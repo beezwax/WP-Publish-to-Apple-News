@@ -5,11 +5,22 @@
  * @author  Federico Ramirez
  * @since   0.0.0
  */
-class Admin_Apple_Export extends Apple_Export
-{
+
+require_once plugin_dir_path( __FILE__ ) . '../includes/class-exporter.php';
+
+class Admin_Apple_Export extends Apple_Export {
+
     function __construct() {
         // Register hooks
         add_action( 'admin_menu', array( $this, 'setup_pages' ) );
+    }
+
+    /**
+     * Given a post id, export the post into the custom format.
+     */
+    private function export( $id ) {
+        $exporter = new Exporter( get_post( $id ) );
+        var_dump( $exporter->export() );
     }
 
     public function setup_pages() {
@@ -31,6 +42,12 @@ class Admin_Apple_Export extends Apple_Export
     }
 
     public function page_index_render() {
+        $id = intval( $_GET['post_id'] );
+        if( $id > 0 ) {
+            $this->export( $id );
+            return;
+        }
+
         include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
     }
 
@@ -53,4 +70,5 @@ class Admin_Apple_Export extends Apple_Export
 
         include plugin_dir_path( __FILE__ ) . 'partials/page_options.php';
     }
+
 }

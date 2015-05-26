@@ -21,7 +21,7 @@
             <td><?php echo $post->post_title; ?></td>
             <td><?php echo $post->post_author; ?></td>
             <td><?php echo date( get_option( 'date_format', $post->post_date ) ); ?></td>
-            <td><button class="button">Export</button></td>
+            <td><a href="<?php echo admin_url( 'admin.php?page=apple_export_index&amp;post_id=' . $post->ID ) ?>" class="button">Export</button></td>
         </tr>
     <?php endforeach; ?>
     </tbody>

@@ -9,7 +9,14 @@
  * @since   0.0.0
  * @package WP_Plugin
  *
- * Plugin Name: Apple news feed
+ * Plugin Name: Apple Export
+ * Plugin URI:  http://beezwax.net
+ * Description: Export and sync posts to Apple format.
+ * Version:     0.0.0
+ * Author:      Beezwax
+ * Author URI:  http://beezwax.net
+ * Text Domain: apple-export
+ * Domain Path: lang/
  */
 
 if( ! defined( 'WPINC' ) )
