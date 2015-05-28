@@ -36,7 +36,7 @@ class Exporter {
                 ),
             ),
             // TODO: Create a Layout object
-            'layout'        => array(
+            'layout' => array(
                 'columns' => 7,
                 'width'   => 1024,
                 'margin'  => 30,
