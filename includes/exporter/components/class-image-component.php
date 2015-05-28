@@ -1,6 +1,11 @@
 <?php
 
 class ImageComponent extends Component {
+
+    public static function is_match( $string ) {
+        return strpos( $string, '<img' ) !== false;
+    }
+
     protected function build( $component ) {
         $matches = array();
         preg_match( '/src="(.*?)"/imU', $component, $matches );
@@ -11,5 +16,6 @@ class ImageComponent extends Component {
             'text' => 'bundle://' . $url,
         );
     }
+
 }
 

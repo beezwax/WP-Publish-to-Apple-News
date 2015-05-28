@@ -7,22 +7,17 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-heading-component.p
 
 class ComponentFactory {
 
-    public static function GetComponent( $component ) {
-        if( self::is_image( $component ) ) {
-            return new ImageComponent( $component );
-        } else if( self::is_heading( $component ) ) {
-            return new HeadingComponent( $component );
+    /**
+     * Given a string, return an instance of the appropriate component.
+     */
+    public static function GetComponent( $base_string ) {
+        if( ImageComponent::is_match( $base_string ) ) {
+            return new ImageComponent( $base_string );
+        } else if( HeadingComponent::is_match( $base_string ) ) {
+            return new HeadingComponent( $base_string );
         } else {
-            return new BodyComponent( $component );
+            return new BodyComponent( $base_string );
         }
-    }
-
-    private static function is_heading( $component ) {
-        return preg_match( '/<h(\d)>(?:.*?)<\/h\1>/im', $component ) === 1;
-    }
-
-    private static function is_image( $component ) {
-        return strpos( $component, '<img' ) !== false;
     }
 
 }
