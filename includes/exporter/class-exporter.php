@@ -12,21 +12,8 @@ class Exporter {
 
     private $post;
 
-    /**
-     * The generated JSON file stored as an associative array.
-     * @since 0.0.0
-     */
-    private $json;
-
     function __construct( $post ) {
         $this->post = $post;
-        $this->json = array(
-            'version'       => '0.1',
-            'identifier'    => $post->ID,
-            'language'      => 'en',
-            'title'         => $post->post_title,
-            'components'    => array(),
-        );
     }
 
     /**
@@ -34,17 +21,26 @@ class Exporter {
      * and return the path.
      */
     public function export() {
-        $this->build_components();
-        return json_encode( $this->json );
+        $json = array(
+            'version'       => '0.1',
+            'identifier'    => $post->ID,
+            'language'      => 'en',
+            'title'         => $post->post_title,
+            'components'    => $this->build_components(),
+        );
+
+        return json_encode( $json );
     }
 
     /**
-     * Builds up the internal JSON representation of the article.
+     * Builds an array with all the components of this WordPress post.
      */
     private function build_components() {
+        $components = array();
         foreach( $this->split_into_components() as $component ) {
-            $this->json['components'][] = $component->value();
+            $components[] = $component->value();
         }
+        return $components;
     }
 
     /**
