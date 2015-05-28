@@ -6,7 +6,7 @@
  * @since   0.0.0
  */
 
-require_once plugin_dir_path( __FILE__ ) . '../includes/class-exporter.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter.php';
 
 class Admin_Apple_Export extends Apple_Export {
 
