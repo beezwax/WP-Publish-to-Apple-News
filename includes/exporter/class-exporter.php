@@ -23,9 +23,9 @@ class Exporter {
     public function export() {
         $json = array(
             'version'       => '0.1',
-            'identifier'    => $post->ID,
+            'identifier'    => 'post-' . $this->post_id(),
             'language'      => 'en',
-            'title'         => $post->post_title,
+            'title'         => $this->post_title(),
             'components'    => $this->build_components(),
         );
 
@@ -44,10 +44,18 @@ class Exporter {
     }
 
     /**
-     * Isolate post dependency. Get the content.
+     * Isolate post dependencies.
      */
     private function post_content() {
         return $this->post->post_content;
+    }
+
+    private function post_id() {
+        return $this->post->ID;
+    }
+
+    private function post_title() {
+        return $this->post->post_title;
     }
 
     /**
