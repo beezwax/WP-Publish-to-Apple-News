@@ -27,6 +27,21 @@ class Exporter {
             'language'      => 'en',
             'title'         => $this->post_title(),
             'components'    => $this->build_components(),
+            // TODO: Create a Style object
+            'componentTextStyles' => array(
+                'default' => array(
+                    'fontName' => 'Helvetica',
+                    'fontSize' => 13,
+                    'linkStyle' => array( 'textColor' => '#428bca' ),
+                ),
+            ),
+            // TODO: Create a Layout object
+            'layout'        => array(
+                'columns' => 7,
+                'width'   => 1024,
+                'margin'  => 30,
+                'gutter'  => 20,
+            ),
         );
 
         return json_encode( $json );
