@@ -33,8 +33,7 @@ class Exporter {
      * and return the path.
      */
     public function export() {
-        $json = $this->generate_json();
-        $this->write_to_workspace( 'article.json', $json );
+        $this->write_to_workspace( 'article.json', $this->generate_json() );
         return $this->workspace->zip();
     }
 
