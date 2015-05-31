@@ -1,17 +1,19 @@
 <?php
 
+require_once plugin_dir_path( __FILE__ ) . '../class-workspace.php';
+
 abstract class Component {
     protected $json;
-    protected $workspace_path;
+    protected $workspace;
 
-    function __construct( $component ) {
-        $this->workspace_path = plugin_dir_path( __FILE__ ) . '../../../workspace/';
-        $this->build( $component );
+    function __construct( $text ) {
+        $this->workspace = new Workspace();
+        $this->build( $text );
     }
 
     public function value() {
         return $this->json;
     }
 
-    abstract protected function build( $component );
+    abstract protected function build( $text );
 }

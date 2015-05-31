@@ -6,8 +6,8 @@ class Heading_Component extends Component {
         return preg_match( '/<h(\d)>(?:.*?)<\/h\1>/im', $string ) === 1;
     }
 
-    protected function build( $component ) {
-        preg_match( '/<h(\d)>(.*?)<\/h\1>/im', $component, $matches );
+    protected function build( $text ) {
+        preg_match( '/<h(\d)>(.*?)<\/h\1>/im', $text, $matches );
         
         $this->json = array(
             'role' => 'heading' . $matches[1],

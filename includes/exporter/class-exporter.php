@@ -11,13 +11,17 @@
 
 require_once plugin_dir_path( __FILE__ ) . 'class-component-factory.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
 
 class Exporter {
 
     private $exporter_content;
+    // TODO: This is instantiated a lot, fix?
+    private $workspace;
 
     function __construct( Exporter_Content $content ) {
         $this->exporter_content = $content;
+        $this->workspace = new Workspace();
     }
 
     /**
@@ -25,6 +29,10 @@ class Exporter {
      * and return the path.
      */
     public function export() {
+        return $this->generate_json();
+    }
+
+    private function generate_json() {
         $json = array(
             'version'       => '0.1',
             'identifier'    => 'post-' . $this->content_id(),

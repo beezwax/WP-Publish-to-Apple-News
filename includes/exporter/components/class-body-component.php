@@ -1,10 +1,10 @@
 <?php
 
 class Body_Component extends Component {
-    protected function build( $component ) {
+    protected function build( $text ) {
         $this->json = array(
             'role' => 'body',
-            'text' => $component,
+            'text' => $text,
         );
     }
 }
