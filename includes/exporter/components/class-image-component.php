@@ -1,6 +1,6 @@
 <?php
 
-class ImageComponent extends Component {
+class Image_Component extends Component {
 
     public static function is_match( $string ) {
         return strpos( $string, '<img' ) !== false;

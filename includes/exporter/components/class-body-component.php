@@ -1,6 +1,6 @@
 <?php
 
-class BodyComponent extends Component {
+class Body_Component extends Component {
     protected function build( $component ) {
         $this->json = array(
             'role' => 'body',

@@ -80,7 +80,7 @@ class Exporter {
     private function split_into_components() {
         $result = array();
         foreach( preg_split( "/(\n|\r\n|\r){3,}/", $this->content_text() ) as $component ) {
-            $result[] = ComponentFactory::GetComponent( $component );
+            $result[] = Component_Factory::GetComponent( $component );
         }
         return $result;
     }

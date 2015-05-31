@@ -1,6 +1,6 @@
 <?php
 
-class HeadingComponent extends Component {
+class Heading_Component extends Component {
 
     public static function is_match( $string ) {
         return preg_match( '/<h(\d)>(?:.*?)<\/h\1>/im', $string ) === 1;
