@@ -28,7 +28,10 @@ class Exporter {
      * and return the path.
      */
     public function export() {
-        return $this->generate_json();
+        $json = $this->generate_json();
+        $this->write_to_workspace( 'article.json', $json );
+        return $this->workspace->zip();
+        return 'GEN!';
     }
 
     private function generate_json() {
@@ -71,6 +74,10 @@ class Exporter {
 
     private function content_text() {
         return $this->exporter_content->content();
+    }
+
+    private function write_to_workspace( $file, $contents ) {
+        $this->workspace->write_file( $file, $contents );
     }
 
     /**
