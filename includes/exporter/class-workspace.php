@@ -21,6 +21,19 @@ class Workspace {
     }
 
     /**
+     * Delete all files from the workspace directory.
+     *
+     * @since   0.0.0
+     */
+    private function clean_workspace() {
+        $files = glob( $this->path . '*', GLOB_BRACE );
+        foreach( $files as $file ) {
+            if( is_file( $file ) )
+                unlink( $file );
+        }
+    }
+
+    /**
      * Write a file to the workspace.
      *
      * @since   0.0.0
@@ -56,6 +69,7 @@ class Workspace {
         }
 
         $zip->close();
+        $this->clean_workspace();
         return $zipfile_path;
     }
 

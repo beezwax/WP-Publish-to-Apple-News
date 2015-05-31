@@ -34,7 +34,7 @@ class Exporter {
      */
     public function export() {
         $this->write_to_workspace( 'article.json', $this->generate_json() );
-        return $this->workspace->zip();
+        return $this->zip_workspace();
     }
 
     private function generate_json() {
@@ -81,6 +81,10 @@ class Exporter {
 
     private function write_to_workspace( $file, $contents ) {
         $this->workspace->write_file( $file, $contents );
+    }
+
+    private function zip_workspace() {
+        return $this->workspace->zip();
     }
 
     /**
