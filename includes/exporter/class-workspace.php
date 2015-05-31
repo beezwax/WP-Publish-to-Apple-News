@@ -53,8 +53,8 @@ class Workspace {
      * @since   0.0.0
      * @return  The full path to the generated zipfile
      */
-    public function zip() {
-        $zipfile_path = realpath( $this->path . '..' ) . '/article.zip';
+    public function zip( $filename ) {
+        $zipfile_path = realpath( $this->path . '..' ) . '/' . $filename;
 
         $zip = new ZipArchive();
         $zip->open( $zipfile_path, ZipArchive::CREATE | ZipArchive::OVERWRITE );
