@@ -11,10 +11,10 @@ require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
 
 class Exporter {
 
-    private $base_content;
+    private $exporter_content;
 
     function __construct( Exporter_Content $content ) {
-        $this->base_content = $content;
+        $this->exporter_content = $content;
     }
 
     /**
@@ -52,15 +52,15 @@ class Exporter {
      * Isolate content dependencies.
      */
     private function content_id() {
-        return $this->base_content->id();
+        return $this->exporter_content->id();
     }
 
     private function content_title() {
-        return $this->base_content->title();
+        return $this->exporter_content->title();
     }
 
     private function content_text() {
-        return $this->base_content->content();
+        return $this->exporter_content->content();
     }
 
     /**
