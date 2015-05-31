@@ -1,7 +1,7 @@
 <?php
 namespace Exporter\Components;
 
-class Body_Component extends Component {
+class Body extends Component {
     protected function build( $text ) {
         $this->json = array(
             'role' => 'body',

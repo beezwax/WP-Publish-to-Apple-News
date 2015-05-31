@@ -1,7 +1,7 @@
 <?php
 namespace Exporter\Components;
 
-class Image_Component extends Component {
+class Image extends Component {
 
     public static function is_match( $string ) {
         return strpos( $string, '<img' ) !== false;
