@@ -49,17 +49,6 @@ class Exporter {
     }
 
     /**
-     * Builds an array with all the components of this WordPress content.
-     */
-    private function build_components() {
-        $components = array();
-        foreach( $this->split_into_components() as $component ) {
-            $components[] = $component->value();
-        }
-        return $components;
-    }
-
-    /**
      * Isolate content dependencies.
      */
     private function content_id() {
@@ -72,6 +61,17 @@ class Exporter {
 
     private function content_text() {
         return $this->base_content->content();
+    }
+
+    /**
+     * Builds an array with all the components of this WordPress content.
+     */
+    private function build_components() {
+        $components = array();
+        foreach( $this->split_into_components() as $component ) {
+            $components[] = $component->value();
+        }
+        return $components;
     }
 
     /**
