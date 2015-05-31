@@ -1,6 +1,7 @@
 <?php
 /**
- * Base plugin class with core plugin information and shared functionality.
+ * Base plugin class with core plugin information and shared functionality
+ * between frontend and backend plugin classes.
  *
  * @author  Federico Ramirez
  * @since   0.0.0
