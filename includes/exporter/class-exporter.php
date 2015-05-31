@@ -1,31 +1,32 @@
 <?php
 /**
- * Export a post to Apple format.
+ * Export a Exporter_Content instance to Apple format.
  *
  * @author  Federico Ramirez
  * @since   0.0.0
  */
 
 require_once plugin_dir_path( __FILE__ ) . 'class-component-factory.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
 
 class Exporter {
 
-    private $post;
+    private $base_content;
 
-    function __construct( $post ) {
-        $this->post = $post;
+    function __construct( Exporter_Content $content ) {
+        $this->base_content = $content;
     }
 
     /**
-     * Based on the post this instance holds, create an Article Format zipfile
+     * Based on the content this instance holds, create an Article Format zipfile
      * and return the path.
      */
     public function export() {
         $json = array(
             'version'       => '0.1',
-            'identifier'    => 'post-' . $this->post_id(),
+            'identifier'    => 'post-' . $this->content_id(),
             'language'      => 'en',
-            'title'         => $this->post_title(),
+            'title'         => $this->content_title(),
             'components'    => $this->build_components(),
             // TODO: Create a Style object
             'componentTextStyles' => array(
@@ -48,7 +49,7 @@ class Exporter {
     }
 
     /**
-     * Builds an array with all the components of this WordPress post.
+     * Builds an array with all the components of this WordPress content.
      */
     private function build_components() {
         $components = array();
@@ -59,26 +60,26 @@ class Exporter {
     }
 
     /**
-     * Isolate post dependencies.
+     * Isolate content dependencies.
      */
-    private function post_content() {
-        return $this->post->post_content;
+    private function content_id() {
+        return $this->base_content->id();
     }
 
-    private function post_id() {
-        return $this->post->ID;
+    private function content_title() {
+        return $this->base_content->title();
     }
 
-    private function post_title() {
-        return $this->post->post_title;
+    private function content_text() {
+        return $this->base_content->content();
     }
 
     /**
-     * Split components from the source WordPress post.
+     * Split components from the source WordPress content.
      */
     private function split_into_components() {
         $result = array();
-        foreach( preg_split( "/(\n|\r\n|\r){3,}/", $this->post_content() ) as $component ) {
+        foreach( preg_split( "/(\n|\r\n|\r){3,}/", $this->content_text() ) as $component ) {
             $result[] = ComponentFactory::GetComponent( $component );
         }
         return $result;

@@ -7,6 +7,7 @@
  */
 
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter-content.php';
 
 class Admin_Apple_Export extends Apple_Export {
 
@@ -19,7 +20,9 @@ class Admin_Apple_Export extends Apple_Export {
      * Given a post id, export the post into the custom format.
      */
     private function export( $id ) {
-        $exporter = new Exporter( get_post( $id ) );
+        $post = get_post( $id );
+        $base_content = new Exporter_Content( $post->ID, $post->post_title, $post->post_content );
+        $exporter = new Exporter( $base_content );
         var_dump( $exporter->export() );
     }
 
