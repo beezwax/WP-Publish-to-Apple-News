@@ -16,7 +16,6 @@ require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
 class Exporter {
 
     private $exporter_content;
-    // TODO: This is instantiated a lot, fix?
     private $workspace;
 
     function __construct( Exporter_Content $content ) {
@@ -91,7 +90,7 @@ class Exporter {
     private function split_into_components() {
         $result = array();
         foreach( preg_split( "/(\n|\r\n|\r){3,}/", $this->content_text() ) as $component ) {
-            $result[] = Component_Factory::GetComponent( $component );
+            $result[] = Component_Factory::GetComponent( $component, $this->workspace );
         }
         return $result;
     }
