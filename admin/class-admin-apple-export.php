@@ -21,8 +21,8 @@ class Admin_Apple_Export extends Apple_Export {
      */
     private function export( $id ) {
         $post = get_post( $id );
-        $base_content = new Exporter_Content( $post->ID, $post->post_title, $post->post_content );
-        $exporter = new Exporter( $base_content );
+        $base_content = new Exporter\Exporter_Content( $post->ID, $post->post_title, $post->post_content );
+        $exporter = new Exporter\Exporter( $base_content );
         var_dump( $exporter->export() );
     }
 

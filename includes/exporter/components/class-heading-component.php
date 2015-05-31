@@ -1,4 +1,5 @@
 <?php
+namespace Exporter\Components;
 
 class Heading_Component extends Component {
 

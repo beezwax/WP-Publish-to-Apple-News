@@ -1,4 +1,5 @@
 <?php
+namespace Exporter\Components;
 
 class Body_Component extends Component {
     protected function build( $text ) {

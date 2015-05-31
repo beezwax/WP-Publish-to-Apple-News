@@ -1,4 +1,10 @@
 <?php
+namespace Exporter;
+
+require_once plugin_dir_path( __FILE__ ) . 'class-component-factory.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
+
 /**
  * Export a Exporter_Content instance to Apple format. 
  *
@@ -12,11 +18,6 @@
  * @author  Federico Ramirez
  * @since   0.0.0
  */
-
-require_once plugin_dir_path( __FILE__ ) . 'class-component-factory.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
-
 class Exporter {
 
     private $exporter_content;

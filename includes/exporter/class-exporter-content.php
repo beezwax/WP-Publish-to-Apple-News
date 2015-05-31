@@ -1,4 +1,5 @@
 <?php
+namespace Exporter;
 
 /**
  * Represents a generic way to represent content that must be exported. This 

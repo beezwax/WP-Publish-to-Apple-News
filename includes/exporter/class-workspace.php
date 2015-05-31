@@ -1,4 +1,9 @@
 <?php
+namespace Exporter;
+
+use \ZipArchive as ZipArchive;
+use \RecursiveIteratorIterator as RecursiveIteratorIterator;
+use \RecursiveDirectoryIterator as RecursiveDirectoryIterator;
 
 /**
  * Manage the exporter's workspace. This class is able to write to the
@@ -17,7 +22,7 @@ class Workspace {
     }
 
     public function zip() {
-        $zipfile_path = realpath( $this->path . '../article.zip' );
+        $zipfile_path = realpath( $this->path . '..' ) . '/article.zip';
 
         $zip = new ZipArchive();
         $zip->open( $zipfile_path, ZipArchive::CREATE | ZipArchive::OVERWRITE );

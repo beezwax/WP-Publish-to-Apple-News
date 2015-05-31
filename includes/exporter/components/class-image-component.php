@@ -1,4 +1,5 @@
 <?php
+namespace Exporter\Components;
 
 class Image_Component extends Component {
 
