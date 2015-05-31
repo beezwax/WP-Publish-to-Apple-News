@@ -8,12 +8,16 @@ class Image_Component extends Component {
 
     protected function build( $component ) {
         $matches = array();
-        preg_match( '/src="(.*?)"/imU', $component, $matches );
+        preg_match( '/src="([^"]*?)"/im', $component, $matches );
         $url = $matches[1];
+        $filename = array_pop( explode( '/', $url ) );
+
+        // Save image into bundle
+        file_put_contents( $this->workspace_path . $filename, file_get_contents( $url ) );
 
         $this->json = array(
             'role' => 'photo',
-            'text' => 'bundle://' . $url,
+            'text' => 'bundle://' . $filename,
         );
     }
 
