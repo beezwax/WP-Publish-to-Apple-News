@@ -31,7 +31,6 @@ class Exporter {
         $json = $this->generate_json();
         $this->write_to_workspace( 'article.json', $json );
         return $this->workspace->zip();
-        return 'GEN!';
     }
 
     private function generate_json() {
