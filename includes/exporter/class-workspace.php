@@ -1,7 +1,8 @@
 <?php
 
 /**
- * Manage the exporter's workspace.
+ * Manage the exporter's workspace. This class is able to write to the
+ * workspace as well as zipping it.
  */
 class Workspace {
 

@@ -24,7 +24,11 @@ if( ! defined( 'WPINC' ) )
 
 // Plugin activation. Create tables and stuff.
 function activate_wp_plugin() {
-    // Do something
+    // Check for ZipArchive dependency
+    if( ! class_exists( 'ZipArchive' ) ) {
+        deactivate_plugins( basename( __FILE__ ) );
+        wp_die('<p>This PHP installation was not compiled with ZipArchive, which is required by this plugin.</p>');
+    }
 }
 
 // Plugin deactivation. Clean up everything.
