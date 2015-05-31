@@ -10,13 +10,13 @@ class Component_Factory {
     /**
      * Given a string, return an instance of the appropriate component.
      */
-    public static function GetComponent( $base_string ) {
-        if( Image_Component::is_match( $base_string ) ) {
-            return new Image_Component( $base_string );
-        } else if( Heading_Component::is_match( $base_string ) ) {
-            return new Heading_Component( $base_string );
+    public static function GetComponent( $text, $workspace ) {
+        if( Image_Component::is_match( $text ) ) {
+            return new Image_Component( $text, $workspace );
+        } else if( Heading_Component::is_match( $text ) ) {
+            return new Heading_Component( $text, $workspace );
         } else {
-            return new Body_Component( $base_string );
+            return new Body_Component( $text, $workspace );
         }
     }
 
