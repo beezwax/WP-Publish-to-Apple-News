@@ -12,6 +12,9 @@ require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter-
 class Admin_Apple_Export extends Apple_Export {
 
     function __construct() {
+        // This is required to download files and setting headers.
+        ob_start();
+
         // Register hooks
         add_action( 'admin_menu', array( $this, 'setup_pages' ) );
     }
@@ -23,7 +26,24 @@ class Admin_Apple_Export extends Apple_Export {
         $post = get_post( $id );
         $base_content = new Exporter\Exporter_Content( $post->ID, $post->post_title, $post->post_content );
         $exporter = new Exporter\Exporter( $base_content );
-        var_dump( $exporter->export() );
+        $this->download_zipfile( $exporter->export() );
+    }
+
+    /**
+     * Given the full path to a zip file INSIDE THE PLUGN DIRECTORY, redirect
+     * to the appropriate URL to download it.
+     */
+    private function download_zipfile( $path ) {
+        header( 'Content-Type: application/zip, application/octet-stream' );
+        header( 'Content-Transfer-Encoding: Binary' );
+        header( 'Content-Disposition: attachment; filename="' . basename( $path ) . '"' );
+
+
+        ob_clean();
+        flush();
+
+        readfile( $path );
+        exit;
     }
 
     public function setup_pages() {

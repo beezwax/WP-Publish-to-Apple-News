@@ -42,4 +42,5 @@ register_deactivation_hook( __FILE__, 'deactivate_wp_plugin' );
 // Initiate plugin class
 require plugin_dir_path( __FILE__ ) . 'includes/class-apple-export.php';
 require plugin_dir_path( __FILE__ ) . 'admin/class-admin-apple-export.php';
+
 new Admin_Apple_Export();
