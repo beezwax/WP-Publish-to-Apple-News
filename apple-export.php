@@ -24,6 +24,12 @@ if( ! defined( 'WPINC' ) )
 
 // Plugin activation. Create tables and stuff.
 function activate_wp_plugin() {
+    // Check for PHP version
+    if( version_compare( PHP_VERSION, '5.3.0' ) < 0 ) {
+        deactivate_plugins( basename( __FILE__ ) );
+        wp_die('<p>This plugin requires at least PHP 5.3.0</p>');
+    }
+
     // Check for ZipArchive dependency
     if( ! class_exists( 'ZipArchive' ) ) {
         deactivate_plugins( basename( __FILE__ ) );

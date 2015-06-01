@@ -9,7 +9,7 @@
 class Apple_Export {
 
     protected $plugin_name   = 'apple_export';
-    protected $version       = '0.0.0';
     protected $plugin_domain = 'apple-export';
+    protected $version       = '0.0.0';
 
 }
