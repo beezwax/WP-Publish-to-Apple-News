@@ -23,9 +23,10 @@ class Admin_Apple_Export extends Apple_Export {
      * Given a post id, export the post into the custom format.
      */
     private function export( $id ) {
-        $post = get_post( $id );
+        $post         = get_post( $id );
         $base_content = new Exporter\Exporter_Content( $post->ID, $post->post_title, $post->post_content );
-        $exporter = new Exporter\Exporter( $base_content );
+        $exporter     = new Exporter\Exporter( $base_content );
+
         $this->download_zipfile( $exporter->export() );
     }
 
@@ -38,10 +39,8 @@ class Admin_Apple_Export extends Apple_Export {
         header( 'Content-Transfer-Encoding: Binary' );
         header( 'Content-Disposition: attachment; filename="' . basename( $path ) . '"' );
 
-
         ob_clean();
         flush();
-
         readfile( $path );
         exit;
     }
