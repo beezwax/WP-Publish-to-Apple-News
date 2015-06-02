@@ -14,7 +14,7 @@ class Image extends Component {
 
         $this->json = array(
             'role' => 'photo',
-            'text' => 'bundle://' . $filename,
+            'URL'  => 'bundle://' . $filename,
         );
     }
 

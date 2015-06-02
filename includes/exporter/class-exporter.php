@@ -46,6 +46,17 @@ class Exporter {
             'language'      => 'en',
             'title'         => $this->content_title(),
             'components'    => $this->build_components(),
+            // TODO: Create a Layout object
+            'layout' => array(
+                'columns' => 7,
+                'width'   => 1024,
+                'margin'  => 30,
+                'gutter'  => 20,
+            ),
+            // Styles
+            'documentStyle' => array(
+                'backgroundColor' => '#F7F7F7',
+            ),
             // TODO: Create a Style object
             'componentTextStyles' => array(
                 'default' => array(
@@ -53,13 +64,15 @@ class Exporter {
                     'fontSize' => 13,
                     'linkStyle' => array( 'textColor' => '#428bca' ),
                 ),
-            ),
-            // TODO: Create a Layout object
-            'layout' => array(
-                'columns' => 7,
-                'width'   => 1024,
-                'margin'  => 30,
-                'gutter'  => 20,
+                'title' => array(
+                    'fontName' => 'Helvetica-Bold',
+                    'fontSize' => 30,
+                    'hyphenation' => false,
+                ),
+                'default-body' => array(
+                    'fontName' => 'Helvetica',
+                    'fontSize' => 13,
+                ),
             ),
         );
 
@@ -120,16 +133,19 @@ class Exporter {
 
         $result = array();
         foreach( $nodes as $node ) {
+            $element = null;
+
             // Some nodes might be found nested inside another, like a <p> or
             // <a>. Seek for them and add them. For now, there's only img which
             // has to be treated like this, but there might be more, so FIXME.
             if( method_exists( $node, 'getElementsByTagName' ) && $node->getElementsByTagName( 'img' )->length > 0 ) {
                 $image_node = $node->getElementsByTagName( 'img' )->item(0);
-                $result[] = $this->create_component_or_null( $image_node );
-                continue;
+                $element = $this->create_component_or_null( $image_node );
+            } else {
+                $element = $this->create_component_or_null( $node );
             }
 
-            $this->create_component_or_null( $node );
+            $result[] = $element;
         }
 
         // Remove null values from result and return
