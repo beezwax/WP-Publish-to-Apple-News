@@ -133,19 +133,19 @@ class Exporter {
 
         $result = array();
         foreach( $nodes as $node ) {
-            $element = null;
+            $component = null;
 
             // Some nodes might be found nested inside another, like a <p> or
             // <a>. Seek for them and add them. For now, there's only img which
             // has to be treated like this, but there might be more, so FIXME.
             if( method_exists( $node, 'getElementsByTagName' ) && $node->getElementsByTagName( 'img' )->length > 0 ) {
                 $image_node = $node->getElementsByTagName( 'img' )->item(0);
-                $element = $this->create_component_or_null( $image_node );
+                $component = $this->create_component_or_null( $image_node );
             } else {
-                $element = $this->create_component_or_null( $node );
+                $component = $this->create_component_or_null( $node );
             }
 
-            $result[] = $element;
+            $result[] = $component;
         }
 
         // Remove null values from result and return
