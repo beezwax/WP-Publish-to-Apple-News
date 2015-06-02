@@ -3,10 +3,6 @@ namespace Exporter\Components;
 
 class Image extends Component {
 
-    public static function is_match( $string ) {
-        return strpos( $string, '<img' ) !== false;
-    }
-
     protected function build( $text ) {
         $matches = array();
         preg_match( '/src="([^"]*?)"/im', $text, $matches );
@@ -18,7 +14,7 @@ class Image extends Component {
 
         $this->json = array(
             'role' => 'photo',
-            'text' => 'bundle://' . $filename,
+            'URL'  => 'bundle://' . $filename,
         );
     }
 
