@@ -34,8 +34,7 @@ class Admin_Apple_Export extends Apple_Export {
         );
 
         $exporter = new Exporter\Exporter( $base_content );
-        echo $exporter->export();
-        //$this->download_zipfile( $exporter->export() );
+        $this->download_zipfile( $exporter->export() );
     }
 
     /**
