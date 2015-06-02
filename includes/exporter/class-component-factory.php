@@ -11,9 +11,9 @@ class Component_Factory {
     private static $components = array();
 
     public static function initialize() {
-        self::register_component( 'img',      '\\Exporter\\Components\\Image' );
-        self::register_component( 'p',        '\\Exporter\\Components\\Body' );
-        self::register_component( 'h[1-6]', '\\Exporter\\Components\\Heading' );
+        self::register_component( 'img'   ,   '\\Exporter\\Components\\Image'   );
+        self::register_component( 'p'     ,   '\\Exporter\\Components\\Body'    );
+        self::register_component( 'h[1-6]',   '\\Exporter\\Components\\Heading' );
     }
 
     private static function register_component( $tagname, $classname ) {
