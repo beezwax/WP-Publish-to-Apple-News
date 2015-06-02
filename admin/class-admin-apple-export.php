@@ -28,9 +28,10 @@ class Admin_Apple_Export extends Apple_Export {
             $post->ID,
             $post->post_title,
             // post_content is not raw HTML, as WordPress editor cleans up
-            // paragraphs and new lines, so we need to transform the content
-            // HTML.
-            apply_filters( 'the_content', $post->post_content )
+            // paragraphs and new lines, so we need to transform the content to
+            // HTML. We use 'the_content' filter for that.
+            apply_filters( 'the_content', $post->post_content ),
+            $post->post_excerpt
         );
 
         $exporter = new Exporter\Exporter( $base_content );

@@ -94,6 +94,10 @@ class Exporter {
         return $this->exporter_content->content();
     }
 
+    private function content_intro() {
+        return $this->exporter_content->intro();
+    }
+
     private function write_to_workspace( $file, $contents ) {
         $this->workspace->write_file( $file, $contents );
     }
@@ -107,9 +111,17 @@ class Exporter {
      */
     private function build_components() {
         $components = array();
+
+        // The content's intro is optional. In WordPress, it's a post's
+        // excerpt. It's an introduction to the article.
+        if( $this->content_intro() ) {
+            $components[] = Component_Factory::GetComponent( 'intro', $this->content_intro(), $this->workspace )->value();
+        }
+        
         foreach( $this->split_into_components() as $component ) {
             $components[] = $component->value();
         }
+
         return $components;
     }
 

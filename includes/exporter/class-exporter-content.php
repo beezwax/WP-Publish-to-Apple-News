@@ -10,11 +10,13 @@ class Exporter_Content {
     private $id;
     private $title;
     private $content;
+    private $intro;
 
-    function __construct( $id, $title, $content ) {
+    function __construct( $id, $title, $content, $intro = null ) {
         $this->id = $id;
         $this->title = $title;
         $this->content = $content;
+        $this->intro = $intro;
     }
 
     public function id() {
@@ -27,6 +29,10 @@ class Exporter_Content {
 
     public function content() {
         return $this->content;
+    }
+
+    public function intro() {
+        return $this->intro;
     }
 
 }
