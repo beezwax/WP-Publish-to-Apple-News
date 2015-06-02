@@ -24,10 +24,18 @@ class Admin_Apple_Export extends Apple_Export {
      */
     private function export( $id ) {
         $post         = get_post( $id );
-        $base_content = new Exporter\Exporter_Content( $post->ID, $post->post_title, $post->post_content );
-        $exporter     = new Exporter\Exporter( $base_content );
+        $base_content = new Exporter\Exporter_Content( 
+            $post->ID,
+            $post->post_title,
+            // post_content is not raw HTML, as WordPress editor cleans up
+            // paragraphs and new lines, so we need to transform the content
+            // HTML.
+            apply_filters( 'the_content', $post->post_content )
+        );
 
-        $this->download_zipfile( $exporter->export() );
+        $exporter = new Exporter\Exporter( $base_content );
+        echo $exporter->export();
+        //$this->download_zipfile( $exporter->export() );
     }
 
     /**

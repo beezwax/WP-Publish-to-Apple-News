@@ -26,6 +26,8 @@ class Exporter {
     function __construct( Exporter_Content $content ) {
         $this->exporter_content = $content;
         $this->workspace = new Workspace();
+
+        Component_Factory::initialize();
     }
 
     /**
@@ -99,14 +101,39 @@ class Exporter {
     }
 
     /**
+     * Given a DomNode, try to create a component from it. It it fails, return
+     * null.
+     */
+    private function create_component_or_null( $node ) {
+        $html = $node->ownerDocument->saveXML( $node );
+        // GetComponent returns null if no component matches.
+        return Component_Factory::GetComponent( $node->nodeName, $html, $this->workspace );
+    }
+
+    /**
      * Split components from the source WordPress content.
      */
     private function split_into_components() {
+        $dom = new \DOMDocument();
+        $dom->loadHTML( $this->content_text() );
+        $nodes = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes;
+
         $result = array();
-        foreach( preg_split( "/(\n|\r\n|\r){3,}/", $this->content_text() ) as $component ) {
-            $result[] = Component_Factory::GetComponent( $component, $this->workspace );
+        foreach( $nodes as $node ) {
+            // Some nodes might be found nested inside another, like a <p> or
+            // <a>. Seek for them and add them. For now, there's only img which
+            // has to be treated like this, but there might be more, so FIXME.
+            if( method_exists( $node, 'getElementsByTagName' ) && $node->getElementsByTagName( 'img' )->length > 0 ) {
+                $image_node = $node->getElementsByTagName( 'img' )->item(0);
+                $result[] = $this->create_component_or_null( $image_node );
+                continue;
+            }
+
+            $this->create_component_or_null( $node );
         }
-        return $result;
+
+        // Remove null values from result and return
+        return array_filter( $result );
     }
 
 }
