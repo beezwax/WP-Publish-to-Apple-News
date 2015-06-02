@@ -123,6 +123,20 @@ class Exporter {
         return Component_Factory::GetComponent( $node->nodeName, $html, $this->workspace );
     }
 
+    private function node_contains( $node, $tagname ) {
+        if( ! method_exists( $node, 'getElementsByTagName' ) ) {
+            return false;
+        }
+
+        $elements = $node->getElementsByTagName( $tagname );
+
+        if( $elements->length == 0 ) {
+            return false;
+        }
+
+        return $elements->item( 0 );
+    }
+
     /**
      * Split components from the source WordPress content.
      */
@@ -131,16 +145,21 @@ class Exporter {
         $dom->loadHTML( $this->content_text() );
         $nodes = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes;
 
+        // Loop though the first-level nodes of the body element. Components
+        // might include child-components, like an Image Gallery or Header.
         $result = array();
         foreach( $nodes as $node ) {
             $component = null;
 
-            // Some nodes might be found nested inside another, like a <p> or
-            // <a>. Seek for them and add them. For now, there's only img which
-            // has to be treated like this, but there might be more, so FIXME.
-            if( method_exists( $node, 'getElementsByTagName' ) && $node->getElementsByTagName( 'img' )->length > 0 ) {
-                $image_node = $node->getElementsByTagName( 'img' )->item(0);
+            // Some nodes might be found nested inside another, for example an
+            // <img> could be inside a <p> or <a>. Seek for them and add them.
+            // The way this is beeing handled right now is pretty hacky, but
+            // I'm waiting until I get a bit more code so I can figure out how
+            // to do it propertly. FIXME.
+            if( $image_node = $this->node_contains( $node, 'img' ) ) {
                 $component = $this->create_component_or_null( $image_node );
+            } else if( $ewv = $this->node_contains( $node, 'iframe' ) ) {
+                $component = $this->create_component_or_null( $ewv );
             } else {
                 $component = $this->create_component_or_null( $node );
             }

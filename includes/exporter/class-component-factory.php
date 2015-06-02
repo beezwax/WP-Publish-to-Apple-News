@@ -5,15 +5,17 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-component.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-image.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-body.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-heading.php';
+require_once plugin_dir_path( __FILE__ ) . 'components/class-embed-web-video.php';
 
 class Component_Factory {
 
     private static $components = array();
 
     public static function initialize() {
-        self::register_component( 'img'   ,   '\\Exporter\\Components\\Image'   );
-        self::register_component( 'p'     ,   '\\Exporter\\Components\\Body'    );
-        self::register_component( 'h[1-6]',   '\\Exporter\\Components\\Heading' );
+        self::register_component( 'img'   ,   '\\Exporter\\Components\\Image'           );
+        self::register_component( 'p'     ,   '\\Exporter\\Components\\Body'            );
+        self::register_component( 'h[1-6]',   '\\Exporter\\Components\\Heading'         );
+        self::register_component( 'iframe',   '\\Exporter\\Components\\Embed_Web_Video' );
     }
 
     private static function register_component( $tagname, $classname ) {
