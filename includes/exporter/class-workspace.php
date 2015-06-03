@@ -48,7 +48,7 @@ class Workspace {
     }
 
     /**
-     * Compresses the workspace directory recursively the ZIP algorhythm.
+	 * Compresses the workspace directory recursively into a ZIP.
      *
      * @since   0.0.0
      * @return  The full path to the generated zipfile
