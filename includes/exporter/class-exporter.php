@@ -114,11 +114,11 @@ class Exporter {
 
         // The content's intro is optional. In WordPress, it's a post's
         // excerpt. It's an introduction to the article.
-        if( $this->content_intro() ) {
+        if ( $this->content_intro() ) {
             $components[] = Component_Factory::GetComponent( 'intro', $this->content_intro(), $this->workspace )->value();
         }
         
-        foreach( $this->split_into_components() as $component ) {
+        foreach ( $this->split_into_components() as $component ) {
             $components[] = $component->value();
         }
 
@@ -136,13 +136,13 @@ class Exporter {
     }
 
     private function node_contains( $node, $tagname ) {
-        if( ! method_exists( $node, 'getElementsByTagName' ) ) {
+        if ( ! method_exists( $node, 'getElementsByTagName' ) ) {
             return false;
         }
 
         $elements = $node->getElementsByTagName( $tagname );
 
-        if( $elements->length == 0 ) {
+        if ( $elements->length == 0 ) {
             return false;
         }
 
@@ -160,7 +160,7 @@ class Exporter {
         // Loop though the first-level nodes of the body element. Components
         // might include child-components, like an Image Gallery or Header.
         $result = array();
-        foreach( $nodes as $node ) {
+        foreach ( $nodes as $node ) {
             $component = null;
 
             // Some nodes might be found nested inside another, for example an
@@ -168,9 +168,9 @@ class Exporter {
             // The way this is beeing handled right now is pretty hacky, but
             // I'm waiting until I get a bit more code so I can figure out how
             // to do it propertly. FIXME.
-            if( $image_node = $this->node_contains( $node, 'img' ) ) {
+            if ( $image_node = $this->node_contains( $node, 'img' ) ) {
                 $component = $this->create_component_or_null( $image_node );
-            } else if( $ewv = $this->node_contains( $node, 'iframe' ) ) {
+            } else if ( $ewv = $this->node_contains( $node, 'iframe' ) ) {
                 $component = $this->create_component_or_null( $ewv );
             } else {
                 $component = $this->create_component_or_null( $node );

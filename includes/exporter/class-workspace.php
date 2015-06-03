@@ -31,8 +31,8 @@ class Workspace {
      */
     private function clean_workspace() {
         $files = glob( $this->path . '*', GLOB_BRACE );
-        foreach( $files as $file ) {
-            if( is_file( $file ) ) {
+        foreach ( $files as $file ) {
+            if ( is_file( $file ) ) {
                 unlink( $file );
             }
         }
@@ -64,12 +64,12 @@ class Workspace {
             RecursiveIteratorIterator::LEAVES_ONLY
         );
 
-        foreach( $files as $name => $file ) {
-            if( ! $file->isDir() ) {
-                $filePath = $file->getRealPath();
-                $relativePath = substr( $filePath, strlen( $this->path ) );
+        foreach ( $files as $name => $file ) {
+            if ( ! $file->isDir() ) {
+                $file_path     = $file->getRealPath();
+                $relative_path = substr( $file_path, strlen( $this->path ) );
 
-                $zip->addFile( $filePath, $relativePath );
+                $zip->addFile( $file_path, $relative_path );
             }
         }
 
