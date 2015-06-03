@@ -12,7 +12,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
  * can be a dependency. It can be used to create other plugins, for example,
  * a Joomla or Drupal plugin. 
  *
- * NOTE: Even though this is not a WordPress class it follows it's coding
+ * NOTE: Even though this is not a WordPress class it follows its coding
  * conventions.
  *
  * @author  Federico Ramirez
@@ -114,7 +114,7 @@ class Exporter {
     }
 
     /**
-     * Given a DomNode, try to create a component from it. It it fails, return
+     * Given a DomNode, try to create a component from it. If it fails, return
      * null.
      */
     private function create_component_or_null( $node ) {

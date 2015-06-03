@@ -3,7 +3,7 @@ namespace Exporter;
 
 /**
  * Represents a generic way to represent content that must be exported. This 
- * can be filled based on a WordPress post by example.
+ * can be filled based on a WordPress post for example.
  */
 class Exporter_Content {
 
