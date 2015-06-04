@@ -2,8 +2,12 @@
 Apple export plugin for WordPress. This plugin works only in the admin-side so
 no `public/` folder.
 
+## Coding standards
 PHP code must follow WordPress' [Coding
 Standards](https://codex.wordpress.org/WordPress_Coding_Standards).
+
+Using [EditorConfig](http://editorconfig.org) is reccommended so files always
+use the same formatting.
 
 ## Requirements
 In order to work on the plugin, you'll need a webserver such as Apache with
@@ -16,3 +20,4 @@ It's recommended to create a symbolic link for better code organization.
 
 ## Running tests
 You'll need PHPUnit to run tests. Simply run the `phpunit` command to run them.
+

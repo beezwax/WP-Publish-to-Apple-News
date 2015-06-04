@@ -1,7 +1,7 @@
 <?php
 /**
  * Entry point for the plugin.
- * 
+ *
  * This file is read by WordPress to generate the plugin information in the
  * admin panel.
  *
@@ -19,27 +19,28 @@
  * Domain Path: lang/
  */
 
-if( ! defined( 'WPINC' ) )
-    die;
+if ( ! defined( 'WPINC' ) ) {
+	die;
+}
 
 // Plugin activation. Create tables and stuff.
 function activate_wp_plugin() {
-    // Check for PHP version
-    if( version_compare( PHP_VERSION, '5.3.0' ) < 0 ) {
-        deactivate_plugins( basename( __FILE__ ) );
-        wp_die('<p>This plugin requires at least PHP 5.3.0</p>');
-    }
+	// Check for PHP version
+	if ( version_compare( PHP_VERSION, '5.3.0' ) < 0 ) {
+		deactivate_plugins( basename( __FILE__ ) );
+		wp_die('<p>This plugin requires at least PHP 5.3.0</p>');
+	}
 
-    // Check for ZipArchive dependency
-    if( ! class_exists( 'ZipArchive' ) ) {
-        deactivate_plugins( basename( __FILE__ ) );
-        wp_die('<p>This PHP installation was not compiled with ZipArchive, which is required by this plugin.</p>');
-    }
+	// Check for ZipArchive dependency
+	if ( ! class_exists( 'ZipArchive' ) ) {
+		deactivate_plugins( basename( __FILE__ ) );
+		wp_die('<p>This PHP installation was not compiled with ZipArchive, which is required by this plugin.</p>');
+	}
 }
 
 // Plugin deactivation. Clean up everything.
 function deactivate_wp_plugin() {
-    // Do something
+	// Do something
 }
 
 register_activation_hook( __FILE__,   'activate_wp_plugin' );
