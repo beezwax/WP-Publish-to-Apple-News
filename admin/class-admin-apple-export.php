@@ -73,7 +73,7 @@ class Admin_Apple_Export extends Apple_Export {
 
     public function page_index_render() {
         $id = intval( $_GET['post_id'] );
-        if( $id > 0 ) {
+        if ( $id > 0 ) {
             $this->export( $id );
             return;
         }
@@ -95,7 +95,7 @@ class Admin_Apple_Export extends Apple_Export {
     }
 
     public function page_options_render() {
-        if( ! current_user_can( 'manage_options' ) )
+        if ( ! current_user_can( 'manage_options' ) )
             wp_die( __( 'You do not have permissions to access this page.' ) );
 
         include plugin_dir_path( __FILE__ ) . 'partials/page_options.php';
