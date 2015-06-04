@@ -19,8 +19,9 @@
  * Domain Path: lang/
  */
 
-if ( ! defined( 'WPINC' ) )
+if ( ! defined( 'WPINC' ) ) {
 	die;
+}
 
 // Plugin activation. Create tables and stuff.
 function activate_wp_plugin() {
