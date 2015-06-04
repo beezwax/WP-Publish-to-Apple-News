@@ -25,8 +25,8 @@ class Component_Factory {
     }
 
     private static function get_component( $tagname ) {
-        foreach( array_keys( self::$components ) as $key ) {
-            if( preg_match( '@' . $key . '@', $tagname ) ) {
+        foreach ( array_keys( self::$components ) as $key ) {
+            if ( preg_match( '@' . $key . '@', $tagname ) ) {
                 return self::$components[ $key ];
             }
         }
@@ -40,7 +40,7 @@ class Component_Factory {
     public static function GetComponent( $tagname, $html, $workspace ) {
         $class = self::get_component( $tagname );
 
-        if( is_null( $class ) ) {
+        if ( is_null( $class ) ) {
             return null;
         }
 

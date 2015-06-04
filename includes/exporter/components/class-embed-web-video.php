@@ -5,7 +5,7 @@ class Embed_Web_Video extends Component {
     protected function build( $text ) {
         $attributes = array();
         preg_match_all( '/(\w+)="([^"]*?)"/im', $text, $matches, PREG_SET_ORDER );
-        foreach( $matches as $match ) {
+        foreach ( $matches as $match ) {
             $attributes[ $match[1] ] = $match[2];
         }
 
