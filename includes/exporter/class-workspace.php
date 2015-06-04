@@ -19,7 +19,7 @@ class Workspace {
 		function __construct() {
 				$this->path = realpath( plugin_dir_path( __FILE__ ) . '../../workspace' ) . '/';
 
-				if( ! file_exists( $this->path ) ) {
+				if ( ! file_exists( $this->path ) ) {
 						mkdir( $this->path, 0775, true );
 				}
 		}
