@@ -1,7 +1,7 @@
 <?php
 /**
  * Entry point for the plugin.
- * 
+ *
  * This file is read by WordPress to generate the plugin information in the
  * admin panel.
  *

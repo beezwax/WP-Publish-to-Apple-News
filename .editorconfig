@@ -1,9 +1,20 @@
 root = true
 
-# Unix style newlines with a newline ending every file
+# For all files:
+# - Unix newlines
+# - Insert new line at the end
+# - trim whitespace at end of lines
+# - Use 2 spaces for indentation
 [*]
 end_of_line = lf
 insert_final_newline = true
+trim_trailing_whitespace = true
+tab_style = space
+tab_width = 2
 
+# For PHP files only:
+# - Use tabs (following WordPress conventions) for indentation
+# - Show tab width as 2 spaces
 [*.php]
-indent_style = tabs
+indent_style = tab
+tab_width = 2
