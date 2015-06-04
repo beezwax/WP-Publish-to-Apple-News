@@ -14,11 +14,11 @@ class Exporter_Content {
 	private $cover;
 
 	function __construct( $id, $title, $content, $intro = null, $cover = null ) {
-		$this->id				= $id;
-		$this->title		= $title;
-		$this->content	= $content;
-		$this->intro		= $intro;
-		$this->cover		= $cover;
+		$this->id       = $id;
+		$this->title    = $title;
+		$this->content  = $content;
+		$this->intro    = $intro;
+		$this->cover    = $cover;
 	}
 
 	public function id() {
