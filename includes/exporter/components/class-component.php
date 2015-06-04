@@ -4,14 +4,18 @@ namespace Exporter\Components;
 abstract class Component {
 
 	protected $workspace;
-	protected $json;
+	protected $json = null;
 
 	function __construct( $text, $workspace ) {
 		$this->workspace = $workspace;
-		$this->build( $text );
 	}
 
 	public function value() {
+		// Lazy value evaluation
+		if( is_null( $this->json ) ) {
+			$this->build( $text );
+		}
+
 		return $this->json;
 	}
 
