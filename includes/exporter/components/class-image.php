@@ -3,6 +3,14 @@ namespace Exporter\Components;
 
 class Image extends Component {
 
+	protected function write_to_workspace( $filename, $contents ) {
+		$this->workspace->write_tmp_file( $filename, $contents );
+	}
+
+	protected function get_file_contents( $url ) {
+		return $this->workspace->get_file_contents( $url );
+	}
+
 	protected function build( $text ) {
 		$matches = array();
 		preg_match( '/src="([^"]*?)"/im', $text, $matches );
@@ -10,7 +18,8 @@ class Image extends Component {
 		$filename = array_pop( explode( '/', $url ) );
 
 		// Save image into bundle
-		$this->workspace->write_tmp_file( $filename, file_get_contents( $url ) );
+		$content = $this->get_file_contents( $url );
+		$this->write_to_workspace( $filename, $content );
 
 		$this->json = array(
 			'role' => 'photo',

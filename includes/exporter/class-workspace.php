@@ -67,6 +67,15 @@ class Workspace {
 	}
 
 	/**
+	 * Reads the contents of a file or URL.
+	 *
+	 * @since   0.0.0
+	 */
+	public function get_file_contents( $file ) {
+		return file_get_contents( $file );
+	}
+
+	/**
 	 * Compresses the workspace directory recursively into a ZIP.
 	 *
 	 * @since   0.0.0
