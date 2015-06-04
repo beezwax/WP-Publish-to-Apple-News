@@ -27,7 +27,7 @@ class Component_Factory {
 		self::$components[ $tagname ] = $classname;
 	}
 
-	private static function get_component( $tagname ) {
+	private static function find_component_by_tagname( $tagname ) {
 		foreach ( array_keys( self::$components ) as $key ) {
 			if ( preg_match( '@' . $key . '@', $tagname ) ) {
 				return self::$components[ $key ];
@@ -38,10 +38,11 @@ class Component_Factory {
 	}
 
 	/**
-	 * Given a string, return an instance of the appropriate component.
+	 * Given a string, return an instance of the appropriate component or null if
+	 * no component matches the given tagname.
 	 */
-	public static function GetComponent( $tagname, $html ) {
-		$class = self::get_component( $tagname );
+	public static function get_component( $tagname, $html ) {
+		$class = self::find_component_by_tagname( $tagname );
 
 		if ( is_null( $class ) ) {
 			return null;
