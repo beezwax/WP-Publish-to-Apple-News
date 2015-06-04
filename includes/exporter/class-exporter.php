@@ -40,25 +40,12 @@ class Exporter {
 	}
 
 	private function generate_json() {
-		// For now, generate the thumb url in here, eventually it will move to the
-		// metadata manager object. The cover component is in charge of copying
-		// the actual file, just link here.
-		$thumb_url = null;
-		if( $this->content_cover() ) {
-			$filename  = array_pop( explode( '/', $this->content_cover() ) );
-			$thumb_url = 'bundle://' . $filename;
-		}
-
 		$json = array(
 			'version'       => '0.1',
 			'identifier'    => 'post-' . $this->content_id(),
 			'language'      => 'en',
 			'title'         => $this->content_title(),
 			'components'    => $this->build_components(),
-			// TODO: Create a metadata object
-			'metadata' => array(
-				'thumbnailURL' => $thumb_url,
-			),
 			// TODO: Create a Layout object
 			'layout' => array(
 				'columns' => 7,
@@ -97,6 +84,20 @@ class Exporter {
 				),
 			),
 		);
+
+		// For now, generate the thumb url in here, eventually it will move to the
+		// metadata manager object. The cover component is in charge of copying
+		// the actual file, just link here.
+		$thumb_url = null;
+		if( $this->content_cover() ) {
+			$filename  = array_pop( explode( '/', $this->content_cover() ) );
+			$thumb_url = 'bundle://' . $filename;
+
+			// TODO: Create a metadata object
+			$json['metadata'] = array(
+				'thumbnailURL' => $thumb_url,
+			);
+		}
 
 		return json_encode( $json );
 	}
