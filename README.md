@@ -19,5 +19,6 @@ It's recommended to create a symbolic link for better code organization.
 2. `ln -s apple-export /var/www/my-wp-installation/wp-content/plugins/apple-export`
 
 ## Running tests
-You'll need PHPUnit to run tests. Simply run the `phpunit` command to run them.
+You'll need PHPUnit v4.5+ to run tests. Simply run the `phpunit` command to run
+them.
 
