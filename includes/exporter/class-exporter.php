@@ -27,7 +27,7 @@ class Exporter {
 		$this->exporter_content = $content;
 		$this->workspace = new Workspace();
 
-		Component_Factory::initialize();
+		Component_Factory::initialize( $this->workspace );
 	}
 
 	/**
@@ -115,7 +115,7 @@ class Exporter {
 		// The content's intro is optional. In WordPress, it's a post's
 		// excerpt. It's an introduction to the article.
 		if ( $this->content_intro() ) {
-			$components[] = Component_Factory::GetComponent( 'intro', $this->content_intro(), $this->workspace )->value();
+			$components[] = Component_Factory::GetComponent( 'intro', $this->content_intro() )->value();
 		}
 
 		foreach ( $this->split_into_components() as $component ) {
@@ -132,7 +132,7 @@ class Exporter {
 	private function create_component_or_null( $node ) {
 		$html = $node->ownerDocument->saveXML( $node );
 		// GetComponent returns null if no component matches.
-		return Component_Factory::GetComponent( $node->nodeName, $html, $this->workspace );
+		return Component_Factory::GetComponent( $node->nodeName, $html );
 	}
 
 	private function node_contains( $node, $tagname ) {
