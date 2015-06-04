@@ -99,7 +99,7 @@ class Exporter {
 	}
 
 	private function write_to_workspace( $file, $contents ) {
-		$this->workspace->write_file( $file, $contents );
+		$this->workspace->write_tmp_file( $file, $contents );
 	}
 
 	private function zip_workspace( $id ) {
