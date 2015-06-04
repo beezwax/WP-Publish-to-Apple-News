@@ -4,7 +4,7 @@ namespace Exporter\Components;
 class Cover extends Component {
 
 	protected function build( $url ) {
-		$filename = array_pop( explode( '/', $url ) );
+		$filename = basename( $url );
 		// Save image into bundle
 		$this->workspace->write_tmp_file( $filename, file_get_contents( $url ) );
 

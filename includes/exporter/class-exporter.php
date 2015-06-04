@@ -89,7 +89,7 @@ class Exporter {
 		// metadata manager object. The cover component is in charge of copying
 		// the actual file, just link here.
 		if( $this->content_cover() ) {
-			$filename  = array_pop( explode( '/', $this->content_cover() ) );
+			$filename  = basename( $this->content_cover() );
 			$thumb_url = 'bundle://' . $filename;
 
 			// TODO: Create a metadata object
