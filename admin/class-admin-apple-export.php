@@ -23,7 +23,11 @@ class Admin_Apple_Export extends Apple_Export {
 	 * Given a post id, export the post into the custom format.
 	 */
 	private function export( $id ) {
-		$post         = get_post( $id );
+		// The WP_Post object representing the post.
+		$post       = get_post( $id );
+		// The URL of the post's thumbnail (a.k.a featured image), if any.
+		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ?: null;
+
 		$base_content = new Exporter\Exporter_Content(
 			$post->ID,
 			$post->post_title,
@@ -31,7 +35,8 @@ class Admin_Apple_Export extends Apple_Export {
 			// paragraphs and new lines, so we need to transform the content to
 			// HTML. We use 'the_content' filter for that.
 			apply_filters( 'the_content', $post->post_content ),
-			$post->post_excerpt
+			$post->post_excerpt,
+			$post_thumb
 		);
 
 		$exporter = new Exporter\Exporter( $base_content );

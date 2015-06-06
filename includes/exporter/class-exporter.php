@@ -74,7 +74,29 @@ class Exporter {
 					'fontSize' => 13,
 				),
 			),
+			// TODO: Create a Component Layout object
+			'componentLayouts' => array(
+				'headerContainerLayout' => array(
+					'columnStart' => 0,
+					'columnSpan' => 7,
+					'ignoreDocumentMargin' => true,
+					'minimumHeight' => '50vh',
+				),
+			),
 		);
+
+		// For now, generate the thumb url in here, eventually it will move to the
+		// metadata manager object. The cover component is in charge of copying
+		// the actual file, just link here.
+		if( $this->content_cover() ) {
+			$filename  = basename( $this->content_cover() );
+			$thumb_url = 'bundle://' . $filename;
+
+			// TODO: Create a metadata object
+			$json['metadata'] = array(
+				'thumbnailURL' => $thumb_url,
+			);
+		}
 
 		return json_encode( $json );
 	}
@@ -98,6 +120,10 @@ class Exporter {
 		return $this->exporter_content->intro();
 	}
 
+	private function content_cover() {
+		return $this->exporter_content->cover();
+	}
+
 	private function write_to_workspace( $file, $contents ) {
 		$this->workspace->write_tmp_file( $file, $contents );
 	}
@@ -111,6 +137,12 @@ class Exporter {
 	 */
 	private function build_components() {
 		$components = array();
+
+		// The content's cover is optional. In WordPress, it's a post's thumbnail
+		// or featured image.
+		if ( $this->content_cover() ) {
+			$components[] = Component_Factory::get_component( 'cover', $this->content_cover() )->value();
+		}
 
 		// The content's intro is optional. In WordPress, it's a post's
 		// excerpt. It's an introduction to the article.

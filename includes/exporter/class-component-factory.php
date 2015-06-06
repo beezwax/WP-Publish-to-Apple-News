@@ -7,6 +7,7 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-body.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-heading.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-embed-web-video.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-intro.php';
+require_once plugin_dir_path( __FILE__ ) . 'components/class-cover.php';
 
 class Component_Factory {
 
@@ -21,6 +22,7 @@ class Component_Factory {
 		self::register_component( 'h[1-6]',   '\\Exporter\\Components\\Heading'         );
 		self::register_component( 'iframe',   '\\Exporter\\Components\\Embed_Web_Video' );
 		self::register_component( 'intro' ,   '\\Exporter\\Components\\Intro'           );
+		self::register_component( 'cover' ,   '\\Exporter\\Components\\Cover'           );
 	}
 
 	private static function register_component( $tagname, $classname ) {

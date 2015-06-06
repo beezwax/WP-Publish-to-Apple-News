@@ -7,7 +7,7 @@ class Image extends Component {
 		$matches = array();
 		preg_match( '/src="([^"]*?)"/im', $text, $matches );
 		$url = $matches[1];
-		$filename = array_pop( explode( '/', $url ) );
+		$filename = basename( $url );
 
 		// Save image into bundle
 		$this->workspace->write_tmp_file( $filename, file_get_contents( $url ) );
