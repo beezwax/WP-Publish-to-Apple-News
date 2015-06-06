@@ -10,7 +10,7 @@ class Embed_Web_Video extends Component {
 			$attributes[ $match[1] ] = $match[2];
 		}
 
-		$aspect_ratio = (float) substr( ( $attributes['width'] / $attributes['height'] ), 0, 5 );
+		$aspect_ratio = substr( ( $attributes['width'] / $attributes['height'] ), 0, 5 );
 
 		$this->json = array(
 			'role' => 'embedwebvideo',
