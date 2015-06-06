@@ -12,6 +12,14 @@ abstract class Component {
 		$this->workspace = $workspace;
 	}
 
+	protected function write_to_workspace( $filename, $contents ) {
+		$this->workspace->write_tmp_file( $filename, $contents );
+	}
+
+	protected function get_file_contents( $url ) {
+		return $this->workspace->get_file_contents( $url );
+	}
+
 	public function value() {
 		// Lazy value evaluation
 		if( is_null( $this->json ) ) {

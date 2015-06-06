@@ -3,14 +3,6 @@ namespace Exporter\Components;
 
 class Image extends Component {
 
-	protected function write_to_workspace( $filename, $contents ) {
-		$this->workspace->write_tmp_file( $filename, $contents );
-	}
-
-	protected function get_file_contents( $url ) {
-		return $this->workspace->get_file_contents( $url );
-	}
-
 	protected function build( $text ) {
 		$matches = array();
 		preg_match( '/src="([^"]*?)"/im', $text, $matches );
