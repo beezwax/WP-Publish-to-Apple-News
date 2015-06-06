@@ -5,15 +5,15 @@ require_once __DIR__ . '/../../includes/exporter/class-exporter.php';
 
 use \Exporter\Exporter as Exporter;
 
-class BodyTest extends PHPUnit_Framework_TestCase {
+class BodyTest extends WP_UnitTestCase {
 
 	private $prophet;
 
-	protected function setup() {
+	public function setup() {
 		$this->prophet = new \Prophecy\Prophet;
 	}
 
-	protected function tearDown() {
+	public function tearDown() {
 		$this->prophet->checkPredictions();
 	}
 
