@@ -95,7 +95,7 @@ class Workspace {
 		foreach ( $files as $name => $file ) {
 			if ( ! $file->isDir() ) {
 				$file_path     = $file->getRealPath();
-				$relative_path = substr( $file_path, strlen( $this->tmp_path ) );
+				$relative_path = 'article/' . substr( $file_path, strlen( $this->tmp_path ) );
 
 				$zip->addFile( $file_path, $relative_path );
 			}
