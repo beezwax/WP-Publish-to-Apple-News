@@ -161,10 +161,10 @@ class Exporter {
 	 * Given a DomNode, try to create a component from it. If it fails, return
 	 * null.
 	 */
-	private function create_component_or_null( $node ) {
+	private function create_component_or_null( $node, $name = null ) {
 		$html = $node->ownerDocument->saveXML( $node );
 		// get_component returns null if no component matches.
-		return Component_Factory::get_component( $node->nodeName, $html, $this->workspace );
+		return Component_Factory::get_component( $name ?: $node->nodeName, $html, $this->workspace );
 	}
 
 	private function node_contains( $node, $tagname ) {
@@ -181,16 +181,35 @@ class Exporter {
 		return $elements->item( 0 );
 	}
 
+	private function node_has_class( $node, $classname ) {
+		if ( ! method_exists( $node, 'getAttribute' ) ) {
+			return false;
+		}
+
+		$classes = trim( $node->getAttribute( 'class' ) );
+
+		if( empty( $classes ) ) {
+			return false;
+		}
+
+		return in_array( $classname, explode( ' ', $classes ) );
+	}
+
 	/**
 	 * Split components from the source WordPress content.
 	 */
 	private function split_into_components() {
+		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
 		$dom = new \DOMDocument();
+		libxml_use_internal_errors( true );
 		$dom->loadHTML( $this->content_text() );
+		libxml_clear_errors( true );
+
+		// Find the first-level nodes of the body tag.
 		$nodes = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes;
 
 		// Loop though the first-level nodes of the body element. Components
-		// might include child-components, like an Image Gallery or Header.
+		// might include child-components, like an Cover and Image.
 		$result = array();
 		foreach ( $nodes as $node ) {
 			$component = null;
@@ -200,7 +219,9 @@ class Exporter {
 			// The way this is beeing handled right now is pretty hacky, but
 			// I'm waiting until I get a bit more code so I can figure out how
 			// to do it propertly. FIXME.
-			if ( $image_node = $this->node_contains( $node, 'img' ) ) {
+			if ( $gallery_node = $this->node_has_class( $node, 'gallery' ) ) {
+				$component = $this->create_component_or_null( $node, 'gallery' );
+			} else if ( $image_node = $this->node_contains( $node, 'img' ) ) {
 				$component = $this->create_component_or_null( $image_node );
 			} else if ( $ewv = $this->node_contains( $node, 'iframe' ) ) {
 				$component = $this->create_component_or_null( $ewv );
