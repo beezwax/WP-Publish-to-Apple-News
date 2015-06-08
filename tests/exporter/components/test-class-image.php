@@ -1,12 +1,12 @@
 <?php
 
 require_once __DIR__ . '/../../../includes/exporter/components/class-component.php';
-require_once __DIR__ . '/../../../includes/exporter/components/class-cover.php';
+require_once __DIR__ . '/../../../includes/exporter/components/class-image.php';
 require_once __DIR__ . '/../../../includes/exporter/class-workspace.php';
 
-use \Exporter\Components\Cover as Cover;
+use \Exporter\Components\Image as Image;
 
-class CoverTest extends PHPUnit_Framework_TestCase {
+class Image_Test extends PHPUnit_Framework_TestCase {
 
 	private $prophet;
 
@@ -25,21 +25,13 @@ class CoverTest extends PHPUnit_Framework_TestCase {
 		$workspace->get_file_contents( 'http://someurl.com/filename.jpg' )->willReturn( 'foo' )->shouldBeCalled();
 		$workspace->write_tmp_file( 'filename.jpg', 'foo' )->willReturn( true )->shouldBeCalled();
 
-		$cover_component = new Cover( 'http://someurl.com/filename.jpg', $workspace->reveal() );
+		// Pass the mock workspace as a dependency
+		$image_component = new Image( '<img src="http://someurl.com/filename.jpg" alt="Example" />', $workspace->reveal() );
 
+		// Test for valid JSON
 		$this->assertEquals(
-			array(
-				'role' => 'container',
-				'layout' => 'headerContainerLayout',
-				'style' => array(
-					'fill' => array(
-						'type' => 'image',
-						'URL' => 'bundle://filename.jpg',
-						'fillMode' => 'cover',
-					),
-				),
-			),
-			$cover_component->value()
+			array( 'role' => 'photo', 'URL' => 'bundle://filename.jpg' ),
+			$image_component->value()
 		);
 	}
 

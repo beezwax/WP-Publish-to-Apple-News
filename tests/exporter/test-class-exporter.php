@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../includes/exporter/class-exporter.php';
 
 use \Exporter\Exporter as Exporter;
 
-class BodyTest extends WP_UnitTestCase {
+class Exporter_Test extends WP_UnitTestCase {
 
 	private $prophet;
 
@@ -17,11 +17,21 @@ class BodyTest extends WP_UnitTestCase {
 		$this->prophet->checkPredictions();
 	}
 
-	public function testZipsWorkspaceOnExport() {
+	public function testExport() {
 		$workspace = $this->prophet->prophesize( '\Exporter\Workspace' );
-		$workspace->zip( 'content' )->willReturn( true )->shouldBeCalled();
+		// Creates the article.json file
+		$workspace
+			->write_tmp_file( 'article.json', \Prophecy\Argument::type( 'string' ) )
+			->willReturn( true )
+			->shouldBeCalled();
+		// Creates a zipfile with the id
+		$workspace
+			->zip( 'article-3.zip' )
+			->willReturn( true )
+			->shouldBeCalled();
 
-		$exporter = new Exporter( '<p>Test body</p>' );
+		$content  = new \Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>' );
+		$exporter = new Exporter( $content, $workspace->reveal() );
 		$exporter->export();
 	}
 

@@ -5,7 +5,7 @@ require_once __DIR__ . '/../../../includes/exporter/components/class-heading.php
 
 use \Exporter\Components\Heading as Heading;
 
-class HeadingTest extends PHPUnit_Framework_TestCase {
+class Heading_Test extends PHPUnit_Framework_TestCase {
 
 	public function testInvalidInput() {
 		$heading_component = new Heading( '<p>This is not a heading</p>', null );
