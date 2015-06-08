@@ -10,7 +10,8 @@ class Image extends Component {
 		$filename = basename( $url );
 
 		// Save image into bundle
-		$this->workspace->write_tmp_file( $filename, file_get_contents( $url ) );
+		$content = $this->get_file_contents( $url );
+		$this->write_to_workspace( $filename, $content );
 
 		$this->json = array(
 			'role' => 'photo',

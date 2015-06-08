@@ -23,9 +23,9 @@ class Exporter {
 	private $exporter_content;
 	private $workspace;
 
-	function __construct( Exporter_Content $content ) {
+	function __construct( Exporter_Content $content, Workspace $workspace = null ) {
 		$this->exporter_content = $content;
-		$this->workspace = new Workspace();
+		$this->workspace = $workspace ?: new Workspace();
 
 		Component_Factory::initialize( $this->workspace );
 	}
