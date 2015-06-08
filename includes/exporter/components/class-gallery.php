@@ -1,6 +1,10 @@
 <?php
 namespace Exporter\Components;
 
+/**
+ * An image gallery is basically a container with 'gallery' class and some
+ * images inside.
+ */
 class Gallery extends Component {
 
 	protected function build( $text ) {
@@ -11,7 +15,8 @@ class Gallery extends Component {
 		foreach ( $urls as $url ) {
 			// TODO: get_file_contents and write_to_workspace used one after another
 			// is used quite a lot. Maybe make a function save_to_workspace to
-			// make things more DRY.
+			// make things more DRY. Doing that would also prevent downloading
+			// repeated images.
 			$filename = basename( $url );
 			$content = $this->get_file_contents( $url );
 			$this->write_to_workspace( $filename, $content );
