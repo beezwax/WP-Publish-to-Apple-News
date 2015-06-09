@@ -22,7 +22,7 @@ abstract class Component {
 
 	public function value() {
 		// Lazy value evaluation
-		if( is_null( $this->json ) ) {
+		if ( is_null( $this->json ) ) {
 			$this->build( $this->text );
 		}
 
