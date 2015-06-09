@@ -88,7 +88,7 @@ class Exporter {
 		// For now, generate the thumb url in here, eventually it will move to the
 		// metadata manager object. The cover component is in charge of copying
 		// the actual file, just link here.
-		if( $this->content_cover() ) {
+		if ( $this->content_cover() ) {
 			$filename  = basename( $this->content_cover() );
 			$thumb_url = 'bundle://' . $filename;
 
@@ -188,7 +188,7 @@ class Exporter {
 
 		$classes = trim( $node->getAttribute( 'class' ) );
 
-		if( empty( $classes ) ) {
+		if ( empty( $classes ) ) {
 			return false;
 		}
 
