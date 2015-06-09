@@ -11,6 +11,7 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-intro.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-cover.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-gallery.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-tweet.php';
+require_once plugin_dir_path( __FILE__ ) . 'components/class-instagram.php';
 
 class Component_Factory {
 
@@ -29,6 +30,7 @@ class Component_Factory {
 		self::register_component( 'cover'     ,   '\\Exporter\\Components\\Cover'           );
 		self::register_component( 'gallery'   ,   '\\Exporter\\Components\\Gallery'         );
 		self::register_component( 'tweet'     ,   '\\Exporter\\Components\\Tweet'           );
+		self::register_component( 'instagram' ,   '\\Exporter\\Components\\Instagram'       );
 	}
 
 	private static function register_component( $tagname, $classname ) {

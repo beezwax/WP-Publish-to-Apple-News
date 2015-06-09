@@ -223,6 +223,8 @@ class Exporter {
 				$component = $this->create_component_or_null( $node, 'gallery' );
 			} else if ( $this->node_has_class( $node, 'twitter-tweet' ) ) {
 				$component = $this->create_component_or_null( $node, 'tweet' );
+			} else if ( $this->node_has_class( $node, 'instagram-media' ) ) {
+				$component = $this->create_component_or_null( $node, 'instagram' );
 			} else if ( $image_node = $this->node_contains( $node, 'img' ) ) {
 				$component = $this->create_component_or_null( $image_node );
 			} else if ( $ewv = $this->node_contains( $node, 'iframe' ) ) {
