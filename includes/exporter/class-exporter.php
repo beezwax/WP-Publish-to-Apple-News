@@ -219,7 +219,7 @@ class Exporter {
 			// The way this is beeing handled right now is pretty hacky, but
 			// I'm waiting until I get a bit more code so I can figure out how
 			// to do it propertly. FIXME.
-			if ( $gallery_node = $this->node_has_class( $node, 'gallery' ) ) {
+			if ( $this->node_has_class( $node, 'gallery' ) ) {
 				$component = $this->create_component_or_null( $node, 'gallery' );
 			} else if ( $image_node = $this->node_contains( $node, 'img' ) ) {
 				$component = $this->create_component_or_null( $image_node );
