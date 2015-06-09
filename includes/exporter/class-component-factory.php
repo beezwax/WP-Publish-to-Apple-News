@@ -12,6 +12,7 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-cover.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-gallery.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-tweet.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-video.php';
+require_once plugin_dir_path( __FILE__ ) . 'components/class-audio.php';
 
 class Component_Factory {
 
@@ -31,6 +32,7 @@ class Component_Factory {
 		self::register_component( 'gallery'   ,   '\\Exporter\\Components\\Gallery'         );
 		self::register_component( 'tweet'     ,   '\\Exporter\\Components\\Tweet'           );
 		self::register_component( 'video'     ,   '\\Exporter\\Components\\Video'           );
+		self::register_component( 'audio'     ,   '\\Exporter\\Components\\Audio'           );
 	}
 
 	private static function register_component( $tagname, $classname ) {
