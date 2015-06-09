@@ -22,12 +22,12 @@ class Video_Test extends PHPUnit_Framework_TestCase {
 		$workspace->write_tmp_file( 'video-file.mp4', 'foo' )->willReturn( true )->shouldBeCalled();
 
 		// Pass the mock workspace as a dependency
-		$image_component = new Video( '<img src="http://someurl.com/video-file.mp4?some_query=string" alt="Example" />', $workspace->reveal() );
+		$video_component = new Video( '<video><source src="http://someurl.com/video-file.mp4?some_query=string"></video>', $workspace->reveal() );
 
 		// Test for valid JSON
 		$this->assertEquals(
 			array( 'role' => 'video', 'URL' => 'bundle://video-file.mp4' ),
-			$image_component->value()
+			$video_component->value()
 		);
 	}
 
