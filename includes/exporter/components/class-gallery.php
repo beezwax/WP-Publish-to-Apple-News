@@ -26,6 +26,7 @@ class Gallery extends Component {
 		}
 
 		$this->json = array(
+			// TODO: Depending on the configuration, this could also be 'mosaic'.
 			'role' => 'gallery',
 			'items' => $items,
 		);
