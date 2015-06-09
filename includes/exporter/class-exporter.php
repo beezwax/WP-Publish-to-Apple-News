@@ -221,10 +221,15 @@ class Exporter {
 			// to do it propertly. FIXME.
 			if ( $this->node_has_class( $node, 'gallery' ) ) {
 				$component = $this->create_component_or_null( $node, 'gallery' );
+			} else if ( $this->node_has_class( $node, 'twitter-tweet' ) ) {
+				$component = $this->create_component_or_null( $node, 'tweet' );
 			} else if ( $image_node = $this->node_contains( $node, 'img' ) ) {
 				$component = $this->create_component_or_null( $image_node );
 			} else if ( $ewv = $this->node_contains( $node, 'iframe' ) ) {
 				$component = $this->create_component_or_null( $ewv );
+			} else if ( $ewv = $this->node_contains( $node, 'script' ) ) {
+				// Ignore script tags.
+				$component = null;
 			} else {
 				$component = $this->create_component_or_null( $node );
 			}
