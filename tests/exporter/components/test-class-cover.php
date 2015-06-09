@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../../includes/exporter/components/class-component.php';
-require_once __DIR__ . '/../../../includes/exporter/components/class-cover.php';
-require_once __DIR__ . '/../../../includes/exporter/class-workspace.php';
-
 use \Exporter\Components\Cover as Cover;
 
 class Cover_Test extends PHPUnit_Framework_TestCase {

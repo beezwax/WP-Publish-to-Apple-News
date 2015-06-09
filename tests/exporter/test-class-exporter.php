@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../includes/exporter/class-workspace.php';
-require_once __DIR__ . '/../../includes/exporter/class-exporter.php';
-
 use \Exporter\Exporter as Exporter;
 
 class Exporter_Test extends WP_UnitTestCase {

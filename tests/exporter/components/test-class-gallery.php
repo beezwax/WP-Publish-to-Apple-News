@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../../includes/exporter/components/class-component.php';
-require_once __DIR__ . '/../../../includes/exporter/components/class-gallery.php';
-require_once __DIR__ . '/../../../includes/exporter/class-workspace.php';
-
 use \Exporter\Components\Gallery as Gallery;
 
 class Gallery_Test extends PHPUnit_Framework_TestCase {
