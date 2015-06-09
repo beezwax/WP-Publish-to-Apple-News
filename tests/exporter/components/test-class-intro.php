@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../../includes/exporter/components/class-component.php';
-require_once __DIR__ . '/../../../includes/exporter/components/class-intro.php';
-
 use \Exporter\Components\Intro as Intro;
 
 class Intro_Test extends PHPUnit_Framework_TestCase {

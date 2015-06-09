@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../../includes/exporter/components/class-component.php';
-require_once __DIR__ . '/../../../includes/exporter/components/class-heading.php';
-
 use \Exporter\Components\Heading as Heading;
 
 class Heading_Test extends PHPUnit_Framework_TestCase {

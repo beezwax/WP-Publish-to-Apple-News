@@ -1,9 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../../includes/exporter/components/class-component.php';
-require_once __DIR__ . '/../../../includes/exporter/components/class-image.php';
-require_once __DIR__ . '/../../../includes/exporter/class-workspace.php';
-
 use \Exporter\Components\Image as Image;
 
 class Image_Test extends PHPUnit_Framework_TestCase {

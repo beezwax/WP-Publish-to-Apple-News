@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . '/../../../includes/exporter/components/class-component.php';
-require_once __DIR__ . '/../../../includes/exporter/components/class-embed-web-video.php';
-
 use \Exporter\Components\Embed_Web_Video as Embed_Web_Video;
 
 class Embed_Web_Video_Test extends PHPUnit_Framework_TestCase {
