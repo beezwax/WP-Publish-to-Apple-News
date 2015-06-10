@@ -2,8 +2,11 @@
 namespace Exporter\Components;
 
 /**
- * Instagram embed code consists of a blockquote followed by a script tag. Parse
- * the blockquote only and ignore the script tag, as all we need is the URL.
+ * Instagram embed code consists of a blockquote followed by a script tag.
+ * Parse the blockquote only and ignore the script tag, as all we need is the
+ * URL.
+ *
+ * @since 0.0.0
  */
 class Instagram extends Component {
 

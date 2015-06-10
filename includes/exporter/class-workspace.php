@@ -19,6 +19,9 @@ class Workspace {
 	 * assuming the folder is owned by the webserver group (which is recommended
 	 * but could also be the user). If not existant, the plugin will try to
 	 * create it.
+	 *
+	 * @var string
+	 * @since 0.0.0
 	 */
 	private $base_path;
 
@@ -27,6 +30,9 @@ class Workspace {
 	 * place to generate files into so they can then be zipped and stored in the
 	 * workspace. The tmp directory gets cleaned up after each zipfile
 	 * generation.
+	 *
+	 * @var string
+	 * @since 0.0.0
 	 */
 	private $tmp_path;
 
