@@ -18,7 +18,7 @@ abstract class Component {
 	 */
 	protected function bundle_source( $filename, $source ) {
 		$content = $this->workspace->get_file_contents( $source );
-		$this->workspace->write_tmp_file( $filename, $contents );
+		$this->workspace->write_tmp_file( $filename, $content );
 	}
 
 	public function value() {
