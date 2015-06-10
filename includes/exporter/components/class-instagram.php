@@ -9,7 +9,7 @@ class Instagram extends Component {
 
 	protected function build( $text ) {
 		// Find instagram URL in HTML string
-		if( ! preg_match( '#https?://instagr(\.am|am\.com)/p/([^\/]+)/#', $text, $matches ) ) {
+		if ( ! preg_match( '#https?://instagr(\.am|am\.com)/p/([^\/]+)/#', $text, $matches ) ) {
 			return null;
 		}
 
