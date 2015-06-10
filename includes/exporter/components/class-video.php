@@ -10,7 +10,7 @@ class Video extends Component {
 
 	public static function node_matches( $node ) {
 		// Is this an video node?
-		if( 'video' == $node->nodeName ) {
+		if ( 'video' == $node->nodeName ) {
 			return $node;
 		}
 

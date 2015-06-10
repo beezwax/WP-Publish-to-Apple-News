@@ -10,7 +10,7 @@ class Image extends Component {
 
 	public static function node_matches( $node ) {
 		// Is this an image node?
-		if( 'img' == $node->nodeName ) {
+		if ( 'img' == $node->nodeName ) {
 			return $node;
 		}
 

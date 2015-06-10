@@ -10,7 +10,7 @@ class Audio extends Component {
 
 	public static function node_matches( $node ) {
 		// Is this an audio node?
-		if( 'audio' == $node->nodeName ) {
+		if ( 'audio' == $node->nodeName ) {
 			return $node;
 		}
 
