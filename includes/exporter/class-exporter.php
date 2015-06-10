@@ -144,6 +144,9 @@ class Exporter {
 			$components[] = Component_Factory::get_component( 'cover', $this->content_cover() )->value();
 		}
 
+		// Add title
+		$components[] = Component_Factory::get_component( 'title', $this->content_title() )->value();
+
 		// The content's intro is optional. In WordPress, it's a post's
 		// excerpt. It's an introduction to the article.
 		if ( $this->content_intro() ) {

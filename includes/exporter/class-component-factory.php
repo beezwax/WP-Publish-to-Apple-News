@@ -15,6 +15,7 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-instagram.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-video.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-audio.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-divider.php';
+require_once plugin_dir_path( __FILE__ ) . 'components/class-title.php';
 
 class Component_Factory {
 
@@ -37,6 +38,7 @@ class Component_Factory {
 		self::register_component( 'video'     ,   '\\Exporter\\Components\\Video'           );
 		self::register_component( 'audio'     ,   '\\Exporter\\Components\\Audio'           );
 		self::register_component( 'hr'        ,   '\\Exporter\\Components\\Divider'         );
+		self::register_component( 'title'     ,   '\\Exporter\\Components\\Title'           );
 	}
 
 	private static function register_component( $tagname, $classname ) {
