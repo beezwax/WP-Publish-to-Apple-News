@@ -13,6 +13,7 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-gallery.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-tweet.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-video.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-audio.php';
+require_once plugin_dir_path( __FILE__ ) . 'components/class-divider.php';
 
 class Component_Factory {
 
@@ -33,6 +34,7 @@ class Component_Factory {
 		self::register_component( 'tweet'     ,   '\\Exporter\\Components\\Tweet'           );
 		self::register_component( 'video'     ,   '\\Exporter\\Components\\Video'           );
 		self::register_component( 'audio'     ,   '\\Exporter\\Components\\Audio'           );
+		self::register_component( 'hr'        ,   '\\Exporter\\Components\\Divider'         );
 	}
 
 	private static function register_component( $tagname, $classname ) {

@@ -192,7 +192,7 @@ class Exporter {
 			return false;
 		}
 
-		return in_array( $classname, explode( ' ', $classes ) );
+		return 1 == preg_match( "/(?:\s+|^)$classname(?:\s+|$)/", $classes );
 	}
 
 	/**
