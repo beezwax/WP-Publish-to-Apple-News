@@ -8,14 +8,14 @@ class Video extends Component {
 
 	protected function build( $text ) {
 		// Remove initial and trailing tags: <video><p>...</p></video>
-		if( ! preg_match( '/src="([^"]+)"/', $text, $match ) ) {
+		if ( ! preg_match( '/src="([^"]+)"/', $text, $match ) ) {
 			return null;
 		}
 
 		$url = $match[1];
 		$filename = basename( $url );
 
-		if( false !== strpos( $filename, '?' ) ) {
+		if ( false !== strpos( $filename, '?' ) ) {
 			$parts    = explode( '?', $filename );
 			$filename = $parts[0];
 		}
