@@ -9,11 +9,13 @@ class Tweet extends Component {
 
 	protected function build( $text ) {
 		// Find tweeter URL in HTML string
-		if( ! preg_match( '/https:\/\/twitter.com\/([^\/]*)\/status\/(\d+)/', $text, $matches ) ) {
+		if ( ! preg_match_all( '/https?:\/\/(?:www\.)?twitter.com\/(?:#!\/)?([^\/]*)\/status(?:es)?\/(\d+)/', $text, $matches, PREG_SET_ORDER ) ) {
 			return null;
 		}
 
-		$url = $matches[0];
+		$matches = array_pop( $matches );
+
+		$url = 'https://twitter.com/' . $matches[1] . '/status/' . $matches[2];
 		$this->json = array(
 			'role' => 'tweet',
 			'URL'  => $url,
