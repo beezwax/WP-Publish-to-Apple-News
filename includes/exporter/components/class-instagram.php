@@ -10,6 +10,14 @@ namespace Exporter\Components;
  */
 class Instagram extends Component {
 
+	public static function node_matches( $node ) {
+		if ( self::node_has_class( $node, 'instagram-media' ) ) {
+			return $node;
+		}
+
+		return null;
+	}
+
 	protected function build( $text ) {
 		// Find instagram URL in HTML string
 		if ( ! preg_match( '#https?://instagr(\.am|am\.com)/p/([^/]+)/#', $text, $matches ) ) {

@@ -10,6 +10,14 @@ namespace Exporter\Components;
  */
 class Gallery extends Component {
 
+	public static function node_matches( $node ) {
+		if ( self::node_has_class( $node, 'gallery' ) ) {
+			return $node;
+		}
+
+		return null;
+	}
+
 	protected function build( $text ) {
 		preg_match_all( '/src="([^"]+)"/', $text, $matches );
 		$urls  = $matches[1];

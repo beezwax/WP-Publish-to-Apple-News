@@ -13,6 +13,14 @@ abstract class Component {
 	protected $text;
 	protected $json = null;
 
+	/**
+	 * Given a DomNode, if it matches the component, return the relevant node to
+	 * work on. Otherwise, return null.
+	 */
+	public static function node_matches( $node ) {
+		return null;
+	}
+
 	function __construct( $text, $workspace ) {
 		$this->text = $text;
 		$this->workspace = $workspace;
@@ -42,6 +50,36 @@ abstract class Component {
 		}
 
 		return $this->json;
+	}
+
+
+	protected function node_find_by_tagname( $node, $tagname ) {
+		if ( ! method_exists( $node, 'getElementsByTagName' ) ) {
+			return false;
+		}
+
+		$elements = $node->getElementsByTagName( $tagname );
+
+		if ( $elements->length == 0 ) {
+			return false;
+		}
+
+		return $elements->item( 0 );
+	}
+
+
+	protected function node_has_class( $node, $classname ) {
+		if ( ! method_exists( $node, 'getAttribute' ) ) {
+			return false;
+		}
+
+		$classes = trim( $node->getAttribute( 'class' ) );
+
+		if ( empty( $classes ) ) {
+			return false;
+		}
+
+		return 1 == preg_match( "/(?:\s+|^)$classname(?:\s+|$)/", $classes );
 	}
 
 	/**

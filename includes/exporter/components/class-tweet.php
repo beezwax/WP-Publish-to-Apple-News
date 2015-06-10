@@ -9,6 +9,14 @@ namespace Exporter\Components;
  */
 class Tweet extends Component {
 
+	public static function node_matches( $node ) {
+		if ( self::node_has_class( $node, 'twitter-tweet' ) ) {
+			return $node;
+		}
+
+		return null;
+	}
+
 	protected function build( $text ) {
 		// Find tweeter URL in HTML string
 		if ( ! preg_match_all( '/https?:\/\/(?:www\.)?twitter.com\/(?:#!\/)?([^\/]*)\/status(?:es)?\/(\d+)/', $text, $matches, PREG_SET_ORDER ) ) {

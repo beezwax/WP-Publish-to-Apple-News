@@ -8,6 +8,14 @@ namespace Exporter\Components;
  */
 class Divider extends Component {
 
+	public static function node_matches( $node ) {
+		if ( 'hr' == $node->nodeName ) {
+			return $node;
+		}
+
+		return null;
+	}
+
 	protected function build( $text ) {
 		$this->json = array(
 			'role' => 'divider',

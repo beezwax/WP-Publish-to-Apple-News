@@ -3,8 +3,8 @@ namespace Exporter\Components;
 
 /**
  * A cover is optional and displayed at the very top of the article. It's
- * loaded from the Exporter_Content's cover attribute, if present, and NOT
- * loaded from HTML.
+ * loaded from the Exporter_Content's cover attribute, if present.
+ * This component does not need a node so no need to implement match_node.
  *
  * In a WordPress context, the Exporter_Content's cover attribute is a post's
  * thumbnail, a.k.a featured image.

@@ -8,6 +8,14 @@ namespace Exporter\Components;
  */
 class Quote extends Component {
 
+	public static function node_matches( $node ) {
+		if ( 'blockquote' == $node->nodeName ) {
+			return $node;
+		}
+
+		return null;
+	}
+
 	protected function build( $text ) {
 		// Remove initial and trailing tags: <blockquote><p>...</p></blockquote>
 		$text = substr( $text, 15, -17 );
