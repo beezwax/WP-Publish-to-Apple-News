@@ -50,13 +50,14 @@ class Component_Factory {
 		self::$components[$tagname] = $classname;
 	}
 
-	public static function get_component( $tagname, $html ) {
+	public static function get_component( $tagname, $node ) {
 		$class = self::$components[$tagname];
 
 		if ( is_null( $class ) ) {
 			return null;
 		}
 
+		$html = $node->ownerDocument->saveXML( $node );
 		return new $class( $html, self::$workspace );
 	}
 
@@ -64,8 +65,7 @@ class Component_Factory {
 		foreach( self::$components as $tagname => $class ) {
 			if( $matched_node = $class::node_matches( $node ) ) {
 				// TODO: calculate HTML lazily
-				$html = $node->ownerDocument->saveXML( $matched_node );
-				return self::get_component( $tagname, $html );
+				return self::get_component( $tagname, $matched_node );
 			}
 		}
 
