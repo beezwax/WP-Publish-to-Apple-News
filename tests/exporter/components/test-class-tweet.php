@@ -46,6 +46,38 @@ class Tweet_Test extends PHPUnit_Framework_TestCase {
 		);
 	}
 
+	public function testGetUsingWWW() {
+		$tweet_component = new Tweet( '<blockquote class="twitter-tweet"
+			lang="en">WordPress.com (@wordpressdotcom) <a
+			href="https://www.twitter.com/#!/wordpressdotcom/status/204557548249026561"
+			data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
+			null );
+
+		$this->assertEquals(
+			array(
+				'role' => 'tweet',
+				'URL' => 'https://twitter.com/wordpressdotcom/status/204557548249026561',
+		 	),
+			$tweet_component->value()
+		);
+	}
+
+	public function testGetUsingStatuses() {
+		$tweet_component = new Tweet( '<blockquote class="twitter-tweet"
+			lang="en">WordPress.com (@wordpressdotcom) <a
+			href="https://twitter.com/#!/wordpressdotcom/statuses/204557548249026561"
+			data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
+			null );
+
+		$this->assertEquals(
+			array(
+				'role' => 'tweet',
+				'URL' => 'https://twitter.com/wordpressdotcom/status/204557548249026561',
+		 	),
+			$tweet_component->value()
+		);
+	}
+
 	public function testGetLastLink() {
 		$tweet_component = new Tweet( '<blockquote class="twitter-tweet"
 			lang="en"><p><a

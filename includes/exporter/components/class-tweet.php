@@ -9,7 +9,7 @@ class Tweet extends Component {
 
 	protected function build( $text ) {
 		// Find tweeter URL in HTML string
-		if( ! preg_match_all( '/http(?:s)?:\/\/twitter.com\/(?:#!\/)?([^\/]*)\/status\/(\d+)/', $text, $matches, PREG_SET_ORDER ) ) {
+		if( ! preg_match_all( '/https?:\/\/(?:www\.)?twitter.com\/(?:#!\/)?([^\/]*)\/status(?:es)?\/(\d+)/', $text, $matches, PREG_SET_ORDER ) ) {
 			return null;
 		}
 
