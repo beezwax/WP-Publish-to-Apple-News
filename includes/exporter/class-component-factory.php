@@ -64,7 +64,6 @@ class Component_Factory {
 	public static function get_component_from_node( $node ) {
 		foreach( self::$components as $shortname => $class ) {
 			if( $matched_node = $class::node_matches( $node ) ) {
-				// TODO: calculate HTML lazily
 				return self::get_component( $shortname, $matched_node );
 			}
 		}
