@@ -102,7 +102,7 @@ class Exporter {
 	}
 
 	/**
-	 * Isolate content dependencies.
+	 * Isolate all dependencies.
 	 */
 	private function content_id() {
 		return $this->exporter_content->id();
@@ -132,6 +132,14 @@ class Exporter {
 		return $this->workspace->zip( 'article-' . $id . '.zip' );
 	}
 
+	private function get_component_from_shortname( $shortname, $html ) {
+		return Component_Factory::get_component( 'intro', $html )->value();
+	}
+
+	private function get_component_from_node( $node ) {
+		return Component_Factory::get_component_from_node( $node );
+	}
+
 	/**
 	 * Builds an array with all the components of this WordPress content.
 	 */
@@ -144,8 +152,8 @@ class Exporter {
 			$components[] = $this->get_component_from_shortname( 'cover', $this->content_intro() );
 		}
 
-		// The content's intro is optional. In WordPress, it's a post's
-		// excerpt. It's an introduction to the article.
+		// The content's intro is optional. In WordPress, it's a post's excerpt.
+		// It's an introduction to the article.
 		if ( $this->content_intro() ) {
 			$components[] = $this->get_component_from_shortname( 'intro', $this->content_intro() );
 		}
@@ -155,14 +163,6 @@ class Exporter {
 		}
 
 		return $components;
-	}
-
-	private function get_component_from_shortname( $shortname, $html ) {
-		return Component_Factory::get_component( 'intro', $html )->value();
-	}
-
-	private function get_component_from_node( $node ) {
-		return Component_Factory::get_component_from_node( $node );
 	}
 
 	/**
