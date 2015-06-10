@@ -141,13 +141,13 @@ class Exporter {
 		// The content's cover is optional. In WordPress, it's a post's thumbnail
 		// or featured image.
 		if ( $this->content_cover() ) {
-			$components[] = Component_Factory::get_component( 'cover', $this->content_cover() )->value();
+			$components[] = $this->get_component_from_shortname( 'cover', $this->content_intro() );
 		}
 
 		// The content's intro is optional. In WordPress, it's a post's
 		// excerpt. It's an introduction to the article.
 		if ( $this->content_intro() ) {
-			$components[] = Component_Factory::get_component( 'intro', $this->content_intro() )->value();
+			$components[] = $this->get_component_from_shortname( 'intro', $this->content_intro() );
 		}
 
 		foreach ( $this->split_into_components() as $component ) {
@@ -155,6 +155,10 @@ class Exporter {
 		}
 
 		return $components;
+	}
+
+	private function get_component_from_shortname( $shortname, $html ) {
+		return Component_Factory::get_component( 'intro', $html )->value();
 	}
 
 	private function get_component_from_node( $node ) {
