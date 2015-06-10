@@ -1,6 +1,11 @@
 <?php
 namespace Exporter\Components;
 
+/**
+ * Represents a simple image.
+ *
+ * @since 0.0.0
+ */
 class Image extends Component {
 
 	protected function build( $text ) {

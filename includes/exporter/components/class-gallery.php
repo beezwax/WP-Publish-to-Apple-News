@@ -2,8 +2,11 @@
 namespace Exporter\Components;
 
 /**
- * An image gallery is basically a container with 'gallery' class and some
- * images inside.
+ * An image gallery is just a container with 'gallery' class and some images
+ * inside. The container should be a div, but can be anything as long as it has
+ * a 'gallery' class.
+ *
+ * @since 0.0.0
  */
 class Gallery extends Component {
 

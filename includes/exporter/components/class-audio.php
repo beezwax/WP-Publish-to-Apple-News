@@ -3,6 +3,8 @@ namespace Exporter\Components;
 
 /**
  * An HTML audio tag.
+ *
+ * @since 0.0.0
  */
 class Audio extends Component {
 

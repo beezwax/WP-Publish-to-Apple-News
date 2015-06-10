@@ -2,8 +2,9 @@
 namespace Exporter\Components;
 
 /**
- * An image gallery is basically a container with 'gallery' class and some
- * images inside.
+ * An HTML's blockquote representation.
+ *
+ * @since 0.0.0
  */
 class Quote extends Component {
 

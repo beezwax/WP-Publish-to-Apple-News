@@ -4,6 +4,8 @@ namespace Exporter\Components;
 /**
  * A tweet embed code consists of a blockquote followed by a script tag. Parse
  * the blockquote only and ignore the script tag, as all we need is the URL.
+ *
+ * @since 0.0.0
  */
 class Tweet extends Component {
 

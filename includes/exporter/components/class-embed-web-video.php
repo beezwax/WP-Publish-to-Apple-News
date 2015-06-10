@@ -1,6 +1,11 @@
 <?php
 namespace Exporter\Components;
 
+/**
+ * An embedded video from Youtube or Vimeo, for example.
+ *
+ * @since 0.0.0
+ */
 class Embed_Web_Video extends Component {
 
 	protected function build( $text ) {
