@@ -157,16 +157,6 @@ class Exporter {
 		return $components;
 	}
 
-	/**
-	 * Given a DomNode, try to create a component from it. If it fails, return
-	 * null.
-	 */
-	private function create_component_or_null( $node, $name = null ) {
-		$html = $node->ownerDocument->saveXML( $node );
-		// get_component returns null if no component matches.
-		return Component_Factory::get_component( $name ?: $node->nodeName, $html, $this->workspace );
-	}
-
 	private function get_component_from_node( $node ) {
 		return Component_Factory::get_component_from_node( $node );
 	}
