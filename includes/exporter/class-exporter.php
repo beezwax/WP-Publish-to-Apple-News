@@ -167,32 +167,8 @@ class Exporter {
 		return Component_Factory::get_component( $name ?: $node->nodeName, $html, $this->workspace );
 	}
 
-	private function node_contains( $node, $tagname ) {
-		if ( ! method_exists( $node, 'getElementsByTagName' ) ) {
-			return false;
-		}
-
-		$elements = $node->getElementsByTagName( $tagname );
-
-		if ( $elements->length == 0 ) {
-			return false;
-		}
-
-		return $elements->item( 0 );
-	}
-
-	private function node_has_class( $node, $classname ) {
-		if ( ! method_exists( $node, 'getAttribute' ) ) {
-			return false;
-		}
-
-		$classes = trim( $node->getAttribute( 'class' ) );
-
-		if ( empty( $classes ) ) {
-			return false;
-		}
-
-		return 1 == preg_match( "/(?:\s+|^)$classname(?:\s+|$)/", $classes );
+	private function get_component_from_node( $node ) {
+		return Component_Factory::get_component_from_node( $node );
 	}
 
 	/**
@@ -212,35 +188,7 @@ class Exporter {
 		// might include child-components, like an Cover and Image.
 		$result = array();
 		foreach ( $nodes as $node ) {
-			$component = null;
-
-			// Some nodes might be found nested inside another, for example an
-			// <img> could be inside a <p> or <a>. Seek for them and add them.
-			// The way this is beeing handled right now is pretty hacky, but
-			// I'm waiting until I get a bit more code so I can figure out how
-			// to do it propertly. FIXME.
-			if ( $this->node_has_class( $node, 'gallery' ) ) {
-				$component = $this->create_component_or_null( $node, 'gallery' );
-			} else if ( $this->node_has_class( $node, 'twitter-tweet' ) ) {
-				$component = $this->create_component_or_null( $node, 'tweet' );
-			} else if ( $this->node_has_class( $node, 'instagram-media' ) ) {
-				$component = $this->create_component_or_null( $node, 'instagram' );
-			} else if ( $image_node = $this->node_contains( $node, 'img' ) ) {
-				$component = $this->create_component_or_null( $image_node );
-			} else if ( $ewv = $this->node_contains( $node, 'iframe' ) ) {
-				$component = $this->create_component_or_null( $ewv );
-			} else if ( $video = $this->node_contains( $node, 'video' ) ) {
-				$component = $this->create_component_or_null( $video );
-			} else if ( $audio = $this->node_contains( $node, 'audio' ) ) {
-				$component = $this->create_component_or_null( $audio );
-			} else if ( $this->node_contains( $node, 'script' ) ) {
-				// Ignore script tags.
-				$component = null;
-			} else {
-				$component = $this->create_component_or_null( $node );
-			}
-
-			$result[] = $component;
+			$result[] = $this->get_component_from_node( $node );
 		}
 
 		// Remove null values from result and return
