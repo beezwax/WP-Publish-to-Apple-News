@@ -12,12 +12,13 @@ abstract class Component {
 		$this->workspace = $workspace;
 	}
 
-	protected function write_to_workspace( $filename, $contents ) {
+	/**
+	 * Given a source (either a file or an URL) gets the contents and writes
+	 * them into a file.
+	 */
+	protected function bundle_source( $filename, $source ) {
+		$content = $this->workspace->get_file_contents( $source );
 		$this->workspace->write_tmp_file( $filename, $contents );
-	}
-
-	protected function get_file_contents( $url ) {
-		return $this->workspace->get_file_contents( $url );
 	}
 
 	public function value() {

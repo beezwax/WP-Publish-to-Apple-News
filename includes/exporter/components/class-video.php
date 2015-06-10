@@ -21,8 +21,7 @@ class Video extends Component {
 		}
 
 		// Save video into bundle
-		$content = $this->get_file_contents( $url );
-		$this->write_to_workspace( $filename, $content );
+		$this->bundle_source( $filename, $url );
 
 		$this->json = array(
 			'role' => 'video',
