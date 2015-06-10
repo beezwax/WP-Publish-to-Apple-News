@@ -53,7 +53,7 @@ abstract class Component {
 	}
 
 
-	protected function node_find_by_tagname( $node, $tagname ) {
+	protected static function node_find_by_tagname( $node, $tagname ) {
 		if ( ! method_exists( $node, 'getElementsByTagName' ) ) {
 			return false;
 		}
@@ -68,7 +68,7 @@ abstract class Component {
 	}
 
 
-	protected function node_has_class( $node, $classname ) {
+	protected static function node_has_class( $node, $classname ) {
 		if ( ! method_exists( $node, 'getAttribute' ) ) {
 			return false;
 		}
