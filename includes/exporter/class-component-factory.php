@@ -41,9 +41,10 @@ class Component_Factory {
 		self::register_component( 'heading'   ,   '\\Exporter\\Components\\Heading'         );
 		self::register_component( 'p'         ,   '\\Exporter\\Components\\Body'            );
 		self::register_component( 'blockquote',   '\\Exporter\\Components\\Quote'           );
+		self::register_component( 'hr'        ,   '\\Exporter\\Components\\Divider'         );
+		// Non HTML-based components
 		self::register_component( 'intro'     ,   '\\Exporter\\Components\\Intro'           );
 		self::register_component( 'cover'     ,   '\\Exporter\\Components\\Cover'           );
-		self::register_component( 'hr'        ,   '\\Exporter\\Components\\Divider'         );
 	}
 
 	private static function register_component( $shortname, $classname ) {
