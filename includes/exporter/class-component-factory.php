@@ -60,17 +60,6 @@ class Component_Factory {
 		return new $class( $html, self::$workspace );
 	}
 
-	/**
-	 * Given a string, return an instance of the appropriate component or null if
-	 * no component matches the given tagname.
-	 */
-	private static function get_component_or_null( $node, $name = null ) {
-		$tagname = $name ?: $node->nodeName;
-		$html    = $node->ownerDocument->saveXML( $node );
-
-		return self::get_component( $tagname, $html );
-	}
-
 	public static function get_component_from_node( $node ) {
 		foreach( self::$components as $tagname => $class ) {
 			if( $matched_node = $class::node_matches( $node ) ) {
