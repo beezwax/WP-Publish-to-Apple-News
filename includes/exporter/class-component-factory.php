@@ -50,21 +50,21 @@ class Component_Factory {
 		self::$components[$shortname] = $classname;
 	}
 
-	public static function get_component( $shortname, $node ) {
+	public static function get_component( $shortname, $html ) {
 		$class = self::$components[$shortname];
 
 		if ( is_null( $class ) ) {
 			return null;
 		}
 
-		$html = $node->ownerDocument->saveXML( $node );
 		return new $class( $html, self::$workspace );
 	}
 
 	public static function get_component_from_node( $node ) {
 		foreach ( self::$components as $shortname => $class ) {
 			if( $matched_node = $class::node_matches( $node ) ) {
-				return self::get_component( $shortname, $matched_node );
+				$html = $node->ownerDocument->saveXML( $matched_node );
+				return self::get_component( $shortname, $html );
 			}
 		}
 
