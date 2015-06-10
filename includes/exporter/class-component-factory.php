@@ -46,12 +46,12 @@ class Component_Factory {
 		self::register_component( 'hr'        ,   '\\Exporter\\Components\\Divider'         );
 	}
 
-	private static function register_component( $tagname, $classname ) {
-		self::$components[$tagname] = $classname;
+	private static function register_component( $shortname, $classname ) {
+		self::$components[$shortname] = $classname;
 	}
 
-	public static function get_component( $tagname, $node ) {
-		$class = self::$components[$tagname];
+	public static function get_component( $shortname, $node ) {
+		$class = self::$components[$shortname];
 
 		if ( is_null( $class ) ) {
 			return null;
@@ -62,10 +62,10 @@ class Component_Factory {
 	}
 
 	public static function get_component_from_node( $node ) {
-		foreach( self::$components as $tagname => $class ) {
+		foreach( self::$components as $shortname => $class ) {
 			if( $matched_node = $class::node_matches( $node ) ) {
 				// TODO: calculate HTML lazily
-				return self::get_component( $tagname, $matched_node );
+				return self::get_component( $shortname, $matched_node );
 			}
 		}
 
