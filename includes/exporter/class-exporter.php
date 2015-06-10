@@ -227,6 +227,10 @@ class Exporter {
 				$component = $this->create_component_or_null( $image_node );
 			} else if ( $ewv = $this->node_contains( $node, 'iframe' ) ) {
 				$component = $this->create_component_or_null( $ewv );
+			} else if ( $video = $this->node_contains( $node, 'video' ) ) {
+				$component = $this->create_component_or_null( $video );
+			} else if ( $audio = $this->node_contains( $node, 'audio' ) ) {
+				$component = $this->create_component_or_null( $audio );
 			} else if ( $this->node_contains( $node, 'script' ) ) {
 				// Ignore script tags.
 				$component = null;
