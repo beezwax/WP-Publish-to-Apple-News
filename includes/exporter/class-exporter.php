@@ -153,7 +153,7 @@ class Exporter {
 		}
 
 		// Add title
-		$components[] = Component_Factory::get_component( 'title', $this->content_title() )->value();
+		$components[] = $this->get_component_from_shortname( 'title', $this->content_title() );
 
 		// The content's intro is optional. In WordPress, it's a post's
 		// excerpt. It's an introduction to the article.
