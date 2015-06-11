@@ -36,6 +36,12 @@ function activate_wp_plugin() {
 		deactivate_plugins( basename( __FILE__ ) );
 		wp_die('<p>This PHP installation was not compiled with ZipArchive, which is required by this plugin.</p>');
 	}
+
+	// Check for CURL
+	if( ! function_exists( 'curl_version' ) ) {
+		deactivate_plugins( basename( __FILE__ ) );
+		wp_die('<p>This PHP installation does not include CURL, which is required by this plugin.</p>');
+	}
 }
 
 // Plugin deactivation. Clean up everything.
