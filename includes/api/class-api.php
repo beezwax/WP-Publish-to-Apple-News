@@ -2,15 +2,41 @@
 /**
  * This class will post provided specified format articles to a channel using
  * the API.
+ *
+ * @since 0.0.0
  */
 class API {
 
+	/**
+	 * The endpoint to connect to.
+	 *
+	 * @since 0.0.0
+	 */
 	private $endpoint;
 
+	/**
+	 * The key used in the authentication process, this is provided as part of
+	 * the API credentials and should be safely stored in the server, do not
+	 * hard-code it in the source code.
+	 *
+	 * @since 0.0.0
+	 */
 	private $key;
 
+	/**
+	 * The secret used in the authentication process, this is provided as part of
+	 * the API credentials and should be safely stored in the server, do not
+	 * hard-code it in the source code.
+	 *
+	 * @since 0.0.0
+	 */
 	private $secret;
 
+	/**
+	 * Whether or not to use a reverse proxy like Charles to send requests though.
+	 *
+	 * @since 0.0.0
+	 */
 	private $debug;
 
 	function __construct( $endpoint, $key, $secret, $debug = false ) {
@@ -43,12 +69,12 @@ class API {
 		$content_length = strlen( $article );
 
 		// This is used all around to generate the MIME request
-    $mime_boundary = md5( time());
+    $mime_boundary = md5( time() );
 
 		// Build MIME content
-    $mime_content  = $this->mime_add_content( 'my_article', 'article.json', $article, $mime_boundary );
+    $mime_content  = $this->mime_add_json_string( 'my_article', 'article.json', $article, $mime_boundary );
     foreach ( $bundles as $bundle ) {
-				$mime_content .= $this->mime_add_content_from_file( $mime_boundary, $bundle );
+				$mime_content .= $this->mime_add_content_from_file( $bundle, $mime_boundary );
     }
 		$mime_content .= $this->mime_close( $mime_boundary );
 
@@ -97,31 +123,28 @@ class API {
     return $response;
 	}
 
-	private function mime_add_content( $name, $filename, $content, $mime_boundary ) {
+	private function mime_build_attachment( $mime_boundary, $name, $filename, $content, $mime_type ) {
     $eol  = "\r\n";
     $size = strlen( $content );
 
-    $header  = '--' . $mime_boundary . $eol;
-    $header .= 'Content-Type: application/json' . $eol;
-    $header .= 'Content-Disposition: form-data; name=' . $name . '; filename=' . $filename . '; size=' . $size . $eol . $eol;
-    $header .= $content . $eol;
+    $attachment  = '--' . $mime_boundary . $eol;
+    $attachment .= 'Content-Type: ' . $mime_type . $eol;
+    $attachment .= 'Content-Disposition: form-data; name=' . $name . '; filename=' . $filename . '; size=' . $size . $eol . $eol;
+    $attachment .= $content . $eol;
 
-    return $header;
+		return $attachment;
 	}
 
-	private function mime_add_content_from_file( $mime_boundary, $filepath, $name = 'a_file' ) {
-		$eol         = "\r\n";
+	private function mime_add_json_string( $name, $filename, $content, $mime_boundary ) {
+		return $this->mime_build_attachment( $mime_boundary, $name, $filename, $content, 'application/json' );
+	}
+
+	private function mime_add_content_from_file( $filepath, $mime_boundary, $name = 'a_file' ) {
 		$filename		 = basename( $filepath );
 		$filecontent = file_get_contents( $filepath );
-    $filesize    = strlen( $filepath );
 		$filemime    = $this->get_mime_type_for( $filepath );
 
-    $content  = '--' . $mime_boundary . $eol;
-    $content .= "Content-Type: " . $filemime . $eol;
-    $content .= "Content-Disposition: form-data; filename=" . $filename . "; name=" . $name . "; size=" . $filesize . $eol . $eol;
-    $content .= $filecontent . $eol;
-
-    return $content;
+		return $this->mime_build_attachment( $mime_boundary, $name, $filename, $filecontent, $filemime );
 	}
 
 	private function mime_close( $mime_boundary ) {
