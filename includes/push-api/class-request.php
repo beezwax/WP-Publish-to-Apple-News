@@ -54,8 +54,8 @@ class Request {
 	 *                                          to sign the request.
 	 */
 	public function authenticate( $credentials ) {
-		if( is_null( $this->content ) ) {
-			throw new Exception( 'Please add content before you sign it.' );
+		if( 'POST' == $this->verb && is_null( $this->content ) ) {
+			throw new Exception( 'POST requests must add content before signing it.' );
 		}
 
     $current_date = date( 'c' );
