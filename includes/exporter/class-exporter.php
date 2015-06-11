@@ -152,8 +152,11 @@ class Exporter {
 			$components[] = $this->get_component_from_shortname( 'cover', $this->content_intro() );
 		}
 
-		// The content's intro is optional. In WordPress, it's a post's excerpt.
-		// It's an introduction to the article.
+		// Add title
+		$components[] = Component_Factory::get_component( 'title', $this->content_title() )->value();
+
+		// The content's intro is optional. In WordPress, it's a post's
+		// excerpt. It's an introduction to the article.
 		if ( $this->content_intro() ) {
 			$components[] = $this->get_component_from_shortname( 'intro', $this->content_intro() );
 		}

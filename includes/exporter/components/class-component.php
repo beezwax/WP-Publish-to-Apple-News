@@ -3,7 +3,7 @@ namespace Exporter\Components;
 
 /**
  * Base component class. All components must inherit from this class and
- * implement it's abstract method "build".
+ * implement its abstract method "build".
  *
  * @since 0.0.0
  */

@@ -15,6 +15,7 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-instagram.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-video.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-audio.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-divider.php';
+require_once plugin_dir_path( __FILE__ ) . 'components/class-title.php';
 
 /**
  * This class in in charge of creating components. Manual component
@@ -45,6 +46,7 @@ class Component_Factory {
 		// Non HTML-based components
 		self::register_component( 'intro'     ,   '\\Exporter\\Components\\Intro'           );
 		self::register_component( 'cover'     ,   '\\Exporter\\Components\\Cover'           );
+		self::register_component( 'title'     ,   '\\Exporter\\Components\\Title'           );
 	}
 
 	private static function register_component( $shortname, $classname ) {
