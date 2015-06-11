@@ -1,6 +1,11 @@
 <?php
 namespace Exporter\Components;
 
+/**
+ * Represents a simple image.
+ *
+ * @since 0.0.0
+ */
 class Image extends Component {
 
 	protected function build( $text ) {
@@ -10,8 +15,7 @@ class Image extends Component {
 		$filename = basename( $url );
 
 		// Save image into bundle
-		$content = $this->get_file_contents( $url );
-		$this->write_to_workspace( $filename, $content );
+		$this->bundle_source( $filename, $url );
 
 		$this->json = array(
 			'role' => 'photo',

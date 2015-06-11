@@ -2,7 +2,7 @@
 
 use \Exporter\Components\Body as Body;
 
-class BodyTest extends PHPUnit_Framework_TestCase {
+class Body_Test extends PHPUnit_Framework_TestCase {
 
 	public function testBuildingRemovesTags() {
 		$body_component = new Body( '<p>my text</p>', null );

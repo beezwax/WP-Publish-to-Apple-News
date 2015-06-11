@@ -17,6 +17,12 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-audio.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-divider.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-title.php';
 
+/**
+ * This class in in charge of creating components. Manual component
+ * instantiation should be avoided, use this instead.
+ *
+ * @since 0.0.0
+ */
 class Component_Factory {
 
 	private static $components = array();

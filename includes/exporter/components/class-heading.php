@@ -1,6 +1,11 @@
 <?php
 namespace Exporter\Components;
 
+/**
+ * Represents an HTML header.
+ *
+ * @since 0.0.0
+ */
 class Heading extends Component {
 
 	protected function build( $text ) {

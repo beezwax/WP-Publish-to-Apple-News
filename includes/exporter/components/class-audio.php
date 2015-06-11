@@ -3,6 +3,8 @@ namespace Exporter\Components;
 
 /**
  * An HTML audio tag.
+ *
+ * @since 0.0.0
  */
 class Audio extends Component {
 
@@ -21,8 +23,7 @@ class Audio extends Component {
 		}
 
 		// Save video into bundle
-		$content = $this->get_file_contents( $url );
-		$this->write_to_workspace( $filename, $content );
+		$this->bundle_source( $filename, $url );
 
 		$this->json = array(
 			'role' => 'audio',

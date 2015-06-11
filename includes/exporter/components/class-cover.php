@@ -1,14 +1,23 @@
 <?php
 namespace Exporter\Components;
 
+/**
+ * A cover is optional and displayed at the very top of the article. It's
+ * loaded from the Exporter_Content's cover attribute, if present, and NOT
+ * loaded from HTML.
+ *
+ * In a WordPress context, the Exporter_Content's cover attribute is a post's
+ * thumbnail, a.k.a featured image.
+ *
+ * @since 0.0.0
+ */
 class Cover extends Component {
 
 	protected function build( $url ) {
 		$filename = basename( $url );
 
 		// Save image into bundle
-		$content = $this->get_file_contents( $url );
-		$this->write_to_workspace( $filename, $content );
+		$this->bundle_source( $filename, $url );
 
 		$this->json = array(
 			'role' => 'container',

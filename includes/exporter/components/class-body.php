@@ -1,6 +1,11 @@
 <?php
 namespace Exporter\Components;
 
+/**
+ * One of the simplest components. It's just a paragraph.
+ *
+ * @since 0.0.0
+ */
 class Body extends Component {
 
 	protected function build( $text ) {
