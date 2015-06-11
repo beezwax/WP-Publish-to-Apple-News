@@ -17,7 +17,7 @@ class API_Test extends WP_UnitTestCase {
 
 	public function testPostSimpleArticle() {
 		$credentials = new Credentials( $this->key, $this->secret );
-		$api = new API( $this->endpoint, $credentials, true );
+		$api = new API( $this->endpoint, $credentials, false );
 
 		$article = '{"version":"0.1","identifier":"post-1","language":"en","title":"\u00a1Hola mundo!","components":[{"role":"intro","text":"\u00a1Hola mundo!"},{"role":"body","text":"Bienvenido a WordPress. Esta es tu primera entrada. Ed\u00c3\u00adtala o b\u00c3\u00b3rrala, \u00c2\u00a1y comienza a publicar!."},{"role":"body","text":"Now this is the second paragraph. And it\u2019s in english!"}],"layout":{"columns":7,"width":1024,"margin":30,"gutter":20},"documentStyle":{"backgroundColor":"#F7F7F7"},"componentTextStyles":{"default":{"fontName":"Helvetica","fontSize":13,"linkStyle":{"textColor":"#428bca"}},"title":{"fontName":"Helvetica-Bold","fontSize":30,"hyphenation":false},"default-body":{"fontName":"Helvetica","fontSize":13}},"componentLayouts":{"headerContainerLayout":{"columnStart":0,"columnSpan":7,"ignoreDocumentMargin":true,"minimumHeight":"50vh"}}}';
 

@@ -92,15 +92,20 @@ class Request {
     //curl_setopt( $curl, CURLOPT_INFILESIZE, strlen( $this->article ) );
 		// Make curl_exec return the request result rather than just true.
     curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
-		// TODO: How are GET requests managed?
-    curl_setopt( $curl, CURLOPT_HTTPHEADER, array(
-        'Content-Length: ' . strlen( $this->content ),
-        'Content-Type: multipart/form-data; boundary=' . $this->mime_builder->boundary(),
-        $this->signature
-      )
-    );
-    curl_setopt( $curl, CURLOPT_POST, true );
-    curl_setopt( $curl, CURLOPT_POSTFIELDS, $this->content );
+
+		// Check for request type
+		if( 'POST' == $this->verb ) {
+			curl_setopt( $curl, CURLOPT_HTTPHEADER, array(
+					'Content-Length: ' . strlen( $this->content ),
+					'Content-Type: multipart/form-data; boundary=' . $this->mime_builder->boundary(),
+					$this->signature
+				)
+			);
+			curl_setopt( $curl, CURLOPT_POST, true );
+			curl_setopt( $curl, CURLOPT_POSTFIELDS, $this->content );
+		} else {
+			curl_setopt( $curl, CURLOPT_HTTPHEADER, array( $this->signature ) );
+		}
 
 		// CURL is ready. Execute!
     $response = curl_exec( $curl );
