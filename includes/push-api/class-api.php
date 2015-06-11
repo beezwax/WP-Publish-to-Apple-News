@@ -1,4 +1,8 @@
 <?php
+namespace Push_API;
+
+use \Exception as Exception;
+
 /**
  * This class will post provided specified format articles to a channel using
  * the API.

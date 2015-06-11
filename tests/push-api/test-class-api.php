@@ -1,6 +1,8 @@
 <?php
 
-require_once __DIR__ . '/../../includes/api/class-api.php';
+require_once __DIR__ . '/../../includes/push-api/class-api.php';
+
+use \Push_API\API as API;
 
 class API_Test extends WP_UnitTestCase {
 
