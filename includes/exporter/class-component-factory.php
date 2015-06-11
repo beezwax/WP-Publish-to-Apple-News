@@ -48,11 +48,11 @@ class Component_Factory {
 	}
 
 	private static function register_component( $shortname, $classname ) {
-		self::$components[$shortname] = $classname;
+		self::$components[ $shortname ] = $classname;
 	}
 
 	public static function get_component( $shortname, $html ) {
-		$class = self::$components[$shortname];
+		$class = self::$components[ $shortname ];
 
 		if ( is_null( $class ) ) {
 			return null;
@@ -63,7 +63,7 @@ class Component_Factory {
 
 	public static function get_component_from_node( $node ) {
 		foreach ( self::$components as $shortname => $class ) {
-			if( $matched_node = $class::node_matches( $node ) ) {
+			if ( $matched_node = $class::node_matches( $node ) ) {
 				$html = $node->ownerDocument->saveXML( $matched_node );
 				return self::get_component( $shortname, $html );
 			}
