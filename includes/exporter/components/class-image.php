@@ -8,6 +8,20 @@ namespace Exporter\Components;
  */
 class Image extends Component {
 
+	public static function node_matches( $node ) {
+		// Is this an image node?
+		if ( 'img' == $node->nodeName ) {
+			return $node;
+		}
+
+		// Is there a node with tag 'img' inside this one?
+		if ( $image_node = self::node_find_by_tagname( $node, 'img' ) ) {
+			return $image_node;
+		}
+
+		return null;
+	}
+
 	protected function build( $text ) {
 		$matches = array();
 		preg_match( '/src="([^"]*?)"/im', $text, $matches );

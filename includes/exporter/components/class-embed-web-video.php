@@ -2,11 +2,26 @@
 namespace Exporter\Components;
 
 /**
- * An embedded video from Youtube or Vimeo, for example.
+ * An embedded video from Youtube or Vimeo, for example. For now, assume
+ * any iframe is an embedded video.
  *
  * @since 0.0.0
  */
 class Embed_Web_Video extends Component {
+
+	public static function node_matches( $node ) {
+		// Is this node an iframe?
+		if ( 'iframe' == $node->nodeName ) {
+			return $node;
+		}
+
+		// Does this node contain an iframe?
+		if ( $ewv = self::node_find_by_tagname( $node, 'iframe' ) ) {
+			return $ewv;
+		}
+
+		return null;
+	}
 
 	protected function build( $text ) {
 		$attributes = array();

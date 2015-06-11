@@ -8,6 +8,20 @@ namespace Exporter\Components;
  */
 class Audio extends Component {
 
+	public static function node_matches( $node ) {
+		// Is this an audio node?
+		if ( 'audio' == $node->nodeName ) {
+			return $node;
+		}
+
+		// Is there a node with tag 'audio' inside this one?
+		if ( $audio_node = self::node_find_by_tagname( $node, 'audio' ) ) {
+			return $audio_node;
+		}
+
+		return null;
+	}
+
 	protected function build( $text ) {
 		// Remove initial and trailing tags: <video><p>...</p></video>
 		if ( ! preg_match( '/src="([^"]+)"/', $text, $match ) ) {

@@ -8,6 +8,14 @@ namespace Exporter\Components;
  */
 class Body extends Component {
 
+	public static function node_matches( $node ) {
+		if ( 'p' == $node->nodeName ) {
+			return $node;
+		}
+
+		return null;
+	}
+
 	protected function build( $text ) {
 		// Remove initial and trailing tags
 		$text = substr( $text, 3, -4 );
