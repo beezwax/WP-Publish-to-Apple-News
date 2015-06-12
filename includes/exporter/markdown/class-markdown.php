@@ -42,56 +42,56 @@ class Markdown {
 	private function parseNodes( $nodes ) {
 		$result = '';
 		foreach ( $nodes as $node ) {
-			$result .= $this->parseNode( $node );
+			$result .= $this->parse_node( $node );
 		}
 
 		return $result;
 	}
 
-	private function parseNode( $node ) {
+	private function parse_node( $node ) {
 		var_dump( 'parse: ' . $node->nodeName );
 		switch( $node->nodeName ) {
 		case '#text':
-			return $this->parseTextNode( $node );
+			return $this->parse_text_node( $node );
 		case 'strong':
-			return $this->parseStrongNode( $node );
+			return $this->parse_strong_node( $node );
 		case  'i':
 		case 'em':
-			return $this->parseEmphasisNode( $node );
+			return $this->parse_emphasis_node( $node );
 		case 'br':
-			return $this->parseLinebreakNode( $node );
+			return $this->parse_linebreak_node( $node );
 		case 'p':
-			return $this->parseParagraphNode( $node );
+			return $this->parse_paragraph_node( $node );
 		case 'a':
-			return $this->parseHyperlinkNode( $node );
+			return $this->parse_hyperlink_node( $node );
 		case 'ul':
-			return $this->parseUnorderedListNode( $node );
+			return $this->parse_unordered_list_node( $node );
 		case 'ol':
-			return $this->parseOrderedListNode( $node );
+			return $this->parse_ordered_list_node( $node );
 		case 'li':
-			return $this->parseListItemNode( $node );
+			return $this->parse_list_item_node( $node );
 		}
 
 		return $node->nodeValue ?: '';
 	}
 
-	private function parseTextNode( $node ) {
+	private function parse_text_node( $node ) {
 		return $node->nodeValue;
 	}
 
-	private function parseLinebreakNode( $node ) {
+	private function parse_linebreak_node( $node ) {
 		return "  \n";
 	}
 
-	private function parseStrongNode( $node ) {
+	private function parse_strong_node( $node ) {
 		return '**' . $this->parseNodes( $node->childNodes ) . '**';
 	}
 
-	private function parseEmphasisNode( $node ) {
+	private function parse_emphasis_node( $node ) {
 		return '_' . $this->parseNodes( $node->childNodes ) . '_';
 	}
 
-	private function parseParagraphNode( $node ) {
+	private function parse_paragraph_node( $node ) {
 		return $this->parseNodes( $node->childNodes ) . "\n\n";
 	}
 
@@ -99,23 +99,23 @@ class Markdown {
 	 * Hyperlinks are not yet supported in Article Format markdown. Ignore for
 	 * now.
 	 */
-	private function parseHyperlinkNode( $node ) {
+	private function parse_hyperlink_node( $node ) {
 		$url = $node->getAttribute( 'href' );
 		return '[' . $this->parseNodes( $node->childNodes ) . '](' . $url . ')';
 	}
 
-	private function parseUnorderedListNode( $node ) {
+	private function parse_unordered_list_node( $node ) {
 		$this->list_mode = 'ul';
 		return $this->parseNodes( $node->childNodes ) . "\n";
 	}
 
-	private function parseOrderedListNode( $node ) {
+	private function parse_ordered_list_node( $node ) {
 		$this->list_mode = 'ol';
 		$this->list_index = 1;
 		return $this->parseNodes( $node->childNodes ) . "\n";
 	}
 
-	private function parseListItemNode( $node ) {
+	private function parse_list_item_node( $node ) {
 		if( 'ol' == $this->list_mode ) {
 			return $this->list_index . '. ' . $this->parseNodes( $node->childNodes );
 			$this->list_index += 1;
