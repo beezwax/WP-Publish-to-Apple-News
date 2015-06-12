@@ -9,7 +9,7 @@ namespace Exporter\Components;
 class Body extends Component {
 
 	public static function node_matches( $node ) {
-		if ( 'p' == $node->nodeName ) {
+		if ( in_array( $node->nodeName, array( 'p', 'ul', 'ol' ) ) ) {
 			return $node;
 		}
 
@@ -18,7 +18,7 @@ class Body extends Component {
 
 	protected function build( $text ) {
 		// Remove initial and trailing tags
-		$text = substr( $text, 3, -4 );
+		// $text = substr( $text, 3, -4 );
 
 		$this->json = array(
 			'role' => 'body',

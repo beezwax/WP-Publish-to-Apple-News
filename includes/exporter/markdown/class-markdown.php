@@ -49,6 +49,7 @@ class Markdown {
 	}
 
 	private function parseNode( $node ) {
+		var_dump( 'parse: ' . $node->nodeName );
 		switch( $node->nodeName ) {
 		case '#text':
 			return $this->parseTextNode( $node );
@@ -105,21 +106,22 @@ class Markdown {
 
 	private function parseUnorderedListNode( $node ) {
 		$this->list_mode = 'ul';
-		return $this->parseNodes( $nodes->childNodes );
+		return $this->parseNodes( $node->childNodes ) . "\n";
 	}
 
 	private function parseOrderedListNode( $node ) {
 		$this->list_mode = 'ol';
 		$this->list_index = 1;
-		return $this->parseNodes( $nodes->childNodes );
+		return $this->parseNodes( $node->childNodes ) . "\n";
 	}
 
 	private function parseListItemNode( $node ) {
 		if( 'ol' == $this->list_mode ) {
-			return "\n" . $this->list_index . '. ' . $this->parseNodes( $nodes->childNodes );
+			return $this->list_index . '. ' . $this->parseNodes( $node->childNodes );
+			$this->list_index += 1;
 		}
 
-		return "\n- " . $this->parseNodes( $nodes->childNodes );
+		return "- " . $this->parseNodes( $node->childNodes );
 	}
 
 }
