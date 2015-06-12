@@ -16,13 +16,11 @@ class Markdown {
 	 * Transforms HTML into Article Format Markdown.
 	 */
 	public function parse( $html ) {
-		// PHP doesn't really like UTF-8 strings
-		var_dump( 'Initial content: ' . $html );
-
 		// PHP's DomDocument doesn't like HTML5 so we must ignore errors, we'll
 		// manually handle all tags anyways.
 		$dom = new \DOMDocument();
 		libxml_use_internal_errors( true );
+		// A trick to load string as UTF-8
 		$dom->loadHTML( '<?xml encoding="UTF-8">' . $html );
 		libxml_clear_errors( true );
 
@@ -64,8 +62,6 @@ class Markdown {
 	}
 
 	private function parseTextNode( $node ) {
-		var_dump( 'Content: ' . $node->wholeText );
-
 		return $node->nodeValue;
 	}
 
