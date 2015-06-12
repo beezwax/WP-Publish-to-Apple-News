@@ -74,7 +74,7 @@ class Markdown {
 	}
 
 	private function parseStrongNode( $node ) {
-		return '*' . $this->parseNodes( $node->childNodes ) . '*';
+		return '**' . $this->parseNodes( $node->childNodes ) . '**';
 	}
 
 	private function parseEmphasisNode( $node ) {
