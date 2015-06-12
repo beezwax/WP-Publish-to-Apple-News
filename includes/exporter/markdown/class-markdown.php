@@ -12,6 +12,14 @@ namespace Exporter\Markdown;
  */
 class Markdown {
 
+	private $list_mode;
+	private $list_index;
+
+	function __construct() {
+		$this->list_mode = 'ul';
+		$this->list_index = 1;
+	}
+
 	/**
 	 * Transforms HTML into Article Format Markdown.
 	 */
@@ -55,6 +63,12 @@ class Markdown {
 			return $this->parseParagraphNode( $node );
 		case 'a':
 			return $this->parseHyperlinkNode( $node );
+		case 'ul':
+			return $this->parseUnorderedListNode( $node );
+		case 'ol':
+			return $this->parseOrderedListNode( $node );
+		case 'li':
+			return $this->parseListItemNode( $node );
 		}
 
 		return $node->nodeValue ?: '';
@@ -87,6 +101,25 @@ class Markdown {
 	private function parseHyperlinkNode( $node ) {
 		$url = $node->getAttribute( 'href' );
 		return '[' . $this->parseNodes( $node->childNodes ) . '](' . $url . ')';
+	}
+
+	private function parseUnorderedListNode( $node ) {
+		$this->list_mode = 'ul';
+		return $this->parseNodes( $nodes->childNodes );
+	}
+
+	private function parseOrderedListNode( $node ) {
+		$this->list_mode = 'ol';
+		$this->list_index = 1;
+		return $this->parseNodes( $nodes->childNodes );
+	}
+
+	private function parseListItemNode( $node ) {
+		if( 'ol' == $this->list_mode ) {
+			return "\n" . $this->list_index . '. ' . $this->parseNodes( $nodes->childNodes );
+		}
+
+		return "\n- " . $this->parseNodes( $nodes->childNodes );
 	}
 
 }
