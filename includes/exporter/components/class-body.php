@@ -22,7 +22,8 @@ class Body extends Component {
 
 		$this->json = array(
 			'role' => 'body',
-			'text' => $text,
+			'text' => $this->markdown->parse( $text ),
+			'format' => 'markdown',
 		);
 	}
 
