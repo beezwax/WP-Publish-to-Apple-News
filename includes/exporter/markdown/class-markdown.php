@@ -69,6 +69,13 @@ class Markdown {
 			return $this->parse_ordered_list_node( $node );
 		case 'li':
 			return $this->parse_list_item_node( $node );
+		case 'h1':
+		case 'h2':
+		case 'h3':
+		case 'h4':
+		case 'h5':
+		case 'h6':
+			return $this->parse_heading_node( $node );
 		}
 
 		return $node->nodeValue ?: '';
@@ -121,6 +128,20 @@ class Markdown {
 		}
 
 		return "- " . $this->parseNodes( $node->childNodes );
+	}
+
+	private function parse_heading_node( $node ) {
+		preg_match( '#h(\d)#', $node->nodeName, $matches );
+		$level = $matches[1];
+		$output = '';
+		for( $i = 0; $i < $level; $i++ ) {
+			$output .= '#';
+		}
+		$output .= ' ' . $this->parseNodes( $node->childNodes ) . "\n";
+
+		var_dump( $output );
+
+		return $output;
 	}
 
 }
