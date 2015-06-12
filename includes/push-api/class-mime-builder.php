@@ -30,13 +30,13 @@ class MIME_Builder {
 	}
 
 	private function build_attachment( $name, $filename, $content, $mime_type ) {
-    $eol  = "\r\n";
-    $size = strlen( $content );
+		$eol  = "\r\n";
+		$size = strlen( $content );
 
-    $attachment  = '--' . $this->boundary . $eol;
-    $attachment .= 'Content-Type: ' . $mime_type . $eol;
-    $attachment .= 'Content-Disposition: form-data; name=' . $name . '; filename=' . $filename . '; size=' . $size . $eol . $eol;
-    $attachment .= $content . $eol;
+		$attachment  = '--' . $this->boundary . $eol;
+		$attachment .= 'Content-Type: ' . $mime_type . $eol;
+		$attachment .= 'Content-Disposition: form-data; name=' . $name . '; filename=' . $filename . '; size=' . $size . $eol . $eol;
+		$attachment .= $content . $eol;
 
 		return $attachment;
 	}
