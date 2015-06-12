@@ -133,7 +133,7 @@ class Exporter {
 	}
 
 	private function get_component_from_shortname( $shortname, $html ) {
-		return Component_Factory::get_component( 'intro', $html )->value();
+		return Component_Factory::get_component( $shortname, $html )->value();
 	}
 
 	private function get_component_from_node( $node ) {
@@ -149,7 +149,7 @@ class Exporter {
 		// The content's cover is optional. In WordPress, it's a post's thumbnail
 		// or featured image.
 		if ( $this->content_cover() ) {
-			$components[] = $this->get_component_from_shortname( 'cover', $this->content_intro() );
+			$components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() );
 		}
 
 		// Add title
