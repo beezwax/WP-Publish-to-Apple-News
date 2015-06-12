@@ -41,7 +41,6 @@ class Markdown {
 	}
 
 	private function parseNode( $node ) {
-		var_dump( 'parse ' . $node->nodeName );
 		switch( $node->nodeName ) {
 		case '#text':
 			return $this->parseTextNode( $node );
@@ -86,7 +85,8 @@ class Markdown {
 	 * now.
 	 */
 	private function parseHyperlinkNode( $node ) {
-		return $this->parseNodes( $node->childNodes );
+		$url = $node->getAttribute( 'href' );
+		return '[' . $this->parseNodes( $node->childNodes ) . '](' . $url . ')';
 	}
 
 }
