@@ -49,7 +49,6 @@ class Markdown {
 	}
 
 	private function parse_node( $node ) {
-		var_dump( 'parse: ' . $node->nodeName );
 		switch( $node->nodeName ) {
 		case '#text':
 			return $this->parse_text_node( $node );
