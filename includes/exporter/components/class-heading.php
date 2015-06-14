@@ -23,8 +23,8 @@ class Heading extends Component {
 
 		$this->json = array(
 			'role' => 'heading' . $matches[1],
-			'text' => $matches[2],
-			'textStyle' => 'title',
+			'text' => $this->markdown->parse( $text ),
+			'format' => 'markdown',
 		);
 	}
 
