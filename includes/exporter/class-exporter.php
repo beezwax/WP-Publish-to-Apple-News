@@ -185,7 +185,13 @@ class Exporter {
 		// might include child-components, like an Cover and Image.
 		$result = array();
 		foreach ( $nodes as $node ) {
-			$result[] = $this->get_component_from_node( $node );
+			$component = $this->get_component_from_node( $node );
+
+			if( is_array( $component ) ) {
+				$result = array_merge( $result, $component );
+			} else {
+				$result[] = $component;
+			}
 		}
 
 		// Remove null values from result and return
