@@ -175,7 +175,7 @@ class Exporter {
 		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
 		$dom = new \DOMDocument();
 		libxml_use_internal_errors( true );
-		$dom->loadHTML( $this->content_text() );
+		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $this->content_text() );
 		libxml_clear_errors( true );
 
 		// Find the first-level nodes of the body tag.
@@ -185,7 +185,13 @@ class Exporter {
 		// might include child-components, like an Cover and Image.
 		$result = array();
 		foreach ( $nodes as $node ) {
-			$result[] = $this->get_component_from_node( $node );
+			$component = $this->get_component_from_node( $node );
+
+			if( is_array( $component ) ) {
+				$result = array_merge( $result, $component );
+			} else {
+				$result[] = $component;
+			}
 		}
 
 		// Remove null values from result and return

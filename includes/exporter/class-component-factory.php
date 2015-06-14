@@ -66,8 +66,21 @@ class Component_Factory {
 	public static function get_component_from_node( $node ) {
 		foreach ( self::$components as $shortname => $class ) {
 			if ( $matched_node = $class::node_matches( $node ) ) {
+
+				// Did we match a list of nodes?
+				if( $matched_node instanceof \DOMNodeList ) {
+					$result = array();
+					foreach( $matched_node as $item ) {
+						$html     = $node->ownerDocument->saveXML( $item );
+						$result[] = self::get_component( $shortname, $html );
+					}
+					return $result;
+				}
+
+				// We matched a single node
 				$html = $node->ownerDocument->saveXML( $matched_node );
 				return self::get_component( $shortname, $html );
+
 			}
 		}
 

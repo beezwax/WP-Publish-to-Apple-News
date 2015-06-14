@@ -14,9 +14,10 @@ class Image extends Component {
 			return $node;
 		}
 
-		// Is there a node with tag 'img' inside this one?
-		if ( $image_node = self::node_find_by_tagname( $node, 'img' ) ) {
-			return $image_node;
+		// Is there a node with tag 'img' inside this one? If so return all image
+		// nodes.
+		if ( $images = self::node_find_all_by_tagname( $node, 'img' ) ) {
+			return $images;
 		}
 
 		return null;

@@ -55,8 +55,17 @@ abstract class Component {
 		return $this->json;
 	}
 
-
 	protected static function node_find_by_tagname( $node, $tagname ) {
+		$result = self::node_find_all_by_tagname( $node, $tagname );
+
+		if( $result ) {
+			return $result->item( 0 );
+		}
+
+		return false;
+	}
+
+	protected static function node_find_all_by_tagname( $node, $tagname ) {
 		if ( ! method_exists( $node, 'getElementsByTagName' ) ) {
 			return false;
 		}
@@ -67,7 +76,7 @@ abstract class Component {
 			return false;
 		}
 
-		return $elements->item( 0 );
+		return $elements;
 	}
 
 
