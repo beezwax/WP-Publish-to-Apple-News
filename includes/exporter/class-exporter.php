@@ -175,7 +175,7 @@ class Exporter {
 		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
 		$dom = new \DOMDocument();
 		libxml_use_internal_errors( true );
-		$dom->loadHTML( $this->content_text() );
+		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $this->content_text() );
 		libxml_clear_errors( true );
 
 		// Find the first-level nodes of the body tag.
