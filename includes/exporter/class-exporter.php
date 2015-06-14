@@ -109,7 +109,7 @@ class Exporter {
 	}
 
 	private function content_title() {
-		return $this->exporter_content->title();
+		return $this->exporter_content->title() ?: 'Untitled Article';
 	}
 
 	private function content_text() {
