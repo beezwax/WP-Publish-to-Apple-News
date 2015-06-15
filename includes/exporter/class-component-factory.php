@@ -63,29 +63,35 @@ class Component_Factory {
 		return new $class( $html, self::$workspace );
 	}
 
+	/**
+	 * Given a node, check all components for a match. If a match is found,
+	 * return an instance of the component or an array of instances of that
+	 * component.
+	 *
+	 * If no component matches this node, return null.
+	 */
 	public static function get_component_from_node( $node ) {
 		foreach ( self::$components as $shortname => $class ) {
-			if ( $matched_node = $class::node_matches( $node ) ) {
+			$matched_node = $class::node_matches( $node );
 
-				// Did we match a list of nodes?
-				if( $matched_node instanceof \DOMNodeList ) {
-					$result = array();
-					foreach( $matched_node as $item ) {
-						$html     = $node->ownerDocument->saveXML( $item );
-						$result[] = self::get_component( $shortname, $html );
-					}
-					return $result;
-				}
-
-				// We matched a single node
-				$html = $node->ownerDocument->saveXML( $matched_node );
-				return self::get_component( $shortname, $html );
-
+			if ( ! $matched_node ) {
+				return null;
 			}
-		}
 
-		// Ignore every other tags
-		return null;
+			// Did we match a list of nodes?
+			if( $matched_node instanceof \DOMNodeList ) {
+				$result = array();
+				foreach( $matched_node as $item ) {
+					$html     = $node->ownerDocument->saveXML( $item );
+					$result[] = self::get_component( $shortname, $html );
+				}
+				return $result;
+			}
+
+			// We matched a single node
+			$html = $node->ownerDocument->saveXML( $matched_node );
+			return self::get_component( $shortname, $html );
+		}
 	}
 
 }
