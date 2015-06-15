@@ -43,4 +43,11 @@ class API {
 		return $request->send();
 	}
 
+	public function get_channel_info( $channel_uuid ) {
+		$url     = $this->endpoint . '/channels/' . $channel_uuid;
+		$request = new Request( $url, 'GET', $this->debug );
+		$request->authenticate( $this->credentials );
+		return $request->send();
+	}
+
 }
