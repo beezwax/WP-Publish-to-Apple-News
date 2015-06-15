@@ -1,5 +1,5 @@
 <?php
-namespace Exporter\Markdown;
+namespace Exporter;
 
 /**
  * This class transforms HTML into Article Format Markdown, which is a subset
@@ -138,8 +138,6 @@ class Markdown {
 			$output .= '#';
 		}
 		$output .= ' ' . $this->parseNodes( $node->childNodes ) . "\n";
-
-		var_dump( $output );
 
 		return $output;
 	}

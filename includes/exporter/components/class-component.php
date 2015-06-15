@@ -1,7 +1,7 @@
 <?php
 namespace Exporter\Components;
 
-require_once __DIR__ . '/../markdown/class-markdown.php';
+require_once __DIR__ . '/../class-markdown.php';
 
 /**
  * Base component class. All components must inherit from this class and
@@ -26,7 +26,7 @@ abstract class Component {
 	function __construct( $text, $workspace, $markdown = null ) {
 		$this->text      = $text;
 		$this->workspace = $workspace;
-		$this->markdown  = $markdown ?: new \Exporter\Markdown\Markdown();
+		$this->markdown  = $markdown ?: new \Exporter\Markdown();
 	}
 
 	/**

@@ -63,28 +63,38 @@ class Component_Factory {
 		return new $class( $html, self::$workspace );
 	}
 
+	/**
+	 * Given a node, check all components for a match. If a match is found,
+	 * return an instance of the component or an array of instances of that
+	 * component.
+	 *
+	 * If no component matches this node, return null.
+	 *
+	 * FIXME: This method does a bit too much and returns different things...
+	 */
 	public static function get_component_from_node( $node ) {
 		foreach ( self::$components as $shortname => $class ) {
-			if ( $matched_node = $class::node_matches( $node ) ) {
-
-				// Did we match a list of nodes?
-				if( $matched_node instanceof \DOMNodeList ) {
-					$result = array();
-					foreach( $matched_node as $item ) {
-						$html     = $node->ownerDocument->saveXML( $item );
-						$result[] = self::get_component( $shortname, $html );
-					}
-					return $result;
-				}
-
-				// We matched a single node
-				$html = $node->ownerDocument->saveXML( $matched_node );
-				return self::get_component( $shortname, $html );
-
+			$matched_node = $class::node_matches( $node );
+			if( ! $matched_node ) {
+				continue;
 			}
+
+			// Did we match a list of nodes?
+			if( $matched_node instanceof \DOMNodeList ) {
+				$result = array();
+				foreach( $matched_node as $item ) {
+					$html     = $node->ownerDocument->saveXML( $item );
+					$result[] = self::get_component( $shortname, $html );
+				}
+				return $result;
+			}
+
+			// We matched a single node
+			$html = $node->ownerDocument->saveXML( $matched_node );
+			return self::get_component( $shortname, $html );
 		}
 
-		// Ignore every other tags
+		// Nothing was found, return null.
 		return null;
 	}
 
