@@ -11,7 +11,7 @@ class API_Test extends WP_UnitTestCase {
 	public function setup() {
 		// Whether or not to set requests to debug mode, enabling the use or
 		// reverse proxies such as Charles.
-		$debug_mode = true;
+		$debug_mode = false;
 
 		$key        = getenv( 'WP_PLUGIN_KEY' );
 		$secret     = getenv( 'WP_PLUGIN_SECRET' );
@@ -40,6 +40,11 @@ class API_Test extends WP_UnitTestCase {
 	public function testGetChannelInfo() {
 		$info = $this->api->get_channel_info( $this->channel_id );
 		$this->assertEquals( $this->channel_id, $info->data->id );
+	}
+
+	public function testGetSections() {
+		$info = $this->api->get_sections( $this->channel_id );
+		$this->assertTrue( count( $info->data ) > 0 );
 	}
 
 }

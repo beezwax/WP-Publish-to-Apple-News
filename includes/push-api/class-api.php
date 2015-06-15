@@ -50,4 +50,11 @@ class API {
 		return $request->send();
 	}
 
+	public function get_sections( $channel_uuid ) {
+		$url     = $this->endpoint . '/channels/' . $channel_uuid . '/sections';
+		$request = new Request( $url, 'GET', $this->debug );
+		$request->authenticate( $this->credentials );
+		return $request->send();
+	}
+
 }
