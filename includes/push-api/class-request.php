@@ -110,7 +110,7 @@ class Request {
 		if ( false === $response ) {
 			$error = curl_error( $curl );
 			curl_close( $curl );
-			throw new Request_Exception( "Curl request failed: $error" );
+			throw new Request_Exception( "CURL request failed: $error" );
 		}
 		curl_close($curl);
 
