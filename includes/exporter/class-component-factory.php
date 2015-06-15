@@ -69,6 +69,8 @@ class Component_Factory {
 	 * component.
 	 *
 	 * If no component matches this node, return null.
+	 *
+	 * FIXME: This method does a bit too much and returns different things...
 	 */
 	public static function get_component_from_node( $node ) {
 		foreach ( self::$components as $shortname => $class ) {
