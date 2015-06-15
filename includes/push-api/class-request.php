@@ -1,8 +1,6 @@
 <?php
 namespace Push_API;
 
-use \Exception as Exception;
-
 require_once __DIR__ . '/class-mime-builder.php';
 
 /**
@@ -55,7 +53,7 @@ class Request {
 	 */
 	public function authenticate( $credentials ) {
 		if ( 'POST' == $this->verb && is_null( $this->content ) ) {
-			throw new Exception( 'POST requests must add content before signing it.' );
+			throw new Request_Exception( 'POST requests must add content before signing it.' );
 		}
 
 		$current_date = date( 'c' );
@@ -112,7 +110,7 @@ class Request {
 		if ( false === $response ) {
 			$error = curl_error( $curl );
 			curl_close( $curl );
-			throw new Exception( "Curl request failed: $error" );
+			throw new Request_Exception( "Curl request failed: $error" );
 		}
 		curl_close($curl);
 
@@ -122,10 +120,12 @@ class Request {
 			foreach( $response->errors as $error ) {
 				$string_errors .= $error->code . "\n";
 			}
-			throw new Exception( "There has been an error with your request:\n$string_errors" );
+			throw new Request_Exception( "There has been an error with your request:\n$string_errors" );
 		}
 
 		return $response;
 	}
 
 }
+
+class Request_Exception extends \Exception {}
