@@ -75,9 +75,8 @@ class Component_Factory {
 	public static function get_component_from_node( $node ) {
 		foreach ( self::$components as $shortname => $class ) {
 			$matched_node = $class::node_matches( $node );
-
-			if ( ! $matched_node ) {
-				return null;
+			if( ! $matched_node ) {
+				continue;
 			}
 
 			// Did we match a list of nodes?
@@ -94,6 +93,9 @@ class Component_Factory {
 			$html = $node->ownerDocument->saveXML( $matched_node );
 			return self::get_component( $shortname, $html );
 		}
+
+		// Nothing was found, return null.
+		return null;
 	}
 
 }
