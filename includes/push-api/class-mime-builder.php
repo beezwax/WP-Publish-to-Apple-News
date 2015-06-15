@@ -5,6 +5,20 @@ class MIME_Builder {
 
 	private $boundary;
 
+	private static $valid_mime_types = array (
+		'image/jpeg',
+		'image/png',
+		'image/gif',
+		'application/font-sfnt',
+		'application/x-font-truetype',
+		'application/font-truetype',
+		'application/vnd.ms-opentype',
+		'application/x-font-opentype',
+		'application/font-opentype',
+		'application/octet-stream',
+	);
+
+
 	function __construct() {
 		$this->boundary = md5( microtime() );
 	}
@@ -54,18 +68,7 @@ class MIME_Builder {
 	}
 
 	private function is_valid_mime_type( $type ) {
-		return in_array( $type, array (
-			'image/jpeg',
-			'image/png',
-			'image/gif',
-			'application/font-sfnt',
-			'application/x-font-truetype',
-			'application/font-truetype',
-			'application/vnd.ms-opentype',
-			'application/x-font-opentype',
-			'application/font-opentype',
-			'application/octet-stream',
-		) );
+		return in_array( $type, self::$valid_mime_types );
 	}
 
 }
