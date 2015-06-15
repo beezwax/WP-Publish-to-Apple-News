@@ -54,7 +54,7 @@ class Request {
 	 *                                          to sign the request.
 	 */
 	public function authenticate( $credentials ) {
-		if( 'POST' == $this->verb && is_null( $this->content ) ) {
+		if ( 'POST' == $this->verb && is_null( $this->content ) ) {
 			throw new Exception( 'POST requests must add content before signing it.' );
 		}
 
@@ -94,7 +94,7 @@ class Request {
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
 
 		// Check for request type
-		if( 'POST' == $this->verb ) {
+		if ( 'POST' == $this->verb ) {
 			curl_setopt( $curl, CURLOPT_HTTPHEADER, array(
 				'Content-Length: ' . strlen( $this->content ),
 				'Content-Type: multipart/form-data; boundary=' . $this->mime_builder->boundary(),
@@ -117,7 +117,7 @@ class Request {
 		curl_close($curl);
 
 		$response = json_decode( $response );
-		if( property_exists( $response, 'errors' ) ) {
+		if ( property_exists( $response, 'errors' ) ) {
 			$string_errors = '';
 			foreach( $response->errors as $error ) {
 				$string_errors .= $error->code . "\n";
