@@ -19,8 +19,8 @@ class Heading_Test extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			array(
 				'role' => 'heading1',
-				'text' => 'This is a heading',
-				'textStyle' => 'title',
+				'text' => "# This is a heading\n",
+				'format' => 'markdown',
 		 	),
 			$heading_component->value()
 		);

@@ -9,8 +9,9 @@ class Body_Test extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			array(
-				'text' => 'my text',
+				'text' => "my text\n\n",
 				'role' => 'body',
+				'format' => 'markdown'
 		 	),
 			$body_component->value()
 		);
