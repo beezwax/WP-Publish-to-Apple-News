@@ -117,7 +117,7 @@ class Request {
 		$response = json_decode( $response );
 		if ( property_exists( $response, 'errors' ) ) {
 			$string_errors = '';
-			foreach( $response->errors as $error ) {
+			foreach ( $response->errors as $error ) {
 				$string_errors .= $error->code . "\n";
 			}
 			throw new Request_Exception( "There has been an error with your request:\n$string_errors" );
