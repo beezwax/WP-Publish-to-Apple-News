@@ -122,7 +122,7 @@ class Markdown {
 	}
 
 	private function parse_list_item_node( $node ) {
-		if( 'ol' == $this->list_mode ) {
+		if ( 'ol' == $this->list_mode ) {
 			return $this->list_index . '. ' . $this->parseNodes( $node->childNodes );
 			$this->list_index += 1;
 		}
