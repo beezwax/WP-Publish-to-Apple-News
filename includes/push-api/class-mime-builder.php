@@ -46,7 +46,7 @@ class MIME_Builder {
 		$finfo = finfo_open( FILEINFO_MIME_TYPE );
 		$type  = finfo_file( $finfo, $filepath );
 
-		if( $this->is_valid_mime_type( $type ) ) {
+		if ( $this->is_valid_mime_type( $type ) ) {
 			return $type;
 		}
 
