@@ -18,11 +18,11 @@ class MIME_Builder {
 	}
 
 	public function add_content_from_file( $filepath, $name = 'a_file' ) {
-		$filename		 = basename( $filepath );
-		$filecontent = file_get_contents( $filepath );
-		$filemime    = $this->get_mime_type_for( $filepath );
+		$filename     = basename( $filepath );
+		$file_content = file_get_contents( $filepath );
+		$file_mime    = $this->get_mime_type_for( $filepath );
 
-		return $this->build_attachment( $name, $filename, $filecontent, $filemime );
+		return $this->build_attachment( $name, $filename, $file_content, $file_mime );
 	}
 
 	public function close() {
