@@ -38,7 +38,7 @@ function activate_wp_plugin() {
 	}
 
 	// Check for CURL
-	if( ! function_exists( 'curl_version' ) ) {
+	if ( ! function_exists( 'curl_version' ) ) {
 		deactivate_plugins( basename( __FILE__ ) );
 		wp_die('<p>This PHP installation does not include CURL, which is required by this plugin.</p>');
 	}

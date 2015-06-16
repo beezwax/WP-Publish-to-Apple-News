@@ -187,7 +187,7 @@ class Exporter {
 		foreach ( $nodes as $node ) {
 			$component = $this->get_component_from_node( $node );
 
-			if( is_array( $component ) ) {
+			if ( is_array( $component ) ) {
 				$result = array_merge( $result, $component );
 			} else {
 				$result[] = $component;
