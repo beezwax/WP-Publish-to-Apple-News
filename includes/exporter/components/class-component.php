@@ -58,7 +58,7 @@ abstract class Component {
 	protected static function node_find_by_tagname( $node, $tagname ) {
 		$result = self::node_find_all_by_tagname( $node, $tagname );
 
-		if( $result ) {
+		if ( $result ) {
 			return $result->item( 0 );
 		}
 

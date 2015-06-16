@@ -142,11 +142,10 @@ class Request {
 		// Check for request type
 		if ( 'POST' == $this->verb ) {
 			curl_setopt( $curl, CURLOPT_HTTPHEADER, array(
-					'Content-Length: ' . strlen( $this->content ),
-					'Content-Type: multipart/form-data; boundary=' . $this->mime_builder->boundary(),
-					$this->signature
-				)
-			);
+				'Content-Length: ' . strlen( $this->content ),
+				'Content-Type: multipart/form-data; boundary=' . $this->mime_builder->boundary(),
+				$this->signature
+			) );
 			curl_setopt( $curl, CURLOPT_POST, true );
 			curl_setopt( $curl, CURLOPT_POSTFIELDS, $this->content );
 		} else {
