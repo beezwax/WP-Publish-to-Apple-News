@@ -38,6 +38,9 @@ class API {
 	/**
 	 * Sends a new article to a given channel.
 	 *
+	 * @param string $article The JSON string representing the article
+	 * @param array  $bundles An array of file paths for the article attachments
+	 *
 	 * @since 0.0.0
 	 */
 	public function post_article_to_channel( $article, $channel_uuid, $bundles = array() ) {
