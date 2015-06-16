@@ -43,8 +43,24 @@ class API_Test extends WP_UnitTestCase {
 	}
 
 	public function testGetSections() {
-		$info = $this->api->get_sections( $this->channel_id );
-		$this->assertTrue( count( $info->data ) > 0 );
+		$sections = $this->api->get_sections( $this->channel_id );
+		$this->assertTrue( count( $sections->data ) > 0 );
+	}
+
+	public function testGetSection() {
+		$all_sections    = $this->api->get_sections( $this->channel_id );
+		$first_section   = $all_sections->data[0];
+		$fetched_section = $this->api->get_section( $first_section->id )->data;
+
+		$this->assertEquals(
+			$first_section->id,
+			$fetched_section->id
+		);
+
+		$this->assertEquals(
+			$first_section->name,
+			$fetched_section->name
+		);
 	}
 
 }

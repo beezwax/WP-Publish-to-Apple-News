@@ -57,4 +57,11 @@ class API {
 		return $request->send();
 	}
 
+	public function get_section( $section_id ) {
+		$url     = $this->endpoint . '/sections/' . $section_id;
+		$request = new Request( $url, 'GET', $this->debug );
+		$request->authenticate( $this->credentials );
+		return $request->send();
+	}
+
 }
