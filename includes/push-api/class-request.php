@@ -10,20 +10,54 @@ require_once __DIR__ . '/class-mime-builder.php';
  */
 class Request {
 
+	/**
+	 * The URL the request will be sent to.
+	 *
+	 * @var string
+	 * @since 0.0.0
+	 */
 	private $url;
+
+	/**
+	 * The method we'll use for the request. Assumes GET. Can be either POST or
+	 * GET.
+	 *
+	 * @var string Can either be POST or GET. If it's invalid, assumes GET.
+	 * @since 0.0.0
+	 */
 	private $verb;
+
+	/**
+	 * Helper class used to build the MIME parts of the request.
+	 *
+	 * @var MIME_Builder
+	 * @since 0.0.0
+	 */
 	private $mime_builder;
 
+	/**
+	 * Whether or not we are debugging using a reverse proxy, like Charles.
+	 *
+	 * @var boolean
+	 * @since 0.0.0
+	 */
 	private $debug;
 
+	/**
+	 * The signature used to authenticate the sent request.
+	 *
+	 * @var string
+	 * @since 0.0.0
+	 */
 	private $signature;
 
 	/**
 	 * The content this request holds, in MIME format.
+	 *
+	 * @var string
+	 * @since 0.0.0
 	 */
 	private $content;
-
-	private $article;
 
 	function __construct( $url, $verb = 'GET', $debug = false, $mime_builder = null ) {
 		$this->url          = $url;
@@ -34,9 +68,18 @@ class Request {
 		$this->content      = null;
 	}
 
-	// TODO: Should article be an Export_Content?
+	/**
+	 * Given an article, builds the request's content.
+	 *
+	 * TODO: Should article be an Export_Content?
+	 *
+	 * @param string $article The JSON contents of the article
+	 * @param array  $bundles The paths of the article's bundled files. Names
+	 *                        must match the ones specified in the JSON spec.
+	 *
+	 * @since 0.0.0
+	 */
 	public function set_article( $article, $bundles = array() ) {
-		$this->article = $article;
 		$this->content = $this->mime_builder->add_json_string( 'my_article', 'article.json', $article );
 		foreach ( $bundles as $bundle ) {
 			$this->content .= $this->mime_builder->add_content_from_file( $bundle );
@@ -71,6 +114,11 @@ class Request {
 		$this->signature = 'Authorization: HHMAC; key=' . $credentials->key() . '; signature=' . $signature . '; date=' . $current_date;
 	}
 
+	/**
+	 * Send the request using CURL.
+	 *
+	 * @since 0.0.0
+	 */
 	public function send() {
 		// TODO: Make a request object to wrap CURL requests
 		// Set up CURL
