@@ -4,7 +4,7 @@ namespace Exporter\Components;
 /**
  * Represents a simple image.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class Image extends Component {
 

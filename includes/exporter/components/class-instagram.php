@@ -6,7 +6,7 @@ namespace Exporter\Components;
  * Parse the blockquote only and ignore the script tag, as all we need is the
  * URL.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class Instagram extends Component {
 

@@ -9,7 +9,7 @@ namespace Exporter\Components;
  * In a WordPress context, the Exporter_Content's cover attribute is a post's
  * thumbnail, a.k.a featured image.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class Cover extends Component {
 

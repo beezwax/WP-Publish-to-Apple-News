@@ -6,7 +6,7 @@ namespace Exporter\Components;
  * inside. The container should be a div, but can be anything as long as it has
  * a 'gallery' class.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class Gallery extends Component {
 

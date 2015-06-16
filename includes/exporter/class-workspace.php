@@ -10,7 +10,7 @@ use \RecursiveDirectoryIterator as RecursiveDirectoryIterator;
  * workspace as well as zipping it.
  *
  * @author  Federico Ramirez
- * @since   0.0.0
+ * @since   0.2.0
  */
 class Workspace {
 
@@ -21,7 +21,7 @@ class Workspace {
 	 * create it.
 	 *
 	 * @var string
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	private $base_path;
 
@@ -32,7 +32,7 @@ class Workspace {
 	 * generation.
 	 *
 	 * @var string
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	private $tmp_path;
 
@@ -52,7 +52,7 @@ class Workspace {
 	/**
 	 * Delete all files from the workspace directory.
 	 *
-	 * @since   0.0.0
+	 * @since   0.2.0
 	 */
 	private function clean_up() {
 		$files = glob( $this->tmp_path . '*', GLOB_BRACE );
@@ -66,7 +66,7 @@ class Workspace {
 	/**
 	 * Write a file to the workspace.
 	 *
-	 * @since   0.0.0
+	 * @since   0.2.0
 	 */
 	public function write_tmp_file( $file, $contents ) {
 		file_put_contents( $this->tmp_path . $file, $contents );
@@ -75,7 +75,7 @@ class Workspace {
 	/**
 	 * Reads the contents of a file or URL.
 	 *
-	 * @since   0.0.0
+	 * @since   0.2.0
 	 */
 	public function get_file_contents( $file ) {
 		return file_get_contents( $file );
@@ -84,7 +84,7 @@ class Workspace {
 	/**
 	 * Compresses the workspace directory recursively into a ZIP.
 	 *
-	 * @since   0.0.0
+	 * @since   0.2.0
 	 * @return  The full path to the generated zipfile
 	 */
 	public function zip( $filename ) {

@@ -4,7 +4,7 @@ namespace Exporter\Components;
 /**
  * One of the simplest components. It's just a paragraph.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class Body extends Component {
 

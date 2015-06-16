@@ -4,7 +4,7 @@ namespace Exporter\Components;
 /**
  * An HTML video tag representation.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class Video extends Component {
 

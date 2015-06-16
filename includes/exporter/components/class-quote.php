@@ -4,7 +4,7 @@ namespace Exporter\Components;
 /**
  * An HTML's blockquote representation.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class Quote extends Component {
 

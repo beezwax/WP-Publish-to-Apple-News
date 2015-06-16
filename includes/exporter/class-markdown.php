@@ -8,7 +8,7 @@ namespace Exporter;
  * For elements that are not supported, just skip them and add the contents of
  * the tag.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class Markdown {
 
