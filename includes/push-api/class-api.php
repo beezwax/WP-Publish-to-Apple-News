@@ -1,7 +1,6 @@
 <?php
 namespace Push_API;
 
-use \Exception as Exception;
 use \Push_API\Request\Request as Request;
 
 require_once __DIR__ . '/request/class-request.php';
