@@ -34,6 +34,11 @@ class Request_CURL {
 		curl_setopt( $this->curl, CURLOPT_RETURNTRANSFER, true );
 	}
 
+	/**
+	 * Send a signed POST request using CURL.
+	 *
+	 * @since 0.0.0
+	 */
 	public function post( $content, $boundary, $signature ) {
 		curl_setopt( $this->curl, CURLOPT_HTTPHEADER, array(
 			'Content-Length: ' . strlen( $content ),
@@ -46,6 +51,11 @@ class Request_CURL {
 		return $this->send();
 	}
 
+	/**
+	 * Send a signed GET request using CURL.
+	 *
+	 * @since 0.0.0
+	 */
 	public function get( $signature ) {
 		curl_setopt( $this->curl, CURLOPT_HTTPHEADER, array( $signature ) );
 		return $this->send();

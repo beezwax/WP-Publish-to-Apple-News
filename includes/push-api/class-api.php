@@ -85,6 +85,9 @@ class API {
 		return $this->send_get_request( $url );
 	}
 
+	// Isolate request dependency.
+	// -------------------------------------------------------------------------
+
 	private function send_get_request( $url ) {
 		return $this->request->get( $url );
 	}

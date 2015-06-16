@@ -41,30 +41,32 @@ class Request {
 		$this->mime_builder = $mime_builder ?: new MIME_Builder();
 	}
 
+	/**
+	 * Sends a POST request with the given article and bundles.
+	 *
+	 * @since 0.0.0
+	 */
 	public function post( $url, $article, $bundles = array() ) {
-		$curl = new Request_CURL( $url, $this->debug );
-
 		$content   = $this->build_content( $article, $bundles );
 		$signature = $this->sign( $url, $content );
-		$response  = $curl->post( $content, $this->mime_builder->boundary(), $signature );
+		$response  = $this->curl_post( $url, $content, $this->mime_builder->boundary(), $signature );
 
-		if ( property_exists( $response, 'errors' ) ) {
-			$string_errors = '';
-			foreach ( $response->errors as $error ) {
-				$string_errors .= $error->code . "\n";
-			}
-			throw new Request_Exception( "There has been an error with your request:\n$string_errors" );
-		}
-
-		return $response;
+		return $this->parse_response( $response );
 	}
 
+	/**
+	 * Sends a GET request with the given article and bundles.
+	 *
+	 * @since 0.0.0
+	 */
 	public function get( $url ) {
-		$curl = new Request_CURL( $url, $this->debug );
-
 		$signature = $this->sign( $url );
-		$response  = $curl->get( $signature );
+		$response  = $this->curl_get( $url, $signature );
 
+		return $this->parse_response( $response );
+	}
+
+	private function parse_response( $response ) {
 		if ( property_exists( $response, 'errors' ) ) {
 			$string_errors = '';
 			foreach ( $response->errors as $error ) {
@@ -75,7 +77,6 @@ class Request {
 
 		return $response;
 	}
-
 
 	// TODO The exporter has an abstracted article class. Should we have
 	// something similar here? That way this method could live there.
@@ -104,6 +105,19 @@ class Request {
 		$signature  = base64_encode( $hash );
 
 		return 'Authorization: HHMAC; key=' . $this->credentials->key() . '; signature=' . $signature . '; date=' . $current_date;
+	}
+
+	// Isolate Request_CURL dependency.
+	// -------------------------------------------------------------------------
+
+	private function curl_post( $url, $content, $boundary, $signature ) {
+		$curl = new Request_CURL( $url, $this->debug );
+		return $curl->post( $content, $boundary, $signature );
+	}
+
+	private function curl_get( $url, $signature ) {
+		$curl = new Request_CURL( $url, $this->debug );
+		return $curl->get( $signature );
 	}
 
 }
