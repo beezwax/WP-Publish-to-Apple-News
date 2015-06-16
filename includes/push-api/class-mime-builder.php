@@ -5,6 +5,20 @@ class MIME_Builder {
 
 	private $boundary;
 
+	private static $valid_mime_types = array (
+		'image/jpeg',
+		'image/png',
+		'image/gif',
+		'application/font-sfnt',
+		'application/x-font-truetype',
+		'application/font-truetype',
+		'application/vnd.ms-opentype',
+		'application/x-font-opentype',
+		'application/font-opentype',
+		'application/octet-stream',
+	);
+
+
 	function __construct() {
 		$this->boundary = md5( microtime() );
 	}
@@ -18,11 +32,11 @@ class MIME_Builder {
 	}
 
 	public function add_content_from_file( $filepath, $name = 'a_file' ) {
-		$filename		 = basename( $filepath );
-		$filecontent = file_get_contents( $filepath );
-		$filemime    = $this->get_mime_type_for( $filepath );
+		$filename     = basename( $filepath );
+		$file_content = file_get_contents( $filepath );
+		$file_mime    = $this->get_mime_type_for( $filepath );
 
-		return $this->build_attachment( $name, $filename, $filecontent, $filemime );
+		return $this->build_attachment( $name, $filename, $file_content, $file_mime );
 	}
 
 	public function close() {
@@ -46,7 +60,7 @@ class MIME_Builder {
 		$finfo = finfo_open( FILEINFO_MIME_TYPE );
 		$type  = finfo_file( $finfo, $filepath );
 
-		if( $this->is_valid_mime_type( $type ) ) {
+		if ( $this->is_valid_mime_type( $type ) ) {
 			return $type;
 		}
 
@@ -54,18 +68,7 @@ class MIME_Builder {
 	}
 
 	private function is_valid_mime_type( $type ) {
-		return in_array( $type, array (
-			'image/jpeg',
-			'image/png',
-			'image/gif',
-			'application/font-sfnt',
-			'application/x-font-truetype',
-			'application/font-truetype',
-			'application/vnd.ms-opentype',
-			'application/x-font-opentype',
-			'application/font-opentype',
-			'application/octet-stream',
-		) );
+		return in_array( $type, self::$valid_mime_types );
 	}
 
 }

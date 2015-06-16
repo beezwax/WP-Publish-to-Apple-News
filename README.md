@@ -33,13 +33,13 @@ That script will download latest wordpress as well as latest wordpress' tests so
 
 You'll also need to set up your API credentials using your system's
 environmental variables. For UNIX systems (OSX, Linux, etc) you can simply edit
-the `.profile` file, adding your variables as follows:
+the `~/.profile` file, adding your variables as follows:
 
     export WP_PLUGIN_KEY=my-api-key
     export WP_PLUGIN_SECRET=my-api-secret
     export WP_PLUGIN_CHANNEL=my-api-channel
 
-Once updated, reload it using `source .profile`. Test it out by doing `echo
+Once updated, reload it using `source ~/.profile`. Test it out by doing `echo
 $WP_PLUGIN_KEY`, it should display your key in the terminal.
 
 Now you can simply use the `phpunit` command to run the tests.

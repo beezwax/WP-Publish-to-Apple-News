@@ -1,8 +1,6 @@
 <?php
 namespace Push_API;
 
-use \Exception as Exception;
-
 require_once __DIR__ . '/class-mime-builder.php';
 
 /**
@@ -54,8 +52,8 @@ class Request {
 	 *                                          to sign the request.
 	 */
 	public function authenticate( $credentials ) {
-		if( 'POST' == $this->verb && is_null( $this->content ) ) {
-			throw new Exception( 'POST requests must add content before signing it.' );
+		if ( 'POST' == $this->verb && is_null( $this->content ) ) {
+			throw new Request_Exception( 'POST requests must add content before signing it.' );
 		}
 
 		$current_date = date( 'c' );
@@ -94,13 +92,12 @@ class Request {
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
 
 		// Check for request type
-		if( 'POST' == $this->verb ) {
+		if ( 'POST' == $this->verb ) {
 			curl_setopt( $curl, CURLOPT_HTTPHEADER, array(
 				'Content-Length: ' . strlen( $this->content ),
 				'Content-Type: multipart/form-data; boundary=' . $this->mime_builder->boundary(),
 				$this->signature
-			)
-		);
+			) );
 			curl_setopt( $curl, CURLOPT_POST, true );
 			curl_setopt( $curl, CURLOPT_POSTFIELDS, $this->content );
 		} else {
@@ -112,20 +109,22 @@ class Request {
 		if ( false === $response ) {
 			$error = curl_error( $curl );
 			curl_close( $curl );
-			throw new Exception( "Curl request failed: $error" );
+			throw new Request_Exception( "CURL request failed: $error" );
 		}
 		curl_close($curl);
 
 		$response = json_decode( $response );
-		if( property_exists( $response, 'errors' ) ) {
+		if ( property_exists( $response, 'errors' ) ) {
 			$string_errors = '';
-			foreach( $response->errors as $error ) {
+			foreach ( $response->errors as $error ) {
 				$string_errors .= $error->code . "\n";
 			}
-			throw new Exception( "There has been an error with your request:\n$string_errors" );
+			throw new Request_Exception( "There has been an error with your request:\n$string_errors" );
 		}
 
 		return $response;
 	}
 
 }
+
+class Request_Exception extends \Exception {}
