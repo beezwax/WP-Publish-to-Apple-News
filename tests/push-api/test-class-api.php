@@ -38,7 +38,7 @@ class API_Test extends WP_UnitTestCase {
 	}
 
 	public function testGetChannelInfo() {
-		$info = $this->api->get_channel_info( $this->channel_id );
+		$info = $this->api->get_channel( $this->channel_id );
 		$this->assertEquals( $this->channel_id, $info->data->id );
 	}
 
