@@ -2,6 +2,7 @@
 namespace Push_API;
 
 require_once __DIR__ . '/class-mime-builder.php';
+require_once __DIR__ . '/class-request-curl.php';
 
 /**
  * An object capable of sending signed HTTP requests to the Push API.
@@ -120,48 +121,15 @@ class Request {
 	 * @since 0.0.0
 	 */
 	public function send() {
-		// TODO: Make a request object to wrap CURL requests
-		// Set up CURL
-		$curl = curl_init( $this->url );
+		$curl = new Request_CURL( $this->url, $this->debug );
 
-		// If we want to debug using a reverse proxy, like Charles.
-		if ( $this->debug ) {
-			curl_setopt( $curl, CURLOPT_PROXY, '127.0.0.1' );
-			curl_setopt( $curl, CURLOPT_PROXYPORT, 8888 );
-		}
-
-		// The HTTPS certificate does not seem to be validated, this is probably
-		// becaues it's just a test endpoint for now. This should be removed once
-		// the endoint is stable, or at least be able to toggle it on and off.
-		curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, 0);
-		// Not sure if this is required. Leave it off if possible.
-		//curl_setopt( $curl, CURLOPT_INFILESIZE, strlen( $this->article ) );
-		// Make curl_exec return the request result rather than just true.
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
-
-		// Check for request type
+		$response = null;
 		if ( 'POST' == $this->verb ) {
-			curl_setopt( $curl, CURLOPT_HTTPHEADER, array(
-				'Content-Length: ' . strlen( $this->content ),
-				'Content-Type: multipart/form-data; boundary=' . $this->mime_builder->boundary(),
-				$this->signature
-			) );
-			curl_setopt( $curl, CURLOPT_POST, true );
-			curl_setopt( $curl, CURLOPT_POSTFIELDS, $this->content );
+			$response = $curl->post( $this->content, $this->mime_builder->boundary(), $this->signature  );
 		} else {
-			curl_setopt( $curl, CURLOPT_HTTPHEADER, array( $this->signature ) );
+			$response = $curl->get( $this->signature  );
 		}
 
-		// CURL is ready. Execute!
-		$response = curl_exec( $curl );
-		if ( false === $response ) {
-			$error = curl_error( $curl );
-			curl_close( $curl );
-			throw new Request_Exception( "CURL request failed: $error" );
-		}
-		curl_close($curl);
-
-		$response = json_decode( $response );
 		if ( property_exists( $response, 'errors' ) ) {
 			$string_errors = '';
 			foreach ( $response->errors as $error ) {
