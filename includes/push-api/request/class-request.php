@@ -1,8 +1,10 @@
 <?php
-namespace Push_API;
+namespace Push_API\Request;
 
-require_once __DIR__ . '/class-mime-builder.php';
-require_once __DIR__ . '/class-request-curl.php';
+use \Push_API\MIME_Builder as MIME_Builder;
+
+require_once __DIR__ . '/../class-mime-builder.php';
+require_once __DIR__ . '/class-curl.php';
 
 /**
  * An object capable of sending signed HTTP requests to the Push API.
@@ -107,16 +109,16 @@ class Request {
 		return 'Authorization: HHMAC; key=' . $this->credentials->key() . '; signature=' . $signature . '; date=' . $current_date;
 	}
 
-	// Isolate Request_CURL dependency.
+	// Isolate CURL dependency.
 	// -------------------------------------------------------------------------
 
 	private function curl_post( $url, $content, $boundary, $signature ) {
-		$curl = new Request_CURL( $url, $this->debug );
+		$curl = new CURL( $url, $this->debug );
 		return $curl->post( $content, $boundary, $signature );
 	}
 
 	private function curl_get( $url, $signature ) {
-		$curl = new Request_CURL( $url, $this->debug );
+		$curl = new CURL( $url, $this->debug );
 		return $curl->get( $signature );
 	}
 

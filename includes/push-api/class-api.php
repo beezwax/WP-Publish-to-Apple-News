@@ -2,8 +2,9 @@
 namespace Push_API;
 
 use \Exception as Exception;
+use \Push_API\Request\Request as Request;
 
-require_once __DIR__ . '/class-request.php';
+require_once __DIR__ . '/request/class-request.php';
 
 /**
  * This class will post provided specified format articles to a channel using

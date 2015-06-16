@@ -1,12 +1,12 @@
 <?php
-namespace Push_API;
+namespace Push_API\Request;
 
 /**
  * Helper class to handle CURL configuration.
  *
  * @since 0.0.0
  */
-class Request_CURL {
+class CURL {
 
 	/**
 	 * @var CURL Handle
