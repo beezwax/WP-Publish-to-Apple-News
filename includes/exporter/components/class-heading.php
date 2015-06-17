@@ -28,7 +28,6 @@ class Heading extends Component {
 		// textStyle in headings.
 		$text  = preg_replace( '#</?\.+?>#', '', $matches[2] );
 
-		// NOTE: this is not using markdown format
 		$this->json = array(
 			'role' => 'heading' . $level,
 			'text' => $text,
@@ -42,7 +41,7 @@ class Heading extends Component {
 		$this->register_style( 'default-heading-' . $level, array(
 			'fontName' => $this->get_setting( 'header_font' ),
 			'fontSize' => $this->get_setting( 'header' . $level . '_size' ),
-			'relativeLineHeight' => 1.35,
+			'relativeLineHeight' => 1.5,
 			'textColor' => '#000',
 		) );
 	}
