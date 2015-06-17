@@ -9,19 +9,58 @@ use \Push_API\Credentials as Credentials;
 class API_Test extends WP_UnitTestCase {
 
 	public function setup() {
-		$this->key        = getenv( 'WP_PLUGIN_KEY' );
-		$this->secret     = getenv( 'WP_PLUGIN_SECRET' );
+		// Whether or not to set requests to debug mode, enabling the use or
+		// reverse proxies such as Charles.
+		$debug_mode = false;
+
+		$key        = getenv( 'WP_PLUGIN_KEY' );
+		$secret     = getenv( 'WP_PLUGIN_SECRET' );
+		$endpoint   = 'https://u48r14.digitalhub.com';
 		$this->channel_id = getenv( 'WP_PLUGIN_CHANNEL' );
-		$this->endpoint   = 'https://u48r14.digitalhub.com';
+
+		$credentials = new Credentials( $key, $secret );
+		$this->api   = new API( $endpoint, $credentials, $debug_mode );
 	}
 
 	public function testPostSimpleArticle() {
-		$credentials = new Credentials( $this->key, $this->secret );
-		$api = new API( $this->endpoint, $credentials, false );
-
 		$article = '{"version":"0.1","identifier":"post-1","language":"en","title":"\u00a1Hola mundo!","components":[{"role":"intro","text":"\u00a1Hola mundo!"},{"role":"body","text":"Bienvenido a WordPress. Esta es tu primera entrada. Ed\u00c3\u00adtala o b\u00c3\u00b3rrala, \u00c2\u00a1y comienza a publicar!."},{"role":"body","text":"Now this is the second paragraph. And it\u2019s in english!"}],"layout":{"columns":7,"width":1024,"margin":30,"gutter":20},"documentStyle":{"backgroundColor":"#F7F7F7"},"componentTextStyles":{"default":{"fontName":"Helvetica","fontSize":13,"linkStyle":{"textColor":"#428bca"}},"title":{"fontName":"Helvetica-Bold","fontSize":30,"hyphenation":false},"default-body":{"fontName":"Helvetica","fontSize":13}},"componentLayouts":{"headerContainerLayout":{"columnStart":0,"columnSpan":7,"ignoreDocumentMargin":true,"minimumHeight":"50vh"}}}';
 
-		$this->assertNotNull( $api->post_article_to_channel( $article, $this->channel_id ) );
+		$this->assertNotNull( $this->api->post_article_to_channel( $article, $this->channel_id ) );
+	}
+
+	public function testPostWithImages() {
+		$article = file_get_contents( __DIR__ . '/resources/article.json' );
+		$files = array(
+			realpath( __DIR__ . '/resources/367f66381fd0be912e6d1744135e528b.png' ),
+			realpath( __DIR__ . '/resources/54dd603249541ae4dc6356aeb186e47b.png' ),
+		);
+		$this->assertNotNull( $this->api->post_article_to_channel( $article, $this->channel_id, $files ) );
+	}
+
+	public function testGetChannelInfo() {
+		$info = $this->api->get_channel( $this->channel_id );
+		$this->assertEquals( $this->channel_id, $info->data->id );
+	}
+
+	public function testGetSections() {
+		$sections = $this->api->get_sections( $this->channel_id );
+		$this->assertTrue( count( $sections->data ) > 0 );
+	}
+
+	public function testGetSection() {
+		$all_sections    = $this->api->get_sections( $this->channel_id );
+		$first_section   = $all_sections->data[0];
+		$fetched_section = $this->api->get_section( $first_section->id )->data;
+
+		$this->assertEquals(
+			$first_section->id,
+			$fetched_section->id
+		);
+
+		$this->assertEquals(
+			$first_section->name,
+			$fetched_section->name
+		);
 	}
 
 }

@@ -8,6 +8,7 @@ class Credentials {
 	 * the API credentials and should be safely stored in the server, do not
 	 * hard-code it in the source code.
 	 *
+	 * @var string
 	 * @since 0.0.0
 	 */
 	private $key;
@@ -17,6 +18,7 @@ class Credentials {
 	 * the API credentials and should be safely stored in the server, do not
 	 * hard-code it in the source code.
 	 *
+	 * @var string
 	 * @since 0.0.0
 	 */
 	private $secret;

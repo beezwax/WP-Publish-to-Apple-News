@@ -112,13 +112,13 @@ class Markdown {
 
 	private function parse_unordered_list_node( $node ) {
 		$this->list_mode = 'ul';
-		return $this->parseNodes( $node->childNodes ) . "\n";
+		return $this->parseNodes( $node->childNodes ) . "\n\n";
 	}
 
 	private function parse_ordered_list_node( $node ) {
 		$this->list_mode = 'ol';
 		$this->list_index = 1;
-		return $this->parseNodes( $node->childNodes ) . "\n";
+		return $this->parseNodes( $node->childNodes ) . "\n\n";
 	}
 
 	private function parse_list_item_node( $node ) {
