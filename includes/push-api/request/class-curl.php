@@ -25,7 +25,7 @@ class CURL {
 		}
 
 		// The HTTPS certificate does not seem to be validated, this is probably
-		// becaues it's just a test endpoint for now. This should be removed once
+		// because it's just a test endpoint for now. This should be removed once
 		// the endoint is stable, or at least be able to toggle it on and off.
 		curl_setopt( $this->curl, CURLOPT_SSL_VERIFYPEER, 0);
 		// Not sure if this is required. Leave it off if possible.
