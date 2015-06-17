@@ -22,8 +22,10 @@ class Heading extends Component {
 		}
 
 		$level = intval( $matches[1] );
-		// We won't be using markdown, we ignore all HTML tags, just fetch the
+		// We won't be using markdown*, we ignore all HTML tags, just fetch the
 		// contents.
+		// *: No markdown because the apple format doesn't support markdown with
+		// textStyle in headings.
 		$text  = preg_replace( '#</?\.+?>#', '', $matches[2] );
 
 		// NOTE: this is not using markdown format
