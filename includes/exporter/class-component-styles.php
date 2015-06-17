@@ -12,17 +12,15 @@ class Component_Styles {
 	private $styles;
 
 	function __construct() {
-		// Default styles
-		$this->styles = array(
-			'default' => array(
-				'fontName' => 'Helvetica',
-				'fontSize' => 13,
-				'linkStyle' => array( 'textColor' => '#428bca' ),
-			),
-		);
+		$this->styles = array();
 	}
 
 	public function register_style( $name, $spec ) {
+		// Only register once, styles have unique names.
+		if( array_key_exists( $name, $this->styles ) ) {
+			return;
+		}
+
 		$this->styles[ $name ] = $spec;
 	}
 
