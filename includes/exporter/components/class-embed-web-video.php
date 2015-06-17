@@ -5,7 +5,7 @@ namespace Exporter\Components;
  * An embedded video from Youtube or Vimeo, for example. For now, assume
  * any iframe is an embedded video.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class Embed_Web_Video extends Component {
 

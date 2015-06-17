@@ -9,7 +9,7 @@ require_once __DIR__ . '/class-curl.php';
 /**
  * An object capable of sending signed HTTP requests to the Push API.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class Request {
 
@@ -17,7 +17,7 @@ class Request {
 	 * Helper class used to build the MIME parts of the request.
 	 *
 	 * @var MIME_Builder
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	private $mime_builder;
 
@@ -25,7 +25,7 @@ class Request {
 	 * Whether or not we are debugging using a reverse proxy, like Charles.
 	 *
 	 * @var boolean
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	private $debug;
 
@@ -33,7 +33,7 @@ class Request {
 	 * The credentials that will be used to sign sent requests.
 	 *
 	 * @var Credentials
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	private $credentials;
 
@@ -46,7 +46,7 @@ class Request {
 	/**
 	 * Sends a POST request with the given article and bundles.
 	 *
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	public function post( $url, $article, $bundles = array() ) {
 		$content   = $this->build_content( $article, $bundles );
@@ -59,7 +59,7 @@ class Request {
 	/**
 	 * Sends a GET request with the given article and bundles.
 	 *
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	public function get( $url ) {
 		$signature = $this->sign( $url );

@@ -4,7 +4,7 @@ namespace Exporter\Components;
 /**
  * Represents an HTML header.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class Heading extends Component {
 

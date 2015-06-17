@@ -4,13 +4,13 @@ namespace Push_API\Request;
 /**
  * Helper class to handle CURL configuration.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class CURL {
 
 	/**
 	 * @var CURL Handle
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	private $curl;
 
@@ -37,7 +37,7 @@ class CURL {
 	/**
 	 * Send a signed POST request using CURL.
 	 *
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	public function post( $content, $boundary, $signature ) {
 		curl_setopt( $this->curl, CURLOPT_HTTPHEADER, array(
@@ -54,7 +54,7 @@ class CURL {
 	/**
 	 * Send a signed GET request using CURL.
 	 *
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	public function get( $signature ) {
 		curl_setopt( $this->curl, CURLOPT_HTTPHEADER, array( $signature ) );

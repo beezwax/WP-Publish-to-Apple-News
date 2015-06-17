@@ -6,13 +6,13 @@
  * admin panel.
  *
  * @link    http://beezwax.net
- * @since   0.0.0
+ * @since   0.2.0
  * @package WP_Plugin
  *
  * Plugin Name: Apple Export
  * Plugin URI:  http://beezwax.net
  * Description: Export and sync posts to Apple format.
- * Version:     0.0.0
+ * Version:     0.2.0
  * Author:      Beezwax
  * Author URI:  http://beezwax.net
  * Text Domain: apple-export

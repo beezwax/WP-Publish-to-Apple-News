@@ -9,7 +9,7 @@ class Credentials {
 	 * hard-code it in the source code.
 	 *
 	 * @var string
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	private $key;
 
@@ -19,7 +19,7 @@ class Credentials {
 	 * hard-code it in the source code.
 	 *
 	 * @var string
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	private $secret;
 

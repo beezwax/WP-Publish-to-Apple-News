@@ -9,7 +9,7 @@ require_once __DIR__ . '/request/class-request.php';
  * This class will post provided specified format articles to a channel using
  * the API.
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 class API {
 
@@ -17,7 +17,7 @@ class API {
 	 * The endpoint to connect to.
 	 *
 	 * @var string
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	private $endpoint;
 
@@ -26,7 +26,7 @@ class API {
 	 * endpoint.
 	 *
 	 * @var Request
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	private $request;
 
@@ -41,7 +41,7 @@ class API {
 	 * @param string $article The JSON string representing the article
 	 * @param array  $bundles An array of file paths for the article attachments
 	 *
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	public function post_article_to_channel( $article, $channel_uuid, $bundles = array() ) {
 		$url = $this->endpoint . '/channels/' . $channel_uuid . '/articles';
@@ -51,7 +51,7 @@ class API {
 	/**
 	 * Gets a channel information.
 	 *
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	public function get_channel( $channel_uuid ) {
 		$url = $this->endpoint . '/channels/' . $channel_uuid;
@@ -61,7 +61,7 @@ class API {
 	/**
 	 * Gets article information.
 	 *
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	public function get_article( $article_id ) {
 		$url = $this->endpoint . '/articles/' . $article_id;
@@ -71,7 +71,7 @@ class API {
 	/**
 	 * Gets all sections in the given channel.
 	 *
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	public function get_sections( $channel_uuid ) {
 		$url = $this->endpoint . '/channels/' . $channel_uuid . '/sections';
@@ -81,7 +81,7 @@ class API {
 	/**
 	 * Gets information for a section.
 	 *
-	 * @since 0.0.0
+	 * @since 0.2.0
 	 */
 	public function get_section( $section_id ) {
 		$url = $this->endpoint . '/sections/' . $section_id;

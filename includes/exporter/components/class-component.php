@@ -7,7 +7,7 @@ require_once __DIR__ . '/../class-markdown.php';
  * Base component class. All components must inherit from this class and
  * implement its abstract method "build".
  *
- * @since 0.0.0
+ * @since 0.2.0
  */
 abstract class Component {
 

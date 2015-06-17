@@ -16,7 +16,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
  * conventions.
  *
  * @author  Federico Ramirez
- * @since   0.0.0
+ * @since   0.2.0
  */
 class Exporter {
 
