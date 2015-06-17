@@ -31,8 +31,8 @@ class API_Test extends WP_UnitTestCase {
 	public function testPostWithImages() {
 		$article = file_get_contents( __DIR__ . '/resources/article.json' );
 		$files = array(
-			realpath( __DIR__ . '/resources/367f66381fd0be912e6d1744135e528b.png' ),
-			realpath( __DIR__ . '/resources/54dd603249541ae4dc6356aeb186e47b.png' ),
+			realpath( __DIR__ . '/resources/367f66381fd0be912e6d1744135e528b.jpg' ),
+			realpath( __DIR__ . '/resources/54dd603249541ae4dc6356aeb186e47b.jpg' ),
 		);
 		$this->assertNotNull( $this->api->post_article_to_channel( $article, $this->channel_id, $files ) );
 	}

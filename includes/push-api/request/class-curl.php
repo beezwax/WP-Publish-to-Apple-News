@@ -1,12 +1,12 @@
 <?php
-namespace Push_API;
+namespace Push_API\Request;
 
 /**
  * Helper class to handle CURL configuration.
  *
  * @since 0.0.0
  */
-class Request_CURL {
+class CURL {
 
 	/**
 	 * @var CURL Handle
@@ -25,7 +25,7 @@ class Request_CURL {
 		}
 
 		// The HTTPS certificate does not seem to be validated, this is probably
-		// becaues it's just a test endpoint for now. This should be removed once
+		// because it's just a test endpoint for now. This should be removed once
 		// the endoint is stable, or at least be able to toggle it on and off.
 		curl_setopt( $this->curl, CURLOPT_SSL_VERIFYPEER, 0);
 		// Not sure if this is required. Leave it off if possible.
@@ -34,6 +34,11 @@ class Request_CURL {
 		curl_setopt( $this->curl, CURLOPT_RETURNTRANSFER, true );
 	}
 
+	/**
+	 * Send a signed POST request using CURL.
+	 *
+	 * @since 0.0.0
+	 */
 	public function post( $content, $boundary, $signature ) {
 		curl_setopt( $this->curl, CURLOPT_HTTPHEADER, array(
 			'Content-Length: ' . strlen( $content ),
@@ -46,6 +51,11 @@ class Request_CURL {
 		return $this->send();
 	}
 
+	/**
+	 * Send a signed GET request using CURL.
+	 *
+	 * @since 0.0.0
+	 */
 	public function get( $signature ) {
 		curl_setopt( $this->curl, CURLOPT_HTTPHEADER, array( $signature ) );
 		return $this->send();

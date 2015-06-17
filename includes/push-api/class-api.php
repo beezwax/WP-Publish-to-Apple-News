@@ -1,9 +1,9 @@
 <?php
 namespace Push_API;
 
-use \Exception as Exception;
+use \Push_API\Request\Request as Request;
 
-require_once __DIR__ . '/class-request.php';
+require_once __DIR__ . '/request/class-request.php';
 
 /**
  * This class will post provided specified format articles to a channel using
@@ -14,14 +14,6 @@ require_once __DIR__ . '/class-request.php';
 class API {
 
 	/**
-	 * Credentials used for requests authentication.
-	 *
-	 * @var Credentials
-	 * @since 0.0.0
-	 */
-	private $credentials;
-
-	/**
 	 * The endpoint to connect to.
 	 *
 	 * @var string
@@ -30,21 +22,24 @@ class API {
 	private $endpoint;
 
 	/**
-	 * Whether or not to use a reverse proxy like Charles to send requests though.
+	 * The request object, used to send signed POST and GET requests to the
+	 * endpoint.
 	 *
-	 * @var boolean
+	 * @var Request
 	 * @since 0.0.0
 	 */
-	private $debug;
+	private $request;
 
 	function __construct( $endpoint, $credentials, $debug = false ) {
-		$this->endpoint    = $endpoint;
-		$this->credentials = $credentials;
-		$this->debug       = $debug;
+		$this->endpoint = $endpoint;
+		$this->request  = new Request( $credentials, $debug );
 	}
 
 	/**
 	 * Sends a new article to a given channel.
+	 *
+	 * @param string $article The JSON string representing the article
+	 * @param array  $bundles An array of file paths for the article attachments
 	 *
 	 * @since 0.0.0
 	 */
@@ -93,17 +88,15 @@ class API {
 		return $this->send_get_request( $url );
 	}
 
+	// Isolate request dependency.
+	// -------------------------------------------------------------------------
+
 	private function send_get_request( $url ) {
-		$request = new Request( $url, 'GET', $this->debug );
-		$request->authenticate( $this->credentials );
-		return $request->send();
+		return $this->request->get( $url );
 	}
 
 	private function send_post_request( $url, $article, $bundles ) {
-		$request = new Request( $url, 'POST', $this->debug );
-		$request->set_article( $article, $bundles );
-		$request->authenticate( $this->credentials );
-		return $request->send();
+		return $this->request->post( $url, $article, $bundles );
 	}
 
 }
