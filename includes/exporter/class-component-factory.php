@@ -27,9 +27,13 @@ class Component_Factory {
 
 	private static $components = array();
 	private static $workspace  = null;
+	private static $settings   = null;
+	private static $styles     = null;
 
-	public static function initialize( $workspace ) {
+	public static function initialize( $workspace, $settings, $styles ) {
 		self::$workspace = $workspace;
+		self::$settings  = $settings;
+		self::$styles    = $styles;
 
 		// Order is important. Components are checked in the order they are added.
 		self::register_component( 'gallery'   ,   '\\Exporter\\Components\\Gallery'         );
@@ -60,7 +64,7 @@ class Component_Factory {
 			return null;
 		}
 
-		return new $class( $html, self::$workspace );
+		return new $class( $html, self::$workspace, self::$settings, self::$styles );
 	}
 
 	/**

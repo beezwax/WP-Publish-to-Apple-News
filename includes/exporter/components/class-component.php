@@ -7,13 +7,46 @@ require_once __DIR__ . '/../class-markdown.php';
  * Base component class. All components must inherit from this class and
  * implement its abstract method "build".
  *
+ * It provides several helper methods, such as get/set_setting and
+ * register_style.
+ *
  * @since 0.2.0
  */
 abstract class Component {
 
+	/**
+	 * @since 0.2.0
+	 */
 	protected $workspace;
+
+	/**
+	 * @since 0.2.0
+	 */
 	protected $text;
-	protected $json = null;
+
+	/**
+	 * @since 0.2.0
+	 */
+	protected $json;
+
+	/**
+	 * @since 0.4.0
+	 */
+	protected $settings;
+
+	/**
+	 * @since 0.4.0
+	 */
+	protected $styles;
+
+	function __construct( $text, $workspace, $settings, $styles, $markdown = null ) {
+		$this->workspace = $workspace;
+		$this->settings  = $settings;
+		$this->styles    = $styles;
+		$this->markdown  = $markdown ?: new \Exporter\Markdown();
+		$this->text      = $text;
+		$this->json      = null;
+	}
 
 	/**
 	 * Given a DomNode, if it matches the component, return the relevant node to
@@ -23,10 +56,17 @@ abstract class Component {
 		return null;
 	}
 
-	function __construct( $text, $workspace, $markdown = null ) {
-		$this->text      = $text;
-		$this->workspace = $workspace;
-		$this->markdown  = $markdown ?: new \Exporter\Markdown();
+	/**
+	 * Lazily transforms HTML into an array that describes the component using
+	 * the build function.
+	 */
+	public function value() {
+		// Lazy value evaluation
+		if ( is_null( $this->json ) ) {
+			$this->build( $this->text );
+		}
+
+		return $this->json;
 	}
 
 	/**
@@ -42,17 +82,34 @@ abstract class Component {
 		$this->workspace->write_tmp_file( $filename, $content );
 	}
 
-	/**
-	 * Lazily transforms HTML into an array that describes the component using
-	 * the build function.
-	 */
-	public function value() {
-		// Lazy value evaluation
-		if ( is_null( $this->json ) ) {
-			$this->build( $this->text );
-		}
+	// Isolate settings dependency
+	// -------------------------------------------------------------------------
 
-		return $this->json;
+	/**
+	 * Gets an exporter setting.
+	 *
+	 * @since 0.4.0
+	 */
+	protected function get_setting( $name ) {
+		return $this->settings->get( $name );
+	}
+
+	/**
+	 * Sets an exporter setting.
+	 *
+	 * @since 0.4.0
+	 */
+	protected function set_setting( $name, $value ) {
+		return $this->settings->set( $name, $value );
+	}
+
+	/**
+	 * Using the style service, register a new style.
+	 *
+	 * @since 0.4.0
+	 */
+	protected function register_style( $name, $spec ) {
+		$this->styles->register_style( $name, $spec );
 	}
 
 	protected static function node_find_by_tagname( $node, $tagname ) {

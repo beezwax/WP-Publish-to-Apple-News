@@ -2,8 +2,10 @@
 namespace Exporter;
 
 require_once plugin_dir_path( __FILE__ ) . 'class-component-factory.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-component-styles.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-settings.php';
 
 /**
  * Export a Exporter_Content instance to Apple format.
@@ -20,14 +22,40 @@ require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
  */
 class Exporter {
 
+	/**
+	 * The content object to be exported.
+	 *
+	 * @var  Exporter_Content
+	 * @since 0.2.0
+	 */
 	private $exporter_content;
+
+	/**
+	 * The workspace object, used to write and zip files.
+	 *
+	 * @var  Workspace
+	 * @since 0.2.0
+	 */
 	private $workspace;
 
-	function __construct( Exporter_Content $content, Workspace $workspace = null ) {
+	/**
+	 * The settings object which is used to configure the output of the exporter.
+	 *
+	 * @var  Settings
+	 * @since 0.4.0
+	 */
+	private $settings;
+
+	/**
+	 * FIXME: This constructor got big. Should make setters/getters instead?
+	 */
+	function __construct( Exporter_Content $content, Workspace $workspace = null, Settings $settings = null, Component_Styles $styles = null ) {
 		$this->exporter_content = $content;
 		$this->workspace = $workspace ?: new Workspace();
+		$this->settings  = $settings ?: new Settings();
+		$this->styles    = $styles ?: new Component_Styles();
 
-		Component_Factory::initialize( $this->workspace );
+		Component_Factory::initialize( $this->workspace, $this->settings, $this->styles );
 	}
 
 	/**
@@ -53,27 +81,14 @@ class Exporter {
 				'margin'  => 30,
 				'gutter'  => 20,
 			),
-			// Styles
+			// Document style
 			'documentStyle' => array(
 				'backgroundColor' => '#F7F7F7',
 			),
-			// TODO: Create a Style object
-			'componentTextStyles' => array(
-				'default' => array(
-					'fontName' => 'Helvetica',
-					'fontSize' => 13,
-					'linkStyle' => array( 'textColor' => '#428bca' ),
-				),
-				'title' => array(
-					'fontName' => 'Helvetica-Bold',
-					'fontSize' => 30,
-					'hyphenation' => false,
-				),
-				'default-body' => array(
-					'fontName' => 'Helvetica',
-					'fontSize' => 13,
-				),
-			),
+			// Component styles. Must be called after build_components, as styles
+			// are lazily added.
+			'componentTextStyles' => $this->build_styles(),
+			// Component layouts
 			// TODO: Create a Component Layout object
 			'componentLayouts' => array(
 				'headerContainerLayout' => array(
@@ -138,6 +153,10 @@ class Exporter {
 
 	private function get_component_from_node( $node ) {
 		return Component_Factory::get_component_from_node( $node );
+	}
+
+	private function build_styles() {
+		return $this->styles->get_styles();
 	}
 
 	/**
