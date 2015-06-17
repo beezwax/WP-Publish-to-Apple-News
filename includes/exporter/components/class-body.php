@@ -32,34 +32,35 @@ class Body extends Component {
 		}
 	}
 
-	private function set_default_style() {
-		$this->json[ 'textStyle' ] = 'default-body';
-		$this->register_style( 'default-body', array(
+	private function get_default_style() {
+		return array(
 			'textAlignment' => 'left',
 			'fontName' => $this->get_setting( 'body_font' ),
 			'fontSize' => 16,
 			'relativeLineHeight' => 1.2,
 			'textColor' => '#000',
 			'linkStyle' => array( 'textColor' => '#428bca' ),
-		) );
+		);
+	}
+
+	private function set_default_style() {
+		$this->json[ 'textStyle' ] = 'default-body';
+		$this->register_style( 'default-body', $this->get_default_style() );
 	}
 
 	private function set_initial_dropcap_style() {
 		$this->json[ 'textStyle' ] = 'dropcapBodyStyle';
-		$this->register_style( 'dropcapBodyStyle', array(
-			'textAlignment' => 'left',
-			'fontName' => $this->get_setting( 'body_font' ),
-			'fontSize' => 16,
-			'relativeLineHeight' => 1.2,
-			'textColor' => '#000',
-			'linkStyle' => array( 'textColor' => '#428bca' ),
-			'dropCapStyle' => array (
-				'numberOfLines' => 2,
-				'numberOfCharacters' => 1,
-				'fontName' => $this->get_setting( 'dropcap_font' ),
-				'textColor' => '#000',
-			),
-		) );
+		$this->register_style( 'dropcapBodyStyle', array_merge(
+			$this->get_default_style(),
+		 	array(
+				'dropCapStyle' => array (
+					'numberOfLines' => 2,
+					'numberOfCharacters' => 1,
+					'fontName' => $this->get_setting( 'dropcap_font' ),
+					'textColor' => '#000',
+				),
+			)
+	 	) );
 	}
 
 }
