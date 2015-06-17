@@ -14,6 +14,18 @@ class Intro extends Component {
 			'role' => 'intro',
 			'text' => $text,
 		);
+
+		$this->set_style();
+	}
+
+	private function set_style() {
+		$this->json[ 'textStyle' ] = 'default-intro';
+		$this->register_style( 'default-intro', array(
+			'fontName' => $this->get_setting( 'body_font' ),
+			'fontSize' => 16,
+			'relativeLineHeight' => 1.2,
+			'textColor' => '#000',
+		) );
 	}
 
 }
