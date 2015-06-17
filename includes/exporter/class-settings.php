@@ -19,6 +19,10 @@ class Settings {
 		'header6_size'    => 16,
 		'body_font'       => 'AvenirNext-Regular',
 		'dropcap_font'    => 'Georgia-Bold',
+		'pullquote_font'  => 'DINCondensed-Bold',
+		'pullquote_size'  => 48,
+		'pullquote_color' => '#53585F',
+		'pullquote_transform' => 'uppercase',
 	);
 
 	public function get( $name ) {
