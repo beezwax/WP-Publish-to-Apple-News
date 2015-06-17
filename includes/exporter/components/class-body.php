@@ -36,10 +36,11 @@ class Body extends Component {
 		$this->json[ 'textStyle' ] = 'default-body';
 		$this->register_style( 'default-body', array(
 			'textAlignment' => 'left',
-			'fontName' => 'AvenirNext-Regular',
+			'fontName' => $this->get_setting( 'body_font' ),
 			'fontSize' => 16,
 			'relativeLineHeight' => 1.2,
 			'textColor' => '#000',
+			'linkStyle' => array( 'textColor' => '#428bca' ),
 		) );
 	}
 
@@ -47,14 +48,15 @@ class Body extends Component {
 		$this->json[ 'textStyle' ] = 'dropcapBodyStyle';
 		$this->register_style( 'dropcapBodyStyle', array(
 			'textAlignment' => 'left',
-			'fontName' => 'AvenirNext-Regular',
+			'fontName' => $this->get_setting( 'body_font' ),
 			'fontSize' => 16,
 			'relativeLineHeight' => 1.2,
 			'textColor' => '#000',
+			'linkStyle' => array( 'textColor' => '#428bca' ),
 			'dropCapStyle' => array (
 				'numberOfLines' => 2,
 				'numberOfCharacters' => 1,
-				'fontName' => 'Georgia-Bold',
+				'fontName' => $this->get_setting( 'dropcap_font' ),
 				'textColor' => '#000',
 			),
 		) );
