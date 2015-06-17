@@ -36,10 +36,10 @@ class Body extends Component {
 		return array(
 			'textAlignment' => 'left',
 			'fontName' => $this->get_setting( 'body_font' ),
-			'fontSize' => 16,
+			'fontSize' => $this->get_setting( 'body_size' ),
 			'relativeLineHeight' => 1.2,
-			'textColor' => '#000',
-			'linkStyle' => array( 'textColor' => '#428bca' ),
+			'textColor' => $this->get_setting( 'body_color' ),
+			'linkStyle' => array( 'textColor' => $this->get_setting( 'body_link_color' ) ),
 		);
 	}
 
@@ -57,7 +57,7 @@ class Body extends Component {
 					'numberOfLines' => 2,
 					'numberOfCharacters' => 1,
 					'fontName' => $this->get_setting( 'dropcap_font' ),
-					'textColor' => '#000',
+					'textColor' => $this->get_setting( 'dropcap_color' ),
 				),
 			)
 	 	) );

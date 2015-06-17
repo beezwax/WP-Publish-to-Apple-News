@@ -42,7 +42,7 @@ class Heading extends Component {
 			'fontName' => $this->get_setting( 'header_font' ),
 			'fontSize' => $this->get_setting( 'header' . $level . '_size' ),
 			'relativeLineHeight' => 1.5,
-			'textColor' => '#000',
+			'textColor' => $this->get_setting( 'header_color' ),
 		) );
 	}
 
