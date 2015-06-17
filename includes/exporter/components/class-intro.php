@@ -22,9 +22,9 @@ class Intro extends Component {
 		$this->json[ 'textStyle' ] = 'default-intro';
 		$this->register_style( 'default-intro', array(
 			'fontName' => $this->get_setting( 'body_font' ),
-			'fontSize' => 16,
+			'fontSize' => $this->get_setting( 'body_size' ),
 			'relativeLineHeight' => 1.2,
-			'textColor' => '#000',
+			'textColor' => $this->get_setting( 'body_color' ),
 		) );
 	}
 

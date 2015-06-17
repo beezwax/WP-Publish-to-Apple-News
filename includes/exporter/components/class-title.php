@@ -18,7 +18,7 @@ class Title extends Component {
 			'fontName' => $this->get_setting( 'header_font' ),
 			'fontSize' => $this->get_setting( 'header1_size' ),
 			'relativeLineHeight' => 1.2,
-			'textColor' => '#000',
+			'textColor' => $this->get_setting( 'header_color' ),
 		) );
 	}
 
