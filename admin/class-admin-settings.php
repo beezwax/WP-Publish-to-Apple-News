@@ -30,7 +30,7 @@ class Admin_Settings {
 	}
 
 	private function get_type_for_field( $name ) {
-		if( array_key_exists( $name, $this->field_types ) ) {
+		if ( array_key_exists( $name, $this->field_types ) ) {
 			return $this->field_types[ $name ];
 		}
 
@@ -53,13 +53,13 @@ class Admin_Settings {
 				$field .= ">$option</option>";
 			}
 			$field .= '</select>';
-		} else if( 'boolean' == $type ) {
+		} else if ( 'boolean' == $type ) {
 			$field = '<input type="checkbox"';
 			if ( $value ) {
 				$field .= ' checked ';
 			}
 			$field .= '>';
-		} else if( 'string' == $type ) {
+		} else if ( 'string' == $type ) {
 			$field = '<input type="text" id="title" name="%s", value="%s">';
 		} else if ( 'integer' == $type ) {
 			$field = '<input type="number" id="title" name="%s", value="%s">';
