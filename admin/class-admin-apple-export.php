@@ -6,8 +6,12 @@
  * @since   0.0.0
  */
 
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-settings.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter-content.php';
+
+use Exporter\Exporter as Exporter;
+use Exporter\Exporter_Content as Exporter_Content;
 
 class Admin_Apple_Export extends Apple_Export {
 
@@ -17,6 +21,9 @@ class Admin_Apple_Export extends Apple_Export {
 
 		// Register hooks
 		add_action( 'admin_menu', array( $this, 'setup_pages' ) );
+
+		// Initialize admin settings
+		new Admin_Settings();
 	}
 
 	/**
@@ -28,7 +35,7 @@ class Admin_Apple_Export extends Apple_Export {
 		// The URL of the post's thumbnail (a.k.a featured image), if any.
 		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ?: null;
 
-		$base_content = new Exporter\Exporter_Content(
+		$base_content = new Exporter_Content(
 			$post->ID,
 			$post->post_title,
 			// post_content is not raw HTML, as WordPress editor cleans up
@@ -39,7 +46,7 @@ class Admin_Apple_Export extends Apple_Export {
 			$post_thumb
 		);
 
-		$exporter = new Exporter\Exporter( $base_content );
+		$exporter = new Exporter( $base_content );
 		$this->download_zipfile( $exporter->export() );
 	}
 
@@ -59,8 +66,8 @@ class Admin_Apple_Export extends Apple_Export {
 	}
 
 	public function setup_pages() {
+		// Only one page for now.
 		$this->page_index();
-		$this->page_options();
 	}
 
 	/**
@@ -84,26 +91,6 @@ class Admin_Apple_Export extends Apple_Export {
 		}
 
 		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
-	}
-
-	/**
-	 * Options page setup
-	 */
-	public function page_options() {
-		add_options_page(
-			'Apple Export Options',
-			'Apple Export',
-			'manage_options',
-			$this->plugin_name . '_options',
-			array( $this, 'page_options_render' )
-		);
-	}
-
-	public function page_options_render() {
-		if ( ! current_user_can( 'manage_options' ) )
-			wp_die( __( 'You do not have permissions to access this page.' ) );
-
-		include plugin_dir_path( __FILE__ ) . 'partials/page_options.php';
 	}
 
 }

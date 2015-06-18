@@ -9,7 +9,14 @@ class Settings {
 
 	// Default settings.
 	private $settings = array(
+		'body_font'       => 'AvenirNext-Regular',
+		'body_size'       => 16,
+		'body_color'      => '#000',
+		'body_link_color' => '#428BCA',
 		'initial_dropcap' => true,
+		'dropcap_font'    => 'Georgia-Bold',
+		'dropcap_color'   => '#000',
+
 		'header_font'     => 'AvenirNext-Bold',
 		'header_color'    => '#000',
 		'header1_size'    => 48,
@@ -18,13 +25,6 @@ class Settings {
 		'header4_size'    => 21,
 		'header5_size'    => 18,
 		'header6_size'    => 16,
-
-		'body_font'       => 'AvenirNext-Regular',
-		'body_size'       => 16,
-		'body_color'      => '#000',
-		'body_link_color' => '#428BCA',
-		'dropcap_font'    => 'Georgia-Bold',
-		'dropcap_color'   => '#000',
 
 		'pullquote_font'  => 'DINCondensed-Bold',
 		'pullquote_size'  => 48,
@@ -44,6 +44,10 @@ class Settings {
 
 	public function set( $name, $value ) {
 		$this->settings[ $name ] = $value;
+	}
+
+	public function all() {
+		return $this->settings;
 	}
 
 }
