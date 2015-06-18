@@ -5,6 +5,13 @@ use Exporter\Settings as Settings;
 
 class Admin_Settings {
 
+	/**
+	 * Associative array of fields and types. If not present, defaults to string.
+	 * Possible types are: integer, color, boolean, string and options.
+	 * If options, use an array instead of a string.
+	 *
+	 * @since 0.4.0
+	 */
 	private $field_types = array(
 		'body_size' => 'integer',
 		'body_color' => 'color',
@@ -27,14 +34,6 @@ class Admin_Settings {
 	function __construct() {
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_menu', array( $this, 'setup_options_page' ) );
-	}
-
-	private function get_type_for_field( $name ) {
-		if ( array_key_exists( $name, $this->field_types ) ) {
-			return $this->field_types[ $name ];
-		}
-
-		return 'string';
 	}
 
 	public function render_field( $args ) {
@@ -70,10 +69,9 @@ class Admin_Settings {
 		printf( $field, $name, $value );
 	}
 
-	public function print_section_info() {
+	public function print_general_settings_section_info() {
 		echo 'Settings which apply globally to the plugin functionality.';
 	}
-
 
 	/**
 	 * Load exporter settings and register them.
@@ -84,7 +82,7 @@ class Admin_Settings {
 		add_settings_section(
 			'apple-export-options-section-general', // ID
 			'General Settings', // Title
-			array( $this, 'print_section_info' ),
+			array( $this, 'print_general_settings_section_info' ),
 			'apple-export-options'
 	 	);
 
@@ -120,6 +118,14 @@ class Admin_Settings {
 			wp_die( __( 'You do not have permissions to access this page.' ) );
 
 		include plugin_dir_path( __FILE__ ) . 'partials/page_options.php';
+	}
+
+	private function get_type_for_field( $name ) {
+		if ( array_key_exists( $name, $this->field_types ) ) {
+			return $this->field_types[ $name ];
+		}
+
+		return 'string';
 	}
 
 }
