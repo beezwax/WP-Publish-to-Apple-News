@@ -30,6 +30,8 @@ class Settings {
 		'pullquote_size'  => 48,
 		'pullquote_color' => '#53585F',
 		'pullquote_transform' => 'uppercase',
+
+		'gallery_type'   => 'gallery', // this can either be gallery or mosaic.
 	);
 
 	public function get( $name ) {
