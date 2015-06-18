@@ -35,7 +35,7 @@ class Settings {
 	);
 
 	public function get( $name ) {
-		if( ! array_key_exists( $name, $this->settings ) ) {
+		if ( ! array_key_exists( $name, $this->settings ) ) {
 			return null;
 		}
 

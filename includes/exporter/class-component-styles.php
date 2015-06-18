@@ -17,7 +17,7 @@ class Component_Styles {
 
 	public function register_style( $name, $spec ) {
 		// Only register once, styles have unique names.
-		if( array_key_exists( $name, $this->styles ) ) {
+		if ( array_key_exists( $name, $this->styles ) ) {
 			return;
 		}
 
