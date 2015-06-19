@@ -12,6 +12,7 @@ require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter-
 
 use Exporter\Exporter as Exporter;
 use Exporter\Exporter_Content as Exporter_Content;
+use Exporter\Settings as Settings;
 
 class Admin_Apple_Export extends Apple_Export {
 
@@ -46,8 +47,21 @@ class Admin_Apple_Export extends Apple_Export {
 			$post_thumb
 		);
 
-		$exporter = new Exporter( $base_content );
+		$exporter = new Exporter( $base_content, null, $this->get_settings() );
 		$this->download_zipfile( $exporter->export() );
+	}
+
+	/**
+	 * Loads the initial settings with the WordPress ones.
+	 * @since 0.4.0
+	 */
+	private function get_settings() {
+		$settings = new Settings();
+		foreach( $settings->all() as $key => $value ) {
+			$wp_value = esc_attr( get_option( $key ) ) ?: $value;
+			$settings->set( $key, $wp_value );
+		}
+		return $settings;
 	}
 
 	/**

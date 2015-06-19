@@ -55,17 +55,27 @@ class Admin_Settings {
 			}
 			$field .= '</select>';
 		} else if ( 'boolean' == $type ) {
-			$field = '<input type="checkbox"';
-			if ( $value ) {
-				$field .= ' checked ';
+			$field = '<select name="%s">';
+
+			$field .= '<option value="yes"';
+			if ( 'yes' == $value ) {
+				$field .= ' selected ';
 			}
-			$field .= '>';
+			$field .= '>Yes</option>';
+
+			$field .= '<option value="no"';
+			if ( 'yes' != $value ) {
+				$field .= ' selected ';
+			}
+			$field .= '>No</option>';
+
+			$field .= '</select>';
 		} else if ( 'string' == $type ) {
-			$field = '<input type="text" id="title" name="%s", value="%s">';
+			$field = '<input type="text" name="%s" value="%s">';
 		} else if ( 'integer' == $type ) {
-			$field = '<input type="number" id="title" name="%s", value="%s">';
+			$field = '<input type="number" name="%s" value="%s">';
 		} else if ( 'color' == $type ) {
-			$field = '<input type="color" id="title" name="%s", value="%s">';
+			$field = '<input type="color" name="%s" value="%s">';
 	  }
 
 		printf( $field, $name, $value );

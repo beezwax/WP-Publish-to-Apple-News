@@ -13,7 +13,7 @@ class Settings {
 		'body_size'       => 16,
 		'body_color'      => '#000',
 		'body_link_color' => '#428BCA',
-		'initial_dropcap' => true,
+		'initial_dropcap' => 'yes',
 		'dropcap_font'    => 'Georgia-Bold',
 		'dropcap_color'   => '#000',
 
