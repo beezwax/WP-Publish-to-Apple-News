@@ -42,6 +42,8 @@ class Admin_Settings {
 		$value = esc_attr( get_option( $name ) ) ?: $default_value;
 		$field = null;
 
+		// FIXME: A cleaner object-oriented solution would create Input objects
+		// and instantiate them according to their type.
 		if ( is_array( $type ) ) {
 			$field = '<select name="%s">';
 			foreach ( $type as $option ) {
