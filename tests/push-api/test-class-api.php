@@ -26,6 +26,10 @@ class API_Test extends WP_UnitTestCase {
 		$article = '{"version":"0.1","identifier":"post-1","language":"en","title":"\u00a1Hola mundo!","components":[{"role":"intro","text":"\u00a1Hola mundo!"},{"role":"body","text":"Bienvenido a WordPress. Esta es tu primera entrada. Ed\u00c3\u00adtala o b\u00c3\u00b3rrala, \u00c2\u00a1y comienza a publicar!."},{"role":"body","text":"Now this is the second paragraph. And it\u2019s in english!"}],"layout":{"columns":7,"width":1024,"margin":30,"gutter":20},"documentStyle":{"backgroundColor":"#F7F7F7"},"componentTextStyles":{"default":{"fontName":"Helvetica","fontSize":13,"linkStyle":{"textColor":"#428bca"}},"title":{"fontName":"Helvetica-Bold","fontSize":30,"hyphenation":false},"default-body":{"fontName":"Helvetica","fontSize":13}},"componentLayouts":{"headerContainerLayout":{"columnStart":0,"columnSpan":7,"ignoreDocumentMargin":true,"minimumHeight":"50vh"}}}';
 
 		$this->assertNotNull( $this->api->post_article_to_channel( $article, $this->channel_id ) );
+
+		// Test article with invalid json
+		$this->setExpectedException( 'Push_API\\Request\\Request_Exception', 'INVALID_DOCUMENT' );
+		$this->api->post_article_to_channel( '{invalid json}', $this->channel_id );
 	}
 
 	public function testPostWithImages() {
@@ -35,6 +39,10 @@ class API_Test extends WP_UnitTestCase {
 			realpath( __DIR__ . '/resources/54dd603249541ae4dc6356aeb186e47b.jpg' ),
 		);
 		$this->assertNotNull( $this->api->post_article_to_channel( $article, $this->channel_id, $files ) );
+
+		// Test article with no files
+		$this->setExpectedException( 'Push_API\\Request\\Request_Exception', 'INVALID_DOCUMENT' );
+		$this->api->post_article_to_channel( $article, $this->channel_id );
 	}
 
 	public function testGetChannelInfo() {
@@ -45,6 +53,10 @@ class API_Test extends WP_UnitTestCase {
 	public function testGetSections() {
 		$sections = $this->api->get_sections( $this->channel_id );
 		$this->assertTrue( count( $sections->data ) > 0 );
+
+		// Test for an invalid channel ID
+		$this->setExpectedException( 'Push_API\\Request\\Request_Exception', 'INVALID_TYPE' );
+		$fetched_section = $this->api->get_sections( 'some-invalid-id' );
 	}
 
 	public function testGetSection() {
@@ -61,6 +73,10 @@ class API_Test extends WP_UnitTestCase {
 			$first_section->name,
 			$fetched_section->name
 		);
+
+		// Test for an invalid channel ID
+		$this->setExpectedException( 'Push_API\\Request\\Request_Exception', 'INVALID_TYPE' );
+		$fetched_section = $this->api->get_section( 'some-invalid-id' );
 	}
 
 }
