@@ -69,6 +69,10 @@ class Request {
 	}
 
 	private function parse_response( $response ) {
+		if( ! $response ) {
+			throw new Request_Exception( "Invalid response:" . $response );
+		}
+
 		if ( property_exists( $response, 'errors' ) ) {
 			$string_errors = '';
 			foreach ( $response->errors as $error ) {
