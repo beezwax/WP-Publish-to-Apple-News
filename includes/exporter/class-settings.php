@@ -44,6 +44,7 @@ class Settings {
 
 	public function set( $name, $value ) {
 		$this->settings[ $name ] = $value;
+		return $value;
 	}
 
 }
