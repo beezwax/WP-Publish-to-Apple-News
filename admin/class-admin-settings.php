@@ -16,7 +16,7 @@ class Admin_Settings {
 		'body_size' => 'integer',
 		'body_color' => 'color',
 		'body_link_color' => 'color',
-		'initial_dropcap' => 'boolean',
+		'initial_dropcap' => 'boolean', // boolean is internally a 'yes' or 'no' string
 		'dropcap_color' => 'color',
 		'header_color' => 'color',
 		'header1_size' => 'integer',
