@@ -15,8 +15,12 @@ PHP 5.3+ and MySQL 5+.
 
 It's recommended to create a symbolic link for better code organization.
 
-1. `git clone http://...`
-2. `ln -s apple-export /var/www/my-wp-installation/wp-content/plugins/apple-export`
+1. `git clone ssh://... wppl`
+2. `cd wppl`
+3. `ln -s /home/my-user/my-projects/wppl /var/www/my-wp-installation/wp-content/plugins/apple-export`
+
+Make sure `/home/my-user` has execute permissions or WordPress might not show it
+as a plugin. You can do so by doing `chmod o+x /home/my-user`.
 
 ## Running tests
 You'll need PHPUnit v4.5+ to run tests. Initially you'll need to set up the

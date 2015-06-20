@@ -23,9 +23,9 @@ class Body extends Component {
 			'format' => 'markdown',
 		);
 
-		if ( $this->get_setting( 'initial_dropcap' ) ) {
+		if ( 'yes' == $this->get_setting( 'initial_dropcap' ) ) {
 			// Toggle setting. This should only happen in the initial paragraph.
-			$this->set_setting( 'initial_dropcap', false );
+			$this->set_setting( 'initial_dropcap', 'no' );
 			$this->set_initial_dropcap_style();
 		} else {
 			$this->set_default_style();
