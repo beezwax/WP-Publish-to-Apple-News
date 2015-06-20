@@ -21,11 +21,29 @@ class Heading extends Component {
 			return;
 		}
 
+		$level = intval( $matches[1] );
+		// We won't be using markdown*, so we ignore all HTML tags, just fetch the
+		// contents.
+		// *: No markdown because the apple format doesn't support markdown with
+		// textStyle in headings.
+		$text  = preg_replace( '#</?\.+?>#', '', $matches[2] );
+
 		$this->json = array(
-			'role' => 'heading' . $matches[1],
-			'text' => $this->markdown->parse( $text ),
-			'format' => 'markdown',
+			'role' => 'heading' . $level,
+			'text' => $text,
 		);
+
+		$this->set_style( $level );
+	}
+
+	private function set_style( $level ) {
+		$this->json[ 'textStyle' ] = 'default-heading-' . $level;
+		$this->register_style( 'default-heading-' . $level, array(
+			'fontName' => $this->get_setting( 'header_font' ),
+			'fontSize' => $this->get_setting( 'header' . $level . '_size' ),
+			'relativeLineHeight' => 1.5,
+			'textColor' => $this->get_setting( 'header_color' ),
+		) );
 	}
 
 }
