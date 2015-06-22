@@ -39,10 +39,11 @@ abstract class Component {
 	 */
 	protected $styles;
 
-	function __construct( $text, $workspace, $settings, $styles, $markdown = null ) {
+	function __construct( $text, $workspace, $settings, $styles, $layouts, $markdown = null ) {
 		$this->workspace = $workspace;
 		$this->settings  = $settings;
 		$this->styles    = $styles;
+		$this->layouts   = $layouts;
 		$this->markdown  = $markdown ?: new \Exporter\Markdown();
 		$this->text      = $text;
 		$this->json      = null;
@@ -110,6 +111,15 @@ abstract class Component {
 	 */
 	protected function register_style( $name, $spec ) {
 		$this->styles->register_style( $name, $spec );
+	}
+
+	/**
+	 * Using the layouts service, register a new layout.
+	 *
+	 * @since 0.4.0
+	 */
+	protected function register_layout( $name, $spec ) {
+		$this->layouts->register_layout( $name, $spec );
 	}
 
 	protected static function node_find_by_tagname( $node, $tagname ) {

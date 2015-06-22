@@ -3,6 +3,7 @@ namespace Exporter;
 
 require_once plugin_dir_path( __FILE__ ) . 'class-component-factory.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-component-styles.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-component-layouts.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-settings.php';
@@ -49,13 +50,15 @@ class Exporter {
 	/**
 	 * FIXME: This constructor got big. Should make setters/getters instead?
 	 */
-	function __construct( Exporter_Content $content, Workspace $workspace = null, Settings $settings = null, Component_Styles $styles = null ) {
+	function __construct( Exporter_Content $content, Workspace $workspace = null,
+	 	Settings $settings = null, Component_Styles $styles = null, Component_Layouts $layouts = null ) {
 		$this->exporter_content = $content;
 		$this->workspace = $workspace ?: new Workspace();
 		$this->settings  = $settings ?: new Settings();
 		$this->styles    = $styles ?: new Component_Styles();
+		$this->layouts   = $layouts ?: new Component_Layouts();
 
-		Component_Factory::initialize( $this->workspace, $this->settings, $this->styles );
+		Component_Factory::initialize( $this->workspace, $this->settings, $this->styles, $this->layouts );
 	}
 
 	/**
@@ -74,12 +77,12 @@ class Exporter {
 			'language'      => 'en',
 			'title'         => $this->content_title(),
 			'components'    => $this->build_components(),
-			// TODO: Create a Layout object
+			// Article base layout
 			'layout' => array(
-				'columns' => $this->settings->get( 'layout_columns' ) - 1, // Defaults to 7 ( 8 - 1 ). Starts counting from 0.
-				'width'   => $this->settings->get( 'layout_width' ),       // Defaults to 1024
-				'margin'  => $this->settings->get( 'layout_margin' ),			 // Defaults to 30
-				'gutter'  => $this->settings->get( 'layout_gutter' ),      // Defaults to 20
+				'columns' => $this->get_setting( 'layout_columns' ) - 1, // Defaults to 7 ( 8 - 1 ). Starts counting from 0.
+				'width'   => $this->get_setting( 'layout_width' ),       // Defaults to 1024
+				'margin'  => $this->get_setting( 'layout_margin' ),			 // Defaults to 30
+				'gutter'  => $this->get_setting( 'layout_gutter' ),      // Defaults to 20
 			),
 			// Document style
 			'documentStyle' => array(
@@ -88,16 +91,9 @@ class Exporter {
 			// Component styles. Must be called after build_components, as styles
 			// are lazily added.
 			'componentTextStyles' => $this->build_styles(),
-			// Component layouts
-			// TODO: Create a Component Layout object
-			'componentLayouts' => array(
-				'headerContainerLayout' => array(
-					'columnStart' => 0,
-					'columnSpan' => 7,
-					'ignoreDocumentMargin' => true,
-					'minimumHeight' => '50vh',
-				),
-			),
+			// Component layouts. Must be called after build_components, as layouts
+			// are too lazily added.
+			'componentLayouts' => $this->build_layouts(),
 		);
 
 		// For now, generate the thumb url in here, eventually it will move to the
@@ -157,6 +153,14 @@ class Exporter {
 
 	private function build_styles() {
 		return $this->styles->get_styles();
+	}
+
+	private function build_layouts() {
+		return $this->layouts->get_layouts();
+	}
+
+	private function get_setting( $name ) {
+		return $this->settings->get( $name );
 	}
 
 	/**
