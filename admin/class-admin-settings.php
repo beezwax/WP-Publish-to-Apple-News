@@ -76,7 +76,7 @@ class Admin_Settings {
 			$field = '<input type="number" name="%s" value="%s">';
 		} else if ( 'color' == $type ) {
 			$field = '<input type="color" name="%s" value="%s">';
-	  }
+		}
 
 		printf( $field, $name, $value );
 	}
