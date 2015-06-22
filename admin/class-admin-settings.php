@@ -13,6 +13,10 @@ class Admin_Settings {
 	 * @since 0.4.0
 	 */
 	private $field_types = array(
+		'layout_columns' => 'integer',
+		'layout_width' => 'integer',
+		'layout_margin' => 'integer',
+		'layout_gutter' => 'integer',
 		'body_size' => 'integer',
 		'body_color' => 'color',
 		'body_link_color' => 'color',

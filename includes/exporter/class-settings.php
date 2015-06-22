@@ -9,6 +9,11 @@ class Settings {
 
 	// Default settings.
 	private $settings = array(
+		'layout_width'    => '1024',
+		'layout_columns'  => '8', // Because we start counting at 0, this is actually 7, but show it as 8.
+		'layout_margin'   => '30',
+		'layout_gutter'   => '20',
+
 		'body_font'       => 'AvenirNext-Regular',
 		'body_size'       => 16,
 		'body_color'      => '#000',

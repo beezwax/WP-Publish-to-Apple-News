@@ -69,17 +69,17 @@ class Exporter {
 
 	private function generate_json() {
 		$json = array(
-			'version'       => '0.1',
+			'version'       => '0.10',
 			'identifier'    => 'post-' . $this->content_id(),
 			'language'      => 'en',
 			'title'         => $this->content_title(),
 			'components'    => $this->build_components(),
 			// TODO: Create a Layout object
 			'layout' => array(
-				'columns' => 7,
-				'width'   => 1024,
-				'margin'  => 30,
-				'gutter'  => 20,
+				'columns' => $this->settings->get( 'layout_columns' ) - 1, // Defaults to 7 ( 8 - 1 ). Starts counting from 0.
+				'width'   => $this->settings->get( 'layout_width' ),       // Defaults to 1024
+				'margin'  => $this->settings->get( 'layout_margin' ),			 // Defaults to 30
+				'gutter'  => $this->settings->get( 'layout_gutter' ),      // Defaults to 20
 			),
 			// Document style
 			'documentStyle' => array(
