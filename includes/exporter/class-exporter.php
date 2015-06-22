@@ -76,15 +76,16 @@ class Exporter {
 			'identifier' => 'post-' . $this->content_id(),
 			'language' => 'en',
 			'title' => $this->content_title(),
+			// Components
 			'components' => $this->build_components(),
-			// Article base layout
+			// Base layout
 			'layout' => $this->build_article_layout(),
-			// Document style
+			// Base style
 			'documentStyle' => array(
 				'backgroundColor' => '#F7F7F7',
 			),
-			// Component styles. Must be called after build_components, as styles
-			// are lazily added.
+			// Component styles. Must be called after build_components, as styles are
+			// lazily added.
 			'componentTextStyles' => $this->build_styles(),
 			// Component layouts. Must be called after build_components, as layouts
 			// are too lazily added.
