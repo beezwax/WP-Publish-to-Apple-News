@@ -69,7 +69,7 @@ class Request {
 	}
 
 	private function parse_response( $response ) {
-		if( ! $response ) {
+		if ( ! $response ) {
 			throw new Request_Exception( "Invalid response:" . $response );
 		}
 
