@@ -72,18 +72,13 @@ class Exporter {
 
 	private function generate_json() {
 		$json = array(
-			'version'       => '0.10',
-			'identifier'    => 'post-' . $this->content_id(),
-			'language'      => 'en',
-			'title'         => $this->content_title(),
-			'components'    => $this->build_components(),
+			'version' => '0.10',
+			'identifier' => 'post-' . $this->content_id(),
+			'language' => 'en',
+			'title' => $this->content_title(),
+			'components' => $this->build_components(),
 			// Article base layout
-			'layout' => array(
-				'columns' => $this->get_setting( 'layout_columns' ) - 1, // Defaults to 7 ( 8 - 1 ). Starts counting from 0.
-				'width'   => $this->get_setting( 'layout_width' ),       // Defaults to 1024
-				'margin'  => $this->get_setting( 'layout_margin' ),			 // Defaults to 30
-				'gutter'  => $this->get_setting( 'layout_gutter' ),      // Defaults to 20
-			),
+			'layout' => $this->build_article_layout(),
 			// Document style
 			'documentStyle' => array(
 				'backgroundColor' => '#F7F7F7',
@@ -110,6 +105,15 @@ class Exporter {
 		}
 
 		return json_encode( $json );
+	}
+
+	private function build_article_layout() {
+		return array(
+			'columns' => $this->get_setting( 'layout_columns' ) - 1, // Defaults to 7 ( 8 - 1 ). Starts counting from 0.
+			'width'   => $this->get_setting( 'layout_width' ),       // Defaults to 1024
+			'margin'  => $this->get_setting( 'layout_margin' ),			 // Defaults to 30
+			'gutter'  => $this->get_setting( 'layout_gutter' ),      // Defaults to 20
+		);
 	}
 
 	/**
