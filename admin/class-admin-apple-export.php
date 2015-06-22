@@ -47,7 +47,7 @@ class Admin_Apple_Export extends Apple_Export {
 			$post_thumb
 		);
 
-		$exporter = new Exporter( $base_content, null, $this->get_settings() );
+		$exporter = new Exporter( $base_content, null, $this->fetch_settings() );
 		$this->download_zipfile( $exporter->export() );
 	}
 
@@ -55,9 +55,9 @@ class Admin_Apple_Export extends Apple_Export {
 	 * Loads the initial settings with the WordPress ones.
 	 * @since 0.4.0
 	 */
-	private function get_settings() {
+	private function fetch_settings() {
 		$settings = new Settings();
-		foreach( $settings->all() as $key => $value ) {
+		foreach ( $settings->all() as $key => $value ) {
 			$wp_value = esc_attr( get_option( $key ) ) ?: $value;
 			$settings->set( $key, $wp_value );
 		}
