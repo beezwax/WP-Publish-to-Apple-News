@@ -86,10 +86,10 @@ class Exporter {
 			'components' => $this->build_components(),
 			// Component styles. Must be called after build_components, as styles are
 			// lazily added.
-			'componentTextStyles' => $this->build_styles(),
+			'componentTextStyles' => $this->build_component_styles(),
 			// Component layouts. Must be called after build_components, as layouts
 			// are too lazily added.
-			'componentLayouts' => $this->build_layouts(),
+			'componentLayouts' => $this->build_component_layouts(),
 		);
 
 		// For now, generate the thumb url in here, eventually it will move to the
@@ -156,11 +156,11 @@ class Exporter {
 		return Component_Factory::get_component_from_node( $node );
 	}
 
-	private function build_styles() {
+	private function build_component_styles() {
 		return $this->styles->get_styles();
 	}
 
-	private function build_layouts() {
+	private function build_component_layouts() {
 		return $this->layouts->get_layouts();
 	}
 
