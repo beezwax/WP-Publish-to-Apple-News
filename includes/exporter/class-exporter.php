@@ -4,6 +4,7 @@ namespace Exporter;
 require_once plugin_dir_path( __FILE__ ) . 'class-component-factory.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-component-styles.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-component-layouts.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-component-grid.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-settings.php';
@@ -51,12 +52,15 @@ class Exporter {
 	 * FIXME: This constructor got big. Should make setters/getters instead?
 	 */
 	function __construct( Exporter_Content $content, Workspace $workspace = null,
-	 	Settings $settings = null, Component_Styles $styles = null, Component_Layouts $layouts = null ) {
+		Settings $settings = null, Component_Styles $styles = null,
+		Component_Layouts $layouts = null, Component_Grid $grid = null ) {
+
 		$this->exporter_content = $content;
 		$this->workspace = $workspace ?: new Workspace();
 		$this->settings  = $settings ?: new Settings();
 		$this->styles    = $styles ?: new Component_Styles();
 		$this->layouts   = $layouts ?: new Component_Layouts();
+		$this->grid      = $grid ?: new Component_Grid( $this->settings );
 
 		Component_Factory::initialize( $this->workspace, $this->settings, $this->styles, $this->layouts );
 	}
@@ -82,15 +86,27 @@ class Exporter {
 			'documentStyle' => array(
 				'backgroundColor' => '#F7F7F7',
 			),
-			// Components
-			'components' => $this->build_components(),
-			// Component styles. Must be called after build_components, as styles are
-			// lazily added.
-			'componentTextStyles' => $this->build_component_styles(),
-			// Component layouts. Must be called after build_components, as layouts
-			// are too lazily added.
-			'componentLayouts' => $this->build_component_layouts(),
 		);
+
+		// Components
+		$components = $this->build_components();
+		if ( $components ) {
+			$json['components'] = $components;
+		}
+
+		// Component styles. Must be called after build_components, as styles are
+		// lazily added.
+		$styles = $this->build_component_styles();
+		if ( $styles ) {
+			$json['componentTextStyles'] = $styles;
+		}
+
+		// Component layouts. Must be called after build_components, as layouts
+		// are too lazily added.
+		$layouts = $this->build_component_layouts();
+		if ( $layouts ) {
+			$json['componentLayouts'] = $layouts;
+		}
 
 		// For now, generate the thumb url in here, eventually it will move to the
 		// metadata manager object. The cover component is in charge of copying
@@ -110,10 +126,10 @@ class Exporter {
 
 	private function build_article_layout() {
 		return array(
-			'columns' => $this->get_setting( 'layout_columns' ) - 1, // Defaults to 7 ( 8 - 1 ). Starts counting from 0.
-			'width'   => $this->get_setting( 'layout_width' ),       // Defaults to 1024
-			'margin'  => $this->get_setting( 'layout_margin' ),			 // Defaults to 30
-			'gutter'  => $this->get_setting( 'layout_gutter' ),      // Defaults to 20
+			'columns' => $this->get_setting( 'layout_columns' ), // Defaults to 8
+			'width'   => $this->get_setting( 'layout_width' ),   // Defaults to 1024
+			'margin'  => $this->get_setting( 'layout_margin' ),	 // Defaults to 30
+			'gutter'  => $this->get_setting( 'layout_gutter' ),  // Defaults to 20
 		);
 	}
 
@@ -168,6 +184,10 @@ class Exporter {
 		return $this->settings->get( $name );
 	}
 
+	private function split_components_into_columns( $components ) {
+		return $this->grid->split_components_into_columns( $components );
+	}
+
 	/**
 	 * Builds an array with all the components of this WordPress content.
 	 */
@@ -189,11 +209,14 @@ class Exporter {
 			$components[] = $this->get_component_from_shortname( 'intro', $this->content_intro() );
 		}
 
+		$post_components = array();
 		foreach ( $this->split_into_components() as $component ) {
-			$components[] = $component->value();
+			$post_components[] = $component->value();
 		}
+		// Use the grid service to split component into columns if needed.
+		$post_components = $this->split_components_into_columns( $post_components );
 
-		return $components;
+		return array_merge( $components, $post_components );
 	}
 
 	/**

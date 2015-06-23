@@ -1,0 +1,96 @@
+<?php
+namespace Exporter;
+
+/**
+ * Exporter and components can register layouts. This class manages the layouts
+ * the final JSON will contain.
+ *
+ * @since 0.4.0
+ */
+class Component_Grid {
+
+	/**
+	 * If a grid is specified, holds columns containers.
+	 * @since 0.4.0
+   */
+	private $columns;
+
+	private $has_grid;
+
+	private $total_columns;
+
+	function __construct( $settings ) {
+		$this->columns  = null;
+		$this->has_grid = false;
+		$this->total_columns = intval( $settings->get( 'layout_columns' ) );
+
+		// Check for a custom "grid", if it exists, register columns.
+		if ( $this->total_columns != $settings->get( 'grid' ) ) {
+			preg_match_all( '#(\d+)#m', $settings->get( 'grid' ), $columns );
+			$this->register_columns( $columns[1] );
+		}
+	}
+
+
+	/**
+	 * Split an array of components into the defined columns configured for this
+	 * article. If no columns are set, just return the raw array of components.
+	 */
+	public function split_components_into_columns( $components ) {
+		if ( ! $this->has_grid ) {
+			return $components;
+		}
+
+		// Completely fill first column, then fill second, and so on.
+		$total_cols  = count( $this->columns );
+		$per_column  = ceil( count( $components ) / $total_cols );
+		$in_curr_col = 0;
+		$col_idx     = 0;
+
+		foreach ( $components as $component ) {
+			if ( $in_curr_col >= $per_column ) {
+				$in_curr_col = 0;
+				$col_idx     = ( $col_idx + 1 ) % $total_cols;
+			}
+
+			// Use full-width layout if there's no layout defined.
+			if ( ! $component['layout'] ) {
+				$component['layout'] = 'full-width';
+			}
+
+			$this->columns[ $col_idx ]['components'][] = $component;
+			$in_curr_col += 1;
+		}
+
+		return $this->columns;
+	}
+
+	/**
+	 * Given an array of columns (eg [2 4 2]) creates appropriate containers.
+	 */
+	private function register_columns( $cols ) {
+		// If columns are invalid, ignore silently.
+		// TODO: Show warning.
+		if ( $this->total_columns != array_sum( $cols ) ) {
+			return;
+		}
+
+		// Generate columns. Each column is a container which will hold components
+		// inside.
+		$this->columns  = array();
+		$this->has_grid = true;
+		$start = 0;
+		foreach ( $cols as $col ) {
+			$this->columns[] = array(
+				'role' => 'container',
+				'layout' => array(
+					'columnStart' => intval( $start ),
+					'columnSpan'  => intval( $col ),
+				),
+				'components' => array(),
+			);
+			$start += $col;
+		}
+	}
+
+}

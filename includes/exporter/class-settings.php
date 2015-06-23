@@ -10,9 +10,17 @@ class Settings {
 	// Default settings.
 	private $settings = array(
 		'layout_width'    => '1024',
-		'layout_columns'  => '8', // Because we start counting at 0, this is actually 7, but show it as 8.
+		'layout_columns'  => '7', // Because we start counting at 0, this is actually 7, but show it as 8.
 		'layout_margin'   => '30',
 		'layout_gutter'   => '20',
+
+		// This is a string containing the grid definition for the exporter.
+		// For exampe, "4 4" will make two equal columns, "2 4 2" will make three
+		// columns.
+		// Note that the sum of all numbers must be equal to "layout_columns",
+		// otherwise, it will be ignored.
+		//'grid'            => '4 3',
+		'grid'            => '7',
 
 		'body_font'       => 'AvenirNext-Regular',
 		'body_size'       => 16,
