@@ -13,7 +13,7 @@ class Component_Grid {
 	 * If a grid is specified, holds columns containers.
 	 *
 	 * @since 0.4.0
-   */
+	 */
 	private $columns;
 
 	/**
