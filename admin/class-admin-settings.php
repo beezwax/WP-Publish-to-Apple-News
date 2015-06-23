@@ -5,6 +5,11 @@ use Exporter\Settings as Settings;
 
 class Admin_Settings {
 
+	/**
+	 * All available iOS fonts.
+	 *
+	 * @since 0.4.0
+	 */
 	private $fonts = array(
 		'AcademyEngravedLetPlain',
 		'AlNile-Bold',
