@@ -333,6 +333,13 @@ class Admin_Settings {
 
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_menu', array( $this, 'setup_options_page' ) );
+
+		// Dependencies
+		wp_enqueue_style( 'apple-export-select2-css', plugin_dir_url( __FILE__ ) .  '../vendor/select2/select2.min.css', array() );
+		wp_enqueue_script( 'apple-export-select2-js', plugin_dir_url( __FILE__ ) .  '../vendor/select2/select2.full.min.js', array( 'jquery' ) );
+
+		wp_enqueue_script( 'apple-export-settings-js', plugin_dir_url( __FILE__ ) .
+			'../assets/js/settings.js', array( 'jquery', 'apple-export-select2-js' ) );
 	}
 
 	public function render_field( $args ) {
