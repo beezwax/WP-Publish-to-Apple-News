@@ -68,7 +68,7 @@ class Component_Grid {
 			}
 
 			// Use full-width layout if there's no layout defined.
-			if ( ! $component['layout'] ) {
+			if ( ! $component['layout'] && $column_index > 0 ) {
 				$component['layout'] = 'full-width';
 			}
 
