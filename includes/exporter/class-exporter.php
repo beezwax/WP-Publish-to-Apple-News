@@ -192,21 +192,21 @@ class Exporter {
 	 * Builds an array with all the components of this WordPress content.
 	 */
 	private function build_components() {
-		$components = array();
+		$meta_components = array();
 
 		// The content's cover is optional. In WordPress, it's a post's thumbnail
 		// or featured image.
 		if ( $this->content_cover() ) {
-			$components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() );
+			$meta_components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() );
 		}
 
 		// Add title
-		$components[] = $this->get_component_from_shortname( 'title', $this->content_title() );
+		$meta_components[] = $this->get_component_from_shortname( 'title', $this->content_title() );
 
 		// The content's intro is optional. In WordPress, it's a post's
 		// excerpt. It's an introduction to the article.
 		if ( $this->content_intro() ) {
-			$components[] = $this->get_component_from_shortname( 'intro', $this->content_intro() );
+			$meta_components[] = $this->get_component_from_shortname( 'intro', $this->content_intro() );
 		}
 
 		$post_components = array();
@@ -216,7 +216,7 @@ class Exporter {
 		// Use the grid service to split component into columns if needed.
 		$post_components = $this->split_components_into_columns( $post_components );
 
-		return array_merge( $components, $post_components );
+		return array_merge( $meta_components, $post_components );
 	}
 
 	/**

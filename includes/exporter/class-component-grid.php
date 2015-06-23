@@ -2,8 +2,8 @@
 namespace Exporter;
 
 /**
- * Exporter and components can register layouts. This class manages the layouts
- * the final JSON will contain.
+ * The grid takes an array of components and sorts them into Containers,
+ * aligned as columns, as specified in the settings.
  *
  * @since 0.4.0
  */
@@ -11,12 +11,23 @@ class Component_Grid {
 
 	/**
 	 * If a grid is specified, holds columns containers.
+	 *
 	 * @since 0.4.0
    */
 	private $columns;
 
+	/**
+	 * Whether or not a valid grid is beeing used.
+	 *
+	 * @since 0.4.0
+	 */
 	private $has_grid;
 
+	/**
+	 * Ammount of columns specified in the settings.
+	 *
+	 * @since 0.4.0
+	 */
 	private $total_columns;
 
 	function __construct( $settings ) {
@@ -33,8 +44,11 @@ class Component_Grid {
 
 
 	/**
-	 * Split an array of components into the defined columns configured for this
-	 * article. If no columns are set, just return the raw array of components.
+	 * Split an array of components into the defined columns (containers)
+	 * configured for this article. If no columns are set, just return the input
+	 * array of components.
+	 *
+	 * @since 0.4.0
 	 */
 	public function split_components_into_columns( $components ) {
 		if ( ! $this->has_grid ) {
@@ -67,6 +81,8 @@ class Component_Grid {
 
 	/**
 	 * Given an array of columns (eg [2 4 2]) creates appropriate containers.
+	 *
+	 * @since 0.4.0
 	 */
 	private function register_columns( $cols ) {
 		// If columns are invalid, ignore silently.
