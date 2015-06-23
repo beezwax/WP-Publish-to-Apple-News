@@ -59,12 +59,12 @@ class Component_Grid {
 		$total_cols  = count( $this->columns );
 		$per_column  = ceil( count( $components ) / $total_cols );
 		$in_curr_col = 0;
-		$col_idx     = 0;
+		$column_index     = 0;
 
 		foreach ( $components as $component ) {
 			if ( $in_curr_col >= $per_column ) {
-				$in_curr_col = 0;
-				$col_idx     = ( $col_idx + 1 ) % $total_cols;
+				$in_curr_col  = 0;
+				$column_index = ( $column_index + 1 ) % $total_cols;
 			}
 
 			// Use full-width layout if there's no layout defined.
@@ -72,7 +72,7 @@ class Component_Grid {
 				$component['layout'] = 'full-width';
 			}
 
-			$this->columns[ $col_idx ]['components'][] = $component;
+			$this->columns[ $column_index ]['components'][] = $component;
 			$in_curr_col += 1;
 		}
 
