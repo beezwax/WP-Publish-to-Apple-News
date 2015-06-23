@@ -377,12 +377,12 @@ class Admin_Settings {
 
 			$field .= '</select>';
 		} else if ( 'integer' == $type ) {
-			$field = '<input type="number" name="%s" value="%s">';
+			$field = '<input required type="number" name="%s" value="%s">';
 		} else if ( 'color' == $type ) {
-			$field = '<input type="color" name="%s" value="%s">';
+			$field = '<input required type="color" name="%s" value="%s">';
 		} else {
 			// If nothing else matches, it's a string.
-			$field = '<input type="text" name="%s" value="%s">';
+			$field = '<input required type="text" name="%s" value="%s">';
 		}
 
 		printf( $field, $name, $value );
