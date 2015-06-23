@@ -97,11 +97,12 @@ class Component_Grid {
 		$this->has_grid = true;
 		$start = 0;
 		foreach ( $cols as $col ) {
+			$col = intval( $col );
 			$this->columns[] = array(
 				'role' => 'container',
 				'layout' => array(
-					'columnStart' => intval( $start ),
-					'columnSpan'  => intval( $col ),
+					'columnStart' => $start,
+					'columnSpan'  => $col,
 				),
 				'components' => array(),
 			);
