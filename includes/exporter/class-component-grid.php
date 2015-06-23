@@ -56,10 +56,10 @@ class Component_Grid {
 		}
 
 		// Completely fill first column, then fill second, and so on.
-		$total_cols  = count( $this->columns );
-		$per_column  = ceil( count( $components ) / $total_cols );
-		$in_curr_col = 0;
-		$column_index     = 0;
+		$total_cols   = count( $this->columns );
+		$per_column   = ceil( count( $components ) / $total_cols );
+		$in_curr_col  = 0;
+		$column_index = 0;
 
 		foreach ( $components as $component ) {
 			if ( $in_curr_col >= $per_column ) {
