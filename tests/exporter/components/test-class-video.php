@@ -1,6 +1,9 @@
 <?php
 
 use \Exporter\Components\Video as Video;
+use \Exporter\Settings as Settings;
+use \Exporter\Component_Layouts as Component_Layouts;
+use \Exporter\Component_Styles as Component_Styles;
 
 class Video_Test extends PHPUnit_Framework_TestCase {
 
@@ -8,6 +11,9 @@ class Video_Test extends PHPUnit_Framework_TestCase {
 
 	protected function setup() {
 		$this->prophet = new \Prophecy\Prophet;
+		$this->settings = new Settings();
+		$this->styles   = new Component_Styles();
+		$this->layouts  = new Component_Layouts();
 	}
 
 	protected function tearDown() {
@@ -22,12 +28,13 @@ class Video_Test extends PHPUnit_Framework_TestCase {
 		$workspace->write_tmp_file( 'video-file.mp4', 'foo' )->willReturn( true )->shouldBeCalled();
 
 		// Pass the mock workspace as a dependency
-		$video_component = new Video( '<video><source src="http://someurl.com/video-file.mp4?some_query=string"></video>', $workspace->reveal() );
+		$component = new Video( '<video><source src="http://someurl.com/video-file.mp4?some_query=string"></video>',
+			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
 
 		// Test for valid JSON
 		$this->assertEquals(
 			array( 'role' => 'video', 'URL' => 'bundle://video-file.mp4' ),
-			$video_component->value()
+			$component->value()
 		);
 	}
 
