@@ -15,9 +15,14 @@ class Video extends Component {
 		}
 
 		// Is there a node with tag 'video' inside this one?
-		//if ( $video_node = self::node_find_by_tagname( $node, 'video' ) ) {
-		//	return $video_node;
-		//}
+		//
+		// FIXME: Because video can't just be parsed by markdown we have to
+		// forcefully extract them from the container, so if the container has
+		// something besides this component, it will be ignored. See comment in
+		// Components/Body.
+		if ( $video_node = self::node_find_by_tagname( $node, 'video' ) ) {
+			return $video_node;
+		}
 
 		return null;
 	}
