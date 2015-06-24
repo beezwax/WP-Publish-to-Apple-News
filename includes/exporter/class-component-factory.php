@@ -97,14 +97,14 @@ class Component_Factory {
 			return $result;
 		}
 
-    // Nothing found. Maybe it's a container element?
-    if ( $node->hasChildNodes() ) {
-      foreach ( $node->childNodes as $child ) {
-        $result = array_merge( $result, self::get_components_from_node( $child ) );
-      }
-      // Remove all nulls from the array
-      $result = array_filter( $result );
-    }
+		// Nothing found. Maybe it's a container element?
+		if ( $node->hasChildNodes() ) {
+			foreach ( $node->childNodes as $child ) {
+				$result = array_merge( $result, self::get_components_from_node( $child ) );
+			}
+			// Remove all nulls from the array
+			$result = array_filter( $result );
+		}
 
 		// Nothing was found, return null.
 		return $result;
