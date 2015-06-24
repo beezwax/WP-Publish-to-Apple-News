@@ -3,6 +3,8 @@ namespace Exporter;
 
 require_once plugin_dir_path( __FILE__ ) . 'class-component-factory.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-component-styles.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-component-layouts.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-component-grid.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-settings.php';
@@ -49,13 +51,18 @@ class Exporter {
 	/**
 	 * FIXME: This constructor got big. Should make setters/getters instead?
 	 */
-	function __construct( Exporter_Content $content, Workspace $workspace = null, Settings $settings = null, Component_Styles $styles = null ) {
+	function __construct( Exporter_Content $content, Workspace $workspace = null,
+		Settings $settings = null, Component_Styles $styles = null,
+		Component_Layouts $layouts = null, Component_Grid $grid = null ) {
+
 		$this->exporter_content = $content;
 		$this->workspace = $workspace ?: new Workspace();
 		$this->settings  = $settings ?: new Settings();
 		$this->styles    = $styles ?: new Component_Styles();
+		$this->layouts   = $layouts ?: new Component_Layouts();
+		$this->grid      = $grid ?: new Component_Grid( $this->settings );
 
-		Component_Factory::initialize( $this->workspace, $this->settings, $this->styles );
+		Component_Factory::initialize( $this->workspace, $this->settings, $this->styles, $this->layouts );
 	}
 
 	/**
@@ -69,36 +76,37 @@ class Exporter {
 
 	private function generate_json() {
 		$json = array(
-			'version'       => '0.1',
-			'identifier'    => 'post-' . $this->content_id(),
-			'language'      => 'en',
-			'title'         => $this->content_title(),
-			'components'    => $this->build_components(),
-			// TODO: Create a Layout object
-			'layout' => array(
-				'columns' => 7,
-				'width'   => 1024,
-				'margin'  => 30,
-				'gutter'  => 20,
-			),
-			// Document style
+			'version' => '0.10',
+			'identifier' => 'post-' . $this->content_id(),
+			'language' => 'en',
+			'title' => $this->content_title(),
+			// Base layout
+			'layout' => $this->build_article_layout(),
+			// Base style
 			'documentStyle' => array(
 				'backgroundColor' => '#F7F7F7',
 			),
-			// Component styles. Must be called after build_components, as styles
-			// are lazily added.
-			'componentTextStyles' => $this->build_styles(),
-			// Component layouts
-			// TODO: Create a Component Layout object
-			'componentLayouts' => array(
-				'headerContainerLayout' => array(
-					'columnStart' => 0,
-					'columnSpan' => 7,
-					'ignoreDocumentMargin' => true,
-					'minimumHeight' => '50vh',
-				),
-			),
 		);
+
+		// Components
+		$components = $this->build_components();
+		if ( $components ) {
+			$json['components'] = $components;
+		}
+
+		// Component styles. Must be called after build_components, as styles are
+		// lazily added.
+		$styles = $this->build_component_styles();
+		if ( $styles ) {
+			$json['componentTextStyles'] = $styles;
+		}
+
+		// Component layouts. Must be called after build_components, as layouts
+		// are too lazily added.
+		$layouts = $this->build_component_layouts();
+		if ( $layouts ) {
+			$json['componentLayouts'] = $layouts;
+		}
 
 		// For now, generate the thumb url in here, eventually it will move to the
 		// metadata manager object. The cover component is in charge of copying
@@ -114,6 +122,15 @@ class Exporter {
 		}
 
 		return json_encode( $json );
+	}
+
+	private function build_article_layout() {
+		return array(
+			'columns' => $this->get_setting( 'layout_columns' ), // Defaults to 8
+			'width'   => $this->get_setting( 'layout_width' ),   // Defaults to 1024
+			'margin'  => $this->get_setting( 'layout_margin' ),  // Defaults to 30
+			'gutter'  => $this->get_setting( 'layout_gutter' ),  // Defaults to 20
+		);
 	}
 
 	/**
@@ -155,36 +172,51 @@ class Exporter {
 		return Component_Factory::get_component_from_node( $node );
 	}
 
-	private function build_styles() {
+	private function build_component_styles() {
 		return $this->styles->get_styles();
+	}
+
+	private function build_component_layouts() {
+		return $this->layouts->get_layouts();
+	}
+
+	private function get_setting( $name ) {
+		return $this->settings->get( $name );
+	}
+
+	private function split_components_into_columns( $components ) {
+		return $this->grid->split_components_into_columns( $components );
 	}
 
 	/**
 	 * Builds an array with all the components of this WordPress content.
 	 */
 	private function build_components() {
-		$components = array();
+		$meta_components = array();
 
 		// The content's cover is optional. In WordPress, it's a post's thumbnail
 		// or featured image.
 		if ( $this->content_cover() ) {
-			$components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() );
+			$meta_components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() );
 		}
 
 		// Add title
-		$components[] = $this->get_component_from_shortname( 'title', $this->content_title() );
+		$meta_components[] = $this->get_component_from_shortname( 'title', $this->content_title() );
 
 		// The content's intro is optional. In WordPress, it's a post's
 		// excerpt. It's an introduction to the article.
 		if ( $this->content_intro() ) {
-			$components[] = $this->get_component_from_shortname( 'intro', $this->content_intro() );
+			$meta_components[] = $this->get_component_from_shortname( 'intro', $this->content_intro() );
 		}
 
+		$post_components = array();
 		foreach ( $this->split_into_components() as $component ) {
-			$components[] = $component->value();
+			$post_components[] = $component->value();
 		}
+		// Use the grid service to split component into columns if needed.
+		$post_components = $this->split_components_into_columns( $post_components );
 
-		return $components;
+		return array_merge( $meta_components, $post_components );
 	}
 
 	/**

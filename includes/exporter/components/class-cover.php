@@ -30,17 +30,18 @@ class Cover extends Component {
 				),
 			),
 		);
+
+		$this->set_default_layout();
 	}
 
-	// TODO: Maybe something like this? That way components can require and
-	// create their own layouts if needed.
-	// function __construct() {
-	//		Component_Factory::register_layout( 'headerContainerLayout', ... );
-	//		// OR
-	//		$exporter->register_layout( 'headerContainerLayout', ... );
-	//		// OR
-	//		Layout_Factory::register_layout( 'headerContainerLayout', ... );
-	// }
+	private function set_default_layout() {
+		$this->register_layout( 'headerContainerLayout', array(
+			'columnStart' => 0,
+			'columnSpan' => $this->get_setting( 'layout_columns' ),
+			'ignoreDocumentMargin' => true,
+			'minimumHeight' => '50vh',
+		) );
+	}
 
 }
 

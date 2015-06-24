@@ -62,6 +62,5 @@ class Body extends Component {
 			)
 	 	) );
 	}
-
 }
 
