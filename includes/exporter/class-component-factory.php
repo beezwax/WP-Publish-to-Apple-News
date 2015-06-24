@@ -16,6 +16,7 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-video.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-audio.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-divider.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-title.php';
+require_once plugin_dir_path( __FILE__ ) . 'components/class-caption.php';
 
 /**
  * This class in in charge of creating components. Manual component
@@ -41,13 +42,14 @@ class Component_Factory {
 		self::register_component( 'gallery'   ,   '\\Exporter\\Components\\Gallery'         );
 		self::register_component( 'tweet'     ,   '\\Exporter\\Components\\Tweet'           );
 		self::register_component( 'instagram' ,   '\\Exporter\\Components\\Instagram'       );
+		self::register_component( 'caption'   ,   '\\Exporter\\Components\\Caption'         );
 		self::register_component( 'img'       ,   '\\Exporter\\Components\\Image'           );
 		self::register_component( 'iframe'    ,   '\\Exporter\\Components\\Embed_Web_Video' );
 		self::register_component( 'video'     ,   '\\Exporter\\Components\\Video'           );
 		self::register_component( 'audio'     ,   '\\Exporter\\Components\\Audio'           );
 		self::register_component( 'heading'   ,   '\\Exporter\\Components\\Heading'         );
-		self::register_component( 'p'         ,   '\\Exporter\\Components\\Body'            );
 		self::register_component( 'blockquote',   '\\Exporter\\Components\\Quote'           );
+		self::register_component( 'p'         ,   '\\Exporter\\Components\\Body'            );
 		self::register_component( 'hr'        ,   '\\Exporter\\Components\\Divider'         );
 		// Non HTML-based components
 		self::register_component( 'intro'     ,   '\\Exporter\\Components\\Intro'           );
@@ -88,6 +90,16 @@ class Component_Factory {
 					$html     = $node->ownerDocument->saveXML( $item );
 					$result[] = self::get_component( $shortname, $html );
 				}
+				return $result;
+			}
+
+			// Did we match several components? If so, a hash is returned.
+			if ( is_array( $matched_node ) ) {
+				foreach ( $matched_node as $sname => $inode ) {
+					$html = $node->ownerDocument->saveXML( $inode );
+					$result[] = self::get_component( $sname, $html );
+				}
+
 				return $result;
 			}
 
