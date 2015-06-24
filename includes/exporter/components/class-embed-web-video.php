@@ -16,9 +16,9 @@ class Embed_Web_Video extends Component {
 		}
 
 		// Does this node contain an iframe?
-		if ( $ewv = self::node_find_by_tagname( $node, 'iframe' ) ) {
-			return $ewv;
-		}
+		//if ( $ewv = self::node_find_by_tagname( $node, 'iframe' ) ) {
+		//	return $ewv;
+		//}
 
 		return null;
 	}

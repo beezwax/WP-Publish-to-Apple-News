@@ -15,9 +15,9 @@ class Video extends Component {
 		}
 
 		// Is there a node with tag 'video' inside this one?
-		if ( $video_node = self::node_find_by_tagname( $node, 'video' ) ) {
-			return $video_node;
-		}
+		//if ( $video_node = self::node_find_by_tagname( $node, 'video' ) ) {
+		//	return $video_node;
+		//}
 
 		return null;
 	}

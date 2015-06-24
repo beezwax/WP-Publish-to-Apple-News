@@ -15,9 +15,9 @@ class Audio extends Component {
 		}
 
 		// Is there a node with tag 'audio' inside this one?
-		if ( $audio_node = self::node_find_by_tagname( $node, 'audio' ) ) {
-			return $audio_node;
-		}
+		//if ( $audio_node = self::node_find_by_tagname( $node, 'audio' ) ) {
+		//	return $audio_node;
+		//}
 
 		return null;
 	}

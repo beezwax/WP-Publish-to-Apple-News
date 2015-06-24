@@ -168,8 +168,8 @@ class Exporter {
 		return Component_Factory::get_component( $shortname, $html )->value();
 	}
 
-	private function get_component_from_node( $node ) {
-		return Component_Factory::get_component_from_node( $node );
+	private function get_components_from_node( $node ) {
+		return Component_Factory::get_components_from_node( $node );
 	}
 
 	private function build_component_styles() {
@@ -236,17 +236,11 @@ class Exporter {
 		// might include child-components, like an Cover and Image.
 		$result = array();
 		foreach ( $nodes as $node ) {
-			$component = $this->get_component_from_node( $node );
-
-			if ( is_array( $component ) ) {
-				$result = array_merge( $result, $component );
-			} else {
-				$result[] = $component;
-			}
+			$components = $this->get_components_from_node( $node );
+			$result     = array_merge( $result, $components );
 		}
 
-		// Remove null values from result and return
-		return array_filter( $result );
+		return $result;
 	}
 
 }
