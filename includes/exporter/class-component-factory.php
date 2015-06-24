@@ -80,6 +80,8 @@ class Component_Factory {
 
 		foreach ( self::$components as $shortname => $class ) {
 			$matched_node = $class::node_matches( $node );
+
+			// Nothing matched? Skip to next match.
 			if ( ! $matched_node ) {
 				continue;
 			}
