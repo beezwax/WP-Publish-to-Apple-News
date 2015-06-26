@@ -16,7 +16,7 @@
         </tr>
     </thead>
     <tbody>
-    <?php foreach( get_posts() as $post ): ?>
+    <?php foreach ( get_posts() as $post ): ?>
         <tr>
             <td><?php echo $post->post_title; ?></td>
             <td><?php echo $post->post_author; ?></td>
