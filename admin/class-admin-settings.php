@@ -338,23 +338,6 @@ class Admin_Settings {
 
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_menu', array( $this, 'setup_options_page' ) );
-
-		// Register assets
-		add_action( 'wp_enqueue_styles', array( $this, 'register_styles' ) );
-		add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ) );
-	}
-
-	public function register_styles() {
-		wp_enqueue_style( 'apple-export-select2-css', plugin_dir_url( __FILE__ ) .
-			'../vendor/select2/select2.min.css', array() );
-	}
-
-	public function register_scripts() {
-		wp_enqueue_script( 'apple-export-select2-js', plugin_dir_url( __FILE__ ) .
-			'../vendor/select2/select2.full.min.js', array( 'jquery' ) );
-		wp_enqueue_script( 'apple-export-settings-js', plugin_dir_url( __FILE__ ) .
-			'../assets/js/settings.js', array( 'jquery', 'apple-export-select2-js' )
-		);
 	}
 
 	public function render_field( $args ) {
@@ -438,6 +421,8 @@ class Admin_Settings {
 	 * Options page setup
 	 */
 	public function setup_options_page() {
+		$this->register_assets();
+
 		add_options_page(
 			'Apple Export Options',
 			'Apple Export',
@@ -452,6 +437,17 @@ class Admin_Settings {
 			wp_die( __( 'You do not have permissions to access this page.' ) );
 
 		include plugin_dir_path( __FILE__ ) . 'partials/page_options.php';
+	}
+
+	private function register_assets() {
+		wp_enqueue_style( 'apple-export-select2-css', plugin_dir_url( __FILE__ ) .
+			'../vendor/select2/select2.min.css', array() );
+
+		wp_enqueue_script( 'apple-export-select2-js', plugin_dir_url( __FILE__ ) .
+			'../vendor/select2/select2.full.min.js', array( 'jquery' ) );
+		wp_enqueue_script( 'apple-export-settings-js', plugin_dir_url( __FILE__ ) .
+			'../assets/js/settings.js', array( 'jquery', 'apple-export-select2-js' )
+		);
 	}
 
 	private function get_type_for_field( $name ) {
