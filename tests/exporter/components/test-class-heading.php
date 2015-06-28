@@ -1,28 +1,39 @@
 <?php
 
 use \Exporter\Components\Heading as Heading;
+use \Exporter\Settings as Settings;
+use \Exporter\Component_Layouts as Component_Layouts;
+use \Exporter\Component_Styles as Component_Styles;
 
 class Heading_Test extends PHPUnit_Framework_TestCase {
 
+	protected function setup() {
+		$this->settings = new Settings();
+		$this->styles   = new Component_Styles();
+		$this->layouts  = new Component_Layouts();
+	}
+
 	public function testInvalidInput() {
-		$heading_component = new Heading( '<p>This is not a heading</p>', null );
+		$component = new Heading( '<p>This is not a heading</p>', null,
+			$this->settings, $this->styles, $this->layouts );
 
 		$this->assertEquals(
 			null,
-			$heading_component->value()
+			$component->value()
 		);
 	}
 
 	public function testValidInput() {
-		$heading_component = new Heading( '<h1>This is a heading</h1>', null );
+		$component = new Heading( '<h1>This is a heading</h1>', null,
+			$this->settings, $this->styles, $this->layouts );
 
 		$this->assertEquals(
 			array(
 				'role' => 'heading1',
-				'text' => "# This is a heading\n",
-				'format' => 'markdown',
+				'text' => 'This is a heading',
+				'textStyle' => 'default-heading-1',
 		 	),
-			$heading_component->value()
+			$component->value()
 		);
 	}
 

@@ -1,6 +1,9 @@
 <?php
 
 use \Exporter\Components\Gallery as Gallery;
+use \Exporter\Settings as Settings;
+use \Exporter\Component_Layouts as Component_Layouts;
+use \Exporter\Component_Styles as Component_Styles;
 
 class Gallery_Test extends PHPUnit_Framework_TestCase {
 
@@ -8,6 +11,9 @@ class Gallery_Test extends PHPUnit_Framework_TestCase {
 
 	protected function setup() {
 		$this->prophet = new \Prophecy\Prophet;
+		$this->settings = new Settings();
+		$this->styles   = new Component_Styles();
+		$this->layouts  = new Component_Layouts();
 	}
 
 	protected function tearDown() {
@@ -27,7 +33,7 @@ class Gallery_Test extends PHPUnit_Framework_TestCase {
 		$gallery_component = new Gallery( '<div class="gallery"><img
 			src="http://someurl.com/filename-1.jpg" alt="Example" /><img
 			src="http://someurl.com/another-filename-2.jpg" alt="Example" /></div>',
-			$workspace->reveal() );
+			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
 
 		// Test for valid JSON
 		$this->assertEquals(
