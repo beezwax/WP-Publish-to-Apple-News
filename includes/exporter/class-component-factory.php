@@ -70,15 +70,12 @@ class Component_Factory {
 	}
 
 	/**
-	 * Given a node, check all components for a match. If a match is found,
-	 * return an instance of the component or an array of instances of that
-	 * component.
-	 *
-	 * If no component matches this node, return null.
-	 *
-	 * FIXME: This method does a bit too much and returns different things...
+	 * Given a node, returns an array of all the components inside that node. If
+	 * the node is a component itself, returns an array of only one element.
 	 */
-	public static function get_component_from_node( $node ) {
+	public static function get_components_from_node( $node ) {
+		$result = array();
+
 		foreach ( self::$components as $shortname => $class ) {
 			$matched_node = $class::node_matches( $node );
 			if ( ! $matched_node ) {
@@ -87,7 +84,6 @@ class Component_Factory {
 
 			// Did we match a list of nodes?
 			if ( $matched_node instanceof \DOMNodeList ) {
-				$result = array();
 				foreach ( $matched_node as $item ) {
 					$html     = $node->ownerDocument->saveXML( $item );
 					$result[] = self::get_component( $shortname, $html );
@@ -97,11 +93,21 @@ class Component_Factory {
 
 			// We matched a single node
 			$html = $node->ownerDocument->saveXML( $matched_node );
-			return self::get_component( $shortname, $html );
+			$result[] = self::get_component( $shortname, $html );
+			return $result;
+		}
+
+		// Nothing found. Maybe it's a container element?
+		if ( $node->hasChildNodes() ) {
+			foreach ( $node->childNodes as $child ) {
+				$result = array_merge( $result, self::get_components_from_node( $child ) );
+			}
+			// Remove all nulls from the array
+			$result = array_filter( $result );
 		}
 
 		// Nothing was found, return null.
-		return null;
+		return $result;
 	}
 
 }

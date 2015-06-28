@@ -2,13 +2,19 @@
 namespace Exporter\Components;
 
 /**
- * One of the simplest components. It's just a paragraph.
+ * A paragraph component.
  *
  * @since 0.2.0
  */
 class Body extends Component {
 
 	public static function node_matches( $node ) {
+		// This is tricky. Everything inside a p, ul or ol will be extracted as
+		// HTML and parsed as markdown. This means, if there's a video, image,
+		// audio, iframe or pretty much anything inside it will be ignored.
+		// FIXME: A possible solution would be to filter the HTML beforehand,
+		// splitting every non-markdown-able component out of the paragraph, thus,
+		// making several smaller paragraphs.
 		if ( in_array( $node->nodeName, array( 'p', 'ul', 'ol' ) ) ) {
 			return $node;
 		}

@@ -36,10 +36,10 @@ class Markdown {
 		$nodes = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes;
 
 		// Parse them and return result
-		return $this->parseNodes( $nodes );
+		return $this->parse_nodes( $nodes );
 	}
 
-	private function parseNodes( $nodes ) {
+	private function parse_nodes( $nodes ) {
 		$result = '';
 		foreach ( $nodes as $node ) {
 			$result .= $this->parse_node( $node );
@@ -90,15 +90,15 @@ class Markdown {
 	}
 
 	private function parse_strong_node( $node ) {
-		return '**' . $this->parseNodes( $node->childNodes ) . '**';
+		return '**' . $this->parse_nodes( $node->childNodes ) . '**';
 	}
 
 	private function parse_emphasis_node( $node ) {
-		return '_' . $this->parseNodes( $node->childNodes ) . '_';
+		return '_' . $this->parse_nodes( $node->childNodes ) . '_';
 	}
 
 	private function parse_paragraph_node( $node ) {
-		return $this->parseNodes( $node->childNodes ) . "\n\n";
+		return $this->parse_nodes( $node->childNodes ) . "\n\n";
 	}
 
 	/**
@@ -107,27 +107,27 @@ class Markdown {
 	 */
 	private function parse_hyperlink_node( $node ) {
 		$url = $node->getAttribute( 'href' );
-		return '[' . $this->parseNodes( $node->childNodes ) . '](' . $url . ')';
+		return '[' . $this->parse_nodes( $node->childNodes ) . '](' . $url . ')';
 	}
 
 	private function parse_unordered_list_node( $node ) {
 		$this->list_mode = 'ul';
-		return $this->parseNodes( $node->childNodes ) . "\n\n";
+		return $this->parse_nodes( $node->childNodes ) . "\n\n";
 	}
 
 	private function parse_ordered_list_node( $node ) {
 		$this->list_mode = 'ol';
 		$this->list_index = 1;
-		return $this->parseNodes( $node->childNodes ) . "\n\n";
+		return $this->parse_nodes( $node->childNodes ) . "\n\n";
 	}
 
 	private function parse_list_item_node( $node ) {
 		if ( 'ol' == $this->list_mode ) {
-			return $this->list_index . '. ' . $this->parseNodes( $node->childNodes );
+			return $this->list_index . '. ' . $this->parse_nodes( $node->childNodes );
 			$this->list_index += 1;
 		}
 
-		return "- " . $this->parseNodes( $node->childNodes );
+		return "- " . $this->parse_nodes( $node->childNodes );
 	}
 
 	private function parse_heading_node( $node ) {
@@ -137,7 +137,7 @@ class Markdown {
 		for( $i = 0; $i < $level; $i++ ) {
 			$output .= '#';
 		}
-		$output .= ' ' . $this->parseNodes( $node->childNodes ) . "\n";
+		$output .= ' ' . $this->parse_nodes( $node->childNodes ) . "\n";
 
 		return $output;
 	}

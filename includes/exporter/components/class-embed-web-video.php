@@ -16,6 +16,11 @@ class Embed_Web_Video extends Component {
 		}
 
 		// Does this node contain an iframe?
+		//
+		// FIXME: Because embedded web video can't just be parsed by markdown we
+		// have to forcefully extract them from the container, so if the container
+		// has something besides this component, it will be ignored. See comment in
+		// Components/Body.
 		if ( $ewv = self::node_find_by_tagname( $node, 'iframe' ) ) {
 			return $ewv;
 		}
