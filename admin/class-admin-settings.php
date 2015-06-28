@@ -310,6 +310,7 @@ class Admin_Settings {
 
 	function __construct() {
 		$this->field_types = array(
+			'api_secret'          => 'password',
 			'layout_columns'      => 'integer',
 			'layout_width'        => 'integer',
 			'layout_margin'       => 'integer',
@@ -378,6 +379,8 @@ class Admin_Settings {
 			$field = '<input required type="number" name="%s" value="%s">';
 		} else if ( 'color' == $type ) {
 			$field = '<input required type="color" name="%s" value="%s">';
+		} else if ( 'password' == $type ) {
+			$field = '<input required type="password" name="%s" value="%s">';
 		} else {
 			// If nothing else matches, it's a string.
 			$field = '<input required type="text" name="%s" value="%s">';
