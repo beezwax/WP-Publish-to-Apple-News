@@ -361,7 +361,12 @@ class Admin_Settings {
 		// FIXME: A cleaner object-oriented solution would create Input objects
 		// and instantiate them according to their type.
 		if ( is_array( $type ) ) {
-			$field = '<select name="%s">';
+			// Use select2 only when there is a considerable ammount of options available
+			if( count( $type ) > 10 ) {
+				$field = '<select class="select2" name="%s">';
+			} else {
+				$field = '<select name="%s">';
+			}
 			foreach ( $type as $option ) {
 				$field .= "<option value='$option'";
 				if ( $option == $value ) {
