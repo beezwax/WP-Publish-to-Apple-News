@@ -54,7 +54,7 @@ class Workspace {
 	 *
 	 * @since   0.2.0
 	 */
-	private function clean_up() {
+	public function clean_up() {
 		$files = glob( $this->tmp_path . '*', GLOB_BRACE );
 		foreach ( $files as $file ) {
 			if ( is_file( $file ) ) {
@@ -114,4 +114,7 @@ class Workspace {
 		return $zipfile_path;
 	}
 
+	public function tmp_path() {
+		return $this->tmp_path;
+	}
 }

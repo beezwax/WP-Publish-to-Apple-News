@@ -3,6 +3,10 @@ require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-settings.
 
 use Exporter\Settings as Settings;
 
+/**
+ * This class is in charge of creating a WordPress page to manage the
+ * Exporter's settings class.
+ */
 class Admin_Settings {
 
 	/**
@@ -308,6 +312,11 @@ class Admin_Settings {
 	 */
 	private $field_types;
 
+	/**
+	 * Only load settings once. Cache results for easy and efficient usage.
+	 */
+	private $loaded_settings;
+
 	function __construct() {
 		$this->field_types = array(
 			'api_secret'          => 'password',
@@ -336,6 +345,8 @@ class Admin_Settings {
 			'pullquote_transform' => array( 'none', 'uppercase' ),
 			'gallery_type'        => array( 'gallery', 'mosaic' ),
 		);
+
+		$this->loaded_settings = null;
 
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_menu', array( $this, 'setup_options_page' ) );
@@ -459,6 +470,23 @@ class Admin_Settings {
 		}
 
 		return 'string';
+	}
+
+	/**
+	 * Creates a new Settings instance and loads it with WordPress' saved
+	 * settings.
+	 */
+	public function fetch_settings() {
+		if( is_null( $this->loaded_settings ) ) {
+			$settings = new Settings();
+			foreach ( $settings->all() as $key => $value ) {
+				$wp_value = esc_attr( get_option( $key ) ) ?: $value;
+				$settings->set( $key, $wp_value );
+			}
+			$this->loaded_settings = $settings;
+		}
+
+		return $this->loaded_settings;
 	}
 
 }

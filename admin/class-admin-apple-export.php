@@ -7,16 +7,26 @@
  */
 
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-apple-export-list-table.php';
+// Use exporter
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter-content.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter-content-settings.php';
+// Use push API
+require_once plugin_dir_path( __FILE__ ) . '../includes/push-api/class-api.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/push-api/class-credentials.php';
 
 use Exporter\Exporter as Exporter;
 use Exporter\Exporter_Content as Exporter_Content;
 use Exporter\Settings as Settings;
 use Exporter\Exporter_Content_Settings as Exporter_Content_Settings;
+use Push_API\API as API;
+use Push_API\Credentials as Credentials;
 
 class Admin_Apple_Export extends Apple_Export {
+
+	private $api;
+	private $settings;
 
 	function __construct() {
 		// This is required to download files and setting headers.
@@ -25,14 +35,25 @@ class Admin_Apple_Export extends Apple_Export {
 		// Register hooks
 		add_action( 'admin_menu', array( $this, 'setup_pages' ) );
 
-		// Initialize admin settings
-		new Admin_Settings();
+		// Initialize admin settings page
+		$this->settings = new Admin_Settings();
+		$this->initialize_api();
+	}
+
+	function initialize_api() {
+		// Build credentials
+		$key = $this->get_setting( 'api_key' );
+		$secret = $this->get_setting( 'api_secret' );
+		$credentials = new Credentials( $key, $secret );
+		// Build API
+		$endpoint = 'https://u48r14.digitalhub.com';
+		$this->api = new API( $endpoint, $credentials );
 	}
 
 	/**
-	 * Given a post id, export the post into the custom format.
+	 * Fetches an instance of Exporter.
 	 */
-	private function export( $id ) {
+	private function fetch_exporter( $id ) {
 		// The WP_Post object representing the post.
 		$post       = get_post( $id );
 		// The URL of the post's thumbnail (a.k.a featured image), if any.
@@ -50,22 +71,78 @@ class Admin_Apple_Export extends Apple_Export {
 			$this->fetch_content_settings( $id )
 		);
 
-		$exporter = new Exporter( $base_content, null, $this->fetch_settings() );
-		$this->download_zipfile( $exporter->export() );
+		return new Exporter( $base_content, null, $this->fetch_settings() );
 	}
 
 	/**
-	 * Loads the global settings from the WordPress options.
+	 * Given a post id, export the post into the custom format.
+	 */
+	private function export( $id ) {
+		$exporter = $this->fetch_exporter( $id );
+		return $exporter->export();
+	}
+
+	/**
+	 * Given a post id, push the post using the API data.
+	 */
+	private function push( $id ) {
+		// Check for "valid" API information
+		if(  empty( $this->get_setting( 'api_key' ) )
+			|| empty( $this->get_setting( 'api_secret' ) )
+			|| empty( $this->get_setting( 'api_channel' ) ) ) {
+
+			wp_die( 'Your API settings seem to be empty. Please fill the API key, API
+				secret and API channel fields in the plugin configuration page.' );
+			return;
+		}
+
+		$exporter = $this->fetch_exporter( $id );
+		$exporter->build_article();
+
+		$dir  = $exporter->workspace()->tmp_path();
+		$json = file_get_contents( $dir . 'article.json' );
+
+		$bundles = array();
+		$files   = glob( $dir . '*', GLOB_BRACE );
+		foreach ( $files as $file ) {
+			if ( 'article.json' == basename( $file ) ) {
+				continue;
+			}
+
+			$bundles[] = $file;
+		}
+
+		$error = null;
+		try {
+			$result = $this->api->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles );
+			// Save the ID that was assigned to this post in by the API
+			update_post_meta( $id, 'apple_export_api_id', $result->data->id );
+			update_post_meta( $id, 'apple_export_api_created_at', $result->data->createdAt );
+			update_post_meta( $id, 'apple_export_api_modified_at', $result->data->modifiedAt );
+		} catch( \Exception $e ) {
+			$error = $e->getMessage();
+		} finally {
+			$exporter->workspace()->clean_up();
+			return $error;
+		}
+	}
+
+	/**
+	 * Gets an instance of Exporter Settings loaded from WordPress saved options.
 	 *
 	 * @since 0.4.0
 	 */
 	private function fetch_settings() {
-		$settings = new Settings();
-		foreach ( $settings->all() as $key => $value ) {
-			$wp_value = esc_attr( get_option( $key ) ) ?: $value;
-			$settings->set( $key, $wp_value );
-		}
-		return $settings;
+		return $this->settings->fetch_settings();
+	}
+
+	/**
+	 * Gets a setting by name which was loaded from WordPress options.
+	 *
+	 * @since 0.4.0
+	 */
+	private function get_setting( $name ) {
+		return $this->fetch_settings()->get( $name );
 	}
 
 	/**
@@ -123,24 +200,43 @@ class Admin_Apple_Export extends Apple_Export {
 
 		// Show all posts if id is not set
 		if( ! $id ) {
+			$table = new Apple_Export_List_Table();
+			$table->prepare_items();
 			include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
 			return;
 		}
 
-		// Confirmed post export
-		if ( $_POST && wp_verify_nonce( $_POST['apple-export-nonce'], 'export' ) ) {
-			// Save post metadata
-			update_post_meta( $id, 'apple_export_pullquote', $_POST['pullquote'] );
-			update_post_meta( $id, 'apple_export_pullquote_position', intval( $_POST['pullquote_position'] ) );
-			// Export
-			$this->export( $id );
+		$action = $_GET['action'];
+		if( 'settings' == $action ) {
+			if( $_POST ) {
+				update_post_meta( $id, 'apple_export_pullquote', $_POST['pullquote'] );
+				update_post_meta( $id, 'apple_export_pullquote_position', intval( $_POST['pullquote_position'] ) );
+				$message = 'Settings saved.';
+			}
+
+			$post      = get_post( $id );
+			$post_meta = get_post_meta( $id );
+			include plugin_dir_path( __FILE__ ) . 'partials/page_single_settings.php';
 			return;
 		}
 
-		// Show single post
-		$post      = get_post( $id );
-		$post_meta = get_post_meta( $id );
-		include plugin_dir_path( __FILE__ ) . 'partials/page_single.php';
+		if( 'export' == $action ) {
+			$path = $this->export( $id );
+			$this->download_zipfile( $path );
+			return;
+		}
+
+		if( 'push' == $action ) {
+			$error = $this->push( $id );
+			if( is_null( $error ) ) {
+				echo 'Your article has been pushed successfully!';
+			} else {
+				echo 'Oops, something happened: ' . $error;
+			}
+			return;
+		}
+
+		wp_die( 'Invalid action: ' . $action );
 	}
 
 }
