@@ -28,6 +28,8 @@ class Admin_Apple_Export extends Apple_Export {
 	private $api;
 	private $settings;
 
+	const API_ENDPOINT = 'https://u48r14.digitalhub.com';
+
 	function __construct() {
 		// This is required to download files and setting headers.
 		ob_start();
@@ -46,8 +48,7 @@ class Admin_Apple_Export extends Apple_Export {
 		$secret = $this->get_setting( 'api_secret' );
 		$credentials = new Credentials( $key, $secret );
 		// Build API
-		$endpoint = 'https://u48r14.digitalhub.com';
-		$this->api = new API( $endpoint, $credentials );
+		$this->api = new API( self::API_ENDPOINT, $credentials );
 	}
 
 	/**
