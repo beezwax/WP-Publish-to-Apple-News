@@ -12,6 +12,11 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  */
 class Apple_Export_List_Table extends WP_List_Table {
 
+	/**
+	 * How many entries per page will be displayed.
+	 *
+	 * @since 0.4.0
+	 */
 	const PER_PAGE = 10;
 
 	function __construct() {
