@@ -39,16 +39,21 @@ class Admin_Apple_Export extends Apple_Export {
 
 		// Initialize admin settings page
 		$this->settings = new Admin_Settings();
-		$this->initialize_api();
+		// Set API to null. Use fetch_api to lazily load the API instance.
+		$this->api      = null;
 	}
 
-	private function initialize_api() {
-		// Build credentials
-		$key         = $this->get_setting( 'api_key' );
-		$secret      = $this->get_setting( 'api_secret' );
-		$credentials = new Credentials( $key, $secret );
-		// Build API
-		$this->api = new API( self::API_ENDPOINT, $credentials );
+	private function fetch_api() {
+		if ( is_null( $this->api ) ) {
+			// Build credentials
+			$key         = $this->get_setting( 'api_key' );
+			$secret      = $this->get_setting( 'api_secret' );
+			$credentials = new Credentials( $key, $secret );
+			// Build API
+			$this->api = new API( self::API_ENDPOINT, $credentials );
+		}
+
+		return $this->api;
 	}
 
 	public function setup_pages() {
@@ -162,7 +167,7 @@ class Admin_Apple_Export extends Apple_Export {
 
 		$error = null;
 		try {
-			$result = $this->api->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles );
+			$result = $this->fetch_api()->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles );
 			// Save the ID that was assigned to this post in by the API
 			update_post_meta( $id, 'apple_export_api_id', $result->data->id );
 			update_post_meta( $id, 'apple_export_api_created_at', $result->data->createdAt );
