@@ -3,6 +3,10 @@ require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-settings.
 
 use Exporter\Settings as Settings;
 
+/**
+ * This class is in charge of creating a WordPress page to manage the
+ * Exporter's settings class.
+ */
 class Admin_Settings {
 
 	/**
@@ -308,8 +312,14 @@ class Admin_Settings {
 	 */
 	private $field_types;
 
+	/**
+	 * Only load settings once. Cache results for easy and efficient usage.
+	 */
+	private $loaded_settings;
+
 	function __construct() {
 		$this->field_types = array(
+			'api_secret'          => 'password',
 			'layout_columns'      => 'integer',
 			'layout_width'        => 'integer',
 			'layout_margin'       => 'integer',
@@ -336,6 +346,8 @@ class Admin_Settings {
 			'gallery_type'        => array( 'gallery', 'mosaic' ),
 		);
 
+		$this->loaded_settings = null;
+
 		add_action( 'admin_init', array( $this, 'register_settings' ) );
 		add_action( 'admin_menu', array( $this, 'setup_options_page' ) );
 	}
@@ -349,7 +361,12 @@ class Admin_Settings {
 		// FIXME: A cleaner object-oriented solution would create Input objects
 		// and instantiate them according to their type.
 		if ( is_array( $type ) ) {
-			$field = '<select name="%s">';
+			// Use select2 only when there is a considerable ammount of options available
+			if ( count( $type ) > 10 ) {
+				$field = '<select class="select2" name="%s">';
+			} else {
+				$field = '<select name="%s">';
+			}
 			foreach ( $type as $option ) {
 				$field .= "<option value='$option'";
 				if ( $option == $value ) {
@@ -378,6 +395,8 @@ class Admin_Settings {
 			$field = '<input required type="number" name="%s" value="%s">';
 		} else if ( 'color' == $type ) {
 			$field = '<input required type="color" name="%s" value="%s">';
+		} else if ( 'password' == $type ) {
+			$field = '<input required type="password" name="%s" value="%s">';
 		} else {
 			// If nothing else matches, it's a string.
 			$field = '<input required type="text" name="%s" value="%s">';
@@ -456,6 +475,23 @@ class Admin_Settings {
 		}
 
 		return 'string';
+	}
+
+	/**
+	 * Creates a new Settings instance and loads it with WordPress' saved
+	 * settings.
+	 */
+	public function fetch_settings() {
+		if ( is_null( $this->loaded_settings ) ) {
+			$settings = new Settings();
+			foreach ( $settings->all() as $key => $value ) {
+				$wp_value = esc_attr( get_option( $key ) ) ?: $value;
+				$settings->set( $key, $wp_value );
+			}
+			$this->loaded_settings = $settings;
+		}
+
+		return $this->loaded_settings;
 	}
 
 }

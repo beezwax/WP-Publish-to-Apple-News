@@ -1,35 +1,15 @@
-<h1>Apple Export</h1>
+<div class="wrap">
+	<h1>Apple Export</h1>
 
-<div class="tablenav">
-    <div class="actions">
-        <button class="button">Export All</button>
-    </div>
+	<?php if ( $message ): ?>
+	<div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible">
+		<p><strong><?php echo $message ?></strong></p>
+		<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+	</div>
+	<?php endif; ?>
+
+	<form method="get">
+		<input type="hidden" name="page" value="<?php echo htmlentities( $_REQUEST['page'] ) ?>">
+		<?php $table->display(); ?>
+	</form>
 </div>
-
-<table class="wp-list-table widefat fixed stripped posts">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Date</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    <?php foreach ( get_posts() as $post ): ?>
-        <tr>
-            <td><?php echo $post->post_title; ?></td>
-            <td><?php echo $post->post_author; ?></td>
-            <td><?php echo date( get_option( 'date_format', $post->post_date ) ); ?></td>
-            <td><a href="<?php echo admin_url( 'admin.php?page=apple_export_index&amp;post_id=' . $post->ID ) ?>" class="button">Export</button></td>
-        </tr>
-    <?php endforeach; ?>
-    </tbody>
-</table>
-
-<div class="tablenav">
-    <div class="actions">
-        <button class="button">Export All</button>
-    </div>
-</div>
-

@@ -66,14 +66,35 @@ class Exporter {
 	}
 
 	/**
+	 * Generates JSON for the article.json file. By doing this, all attachments
+	 * get added to the workspace/tmp directory automatically.
+	 *
+	 * If manually called build_article, must alway call `clean_workspace`
+	 * afterwards, as the workspace would remain polluted for later articles
+	 * otherwise.
+	 */
+	public function build_article() {
+		$this->write_to_workspace( 'article.json', $this->generate_json() );
+	}
+
+	/**
 	 * Based on the content this instance holds, create an Article Format zipfile
 	 * and return the path.
+	 * This function builds the article, zips it and cleans up after.
 	 */
 	public function export() {
-		$this->write_to_workspace( 'article.json', $this->generate_json() );
+		// Build the workspace/tmp folder.
+		$this->build_article();
+		// ZIP files inside that folder and clean it afterwards.
 		return $this->zip_workspace( $this->content_id() );
 	}
 
+	/**
+	 * Generate article.json contents. It does so by looping though all data,
+	 * generating valid JSON and adding attachments to workspace/tmp directory.
+	 *
+	 * @return string The generated JSON for article.json
+	 */
 	private function generate_json() {
 		$json = array(
 			'version' => '0.10',
@@ -131,6 +152,10 @@ class Exporter {
 			'margin'  => $this->get_setting( 'layout_margin' ),  // Defaults to 30
 			'gutter'  => $this->get_setting( 'layout_gutter' ),  // Defaults to 20
 		);
+	}
+
+	public function workspace() {
+		return $this->workspace;
 	}
 
 	/**
@@ -217,10 +242,10 @@ class Exporter {
 
 		$pullquote = $this->content_setting( 'pullquote' );
 		$pullquote_position = $this->content_setting( 'pullquote_position' );
-		if( ! empty( $pullquote ) && $pullquote_position > 0 ) {
+		if ( ! empty( $pullquote ) && $pullquote_position > 0 ) {
 			$idx = 1;
 			foreach ( $this->split_into_components() as $component ) {
-				if( $idx == $pullquote_position ) {
+				if ( $idx == $pullquote_position ) {
 					$post_components[] = $this->get_component_from_shortname( 'blockquote', "<blockquote><p>$pullquote</p></blockquote>" );
 					$pullquote_position = 0;
 				}
@@ -229,7 +254,7 @@ class Exporter {
 				$idx++;
 			}
 
-			if( $pullquote_position > 0 ) {
+			if ( $pullquote_position > 0 ) {
 				$post_components[] = $this->get_component_from_shortname( 'blockquote', "<blockquote><p>$pullquote</p></blockquote>" );
 			}
 		} else {

@@ -9,6 +9,11 @@ class Settings {
 
 	// Exporter's default settings.
 	private $settings = array(
+		// API information.
+		'api_key'         => '',
+		'api_secret'      => '',
+		'api_channel'     => '',
+
 		'layout_width'    => '1024',
 		'layout_columns'  => '7', // Because we start counting at 0, this is actually 7, but show it as 8.
 		'layout_margin'   => '30',
