@@ -203,16 +203,18 @@ class Admin_Apple_Export extends Apple_Export {
 	 */
 	public function page_index_setup() {
 		$id     = intval( $_GET['post_id'] );
-		$action = $_GET['action'];
+		$action = htmlentities( $_GET['action'] );
 
 		// Given an action and ID, map the attributes to corresponding actions.
 
 		if ( ! $id ) {
-			if ( 'push' == $action ) {
-				return $this->bulk_push_action( $_REQUEST['article'] );
+			switch ( $action ) {
+			case 'push':
+				$article_list = $_REQUEST['article'];
+				return $this->bulk_push_action( $article_list );
+			default:
+				return $this->show_post_list_action();
 			}
-
-			return $this->show_post_list_action();
 		}
 
 		switch ( $action ) {
