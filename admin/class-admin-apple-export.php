@@ -37,23 +37,9 @@ class Admin_Apple_Export extends Apple_Export {
 		// Register hooks
 		add_action( 'admin_menu', array( $this, 'setup_pages' ) );
 
-		// Initialize admin settings page
-		$this->settings = new Admin_Settings();
-		// Set API to null. Use fetch_api to lazily load the API instance.
+		// Settings and API are lazily loaded using fetch_settings and fetch_api.
+		$this->settings = null;
 		$this->api      = null;
-	}
-
-	private function fetch_api() {
-		if ( is_null( $this->api ) ) {
-			// Build credentials
-			$key         = $this->get_setting( 'api_key' );
-			$secret      = $this->get_setting( 'api_secret' );
-			$credentials = new Credentials( $key, $secret );
-			// Build API
-			$this->api = new API( self::API_ENDPOINT, $credentials );
-		}
-
-		return $this->api;
 	}
 
 	public function setup_pages() {
@@ -101,6 +87,19 @@ class Admin_Apple_Export extends Apple_Export {
 		default:
 			wp_die( 'Invalid action: ' . $action );
 		}
+	}
+
+	private function fetch_api() {
+		if ( is_null( $this->api ) ) {
+			// Build credentials
+			$key         = $this->get_setting( 'api_key' );
+			$secret      = $this->get_setting( 'api_secret' );
+			$credentials = new Credentials( $key, $secret );
+			// Build API
+			$this->api = new API( self::API_ENDPOINT, $credentials );
+		}
+
+		return $this->api;
 	}
 
 	/**
@@ -186,6 +185,10 @@ class Admin_Apple_Export extends Apple_Export {
 	 * @since 0.4.0
 	 */
 	private function fetch_settings() {
+		if ( is_null( $this->settings ) ) {
+			$this->settings = new Admin_Settings();
+		}
+
 		return $this->settings->fetch_settings();
 	}
 
