@@ -215,19 +215,16 @@ class Admin_Apple_Export extends Apple_Export {
 			return $this->show_post_list_action();
 		}
 
-		if ( 'settings' == $action ) {
+		switch ( $action ) {
+		case 'settings':
 			return $this->settings_action( $id );
-		}
-
-		if ( 'export' == $action ) {
+		case 'export':
 			return $this->export_action( $id );
-		}
-
-		if ( 'push' == $action ) {
+		case 'push':
 			return $this->push_action( $id );
+		default:
+			wp_die( 'Invalid action: ' . $action );
 		}
-
-		wp_die( 'Invalid action: ' . $action );
 	}
 
 	// Actions
