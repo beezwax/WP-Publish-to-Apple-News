@@ -8,6 +8,6 @@
 <?php endif; ?>
 
 <form method="get">
-	<input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>">
+	<input type="hidden" name="page" value="<?php echo htmlentities( $_REQUEST['page'] ) ?>">
 	<?php $table->display(); ?>
 </form>

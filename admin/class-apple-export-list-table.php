@@ -42,10 +42,11 @@ class Apple_Export_List_Table extends WP_List_Table {
 	public function column_title( $item ) {
 		$admin_url = get_admin_url() . 'admin.php';
 		$base_url  = "$admin_url?page=%s&amp;action=%s&amp;post_id=%s";
-		$actions = array(
-			'settings' => sprintf( "<a href='$base_url'>Settings</a>", $_REQUEST['page'], 'settings', $item->ID ),
-			'export'   => sprintf( "<a href='$base_url'>Export</a>", $_REQUEST['page'], 'export', $item->ID ),
-			'push'     => sprintf( "<a href='$base_url'>Push</a>", $_REQUEST['page'], 'push', $item->ID ),
+		$page      = htmlentities( $_REQUEST['page'] );
+		$actions   = array(
+			'settings' => sprintf( "<a href='$base_url'>Settings</a>", $page, 'settings', $item->ID ),
+			'export'   => sprintf( "<a href='$base_url'>Export</a>", $page, 'export', $item->ID ),
+			'push'     => sprintf( "<a href='$base_url'>Push</a>", $page, 'push', $item->ID ),
 		);
 
 		return sprintf( '%1$s <span>(id:%2$s)</span> %3$s',
@@ -83,33 +84,15 @@ class Apple_Export_List_Table extends WP_List_Table {
 
 	public function get_bulk_actions() {
 		return array(
-			'export'   => 'Export',
 			'push'     => 'Push',
 		);
-	}
-
-	/**
-	 * Bulk actions can be handled anywhere. Handling them here is quite tidy so
-	 * let's do it.
-	 */
-	public function process_bulk_action() {
-		switch ( $this->current_action() ) {
-		case 'export':
-			wp_die( 'export a batch' );
-		case 'push':
-			wp_die( 'push a batch' );
-		}
 	}
 
 	public function prepare_items() {
 		// Set column headers. It expects an array of columns, and as second
 		// argument an array of hidden columns, which in this case is empty.
-		$columns  = $this->get_columns();
+		$columns = $this->get_columns();
 		$this->_column_headers = array( $columns, array() );
-
-		// We can handle this anywhere, let's do it here so all the table
-		// functionality gets somehow isolated.
-		$this->process_bulk_action();
 
 		// Data fetch
 		$current_page = $this->get_pagenum();

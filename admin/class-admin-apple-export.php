@@ -192,52 +192,104 @@ class Admin_Apple_Export extends Apple_Export {
 			'Apple Export',
 			'manage_options',
 			$this->plugin_name . '_index',
-			array( $this, 'page_index_render' )
+			array( $this, 'page_index_setup' )
 		);
 	}
 
-	public function page_index_render() {
-		$id = intval( $_GET['post_id'] );
-
-		// Show all posts if id is not set
-		if ( ! $id ) {
-			$table = new Apple_Export_List_Table();
-			$table->prepare_items();
-			include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
-			return;
-		}
-
+	/**
+	 * Sets up all pages used in the plugin's admin page. Associate each route
+	 * with an action. Actions are methods that end with "_action" and must
+	 * perform a task and output HTML with the result.
+	 */
+	public function page_index_setup() {
+		$id     = intval( $_GET['post_id'] );
 		$action = $_GET['action'];
-		if ( 'settings' == $action ) {
-			if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
-				update_post_meta( $id, 'apple_export_pullquote', $_POST['pullquote'] );
-				update_post_meta( $id, 'apple_export_pullquote_position', intval( $_POST['pullquote_position'] ) );
-				$message = 'Settings saved.';
+
+		// Given an action and ID, map the attributes to corresponding actions.
+
+		if ( ! $id ) {
+			if ( 'push' == $action ) {
+				return $this->bulk_push_action( $_REQUEST['article'] );
 			}
 
-			$post      = get_post( $id );
-			$post_meta = get_post_meta( $id );
-			include plugin_dir_path( __FILE__ ) . 'partials/page_single_settings.php';
-			return;
+			return $this->show_post_list_action();
+		}
+
+		if ( 'settings' == $action ) {
+			return $this->settings_action( $id );
 		}
 
 		if ( 'export' == $action ) {
-			$path = $this->export( $id );
-			$this->download_zipfile( $path );
-			return;
+			return $this->export_action( $id );
 		}
 
 		if ( 'push' == $action ) {
-			$error = $this->push( $id );
-			if ( is_null( $error ) ) {
-				echo 'Your article has been pushed successfully!';
-			} else {
-				echo 'Oops, something happened: ' . $error;
-			}
-			return;
+			return $this->push_action( $id );
 		}
 
 		wp_die( 'Invalid action: ' . $action );
+	}
+
+	// Actions
+	// -------------------------------------------------------------------------
+
+	private function bulk_push_action( $articles ) {
+		$errors = $this->bulk_push( $articles );
+		if ( $errors ) {
+			// TODO: Show errors page
+			var_dump( $errors );
+		} else {
+			// TODO: Show success page
+			echo 'Pushed articles';
+		}
+	}
+
+	private function show_post_list_action() {
+		$table = new Apple_Export_List_Table();
+		$table->prepare_items();
+		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
+	}
+
+	private function settings_action( $id ) {
+		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
+			update_post_meta( $id, 'apple_export_pullquote', $_POST['pullquote'] );
+			update_post_meta( $id, 'apple_export_pullquote_position', intval( $_POST['pullquote_position'] ) );
+			$message = 'Settings saved.';
+		}
+
+		$post      = get_post( $id );
+		$post_meta = get_post_meta( $id );
+		include plugin_dir_path( __FILE__ ) . 'partials/page_single_settings.php';
+	}
+
+	private function export_action( $id ) {
+		$path = $this->export( $id );
+		$this->download_zipfile( $path );
+	}
+
+	private function push_action( $id ) {
+		$error = $this->push( $id );
+		if ( is_null( $error ) ) {
+			echo 'Your article has been pushed successfully!';
+		} else {
+			echo 'Oops, something happened: ' . $error;
+		}
+	}
+
+	private function bulk_push( $articles ) {
+		$errors = array();
+		if ( empty( $articles ) ) {
+			$errors[] = 'No articles selected.';
+			return $errors;
+		}
+
+		foreach ( $articles as $article_id ) {
+			$error = $this->push( $article_id );
+			if ( ! is_null( $error ) ) {
+				$errors[] = $error;
+			}
+		}
+		return $errors;
 	}
 
 }
