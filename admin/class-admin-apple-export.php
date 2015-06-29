@@ -9,10 +9,12 @@
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-settings.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter-content.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter-content-settings.php';
 
 use Exporter\Exporter as Exporter;
 use Exporter\Exporter_Content as Exporter_Content;
 use Exporter\Settings as Settings;
+use Exporter\Exporter_Content_Settings as Exporter_Content_Settings;
 
 class Admin_Apple_Export extends Apple_Export {
 
@@ -44,7 +46,8 @@ class Admin_Apple_Export extends Apple_Export {
 			// HTML. We use 'the_content' filter for that.
 			apply_filters( 'the_content', $post->post_content ),
 			$post->post_excerpt,
-			$post_thumb
+			$post_thumb,
+			$this->fetch_content_settings( $id )
 		);
 
 		$exporter = new Exporter( $base_content, null, $this->fetch_settings() );
@@ -52,7 +55,8 @@ class Admin_Apple_Export extends Apple_Export {
 	}
 
 	/**
-	 * Loads the initial settings with the WordPress ones.
+	 * Loads the global settings from the WordPress options.
+	 *
 	 * @since 0.4.0
 	 */
 	private function fetch_settings() {
@@ -60,6 +64,23 @@ class Admin_Apple_Export extends Apple_Export {
 		foreach ( $settings->all() as $key => $value ) {
 			$wp_value = esc_attr( get_option( $key ) ) ?: $value;
 			$settings->set( $key, $wp_value );
+		}
+		return $settings;
+	}
+
+	/**
+	 * Loads settings for the Exporter_Content from the WordPress post metadata.
+	 *
+	 * @since 0.4.0
+	 */
+	private function fetch_content_settings( $post_id ) {
+		$settings = new Exporter_Content_Settings();
+		foreach ( get_post_meta( $post_id ) as $name => $value ) {
+			if ( 0 === strpos( $name, 'apple_export_' ) ) {
+				$name  = str_replace( 'apple_export_', '', $name );
+				$value = $value[0];
+				$settings->set( $name, $value );
+			}
 		}
 		return $settings;
 	}
@@ -99,12 +120,27 @@ class Admin_Apple_Export extends Apple_Export {
 
 	public function page_index_render() {
 		$id = intval( $_GET['post_id'] );
-		if ( $id > 0 ) {
+
+		// Show all posts if id is not set
+		if( ! $id ) {
+			include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
+			return;
+		}
+
+		// Confirmed post export
+		if ( $_POST && wp_verify_nonce( $_POST['apple-export-nonce'], 'export' ) ) {
+			// Save post metadata
+			update_post_meta( $id, 'apple_export_pullquote', $_POST['pullquote'] );
+			update_post_meta( $id, 'apple_export_pullquote_position', intval( $_POST['pullquote_position'] ) );
+			// Export
 			$this->export( $id );
 			return;
 		}
 
-		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
+		// Show single post
+		$post      = get_post( $id );
+		$post_meta = get_post_meta( $id );
+		include plugin_dir_path( __FILE__ ) . 'partials/page_single.php';
 	}
 
 }

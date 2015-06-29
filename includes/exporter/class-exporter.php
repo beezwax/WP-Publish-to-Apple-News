@@ -156,6 +156,10 @@ class Exporter {
 		return $this->exporter_content->cover();
 	}
 
+	private function content_setting( $name ) {
+		return $this->exporter_content->get_setting( $name );
+	}
+
 	private function write_to_workspace( $filename, $contents ) {
 		$this->workspace->write_tmp_file( $filename, $contents );
 	}
@@ -210,9 +214,30 @@ class Exporter {
 		}
 
 		$post_components = array();
-		foreach ( $this->split_into_components() as $component ) {
-			$post_components[] = $component->value();
+
+		$pullquote = $this->content_setting( 'pullquote' );
+		$pullquote_position = $this->content_setting( 'pullquote_position' );
+		if( ! empty( $pullquote ) && $pullquote_position > 0 ) {
+			$idx = 1;
+			foreach ( $this->split_into_components() as $component ) {
+				if( $idx == $pullquote_position ) {
+					$post_components[] = $this->get_component_from_shortname( 'blockquote', "<blockquote><p>$pullquote</p></blockquote>" );
+					$pullquote_position = 0;
+				}
+
+				$post_components[] = $component->value();
+				$idx++;
+			}
+
+			if( $pullquote_position > 0 ) {
+				$post_components[] = $this->get_component_from_shortname( 'blockquote', "<blockquote><p>$pullquote</p></blockquote>" );
+			}
+		} else {
+			foreach ( $this->split_into_components() as $component ) {
+				$post_components[] = $component->value();
+			}
 		}
+
 		// Use the grid service to split component into columns if needed.
 		$post_components = $this->split_components_into_columns( $post_components );
 
