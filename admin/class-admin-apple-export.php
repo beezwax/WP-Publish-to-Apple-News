@@ -90,8 +90,8 @@ class Admin_Apple_Export extends Apple_Export {
 		// Check for "valid" API information
 		if (  empty( $this->get_setting( 'api_key' ) )
 			|| empty( $this->get_setting( 'api_secret' ) )
-			|| empty( $this->get_setting( 'api_channel' ) ) ) {
-
+			|| empty( $this->get_setting( 'api_channel' ) ) )
+		{
 			wp_die( 'Your API settings seem to be empty. Please fill the API key, API
 				secret and API channel fields in the plugin configuration page.' );
 			return;
