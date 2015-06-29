@@ -23,6 +23,10 @@ use Exporter\Exporter_Content_Settings as Exporter_Content_Settings;
 use Push_API\API as API;
 use Push_API\Credentials as Credentials;
 
+/**
+ * Main class for the plugin.
+ * FIXME: The admin page does too much, split into several classes.
+ */
 class Admin_Apple_Export extends Apple_Export {
 
 	private $api;
@@ -35,14 +39,15 @@ class Admin_Apple_Export extends Apple_Export {
 		ob_start();
 
 		// Register hooks
-		add_action( 'admin_menu', array( $this, 'setup_pages' ) );
+		add_action( 'admin_menu', array( $this, 'setup_admin_page' ) );
 
-		// Settings and API are lazily loaded using fetch_settings and fetch_api.
-		$this->settings = null;
+		// Admin_Settings builds the settings page for the plugin. It also has
+		// helper methods to query them.
+		$this->settings = new Admin_Settings();
 		$this->api      = null;
 	}
 
-	public function setup_pages() {
+	public function setup_admin_page() {
 		// Set up main page. This page reads parameters and handles actions
 		// accordingly.
 		add_menu_page(
@@ -50,7 +55,7 @@ class Admin_Apple_Export extends Apple_Export {
 			'Apple Export',
 			'manage_options',
 			$this->plugin_name . '_index',
-			array( $this, 'main_page' )
+			array( $this, 'admin_page' )
 		);
 	}
 
@@ -61,7 +66,7 @@ class Admin_Apple_Export extends Apple_Export {
 	 *
 	 * @since 0.4.0
 	 */
-	public function main_page() {
+	public function admin_page() {
 		$id     = intval( $_GET['post_id'] );
 		$action = htmlentities( $_GET['action'] );
 
@@ -128,6 +133,23 @@ class Admin_Apple_Export extends Apple_Export {
 	}
 
 	/**
+	 * Loads settings for the Exporter_Content from the WordPress post metadata.
+	 *
+	 * @since 0.4.0
+	 */
+	private function fetch_content_settings( $post_id ) {
+		$settings = new Exporter_Content_Settings();
+		foreach ( get_post_meta( $post_id ) as $name => $value ) {
+			if ( 0 === strpos( $name, 'apple_export_' ) ) {
+				$name  = str_replace( 'apple_export_', '', $name );
+				$value = $value[0];
+				$settings->set( $name, $value );
+			}
+		}
+		return $settings;
+	}
+
+	/**
 	 * Given a post id, export the post into the custom format.
 	 */
 	private function export( $id ) {
@@ -186,10 +208,6 @@ class Admin_Apple_Export extends Apple_Export {
 	 * @since 0.4.0
 	 */
 	private function fetch_settings() {
-		if ( is_null( $this->settings ) ) {
-			$this->settings = new Admin_Settings();
-		}
-
 		return $this->settings->fetch_settings();
 	}
 
@@ -200,23 +218,6 @@ class Admin_Apple_Export extends Apple_Export {
 	 */
 	private function get_setting( $name ) {
 		return $this->fetch_settings()->get( $name );
-	}
-
-	/**
-	 * Loads settings for the Exporter_Content from the WordPress post metadata.
-	 *
-	 * @since 0.4.0
-	 */
-	private function fetch_content_settings( $post_id ) {
-		$settings = new Exporter_Content_Settings();
-		foreach ( get_post_meta( $post_id ) as $name => $value ) {
-			if ( 0 === strpos( $name, 'apple_export_' ) ) {
-				$name  = str_replace( 'apple_export_', '', $name );
-				$value = $value[0];
-				$settings->set( $name, $value );
-			}
-		}
-		return $settings;
 	}
 
 	/**
