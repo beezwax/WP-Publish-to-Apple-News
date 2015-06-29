@@ -12,6 +12,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  */
 class Apple_Export_List_Table extends WP_List_Table {
 
+	const PER_PAGE = 10;
+
 	function __construct() {
 		parent::__construct( array(
 			'singular' => 'article',
@@ -96,10 +98,9 @@ class Apple_Export_List_Table extends WP_List_Table {
 
 		// Data fetch
 		$current_page = $this->get_pagenum();
-		$per_page     = 5;
 		$data = get_posts( array(
-			'posts_per_page' => $per_page,
-			'offset'         => ($current_page - 1) * $per_page,
+			'posts_per_page' => self::PER_PAGE,
+			'offset'         => ($current_page - 1) * self::PER_PAGE,
 			'orderby'        => 'ID',
 			'order'          => 'DESC',
 		) );
@@ -109,8 +110,8 @@ class Apple_Export_List_Table extends WP_List_Table {
 		$total_items = wp_count_posts()->publish;
 		$this->set_pagination_args( array(
 			'total_items' => $total_items,
-			'per_page'    => $per_page,
-			'total_pages' => ceil( $total_items / $per_page ),
+			'per_page'    => self::PER_PAGE,
+			'total_pages' => ceil( $total_items / self::PER_PAGE ),
 		) );
 	}
 
