@@ -42,13 +42,60 @@ class Admin_Apple_Export extends Apple_Export {
 		$this->initialize_api();
 	}
 
-	function initialize_api() {
+	private function initialize_api() {
 		// Build credentials
 		$key         = $this->get_setting( 'api_key' );
 		$secret      = $this->get_setting( 'api_secret' );
 		$credentials = new Credentials( $key, $secret );
 		// Build API
 		$this->api = new API( self::API_ENDPOINT, $credentials );
+	}
+
+	public function setup_pages() {
+		// Set up main page. This page reads parameters and handles actions
+		// accordingly.
+		add_menu_page(
+			'Apple Export',
+			'Apple Export',
+			'manage_options',
+			$this->plugin_name . '_index',
+			array( $this, 'main_page' )
+		);
+	}
+
+	/**
+	 * Sets up all pages used in the plugin's admin page. Associate each route
+	 * with an action. Actions are methods that end with "_action" and must
+	 * perform a task and output HTML with the result.
+	 *
+	 * @since 0.4.0
+	 */
+	public function main_page() {
+		$id     = intval( $_GET['post_id'] );
+		$action = htmlentities( $_GET['action'] );
+
+		// Given an action and ID, map the attributes to corresponding actions.
+
+		if ( ! $id ) {
+			switch ( $action ) {
+			case 'push':
+				$article_list = $_REQUEST['article'];
+				return $this->bulk_push_action( $article_list );
+			default:
+				return $this->show_post_list_action();
+			}
+		}
+
+		switch ( $action ) {
+		case 'settings':
+			return $this->settings_action( $id );
+		case 'export':
+			return $this->export_action( $id );
+		case 'push':
+			return $this->push_action( $id );
+		default:
+			wp_die( 'Invalid action: ' . $action );
+		}
 	}
 
 	/**
@@ -176,57 +223,6 @@ class Admin_Apple_Export extends Apple_Export {
 		flush();
 		readfile( $path );
 		exit;
-	}
-
-	public function setup_pages() {
-		// Only one page for now.
-		$this->page_index();
-	}
-
-	/**
-	 * Index page setup
-	 */
-	public function page_index() {
-		add_menu_page(
-			'Apple Export',
-			'Apple Export',
-			'manage_options',
-			$this->plugin_name . '_index',
-			array( $this, 'page_index_setup' )
-		);
-	}
-
-	/**
-	 * Sets up all pages used in the plugin's admin page. Associate each route
-	 * with an action. Actions are methods that end with "_action" and must
-	 * perform a task and output HTML with the result.
-	 */
-	public function page_index_setup() {
-		$id     = intval( $_GET['post_id'] );
-		$action = htmlentities( $_GET['action'] );
-
-		// Given an action and ID, map the attributes to corresponding actions.
-
-		if ( ! $id ) {
-			switch ( $action ) {
-			case 'push':
-				$article_list = $_REQUEST['article'];
-				return $this->bulk_push_action( $article_list );
-			default:
-				return $this->show_post_list_action();
-			}
-		}
-
-		switch ( $action ) {
-		case 'settings':
-			return $this->settings_action( $id );
-		case 'export':
-			return $this->export_action( $id );
-		case 'push':
-			return $this->push_action( $id );
-		default:
-			wp_die( 'Invalid action: ' . $action );
-		}
 	}
 
 	// Actions
