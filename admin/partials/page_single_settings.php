@@ -1,4 +1,4 @@
-<h1>Exporting <?php echo $post->post_title; ?></h1>
+<h1><?php echo $post->post_title; ?> Settings</h1>
 
 <?php if ( $message ): ?>
 <div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible">
@@ -31,6 +31,6 @@
 
 	<p class="submit">
 		<a href="<?php echo admin_url( 'admin.php?page=apple_export_index' ); ?>" class="button">Back</a>
-		<button type="submit" class="button button-primary">Save</button>
+		<button type="submit" class="button button-primary">Save Changes</button>
 	</p>
 </form>

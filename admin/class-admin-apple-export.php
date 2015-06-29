@@ -64,6 +64,9 @@ class Admin_Apple_Export extends Apple_Export {
 	 * with an action. Actions are methods that end with "_action" and must
 	 * perform a task and output HTML with the result.
 	 *
+	 * FIXME: Regarding this class doing too much, maybe split all actions into
+	 * their own class.
+	 *
 	 * @since 0.4.0
 	 */
 	public function admin_page() {
@@ -147,6 +150,10 @@ class Admin_Apple_Export extends Apple_Export {
 			}
 		}
 		return $settings;
+	}
+
+	private function display_message( $title, $message ) {
+		include plugin_dir_path( __FILE__ ) . 'partials/page_message.php';
 	}
 
 	/**
@@ -241,11 +248,14 @@ class Admin_Apple_Export extends Apple_Export {
 	private function bulk_push_action( $articles ) {
 		$errors = $this->bulk_push( $articles );
 		if ( $errors ) {
-			// TODO: Show errors page
-			var_dump( $errors );
+			$formatted_errors = '<ul>';
+			foreach ( $errors as $error ) {
+				$formatted_errors .= '<li>' . $error . '</li>';
+			}
+			$formatted_errors .= '</ul>';
+			$this->display_message( 'Oops, something went wrong', $formatted_errors );
 		} else {
-			// TODO: Show success page
-			echo 'Pushed articles';
+			$this->display_message( 'Success', 'Your articles has been pushed successfully!' );
 		}
 	}
 
@@ -275,16 +285,16 @@ class Admin_Apple_Export extends Apple_Export {
 	private function push_action( $id ) {
 		$error = $this->push( $id );
 		if ( is_null( $error ) ) {
-			echo 'Your article has been pushed successfully!';
+			$this->display_message( 'Success', 'Your article has been pushed successfully!' );
 		} else {
-			echo 'Oops, something happened: ' . $error;
+			$this->display_message( 'Oops, something went wrong', $error );
 		}
 	}
 
 	private function bulk_push( $articles ) {
 		$errors = array();
 		if ( empty( $articles ) ) {
-			$errors[] = 'No articles selected.';
+			$errors[] = 'You did not select any articles.';
 			return $errors;
 		}
 
