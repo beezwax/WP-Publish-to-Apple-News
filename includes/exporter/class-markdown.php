@@ -49,7 +49,7 @@ class Markdown {
 	}
 
 	private function parse_node( $node ) {
-		switch( $node->nodeName ) {
+		switch ( $node->nodeName ) {
 		case '#text':
 			return $this->parse_text_node( $node );
 		case 'strong':

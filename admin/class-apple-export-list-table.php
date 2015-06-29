@@ -21,7 +21,7 @@ class Apple_Export_List_Table extends WP_List_Table {
 	}
 
 	public function column_default( $item, $column_name ) {
-		switch( $column_name ) {
+		switch ( $column_name ) {
 		case 'title':
 			return $item[ $column_name ];
 		default:
@@ -93,7 +93,7 @@ class Apple_Export_List_Table extends WP_List_Table {
 	 * let's do it.
 	 */
 	public function process_bulk_action() {
-		switch( $this->current_action() ) {
+		switch ( $this->current_action() ) {
 		case 'export':
 			wp_die( 'export a batch' );
 		case 'push':

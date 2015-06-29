@@ -362,7 +362,7 @@ class Admin_Settings {
 		// and instantiate them according to their type.
 		if ( is_array( $type ) ) {
 			// Use select2 only when there is a considerable ammount of options available
-			if( count( $type ) > 10 ) {
+			if ( count( $type ) > 10 ) {
 				$field = '<select class="select2" name="%s">';
 			} else {
 				$field = '<select name="%s">';
@@ -482,7 +482,7 @@ class Admin_Settings {
 	 * settings.
 	 */
 	public function fetch_settings() {
-		if( is_null( $this->loaded_settings ) ) {
+		if ( is_null( $this->loaded_settings ) ) {
 			$settings = new Settings();
 			foreach ( $settings->all() as $key => $value ) {
 				$wp_value = esc_attr( get_option( $key ) ) ?: $value;

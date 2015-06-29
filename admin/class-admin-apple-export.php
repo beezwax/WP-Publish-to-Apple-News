@@ -87,7 +87,7 @@ class Admin_Apple_Export extends Apple_Export {
 	 */
 	private function push( $id ) {
 		// Check for "valid" API information
-		if(  empty( $this->get_setting( 'api_key' ) )
+		if (  empty( $this->get_setting( 'api_key' ) )
 			|| empty( $this->get_setting( 'api_secret' ) )
 			|| empty( $this->get_setting( 'api_channel' ) ) ) {
 
@@ -119,7 +119,7 @@ class Admin_Apple_Export extends Apple_Export {
 			update_post_meta( $id, 'apple_export_api_id', $result->data->id );
 			update_post_meta( $id, 'apple_export_api_created_at', $result->data->createdAt );
 			update_post_meta( $id, 'apple_export_api_modified_at', $result->data->modifiedAt );
-		} catch( \Exception $e ) {
+		} catch ( \Exception $e ) {
 			$error = $e->getMessage();
 		} finally {
 			$exporter->workspace()->clean_up();
@@ -199,7 +199,7 @@ class Admin_Apple_Export extends Apple_Export {
 		$id = intval( $_GET['post_id'] );
 
 		// Show all posts if id is not set
-		if( ! $id ) {
+		if ( ! $id ) {
 			$table = new Apple_Export_List_Table();
 			$table->prepare_items();
 			include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
@@ -207,8 +207,8 @@ class Admin_Apple_Export extends Apple_Export {
 		}
 
 		$action = $_GET['action'];
-		if( 'settings' == $action ) {
-			if( $_POST ) {
+		if ( 'settings' == $action ) {
+			if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
 				update_post_meta( $id, 'apple_export_pullquote', $_POST['pullquote'] );
 				update_post_meta( $id, 'apple_export_pullquote_position', intval( $_POST['pullquote_position'] ) );
 				$message = 'Settings saved.';
@@ -220,15 +220,15 @@ class Admin_Apple_Export extends Apple_Export {
 			return;
 		}
 
-		if( 'export' == $action ) {
+		if ( 'export' == $action ) {
 			$path = $this->export( $id );
 			$this->download_zipfile( $path );
 			return;
 		}
 
-		if( 'push' == $action ) {
+		if ( 'push' == $action ) {
 			$error = $this->push( $id );
-			if( is_null( $error ) ) {
+			if ( is_null( $error ) ) {
 				echo 'Your article has been pushed successfully!';
 			} else {
 				echo 'Oops, something happened: ' . $error;

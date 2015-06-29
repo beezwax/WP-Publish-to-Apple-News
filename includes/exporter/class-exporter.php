@@ -242,10 +242,10 @@ class Exporter {
 
 		$pullquote = $this->content_setting( 'pullquote' );
 		$pullquote_position = $this->content_setting( 'pullquote_position' );
-		if( ! empty( $pullquote ) && $pullquote_position > 0 ) {
+		if ( ! empty( $pullquote ) && $pullquote_position > 0 ) {
 			$idx = 1;
 			foreach ( $this->split_into_components() as $component ) {
-				if( $idx == $pullquote_position ) {
+				if ( $idx == $pullquote_position ) {
 					$post_components[] = $this->get_component_from_shortname( 'blockquote', "<blockquote><p>$pullquote</p></blockquote>" );
 					$pullquote_position = 0;
 				}
@@ -254,7 +254,7 @@ class Exporter {
 				$idx++;
 			}
 
-			if( $pullquote_position > 0 ) {
+			if ( $pullquote_position > 0 ) {
 				$post_components[] = $this->get_component_from_shortname( 'blockquote', "<blockquote><p>$pullquote</p></blockquote>" );
 			}
 		} else {
