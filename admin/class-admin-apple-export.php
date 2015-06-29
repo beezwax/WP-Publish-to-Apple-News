@@ -44,8 +44,8 @@ class Admin_Apple_Export extends Apple_Export {
 
 	function initialize_api() {
 		// Build credentials
-		$key = $this->get_setting( 'api_key' );
-		$secret = $this->get_setting( 'api_secret' );
+		$key         = $this->get_setting( 'api_key' );
+		$secret      = $this->get_setting( 'api_secret' );
 		$credentials = new Credentials( $key, $secret );
 		// Build API
 		$this->api = new API( self::API_ENDPOINT, $credentials );
