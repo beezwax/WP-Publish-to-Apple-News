@@ -91,15 +91,16 @@ class Admin_Apple_Export extends Apple_Export {
 
 	private function fetch_api() {
 		if ( is_null( $this->api ) ) {
-			// Build credentials
-			$key         = $this->get_setting( 'api_key' );
-			$secret      = $this->get_setting( 'api_secret' );
-			$credentials = new Credentials( $key, $secret );
-			// Build API
-			$this->api = new API( self::API_ENDPOINT, $credentials );
+			$this->api = new API( self::API_ENDPOINT, $this->fetch_credentials() );
 		}
 
 		return $this->api;
+	}
+
+	private function fetch_credentials() {
+		$key    = $this->get_setting( 'api_key' );
+		$secret = $this->get_setting( 'api_secret' );
+		return new Credentials( $key, $secret );
 	}
 
 	/**
@@ -107,7 +108,7 @@ class Admin_Apple_Export extends Apple_Export {
 	 */
 	private function fetch_exporter( $id ) {
 		// The WP_Post object representing the post.
-		$post       = get_post( $id );
+		$post = get_post( $id );
 		// The URL of the post's thumbnail (a.k.a featured image), if any.
 		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ?: null;
 
