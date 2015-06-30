@@ -12,9 +12,11 @@ use \Exporter\Components\Component as Component;
 class Component_Layouts {
 
 	private $layouts;
+	private $settings;
 
-	function __construct() {
+	function __construct( $settings ) {
 		$this->layouts  = array();
+		$this->settings = $settings;
 	}
 
 	/**
@@ -40,6 +42,10 @@ class Component_Layouts {
 		return $this->layouts;
 	}
 
+	private function get_setting( $name ) {
+		return $this->settings->get( $name );
+	}
+
 	private function layout_exists( $name ) {
 		return array_key_exists( $name, $this->layouts );
 	}
@@ -59,7 +65,7 @@ class Component_Layouts {
 			$layout_value = $this->layouts[ $layout_name ];
 
 			// Register new layout using the appropriate start and span
-			$col_start = 0 == $layout_value[ 'columnStart' ] ?: $layout_value[ 'columnStart' ] + Component::ALIGNMENT_OFFSET;
+			$col_start = 0 == $layout_value[ 'columnStart' ] ? 0 : $layout_value[ 'columnStart' ] + Component::ALIGNMENT_OFFSET;
 			$col_span  = $component::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
 			$this->register_layout( 'aligned-other', array(
 				'columnStart' => $col_start,
@@ -73,15 +79,29 @@ class Component_Layouts {
 	}
 
 	public function fix_alignments( $components ) {
-		$must_fix = false;
 		$result   = array();
+		$i        = 0;
+		$len      = count( $components );
 
-		foreach ( $components as $component ) {
-			if ( $must_fix ) {
-				$must_fix  = false;
-				$component = $this->fix_layout_for_component( $component );
-			} else if ( $component->is_alignable ) {
-				$must_fix = true;
+		for ( $i = 0; $i < $len; $i++ ) {
+			$component = $components[ $i ];
+
+			// TODO: What if there are two components alignable next to each other?
+			if ( $component->is_alignable ) {
+				switch ( $this->get_setting( 'body_orientation' ) ) {
+				case 'left':
+					$other_component_index = $i - 1;
+					$other_component       = $components[ $other_component_index ];
+					break;
+				case 'right':
+					$other_component_index = $i + 1;
+					$other_component       = $components[ $other_component_index ];
+					$i++;
+					break;
+				}
+
+				$other_component = $this->fix_layout_for_component( $other_component );
+				$result[ $other_component_index ] = $other_component;
 			}
 
 			$result[] = $component;

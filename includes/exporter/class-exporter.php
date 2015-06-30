@@ -64,7 +64,7 @@ class Exporter {
 		$this->workspace = $workspace ?: new Workspace();
 		$this->settings  = $settings ?: new Settings();
 		$this->styles    = $styles ?: new Component_Styles();
-		$this->layouts   = $layouts ?: new Component_Layouts();
+		$this->layouts   = $layouts ?: new Component_Layouts( $this->settings );
 
 		Component_Factory::initialize( $this->workspace, $this->settings, $this->styles, $this->layouts );
 	}

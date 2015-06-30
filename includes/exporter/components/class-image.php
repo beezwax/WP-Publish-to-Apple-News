@@ -54,8 +54,11 @@ class Image extends Component {
 
 	private function set_default_layout() {
 		// Find out the starting column
-		$col_start = Body::COLUMN_SPAN;
+		$col_start = 0;
 		switch ( $this->get_setting( 'body_orientation' ) ) {
+		case 'left':
+			$col_start = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
+			break;
 		case 'right':
 			$col_start = 0;
 			break;
