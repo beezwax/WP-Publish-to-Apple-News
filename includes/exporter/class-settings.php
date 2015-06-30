@@ -21,6 +21,7 @@ class Settings {
 		'body_size'       => 16,
 		'body_color'      => '#000',
 		'body_link_color' => '#428BCA',
+		'body_orientation'=> 'left',
 		'initial_dropcap' => 'yes',
 		'dropcap_font'    => 'Georgia-Bold',
 		'dropcap_color'   => '#000',
