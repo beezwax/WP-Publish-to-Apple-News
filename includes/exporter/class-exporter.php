@@ -287,6 +287,9 @@ class Exporter {
 			$result     = array_merge( $result, $components );
 		}
 
+		// Now that we have our component's array, let's fix the layouts
+		$result = $this->layouts->fix_alignments( $result );
+
 		return $result;
 	}
 

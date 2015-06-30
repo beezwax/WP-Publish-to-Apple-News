@@ -15,6 +15,27 @@ require_once __DIR__ . '/../class-markdown.php';
 abstract class Component {
 
 	/**
+	 * When a component is displayed aligned relative to another one, slide the
+	 * other component a few columns, in this case, 2.
+	 *
+	 * @since 0.4.0
+	 */
+	const ALIGNMENT_OFFSET = 2;
+
+	/**
+	 * By default, components are not alignable. Alignable components always are
+	 * shown next to another component, this is done in the component itself,
+	 * this flag does not implement that behaviour. Nevertheless, if a component
+	 * behaves like that, you must set it's is_alignable property to true so the
+	 * builder knows how to treat the other component, as it will has less
+	 * columns to consume.
+	 * TODO: Maybe use a container for this?
+	 *
+	 * @since 0.4.0
+	 */
+	public $is_alignable = false;
+
+	/**
 	 * @since 0.2.0
 	 */
 	protected $workspace;
@@ -47,6 +68,9 @@ abstract class Component {
 		$this->markdown  = $markdown ?: new \Exporter\Markdown();
 		$this->text      = $text;
 		$this->json      = null;
+
+		// Once the text is set, build proper JSON. Store as an array.
+		$this->build( $this->text );
 	}
 
 	/**
@@ -62,12 +86,15 @@ abstract class Component {
 	 * the build function.
 	 */
 	public function value() {
-		// Lazy value evaluation
-		if ( is_null( $this->json ) ) {
-			$this->build( $this->text );
-		}
-
 		return $this->json;
+	}
+
+	public function set_json( $name, $value ) {
+		$this->json[ $name ] = $value;
+	}
+
+	public function get_json( $name ) {
+		return $this->json[ $name ];
 	}
 
 	/**

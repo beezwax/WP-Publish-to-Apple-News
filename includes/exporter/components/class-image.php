@@ -10,6 +10,11 @@ use \Exporter\Exporter as Exporter;
  */
 class Image extends Component {
 
+	/**
+	 * Set this component as alignable. @see \Exporter\Components\Component.
+	 */
+	public $is_alignable = true;
+
 	public static function node_matches( $node ) {
 		// Is this an image node?
 		if ( 'img' == $node->nodeName ) {
@@ -63,7 +68,7 @@ class Image extends Component {
 		$this->json[ 'layout' ] = 'image-layout';
 		$this->register_layout( 'image-layout', array(
 			'columnStart' => $col_start,
-			'columnSpan'  => Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN,
+			'columnSpan'  => Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN + Component::ALIGNMENT_OFFSET,
 		) );
 	}
 
