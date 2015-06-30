@@ -1,6 +1,8 @@
 <?php
 namespace Exporter\Components;
 
+use \Exporter\Exporter as Exporter;
+
 /**
  * Represents a simple image.
  *
@@ -46,11 +48,22 @@ class Image extends Component {
 	}
 
 	private function set_default_layout() {
-		// TODO: This depends on whether the alignment is set as left, center or
-		// right. For now let's use right alignment.
+		// Find out the starting column
+		$col_start = Body::COLUMN_SPAN;
+		switch ( $this->get_setting( 'body_orientation' ) ) {
+		case 'right':
+			$col_start = 0;
+			break;
+		case 'center':
+			// TODO: What do? Show centered?
+			$col_start = 0;
+			break;
+		}
+
 		$this->json[ 'layout' ] = 'image-layout';
 		$this->register_layout( 'image-layout', array(
-			'columnStart' => 5,
+			'columnStart' => $col_start,
+			'columnSpan'  => Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN,
 		) );
 	}
 
