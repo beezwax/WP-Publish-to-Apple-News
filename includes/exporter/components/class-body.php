@@ -37,10 +37,10 @@ class Body extends Component {
 			$this->set_default_style();
 		}
 
-		$this->set_layout();
+		$this->set_default_layout();
 	}
 
-	private function set_layout() {
+	private function set_default_layout() {
 		$this->json[ 'layout' ] = 'body-layout';
 		$this->register_layout( 'body-layout', array(
 			'columnStart' => 0,
