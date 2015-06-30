@@ -36,6 +36,16 @@ class Body extends Component {
 		} else {
 			$this->set_default_style();
 		}
+
+		$this->set_layout();
+	}
+
+	private function set_layout() {
+		$this->json[ 'layout' ] = 'body-layout';
+		$this->register_layout( 'body-layout', array(
+			'columnStart' => 0,
+			'columnSpan' => 5,
+		) );
 	}
 
 	private function get_default_style() {

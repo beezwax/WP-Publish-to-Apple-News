@@ -13,11 +13,6 @@ class Component_Layouts {
 
 	function __construct() {
 		$this->layouts  = array();
-
-		// Register default styles. full-width is used by components to always use
-		// all width. When not in the first column, components shrink, so the grid
-		// needs to force them to use all available space.
-		$this->register_layout( 'full-width', array( 'columnStart' => 0 ) );
 	}
 
 	/**

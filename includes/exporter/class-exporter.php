@@ -4,7 +4,6 @@ namespace Exporter;
 require_once plugin_dir_path( __FILE__ ) . 'class-component-factory.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-component-styles.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-component-layouts.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-component-grid.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-settings.php';
@@ -53,14 +52,13 @@ class Exporter {
 	 */
 	function __construct( Exporter_Content $content, Workspace $workspace = null,
 		Settings $settings = null, Component_Styles $styles = null,
-		Component_Layouts $layouts = null, Component_Grid $grid = null ) {
+		Component_Layouts $layouts = null ) {
 
 		$this->exporter_content = $content;
 		$this->workspace = $workspace ?: new Workspace();
 		$this->settings  = $settings ?: new Settings();
 		$this->styles    = $styles ?: new Component_Styles();
 		$this->layouts   = $layouts ?: new Component_Layouts();
-		$this->grid      = $grid ?: new Component_Grid( $this->settings );
 
 		Component_Factory::initialize( $this->workspace, $this->settings, $this->styles, $this->layouts );
 	}
@@ -213,10 +211,6 @@ class Exporter {
 		return $this->settings->get( $name );
 	}
 
-	private function split_components_into_columns( $components ) {
-		return $this->grid->split_components_into_columns( $components );
-	}
-
 	/**
 	 * Builds an array with all the components of this WordPress content.
 	 */
@@ -262,9 +256,6 @@ class Exporter {
 				$post_components[] = $component->value();
 			}
 		}
-
-		// Use the grid service to split component into columns if needed.
-		$post_components = $this->split_components_into_columns( $post_components );
 
 		return array_merge( $meta_components, $post_components );
 	}
