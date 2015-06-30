@@ -320,8 +320,6 @@ class Admin_Settings {
 	function __construct() {
 		$this->field_types = array(
 			'api_secret'          => 'password',
-			'layout_columns'      => 'integer',
-			'layout_width'        => 'integer',
 			'layout_margin'       => 'integer',
 			'layout_gutter'       => 'integer',
 			'body_font'           => $this->fonts,

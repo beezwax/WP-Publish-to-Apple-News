@@ -24,6 +24,12 @@ require_once plugin_dir_path( __FILE__ ) . 'class-settings.php';
 class Exporter {
 
 	/**
+	 * Default layout values for exporter
+	 */
+	const LAYOUT_COLUMNS = 7;
+	const LAYOUT_WIDTH   = 1024;
+
+	/**
 	 * The content object to be exported.
 	 *
 	 * @var  Exporter_Content
@@ -145,8 +151,8 @@ class Exporter {
 
 	private function build_article_layout() {
 		return array(
-			'columns' => $this->get_setting( 'layout_columns' ), // Defaults to 8
-			'width'   => $this->get_setting( 'layout_width' ),   // Defaults to 1024
+			'columns' => self::LAYOUT_COLUMNS,
+			'width'   => self::LAYOUT_WIDTH,
 			'margin'  => $this->get_setting( 'layout_margin' ),  // Defaults to 30
 			'gutter'  => $this->get_setting( 'layout_gutter' ),  // Defaults to 20
 		);

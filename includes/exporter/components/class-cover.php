@@ -1,6 +1,8 @@
 <?php
 namespace Exporter\Components;
 
+use \Exporter\Exporter as Exporter;
+
 /**
  * A cover is optional and displayed at the very top of the article. It's
  * loaded from the Exporter_Content's cover attribute, if present.
@@ -36,10 +38,10 @@ class Cover extends Component {
 
 	private function set_default_layout() {
 		$this->register_layout( 'headerContainerLayout', array(
-			'columnStart' => 0,
-			'columnSpan' => $this->get_setting( 'layout_columns' ),
+			'columnStart'          => 0,
+			'columnSpan'           => Exporter::LAYOUT_COLUMNS,
 			'ignoreDocumentMargin' => true,
-			'minimumHeight' => '50vh',
+			'minimumHeight'        => '50vh',
 		) );
 	}
 

@@ -41,6 +41,17 @@ class Image extends Component {
 			'role' => 'photo',
 			'URL'  => 'bundle://' . $filename,
 		);
+
+		$this->set_default_layout();
+	}
+
+	private function set_default_layout() {
+		// TODO: This depends on whether the alignment is set as left, center or
+		// right. For now let's use right alignment.
+		$this->json[ 'layout' ] = 'image-layout';
+		$this->register_layout( 'image-layout', array(
+			'columnStart' => 5,
+		) );
 	}
 
 }
