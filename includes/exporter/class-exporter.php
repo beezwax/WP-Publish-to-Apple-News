@@ -201,6 +201,10 @@ class Exporter {
 		return $this->exporter_content->get_setting( $name );
 	}
 
+	private function content_nodes() {
+		return $this->exporter_content->nodes();
+	}
+
 	private function write_to_workspace( $filename, $contents ) {
 		$this->workspace->write_tmp_file( $filename, $contents );
 	}
@@ -284,15 +288,6 @@ class Exporter {
 	 * Split components from the source WordPress content.
 	 */
 	private function split_into_components() {
-		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
-		$dom = new \DOMDocument();
-		libxml_use_internal_errors( true );
-		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $this->content_text() );
-		libxml_clear_errors( true );
-
-		// Find the first-level nodes of the body tag.
-		$nodes = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes;
-
 		// Pullquote check
 		$pullquote          = $this->content_setting( 'pullquote' );
 		$pullquote_position = $this->content_setting( 'pullquote_position' );
@@ -301,7 +296,7 @@ class Exporter {
 		// might include child-components, like an Cover and Image.
 		$result   = array();
 		$position = 0;
-		foreach ( $nodes as $node ) {
+		foreach ( $this->content_nodes() as $node ) {
 			$components = $this->get_components_from_node( $node );
 
 			if ( !empty( $pullquote ) && $pullquote_position > 0 ) {
