@@ -31,6 +31,9 @@ class Cover extends Component {
 					'fillMode' => 'cover',
 				),
 			),
+			'behaviour' => array(
+				'type' => 'parallax',
+			),
 		);
 
 		$this->set_default_layout();

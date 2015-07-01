@@ -75,7 +75,12 @@ class Component_Layouts {
 		}
 
 		$component->set_json( 'layout', 'anchor-layout' );
+		// TODO: Use an animation manager
+		$component->set_json( 'animation', array(
+			'type'             => 'fade_in',
+			'userControllable' => 'true',
+			'initialAlpha'     => 0.0,
+		) );
 	}
-
 
 }
