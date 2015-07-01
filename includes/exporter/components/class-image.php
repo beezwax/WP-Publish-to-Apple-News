@@ -44,7 +44,12 @@ class Image extends Component {
 			'URL'  => 'bundle://' . $filename,
 		);
 
-		$this->set_anchorable( true ); // Images are always anchorable
+		// If the img has an align attribute, or a class which starts with 'align',
+		// set as anchorable.
+		if ( preg_match( '#align=#', $text ) || preg_match( '#class=".*?(?:alignleft|alignright).*?"#', $text ) ) {
+			$this->set_anchorable( true );
+		}
+		var_dump( 'endif' );
 	}
 
 }
