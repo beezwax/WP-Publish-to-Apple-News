@@ -169,7 +169,7 @@ class Admin_Apple_Export extends Apple_Export {
 	 */
 	private function push( $id ) {
 		// Check for "valid" API information
-		if (  empty( $this->get_setting( 'api_key' ) )
+		if ( empty( $this->get_setting( 'api_key' ) )
 			|| empty( $this->get_setting( 'api_secret' ) )
 			|| empty( $this->get_setting( 'api_channel' ) ) )
 		{
