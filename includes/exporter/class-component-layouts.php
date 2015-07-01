@@ -2,6 +2,7 @@
 namespace Exporter;
 
 use \Exporter\Components\Component as Component;
+use \Exporter\Components\Body as Body;
 
 /**
  * Exporter and components can register layouts. This class manages the layouts
@@ -50,64 +51,31 @@ class Component_Layouts {
 		return array_key_exists( $name, $this->layouts );
 	}
 
-	/**
-	 * When a component is next to an aligned component (which is a component
-	 * that must be displayed next to another one), the layout must be different,
-	 * as it has less space. @see \Exporter\Components\Component::is_alignable.
-	 *
-	 * @since 0.4.0
-	 */
-	private function fix_layout_for_component( $component ) {
-		// Create fix layout if not existant
-		if ( ! $this->layout_exists( 'aligned-other' ) ) {
-			// Get layout data
-			$layout_name  = $component->get_json( 'layout' );
-			$layout_value = $this->layouts[ $layout_name ];
+	public function set_anchor_layout_for( $component ) {
+		if ( ! $this->layout_exists( 'anchor_layout' ) ) {
+			// Find out the starting column
+			$col_start = 0;
+			switch ( $this->get_setting( 'body_orientation' ) ) {
+			case 'left':
+				$col_start = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
+				break;
+			case 'right':
+				$col_start = 0;
+				break;
+			case 'center':
+				// TODO: What do? Show centered?
+				$col_start = 0;
+				break;
+			}
 
-			// Register new layout using the appropriate start and span
-			$col_start = 0 == $layout_value[ 'columnStart' ] ? 0 : $layout_value[ 'columnStart' ] + Component::ALIGNMENT_OFFSET;
-			$col_span  = $component::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
-			$this->register_layout( 'aligned-other', array(
+			$this->register_layout( 'anchor-layout', array(
 				'columnStart' => $col_start,
-				'columnSpan'  => $col_span,
+				'columnSpan'  => Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN + Component::ALIGNMENT_OFFSET,
 			) );
 		}
 
-		// Use the aligned-other layout instead
-		$component->set_json( 'layout', 'aligned-other' );
-		return $component;
+		$component->set_json( 'layout', 'anchor-layout' );
 	}
 
-	public function fix_alignments( $components ) {
-		$result   = array();
-		$i        = 0;
-		$len      = count( $components );
-
-		for ( $i = 0; $i < $len; $i++ ) {
-			$component = $components[ $i ];
-
-			// TODO: What if there are two components alignable next to each other?
-			if ( $component->is_alignable ) {
-				switch ( $this->get_setting( 'body_orientation' ) ) {
-				case 'left':
-					$other_component_index = $i - 1;
-					$other_component       = $components[ $other_component_index ];
-					break;
-				case 'right':
-					$other_component_index = $i + 1;
-					$other_component       = $components[ $other_component_index ];
-					$i++;
-					break;
-				}
-
-				$other_component = $this->fix_layout_for_component( $other_component );
-				$result[ $other_component_index ] = $other_component;
-			}
-
-			$result[] = $component;
-		}
-
-		return $result;
-	}
 
 }

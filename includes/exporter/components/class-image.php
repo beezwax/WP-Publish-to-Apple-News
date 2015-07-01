@@ -10,11 +10,6 @@ use \Exporter\Exporter as Exporter;
  */
 class Image extends Component {
 
-	/**
-	 * Set this component as alignable. @see \Exporter\Components\Component.
-	 */
-	public $is_alignable = true;
-
 	public static function node_matches( $node ) {
 		// Is this an image node?
 		if ( 'img' == $node->nodeName ) {
@@ -49,30 +44,7 @@ class Image extends Component {
 			'URL'  => 'bundle://' . $filename,
 		);
 
-		$this->set_default_layout();
-	}
-
-	private function set_default_layout() {
-		// Find out the starting column
-		$col_start = 0;
-		switch ( $this->get_setting( 'body_orientation' ) ) {
-		case 'left':
-			$col_start = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
-			break;
-		case 'right':
-			$col_start = 0;
-			break;
-		case 'center':
-			// TODO: What do? Show centered?
-			$col_start = 0;
-			break;
-		}
-
-		$this->json[ 'layout' ] = 'image-layout';
-		$this->register_layout( 'image-layout', array(
-			'columnStart' => $col_start,
-			'columnSpan'  => Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN + Component::ALIGNMENT_OFFSET,
-		) );
+		$this->set_anchorable( true ); // Images are always anchorable
 	}
 
 }

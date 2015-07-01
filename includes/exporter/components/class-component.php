@@ -23,17 +23,11 @@ abstract class Component {
 	const ALIGNMENT_OFFSET = 2;
 
 	/**
-	 * By default, components are not alignable. Alignable components always are
-	 * shown next to another component, this is done in the component itself,
-	 * this flag does not implement that behaviour. Nevertheless, if a component
-	 * behaves like that, you must set it's is_alignable property to true so the
-	 * builder knows how to treat the other component, as it will has less
-	 * columns to consume.
-	 * TODO: Maybe use a container for this?
+	 * Anchorable components are anchored to the next element that appears.
 	 *
 	 * @since 0.4.0
 	 */
-	public $is_alignable = false;
+	public $is_anchorable = false;
 
 	/**
 	 * @since 0.2.0
@@ -186,6 +180,14 @@ abstract class Component {
 		}
 
 		return 1 == preg_match( "/(?:\s+|^)$classname(?:\s+|$)/", $classes );
+	}
+
+	public function set_anchorable( $flag ) {
+		if ( $flag ) {
+			$this->layouts->set_anchor_layout_for( $this );
+		}
+
+		$this->is_anchorable = $flag;
 	}
 
 	/**

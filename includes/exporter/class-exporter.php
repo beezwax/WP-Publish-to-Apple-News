@@ -198,7 +198,7 @@ class Exporter {
 	}
 
 	private function get_component_from_shortname( $shortname, $html ) {
-		return Component_Factory::get_component( $shortname, $html )->value();
+		return Component_Factory::get_component( $shortname, $html );
 	}
 
 	private function get_components_from_node( $node ) {
@@ -226,44 +226,52 @@ class Exporter {
 		// The content's cover is optional. In WordPress, it's a post's thumbnail
 		// or featured image.
 		if ( $this->content_cover() ) {
-			$meta_components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() );
+			$meta_components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() )->value();
 		}
 
 		// Add title
-		$meta_components[] = $this->get_component_from_shortname( 'title', $this->content_title() );
+		$meta_components[] = $this->get_component_from_shortname( 'title', $this->content_title() )->value();
 
 		// The content's intro is optional. In WordPress, it's a post's
 		// excerpt. It's an introduction to the article.
 		if ( $this->content_intro() ) {
-			$meta_components[] = $this->get_component_from_shortname( 'intro', $this->content_intro() );
+			$meta_components[] = $this->get_component_from_shortname( 'intro', $this->content_intro() )->value();
 		}
 
 		$post_components = array();
-
-		$pullquote = $this->content_setting( 'pullquote' );
-		$pullquote_position = $this->content_setting( 'pullquote_position' );
-		if ( ! empty( $pullquote ) && $pullquote_position > 0 ) {
-			$idx = 1;
-			foreach ( $this->split_into_components() as $component ) {
-				if ( $idx == $pullquote_position ) {
-					$post_components[] = $this->get_component_from_shortname( 'blockquote', "<blockquote><p>$pullquote</p></blockquote>" );
-					$pullquote_position = 0;
-				}
-
-				$post_components[] = $component->value();
-				$idx++;
-			}
-
-			if ( $pullquote_position > 0 ) {
-				$post_components[] = $this->get_component_from_shortname( 'blockquote', "<blockquote><p>$pullquote</p></blockquote>" );
-			}
-		} else {
-			foreach ( $this->split_into_components() as $component ) {
-				$post_components[] = $component->value();
-			}
+		foreach ( $this->split_into_components() as $component ) {
+			$post_components[] = $component->value();
 		}
 
 		return array_merge( $meta_components, $post_components );
+	}
+
+	/**
+	 * Anchor components that are anchorable
+	 */
+	private function anchor_components( $components ) {
+		$len = count( $components );
+
+		for ( $i = 0; $i < $len; $i++ ) {
+			$component = $components[ $i ];
+
+			if ( ! $component->is_anchorable ) {
+				continue;
+			}
+
+			// Anchor this component to previous component
+			$uid             = uniqid();
+			$other_component = $components[ $i - 1 ];
+			$other_component->set_json( 'identifier', 'component-' . $uid );
+			$component->set_json( 'anchor', array(
+				'targetComponentIdentifier' => 'component-' . $uid,
+				'targetAnchorPosition'      => 'center',
+				'rangeStart' => 0,
+				'rangeLength' => 1,
+			) );
+		}
+
+		return $components;
 	}
 
 	/**
@@ -279,16 +287,39 @@ class Exporter {
 		// Find the first-level nodes of the body tag.
 		$nodes = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes;
 
+		// Pullquote check
+		$pullquote          = $this->content_setting( 'pullquote' );
+		$pullquote_position = $this->content_setting( 'pullquote_position' );
+
 		// Loop though the first-level nodes of the body element. Components
 		// might include child-components, like an Cover and Image.
-		$result = array();
+		$result   = array();
+		$position = 0;
 		foreach ( $nodes as $node ) {
 			$components = $this->get_components_from_node( $node );
-			$result     = array_merge( $result, $components );
+
+			if ( !empty( $pullquote ) && $pullquote_position > 0 ) {
+				// Do we have to insert a pullquote into the article?
+				// If so, iterate all components, and add when the position is reached.
+				foreach ( $components as $component ) {
+					$position++;
+					$result[] = $component;
+
+					if( $position == $pullquote_position ) {
+						$pullquote_component = $this->get_component_from_shortname( 'blockquote', "<blockquote><p>$pullquote</p></blockquote>" );
+						$pullquote_component->set_anchorable( true );
+						$result[] = $pullquote_component;
+
+						$pullquote_position = 0;
+					}
+				}
+			} else {
+				// No pullquote check needed, just add components into result.
+				$result = array_merge( $result, $components );
+			}
 		}
 
-		// Now that we have our component's array, let's fix the layouts
-		$result = $this->layouts->fix_alignments( $result );
+		$result = $this->anchor_components( $result );
 
 		return $result;
 	}
