@@ -109,7 +109,7 @@ class Exporter {
 			'layout' => $this->build_article_layout(),
 			// Base style
 			'documentStyle' => array(
-				'backgroundColor' => '#F7F7F7',
+				'backgroundColor' => '#FFFFFF',
 			),
 		);
 
