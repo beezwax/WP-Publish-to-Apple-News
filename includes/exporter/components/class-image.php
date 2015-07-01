@@ -49,7 +49,6 @@ class Image extends Component {
 		if ( preg_match( '#align=#', $text ) || preg_match( '#class=".*?(?:alignleft|alignright).*?"#', $text ) ) {
 			$this->set_anchorable( true );
 		}
-		var_dump( 'endif' );
 	}
 
 }
