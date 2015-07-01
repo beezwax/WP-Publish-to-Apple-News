@@ -111,6 +111,7 @@ class Exporter {
 			'documentStyle' => array(
 				'backgroundColor' => '#F7F7F7',
 			),
+			'metadata' => $this->build_metadata(),
 		);
 
 		// Components
@@ -133,21 +134,28 @@ class Exporter {
 			$json['componentLayouts'] = $layouts;
 		}
 
-		// For now, generate the thumb url in here, eventually it will move to the
-		// metadata manager object. The cover component is in charge of copying
-		// the actual file, just link here.
+		return json_encode( $json );
+	}
+
+	private function build_metadata() {
+		$meta = array();
+
+		// The content's intro is optional. In WordPress, it's a post's
+		// excerpt. It's an introduction to the article.
+		if ( $this->content_intro() ) {
+			$meta[ 'excerpt' ] = $this->content_intro();
+		}
+
+		// If the content has a cover, use it as thumb.
 		if ( $this->content_cover() ) {
 			$filename  = basename( $this->content_cover() );
 			$thumb_url = 'bundle://' . $filename;
-
-			// TODO: Create a metadata object
-			$json['metadata'] = array(
-				'thumbnailURL' => $thumb_url,
-			);
+			$meta[ 'thumbnailURL' ] = $thumb_url;
 		}
 
-		return json_encode( $json );
+		return $meta;
 	}
+
 
 	private function build_article_layout() {
 		return array(
@@ -231,12 +239,6 @@ class Exporter {
 
 		// Add title
 		$meta_components[] = $this->get_component_from_shortname( 'title', $this->content_title() )->value();
-
-		// The content's intro is optional. In WordPress, it's a post's
-		// excerpt. It's an introduction to the article.
-		if ( $this->content_intro() ) {
-			$meta_components[] = $this->get_component_from_shortname( 'intro', $this->content_intro() )->value();
-		}
 
 		$post_components = array();
 		foreach ( $this->split_into_components() as $component ) {
