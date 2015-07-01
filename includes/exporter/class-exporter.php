@@ -111,7 +111,6 @@ class Exporter {
 			'documentStyle' => array(
 				'backgroundColor' => '#F7F7F7',
 			),
-			'metadata' => $this->build_metadata(),
 		);
 
 		// Components
@@ -132,6 +131,11 @@ class Exporter {
 		$layouts = $this->build_component_layouts();
 		if ( $layouts ) {
 			$json['componentLayouts'] = $layouts;
+		}
+
+		$meta = $this->build_metadata();
+		if ( $meta ) {
+			$json['metadata'] = $meta;
 		}
 
 		return json_encode( $json );
