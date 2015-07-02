@@ -1,6 +1,12 @@
 <?php
 namespace Exporter\Builders;
 
+/**
+ * A base abstract builder. All builders must implement a build method, in
+ * which they return an array to represent a part of the final article.
+ *
+ * @since 0.4.0
+ */
 abstract class Builder {
 
 	/**
