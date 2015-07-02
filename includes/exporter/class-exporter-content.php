@@ -16,14 +16,16 @@ class Exporter_Content {
 	private $content;
 	private $intro;
 	private $cover;
+	private $byline;
 	private $settings;
 
-	function __construct( $id, $title, $content, $intro = null, $cover = null, $settings = null ) {
+	function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $settings = null ) {
 		$this->id       = $id;
 		$this->title    = $title;
 		$this->content  = $content;
 		$this->intro    = $intro;
 		$this->cover    = $cover;
+		$this->byline   = $byline;
 		$this->settings = $settings ?: new Exporter_Content_Settings();
 	}
 
@@ -45,6 +47,10 @@ class Exporter_Content {
 
 	public function cover() {
 		return $this->cover;
+	}
+
+	public function byline() {
+		return $this->byline;
 	}
 
 	public function get_setting( $name ) {

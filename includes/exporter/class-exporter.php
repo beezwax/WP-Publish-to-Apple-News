@@ -201,6 +201,10 @@ class Exporter {
 		return $this->exporter_content->get_setting( $name );
 	}
 
+	private function content_byline() {
+		return $this->exporter_content->byline();
+	}
+
 	private function content_nodes() {
 		return $this->exporter_content->nodes();
 	}
@@ -234,26 +238,40 @@ class Exporter {
 	}
 
 	/**
-	 * Builds an array with all the components of this WordPress content.
+	 * Meta components are those which were not created from HTML, instead, they
+	 * contain only text. This text is normally created from the article
+	 * metadata.
 	 */
-	private function build_components() {
-		$meta_components = array();
+	private function meta_components() {
+		$components = array();
 
 		// The content's cover is optional. In WordPress, it's a post's thumbnail
 		// or featured image.
 		if ( $this->content_cover() ) {
-			$meta_components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() )->value();
+			$components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() )->value();
 		}
 
 		// Add title
-		$meta_components[] = $this->get_component_from_shortname( 'title', $this->content_title() )->value();
+		$components[] = $this->get_component_from_shortname( 'title', $this->content_title() )->value();
 
+		// Add title
+		if ( $this->content_byline() ) {
+			$components[] = $this->get_component_from_shortname( 'byline', $this->content_byline() )->value();
+		}
+
+		return $components;
+	}
+
+	/**
+	 * Builds an array with all the components of this WordPress content.
+	 */
+	private function build_components() {
 		$post_components = array();
 		foreach ( $this->split_into_components() as $component ) {
 			$post_components[] = $component->value();
 		}
 
-		return array_merge( $meta_components, $post_components );
+		return array_merge( $this->meta_components(), $post_components );
 	}
 
 	/**

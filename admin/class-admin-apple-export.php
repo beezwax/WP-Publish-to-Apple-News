@@ -115,10 +115,13 @@ class Admin_Apple_Export extends Apple_Export {
 	 * Fetches an instance of Exporter.
 	 */
 	private function fetch_exporter( $id ) {
-		// The WP_Post object representing the post.
-		$post = get_post( $id );
-		// The URL of the post's thumbnail (a.k.a featured image), if any.
+		// Fetch WP_Post object, and all required post information to fill up the
+		// Exporter_Content instance.
+		$post       = get_post( $id );
 		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ?: null;
+		$author     = get_the_author_meta( 'display_name', $post->post_author );
+		$date       = date( 'M j, Y | g:i A', strtotime( $post->post_date ) );
+		$byline     = 'by ' . ucfirst( $author ) . ' | ' . $date ;
 
 		$base_content = new Exporter_Content(
 			$post->ID,
@@ -129,6 +132,7 @@ class Admin_Apple_Export extends Apple_Export {
 			apply_filters( 'the_content', $post->post_content ),
 			$post->post_excerpt,
 			$post_thumb,
+			$byline,
 			$this->fetch_content_settings( $id )
 		);
 

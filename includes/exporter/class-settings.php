@@ -26,6 +26,10 @@ class Settings {
 		'dropcap_font'    => 'Georgia-Bold',
 		'dropcap_color'   => '#000',
 
+		'byline_font'       => 'AvenirNext-Medium',
+		'byline_size'       => 16,
+		'byline_color'      => '#53585F',
+
 		'header_font'     => 'AvenirNext-Bold',
 		'header_color'    => '#000',
 		'header1_size'    => 48,
