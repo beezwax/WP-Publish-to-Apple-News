@@ -63,9 +63,8 @@ class Component_Layouts {
 				$col_start = 0;
 				break;
 			case 'center':
-				// TODO: What do? Show centered?
-				$col_start = 0;
-				break;
+				// TODO: What do? Show centered? Ignore anchoring for now
+				return;
 			}
 
 			$this->register_layout( 'anchor-layout', array(
