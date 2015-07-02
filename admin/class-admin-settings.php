@@ -330,6 +330,9 @@ class Admin_Settings {
 			'dropcap_font'        => $this->fonts,
 			'initial_dropcap'     => 'boolean', // boolean is internally a 'yes' or 'no' string
 			'dropcap_color'       => 'color',
+			'byline_font'         => $this->fonts,
+			'byline_size'         => 'integer',
+			'byline_color'        => 'color',
 			'header_font'         => $this->fonts,
 			'header_color'        => 'color',
 			'header1_size'        => 'integer',
