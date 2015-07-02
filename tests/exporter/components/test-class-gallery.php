@@ -13,7 +13,7 @@ class Gallery_Test extends PHPUnit_Framework_TestCase {
 		$this->prophet = new \Prophecy\Prophet;
 		$this->settings = new Settings();
 		$this->styles   = new Component_Styles();
-		$this->layouts  = new Component_Layouts();
+		$this->layouts  = new Component_Layouts( $this->settings );
 	}
 
 	protected function tearDown() {
@@ -47,6 +47,7 @@ class Gallery_Test extends PHPUnit_Framework_TestCase {
 						'URL' => 'bundle://another-filename-2.jpg',
 					),
 				),
+				'layout' => 'gallery-layout',
 			),
 			$gallery_component->value()
 		);
