@@ -169,10 +169,6 @@ class Exporter {
 		);
 	}
 
-	private function get_setting( $name ) {
-		return $this->settings->get( $name );
-	}
-
 	private function content_id() {
 		return $this->content->id();
 	}
