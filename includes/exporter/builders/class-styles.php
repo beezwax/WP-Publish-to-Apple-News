@@ -1,5 +1,5 @@
 <?php
-namespace Exporter;
+namespace Exporter\Builders;
 
 /**
  * Exporter and components can register styles. This class manages the styles
@@ -7,7 +7,7 @@ namespace Exporter;
  *
  * @since 0.4.0
  */
-class Component_Styles {
+class Styles {
 
 	private $styles;
 

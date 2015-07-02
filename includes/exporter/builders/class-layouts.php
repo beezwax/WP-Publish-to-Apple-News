@@ -1,8 +1,9 @@
 <?php
-namespace Exporter;
+namespace Exporter\Builders;
 
 use \Exporter\Components\Component as Component;
 use \Exporter\Components\Body as Body;
+use \Exporter\Exporter as Exporter;
 
 /**
  * Exporter and components can register layouts. This class manages the layouts
@@ -10,7 +11,7 @@ use \Exporter\Components\Body as Body;
  *
  * @since 0.4.0
  */
-class Component_Layouts {
+class Layouts {
 
 	private $layouts;
 	private $settings;
