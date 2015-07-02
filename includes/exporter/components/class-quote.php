@@ -17,12 +17,13 @@ class Quote extends Component {
 	}
 
 	protected function build( $text ) {
-		// Remove initial and trailing tags: <blockquote><p>...</p></blockquote>
-		$text = substr( $text, 15, -17 );
+		preg_match( '#<blockquote.*?>(.*?)</blockquote>#mi', $text, $matches );
+		$text = $matches[1];
 
 		$this->json = array(
-			'role' => 'quote',
-			'text' => $text,
+			'role'   => 'quote',
+			'text'   => $this->markdown->parse( $text ),
+			'format' => 'markdown',
 		);
 
 		$this->set_style();

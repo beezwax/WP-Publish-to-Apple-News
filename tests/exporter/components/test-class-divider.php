@@ -19,9 +19,10 @@ class Divider_Test extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			array(
-				'role' => 'divider',
+				'role'   => 'divider',
+				'layout' => 'divider-layout',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 

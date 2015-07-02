@@ -19,7 +19,7 @@ class Heading_Test extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			null,
-			$component->value()
+			$component->to_array()
 		);
 	}
 
@@ -33,7 +33,7 @@ class Heading_Test extends PHPUnit_Framework_TestCase {
 				'text' => 'This is a heading',
 				'textStyle' => 'default-heading-1',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 

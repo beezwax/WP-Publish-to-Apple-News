@@ -350,7 +350,7 @@ class Exporter {
 					$result[] = $component;
 
 					if ( $position == $pullquote_position ) {
-						$pullquote_component = $this->get_component_from_shortname( 'blockquote', "<blockquote><p>$pullquote</p></blockquote>" );
+						$pullquote_component = $this->get_component_from_shortname( 'blockquote', "<blockquote>$pullquote</blockquote>" );
 						$pullquote_component->set_anchorable( true );
 						$result[] = $pullquote_component;
 

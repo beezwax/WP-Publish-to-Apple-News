@@ -19,7 +19,7 @@ class Tweet_Test extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			null,
-			$component->value()
+			$component->to_array()
 		);
 	}
 
@@ -37,7 +37,7 @@ class Tweet_Test extends PHPUnit_Framework_TestCase {
 				'role' => 'tweet',
 				'URL' => 'https://twitter.com/gosukiwi/status/608069908044390400',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 
@@ -53,7 +53,7 @@ class Tweet_Test extends PHPUnit_Framework_TestCase {
 				'role' => 'tweet',
 				'URL' => 'https://twitter.com/wordpressdotcom/status/204557548249026561',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 
@@ -69,7 +69,7 @@ class Tweet_Test extends PHPUnit_Framework_TestCase {
 				'role' => 'tweet',
 				'URL' => 'https://twitter.com/wordpressdotcom/status/204557548249026561',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 
@@ -85,7 +85,7 @@ class Tweet_Test extends PHPUnit_Framework_TestCase {
 				'role' => 'tweet',
 				'URL' => 'https://twitter.com/wordpressdotcom/status/204557548249026561',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 
@@ -103,7 +103,7 @@ class Tweet_Test extends PHPUnit_Framework_TestCase {
 				'role' => 'tweet',
 				'URL' => 'https://twitter.com/wordpressdotcom/status/123',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 

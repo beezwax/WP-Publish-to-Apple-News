@@ -25,7 +25,7 @@ class Body_Test extends PHPUnit_Framework_TestCase {
 				'textStyle' => 'dropcapBodyStyle',
 				'layout' => 'body-layout',
 		 	),
-			$body_component->value()
+			$body_component->to_array()
 		);
 	}
 
@@ -42,7 +42,7 @@ class Body_Test extends PHPUnit_Framework_TestCase {
 				'textStyle' => 'default-body',
 				'layout' => 'body-layout',
 		 	),
-			$body_component->value()
+			$body_component->to_array()
 		);
 	}
 

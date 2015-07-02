@@ -34,7 +34,7 @@ class Audio_Test extends PHPUnit_Framework_TestCase {
 		// Test for valid JSON
 		$this->assertEquals(
 			array( 'role' => 'audio', 'URL' => 'bundle://audio-file.mp3' ),
-			$component->value()
+			$component->to_array()
 		);
 	}
 

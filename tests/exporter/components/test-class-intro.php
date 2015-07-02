@@ -23,7 +23,7 @@ class Intro_Test extends PHPUnit_Framework_TestCase {
 				'text' => "Test intro text.\n",
 				'textStyle' => 'default-intro',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 

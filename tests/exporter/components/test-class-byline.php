@@ -14,7 +14,7 @@ class Byline_Test extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testWithoutDropcap() {
-		$body_component = new Byline( 'This is the byline', null, $this->settings,
+		$component = new Byline( 'This is the byline', null, $this->settings,
 			$this->styles, $this->layouts );
 
 		$this->assertEquals(
@@ -24,7 +24,7 @@ class Byline_Test extends PHPUnit_Framework_TestCase {
 				'textStyle' => 'default-byline',
 				'layout' => 'byline-layout',
 		 	),
-			$body_component->value()
+			$component->to_array()
 		);
 	}
 

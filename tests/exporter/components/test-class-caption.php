@@ -22,7 +22,7 @@ class Caption_Test extends PHPUnit_Framework_TestCase {
 				'role' => 'caption',
 				'text' => 'my text',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 

@@ -23,7 +23,7 @@ class Title_Test extends PHPUnit_Framework_TestCase {
 				'text' => 'Example Title',
 				'textStyle' => 'default-title',
 		 	),
-			$body_component->value()
+			$body_component->to_array()
 		);
 	}
 

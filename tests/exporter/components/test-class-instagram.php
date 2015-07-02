@@ -20,7 +20,7 @@ class Instagram_Test extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			null,
-			$component->value()
+			$component->to_array()
 		);
 	}
 
@@ -33,7 +33,7 @@ class Instagram_Test extends PHPUnit_Framework_TestCase {
 				'role' => 'instagram',
 				'URL'  => 'https://instagram.com/p/LtaiGnryiu/',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 
@@ -46,7 +46,7 @@ class Instagram_Test extends PHPUnit_Framework_TestCase {
 				'role' => 'instagram',
 				'URL'  => 'http://instagr.am/p/LtaiGnryiu/',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 

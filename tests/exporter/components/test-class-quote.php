@@ -20,10 +20,11 @@ class Quote_Test extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(
 			array(
 				'role' => 'quote',
-				'text' => 'my quote',
+				'text' => "my quote\n\n",
 				'textStyle' => 'default-pullquote',
+				'format' => 'markdown',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 

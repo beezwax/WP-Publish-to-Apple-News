@@ -34,7 +34,7 @@ class Video_Test extends PHPUnit_Framework_TestCase {
 		// Test for valid JSON
 		$this->assertEquals(
 			array( 'role' => 'video', 'URL' => 'bundle://video-file.mp4' ),
-			$component->value()
+			$component->to_array()
 		);
 	}
 
