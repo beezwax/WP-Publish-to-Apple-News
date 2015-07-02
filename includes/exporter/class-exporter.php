@@ -248,15 +248,15 @@ class Exporter {
 		// The content's cover is optional. In WordPress, it's a post's thumbnail
 		// or featured image.
 		if ( $this->content_cover() ) {
-			$components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() )->value();
+			$components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() )->to_array();
 		}
 
 		// Add title
-		$components[] = $this->get_component_from_shortname( 'title', $this->content_title() )->value();
+		$components[] = $this->get_component_from_shortname( 'title', $this->content_title() )->to_array();
 
 		// Add title
 		if ( $this->content_byline() ) {
-			$components[] = $this->get_component_from_shortname( 'byline', $this->content_byline() )->value();
+			$components[] = $this->get_component_from_shortname( 'byline', $this->content_byline() )->to_array();
 		}
 
 		return $components;
@@ -268,7 +268,7 @@ class Exporter {
 	private function build_components() {
 		$post_components = array();
 		foreach ( $this->split_into_components() as $component ) {
-			$post_components[] = $component->value();
+			$post_components[] = $component->to_array();
 		}
 
 		return array_merge( $this->meta_components(), $post_components );

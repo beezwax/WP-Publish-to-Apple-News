@@ -76,10 +76,10 @@ abstract class Component {
 	}
 
 	/**
-	 * Lazily transforms HTML into an array that describes the component using
-	 * the build function.
+	 * Transforms HTML into an array that describes the component using the build
+	 * function.
 	 */
-	public function value() {
+	public function to_array() {
 		return $this->json;
 	}
 
