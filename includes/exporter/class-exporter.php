@@ -266,12 +266,13 @@ class Exporter {
 	 * Builds an array with all the components of this WordPress content.
 	 */
 	private function build_components() {
-		$post_components = array();
+		// Based on the meta components, split the post's text into components and
+		// append them to the "meta components".
+		$components = $this->meta_components();
 		foreach ( $this->split_into_components() as $component ) {
-			$post_components[] = $component->to_array();
+			$components[] = $component->to_array();
 		}
-
-		return array_merge( $this->meta_components(), $post_components );
+		return $components;
 	}
 
 	/**
