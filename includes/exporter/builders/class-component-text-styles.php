@@ -7,7 +7,7 @@ namespace Exporter\Builders;
  *
  * @since 0.4.0
  */
-class Styles extends Builder {
+class Component_Text_Styles extends Builder {
 
 	private $styles;
 

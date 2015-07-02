@@ -6,7 +6,7 @@ use \Exporter\Exporter as Exporter;
 /**
  * @since 0.4.0
  */
-class Article_Layout extends Builder {
+class Layout extends Builder {
 
 	protected function build() {
 		return array(

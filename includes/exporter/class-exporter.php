@@ -6,11 +6,11 @@ require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'builders/class-builder.php';
-require_once plugin_dir_path( __FILE__ ) . 'builders/class-layouts.php';
-require_once plugin_dir_path( __FILE__ ) . 'builders/class-styles.php';
 require_once plugin_dir_path( __FILE__ ) . 'builders/class-components.php';
+require_once plugin_dir_path( __FILE__ ) . 'builders/class-component-layouts.php';
+require_once plugin_dir_path( __FILE__ ) . 'builders/class-component-text-styles.php';
 require_once plugin_dir_path( __FILE__ ) . 'builders/class-metadata.php';
-require_once plugin_dir_path( __FILE__ ) . 'builders/class-article-layout.php';
+require_once plugin_dir_path( __FILE__ ) . 'builders/class-layout.php';
 
 /**
  * Export a Exporter_Content instance to Apple format.
@@ -77,10 +77,10 @@ class Exporter {
 		if ( $builders ) {
 			$this->builders = $builders;
 		} else {
-			$this->register_builder( 'layout'             , new Builders\Article_Layout( $this->content, $this->settings ) );
+			$this->register_builder( 'layout'             , new Builders\Layout( $this->content, $this->settings ) );
 			$this->register_builder( 'components'         , new Builders\Components( $this->content, $this->settings ) );
-			$this->register_builder( 'componentTextStyles', new Builders\Styles( $this->content, $this->settings ) );
-			$this->register_builder( 'componentLayouts'   , new Builders\Layouts( $this->content, $this->settings ) );
+			$this->register_builder( 'componentTextStyles', new Builders\Component_Text_Styles( $this->content, $this->settings ) );
+			$this->register_builder( 'componentLayouts'   , new Builders\Component_Layouts( $this->content, $this->settings ) );
 			$this->register_builder( 'metadata'           , new Builders\Metadata( $this->content, $this->settings ) );
 		}
 

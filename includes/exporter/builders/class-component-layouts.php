@@ -11,7 +11,7 @@ use \Exporter\Exporter as Exporter;
  *
  * @since 0.4.0
  */
-class Layouts extends Builder {
+class Component_Layouts extends Builder {
 
 	private $layouts;
 
