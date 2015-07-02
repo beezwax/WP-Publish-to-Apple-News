@@ -52,6 +52,11 @@ class Component_Layouts {
 	}
 
 	public function set_anchor_layout_for( $component ) {
+		// TODO: What do? Show centered? Ignore anchoring for now
+		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
+			return;
+		}
+
 		if ( ! $this->layout_exists( 'anchor_layout' ) ) {
 			// Find out the starting column
 			$col_start = 0;
@@ -62,9 +67,6 @@ class Component_Layouts {
 			case 'right':
 				$col_start = 0;
 				break;
-			case 'center':
-				// TODO: What do? Show centered? Ignore anchoring for now
-				return;
 			}
 
 			$this->register_layout( 'anchor-layout', array(
