@@ -39,7 +39,7 @@ class Component_Layouts {
 	 *
 	 * @since 0.4.0
 	 */
-	public function get_layouts() {
+	public function to_array() {
 		return $this->layouts;
 	}
 

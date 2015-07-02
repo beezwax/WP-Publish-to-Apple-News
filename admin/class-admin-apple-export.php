@@ -183,7 +183,7 @@ class Admin_Apple_Export extends Apple_Export {
 		}
 
 		$exporter = $this->fetch_exporter( $id );
-		$exporter->build_article();
+		$exporter->generate();
 
 		$dir  = $exporter->workspace()->tmp_path();
 		$json = file_get_contents( $dir . 'article.json' );

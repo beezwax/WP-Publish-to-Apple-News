@@ -54,6 +54,24 @@ class Exporter {
 	private $settings;
 
 	/**
+	 * An instance of styles. It manages all the styles required and can return a
+	 * valid array.
+	 *
+	 * @var  Styles
+	 * @since 0.4.0
+	 */
+	private $styles;
+
+	/**
+	 * An instance of layouts. It manages all the layouts required and can return
+	 * a valid array.
+	 *
+	 * @var  Styles
+	 * @since 0.4.0
+	 */
+	private $layouts;
+
+	/**
 	 * FIXME: This constructor got big. Should make setters/getters instead?
 	 */
 	function __construct( Exporter_Content $content, Workspace $workspace = null,
@@ -73,12 +91,20 @@ class Exporter {
 	 * Generates JSON for the article.json file. By doing this, all attachments
 	 * get added to the workspace/tmp directory automatically.
 	 *
-	 * If manually called build_article, must alway call `clean_workspace`
-	 * afterwards, as the workspace would remain polluted for later articles
-	 * otherwise.
+	 * If manually called, must alway call `clean_workspace` afterwards, as the
+	 * workspace would remain polluted for later articles otherwise.
 	 */
-	public function build_article() {
+	public function generate() {
 		$this->write_to_workspace( 'article.json', $this->generate_json() );
+	}
+
+	/**
+	 * Gets the instance of the current workspace.
+	 *
+	 * @since 0.4.0
+	 */
+	public function workspace() {
+		return $this->workspace;
 	}
 
 	/**
@@ -88,7 +114,7 @@ class Exporter {
 	 */
 	public function export() {
 		// Build the workspace/tmp folder.
-		$this->build_article();
+		$this->generate();
 		// ZIP files inside that folder and clean it afterwards.
 		return $this->zip_workspace( $this->content_id() );
 	}
@@ -170,10 +196,6 @@ class Exporter {
 		);
 	}
 
-	public function workspace() {
-		return $this->workspace;
-	}
-
 	/**
 	 * Isolate all dependencies.
 	 */
@@ -226,11 +248,11 @@ class Exporter {
 	}
 
 	private function build_component_styles() {
-		return $this->styles->get_styles();
+		return $this->styles->to_array();
 	}
 
 	private function build_component_layouts() {
-		return $this->layouts->get_layouts();
+		return $this->layouts->to_array();
 	}
 
 	private function get_setting( $name ) {

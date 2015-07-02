@@ -34,7 +34,7 @@ class Component_Styles {
 	 *
 	 * @since 0.4.0
 	 */
-	public function get_styles() {
+	public function to_array() {
 		return $this->styles;
 	}
 
