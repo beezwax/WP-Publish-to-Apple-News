@@ -4,21 +4,9 @@ namespace Exporter\Builders;
 /**
  * @since 0.4.0
  */
-class Metadata {
+class Metadata extends Builder {
 
-	/**
-	 * The content object to be exported.
-	 *
-	 * @var  Exporter_Content
-	 * @since 0.2.0
-	 */
-	private $content;
-
-	function __construct( $content ) {
-		$this->content = $content;
-	}
-
-	public function to_array() {
+	protected function build() {
 		$meta = array();
 
 		// The content's intro is optional. In WordPress, it's a post's
@@ -35,14 +23,6 @@ class Metadata {
 		}
 
 		return $meta;
-	}
-
-	private function content_intro() {
-		return $this->content->intro();
-	}
-
-	private function content_cover() {
-		return $this->content->cover();
 	}
 
 }

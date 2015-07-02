@@ -5,6 +5,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-component-factory.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'builders/class-builder.php';
 require_once plugin_dir_path( __FILE__ ) . 'builders/class-layouts.php';
 require_once plugin_dir_path( __FILE__ ) . 'builders/class-styles.php';
 require_once plugin_dir_path( __FILE__ ) . 'builders/class-components.php';
@@ -56,6 +57,13 @@ class Exporter {
 	 */
 	private $settings;
 
+	/**
+	 * An ordered hash of builders. They will be executed in order when building
+	 * the JSON array.
+	 *
+	 * @var array
+	 * @since 0.4.0
+	 */
 	private $builders;
 
 	function __construct( $content, $workspace = null, $settings = null ) {
@@ -69,11 +77,11 @@ class Exporter {
 		if ( $builders ) {
 			$this->builders = $builders;
 		} else {
-			$this->register_builder( 'layout'             , new Builders\Article_Layout( $this->settings ) );
-			$this->register_builder( 'components'         , new Builders\Components( $this->content )      );
-			$this->register_builder( 'componentTextStyles', new Builders\Styles()                          );
-			$this->register_builder( 'componentLayouts'   , new Builders\Layouts( $this->settings )        );
-			$this->register_builder( 'metadata'           , new Builders\Metadata( $this->content )        );
+			$this->register_builder( 'layout'             , new Builders\Article_Layout( $this->content, $this->settings ) );
+			$this->register_builder( 'components'         , new Builders\Components( $this->content, $this->settings ) );
+			$this->register_builder( 'componentTextStyles', new Builders\Styles( $this->content, $this->settings ) );
+			$this->register_builder( 'componentLayouts'   , new Builders\Layouts( $this->content, $this->settings ) );
+			$this->register_builder( 'metadata'           , new Builders\Metadata( $this->content, $this->settings ) );
 		}
 
 		Component_Factory::initialize( $this->workspace, $this->settings, $this->get_builder( 'componentTextStyles' ), $this->get_builder( 'componentLayouts' ) );

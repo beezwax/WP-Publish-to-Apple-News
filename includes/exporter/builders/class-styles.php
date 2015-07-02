@@ -7,11 +7,12 @@ namespace Exporter\Builders;
  *
  * @since 0.4.0
  */
-class Styles {
+class Styles extends Builder {
 
 	private $styles;
 
-	function __construct() {
+	function __construct( $content, $settings ) {
+		parent::__construct( $content, $settings );
 		$this->styles = array();
 	}
 
@@ -34,7 +35,7 @@ class Styles {
 	 *
 	 * @since 0.4.0
 	 */
-	public function to_array() {
+	protected function build() {
 		return $this->styles;
 	}
 

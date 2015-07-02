@@ -6,28 +6,12 @@ use \Exporter\Component_Factory as Component_Factory;
 /**
  * @since 0.4.0
  */
-class Components {
-
-	/**
-	 * The content object to be exported.
-	 *
-	 * @var  Exporter_Content
-	 * @since 0.2.0
-	 */
-	private $content;
-
-	function __construct( $content ) {
-		$this->content = $content;
-	}
-
-	public function to_array() {
-		return $this->build_components();
-	}
+class Components extends Builder {
 
 	/**
 	 * Builds an array with all the components of this WordPress content.
 	 */
-	private function build_components() {
+	protected function build() {
 		$components = $this->meta_components();
 		foreach ( $this->split_into_components() as $component ) {
 			$components[] = $component->to_array();
@@ -135,41 +119,5 @@ class Components {
 	private function get_components_from_node( $node ) {
 		return Component_Factory::get_components_from_node( $node );
 	}
-
-	// Isolate dependencies
-	// ------------------------------------------------------------------------
-
-	private function content_id() {
-		return $this->content->id();
-	}
-
-	private function content_title() {
-		return $this->content->title() ?: 'Untitled Article';
-	}
-
-	private function content_text() {
-		return $this->content->content();
-	}
-
-	private function content_intro() {
-		return $this->content->intro();
-	}
-
-	private function content_cover() {
-		return $this->content->cover();
-	}
-
-	private function content_setting( $name ) {
-		return $this->content->get_setting( $name );
-	}
-
-	private function content_byline() {
-		return $this->content->byline();
-	}
-
-	private function content_nodes() {
-		return $this->content->nodes();
-	}
-
 
 }

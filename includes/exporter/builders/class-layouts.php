@@ -11,14 +11,13 @@ use \Exporter\Exporter as Exporter;
  *
  * @since 0.4.0
  */
-class Layouts {
+class Layouts extends Builder {
 
 	private $layouts;
-	private $settings;
 
-	function __construct( $settings ) {
+	function __construct( $content, $settings ) {
+		parent::__construct( $content, $settings );
 		$this->layouts  = array();
-		$this->settings = $settings;
 	}
 
 	/**
@@ -40,12 +39,8 @@ class Layouts {
 	 *
 	 * @since 0.4.0
 	 */
-	public function to_array() {
+	protected function build() {
 		return $this->layouts;
-	}
-
-	private function get_setting( $name ) {
-		return $this->settings->get( $name );
 	}
 
 	private function layout_exists( $name ) {
