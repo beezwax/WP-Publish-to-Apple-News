@@ -59,11 +59,9 @@ class Components extends Builder {
 			}
 
 			// Anchor this component to previous component
-			$uid             = uniqid();
 			$other_component = $components[ $i - 1 ];
-			$other_component->set_json( 'identifier', 'component-' . $uid );
 			$component->set_json( 'anchor', array(
-				'targetComponentIdentifier' => 'component-' . $uid,
+				'targetComponentIdentifier' => $other_component->uid(),
 				'targetAnchorPosition'      => 'center',
 				'rangeStart' => 0,
 				'rangeLength' => 1,
