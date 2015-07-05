@@ -63,8 +63,8 @@ class Components extends Builder {
 			$component->set_json( 'anchor', array(
 				'targetComponentIdentifier' => $other_component->uid(),
 				'targetAnchorPosition'      => 'center',
-				'rangeStart' => 0,
-				'rangeLength' => 1,
+				'rangeStart'                => 0,
+				'rangeLength'               => 1,
 			) );
 		}
 
