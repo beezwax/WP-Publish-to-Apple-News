@@ -35,9 +35,17 @@ class Gallery extends Component {
 		}
 
 		$this->json = array(
-			'role'  => $this->get_setting( 'gallery_type' ),
-			'items' => $items,
+			'role'   => $this->get_setting( 'gallery_type' ),
+			'items'  => $items,
+			'layout' => 'gallery-layout',
 		);
+
+		$this->register_layout( 'gallery-layout', array(
+			'columnStart' => 0,
+			'margin' => array(
+				'bottom' => 30,
+			)
+		) );
 	}
 
 }

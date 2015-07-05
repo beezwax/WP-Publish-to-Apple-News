@@ -320,14 +320,13 @@ class Admin_Settings {
 	function __construct() {
 		$this->field_types = array(
 			'api_secret'          => 'password',
-			'layout_columns'      => 'integer',
-			'layout_width'        => 'integer',
 			'layout_margin'       => 'integer',
 			'layout_gutter'       => 'integer',
 			'body_font'           => $this->fonts,
 			'body_size'           => 'integer',
 			'body_color'          => 'color',
 			'body_link_color'     => 'color',
+			'body_orientation'    => array( 'left', 'center', 'right' ),
 			'dropcap_font'        => $this->fonts,
 			'initial_dropcap'     => 'boolean', // boolean is internally a 'yes' or 'no' string
 			'dropcap_color'       => 'color',

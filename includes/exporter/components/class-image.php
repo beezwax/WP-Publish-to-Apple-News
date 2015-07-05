@@ -1,6 +1,8 @@
 <?php
 namespace Exporter\Components;
 
+use \Exporter\Exporter as Exporter;
+
 /**
  * Represents a simple image.
  *
@@ -41,6 +43,12 @@ class Image extends Component {
 			'role' => 'photo',
 			'URL'  => 'bundle://' . $filename,
 		);
+
+		// If the img has an align attribute, or a class which starts with 'align',
+		// set as anchorable.
+		if ( preg_match( '#align=#', $text ) || preg_match( '#class=".*?(?:alignleft|alignright).*?"#', $text ) ) {
+			$this->set_anchorable( true );
+		}
 	}
 
 }

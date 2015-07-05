@@ -20,6 +20,13 @@ class Divider extends Component {
 		$this->json = array(
 			'role' => 'divider',
 		);
+
+		$this->register_layout( 'divider-layout', array(
+			'margin' => array(
+				'top'    => 30,
+				'bottom' => 30,
+			)
+		) );
 	}
 
 }

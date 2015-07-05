@@ -15,6 +15,21 @@ require_once __DIR__ . '/../class-markdown.php';
 abstract class Component {
 
 	/**
+	 * When a component is displayed aligned relative to another one, slide the
+	 * other component a few columns, in this case, 2.
+	 *
+	 * @since 0.4.0
+	 */
+	const ALIGNMENT_OFFSET = 2;
+
+	/**
+	 * Anchorable components are anchored to the next element that appears.
+	 *
+	 * @since 0.4.0
+	 */
+	public $is_anchorable = false;
+
+	/**
 	 * @since 0.2.0
 	 */
 	protected $workspace;
@@ -47,6 +62,9 @@ abstract class Component {
 		$this->markdown  = $markdown ?: new \Exporter\Markdown();
 		$this->text      = $text;
 		$this->json      = null;
+
+		// Once the text is set, build proper JSON. Store as an array.
+		$this->build( $this->text );
 	}
 
 	/**
@@ -62,12 +80,15 @@ abstract class Component {
 	 * the build function.
 	 */
 	public function value() {
-		// Lazy value evaluation
-		if ( is_null( $this->json ) ) {
-			$this->build( $this->text );
-		}
-
 		return $this->json;
+	}
+
+	public function set_json( $name, $value ) {
+		$this->json[ $name ] = $value;
+	}
+
+	public function get_json( $name ) {
+		return $this->json[ $name ];
 	}
 
 	/**
@@ -159,6 +180,14 @@ abstract class Component {
 		}
 
 		return 1 == preg_match( "/(?:\s+|^)$classname(?:\s+|$)/", $classes );
+	}
+
+	public function set_anchorable( $flag ) {
+		if ( $flag ) {
+			$this->layouts->set_anchor_layout_for( $this );
+		}
+
+		$this->is_anchorable = $flag;
 	}
 
 	/**

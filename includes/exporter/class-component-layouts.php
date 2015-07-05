@@ -1,6 +1,9 @@
 <?php
 namespace Exporter;
 
+use \Exporter\Components\Component as Component;
+use \Exporter\Components\Body as Body;
+
 /**
  * Exporter and components can register layouts. This class manages the layouts
  * the final JSON will contain.
@@ -10,14 +13,11 @@ namespace Exporter;
 class Component_Layouts {
 
 	private $layouts;
+	private $settings;
 
-	function __construct() {
+	function __construct( $settings ) {
 		$this->layouts  = array();
-
-		// Register default styles. full-width is used by components to always use
-		// all width. When not in the first column, components shrink, so the grid
-		// needs to force them to use all available space.
-		$this->register_layout( 'full-width', array( 'columnStart' => 0 ) );
+		$this->settings = $settings;
 	}
 
 	/**
@@ -27,7 +27,7 @@ class Component_Layouts {
 	 */
 	public function register_layout( $name, $spec ) {
 		// Only register once, layouts have unique names.
-		if ( array_key_exists( $name, $this->layouts ) ) {
+		if ( $this->layout_exists( $name ) ) {
 			return;
 		}
 
@@ -41,6 +41,46 @@ class Component_Layouts {
 	 */
 	public function get_layouts() {
 		return $this->layouts;
+	}
+
+	private function get_setting( $name ) {
+		return $this->settings->get( $name );
+	}
+
+	private function layout_exists( $name ) {
+		return array_key_exists( $name, $this->layouts );
+	}
+
+	public function set_anchor_layout_for( $component ) {
+		if ( ! $this->layout_exists( 'anchor_layout' ) ) {
+			// Find out the starting column
+			$col_start = 0;
+			switch ( $this->get_setting( 'body_orientation' ) ) {
+			case 'left':
+				$col_start = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
+				break;
+			case 'right':
+				$col_start = 0;
+				break;
+			case 'center':
+				// TODO: What do? Show centered?
+				$col_start = 0;
+				break;
+			}
+
+			$this->register_layout( 'anchor-layout', array(
+				'columnStart' => $col_start,
+				'columnSpan'  => Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN + Component::ALIGNMENT_OFFSET,
+			) );
+		}
+
+		$component->set_json( 'layout', 'anchor-layout' );
+		// TODO: Use an animation manager
+		$component->set_json( 'animation', array(
+			'type'             => 'fade_in',
+			'userControllable' => 'true',
+			'initialAlpha'     => 0.0,
+		) );
 	}
 
 }
