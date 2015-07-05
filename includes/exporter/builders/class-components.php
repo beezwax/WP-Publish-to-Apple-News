@@ -46,7 +46,7 @@ class Components extends Builder {
 
 
 	/**
-	 * Anchor components that are anchorable
+	 * Anchor components that are marked as anchorable
 	 */
 	private function anchor_components( $components ) {
 		$len = count( $components );
