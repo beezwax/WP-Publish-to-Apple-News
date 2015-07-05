@@ -32,5 +32,34 @@ class Exporter_Test extends WP_UnitTestCase {
 		$exporter->export();
 	}
 
+	public function testBuildersGetCalled() {
+		$workspace = $this->prophet->prophesize( '\Exporter\Workspace' );
+		// Creates the article.json file
+		$workspace
+			->write_tmp_file( 'article.json', \Prophecy\Argument::type( 'string' ) )
+			->willReturn( true );
+		// Creates a zipfile with the id
+		$workspace
+			->zip( 'article-3.zip' )
+			->willReturn( true );
+
+		$builder1 = $this->prophet->prophesize( '\Exporter\Builders\Builder' );
+		$builder1
+			->to_array()
+			->shouldBeCalled();
+		$builder2 = $this->prophet->prophesize( '\Exporter\Builders\Builder' );
+		$builder2
+			->to_array()
+			->shouldBeCalled();
+
+		$content  = new \Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>' );
+		$exporter = new Exporter( $content, $workspace->reveal() );
+		$exporter->initialize_builders( array(
+			'componentTextStyles' => $builder1->reveal(),
+			'componentLayouts'    => $builder2->reveal(),
+		) );
+		$exporter->export();
+	}
+
 }
 
