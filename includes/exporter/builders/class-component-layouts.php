@@ -53,7 +53,7 @@ class Component_Layouts extends Builder {
 			return;
 		}
 
-		if ( ! $this->layout_exists( 'anchor_layout' ) ) {
+		if ( ! $this->layout_exists( 'anchor-layout' ) ) {
 			// Find out the starting column
 			$col_start = 0;
 			switch ( $this->get_setting( 'body_orientation' ) ) {
