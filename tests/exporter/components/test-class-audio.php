@@ -13,7 +13,7 @@ class Audio_Test extends PHPUnit_Framework_TestCase {
 		$this->prophet  = new \Prophecy\Prophet;
 		$this->settings = new Settings();
 		$this->styles   = new Component_Styles();
-		$this->layouts  = new Component_Layouts();
+		$this->layouts  = new Component_Layouts( $this->settings );
 	}
 
 	protected function tearDown() {
@@ -34,7 +34,7 @@ class Audio_Test extends PHPUnit_Framework_TestCase {
 		// Test for valid JSON
 		$this->assertEquals(
 			array( 'role' => 'audio', 'URL' => 'bundle://audio-file.mp3' ),
-			$component->value()
+			$component->to_array()
 		);
 	}
 

@@ -1,11 +1,11 @@
 <?php
 
-use \Exporter\Components\Quote as Quote;
+use \Exporter\Components\Byline as Byline;
 use \Exporter\Settings as Settings;
 use \Exporter\Component_Layouts as Component_Layouts;
 use \Exporter\Component_Styles as Component_Styles;
 
-class Quote_Test extends PHPUnit_Framework_TestCase {
+class Byline_Test extends PHPUnit_Framework_TestCase {
 
 	public function setup() {
 		$this->settings = new Settings();
@@ -13,16 +13,16 @@ class Quote_Test extends PHPUnit_Framework_TestCase {
 		$this->layouts  = new Component_Layouts( $this->settings );
 	}
 
-	public function testBuildingRemovesTags() {
-		$component = new Quote( '<blockquote><p>my quote</p></blockquote>',
-			null, $this->settings, $this->styles, $this->layouts );
+	public function testWithoutDropcap() {
+		$component = new Byline( 'This is the byline', null, $this->settings,
+			$this->styles, $this->layouts );
 
 		$this->assertEquals(
 			array(
-				'role' => 'quote',
-				'text' => "my quote\n\n",
-				'textStyle' => 'default-pullquote',
-				'format' => 'markdown',
+				'text' => "This is the byline",
+				'role' => 'byline',
+				'textStyle' => 'default-byline',
+				'layout' => 'byline-layout',
 		 	),
 			$component->to_array()
 		);

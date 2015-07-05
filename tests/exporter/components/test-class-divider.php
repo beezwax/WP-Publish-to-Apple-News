@@ -10,7 +10,7 @@ class Divider_Test extends PHPUnit_Framework_TestCase {
 	protected function setup() {
 		$this->settings = new Settings();
 		$this->styles   = new Component_Styles();
-		$this->layouts  = new Component_Layouts();
+		$this->layouts  = new Component_Layouts( $this->settings );
 	}
 
 	public function testBuildingRemovesTags() {
@@ -19,9 +19,10 @@ class Divider_Test extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			array(
-				'role' => 'divider',
+				'role'   => 'divider',
+				'layout' => 'divider-layout',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 

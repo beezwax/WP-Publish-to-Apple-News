@@ -39,7 +39,7 @@ class Component_Layouts {
 	 *
 	 * @since 0.4.0
 	 */
-	public function get_layouts() {
+	public function to_array() {
 		return $this->layouts;
 	}
 
@@ -52,6 +52,11 @@ class Component_Layouts {
 	}
 
 	public function set_anchor_layout_for( $component ) {
+		// TODO: What do? Show centered? Ignore anchoring for now
+		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
+			return;
+		}
+
 		if ( ! $this->layout_exists( 'anchor_layout' ) ) {
 			// Find out the starting column
 			$col_start = 0;
@@ -60,10 +65,6 @@ class Component_Layouts {
 				$col_start = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
 				break;
 			case 'right':
-				$col_start = 0;
-				break;
-			case 'center':
-				// TODO: What do? Show centered?
 				$col_start = 0;
 				break;
 			}

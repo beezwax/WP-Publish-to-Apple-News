@@ -13,7 +13,7 @@ class Image_Test extends PHPUnit_Framework_TestCase {
 		$this->prophet = new \Prophecy\Prophet;
 		$this->settings = new Settings();
 		$this->styles   = new Component_Styles();
-		$this->layouts  = new Component_Layouts();
+		$this->layouts  = new Component_Layouts( $this->settings );
 	}
 
 	protected function tearDown() {
@@ -28,13 +28,13 @@ class Image_Test extends PHPUnit_Framework_TestCase {
 		$workspace->write_tmp_file( 'filename.jpg', 'foo' )->willReturn( true )->shouldBeCalled();
 
 		// Pass the mock workspace as a dependency
-		$image_component = new Image( '<img src="http://someurl.com/filename.jpg" alt="Example" />',
+		$component = new Image( '<img src="http://someurl.com/filename.jpg" alt="Example" />',
 			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
 
 		// Test for valid JSON
 		$this->assertEquals(
 			array( 'role' => 'photo', 'URL' => 'bundle://filename.jpg' ),
-			$image_component->value()
+			$component->to_array()
 		);
 	}
 

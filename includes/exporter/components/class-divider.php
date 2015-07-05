@@ -18,7 +18,8 @@ class Divider extends Component {
 
 	protected function build( $text ) {
 		$this->json = array(
-			'role' => 'divider',
+			'role'   => 'divider',
+			'layout' => 'divider-layout',
 		);
 
 		$this->register_layout( 'divider-layout', array(

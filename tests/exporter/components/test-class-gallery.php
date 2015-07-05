@@ -13,7 +13,7 @@ class Gallery_Test extends PHPUnit_Framework_TestCase {
 		$this->prophet = new \Prophecy\Prophet;
 		$this->settings = new Settings();
 		$this->styles   = new Component_Styles();
-		$this->layouts  = new Component_Layouts();
+		$this->layouts  = new Component_Layouts( $this->settings );
 	}
 
 	protected function tearDown() {
@@ -30,7 +30,7 @@ class Gallery_Test extends PHPUnit_Framework_TestCase {
 		$workspace->write_tmp_file( 'another-filename-2.jpg', 'foo' )->willReturn( true )->shouldBeCalled();
 
 		// Pass the mock workspace as a dependency
-		$gallery_component = new Gallery( '<div class="gallery"><img
+		$component = new Gallery( '<div class="gallery"><img
 			src="http://someurl.com/filename-1.jpg" alt="Example" /><img
 			src="http://someurl.com/another-filename-2.jpg" alt="Example" /></div>',
 			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
@@ -47,8 +47,9 @@ class Gallery_Test extends PHPUnit_Framework_TestCase {
 						'URL' => 'bundle://another-filename-2.jpg',
 					),
 				),
+				'layout' => 'gallery-layout',
 			),
-			$gallery_component->value()
+			$component->to_array()
 		);
 	}
 

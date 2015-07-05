@@ -10,7 +10,7 @@ class Heading_Test extends PHPUnit_Framework_TestCase {
 	protected function setup() {
 		$this->settings = new Settings();
 		$this->styles   = new Component_Styles();
-		$this->layouts  = new Component_Layouts();
+		$this->layouts  = new Component_Layouts( $this->settings );
 	}
 
 	public function testInvalidInput() {
@@ -19,7 +19,7 @@ class Heading_Test extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals(
 			null,
-			$component->value()
+			$component->to_array()
 		);
 	}
 
@@ -33,7 +33,7 @@ class Heading_Test extends PHPUnit_Framework_TestCase {
 				'text' => 'This is a heading',
 				'textStyle' => 'default-heading-1',
 		 	),
-			$component->value()
+			$component->to_array()
 		);
 	}
 

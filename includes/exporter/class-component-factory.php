@@ -17,6 +17,7 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-audio.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-divider.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-title.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-caption.php';
+require_once plugin_dir_path( __FILE__ ) . 'components/class-byline.php';
 
 /**
  * This class in in charge of creating components. Manual component
@@ -55,6 +56,7 @@ class Component_Factory {
 		self::register_component( 'intro'     ,   '\\Exporter\\Components\\Intro'           );
 		self::register_component( 'cover'     ,   '\\Exporter\\Components\\Cover'           );
 		self::register_component( 'title'     ,   '\\Exporter\\Components\\Title'           );
+		self::register_component( 'byline'    ,   '\\Exporter\\Components\\Byline'          );
 	}
 
 	private static function register_component( $shortname, $classname ) {

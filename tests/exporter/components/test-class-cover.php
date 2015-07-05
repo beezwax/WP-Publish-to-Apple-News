@@ -13,7 +13,7 @@ class Cover_Test extends PHPUnit_Framework_TestCase {
 		$this->prophet = new \Prophecy\Prophet;
 		$this->settings = new Settings();
 		$this->styles   = new Component_Styles();
-		$this->layouts  = new Component_Layouts();
+		$this->layouts  = new Component_Layouts( $this->settings );
 	}
 
 	protected function tearDown() {
@@ -27,7 +27,7 @@ class Cover_Test extends PHPUnit_Framework_TestCase {
 		$workspace->get_file_contents( 'http://someurl.com/filename.jpg' )->willReturn( 'foo' )->shouldBeCalled();
 		$workspace->write_tmp_file( 'filename.jpg', 'foo' )->willReturn( true )->shouldBeCalled();
 
-		$cover_component = new Cover( 'http://someurl.com/filename.jpg',
+		$component = new Cover( 'http://someurl.com/filename.jpg',
 			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
 
 		$this->assertEquals(
@@ -41,8 +41,11 @@ class Cover_Test extends PHPUnit_Framework_TestCase {
 						'fillMode' => 'cover',
 					),
 				),
+				'behaviour' => array(
+					'type' => 'parallax',
+				),
 			),
-			$cover_component->value()
+			$component->to_array()
 		);
 	}
 

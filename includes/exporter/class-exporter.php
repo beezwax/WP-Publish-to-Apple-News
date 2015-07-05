@@ -54,6 +54,24 @@ class Exporter {
 	private $settings;
 
 	/**
+	 * An instance of styles. It manages all the styles required and can return a
+	 * valid array.
+	 *
+	 * @var  Styles
+	 * @since 0.4.0
+	 */
+	private $styles;
+
+	/**
+	 * An instance of layouts. It manages all the layouts required and can return
+	 * a valid array.
+	 *
+	 * @var  Styles
+	 * @since 0.4.0
+	 */
+	private $layouts;
+
+	/**
 	 * FIXME: This constructor got big. Should make setters/getters instead?
 	 */
 	function __construct( Exporter_Content $content, Workspace $workspace = null,
@@ -73,12 +91,22 @@ class Exporter {
 	 * Generates JSON for the article.json file. By doing this, all attachments
 	 * get added to the workspace/tmp directory automatically.
 	 *
-	 * If manually called build_article, must alway call `clean_workspace`
-	 * afterwards, as the workspace would remain polluted for later articles
-	 * otherwise.
+	 * When called, must alway call `clean_workspace` afterwards, as the
+	 * workspace would be polluted for later articles.
+	 *
+	 * @since 0.4.0
 	 */
-	public function build_article() {
+	public function generate() {
 		$this->write_to_workspace( 'article.json', $this->generate_json() );
+	}
+
+	/**
+	 * Gets the instance of the current workspace.
+	 *
+	 * @since 0.4.0
+	 */
+	public function workspace() {
+		return $this->workspace;
 	}
 
 	/**
@@ -87,9 +115,9 @@ class Exporter {
 	 * This function builds the article, zips it and cleans up after.
 	 */
 	public function export() {
-		// Build the workspace/tmp folder.
-		$this->build_article();
-		// ZIP files inside that folder and clean it afterwards.
+		// Build the ./workspace/tmp folder.
+		$this->generate();
+		// ZIP files inside that folder. This also cleans the workspace when done.
 		return $this->zip_workspace( $this->content_id() );
 	}
 
@@ -170,10 +198,6 @@ class Exporter {
 		);
 	}
 
-	public function workspace() {
-		return $this->workspace;
-	}
-
 	/**
 	 * Isolate all dependencies.
 	 */
@@ -201,6 +225,10 @@ class Exporter {
 		return $this->exporter_content->get_setting( $name );
 	}
 
+	private function content_byline() {
+		return $this->exporter_content->byline();
+	}
+
 	private function content_nodes() {
 		return $this->exporter_content->nodes();
 	}
@@ -222,11 +250,11 @@ class Exporter {
 	}
 
 	private function build_component_styles() {
-		return $this->styles->get_styles();
+		return $this->styles->to_array();
 	}
 
 	private function build_component_layouts() {
-		return $this->layouts->get_layouts();
+		return $this->layouts->to_array();
 	}
 
 	private function get_setting( $name ) {
@@ -234,26 +262,41 @@ class Exporter {
 	}
 
 	/**
-	 * Builds an array with all the components of this WordPress content.
+	 * Meta components are those which were not created from HTML, instead, they
+	 * contain only text. This text is normally created from the article
+	 * metadata.
 	 */
-	private function build_components() {
-		$meta_components = array();
+	private function meta_components() {
+		$components = array();
 
 		// The content's cover is optional. In WordPress, it's a post's thumbnail
 		// or featured image.
 		if ( $this->content_cover() ) {
-			$meta_components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() )->value();
+			$components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() )->to_array();
 		}
 
 		// Add title
-		$meta_components[] = $this->get_component_from_shortname( 'title', $this->content_title() )->value();
+		$components[] = $this->get_component_from_shortname( 'title', $this->content_title() )->to_array();
 
-		$post_components = array();
-		foreach ( $this->split_into_components() as $component ) {
-			$post_components[] = $component->value();
+		// Add title
+		if ( $this->content_byline() ) {
+			$components[] = $this->get_component_from_shortname( 'byline', $this->content_byline() )->to_array();
 		}
 
-		return array_merge( $meta_components, $post_components );
+		return $components;
+	}
+
+	/**
+	 * Builds an array with all the components of this WordPress content.
+	 */
+	private function build_components() {
+		// Based on the meta components, split the post's text into components and
+		// append them to the "meta components".
+		$components = $this->meta_components();
+		foreach ( $this->split_into_components() as $component ) {
+			$components[] = $component->to_array();
+		}
+		return $components;
 	}
 
 	/**
@@ -307,7 +350,7 @@ class Exporter {
 					$result[] = $component;
 
 					if ( $position == $pullquote_position ) {
-						$pullquote_component = $this->get_component_from_shortname( 'blockquote', "<blockquote><p>$pullquote</p></blockquote>" );
+						$pullquote_component = $this->get_component_from_shortname( 'blockquote', "<blockquote>$pullquote</blockquote>" );
 						$pullquote_component->set_anchorable( true );
 						$result[] = $pullquote_component;
 

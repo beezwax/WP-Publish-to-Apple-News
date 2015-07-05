@@ -10,7 +10,7 @@ class Body_Test extends PHPUnit_Framework_TestCase {
 	public function setup() {
 		$this->settings = new Settings();
 		$this->styles   = new Component_Styles();
-		$this->layouts  = new Component_Layouts();
+		$this->layouts  = new Component_Layouts( $this->settings );
 	}
 
 	public function testBuildingRemovesTags() {
@@ -23,8 +23,9 @@ class Body_Test extends PHPUnit_Framework_TestCase {
 				'role' => 'body',
 				'format' => 'markdown',
 				'textStyle' => 'dropcapBodyStyle',
+				'layout' => 'body-layout',
 		 	),
-			$body_component->value()
+			$body_component->to_array()
 		);
 	}
 
@@ -39,8 +40,9 @@ class Body_Test extends PHPUnit_Framework_TestCase {
 				'role' => 'body',
 				'format' => 'markdown',
 				'textStyle' => 'default-body',
+				'layout' => 'body-layout',
 		 	),
-			$body_component->value()
+			$body_component->to_array()
 		);
 	}
 
