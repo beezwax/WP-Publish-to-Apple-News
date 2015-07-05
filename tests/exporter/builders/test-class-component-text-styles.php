@@ -1,13 +1,10 @@
 <?php
 
-use \Exporter\Component_Factory as Component_Factory;
 use \Exporter\Exporter_Content as Exporter_Content;
 use \Exporter\Settings as Settings;
 use \Exporter\Builders\Component_Text_Styles as Component_Text_Styles;
 
 class Component_Text_Styles_Tests extends PHPUnit_Framework_TestCase {
-
-	protected $prophet;
 
 	protected function setup() {
 		$this->settings = new Settings();
