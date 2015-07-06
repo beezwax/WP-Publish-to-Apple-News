@@ -44,7 +44,7 @@ class Component_Factory {
 		self::register_component( 'gallery'      ,   '\\Exporter\\Components\\Gallery'         );
 		self::register_component( 'tweet'        ,   '\\Exporter\\Components\\Tweet'           );
 		self::register_component( 'instagram'    ,   '\\Exporter\\Components\\Instagram'       );
-		self::register_component( 'caption'      ,   '\\Exporter\\Components\\Caption'         );
+		//self::register_component( 'caption'      ,   '\\Exporter\\Components\\Caption'         );
 		self::register_component( 'img'          ,   '\\Exporter\\Components\\Image'           );
 		self::register_component( 'iframe'       ,   '\\Exporter\\Components\\Embed_Web_Video' );
 		self::register_component( 'video'        ,   '\\Exporter\\Components\\Video'           );
