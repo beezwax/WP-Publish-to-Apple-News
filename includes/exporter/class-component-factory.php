@@ -16,7 +16,6 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-video.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-audio.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-divider.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-title.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-caption.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-byline.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-advertisement.php';
 
@@ -44,7 +43,6 @@ class Component_Factory {
 		self::register_component( 'gallery'      ,   '\\Exporter\\Components\\Gallery'         );
 		self::register_component( 'tweet'        ,   '\\Exporter\\Components\\Tweet'           );
 		self::register_component( 'instagram'    ,   '\\Exporter\\Components\\Instagram'       );
-		//self::register_component( 'caption'      ,   '\\Exporter\\Components\\Caption'         );
 		self::register_component( 'img'          ,   '\\Exporter\\Components\\Image'           );
 		self::register_component( 'iframe'       ,   '\\Exporter\\Components\\Embed_Web_Video' );
 		self::register_component( 'video'        ,   '\\Exporter\\Components\\Video'           );
