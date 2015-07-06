@@ -18,6 +18,7 @@ require_once plugin_dir_path( __FILE__ ) . 'components/class-divider.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-title.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-caption.php';
 require_once plugin_dir_path( __FILE__ ) . 'components/class-byline.php';
+require_once plugin_dir_path( __FILE__ ) . 'components/class-advertisment.php';
 
 /**
  * This class in in charge of creating components. Manual component
@@ -40,23 +41,24 @@ class Component_Factory {
 		self::$layouts   = $layouts;
 
 		// Order is important. Components are checked in the order they are added.
-		self::register_component( 'gallery'   ,   '\\Exporter\\Components\\Gallery'         );
-		self::register_component( 'tweet'     ,   '\\Exporter\\Components\\Tweet'           );
-		self::register_component( 'instagram' ,   '\\Exporter\\Components\\Instagram'       );
-		self::register_component( 'caption'   ,   '\\Exporter\\Components\\Caption'         );
-		self::register_component( 'img'       ,   '\\Exporter\\Components\\Image'           );
-		self::register_component( 'iframe'    ,   '\\Exporter\\Components\\Embed_Web_Video' );
-		self::register_component( 'video'     ,   '\\Exporter\\Components\\Video'           );
-		self::register_component( 'audio'     ,   '\\Exporter\\Components\\Audio'           );
-		self::register_component( 'heading'   ,   '\\Exporter\\Components\\Heading'         );
-		self::register_component( 'blockquote',   '\\Exporter\\Components\\Quote'           );
-		self::register_component( 'p'         ,   '\\Exporter\\Components\\Body'            );
-		self::register_component( 'hr'        ,   '\\Exporter\\Components\\Divider'         );
+		self::register_component( 'gallery'     ,   '\\Exporter\\Components\\Gallery'         );
+		self::register_component( 'tweet'       ,   '\\Exporter\\Components\\Tweet'           );
+		self::register_component( 'instagram'   ,   '\\Exporter\\Components\\Instagram'       );
+		self::register_component( 'caption'     ,   '\\Exporter\\Components\\Caption'         );
+		self::register_component( 'img'         ,   '\\Exporter\\Components\\Image'           );
+		self::register_component( 'iframe'      ,   '\\Exporter\\Components\\Embed_Web_Video' );
+		self::register_component( 'video'       ,   '\\Exporter\\Components\\Video'           );
+		self::register_component( 'audio'       ,   '\\Exporter\\Components\\Audio'           );
+		self::register_component( 'heading'     ,   '\\Exporter\\Components\\Heading'         );
+		self::register_component( 'blockquote'  ,   '\\Exporter\\Components\\Quote'           );
+		self::register_component( 'p'           ,   '\\Exporter\\Components\\Body'            );
+		self::register_component( 'hr'          ,   '\\Exporter\\Components\\Divider'         );
 		// Non HTML-based components
-		self::register_component( 'intro'     ,   '\\Exporter\\Components\\Intro'           );
-		self::register_component( 'cover'     ,   '\\Exporter\\Components\\Cover'           );
-		self::register_component( 'title'     ,   '\\Exporter\\Components\\Title'           );
-		self::register_component( 'byline'    ,   '\\Exporter\\Components\\Byline'          );
+		self::register_component( 'intro'       ,   '\\Exporter\\Components\\Intro'           );
+		self::register_component( 'cover'       ,   '\\Exporter\\Components\\Cover'           );
+		self::register_component( 'title'       ,   '\\Exporter\\Components\\Title'           );
+		self::register_component( 'byline'      ,   '\\Exporter\\Components\\Byline'          );
+		self::register_component( 'advertisment',   '\\Exporter\\Components\\Advertisment'    );
 	}
 
 	private static function register_component( $shortname, $classname ) {
