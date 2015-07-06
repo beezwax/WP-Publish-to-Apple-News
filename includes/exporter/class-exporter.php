@@ -149,7 +149,7 @@ class Exporter {
 		);
 
 		// Builders
-		$json[ 'documentStyle' ] = $this->build_article_style();
+		$json['documentStyle'] = $this->build_article_style();
 		foreach ( $this->builders as $name => $builder ) {
 			$arr = $builder->to_array();
 			if ( $arr ) {
