@@ -19,8 +19,8 @@ class Advertisement extends Component {
 	}
 
 	private function set_default_layout() {
-		$this->json[ 'layout' ] = 'advertisment-layout';
-		$this->register_layout( 'advertisment-layout', array(
+		$this->json[ 'layout' ] = 'advertisement-layout';
+		$this->register_layout( 'advertisement-layout', array(
 			'margin' => array(
 				'bottom' => 40,
 			),

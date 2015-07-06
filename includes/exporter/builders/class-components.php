@@ -67,12 +67,12 @@ class Components extends Builder {
 	}
 
 	private function add_advertisement_if_needed( &$components ) {
-		$enabled = 'yes' == $this->get_setting( 'enable_advertisment' );
+		$enabled = 'yes' == $this->get_setting( 'enable_advertisement' );
 		if ( ! $enabled ) {
 			return;
 		}
 
-		$position  = $this->get_setting( 'advertisment_position' );
+		$position  = $this->get_setting( 'advertisement_position' );
 		$index     = 'middle' == $position ? ceil( count( $components ) / 2 ) : 0;
 		$component = $this->get_component_from_shortname( 'advertisement' );
 		// Add component in position
