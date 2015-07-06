@@ -7,7 +7,7 @@ namespace Exporter\Components;
  *
  * @since 0.4.0
  */
-class Advertisment extends Component {
+class Advertisement extends Component {
 
 	protected function build( $text ) {
 		$this->json = array(

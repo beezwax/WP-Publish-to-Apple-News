@@ -60,13 +60,13 @@ class Components extends Builder {
 		// It's not like it's a big memory save but still relevant.
 		// FIXME: Maybe this could have been done in a better way?
 		$this->add_pullquote_if_needed( $result );
-		$this->add_advertisment_if_needed( $result );
+		$this->add_advertisement_if_needed( $result );
 		$this->anchor_components( $result );
 
 		return $result;
 	}
 
-	private function add_advertisment_if_needed( &$components ) {
+	private function add_advertisement_if_needed( &$components ) {
 		$enabled = 'yes' == $this->get_setting( 'enable_advertisment' );
 		if ( ! $enabled ) {
 			return;
@@ -74,7 +74,7 @@ class Components extends Builder {
 
 		$position  = $this->get_setting( 'advertisment_position' );
 		$index     = 'middle' == $position ? ceil( count( $components ) / 2 ) : 0;
-		$component = $this->get_component_from_shortname( 'advertisment' );
+		$component = $this->get_component_from_shortname( 'advertisement' );
 		// Add component in position
 		array_splice( $components, $index, 0, array( $component ) );
 	}
