@@ -17,23 +17,21 @@ class Admin_Post_Sync {
 	}
 
 	public function on_post_saved( $id, $post, $update ) {
-		if ( wp_is_post_revision( $id ) ) {
+		if ( wp_is_post_revision( $id ) || 'POST' != $_SERVER['REQUEST_METHOD'] ) {
 			return;
 		}
 
-		if ( $update ) {
-			$this->update_post( $id );
+		$error = null;
+
+		if( get_post_meta( $id, 'apple_export_api_id', true ) ) {
+			// TODO: Update not done yet
 		} else {
-			$this->insert_post( $id );
+			$error = $this->exporter->push( $id );
 		}
-	}
 
-	private function update_post( $post_id ) {
-		// TODO: No UPDATE interface in API yet
-	}
-
-	private function insert_post( $post_id ) {
-		$this->exporter->push( $post_id );
+		if ( $error ) {
+			wp_die( $error );
+		}
 	}
 
 }
