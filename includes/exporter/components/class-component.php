@@ -91,6 +91,23 @@ abstract class Component {
 		return $this->json[ $name ];
 	}
 
+	public function set_anchorable( $flag ) {
+		if ( $flag ) {
+			$this->layouts->set_anchor_layout_for( $this );
+		}
+
+		$this->is_anchorable = $flag;
+	}
+
+	public function uid() {
+		if ( is_null( $this->uid ) ) {
+			$this->uid = 'component-' . uniqid();
+			$this->set_json( 'identifier', $this->uid );
+		}
+
+		return $this->uid;
+	}
+
 	/**
 	 * Given a source (either a file path or an URL) gets the contents and writes
 	 * them into a file with the given filename.
@@ -180,14 +197,6 @@ abstract class Component {
 		}
 
 		return 1 == preg_match( "/(?:\s+|^)$classname(?:\s+|$)/", $classes );
-	}
-
-	public function set_anchorable( $flag ) {
-		if ( $flag ) {
-			$this->layouts->set_anchor_layout_for( $this );
-		}
-
-		$this->is_anchorable = $flag;
 	}
 
 	/**

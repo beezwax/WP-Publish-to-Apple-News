@@ -1,17 +1,10 @@
 <?php
 
+require_once __DIR__ . '/class-component-testcase.php';
+
 use \Exporter\Components\Byline as Byline;
-use \Exporter\Settings as Settings;
-use \Exporter\Component_Layouts as Component_Layouts;
-use \Exporter\Component_Styles as Component_Styles;
 
-class Byline_Test extends PHPUnit_Framework_TestCase {
-
-	public function setup() {
-		$this->settings = new Settings();
-		$this->styles   = new Component_Styles();
-		$this->layouts  = new Component_Layouts( $this->settings );
-	}
+class Byline_Test extends Component_TestCase {
 
 	public function testWithoutDropcap() {
 		$component = new Byline( 'This is the byline', null, $this->settings,

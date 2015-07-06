@@ -1,5 +1,5 @@
 <?php
-namespace Exporter;
+namespace Exporter\Builders;
 
 /**
  * Exporter and components can register styles. This class manages the styles
@@ -7,11 +7,12 @@ namespace Exporter;
  *
  * @since 0.4.0
  */
-class Component_Styles {
+class Component_Text_Styles extends Builder {
 
 	private $styles;
 
-	function __construct() {
+	function __construct( $content, $settings ) {
+		parent::__construct( $content, $settings );
 		$this->styles = array();
 	}
 
@@ -34,7 +35,7 @@ class Component_Styles {
 	 *
 	 * @since 0.4.0
 	 */
-	public function to_array() {
+	protected function build() {
 		return $this->styles;
 	}
 

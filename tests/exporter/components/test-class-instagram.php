@@ -1,18 +1,10 @@
 <?php
 
+require_once __DIR__ . '/class-component-testcase.php';
+
 use \Exporter\Components\Instagram as Instagram;
-use \Exporter\Settings as Settings;
-use \Exporter\Component_Layouts as Component_Layouts;
-use \Exporter\Component_Styles as Component_Styles;
 
-class Instagram_Test extends PHPUnit_Framework_TestCase {
-
-	protected function setup() {
-		$this->prophet = new \Prophecy\Prophet;
-		$this->settings = new Settings();
-		$this->styles   = new Component_Styles();
-		$this->layouts  = new Component_Layouts( $this->settings );
-	}
+class Instagram_Test extends Component_TestCase {
 
 	public function testInvalidMarkup() {
 		$component = new Instagram( '<blockquote class="instagram-media">Invalid content. No URL.</blockquote>', null,

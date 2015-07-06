@@ -1,8 +1,9 @@
 <?php
-namespace Exporter;
+namespace Exporter\Builders;
 
 use \Exporter\Components\Component as Component;
 use \Exporter\Components\Body as Body;
+use \Exporter\Exporter as Exporter;
 
 /**
  * Exporter and components can register layouts. This class manages the layouts
@@ -10,14 +11,13 @@ use \Exporter\Components\Body as Body;
  *
  * @since 0.4.0
  */
-class Component_Layouts {
+class Component_Layouts extends Builder {
 
 	private $layouts;
-	private $settings;
 
-	function __construct( $settings ) {
+	function __construct( $content, $settings ) {
+		parent::__construct( $content, $settings );
 		$this->layouts  = array();
-		$this->settings = $settings;
 	}
 
 	/**
@@ -39,12 +39,8 @@ class Component_Layouts {
 	 *
 	 * @since 0.4.0
 	 */
-	public function to_array() {
+	protected function build() {
 		return $this->layouts;
-	}
-
-	private function get_setting( $name ) {
-		return $this->settings->get( $name );
 	}
 
 	private function layout_exists( $name ) {
@@ -57,7 +53,7 @@ class Component_Layouts {
 			return;
 		}
 
-		if ( ! $this->layout_exists( 'anchor_layout' ) ) {
+		if ( ! $this->layout_exists( 'anchor-layout' ) ) {
 			// Find out the starting column
 			$col_start = 0;
 			switch ( $this->get_setting( 'body_orientation' ) ) {

@@ -1,17 +1,10 @@
 <?php
 
+require_once __DIR__ . '/class-component-testcase.php';
+
 use \Exporter\Components\Tweet as Tweet;
-use \Exporter\Settings as Settings;
-use \Exporter\Component_Layouts as Component_Layouts;
-use \Exporter\Component_Styles as Component_Styles;
 
-class Tweet_Test extends PHPUnit_Framework_TestCase {
-
-	protected function setup() {
-		$this->settings = new Settings();
-		$this->styles   = new Component_Styles();
-		$this->layouts  = new Component_Layouts( $this->settings );
-	}
+class Tweet_Test extends Component_TestCase {
 
 	public function testInvalidMarkup() {
 		$component = new Tweet( '<blockquote class="twitter-tweet" lang="en">Invalid content. No URL.</blockquote>',
