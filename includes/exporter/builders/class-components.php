@@ -94,6 +94,11 @@ class Components extends Builder {
 
 			// Anchor this component to previous component
 			$other_component = $components[ $i - 1 ];
+			// Skip advertisement elements, they must span all width
+			if ( 'banner_advertisement' == $other_component->get_json( 'role' ) ) {
+				$other_component = $components[ $i - 1 ];
+			}
+
 			$component->set_json( 'anchor', array(
 				'targetComponentIdentifier' => $other_component->uid(),
 				'targetAnchorPosition'      => 'center',
