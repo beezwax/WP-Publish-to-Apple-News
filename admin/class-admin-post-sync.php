@@ -23,7 +23,7 @@ class Admin_Post_Sync {
 
 		$error = null;
 
-		if( get_post_meta( $id, 'apple_export_api_id', true ) ) {
+		if ( get_post_meta( $id, 'apple_export_api_id', true ) ) {
 			// TODO: Update not done yet
 		} else {
 			$error = $this->exporter->push( $id );
