@@ -1,17 +1,6 @@
 <?php
 namespace Exporter;
 
-require_once plugin_dir_path( __FILE__ ) . 'class-component-factory.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-workspace.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-settings.php';
-require_once plugin_dir_path( __FILE__ ) . 'builders/class-builder.php';
-require_once plugin_dir_path( __FILE__ ) . 'builders/class-components.php';
-require_once plugin_dir_path( __FILE__ ) . 'builders/class-component-layouts.php';
-require_once plugin_dir_path( __FILE__ ) . 'builders/class-component-text-styles.php';
-require_once plugin_dir_path( __FILE__ ) . 'builders/class-metadata.php';
-require_once plugin_dir_path( __FILE__ ) . 'builders/class-layout.php';
-
 /**
  * Export a Exporter_Content instance to Apple format.
  *

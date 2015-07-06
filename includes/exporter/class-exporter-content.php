@@ -1,8 +1,6 @@
 <?php
 namespace Exporter;
 
-require_once plugin_dir_path( __FILE__ ) . 'class-exporter-content-settings.php';
-
 /**
  * Represents a generic way to represent content that must be exported. This
  * can be filled based on a WordPress post for example.
