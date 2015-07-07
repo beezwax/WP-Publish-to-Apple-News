@@ -44,7 +44,13 @@ class Settings {
 		'pullquote_color' => '#53585F',
 		'pullquote_transform' => 'uppercase',
 
-		'gallery_type'   => 'gallery', // this can either be gallery or mosaic.
+		// This can either be gallery or mosaic.
+		'gallery_type'   => 'gallery',
+
+		// This can either be top or middle, the latter will count the components
+		// and put the avertisment somewhere in the middle.
+		'advertisement_position' => 'middle',
+		'enable_advertisement'   => 'yes',
 	);
 
 	public function get( $name ) {

@@ -44,11 +44,44 @@ class Components extends Builder {
 		return $components;
 	}
 
+	/**
+	 * Split components from the source WordPress content.
+	 */
+	private function split_into_components() {
+		// Loop though the first-level nodes of the body element. Components
+		// might include child-components, like an Cover and Image.
+		$result = array();
+		foreach ( $this->content_nodes() as $node ) {
+			$components = $this->get_components_from_node( $node );
+			$result     = array_merge( $result, $components );
+		}
+
+		// Process the result some more. It gets passed by reference for efficiency.
+		// It's not like it's a big memory save but still relevant.
+		// FIXME: Maybe this could have been done in a better way?
+		$this->add_pullquote_if_needed( $result );
+		$this->add_advertisement_if_needed( $result );
+		$this->anchor_components( $result );
+
+		return $result;
+	}
+
+	private function add_advertisement_if_needed( &$components ) {
+		if ( 'yes' != $this->get_setting( 'enable_advertisement' ) ) {
+			return;
+		}
+
+		$position  = $this->get_setting( 'advertisement_position' );
+		$index     = 'middle' == $position ? ceil( count( $components ) / 2 ) : 0;
+		$component = $this->get_component_from_shortname( 'advertisement' );
+		// Add component in position
+		array_splice( $components, $index, 0, array( $component ) );
+	}
 
 	/**
 	 * Anchor components that are marked as anchorable
 	 */
-	private function anchor_components( $components ) {
+	private function anchor_components( &$components ) {
 		$len = count( $components );
 
 		for ( $i = 0; $i < $len; $i++ ) {
@@ -60,6 +93,11 @@ class Components extends Builder {
 
 			// Anchor this component to previous component
 			$other_component = $components[ $i - 1 ];
+			// Skip advertisement elements, they must span all width
+			if ( 'banner_advertisement' == $other_component->get_json( 'role' ) ) {
+				$other_component = $components[ $i - 1 ];
+			}
+
 			$component->set_json( 'anchor', array(
 				'targetComponentIdentifier' => $other_component->uid(),
 				'targetAnchorPosition'      => 'center',
@@ -67,50 +105,24 @@ class Components extends Builder {
 				'rangeLength'               => 1,
 			) );
 		}
-
-		return $components;
 	}
 
-	/**
-	 * Split components from the source WordPress content.
-	 */
-	private function split_into_components() {
-		// Pullquote check
+	private function add_pullquote_if_needed( &$components ) {
+		// Must we add a pullquote?
 		$pullquote          = $this->content_setting( 'pullquote' );
 		$pullquote_position = $this->content_setting( 'pullquote_position' );
 
-		// Loop though the first-level nodes of the body element. Components
-		// might include child-components, like an Cover and Image.
-		$result   = array();
-		$position = 0;
-		foreach ( $this->content_nodes() as $node ) {
-			$components = $this->get_components_from_node( $node );
-
-			if ( !empty( $pullquote ) && $pullquote_position > 0 ) {
-				// Do we have to insert a pullquote into the article?
-				// If so, iterate all components, and add when the position is reached.
-				foreach ( $components as $component ) {
-					$position++;
-					$result[] = $component;
-
-					if ( $position == $pullquote_position ) {
-						$pullquote_component = $this->get_component_from_shortname( 'blockquote', "<blockquote>$pullquote</blockquote>" );
-						$pullquote_component->set_anchorable( true );
-						$result[] = $pullquote_component;
-
-						$pullquote_position = 0;
-					}
-				}
-			} else {
-				// No pullquote check needed, just add components into result.
-				$result = array_merge( $result, $components );
-			}
+		if ( empty( $pullquote ) || $pullquote_position <= 0 || $pullquote_position >= count( $components ) ) {
+			return;
 		}
 
-		return $this->anchor_components( $result );
+		$component = $this->get_component_from_shortname( 'blockquote', "<blockquote>$pullquote</blockquote>" );
+		$component->set_anchorable( true );
+		// Add component in position
+		array_splice( $components, $pullquote_position, 0, array( $component ) );
 	}
 
-	private function get_component_from_shortname( $shortname, $html ) {
+	private function get_component_from_shortname( $shortname, $html = null ) {
 		return Component_Factory::get_component( $shortname, $html );
 	}
 
