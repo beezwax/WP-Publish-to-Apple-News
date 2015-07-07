@@ -1,24 +1,6 @@
 <?php
 namespace Exporter;
 
-require_once plugin_dir_path( __FILE__ ) . 'components/class-component.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-image.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-body.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-quote.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-heading.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-embed-web-video.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-intro.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-cover.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-gallery.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-tweet.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-instagram.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-video.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-audio.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-divider.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-title.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-byline.php';
-require_once plugin_dir_path( __FILE__ ) . 'components/class-advertisement.php';
-
 /**
  * This class in in charge of creating components. Manual component
  * instantiation should be avoided, use this instead.

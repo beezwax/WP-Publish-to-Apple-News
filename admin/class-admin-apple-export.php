@@ -9,12 +9,9 @@
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-apple-export-list-table.php';
 // Use exporter
-require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter.php';
-require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter-content.php';
-require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-exporter-content-settings.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/autoload.php';
 // Use push API
-require_once plugin_dir_path( __FILE__ ) . '../includes/push-api/class-api.php';
-require_once plugin_dir_path( __FILE__ ) . '../includes/push-api/class-credentials.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/push-api/autoload.php';
 
 use Exporter\Exporter as Exporter;
 use Exporter\Exporter_Content as Exporter_Content;

@@ -27,6 +27,7 @@ class Component_Tests extends PHPUnit_Framework_TestCase {
 	}
 
 	public function testBuiltArray() {
+		$this->settings->set( 'enable_advertisement', 'no' );
 		$builder = new Components( $this->content, $this->settings );
 		$result  = $builder->to_array();
 
