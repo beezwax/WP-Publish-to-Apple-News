@@ -53,7 +53,7 @@ class Admin_Apple_Export extends Apple_Export {
 
 	public function plugin_styles() {
 		$page = ( isset( $_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : null;
-		if( 'apple_export_index' != $page ) {
+		if ( 'apple_export_index' != $page ) {
 			return;
 		}
 

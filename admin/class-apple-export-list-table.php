@@ -49,7 +49,7 @@ class Apple_Export_List_Table extends WP_List_Table {
 		$updated = strtotime( $updated );
 		$local   = strtotime( $post->post_modified );
 
-		if( $local > $updated ) {
+		if ( $local > $updated ) {
 			return 'Out of sync';
 		}
 

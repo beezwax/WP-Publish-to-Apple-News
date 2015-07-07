@@ -66,7 +66,7 @@ class Request {
 		$response  = $this->curl_delete( $url, $signature );
 
 		// NULL is a valid response for DELETE
-		if( is_null( $response ) ) {
+		if ( is_null( $response ) ) {
 			return null;
 		}
 
