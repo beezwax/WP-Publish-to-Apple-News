@@ -251,6 +251,12 @@ class Admin_Apple_Export extends Apple_Export {
 
 		$error = null;
 		try {
+			// If there's an API ID, delete the post before pushing the new version
+			$remote_id = get_post_meta( $id, 'apple_export_api_id', true );
+			if ( $remote_id ) {
+				$this->fetch_api()->delete_article( $remote_id );
+			}
+
 			$result = $this->fetch_api()->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles );
 			// Save the ID that was assigned to this post in by the API
 			update_post_meta( $id, 'apple_export_api_id', $result->data->id );
