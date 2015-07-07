@@ -53,7 +53,7 @@ class Image extends Component {
 		// Check for caption
 		if ( preg_match( '#<figcaption.*?>(.*?)</figcaption>#m', $text, $matches ) ) {
 			$caption = trim( $matches[1] );
-			$this->json[ 'caption' ] = $caption;
+			$this->json['caption'] = $caption;
 		}
 	}
 
