@@ -67,8 +67,7 @@ class Components extends Builder {
 	}
 
 	private function add_advertisement_if_needed( &$components ) {
-		$enabled = 'yes' == $this->get_setting( 'enable_advertisement' );
-		if ( ! $enabled ) {
+		if ( 'yes' != $this->get_setting( 'enable_advertisement' ) ) {
 			return;
 		}
 
