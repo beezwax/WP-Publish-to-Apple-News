@@ -71,8 +71,8 @@ class Components extends Builder {
 			return;
 		}
 
-		$position  = $this->get_setting( 'advertisement_position' );
-		$index     = 'middle' == $position ? ceil( count( $components ) / 2 ) : 0;
+		// Always position the advertisement in the middle
+		$index     = ceil( count( $components ) / 2 );
 		$component = $this->get_component_from_shortname( 'advertisement' );
 		// Add component in position
 		array_splice( $components, $index, 0, array( $component ) );
