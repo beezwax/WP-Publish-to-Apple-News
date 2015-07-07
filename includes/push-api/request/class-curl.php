@@ -35,6 +35,17 @@ class CURL {
 	}
 
 	/**
+	 * Send a signed DELETE request using CURL.
+	 *
+	 * @since 0.2.0
+	 */
+	public function delete( $signature ) {
+		curl_setopt( $this->curl, CURLOPT_HTTPHEADER, array( $signature ) );
+    curl_setopt( $this->curl, CURLOPT_CUSTOMREQUEST, 'DELETE' );
+		return $this->send();
+	}
+
+	/**
 	 * Send a signed POST request using CURL.
 	 *
 	 * @since 0.2.0

@@ -57,6 +57,23 @@ class Request {
 	}
 
 	/**
+	 * Sends a DELETE request with the given article and bundles.
+	 *
+	 * @since 0.2.0
+	 */
+	public function delete( $url ) {
+		$signature = $this->sign( $url, null, 'DELETE' );
+		$response  = $this->curl_delete( $url, $signature );
+
+		// NULL is a valid response for DELETE
+		if( is_null( $response ) ) {
+			return null;
+		}
+
+		return $this->parse_response( $response );
+	}
+
+	/**
 	 * Sends a GET request with the given article and bundles.
 	 *
 	 * @since 0.2.0
@@ -96,9 +113,12 @@ class Request {
 		return $content;
 	}
 
-	private function sign( $url, $content = null ) {
+	private function sign( $url, $content = null, $verb = null ) {
 		$current_date = date( 'c' );
-		$verb         = is_null( $content ) ? 'GET' : 'POST';
+
+		if ( is_null( $verb ) ) {
+			$verb = is_null( $content ) ? 'GET' : 'POST';
+		}
 
 		$request_info = $verb . $url . $current_date;
 		if ( 'POST' == $verb ) {
@@ -124,6 +144,11 @@ class Request {
 	private function curl_get( $url, $signature ) {
 		$curl = new CURL( $url, $this->debug );
 		return $curl->get( $signature );
+	}
+
+	private function curl_delete( $url, $signature ) {
+		$curl = new CURL( $url, $this->debug );
+		return $curl->delete( $signature );
 	}
 
 }

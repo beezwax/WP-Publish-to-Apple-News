@@ -31,9 +31,29 @@ class Apple_Export_List_Table extends WP_List_Table {
 		switch ( $column_name ) {
 		case 'title':
 			return $item[ $column_name ];
+		case 'sync':
+			return $this->get_synced_status_for( $item );
 		default:
 			return print_r( $item, true ); // For debugging
 		}
+	}
+
+	private function get_synced_status_for( $post ) {
+		$remote_id = get_post_meta( $post->ID, 'apple_export_api_id', true );
+
+		if ( ! $remote_id ) {
+			return 'Not pushed';
+		}
+
+		$updated = get_post_meta( $post->ID, 'apple_export_api_modified_at', true );
+		$updated = strtotime( $updated );
+		$local   = strtotime( $post->post_modified );
+
+		if( $local > $updated ) {
+			return 'Out of sync';
+		}
+
+		return 'Synced';
 	}
 
 	/**
@@ -56,6 +76,10 @@ class Apple_Export_List_Table extends WP_List_Table {
 			'push'     => sprintf( "<a href='$base_url'>Push</a>", $page, 'push', $item->ID ),
 		);
 
+		if ( get_post_meta( $item->ID, 'apple_export_api_id', single ) ) {
+			$actions['delete'] = sprintf( "<a title='This will NOT delete your local copy' href='$base_url'>Delete from Apple News</a>", $page, 'delete', $item->ID );
+		}
+
 		return sprintf( '%1$s <span>(id:%2$s)</span> %3$s',
 			$item->post_title,             // %1$s
 			$item->ID,                     // %2$s
@@ -74,6 +98,7 @@ class Apple_Export_List_Table extends WP_List_Table {
 		return array(
 			'cb'    => '<input type="checkbox">',
 			'title' => 'Title',
+			'sync'  => 'Sync Status',
 		);
 	}
 
