@@ -13,6 +13,7 @@ class Settings {
 		'api_key'         => '',
 		'api_secret'      => '',
 		'api_channel'     => '',
+		'api_autosync'    => 'yes',
 
 		'layout_margin'   => '30',
 		'layout_gutter'   => '20',

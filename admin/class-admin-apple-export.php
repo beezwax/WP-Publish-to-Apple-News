@@ -7,6 +7,7 @@
  */
 
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-post-sync.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-apple-export-list-table.php';
 // Use exporter
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/autoload.php';
@@ -42,6 +43,11 @@ class Admin_Apple_Export extends Apple_Export {
 		// helper methods to query them.
 		$this->settings = new Admin_Settings();
 		$this->api      = null;
+
+		// Set up posts syncing if enabled
+		if ( 'yes' == $this->get_setting( 'api_autosync' ) ) {
+			new Admin_Post_Sync( $this );
+		}
 	}
 
 	public function setup_admin_page() {
@@ -168,7 +174,7 @@ class Admin_Apple_Export extends Apple_Export {
 	/**
 	 * Given a post id, push the post using the API data.
 	 */
-	private function push( $id ) {
+	public function push( $id ) {
 		// Check for "valid" API information
 		if ( empty( $this->get_setting( 'api_key' ) )
 			|| empty( $this->get_setting( 'api_secret' ) )
