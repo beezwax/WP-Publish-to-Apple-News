@@ -21,4 +21,15 @@ abstract class Component_TestCase extends PHPUnit_Framework_TestCase {
 		$this->prophet->checkPredictions();
 	}
 
+	protected function build_node( $html ) {
+		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
+		$dom = new \DOMDocument();
+		libxml_use_internal_errors( true );
+		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $html );
+		libxml_clear_errors( true );
+
+		// Find the first-level nodes of the body tag.
+		return $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes->item( 0 );
+	}
+
 }
