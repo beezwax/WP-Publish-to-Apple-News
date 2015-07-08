@@ -60,7 +60,7 @@ class Push extends API_Action {
 	}
 
 	private function clean_workspace() {
-		if( is_null( $this->exporter ) ) {
+		if ( is_null( $this->exporter ) ) {
 			return;
 		}
 

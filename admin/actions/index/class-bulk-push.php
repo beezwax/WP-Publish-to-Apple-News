@@ -31,9 +31,9 @@ class Bulk_Push extends Action {
 			return $errors;
 		}
 
-		foreach( $this->ids as $id ) {
+		foreach ( $this->ids as $id ) {
 			$error = $this->push( $id );
-			if( ! is_null( $error ) ) {
+			if ( ! is_null( $error ) ) {
 				$errors[] = $error;
 			}
 		}
