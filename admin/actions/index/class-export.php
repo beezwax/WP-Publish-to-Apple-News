@@ -2,7 +2,8 @@
 
 namespace Actions\Index;
 
-require_once __DIR__ . '/../class-action.php';
+require_once plugin_dir_path( __FILE__ ) . '../class-action.php';
+require_once plugin_dir_path( __FILE__ ) . '../../../includes/exporter/autoload.php';
 
 use Actions\Action as Action;
 use Exporter\Exporter as Exporter;

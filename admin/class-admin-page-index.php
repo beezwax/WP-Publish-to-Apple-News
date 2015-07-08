@@ -10,21 +10,14 @@ require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-bulk-push.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-export.php';
-
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-export-list-table.php';
-// Use exporter
-require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/autoload.php';
-// Use push API
-require_once plugin_dir_path( __FILE__ ) . '../includes/push-api/autoload.php';
 
 class Admin_Page_Index extends Apple_Export {
 
 	private $settings;
-	private $api;
 
 	function __construct( $settings ) {
 		$this->settings = $settings;
-		$this->api      = null;
 
 		add_action( 'admin_menu', array( $this, 'setup_admin_page' ) );
 	}

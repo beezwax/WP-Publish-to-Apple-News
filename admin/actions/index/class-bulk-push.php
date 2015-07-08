@@ -2,7 +2,7 @@
 
 namespace Actions\Index;
 
-require_once __DIR__ . '/../class-action.php';
+require_once plugin_dir_path( __FILE__ ) . '../class-action.php';
 
 use Actions\Action as Action;
 

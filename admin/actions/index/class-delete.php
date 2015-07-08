@@ -2,7 +2,7 @@
 
 namespace Actions\Index;
 
-require_once __DIR__ . '/../class-api-action.php';
+require_once plugin_dir_path( __FILE__ ) . '../class-api-action.php';
 
 use Actions\API_Action as API_Action;
 
