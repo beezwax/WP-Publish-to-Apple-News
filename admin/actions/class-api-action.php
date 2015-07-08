@@ -1,8 +1,8 @@
 <?php
 
-namespace Actions\Index;
+namespace Actions;
 
-require_once __DIR__ . '/../class-action.php';
+require_once __DIR__ . '/class-action.php';
 
 use Actions\Action as Action;
 use Push_API\API as API;

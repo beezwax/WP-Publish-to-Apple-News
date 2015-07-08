@@ -2,9 +2,9 @@
 
 namespace Actions\Index;
 
-require_once __DIR__ . '/class-api-action.php';
+require_once __DIR__ . '/../class-api-action.php';
 
-class Delete extends API_Action {
+class Delete extends \Actions\API_Action {
 
 	private $id;
 
