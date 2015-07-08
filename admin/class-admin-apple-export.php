@@ -29,7 +29,7 @@ class Admin_Apple_Export extends Apple_Export {
 		$admin_settings = new Admin_Settings;
 		$settings       = $admin_settings->fetch_settings();
 
-		// Set up pages
+		// Set up index page
 		new Admin_Page_Index( $settings );
 
 		// Set up posts syncing if enabled in the settings
