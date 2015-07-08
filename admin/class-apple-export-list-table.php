@@ -73,7 +73,7 @@ class Apple_Export_List_Table extends WP_List_Table {
 		$actions   = array(
 			'settings' => sprintf( "<a href='$base_url'>Settings</a>", $page, 'settings', $item->ID ),
 			'export'   => sprintf( "<a href='$base_url'>Download</a>", $page, 'export', $item->ID ),
-			'push'     => sprintf( "<a href='$base_url'>Sync</a>", $page, 'push', $item->ID ),
+			'push'     => sprintf( "<a href='$base_url'>Push</a>", $page, 'push', $item->ID ),
 		);
 
 		if ( get_post_meta( $item->ID, 'apple_export_api_id', single ) ) {
