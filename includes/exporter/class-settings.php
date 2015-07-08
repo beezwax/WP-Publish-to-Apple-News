@@ -48,10 +48,7 @@ class Settings {
 		// This can either be gallery or mosaic.
 		'gallery_type'   => 'gallery',
 
-		// This can either be top or middle, the latter will count the components
-		// and put the avertisment somewhere in the middle.
-		'advertisement_position' => 'middle',
-		'enable_advertisement'   => 'yes',
+		'enable_advertisement' => 'yes',
 	);
 
 	public function get( $name ) {
