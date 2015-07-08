@@ -34,6 +34,16 @@ class Heading extends Component {
 		);
 
 		$this->set_style( $level );
+		$this->set_layout();
+	}
+
+	private function set_layout() {
+		$this->json['layout'] = 'heading-layout';
+		$this->register_layout( 'heading-layout', array(
+			'margin' => array(
+				'bottom' => 30,
+			),
+		) );
 	}
 
 	private function set_style( $level ) {
