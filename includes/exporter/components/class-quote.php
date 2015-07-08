@@ -17,7 +17,7 @@ class Quote extends Component {
 	}
 
 	protected function build( $text ) {
-		preg_match( '#<blockquote.*?>(.*?)</blockquote>#mi', $text, $matches );
+		preg_match( '#<blockquote.*?>(.*?)</blockquote>#si', $text, $matches );
 		$text = $matches[1];
 
 		$this->json = array(

@@ -17,7 +17,7 @@ class Heading extends Component {
 	}
 
 	protected function build( $text ) {
-		if ( 0 === preg_match( '/<h(\d)>(.*?)<\/h\1>/im', $text, $matches ) ) {
+		if ( 0 === preg_match( '#<h(\d).*?>(.*?)</h\1>#im', $text, $matches ) ) {
 			return;
 		}
 
