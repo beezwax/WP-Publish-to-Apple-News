@@ -86,8 +86,8 @@ class Admin_Apple_Export extends Apple_Export {
 	 * @since 0.4.0
 	 */
 	public function admin_page() {
-		$id     = intval( $_GET['post_id'] );
-		$action = htmlentities( $_GET['action'] );
+		$id     = intval( @$_GET['post_id'] );
+		$action = htmlentities( @$_GET['action'] );
 
 		// Given an action and ID, map the attributes to corresponding actions.
 
