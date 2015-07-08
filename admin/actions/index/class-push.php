@@ -5,7 +5,9 @@ namespace Actions\Index;
 require_once __DIR__ . '/../class-api-action.php';
 require_once __DIR__ . '/class-export.php';
 
-class Push extends \Actions\API_Action {
+use Actions\API_Action as API_Action;
+
+class Push extends API_Action {
 
 	private $id;
 	private $exporter;

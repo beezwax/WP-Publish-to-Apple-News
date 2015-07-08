@@ -4,7 +4,9 @@ namespace Actions\Index;
 
 require_once __DIR__ . '/../class-api-action.php';
 
-class Delete extends \Actions\API_Action {
+use Actions\API_Action as API_Action;
+
+class Delete extends API_Action {
 
 	private $id;
 

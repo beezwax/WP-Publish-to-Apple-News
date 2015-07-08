@@ -5,8 +5,6 @@ namespace Actions\Index;
 require_once __DIR__ . '/../class-action.php';
 
 use Actions\Action as Action;
-use Push_API\API as API;
-use Push_API\Credentials as Credentials;
 
 class Bulk_Push extends Action {
 
