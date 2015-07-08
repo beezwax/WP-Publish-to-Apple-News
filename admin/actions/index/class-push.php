@@ -2,16 +2,10 @@
 
 namespace Actions\Index;
 
-require_once __DIR__ . '/../class-action.php';
+require_once __DIR__ . '/class-api-action.php';
 require_once __DIR__ . '/class-export.php';
 
-use Actions\Action as Action;
-use Push_API\API as API;
-use Push_API\Credentials as Credentials;
-
-class Push extends Action {
-
-	const API_ENDPOINT = 'https://u48r14.digitalhub.com';
+class Push extends API_Action {
 
 	private $id;
 	private $exporter;
@@ -96,20 +90,6 @@ class Push extends Action {
 		}
 
 		return array( $json, $bundles );
-	}
-
-	private function fetch_api() {
-		if ( is_null( $this->api ) ) {
-			$this->api = new API( self::API_ENDPOINT, $this->fetch_credentials() );
-		}
-
-		return $this->api;
-	}
-
-	private function fetch_credentials() {
-		$key    = $this->get_setting( 'api_key' );
-		$secret = $this->get_setting( 'api_secret' );
-		return new Credentials( $key, $secret );
 	}
 
 }
