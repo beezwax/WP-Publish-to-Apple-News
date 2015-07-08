@@ -34,7 +34,7 @@ class Admin_Apple_Export extends Apple_Export {
 
 		// Set up posts syncing if enabled in the settings
 		if ( 'yes' == $settings->get( 'api_autosync' ) ) {
-			new Admin_Post_Sync( $this );
+			new Admin_Post_Sync( $settings );
 		}
 	}
 

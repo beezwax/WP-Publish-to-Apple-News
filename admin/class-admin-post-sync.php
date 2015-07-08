@@ -1,5 +1,8 @@
 <?php
 
+require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
+require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
+
 /**
  * This class is in charge of syncing posts creation, updates and deletions
  * with Apple's News API.
@@ -8,10 +11,10 @@
  */
 class Admin_Post_Sync {
 
-	private $exporter;
+	private $settings;
 
-	function __construct( $exporter ) {
-		$this->exporter = $exporter;
+	function __construct( $settings ) {
+		$this->settings = $settings;
 
 		add_action( 'publish_post', array( $this, 'on_publish' ), 10, 2 );
 		add_action( 'before_delete_post', array( $this, 'on_delete' ) );
@@ -21,13 +24,15 @@ class Admin_Post_Sync {
 	 * When a post is published, or a published post updated, trigger this
 	 * function.
 	 *
+	 * TODO: UPDATE method is not yet supported by the API, for now, the
+	 * Exporter's push method DELETEs a post if it has an API ID and then sends a
+	 * POST request to create a new one.
+	 *
 	 * @since 0.4.0
 	 */
 	public function on_publish( $id, $post ) {
-		// TODO: UPDATE method is not yet supported by the API, for now, the
-		// Exporter's push method DELETEs a post if it has an API ID and then sends
-		// a POST request to create a new one.
-		$error = $this->exporter->push( $id );
+		$action = new Actions\Index\Push( $this->settings, $id );
+		$error = $action->perform();
 		if ( $error ) {
 			wp_die( $error );
 		}
@@ -44,7 +49,8 @@ class Admin_Post_Sync {
 			return;
 		}
 
-		$error = $this->exporter->delete( $id );
+		$action = new Actions\Index\Delete( $this->settings, $id );
+		$error  = $action->perform();
 		if ( $error ) {
 			wp_die( $error );
 		}
