@@ -8,7 +8,7 @@
 
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-post-sync.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-apple-export-list-table.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-export-list-table.php';
 // Use exporter
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/autoload.php';
 // Use push API
@@ -321,7 +321,7 @@ class Admin_Apple_Export extends Apple_Export {
 	}
 
 	private function show_post_list_action() {
-		$table = new Apple_Export_List_Table();
+		$table = new Admin_Export_List_Table();
 		$table->prepare_items();
 		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
 	}
