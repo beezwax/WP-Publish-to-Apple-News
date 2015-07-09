@@ -16,14 +16,14 @@ class Image extends Component {
 			return $node;
 		}
 
-		// Is there a node with tag 'img' inside this one? If so return all image
+		// Is there a paragrph node with tag 'img' inside this one? If so return all image
 		// nodes.
 		//
 		// FIXME: Because image can't just be parsed by markdown we have to
 		// forcefully extract them from the container, so if the container has
 		// something besides this component, it will be ignored. See comment in
 		// Components/Body.
-		if ( $images = self::node_find_all_by_tagname( $node, 'img' ) ) {
+		if ( 'p' == $node->nodeName && $images = self::node_find_all_by_tagname( $node, 'img' ) ) {
 			return $images;
 		}
 
