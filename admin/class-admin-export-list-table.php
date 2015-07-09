@@ -76,7 +76,7 @@ class Admin_Export_List_Table extends WP_List_Table {
 			'push'     => sprintf( "<a href='$base_url'>Push</a>", $page, 'push', $item->ID ),
 		);
 
-		if ( get_post_meta( $item->ID, 'apple_export_api_id', single ) ) {
+		if ( get_post_meta( $item->ID, 'apple_export_api_id', true ) ) {
 			$actions['delete'] = sprintf( "<a title='This will NOT delete your local copy' href='$base_url'>Delete from Apple News</a>", $page, 'delete', $item->ID );
 		}
 
@@ -124,7 +124,7 @@ class Admin_Export_List_Table extends WP_List_Table {
 		// Set column headers. It expects an array of columns, and as second
 		// argument an array of hidden columns, which in this case is empty.
 		$columns = $this->get_columns();
-		$this->_column_headers = array( $columns, array() );
+		$this->_column_headers = array( $columns, array(), array() );
 
 		// Data fetch
 		$current_page = $this->get_pagenum();
