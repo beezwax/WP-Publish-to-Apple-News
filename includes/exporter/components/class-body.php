@@ -19,17 +19,66 @@ class Body extends Component {
 	const COLUMN_SPAN = 5;
 
 	public static function node_matches( $node ) {
-		// This is tricky. Everything inside a p, ul or ol will be extracted as
-		// HTML and parsed as markdown. This means, if there's a video, image,
-		// audio, iframe or pretty much anything inside it will be ignored.
-		// FIXME: A possible solution would be to filter the HTML beforehand,
-		// splitting every non-markdown-able component out of the paragraph, thus,
-		// making several smaller paragraphs.
-		if ( in_array( $node->nodeName, array( 'p', 'ul', 'ol' ) ) ) {
+		// We are only interested in p, ul and ol
+		if ( ! in_array( $node->nodeName, array( 'p', 'ul', 'ol' ) ) ) {
+			return null;
+		}
+
+		// There are several components which cannot be translated to markdown. The
+		// most common beeing images, so we split the HTML in all images. Note that
+		// other elements, like Vide, EWV and Audio are not yet supported and must
+		// not be inside a paragraph.
+		if( 'p' == $node->nodeName ) {
+			return self::split_from_all_images( $node );
+		}
+
+		return $node;
+	}
+
+	private static function remove_empty_tags( $html ) {
+		return preg_replace( '#<[^/>][^>]*></[^>]+>#', '', $html );
+	}
+
+	private static function split_from_all_images( $node ) {
+		$html = $node->ownerDocument->saveXML( $node );
+		preg_match_all( '#<(\w+).*?>.*?(<img(?:.*?)/?>).*?</\1>#si', $html, $matches, PREG_SET_ORDER );
+
+		if( ! $matches ) {
 			return $node;
 		}
 
-		return null;
+		$result = array();
+		foreach( $matches as $match ) {
+			list( $all, $tag, $img ) = $match;
+			$result = array_merge( $result, self::split_from_image( $html, $tag, $img ) );
+		}
+		return $result;
+	}
+
+	private static function split_from_image( $html, $tag, $img ) {
+		$prefix  = '<p>';
+		$postfix = '</p>';
+		if ( 'p' != $tag  ) {
+			$prefix  = $prefix . "<$tag>";
+			$postfix = "</$tag>" . $postfix;
+		}
+
+		$parts = explode( $img, $html, 3 );
+
+		$result   = array();
+		$result[] = array(
+			'name'  => 'p',
+			'value' => self::remove_empty_tags( $parts[0] . $postfix ),
+		);
+		$result[] = array(
+			'name'  => 'img',
+			'value' => $img
+		);
+		$result[] = array(
+			'name'  => 'p',
+			'value' => self::remove_empty_tags( $prefix . $parts[1] ),
+		);
+		return $result;
 	}
 
 	protected function build( $text ) {

@@ -70,13 +70,23 @@ class Component_Factory {
 				continue;
 			}
 
-			// Did we match a list of nodes? For now, the only component which
-			// returns a DOMNodeList is the Image component
+			// Did we match a list of nodes? For now, components that might return
+			// DOMNodeList are Image, Video, EWV and Audio components.
 			if ( $matched_node instanceof \DOMNodeList ) {
 				foreach ( $matched_node as $item ) {
 					$html     = $node->ownerDocument->saveXML( $item );
 					$result[] = self::get_component( $shortname, $html );
 				}
+				return $result;
+			}
+
+			// Did we match several components? If so, a hash is returned. Right now
+			// only the paragraph returns this.
+			if ( is_array( $matched_node ) ) {
+				foreach ( $matched_node as $base_component ) {
+					$result[] = self::get_component( $base_component['name'], $base_component['value'] );
+				}
+
 				return $result;
 			}
 
