@@ -54,6 +54,11 @@ abstract class Component {
 	 */
 	protected $styles;
 
+	/**
+	 * @since 0.4.0
+	 */
+	private $uid;
+
 	function __construct( $text, $workspace, $settings, $styles, $layouts, $markdown = null ) {
 		$this->workspace = $workspace;
 		$this->settings  = $settings;

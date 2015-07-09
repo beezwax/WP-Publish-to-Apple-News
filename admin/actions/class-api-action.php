@@ -16,6 +16,8 @@ abstract class API_Action extends Action {
 
 	const API_ENDPOINT = 'https://u48r14.digitalhub.com';
 
+	private $api;
+
 	protected function fetch_api() {
 		if ( is_null( $this->api ) ) {
 			$this->api = new API( self::API_ENDPOINT, $this->fetch_credentials() );
