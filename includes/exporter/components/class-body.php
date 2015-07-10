@@ -27,7 +27,7 @@ class Body extends Component {
 		// There are several components which cannot be translated to markdown. The
 		// most common beeing images, so we split the HTML in all images. Note that
 		// other elements, like Video, EWV and Audio are not yet supported and must
-		// not be inside a paragraph.
+		// NOT be inside a paragraph.
 		if( 'p' == $node->nodeName ) {
 			$html = $node->ownerDocument->saveXML( $node );
 			return self::split_images( $html );
