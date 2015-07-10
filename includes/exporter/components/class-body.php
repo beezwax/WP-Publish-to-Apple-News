@@ -24,7 +24,7 @@ class Body extends Component {
 			return null;
 		}
 
-		// If the node is p, ul and ol AND it's empty, just ignore.
+		// If the node is p, ul or ol AND it's empty, just ignore.
 		if ( empty( $node->nodeValue ) ) {
 			return null;
 		}
