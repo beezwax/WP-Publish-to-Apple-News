@@ -26,10 +26,11 @@ class Body extends Component {
 
 		// There are several components which cannot be translated to markdown. The
 		// most common beeing images, so we split the HTML in all images. Note that
-		// other elements, like Vide, EWV and Audio are not yet supported and must
+		// other elements, like Video, EWV and Audio are not yet supported and must
 		// not be inside a paragraph.
 		if( 'p' == $node->nodeName ) {
-			return self::split_from_all_images( $node );
+			$html = $node->ownerDocument->saveXML( $node );
+			return self::split_images( $html );
 		}
 
 		return $node;
@@ -39,23 +40,15 @@ class Body extends Component {
 		return preg_replace( '#<[^/>][^>]*></[^>]+>#', '', $html );
 	}
 
-	private static function split_from_all_images( $node ) {
-		$html = $node->ownerDocument->saveXML( $node );
-		preg_match_all( '#<(\w+).*?>.*?(<img(?:.*?)/?>).*?</\1>#si', $html, $matches, PREG_SET_ORDER );
+	private static function split_images( $html ) {
+		preg_match( '#<(\w+).*?>\s*(<img(?:.*?)/?>)\s*</\1>#si', $html, $matches );
 
 		if( ! $matches ) {
-			return $node;
+			return array( array( 'name' => 'p', 'value' => $html ) );
 		}
 
-		$result = array();
-		foreach( $matches as $match ) {
-			list( $all, $tag, $img ) = $match;
-			$result = array_merge( $result, self::split_from_image( $html, $tag, $img ) );
-		}
-		return $result;
-	}
+		list( $whole, $tag, $img ) = $matches;
 
-	private static function split_from_image( $html, $tag, $img ) {
 		$prefix  = '<p>';
 		$postfix = '</p>';
 		if ( 'p' != $tag  ) {
@@ -65,20 +58,13 @@ class Body extends Component {
 
 		$parts = explode( $img, $html, 3 );
 
-		$result   = array();
-		$result[] = array(
-			'name'  => 'p',
-			'value' => self::remove_empty_tags( $parts[0] . $postfix ),
+		return array_merge(
+		 	array(
+				array( 'name'  => 'p',   'value' => self::remove_empty_tags( $parts[0] . $postfix ) ),
+				array( 'name'  => 'img', 'value' => $img ),
+		 	),
+			self::split_images( self::remove_empty_tags( $prefix . $parts[1] ) )
 		);
-		$result[] = array(
-			'name'  => 'img',
-			'value' => $img
-		);
-		$result[] = array(
-			'name'  => 'p',
-			'value' => self::remove_empty_tags( $prefix . $parts[1] ),
-		);
-		return $result;
 	}
 
 	protected function build( $text ) {
