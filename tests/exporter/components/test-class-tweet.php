@@ -16,6 +16,14 @@ class Tweet_Test extends Component_TestCase {
 		);
 	}
 
+	public function testMatchesASingleURL() {
+		$node = $this->build_node( 'https://twitter.com/gosukiwi/status/608069908044390400' );
+
+		$this->assertNotNull(
+			Tweet::node_matches( $node )
+		);
+	}
+
 	public function testGetsURLFromNewFormat() {
 		$component = new Tweet( '<blockquote class="twitter-tweet"
 			lang="en"><p lang="en" dir="ltr">Swift will be open source later this

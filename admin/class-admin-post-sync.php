@@ -13,22 +13,38 @@ class Admin_Post_Sync {
 	function __construct( $exporter ) {
 		$this->exporter = $exporter;
 
-		add_action( 'save_post', array( $this, 'on_post_saved' ), 10, 3 );
+		add_action( 'publish_post', array( $this, 'on_publish' ), 10, 2 );
+		add_action( 'before_delete_post', array( $this, 'on_delete' ) );
 	}
 
-	public function on_post_saved( $id, $post, $update ) {
-		if ( wp_is_post_revision( $id ) || 'POST' != $_SERVER['REQUEST_METHOD'] ) {
+	/**
+	 * When a post is published, or a published post updated, trigger this
+	 * function.
+	 *
+	 * @since 0.4.0
+	 */
+	public function on_publish( $id, $post ) {
+		// TODO: UPDATE method is not yet supported by the API, for now, the
+		// Exporter's push method DELETEs a post if it has an API ID and then sends
+		// a POST request to create a new one.
+		$error = $this->exporter->push( $id );
+		if ( $error ) {
+			wp_die( $error );
+		}
+	}
+
+	/**
+	 * When a post is deleted, remove it from Apple News.
+	 *
+	 * @since 0.4.0
+	 */
+	public function on_delete( $id ) {
+		// If it does not have a remote API ID just ignore
+		if ( ! get_post_meta( $id, 'apple_export_api_id', true ) ) {
 			return;
 		}
 
-		$error = null;
-
-		if ( get_post_meta( $id, 'apple_export_api_id', true ) ) {
-			// TODO: Update not done yet
-		} else {
-			$error = $this->exporter->push( $id );
-		}
-
+		$error = $this->exporter->delete( $id );
 		if ( $error ) {
 			wp_die( $error );
 		}

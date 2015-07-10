@@ -8,7 +8,7 @@
 
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-post-sync.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-apple-export-list-table.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-export-list-table.php';
 // Use exporter
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/autoload.php';
 // Use push API
@@ -37,6 +37,7 @@ class Admin_Apple_Export extends Apple_Export {
 		ob_start();
 
 		// Register hooks
+		add_action( 'admin_head', array( $this, 'plugin_styles' ) );
 		add_action( 'admin_menu', array( $this, 'setup_admin_page' ) );
 
 		// Admin_Settings builds the settings page for the plugin. It also has
@@ -48,6 +49,18 @@ class Admin_Apple_Export extends Apple_Export {
 		if ( 'yes' == $this->get_setting( 'api_autosync' ) ) {
 			new Admin_Post_Sync( $this );
 		}
+	}
+
+	public function plugin_styles() {
+		$page = ( isset( $_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : null;
+		if ( 'apple_export_index' != $page ) {
+			return;
+		}
+
+		// Styles are tiny, for now just embed them.
+		echo '<style type="text/css">';
+		echo '.wp-list-table .column-sync { width: 10%; }';
+		echo '</style>';
 	}
 
 	public function setup_admin_page() {
@@ -73,8 +86,8 @@ class Admin_Apple_Export extends Apple_Export {
 	 * @since 0.4.0
 	 */
 	public function admin_page() {
-		$id     = intval( $_GET['post_id'] );
-		$action = htmlentities( $_GET['action'] );
+		$id     = intval( @$_GET['post_id'] );
+		$action = htmlentities( @$_GET['action'] );
 
 		// Given an action and ID, map the attributes to corresponding actions.
 
@@ -95,6 +108,8 @@ class Admin_Apple_Export extends Apple_Export {
 			return $this->export_action( $id );
 		case 'push':
 			return $this->push_action( $id );
+		case 'delete':
+			return $this->delete_action( $id );
 		default:
 			wp_die( 'Invalid action: ' . $action );
 		}
@@ -174,6 +189,39 @@ class Admin_Apple_Export extends Apple_Export {
 	/**
 	 * Given a post id, push the post using the API data.
 	 */
+	public function delete( $id ) {
+		// Check for "valid" API information
+		if ( empty( $this->get_setting( 'api_key' ) )
+			|| empty( $this->get_setting( 'api_secret' ) )
+			|| empty( $this->get_setting( 'api_channel' ) ) )
+		{
+			wp_die( 'Your API settings seem to be empty. Please fill the API key, API
+				secret and API channel fields in the plugin configuration page.' );
+			return;
+		}
+
+		$remote_id = get_post_meta( $id, 'apple_export_api_id', true );
+		if ( ! $remote_id ) {
+			wp_die( 'This post has not been pushed to Apple News, cannot delete.' );
+			return;
+		}
+
+		$error = null;
+		try {
+			$this->fetch_api()->delete_article( $remote_id );
+			delete_post_meta( $id, 'apple_export_api_id' );
+			delete_post_meta( $id, 'apple_export_api_created_at' );
+			delete_post_meta( $id, 'apple_export_api_modified_at' );
+		} catch ( \Exception $e ) {
+			$error = $e->getMessage();
+		} finally {
+			return $error;
+		}
+	}
+
+	/**
+	 * Given a post id, push the post using the API data.
+	 */
 	public function push( $id ) {
 		// Check for "valid" API information
 		if ( empty( $this->get_setting( 'api_key' ) )
@@ -203,6 +251,12 @@ class Admin_Apple_Export extends Apple_Export {
 
 		$error = null;
 		try {
+			// If there's an API ID, delete the post before pushing the new version
+			$remote_id = get_post_meta( $id, 'apple_export_api_id', true );
+			if ( $remote_id ) {
+				$this->fetch_api()->delete_article( $remote_id );
+			}
+
 			$result = $this->fetch_api()->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles );
 			// Save the ID that was assigned to this post in by the API
 			update_post_meta( $id, 'apple_export_api_id', $result->data->id );
@@ -267,7 +321,7 @@ class Admin_Apple_Export extends Apple_Export {
 	}
 
 	private function show_post_list_action() {
-		$table = new Apple_Export_List_Table();
+		$table = new Admin_Export_List_Table();
 		$table->prepare_items();
 		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
 	}
@@ -293,6 +347,15 @@ class Admin_Apple_Export extends Apple_Export {
 		$error = $this->push( $id );
 		if ( is_null( $error ) ) {
 			$this->display_message( 'Success', 'Your article has been pushed successfully!' );
+		} else {
+			$this->display_message( 'Oops, something went wrong', $error );
+		}
+	}
+
+	private function delete_action( $id ) {
+		$error = $this->delete( $id );
+		if ( is_null( $error ) ) {
+			$this->display_message( 'Success', 'Your article has been removed from Apple News.' );
 		} else {
 			$this->display_message( 'Oops, something went wrong', $error );
 		}

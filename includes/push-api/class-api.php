@@ -66,6 +66,17 @@ class API {
 		return $this->send_get_request( $url );
 	}
 
+
+	/**
+	 * Deletes an article using a DELETE request.
+	 *
+	 * @since 0.4.0
+	 */
+	public function delete_article( $article_id ) {
+		$url = $this->endpoint . '/articles/' . $article_id;
+		return $this->send_delete_request( $url );
+	}
+
 	/**
 	 * Gets all sections in the given channel.
 	 *
@@ -91,6 +102,10 @@ class API {
 
 	private function send_get_request( $url ) {
 		return $this->request->get( $url );
+	}
+
+	private function send_delete_request( $url ) {
+		return $this->request->delete( $url );
 	}
 
 	private function send_post_request( $url, $article, $bundles ) {

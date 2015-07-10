@@ -15,7 +15,7 @@ class Settings {
 		'api_channel'     => '',
 		'api_autosync'    => 'yes',
 
-		'layout_margin'   => '30',
+		'layout_margin'   => '75',
 		'layout_gutter'   => '20',
 
 		'body_font'       => 'AvenirNext-Regular',

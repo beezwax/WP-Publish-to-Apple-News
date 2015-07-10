@@ -10,7 +10,12 @@ namespace Exporter\Components;
 class Tweet extends Component {
 
 	public static function node_matches( $node ) {
-		if ( self::node_has_class( $node, 'twitter-tweet' ) ) {
+		// Check if the body of a node is solely a tweet URL
+		$is_twitter_url = $node->nodeName == 'p' && preg_match(
+			'#^https?://(?:www\.)?twitter.com/(?:\#!/)?([^/]*)/status(?:es)?/(\d+)$#',
+			trim( $node->nodeValue ) );
+
+		if ( self::node_has_class( $node, 'twitter-tweet' ) || $is_twitter_url ) {
 			return $node;
 		}
 
