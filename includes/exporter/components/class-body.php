@@ -24,46 +24,50 @@ class Body extends Component {
 			return null;
 		}
 
-		// There are several components which cannot be translated to markdown. The
-		// most common beeing images, so we split the HTML in all images. Note that
-		// other elements, like Video, EWV and Audio are not yet supported and must
-		// NOT be inside a paragraph.
+		// There are several components which cannot be translated to markdown,
+		// namely images, videos, audios and EWV. If these components are inside a
+		// paragraph, split the paragraph.
 		if ( 'p' == $node->nodeName ) {
 			$html = $node->ownerDocument->saveXML( $node );
-			return self::split_images( $html );
+			return self::split_non_markdownable( $html );
 		}
 
 		return $node;
 	}
 
-	private static function remove_empty_tags( $html ) {
+	/**
+	 * Use PHP's HTML parser to generate valid HTML out of potentially broken
+	 * input.
+	 */
+	private static function clean_html( $html ) {
+		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
+		$dom = new \DOMDocument();
+		libxml_use_internal_errors( true );
+		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $html );
+		libxml_clear_errors( true );
+
+		// Find the first-level nodes of the body tag.
+		$element = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes->item( 0 );
+		$html    = $dom->saveHTML( $element );
 		return preg_replace( '#<[^/>][^>]*></[^>]+>#', '', $html );
 	}
 
-	private static function split_images( $html ) {
-		preg_match( '#<(\w+).*?>\s*(<img(?:.*?)/?>)\s*</\1>#si', $html, $matches );
+	private static function split_non_markdownable( $html ) {
+		preg_match( '#<(img|video|audio|iframe).*?(?:>(.*?)<\/\1>|\/?>|>)#si', $html, $matches );
 
 		if ( ! $matches ) {
 			return array( array( 'name' => 'p', 'value' => $html ) );
 		}
 
-		list( $whole, $tag, $img ) = $matches;
-
-		$prefix  = '<p>';
-		$postfix = '</p>';
-		if ( 'p' != $tag  ) {
-			$prefix  = $prefix . "<$tag>";
-			$postfix = "</$tag>" . $postfix;
-		}
-
-		$parts = explode( $img, $html, 3 );
+		list( $whole, $tag ) = $matches;
+		$parts = explode( $whole, $html, 3 );
 
 		return array_merge(
 		 	array(
-				array( 'name'  => 'p',   'value' => self::remove_empty_tags( $parts[0] . $postfix ) ),
-				array( 'name'  => 'img', 'value' => $img ),
+				array( 'name'  => 'p',  'value' => self::clean_html( $parts[0] . '</p>' ) ),
+				array( 'name'  => $tag, 'value' => $whole ),
 		 	),
-			self::split_images( self::remove_empty_tags( $prefix . $parts[1] ) )
+			self::split_non_markdownable( self::clean_html( '<p>' . $parts[1] ) )
 		);
 	}
 
