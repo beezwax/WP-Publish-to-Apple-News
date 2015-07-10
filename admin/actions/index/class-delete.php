@@ -48,9 +48,7 @@ class Delete extends API_Action {
 			delete_post_meta( $this->id, 'apple_export_api_created_at' );
 			delete_post_meta( $this->id, 'apple_export_api_modified_at' );
 		} catch ( \Exception $e ) {
-			$error = $e->getMessage();
-		} finally {
-			return $error;
+			return $e->getMessage();
 		}
 	}
 
