@@ -28,7 +28,7 @@ class Body extends Component {
 		// most common beeing images, so we split the HTML in all images. Note that
 		// other elements, like Video, EWV and Audio are not yet supported and must
 		// NOT be inside a paragraph.
-		if( 'p' == $node->nodeName ) {
+		if ( 'p' == $node->nodeName ) {
 			$html = $node->ownerDocument->saveXML( $node );
 			return self::split_images( $html );
 		}
@@ -43,7 +43,7 @@ class Body extends Component {
 	private static function split_images( $html ) {
 		preg_match( '#<(\w+).*?>\s*(<img(?:.*?)/?>)\s*</\1>#si', $html, $matches );
 
-		if( ! $matches ) {
+		if ( ! $matches ) {
 			return array( array( 'name' => 'p', 'value' => $html ) );
 		}
 
