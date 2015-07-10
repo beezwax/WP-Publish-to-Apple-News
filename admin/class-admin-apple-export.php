@@ -8,18 +8,7 @@
 
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-post-sync.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-admin-export-list-table.php';
-// Use exporter
-require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/autoload.php';
-// Use push API
-require_once plugin_dir_path( __FILE__ ) . '../includes/push-api/autoload.php';
-
-use Exporter\Exporter as Exporter;
-use Exporter\Exporter_Content as Exporter_Content;
-use Exporter\Settings as Settings;
-use Exporter\Exporter_Content_Settings as Exporter_Content_Settings;
-use Push_API\API as API;
-use Push_API\Credentials as Credentials;
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-page-index.php';
 
 /**
  * Main class for the plugin.
@@ -27,33 +16,32 @@ use Push_API\Credentials as Credentials;
  */
 class Admin_Apple_Export extends Apple_Export {
 
-	private $api;
-	private $settings;
-
-	const API_ENDPOINT = 'https://u48r14.digitalhub.com';
-
 	function __construct() {
 		// This is required to download files and setting headers.
 		ob_start();
 
 		// Register hooks
 		add_action( 'admin_head', array( $this, 'plugin_styles' ) );
-		add_action( 'admin_menu', array( $this, 'setup_admin_page' ) );
 
-		// Admin_Settings builds the settings page for the plugin. It also has
-		// helper methods to query them.
-		$this->settings = new Admin_Settings();
-		$this->api      = null;
+		// Admin_Settings builds the settings page for the plugin. Besides setting
+		// it up, let's get the settings getter and setter object and save it into
+		// $settings.
+		$admin_settings = new Admin_Settings;
+		$settings       = $admin_settings->fetch_settings();
 
-		// Set up posts syncing if enabled
-		if ( 'yes' == $this->get_setting( 'api_autosync' ) ) {
-			new Admin_Post_Sync( $this );
+		// Set up index page
+		new Admin_Page_Index( $settings );
+
+		// Set up posts syncing if enabled in the settings
+		if ( 'yes' == $settings->get( 'api_autosync' ) ) {
+			new Admin_Post_Sync( $settings );
 		}
 	}
 
 	public function plugin_styles() {
 		$page = ( isset( $_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : null;
-		if ( 'apple_export_index' != $page ) {
+
+		if ( $this->plugin_name . '_index' != $page ) {
 			return;
 		}
 
@@ -61,320 +49,6 @@ class Admin_Apple_Export extends Apple_Export {
 		echo '<style type="text/css">';
 		echo '.wp-list-table .column-sync { width: 10%; }';
 		echo '</style>';
-	}
-
-	public function setup_admin_page() {
-		// Set up main page. This page reads parameters and handles actions
-		// accordingly.
-		add_menu_page(
-			'Apple Export',
-			'Apple Export',
-			'manage_options',
-			$this->plugin_name . '_index',
-			array( $this, 'admin_page' )
-		);
-	}
-
-	/**
-	 * Sets up all pages used in the plugin's admin page. Associate each route
-	 * with an action. Actions are methods that end with "_action" and must
-	 * perform a task and output HTML with the result.
-	 *
-	 * FIXME: Regarding this class doing too much, maybe split all actions into
-	 * their own class.
-	 *
-	 * @since 0.4.0
-	 */
-	public function admin_page() {
-		$id     = intval( @$_GET['post_id'] );
-		$action = htmlentities( @$_GET['action'] );
-
-		// Given an action and ID, map the attributes to corresponding actions.
-
-		if ( ! $id ) {
-			switch ( $action ) {
-			case 'push':
-				$article_list = $_REQUEST['article'];
-				return $this->bulk_push_action( $article_list );
-			default:
-				return $this->show_post_list_action();
-			}
-		}
-
-		switch ( $action ) {
-		case 'settings':
-			return $this->settings_action( $id );
-		case 'export':
-			return $this->export_action( $id );
-		case 'push':
-			return $this->push_action( $id );
-		case 'delete':
-			return $this->delete_action( $id );
-		default:
-			wp_die( 'Invalid action: ' . $action );
-		}
-	}
-
-	private function fetch_api() {
-		if ( is_null( $this->api ) ) {
-			$this->api = new API( self::API_ENDPOINT, $this->fetch_credentials() );
-		}
-
-		return $this->api;
-	}
-
-	private function fetch_credentials() {
-		$key    = $this->get_setting( 'api_key' );
-		$secret = $this->get_setting( 'api_secret' );
-		return new Credentials( $key, $secret );
-	}
-
-	/**
-	 * Fetches an instance of Exporter.
-	 */
-	private function fetch_exporter( $id ) {
-		// Fetch WP_Post object, and all required post information to fill up the
-		// Exporter_Content instance.
-		$post       = get_post( $id );
-		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $id ) ) ?: null;
-		$author     = get_the_author_meta( 'display_name', $post->post_author );
-		$date       = date( 'M j, Y | g:i A', strtotime( $post->post_date ) );
-		$byline     = 'by ' . ucfirst( $author ) . ' | ' . $date ;
-
-		$base_content = new Exporter_Content(
-			$post->ID,
-			$post->post_title,
-			// post_content is not raw HTML, as WordPress editor cleans up
-			// paragraphs and new lines, so we need to transform the content to
-			// HTML. We use 'the_content' filter for that.
-			apply_filters( 'the_content', $post->post_content ),
-			$post->post_excerpt,
-			$post_thumb,
-			$byline,
-			$this->fetch_content_settings( $id )
-		);
-
-		return new Exporter( $base_content, null, $this->fetch_settings() );
-	}
-
-	/**
-	 * Loads settings for the Exporter_Content from the WordPress post metadata.
-	 *
-	 * @since 0.4.0
-	 */
-	private function fetch_content_settings( $post_id ) {
-		$settings = new Exporter_Content_Settings();
-		foreach ( get_post_meta( $post_id ) as $name => $value ) {
-			if ( 0 === strpos( $name, 'apple_export_' ) ) {
-				$name  = str_replace( 'apple_export_', '', $name );
-				$value = $value[0];
-				$settings->set( $name, $value );
-			}
-		}
-		return $settings;
-	}
-
-	private function display_message( $title, $message ) {
-		include plugin_dir_path( __FILE__ ) . 'partials/page_message.php';
-	}
-
-	/**
-	 * Given a post id, export the post into the custom format.
-	 */
-	private function export( $id ) {
-		$exporter = $this->fetch_exporter( $id );
-		return $exporter->export();
-	}
-
-	/**
-	 * Given a post id, push the post using the API data.
-	 */
-	public function delete( $id ) {
-		// Check for "valid" API information
-		if ( empty( $this->get_setting( 'api_key' ) )
-			|| empty( $this->get_setting( 'api_secret' ) )
-			|| empty( $this->get_setting( 'api_channel' ) ) )
-		{
-			wp_die( 'Your API settings seem to be empty. Please fill the API key, API
-				secret and API channel fields in the plugin configuration page.' );
-			return;
-		}
-
-		$remote_id = get_post_meta( $id, 'apple_export_api_id', true );
-		if ( ! $remote_id ) {
-			wp_die( 'This post has not been pushed to Apple News, cannot delete.' );
-			return;
-		}
-
-		$error = null;
-		try {
-			$this->fetch_api()->delete_article( $remote_id );
-			delete_post_meta( $id, 'apple_export_api_id' );
-			delete_post_meta( $id, 'apple_export_api_created_at' );
-			delete_post_meta( $id, 'apple_export_api_modified_at' );
-		} catch ( \Exception $e ) {
-			$error = $e->getMessage();
-		} finally {
-			return $error;
-		}
-	}
-
-	/**
-	 * Given a post id, push the post using the API data.
-	 */
-	public function push( $id ) {
-		// Check for "valid" API information
-		if ( empty( $this->get_setting( 'api_key' ) )
-			|| empty( $this->get_setting( 'api_secret' ) )
-			|| empty( $this->get_setting( 'api_channel' ) ) )
-		{
-			wp_die( 'Your API settings seem to be empty. Please fill the API key, API
-				secret and API channel fields in the plugin configuration page.' );
-			return;
-		}
-
-		$exporter = $this->fetch_exporter( $id );
-		$exporter->generate();
-
-		$dir  = $exporter->workspace()->tmp_path();
-		$json = file_get_contents( $dir . 'article.json' );
-
-		$bundles = array();
-		$files   = glob( $dir . '*', GLOB_BRACE );
-		foreach ( $files as $file ) {
-			if ( 'article.json' == basename( $file ) ) {
-				continue;
-			}
-
-			$bundles[] = $file;
-		}
-
-		$error = null;
-		try {
-			// If there's an API ID, delete the post before pushing the new version
-			$remote_id = get_post_meta( $id, 'apple_export_api_id', true );
-			if ( $remote_id ) {
-				$this->fetch_api()->delete_article( $remote_id );
-			}
-
-			$result = $this->fetch_api()->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles );
-			// Save the ID that was assigned to this post in by the API
-			update_post_meta( $id, 'apple_export_api_id', $result->data->id );
-			update_post_meta( $id, 'apple_export_api_created_at', $result->data->createdAt );
-			update_post_meta( $id, 'apple_export_api_modified_at', $result->data->modifiedAt );
-		} catch ( \Exception $e ) {
-			$error = $e->getMessage();
-		} finally {
-			$exporter->workspace()->clean_up();
-			return $error;
-		}
-	}
-
-	/**
-	 * Gets an instance of Exporter Settings loaded from WordPress saved options.
-	 *
-	 * @since 0.4.0
-	 */
-	private function fetch_settings() {
-		return $this->settings->fetch_settings();
-	}
-
-	/**
-	 * Gets a setting by name which was loaded from WordPress options.
-	 *
-	 * @since 0.4.0
-	 */
-	private function get_setting( $name ) {
-		return $this->fetch_settings()->get( $name );
-	}
-
-	/**
-	 * Given the full path to a zip file INSIDE THE PLUGN DIRECTORY, redirect
-	 * to the appropriate URL to download it.
-	 */
-	private function download_zipfile( $path ) {
-		header( 'Content-Type: application/zip, application/octet-stream' );
-		header( 'Content-Transfer-Encoding: Binary' );
-		header( 'Content-Disposition: attachment; filename="' . basename( $path ) . '"' );
-
-		ob_clean();
-		flush();
-		readfile( $path );
-		exit;
-	}
-
-	// Actions
-	// -------------------------------------------------------------------------
-
-	private function bulk_push_action( $articles ) {
-		$errors = $this->bulk_push( $articles );
-		if ( $errors ) {
-			$formatted_errors = '<ul>';
-			foreach ( $errors as $error ) {
-				$formatted_errors .= '<li>' . $error . '</li>';
-			}
-			$formatted_errors .= '</ul>';
-			$this->display_message( 'Oops, something went wrong', $formatted_errors );
-		} else {
-			$this->display_message( 'Success', 'Your articles has been pushed successfully!' );
-		}
-	}
-
-	private function show_post_list_action() {
-		$table = new Admin_Export_List_Table();
-		$table->prepare_items();
-		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
-	}
-
-	private function settings_action( $id ) {
-		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
-			update_post_meta( $id, 'apple_export_pullquote', $_POST['pullquote'] );
-			update_post_meta( $id, 'apple_export_pullquote_position', intval( $_POST['pullquote_position'] ) );
-			$message = 'Settings saved.';
-		}
-
-		$post      = get_post( $id );
-		$post_meta = get_post_meta( $id );
-		include plugin_dir_path( __FILE__ ) . 'partials/page_single_settings.php';
-	}
-
-	private function export_action( $id ) {
-		$path = $this->export( $id );
-		$this->download_zipfile( $path );
-	}
-
-	private function push_action( $id ) {
-		$error = $this->push( $id );
-		if ( is_null( $error ) ) {
-			$this->display_message( 'Success', 'Your article has been pushed successfully!' );
-		} else {
-			$this->display_message( 'Oops, something went wrong', $error );
-		}
-	}
-
-	private function delete_action( $id ) {
-		$error = $this->delete( $id );
-		if ( is_null( $error ) ) {
-			$this->display_message( 'Success', 'Your article has been removed from Apple News.' );
-		} else {
-			$this->display_message( 'Oops, something went wrong', $error );
-		}
-	}
-
-	private function bulk_push( $articles ) {
-		$errors = array();
-		if ( empty( $articles ) ) {
-			$errors[] = 'You did not select any articles.';
-			return $errors;
-		}
-
-		foreach ( $articles as $article_id ) {
-			$error = $this->push( $article_id );
-			if ( ! is_null( $error ) ) {
-				$errors[] = $error;
-			}
-		}
-		return $errors;
 	}
 
 }
