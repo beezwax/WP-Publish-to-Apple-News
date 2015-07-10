@@ -40,23 +40,6 @@ class Body extends Component {
 		return $node;
 	}
 
-	/**
-	 * Use PHP's HTML parser to generate valid HTML out of potentially broken
-	 * input.
-	 */
-	private static function clean_html( $html ) {
-		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
-		$dom = new \DOMDocument();
-		libxml_use_internal_errors( true );
-		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $html );
-		libxml_clear_errors( true );
-
-		// Find the first-level nodes of the body tag.
-		$element = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes->item( 0 );
-		$html    = $dom->saveHTML( $element );
-		return preg_replace( '#<[^/>][^>]*></[^>]+>#', '', $html );
-	}
-
 	private static function split_non_markdownable( $html ) {
 		preg_match( '#<(img|video|audio|iframe).*?(?:>(.*?)</\1>|/?>)#si', $html, $matches );
 
@@ -74,6 +57,23 @@ class Body extends Component {
 		 	),
 			self::split_non_markdownable( self::clean_html( '<p>' . $right ) )
 		);
+	}
+
+	/**
+	 * Use PHP's HTML parser to generate valid HTML out of potentially broken
+	 * input.
+	 */
+	private static function clean_html( $html ) {
+		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
+		$dom = new \DOMDocument();
+		libxml_use_internal_errors( true );
+		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $html );
+		libxml_clear_errors( true );
+
+		// Find the first-level nodes of the body tag.
+		$element = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes->item( 0 );
+		$html    = $dom->saveHTML( $element );
+		return preg_replace( '#<[^/>][^>]*></[^>]+>#', '', $html );
 	}
 
 	protected function build( $text ) {
