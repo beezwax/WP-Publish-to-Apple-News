@@ -116,7 +116,7 @@ class Admin_Export_List_Table extends WP_List_Table {
 
 	public function get_bulk_actions() {
 		return array(
-			'push'     => 'Push',
+			'push' => 'Push',
 		);
 	}
 
