@@ -32,4 +32,15 @@ abstract class API_Action extends Action {
 		return new Credentials( $key, $secret );
 	}
 
+	protected function is_api_configuration_valid() {
+		if ( empty( $this->get_setting( 'api_key' ) )
+			|| empty( $this->get_setting( 'api_secret' ) )
+			|| empty( $this->get_setting( 'api_channel' ) ) )
+		{
+			return false;
+		}
+
+		return true;
+	}
+
 }
