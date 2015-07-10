@@ -53,7 +53,7 @@ class Body extends Component {
 	}
 
 	private static function split_non_markdownable( $html ) {
-		preg_match( '#<(img|video|audio|iframe).*?(?:>(.*?)<\/\1>|\/?>|>)#si', $html, $matches );
+		preg_match( '#<(img|video|audio|iframe).*?(?:>(.*?)</\1>|/?>)#si', $html, $matches );
 
 		if ( ! $matches ) {
 			return array( array( 'name' => 'p', 'value' => $html ) );
