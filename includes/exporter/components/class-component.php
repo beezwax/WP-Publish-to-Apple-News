@@ -165,31 +165,6 @@ abstract class Component {
 		$this->layouts->register_layout( $name, $spec );
 	}
 
-	protected static function node_find_by_tagname( $node, $tagname ) {
-		$result = self::node_find_all_by_tagname( $node, $tagname );
-
-		if ( $result ) {
-			return $result->item( 0 );
-		}
-
-		return false;
-	}
-
-	protected static function node_find_all_by_tagname( $node, $tagname ) {
-		if ( ! method_exists( $node, 'getElementsByTagName' ) ) {
-			return false;
-		}
-
-		$elements = $node->getElementsByTagName( $tagname );
-
-		if ( $elements->length == 0 ) {
-			return false;
-		}
-
-		return $elements;
-	}
-
-
 	protected static function node_has_class( $node, $classname ) {
 		if ( ! method_exists( $node, 'getAttribute' ) ) {
 			return false;

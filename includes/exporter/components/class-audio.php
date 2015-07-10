@@ -14,16 +14,6 @@ class Audio extends Component {
 			return $node;
 		}
 
-		// Is there a node with tag 'audio' inside this one?
-		//
-		// FIXME: Because audio can't just be parsed by markdown we have to
-		// forcefully extract them from the container, so if the container has
-		// something besides this component, it will be ignored. See comment in
-		// Components/Body.
-		if ( $audio_node = self::node_find_by_tagname( $node, 'audio' ) ) {
-			return $audio_node;
-		}
-
 		return null;
 	}
 

@@ -70,19 +70,6 @@ class Component_Factory {
 				continue;
 			}
 
-			// Did we match a list of nodes? For now, components that might return
-			// DOMNodeList are Video, EWV and Audio components. When a DOMNodeList is
-			// returned, it means there are several of those components inside a
-			// container. The rest of the elements in the container get ignored. This
-			// is still a FIXME.
-			if ( $matched_node instanceof \DOMNodeList ) {
-				foreach ( $matched_node as $item ) {
-					$html     = $node->ownerDocument->saveXML( $item );
-					$result[] = self::get_component( $shortname, $html );
-				}
-				return $result;
-			}
-
 			// Did we match several components? If so, a hash is returned. Right now
 			// only the paragraph returns this, in the case it finds images inside
 			// the paragraph.
