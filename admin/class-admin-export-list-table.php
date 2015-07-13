@@ -42,7 +42,7 @@ class Admin_Export_List_Table extends WP_List_Table {
 		$remote_id = get_post_meta( $post->ID, 'apple_export_api_id', true );
 
 		if ( ! $remote_id ) {
-			return 'Not pushed';
+			return 'Not published';
 		}
 
 		$updated = get_post_meta( $post->ID, 'apple_export_api_modified_at', true );
@@ -50,10 +50,10 @@ class Admin_Export_List_Table extends WP_List_Table {
 		$local   = strtotime( $post->post_modified );
 
 		if ( $local > $updated ) {
-			return 'Out of sync';
+			return 'Needs to be updated';
 		}
 
-		return 'Synced';
+		return 'Published';
 	}
 
 	/**
@@ -71,9 +71,9 @@ class Admin_Export_List_Table extends WP_List_Table {
 		$base_url  = "$admin_url?page=%s&amp;action=%s&amp;post_id=%s";
 		$page      = htmlentities( $_REQUEST['page'] );
 		$actions   = array(
-			'settings' => sprintf( "<a href='$base_url'>Settings</a>", $page, 'settings', $item->ID ),
+			'settings' => sprintf( "<a href='$base_url'>Options</a>", $page, 'settings', $item->ID ),
 			'export'   => sprintf( "<a href='$base_url'>Download</a>", $page, 'export', $item->ID ),
-			'push'     => sprintf( "<a href='$base_url'>Push</a>", $page, 'push', $item->ID ),
+			'push'     => sprintf( "<a href='$base_url'>Publish</a>", $page, 'push', $item->ID ),
 		);
 
 		if ( get_post_meta( $item->ID, 'apple_export_api_id', true ) ) {
@@ -98,7 +98,7 @@ class Admin_Export_List_Table extends WP_List_Table {
 		return array(
 			'cb'    => '<input type="checkbox">',
 			'title' => 'Title',
-			'sync'  => 'Sync Status',
+			'sync'  => 'Apple News Publish Status',
 		);
 	}
 
