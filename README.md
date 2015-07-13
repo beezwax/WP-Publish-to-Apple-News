@@ -22,6 +22,11 @@ It's recommended to create a symbolic link for better code organization.
 Make sure `/home/my-user` has execute permissions or WordPress might not show it
 as a plugin. You can do so by doing `chmod o+x /home/my-user`.
 
+### PHP Configuration
+Make sure PHP's `memory_limit` setting is big enough, or set to -1, as the
+plugin might work with big images and must create zipfiles and move files
+around. Also make sure PHP's upload limit is big enough.
+
 ## Running tests
 You'll need PHPUnit v4.5+ to run tests. Initially you'll need to set up the
 test environment, you can do so by running
