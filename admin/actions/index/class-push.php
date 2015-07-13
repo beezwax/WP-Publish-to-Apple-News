@@ -22,6 +22,14 @@ class Push extends API_Action {
 		return $this->push();
 	}
 
+	private function is_post_in_sync() {
+		$api_time   = get_post_meta( $this->id, 'apple_export_api_modified_at', true );
+		$api_time   = strtotime( $api_time );
+		$post       = get_post( $this->id );
+		$local_time = strtotime( $post->post_modified );
+		return $api_time >= $local_time;
+	}
+
 	/**
 	 * Push the post using the API data.
 	 */
@@ -29,6 +37,11 @@ class Push extends API_Action {
 		if ( ! $this->is_api_configuration_valid() ) {
 			wp_die( 'Your API settings seem to be empty. Please fill the API key, API
 				secret and API channel fields in the plugin configuration page.' );
+			return;
+		}
+
+		// Ignore if the post is already in sync
+		if ( $this->is_post_in_sync() ) {
 			return;
 		}
 
