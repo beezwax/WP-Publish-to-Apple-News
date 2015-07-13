@@ -26,11 +26,12 @@ class Admin_Page_Index extends Apple_Export {
 		// Set up main page. This page reads parameters and handles actions
 		// accordingly.
 		add_menu_page(
-			'Apple Export',
-			'Apple Export',
-			'manage_options',
-			$this->plugin_name . '_index',
-			array( $this, 'page_router' )
+			'Apple News',                  // Page Title
+			'Apple News',                  // Menu Title
+			'manage_options',              // Capability
+			$this->plugin_name . '_index', // Menu Slug
+			array( $this, 'page_router' ), // Function
+			'dashicons-format-aside'       // Icon
 		);
 	}
 
