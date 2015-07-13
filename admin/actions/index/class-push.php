@@ -16,6 +16,9 @@ class Push extends API_Action {
 		parent::__construct( $settings );
 		$this->id       = $id;
 		$this->exporter = null;
+
+		// Maximum execution time is 5 minutes
+		set_time_limit( 60 * 5 );
 	}
 
 	public function perform() {
@@ -45,6 +48,9 @@ class Push extends API_Action {
 			return;
 		}
 
+		// generate_article uses Exporter->genearte, so we MUST clean the workspace
+		// before and after it's usage.
+		$this->clean_workspace();
 		list( $json, $bundles ) = $this->generate_article();
 
 		$error = null;
