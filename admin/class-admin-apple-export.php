@@ -9,10 +9,10 @@
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-post-sync.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-page-index.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-bulk-export-page.php';
 
 /**
- * Main class for the plugin.
- * FIXME: The admin page does too much, split into several classes.
+ * Entry-point class for the plugin.
  */
 class Admin_Apple_Export extends Apple_Export {
 
@@ -29,8 +29,10 @@ class Admin_Apple_Export extends Apple_Export {
 		$admin_settings = new Admin_Settings;
 		$settings       = $admin_settings->fetch_settings();
 
-		// Set up index page
+		// Set up main page
 		new Admin_Page_Index( $settings );
+		// Set up all sub pages
+		new Admin_Bulk_Export_Page( $settings );
 		// Set up posts syncing if enabled in the settings
 		new Admin_Post_Sync( $settings );
 	}
@@ -38,7 +40,7 @@ class Admin_Apple_Export extends Apple_Export {
 	public function plugin_styles() {
 		$page = ( isset( $_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : null;
 
-		if ( $this->plugin_name . '_index' != $page ) {
+		if ( $this->plugin_slug . '_index' != $page ) {
 			return;
 		}
 
