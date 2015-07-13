@@ -31,11 +31,8 @@ class Admin_Apple_Export extends Apple_Export {
 
 		// Set up index page
 		new Admin_Page_Index( $settings );
-
 		// Set up posts syncing if enabled in the settings
-		if ( 'yes' == $settings->get( 'api_autosync' ) ) {
-			new Admin_Post_Sync( $settings );
-		}
+		new Admin_Post_Sync( $settings );
 	}
 
 	public function plugin_styles() {

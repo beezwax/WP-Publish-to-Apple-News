@@ -16,8 +16,11 @@ class Admin_Post_Sync {
 	function __construct( $settings ) {
 		$this->settings = $settings;
 
-		add_action( 'publish_post', array( $this, 'on_publish' ), 10, 2 );
-		add_action( 'before_delete_post', array( $this, 'on_delete' ) );
+		// Register update hooks if needed
+		if ( 'yes' == $settings->get( 'api_autosync' ) ) {
+			add_action( 'publish_post', array( $this, 'on_publish' ), 10, 2 );
+			add_action( 'before_delete_post', array( $this, 'on_delete' ) );
+		}
 	}
 
 	/**
