@@ -41,7 +41,7 @@ class CURL {
 	 */
 	public function delete( $signature ) {
 		curl_setopt( $this->curl, CURLOPT_HTTPHEADER, array( $signature ) );
-    curl_setopt( $this->curl, CURLOPT_CUSTOMREQUEST, 'DELETE' );
+		curl_setopt( $this->curl, CURLOPT_CUSTOMREQUEST, 'DELETE' );
 		return $this->send();
 	}
 

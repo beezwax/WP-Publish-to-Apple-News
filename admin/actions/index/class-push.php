@@ -26,11 +26,7 @@ class Push extends API_Action {
 	 * Push the post using the API data.
 	 */
 	private function push() {
-		// Check for "valid" API information
-		if ( empty( $this->get_setting( 'api_key' ) )
-			|| empty( $this->get_setting( 'api_secret' ) )
-			|| empty( $this->get_setting( 'api_channel' ) ) )
-		{
+		if ( ! $this->is_api_configuration_valid() ) {
 			wp_die( 'Your API settings seem to be empty. Please fill the API key, API
 				secret and API channel fields in the plugin configuration page.' );
 			return;
