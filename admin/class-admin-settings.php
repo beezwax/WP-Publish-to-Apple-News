@@ -359,6 +359,9 @@ class Admin_Settings {
 		);
 
 		$this->field_labels = array(
+			'api_key'      => 'API key',
+			'api_secret'   => 'API secret',
+			'api_channel'  => 'API channel',
 			'api_autosync' => 'Automatically publish to Apple News',
 		);
 
