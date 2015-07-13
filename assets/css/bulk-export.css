@@ -1,0 +1,27 @@
+.bulk-export-list {
+  margin-bottom: 2em;
+}
+
+.bulk-export-list-item {
+  display: flex;
+}
+
+.bulk-export-list-item-title {
+  flex-grow: 1;
+}
+
+.bulk-export-list-item-status {
+  text-transform: uppercase;
+}
+
+.bulk-export-list-item-status.in-progress {
+  font-weight: bold;
+}
+
+.bulk-export-list-item-status.success {
+  color: green;
+}
+
+.bulk-export-list-item-status.failed {
+  color: red;
+}

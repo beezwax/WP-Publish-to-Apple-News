@@ -8,7 +8,7 @@
  */
 class Apple_Export {
 
-	protected $plugin_name   = 'apple_export';
+	protected $plugin_slug   = 'apple_export';
 	protected $plugin_domain = 'apple-export';
 	protected $version       = '0.2.0';
 
