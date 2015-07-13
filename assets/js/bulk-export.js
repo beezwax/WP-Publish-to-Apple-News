@@ -1,6 +1,12 @@
 (function ($, window, undefined) {
   'use strict';
 
+  var started = false;
+
+  function done() {
+    $('.bulk-export-submit').text('Done');
+  }
+
   function push_item(item, next) {
     var $item   = $(item);
     var $status = $item.find('.bulk-export-list-item-status');
@@ -32,14 +38,14 @@
       index += 1;
       if(index < items.length) {
         push_item(items.get(index), next);
+      } else {
+        done();
       }
     };
 
     // Initial push
     next();
   }
-
-  var started = false;
 
   $('.bulk-export-submit').click(function (e) {
     e.preventDefault();

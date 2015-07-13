@@ -16,6 +16,6 @@
 		<?php endforeach; ?>
 	</ul>
 
-	<a class="button" href="#">Back</a>
+	<a class="button" href="<?php menu_page_url( $this->plugin_slug . '_index' ) ?>">Back</a>
 	<a class="button button-primary bulk-export-submit" href="#">Publish All</a>
 </div>
