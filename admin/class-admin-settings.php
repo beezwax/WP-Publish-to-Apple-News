@@ -313,6 +313,14 @@ class Admin_Settings {
 	private $field_types;
 
 	/**
+	 * Optionally define more elaborated labels for each setting and store them
+	 * here.
+	 *
+	 * @since 0.6.0
+	 */
+	private $field_labels;
+
+	/**
 	 * Only load settings once. Cache results for easy and efficient usage.
 	 */
 	private $loaded_settings;
@@ -348,6 +356,10 @@ class Admin_Settings {
 			'pullquote_transform'  => array( 'none', 'uppercase' ),
 			'gallery_type'         => array( 'gallery', 'mosaic' ),
 			'enable_advertisement' => array( 'yes', 'no' ),
+		);
+
+		$this->field_labels = array(
+			'api_autosync' => 'Automatically publish to Apple News',
 		);
 
 		$this->loaded_settings = null;
@@ -413,6 +425,14 @@ class Admin_Settings {
 		echo 'Settings which apply globally to the plugin functionality.';
 	}
 
+	private function get_setting_title( $name ) {
+		if ( isset( $this->field_labels[ $name ] ) ) {
+			return $this->field_labels[ $name ];
+		}
+
+		return ucfirst( str_replace( '_', ' ', $name ) );
+	}
+
 	/**
 	 * Load exporter settings and register them.
 	 *
@@ -431,7 +451,7 @@ class Admin_Settings {
 			register_setting( 'apple-export-options', $name );
 			add_settings_field(
 				$name,                                     // ID
-				ucfirst( str_replace( '_', ' ', $name ) ), // Title
+				$this->get_setting_title( $name ),         // Title
 				array( $this, 'render_field' ),            // Render calback
 				'apple-export-options',                    // Page
 				'apple-export-options-section-general',    // Section
