@@ -42,6 +42,13 @@ class Admin_Export_List_Table extends WP_List_Table {
 		$remote_id = get_post_meta( $post->ID, 'apple_export_api_id', true );
 
 		if ( ! $remote_id ) {
+			// There is no remote id, check for a delete mark
+			$deleted = get_post_meta( $post->ID, 'apple_export_api_deleted', true );
+			if ( $deleted ) {
+				return 'Deleted';
+			}
+
+			// No delete mark, this has not been published yet.
 			return 'Not published';
 		}
 
