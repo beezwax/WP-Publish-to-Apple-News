@@ -39,7 +39,7 @@ class Admin_Bulk_Export_Page extends Apple_Export {
 		}
 
 		$articles = array();
-		foreach( explode( '.', $ids ) as $id ) {
+		foreach ( explode( '.', $ids ) as $id ) {
 			$articles[] = get_post( $id );
 		}
 		require_once plugin_dir_path( __FILE__ ) . 'partials/page_bulk_export.php';
