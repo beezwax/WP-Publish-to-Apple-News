@@ -38,8 +38,13 @@ class Components extends Builder {
 				// If we have something stored in the collector, add it to the new
 				// components array and set to null again.
 				if ( ! is_null( $body_collector ) ) {
+					$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
 					$new_components[] = $body_collector;
 					$body_collector   = null;
+				}
+
+				if( 'body' == $component['role'] && isset( $component['identifier'] ) ) {
+					$component['text'] = trim( $component['text'] ) . "\n";
 				}
 
 				$new_components[] = $component;
@@ -57,6 +62,7 @@ class Components extends Builder {
 
 		// Make a final check for the body collector, as it might not be empty
 		if ( ! is_null( $body_collector ) ) {
+			$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
 			$new_components[] = $body_collector;
 		}
 

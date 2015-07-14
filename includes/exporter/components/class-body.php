@@ -82,8 +82,8 @@ class Body extends Component {
 
 	protected function build( $text ) {
 		$this->json = array(
-			'role' => 'body',
-			'text' => $this->markdown->parse( $text ),
+			'role'   => 'body',
+			'text'   => $this->markdown->parse( $text ),
 			'format' => 'markdown',
 		);
 
