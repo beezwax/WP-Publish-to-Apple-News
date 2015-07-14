@@ -16,7 +16,51 @@ class Components extends Builder {
 		foreach ( $this->split_into_components() as $component ) {
 			$components[] = $component->to_array();
 		}
-		return $components;
+		return $this->group_body_components( $components );
+	}
+
+	/**
+	 * Given an array of components in array format, group all the elements of
+	 * role 'body'. Ignore body elements that have an ID, as they are used for
+	 * anchoring.
+	 *
+	 * Grouping body like this allows the Apple Format interpreter to render
+	 * proper paragraph spacing.
+	 *
+	 * @since 0.6.0
+	 */
+	private function group_body_components( $components ) {
+		$new_components = array();
+		$body_collector = null;
+
+		foreach( $components as $component ) {
+			if( 'body' != $component['role'] || isset( $component['identifier'] ) ) {
+				// If we have something stored in the collector, add it to the new
+				// components array and set to null again.
+				if ( ! is_null( $body_collector ) ) {
+					$new_components[] = $body_collector;
+					$body_collector   = null;
+				}
+
+				$new_components[] = $component;
+				continue;
+			}
+
+			// We can now assume $component is of role body and has no identifier.
+			// Let's collect the contents.
+			if( is_null( $body_collector ) ) {
+				$body_collector = $component;
+			} else {
+				$body_collector['text'] .= $component['text'];
+			}
+		}
+
+		// Make a final check for the body collector, as it might not be empty
+		if ( ! is_null( $body_collector ) ) {
+			$new_components[] = $body_collector;
+		}
+
+		return $new_components;
 	}
 
 	/**
