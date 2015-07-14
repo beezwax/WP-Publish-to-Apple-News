@@ -55,19 +55,19 @@ class Component_Layouts extends Builder {
 
 		if ( ! $this->layout_exists( 'anchor-target-layout' ) ) {
 			// Find out the starting column
-			$col_start = 0;
+			$col_span = 0;
 			switch ( $this->get_setting( 'body_orientation' ) ) {
 			case 'right':
-				$col_start = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
+				$col_span = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
 				break;
 			case 'left':
-				$col_start = 0;
+				$col_span = 0;
 				break;
 			}
 
 			$this->register_layout( 'anchor-target-layout', array(
 				'columnStart' => Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN + Component::ALIGNMENT_OFFSET,
-				'columnSpan'  => $col_start,
+				'columnSpan'  => $col_span,
 			) );
 		}
 
