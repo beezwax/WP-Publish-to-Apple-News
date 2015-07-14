@@ -31,7 +31,12 @@ abstract class Component {
 
 	/**
 	 * If this component is set as a target for an anchor, does it need to fix
-	 * it's layout?
+	 * it's layout? Defaults to true, components can set this to false if they do
+	 * not need an automatic layout assigned to them or want more control.
+	 *
+	 * Right now, the only component that sets this to false is the body, as it
+	 * doesn't need a special layout for anchoring, it just flows around anchored
+	 * components.
 	 *
 	 * @since 0.6.0
 	 */

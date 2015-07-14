@@ -47,6 +47,11 @@ class Component_Layouts extends Builder {
 		return array_key_exists( $name, $this->layouts );
 	}
 
+	/**
+	 * When a component is the target of a layout, fix the column span and start
+	 * to accomodate. Not all components need this, the body component can flow
+	 * around text. @see \Exporter\Components\Component\$needs_layout_if_target
+	 */
 	public function set_anchor_target_layout_for( $component ) {
 		// TODO: What do? Show centered? Ignore anchoring for now
 		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
