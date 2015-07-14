@@ -70,9 +70,9 @@ class Component_Factory {
 				continue;
 			}
 
-			// Did we match several components? If so, a hash is returned. Right now
-			// only the paragraph returns this, in the case it finds images inside
-			// the paragraph.
+			// Did we match several components? If so, a hash is returned. Both the
+			// body and heading components can returns this, in the case they find
+			// non-markdown-able elements inside.
 			if ( is_array( $matched_node ) ) {
 				foreach ( $matched_node as $base_component ) {
 					$result[] = self::get_component( $base_component['name'], $base_component['value'] );

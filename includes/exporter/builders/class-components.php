@@ -148,6 +148,7 @@ class Components extends Builder {
 			if ( 'banner_advertisement' == $other_component->get_json( 'role' ) ) {
 				$other_component = $components[ $i + 1 ];
 			}
+			$other_component->set_anchor_target();
 
 			$component->set_json( 'anchor', array(
 				'targetComponentIdentifier' => $other_component->uid(),

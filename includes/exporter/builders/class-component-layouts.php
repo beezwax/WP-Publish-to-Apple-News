@@ -47,6 +47,33 @@ class Component_Layouts extends Builder {
 		return array_key_exists( $name, $this->layouts );
 	}
 
+	public function set_anchor_target_layout_for( $component ) {
+		// TODO: What do? Show centered? Ignore anchoring for now
+		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
+			return;
+		}
+
+		if ( ! $this->layout_exists( 'anchor-target-layout' ) ) {
+			// Find out the starting column
+			$col_start = 0;
+			switch ( $this->get_setting( 'body_orientation' ) ) {
+			case 'right':
+				$col_start = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
+				break;
+			case 'left':
+				$col_start = 0;
+				break;
+			}
+
+			$this->register_layout( 'anchor-target-layout', array(
+				'columnStart' => Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN + Component::ALIGNMENT_OFFSET,
+				'columnSpan'  => $col_start,
+			) );
+		}
+
+		$component->set_json( 'layout', 'anchor-target-layout' );
+	}
+
 	public function set_anchor_layout_for( $component ) {
 		// TODO: What do? Show centered? Ignore anchoring for now
 		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {

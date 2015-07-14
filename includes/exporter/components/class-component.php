@@ -30,6 +30,14 @@ abstract class Component {
 	public $is_anchorable = false;
 
 	/**
+	 * If this component is set as a target for an anchor, does it need to fix
+	 * it's layout?
+	 *
+	 * @since 0.6.0
+	 */
+	public $needs_layout_if_target = true;
+
+	/**
 	 * @since 0.2.0
 	 */
 	protected $workspace;
@@ -81,6 +89,23 @@ abstract class Component {
 	}
 
 	/**
+	 * Use PHP's HTML parser to generate valid HTML out of potentially broken
+	 * input.
+	 */
+	protected static function clean_html( $html ) {
+		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
+		$dom = new \DOMDocument();
+		libxml_use_internal_errors( true );
+		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $html );
+		libxml_clear_errors( true );
+
+		// Find the first-level nodes of the body tag.
+		$element = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes->item( 0 );
+		$html    = $dom->saveHTML( $element );
+		return preg_replace( '#<[^/>][^>]*></[^>]+>#', '', $html );
+	}
+
+	/**
 	 * Transforms HTML into an array that describes the component using the build
 	 * function.
 	 */
@@ -102,6 +127,16 @@ abstract class Component {
 		}
 
 		$this->is_anchorable = $flag;
+	}
+
+	/**
+	 * Marks this component as an anchor target, this adds the 'anchor-target'
+	 * layout if needed.
+	 */
+	public function set_anchor_target() {
+		if ( $this->needs_layout_if_target ) {
+			$this->layouts->set_anchor_target_layout_for( $this );
+		}
 	}
 
 	public function uid() {
