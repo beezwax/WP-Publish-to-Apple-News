@@ -9,6 +9,11 @@ namespace Exporter\Components;
  */
 class Advertisement extends Component {
 
+	/**
+	 * Images cannot be anchor targets.
+	 */
+	protected $can_be_anchor_target = false;
+
 	protected function build( $text ) {
 		$this->json = array(
 			'role' => 'banner_advertisement',

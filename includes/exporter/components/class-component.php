@@ -53,6 +53,13 @@ abstract class Component {
 	public $needs_layout_if_anchored = true;
 
 	/**
+	 * Whether this component can be an anchor target.
+	 *
+	 * @since 0.6.0
+	 */
+	protected $can_be_anchor_target = true;
+
+	/**
 	 * @since 0.2.0
 	 */
 	protected $workspace;
@@ -161,6 +168,13 @@ abstract class Component {
 	 */
 	public function is_anchor_target() {
 		return !is_null( $this->uid );
+	}
+
+	/**
+	 * Check if it's can_be_anchor_target and it hasn't been anchored already.
+	 */
+	public function can_be_anchor_target() {
+		return $this->can_be_anchor_target && is_null( $this->uid );
 	}
 
 	public function uid() {

@@ -10,6 +10,11 @@ use \Exporter\Exporter as Exporter;
  */
 class Image extends Component {
 
+	/**
+	 * Images cannot be anchor targets.
+	 */
+	protected $can_be_anchor_target = false;
+
 	public static function node_matches( $node ) {
 		// Is this an image node?
 		if ( 'img' == $node->nodeName || 'figure' == $node->nodeName ) {

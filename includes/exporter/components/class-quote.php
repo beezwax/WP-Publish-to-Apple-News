@@ -8,6 +8,11 @@ namespace Exporter\Components;
  */
 class Quote extends Component {
 
+	/**
+	 * Quotes cannot be anchor targets.
+	 */
+	protected $can_be_anchor_target = false;
+
 	public static function node_matches( $node ) {
 		if ( 'blockquote' == $node->nodeName ) {
 			return $node;

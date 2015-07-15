@@ -130,7 +130,7 @@ class Components extends Builder {
 	}
 
 	/**
-	 * Anchor components that are marked as anchorable
+	 * Anchor components that are marked as can_be_anchor_target
 	 */
 	private function anchor_components( &$components ) {
 		$len = count( $components );
@@ -138,16 +138,25 @@ class Components extends Builder {
 		for ( $i = 0; $i < $len; $i++ ) {
 			$component = $components[ $i ];
 
-			if ( Component::ANCHOR_NONE == $component->anchor_position ) {
+			if ( $component->is_anchor_target() || Component::ANCHOR_NONE == $component->anchor_position ) {
 				continue;
 			}
 
 			// Anchor this component to previous component
 			$other_component = $components[ $i - 1 ];
 			// Skip advertisement elements, they must span all width. If the previous
-			// element is an ad, use next instead.
-			if ( 'banner_advertisement' == $other_component->get_json( 'role' ) ) {
-				$other_component = $components[ $i + 1 ];
+			// element is an ad, use next instead. If the element is already
+			// anchoring something, also skip.
+			$counter = 1;
+			$len     = count( $components );
+			while ( !$other_component->can_be_anchor_target() && $i + $counter < $len ) {
+				$other_component = $components[ $i + $counter ];
+				$counter++;
+			}
+			// If the last element is still an anchor target, this element cannot be
+			// anchored.
+			if ( $other_component->is_anchor_target() ) {
+				return;
 			}
 
 			$component->set_json( 'anchor', array(
