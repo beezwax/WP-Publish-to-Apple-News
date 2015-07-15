@@ -2,6 +2,7 @@
 namespace Exporter\Builders;
 
 use \Exporter\Component_Factory as Component_Factory;
+use \Exporter\Components\Component as Component;
 
 /**
  * @since 0.4.0
@@ -137,7 +138,7 @@ class Components extends Builder {
 		for ( $i = 0; $i < $len; $i++ ) {
 			$component = $components[ $i ];
 
-			if ( ! $component->is_anchorable ) {
+			if ( Component::ANCHOR_NONE == $component->anchor_position ) {
 				continue;
 			}
 
@@ -148,7 +149,6 @@ class Components extends Builder {
 			if ( 'banner_advertisement' == $other_component->get_json( 'role' ) ) {
 				$other_component = $components[ $i + 1 ];
 			}
-			$other_component->set_anchor_target();
 
 			$component->set_json( 'anchor', array(
 				'targetComponentIdentifier' => $other_component->uid(),
@@ -156,6 +156,15 @@ class Components extends Builder {
 				'rangeStart'                => 0,
 				'rangeLength'               => 1,
 			) );
+
+			// The anchor method adds the required layout, thus making the actual
+			// anchoring. This must be called after using the UID, because we need to
+			// distinguish target components from anchor ones and components with
+			// UIDs are always anchor targets.
+			$other_position = COMPONENT::ANCHOR_LEFT == $component->anchor_position ? Component::ANCHOR_RIGHT : Component::ANCHOR_LEFT;
+			$other_component->set_anchor_position( $other_position );
+			$other_component->anchor();
+			$component->anchor();
 		}
 	}
 
@@ -169,7 +178,7 @@ class Components extends Builder {
 		}
 
 		$component = $this->get_component_from_shortname( 'blockquote', "<blockquote>$pullquote</blockquote>" );
-		$component->set_anchorable( true );
+		$component->set_anchor_position( Component::ANCHOR_AUTO );
 		// Add component in position
 		array_splice( $components, $pullquote_position, 0, array( $component ) );
 	}

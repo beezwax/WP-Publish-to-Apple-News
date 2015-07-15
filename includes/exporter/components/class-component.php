@@ -23,11 +23,21 @@ abstract class Component {
 	const ALIGNMENT_OFFSET = 2;
 
 	/**
-	 * Anchorable components are anchored to the next element that appears.
-	 *
-	 * @since 0.4.0
+	 * Possible anchoring positions
 	 */
-	public $is_anchorable = false;
+	const ANCHOR_NONE  = 0;
+	const ANCHOR_AUTO  = 1;
+	const ANCHOR_LEFT  = 2;
+	const ANCHOR_RIGHT = 3;
+
+	/**
+	 * Anchorable components are anchored to the previous element that appears in
+	 * the position specified. If the previous element is an advertisement,
+	 * attaches to the next instead of the previous element.
+	 *
+	 * @since 0.6.0
+	 */
+	public $anchor_position = self::ANCHOR_NONE;
 
 	/**
 	 * If this component is set as a target for an anchor, does it need to fix
@@ -40,7 +50,7 @@ abstract class Component {
 	 *
 	 * @since 0.6.0
 	 */
-	public $needs_layout_if_target = true;
+	public $needs_layout_if_anchored = true;
 
 	/**
 	 * @since 0.2.0
@@ -126,22 +136,31 @@ abstract class Component {
 		return $this->json[ $name ];
 	}
 
-	public function set_anchorable( $flag ) {
-		if ( $flag ) {
-			$this->layouts->set_anchor_layout_for( $this );
-		}
-
-		$this->is_anchorable = $flag;
+	public function set_anchor_position( $position ) {
+		$this->anchor_position = $position;
 	}
 
 	/**
-	 * Marks this component as an anchor target, this adds the 'anchor-target'
-	 * layout if needed.
+	 * Sets the anchor layout for this component
+	 *
+	 * @since 0.6.0
 	 */
-	public function set_anchor_target() {
-		if ( $this->needs_layout_if_target ) {
-			$this->layouts->set_anchor_target_layout_for( $this );
+	public function anchor() {
+		if ( ! $this->needs_layout_if_anchored ) {
+			return;
 		}
+
+		$this->layouts->set_anchor_layout_for( $this );
+	}
+
+	/**
+	 * All components that are anchor target have an UID. Return whether this
+	 * component is an anchor target.
+	 *
+	 * @since 0.6.0
+	 */
+	public function is_anchor_target() {
+		return !is_null( $this->uid );
 	}
 
 	public function uid() {

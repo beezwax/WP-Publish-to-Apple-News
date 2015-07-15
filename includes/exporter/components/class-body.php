@@ -22,7 +22,7 @@ class Body extends Component {
 	 * Override. This component doesn't need a layout update if marked as the
 	 * target of an anchor.
 	 */
-	public $needs_layout_if_target = false;
+	public $needs_layout_if_anchored = false;
 
 	public static function node_matches( $node ) {
 		// We are only interested in p, ul and ol
