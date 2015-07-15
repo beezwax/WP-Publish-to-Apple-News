@@ -49,7 +49,7 @@ class Push extends API_Action {
 		}
 
 		// generate_article uses Exporter->genearte, so we MUST clean the workspace
-		// before and after it's usage.
+		// before and after its usage.
 		$this->clean_workspace();
 		list( $json, $bundles ) = $this->generate_article();
 

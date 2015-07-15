@@ -7,8 +7,6 @@
  */
 
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
-//TODO: Remove bulk push file
-//require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-bulk-push.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-export.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-export-list-table.php';
