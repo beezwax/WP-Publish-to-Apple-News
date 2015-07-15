@@ -8,6 +8,11 @@ namespace Exporter\Components;
  */
 class Heading extends Component {
 
+	/**
+	 * Quotes can be anchor targets.
+	 */
+	protected $can_be_anchor_target = true;
+
 	public static function node_matches( $node ) {
 		if ( ! preg_match( '#h[1-6]#', $node->nodeName ) ) {
 			return null;

@@ -24,6 +24,12 @@ class Body extends Component {
 	 */
 	public $needs_layout_if_anchored = false;
 
+	/**
+	 * Quotes can be anchor targets.
+	 */
+	protected $can_be_anchor_target = true;
+
+
 	public static function node_matches( $node ) {
 		// We are only interested in p, ul and ol
 		if ( ! in_array( $node->nodeName, array( 'p', 'ul', 'ol' ) ) ) {

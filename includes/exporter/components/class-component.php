@@ -57,7 +57,7 @@ abstract class Component {
 	 *
 	 * @since 0.6.0
 	 */
-	protected $can_be_anchor_target = true;
+	protected $can_be_anchor_target = false;
 
 	/**
 	 * @since 0.2.0
