@@ -57,13 +57,13 @@ class Body extends Component {
 			return array( array( 'name' => 'p', 'value' => $html ) );
 		}
 
-		list( $whole, $tag )  = $matches;
-		list( $left, $right ) = explode( $whole, $html, 3 );
+		list( $whole, $tag_name ) = $matches;
+		list( $left, $right )     = explode( $whole, $html, 3 );
 
 		return array_merge(
 		 	array(
 				array( 'name'  => 'p',  'value' => self::clean_html( $left . '</p>' ) ),
-				array( 'name'  => $tag, 'value' => $whole ),
+				array( 'name'  => $tag_name, 'value' => $whole ),
 		 	),
 			self::split_non_markdownable( self::clean_html( '<p>' . $right ) )
 		);
