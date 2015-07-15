@@ -45,7 +45,7 @@ class Image extends Component {
 			$this->set_anchor_position( Component::ANCHOR_RIGHT );
 		} else if ( preg_match( '#align="center"#', $text ) || preg_match( '#class=".*?(?:aligncenter).*?"#', $text ) ) {
 			list( $width, $height ) = getimagesize( $url );
-			if( $width < Exporter::LAYOUT_WIDTH ) {
+			if ( $width < Exporter::LAYOUT_WIDTH ) {
 				$this->set_anchor_position( Component::ANCHOR_AUTO );
 			} else {
 				$this->set_anchor_position( Component::ANCHOR_NONE );
