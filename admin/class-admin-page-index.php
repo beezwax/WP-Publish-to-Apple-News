@@ -128,8 +128,7 @@ class Admin_Page_Index extends Apple_Export {
 	private function export_action( $id ) {
 		$action = new Actions\Index\Export( $this->settings, $id );
 		$path   = $action->perform();
-		//$this->download_zipfile( $path );
-		echo $path;
+		$this->download_zipfile( $path );
 	}
 
 	private function push_action( $id ) {
