@@ -24,6 +24,10 @@ class Markdown {
 	 * Transforms HTML into Article Format Markdown.
 	 */
 	public function parse( $html ) {
+		if ( empty( $html ) ) {
+			return '';
+		}
+
 		// PHP's DomDocument doesn't like HTML5 so we must ignore errors, we'll
 		// manually handle all tags anyways.
 		$dom = new \DOMDocument();

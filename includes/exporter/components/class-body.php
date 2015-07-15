@@ -19,17 +19,61 @@ class Body extends Component {
 	const COLUMN_SPAN = 5;
 
 	public static function node_matches( $node ) {
-		// This is tricky. Everything inside a p, ul or ol will be extracted as
-		// HTML and parsed as markdown. This means, if there's a video, image,
-		// audio, iframe or pretty much anything inside it will be ignored.
-		// FIXME: A possible solution would be to filter the HTML beforehand,
-		// splitting every non-markdown-able component out of the paragraph, thus,
-		// making several smaller paragraphs.
-		if ( in_array( $node->nodeName, array( 'p', 'ul', 'ol' ) ) ) {
-			return $node;
+		// We are only interested in p, ul and ol
+		if ( ! in_array( $node->nodeName, array( 'p', 'ul', 'ol' ) ) ) {
+			return null;
 		}
 
-		return null;
+		// If the node is p, ul or ol AND it's empty, just ignore.
+		if ( empty( $node->nodeValue ) ) {
+			return null;
+		}
+
+		// There are several components which cannot be translated to markdown,
+		// namely images, videos, audios and EWV. If these components are inside a
+		// paragraph, split the paragraph.
+		if ( 'p' == $node->nodeName ) {
+			$html = $node->ownerDocument->saveXML( $node );
+			return self::split_non_markdownable( $html );
+		}
+
+		return $node;
+	}
+
+	private static function split_non_markdownable( $html ) {
+		preg_match( '#<(img|video|audio|iframe).*?(?:>(.*?)</\1>|/?>)#si', $html, $matches );
+
+		if ( ! $matches ) {
+			return array( array( 'name' => 'p', 'value' => $html ) );
+		}
+
+		list( $whole, $tag )  = $matches;
+		list( $left, $right ) = explode( $whole, $html, 3 );
+
+		return array_merge(
+		 	array(
+				array( 'name'  => 'p',  'value' => self::clean_html( $left . '</p>' ) ),
+				array( 'name'  => $tag, 'value' => $whole ),
+		 	),
+			self::split_non_markdownable( self::clean_html( '<p>' . $right ) )
+		);
+	}
+
+	/**
+	 * Use PHP's HTML parser to generate valid HTML out of potentially broken
+	 * input.
+	 */
+	private static function clean_html( $html ) {
+		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
+		$dom = new \DOMDocument();
+		libxml_use_internal_errors( true );
+		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $html );
+		libxml_clear_errors( true );
+
+		// Find the first-level nodes of the body tag.
+		$element = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes->item( 0 );
+		$html    = $dom->saveHTML( $element );
+		return preg_replace( '#<[^/>][^>]*></[^>]+>#', '', $html );
 	}
 
 	protected function build( $text ) {
