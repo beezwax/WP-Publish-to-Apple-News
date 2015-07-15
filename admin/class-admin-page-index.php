@@ -7,7 +7,6 @@
  */
 
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
-require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-bulk-push.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-export.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-export-list-table.php';
@@ -26,11 +25,12 @@ class Admin_Page_Index extends Apple_Export {
 		// Set up main page. This page reads parameters and handles actions
 		// accordingly.
 		add_menu_page(
-			'Apple Export',
-			'Apple Export',
-			'manage_options',
-			$this->plugin_name . '_index',
-			array( $this, 'page_router' )
+			'Apple News',                  // Page Title
+			'Apple News',                  // Menu Title
+			'manage_options',              // Capability
+			$this->plugin_slug . '_index', // Menu Slug
+			array( $this, 'page_router' ), // Function
+			'dashicons-format-aside'       // Icon
 		);
 	}
 
@@ -53,7 +53,10 @@ class Admin_Page_Index extends Apple_Export {
 		if ( ! $id ) {
 			switch ( $action ) {
 			case 'push':
-				return $this->bulk_push_action( $_REQUEST['article'] );
+				$url  = menu_page_url( $this->plugin_slug . '_bulk_export', false );
+				$url .= '&ids=' . implode( '.', $_REQUEST['article'] );
+				wp_redirect( $url );
+				return;
 			default:
 				return $this->show_post_list_action();
 			}
@@ -104,21 +107,6 @@ class Admin_Page_Index extends Apple_Export {
 	// Actions
 	// -------------------------------------------------------------------------
 
-	private function bulk_push_action( $articles ) {
-		$action = new Actions\Index\Bulk_Push( $this->settings, $articles );
-		$errors = $action->perform();
-		if ( $errors ) {
-			$formatted_errors = '<ul>';
-			foreach ( $errors as $error ) {
-				$formatted_errors .= '<li>' . $error . '</li>';
-			}
-			$formatted_errors .= '</ul>';
-			$this->display_message( 'Oops, something went wrong', $formatted_errors );
-		} else {
-			$this->display_message( 'Success', 'Your articles has been pushed successfully!' );
-		}
-	}
-
 	private function show_post_list_action() {
 		$table = new Admin_Export_List_Table();
 		$table->prepare_items();
@@ -140,7 +128,8 @@ class Admin_Page_Index extends Apple_Export {
 	private function export_action( $id ) {
 		$action = new Actions\Index\Export( $this->settings, $id );
 		$path   = $action->perform();
-		$this->download_zipfile( $path );
+		//$this->download_zipfile( $path );
+		echo $path;
 	}
 
 	private function push_action( $id ) {

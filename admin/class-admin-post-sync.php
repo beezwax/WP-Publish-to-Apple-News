@@ -16,8 +16,11 @@ class Admin_Post_Sync {
 	function __construct( $settings ) {
 		$this->settings = $settings;
 
-		add_action( 'publish_post', array( $this, 'on_publish' ), 10, 2 );
-		add_action( 'before_delete_post', array( $this, 'on_delete' ) );
+		// Register update hooks if needed
+		if ( 'yes' == $settings->get( 'api_autosync' ) ) {
+			add_action( 'publish_post', array( $this, 'on_publish' ), 10, 2 );
+			add_action( 'before_delete_post', array( $this, 'on_delete' ) );
+		}
 	}
 
 	/**
@@ -31,6 +34,12 @@ class Admin_Post_Sync {
 	 * @since 0.4.0
 	 */
 	public function on_publish( $id, $post ) {
+		// If the post has been marked as deleted from the API, ignore this update
+		$deleted = get_post_meta( $id, 'apple_export_api_deleted', true );
+		if ( $deleted ) {
+			return;
+		}
+
 		$action = new Actions\Index\Push( $this->settings, $id );
 		$error = $action->perform();
 		if ( $error ) {

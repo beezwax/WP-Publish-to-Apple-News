@@ -34,13 +34,17 @@ class Body extends Component {
 		// paragraph, split the paragraph.
 		if ( 'p' == $node->nodeName ) {
 			$html = $node->ownerDocument->saveXML( $node );
-			return self::split_non_markdownable( $html );
+			return array_filter( self::split_non_markdownable( $html ) );
 		}
 
 		return $node;
 	}
 
 	private static function split_non_markdownable( $html ) {
+		if ( empty( $html ) ) {
+			return array( null );
+		}
+
 		preg_match( '#<(img|video|audio|iframe).*?(?:>(.*?)</\1>|/?>)#si', $html, $matches );
 
 		if ( ! $matches ) {

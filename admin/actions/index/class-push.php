@@ -16,10 +16,21 @@ class Push extends API_Action {
 		parent::__construct( $settings );
 		$this->id       = $id;
 		$this->exporter = null;
+
+		// Maximum execution time is 5 minutes
+		set_time_limit( 60 * 5 );
 	}
 
 	public function perform() {
 		return $this->push();
+	}
+
+	private function is_post_in_sync() {
+		$api_time   = get_post_meta( $this->id, 'apple_export_api_modified_at', true );
+		$api_time   = strtotime( $api_time );
+		$post       = get_post( $this->id );
+		$local_time = strtotime( $post->post_modified );
+		return $api_time >= $local_time;
 	}
 
 	/**
@@ -32,6 +43,14 @@ class Push extends API_Action {
 			return;
 		}
 
+		// Ignore if the post is already in sync
+		if ( $this->is_post_in_sync() ) {
+			return;
+		}
+
+		// generate_article uses Exporter->genearte, so we MUST clean the workspace
+		// before and after its usage.
+		$this->clean_workspace();
 		list( $json, $bundles ) = $this->generate_article();
 
 		$error = null;
@@ -47,6 +66,8 @@ class Push extends API_Action {
 			update_post_meta( $this->id, 'apple_export_api_id', $result->data->id );
 			update_post_meta( $this->id, 'apple_export_api_created_at', $result->data->createdAt );
 			update_post_meta( $this->id, 'apple_export_api_modified_at', $result->data->modifiedAt );
+			// If it's marked as deleted, remove the mark. Ignore otherwise.
+			delete_post_meta( $this->id, 'apple_export_api_deleted' );
 		} catch ( \Exception $e ) {
 			$error = $e->getMessage();
 		} finally {

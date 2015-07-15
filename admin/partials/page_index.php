@@ -1,5 +1,5 @@
 <div class="wrap">
-	<h1>Apple Export</h1>
+	<h1>Apple News</h1>
 
 	<?php if ( isset( $message ) ): ?>
 	<div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible">

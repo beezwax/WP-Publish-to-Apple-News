@@ -88,8 +88,8 @@ class Exporter {
 	 * Generates JSON for the article.json file. By doing this, all attachments
 	 * get added to the workspace/tmp directory automatically.
 	 *
-	 * When called, must alway call `clean_workspace` afterwards, as the
-	 * workspace would be polluted for later articles.
+	 * When called, `clean_workspace` must always be called before and
+	 * afterwards.
 	 *
 	 * @since 0.4.0
 	 */
@@ -116,6 +116,9 @@ class Exporter {
 	 * This function builds the article, zips it and cleans up after.
 	 */
 	public function export() {
+		// If an export or push was cancelled, the workspace might be polluted.
+		// Clean beforehand.
+		$this->clean_workspace();
 		// Build the ./workspace/tmp folder.
 		$this->generate();
 		// ZIP files inside that folder. This also cleans the workspace when done.
@@ -154,6 +157,10 @@ class Exporter {
 	 */
 	private function write_to_workspace( $filename, $contents ) {
 		$this->workspace->write_tmp_file( $filename, $contents );
+	}
+
+	private function clean_workspace() {
+		$this->workspace->clean_up();
 	}
 
 	private function zip_workspace( $id ) {

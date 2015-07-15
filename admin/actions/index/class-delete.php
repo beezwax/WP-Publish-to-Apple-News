@@ -44,9 +44,11 @@ class Delete extends API_Action {
 		$error = null;
 		try {
 			$this->fetch_api()->delete_article( $remote_id );
+			// Delete the API references and mark as deleted
 			delete_post_meta( $this->id, 'apple_export_api_id' );
 			delete_post_meta( $this->id, 'apple_export_api_created_at' );
 			delete_post_meta( $this->id, 'apple_export_api_modified_at' );
+			update_post_meta( $this->id, 'apple_export_api_deleted', time() );
 		} catch ( \Exception $e ) {
 			return $e->getMessage();
 		}
