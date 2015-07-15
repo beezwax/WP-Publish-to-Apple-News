@@ -470,8 +470,8 @@ class Admin_Settings {
 		$this->register_assets();
 
 		add_options_page(
-			'Apple Export Options',
-			'Apple Export',
+			'Apple News Options',
+			'Apple News',
 			'manage_options',
 			'apple-export-options',
 			array( $this, 'page_options_render' )

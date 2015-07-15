@@ -22,6 +22,7 @@ class Advertisement extends Component {
 		$this->json['layout'] = 'advertisement-layout';
 		$this->register_layout( 'advertisement-layout', array(
 			'margin' => array(
+				'top'    => 10,
 				'bottom' => 40,
 			),
 		) );

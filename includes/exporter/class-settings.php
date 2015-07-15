@@ -19,7 +19,7 @@ class Settings {
 		'layout_gutter'   => '20',
 
 		'body_font'       => 'AvenirNext-Regular',
-		'body_size'       => 16,
+		'body_size'       => 18,
 		'body_color'      => '#000',
 		'body_link_color' => '#428BCA',
 		'body_orientation'=> 'left',
