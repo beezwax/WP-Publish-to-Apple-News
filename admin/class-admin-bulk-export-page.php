@@ -38,10 +38,14 @@ class Admin_Bulk_Export_Page extends Apple_Export {
 			return;
 		}
 
+		// Populate $articles array with a set of valid posts
 		$articles = array();
 		foreach( explode( '.', $ids ) as $id ) {
-			$articles[] = get_post( $id );
+			if ( $post = get_post( $id ) ) {
+				$articles[] = $post;
+			}
 		}
+
 		require_once plugin_dir_path( __FILE__ ) . 'partials/page_bulk_export.php';
 	}
 
