@@ -40,7 +40,7 @@ class Admin_Bulk_Export_Page extends Apple_Export {
 
 		// Populate $articles array with a set of valid posts
 		$articles = array();
-		foreach( explode( '.', $ids ) as $id ) {
+		foreach ( explode( '.', $ids ) as $id ) {
 			if ( $post = get_post( $id ) ) {
 				$articles[] = $post;
 			}
