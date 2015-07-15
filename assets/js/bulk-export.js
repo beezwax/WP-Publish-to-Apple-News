@@ -1,43 +1,43 @@
-(function ($, window, undefined) {
+(function ( $, window, undefined ) {
   'use strict';
 
   var started = false;
 
   function done() {
-    $('.bulk-export-submit').text('Done');
+    $( '.bulk-export-submit' ).text( 'Done' );
   }
 
-  function push_item(item, next) {
-    var $item   = $(item);
-    var $status = $item.find('.bulk-export-list-item-status');
+  function pushItem( item, next ) {
+    var $item   = $( item );
+    var $status = $item.find( '.bulk-export-list-item-status' );
     var id      = +$item.data( 'post-id' ); // fetch the post-id and cast to integer
 
-    $status.removeClass('pending').addClass('in-progress').text('Publishing...');
+    $status.removeClass( 'pending' ).addClass( 'in-progress' ).text( 'Publishing...' );
 
     // Send a GET request to ajaxurl, which is WordPress endpoint for AJAX
     // requests. Expects JSON as response.
     $.getJSON( ajaxurl, { action: 'push_post', id: id }, function(res) {
       if(res.success) {
-        $status.removeClass('in-progress').addClass('success').text('Success');
+        $status.removeClass( 'in-progress' ).addClass( 'success' ).text( 'Success' );
       } else {
-        $status.removeClass('in-progress').addClass('failed').text(res.error);
+        $status.removeClass( 'in-progress' ).addClass( 'failed' ).text( res.error );
       }
       next();
     }, function (err) {
-      $status.removeClass('in-progress').addClass('failed').text('Server Error');
+      $status.removeClass( 'in-progress' ).addClass( 'failed' ).text( 'Server Error' );
       next();
-    });
+    } );
   }
 
-  function bulk_push() {
+  function bulkPush() {
     // Fetch all the li's that must be exported
-    var items = $('.bulk-export-list-item');
+    var items = $( '.bulk-export-list-item' );
     // The next function will push the next item in queue
     var index = -1;
     var next  = function () {
       index += 1;
-      if(index < items.length) {
-        push_item(items.get(index), next);
+      if( index < items.length ) {
+        pushItem( items.get( index ), next );
       } else {
         done();
       }
@@ -55,7 +55,7 @@
     }
 
     started = true;
-    bulk_push();
+    bulkPush();
   });
 
-})(jQuery, window);
+})( jQuery, window );
