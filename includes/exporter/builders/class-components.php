@@ -166,12 +166,18 @@ class Components extends Builder {
 				'rangeLength'               => 1,
 			) );
 
+			// Given $component, find out the opposite position.
+			$other_position = null;
+			if ( Component::ANCHOR_AUTO == $component->anchor_position ) {
+				$other_position = 'left' == $this->get_setting( 'body_orientation' ) ? Component::ANCHOR_LEFT : Component::ANCHOR_RIGHT;
+			} else {
+				$other_position = Component::ANCHOR_LEFT == $component->anchor_position ? Component::ANCHOR_RIGHT : Component::ANCHOR_LEFT;
+			}
+			$other_component->set_anchor_position( $other_position );
 			// The anchor method adds the required layout, thus making the actual
 			// anchoring. This must be called after using the UID, because we need to
 			// distinguish target components from anchor ones and components with
 			// UIDs are always anchor targets.
-			$other_position = COMPONENT::ANCHOR_LEFT == $component->anchor_position ? Component::ANCHOR_RIGHT : Component::ANCHOR_LEFT;
-			$other_component->set_anchor_position( $other_position );
 			$other_component->anchor();
 			$component->anchor();
 		}

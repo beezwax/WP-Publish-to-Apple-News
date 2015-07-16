@@ -39,7 +39,6 @@ class Heading extends Component {
 		}
 
 		$image_html   = $matches[0];
-		$image_html   = str_replace( '<img', '<img class="alignleft" ', $image_html );
 		$heading_html = str_replace( $image_html, '', $html );
 
 		return array(
