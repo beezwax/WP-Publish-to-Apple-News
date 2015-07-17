@@ -24,19 +24,10 @@ class Audio extends Component {
 		}
 
 		$url = $match[1];
-		$filename = basename( $url );
-
-		if ( false !== strpos( $filename, '?' ) ) {
-			$parts    = explode( '?', $filename );
-			$filename = $parts[0];
-		}
-
-		// Save video into bundle
-		$this->bundle_source( $filename, $url );
 
 		$this->json = array(
 			'role' => 'audio',
-			'URL'  => 'bundle://' . $filename,
+			'URL'  => $url,
 		);
 	}
 
