@@ -10,9 +10,27 @@ use \Exporter\Exporter as Exporter;
  */
 class Image extends Component {
 
+	private static function image_exists( $node ) {
+		$html = $node->ownerDocument->saveXML( $node );
+		preg_match( '/src="([^"]*?)"/im', $html, $matches );
+		$path = $matches[1];
+
+		// Is it an URL? Check the headers in case of 404
+		if ( 0 === strpos( $path, 'http' ) ) {
+			$file_headers = @get_headers( $path );
+			return !preg_match( '#404 Not Found#', $file_headers[0] );
+		}
+
+		// It's not an URL, check in the filesystem
+		return file_exists( $path );
+	}
+
 	public static function node_matches( $node ) {
 		// Is this an image node?
-		if ( 'img' == $node->nodeName || 'figure' == $node->nodeName ) {
+		if (
+		 	( 'img' == $node->nodeName || 'figure' == $node->nodeName )
+			&& self::image_exists( $node )
+		) {
 			return $node;
 		}
 
