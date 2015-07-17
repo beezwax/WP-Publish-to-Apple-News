@@ -10,6 +10,18 @@ use \Exporter\Exporter as Exporter;
  */
 class Image extends Component {
 
+	public static function node_matches( $node ) {
+		// Is this an image node?
+		if (
+		 	( 'img' == $node->nodeName || 'figure' == $node->nodeName )
+			&& self::image_exists( $node )
+		) {
+			return $node;
+		}
+
+		return null;
+	}
+
 	private static function image_exists( $node ) {
 		$html = $node->ownerDocument->saveXML( $node );
 		preg_match( '/src="([^"]*?)"/im', $html, $matches );
@@ -23,18 +35,6 @@ class Image extends Component {
 
 		// It's not an URL, check in the filesystem
 		return file_exists( $path );
-	}
-
-	public static function node_matches( $node ) {
-		// Is this an image node?
-		if (
-		 	( 'img' == $node->nodeName || 'figure' == $node->nodeName )
-			&& self::image_exists( $node )
-		) {
-			return $node;
-		}
-
-		return null;
 	}
 
 	protected function build( $text ) {
