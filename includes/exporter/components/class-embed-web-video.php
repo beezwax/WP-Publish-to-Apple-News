@@ -9,9 +9,19 @@ namespace Exporter\Components;
  */
 class Embed_Web_Video extends Component {
 
+	const YOUTUBE_MATCH = '#^https?://(?:www\.)?(?:youtube\.com/watch\?v=([^&]+)|youtu\.be/([^/]+)).*?$#';
+	const VIMEO_MATCH   = '#^https?://(?:.+\.)?vimeo\.com/(:?.+/)?(\d+)$#';
+
+	private static function is_vimeo_url( $text ) {
+		return 1 == preg_match( self::VIMEO_MATCH, trim( $text ) );
+	}
+
 	public static function node_matches( $node ) {
+		$is_youtube_url = $node->nodeName == 'p' && preg_match( self::YOUTUBE_MATCH, trim( $node->nodeValue ) );
+		$is_vimeo_url   = $node->nodeName == 'p' && preg_match( self::VIMEO_MATCH  , trim( $node->nodeValue ) );
+
 		// Is this node an iframe?
-		if ( 'iframe' == $node->nodeName ) {
+		if ( 'iframe' == $node->nodeName || $is_youtube_url || $is_vimeo_url ) {
 			return $node;
 		}
 
@@ -19,20 +29,33 @@ class Embed_Web_Video extends Component {
 	}
 
 	protected function build( $text ) {
-		$attributes = array();
-		preg_match_all( '/(\w+)="([^"]*?)"/im', $text, $matches, PREG_SET_ORDER );
-		foreach ( $matches as $match ) {
-			$attributes[ $match[1] ] = $match[2];
+		$aspect_ratio = '1.777';
+		$src          = null;
+
+		// If a paragraph was matched, it's because it only contains a EWV URL.
+		if ( preg_match( '#<p.*?>(.*?)</p>#', $text, $matches ) ) {
+			$url = trim( $matches[1] );
+			// The URL is either a YouTube or Vimeo video.
+			if ( preg_match( self::YOUTUBE_MATCH, $url, $matches ) ) {
+				$src = 'https://www.youtube.com/embed/' . $matches[1] ?: $matches[2];
+			} else {
+				preg_match( self::VIMEO_MATCH, $url, $matches );
+				$src = 'https://player.vimeo.com/video/' . $matches[1];
+			}
+		} else {
+			preg_match_all( '/(\w+)="([^"]*?)"/im', $text, $matches, PREG_SET_ORDER );
+			$attributes = array();
+			foreach ( $matches as $match ) {
+				$attributes[ $match[1] ] = $match[2];
+			}
+			$aspect_ratio = substr( ( $attributes['width'] / $attributes['height'] ), 0, 5 );
+			$src          = $attributes['src'];
 		}
 
-		$aspect_ratio = substr( ( $attributes['width'] / $attributes['height'] ), 0, 5 );
-
 		$this->json = array(
-			'role' => 'embedwebvideo',
+			'role'        => 'embedwebvideo',
 			'aspectRatio' => $aspect_ratio,
-			'URL' => $attributes['src'],
-			'caption' => 'test',
-			'accessibilityCaption' => 'test',
+			'URL'         => $src,
 		);
 	}
 
