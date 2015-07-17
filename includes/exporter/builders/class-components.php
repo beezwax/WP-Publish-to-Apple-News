@@ -56,7 +56,7 @@ class Components extends Builder {
 			// grouping an anchor target body several things need to happen:
 			if ( isset( $component['identifier'] )               // The FIRST component must be an anchor target
 				&& isset( $components[ $i + 1 ]['anchor'] )        // The SECOND must be the component to be anchored
-				&& 'body' == @$components[ $i + 2 ]['role']         // The THIRD must be a body component
+				&& 'body' == @$components[ $i + 2 ]['role']        // The THIRD must be a body component
 				&& !isset( $components[ $i + 2 ]['identifier'] ) ) // which must not be an anchor target for another component
 			{
 				// Collect
