@@ -82,7 +82,7 @@ class Component_Layouts extends Builder {
 			// left, but for right side alignment, we have to make some math :)
 			$col_start = 0;
 			if ( 'right' == $position ) {
-				$col_start = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
+				$col_start = $this->get_setting( 'body_column_span' ) - Component::ALIGNMENT_OFFSET;
 
 				if ( $component->is_anchor_target() ) {
 					$col_start += 1;
@@ -94,9 +94,9 @@ class Component_Layouts extends Builder {
 			// defined offset. The element to be anchored uses the remaining space.
 			$col_span = 0;
 			if ( $component->is_anchor_target() ) {
-				$col_span = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
+				$col_span = $this->get_setting( 'body_column_span' ) - Component::ALIGNMENT_OFFSET;
 			} else {
-				$col_span = Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN + Component::ALIGNMENT_OFFSET;
+				$col_span = $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' ) + Component::ALIGNMENT_OFFSET;
 			}
 
 			// Finally, register the layout
