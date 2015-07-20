@@ -82,10 +82,10 @@ class Component_Layouts extends Builder {
 			// left, but for right side alignment, we have to make some math :)
 			$col_start = 0;
 			if ( 'right' == $position ) {
-				$col_start = $this->get_setting( 'body_column_span' ) - Component::ALIGNMENT_OFFSET;
-
 				if ( $component->is_anchor_target() ) {
-					$col_start += 1;
+					$col_start = $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' ) + Component::ALIGNMENT_OFFSET;
+				} else {
+					$col_start = $this->get_setting( 'body_column_span' ) - Component::ALIGNMENT_OFFSET;
 				}
 			}
 
@@ -98,6 +98,11 @@ class Component_Layouts extends Builder {
 			} else {
 				$col_span = $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' ) + Component::ALIGNMENT_OFFSET;
 			}
+			var_dump( 'is anchor target: ' , $component->is_anchor_target() );
+			var_dump( 'position: ' . $position );
+			var_dump( 'col start: ' . $col_start );
+			var_dump( 'col span: ' . $col_span );
+			var_dump( '-----' );
 
 			// Finally, register the layout
 			$this->register_layout( $layout_name, array(
