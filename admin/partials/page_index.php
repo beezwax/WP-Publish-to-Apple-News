@@ -2,7 +2,7 @@
 	<h1>Apple News</h1>
 
 	<?php if ( isset( $_SESSION['apple_export_flash'] ) ): ?>
-		<div class="flash-message">
+		<div class="apple-export flash-message">
 			<h3>Oops! Something went wrong</h3>
 			<?php echo $_SESSION['apple_export_flash'] ?>
 		</div>

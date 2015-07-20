@@ -49,6 +49,8 @@ class Admin_Apple_Export extends Apple_Export {
 		// Styles are tiny, for now just embed them.
 		echo '<style type="text/css">';
 		echo '.wp-list-table .column-sync { width: 15%; }';
+		echo '.apple-export.flash-message { margin: 2em 0; border-radius: 2px; padding: 0.5em 1em; border: 1px solid #bce8f1; background-color: #d9edf7; color: #31708f; }';
+		echo '.apple-export.flash-message h3 { margin: 0.25em 0 0.5em; padding: 0; }';
 		echo '</style>';
 	}
 
