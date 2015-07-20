@@ -34,31 +34,86 @@ class Components extends Builder {
 		$new_components = array();
 		$body_collector = null;
 
-		foreach ( $components as $component ) {
-			if ( 'body' != $component['role'] || isset( $component['identifier'] ) ) {
-				// If we have something stored in the collector, add it to the new
-				// components array and set to null again.
+		$i   = 0;
+		$len = count( $components );
+		while( $i < $len ) {
+			$component = $components[ $i ];
+
+			// If the component is not body, no need to group, just add.
+			if ( 'body' != $component['role'] ) {
 				if ( ! is_null( $body_collector ) ) {
 					$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
 					$new_components[] = $body_collector;
 					$body_collector   = null;
 				}
 
-				if ( 'body' == $component['role'] && isset( $component['identifier'] ) ) {
-					$component['text'] = trim( $component['text'] ) . "\n";
-				}
-
 				$new_components[] = $component;
+				$i++;
 				continue;
 			}
 
-			// We can now assume $component is of role body and has no identifier.
-			// Let's collect the contents.
-			if ( is_null( $body_collector ) ) {
-				$body_collector = $component;
-			} else {
-				$body_collector['text'] .= $component['text'];
+			// If the component is a body, test if it is an anchor target. For
+			// grouping an anchor target body several things need to happen:
+			if ( isset( $component['identifier'] )               // The FIRST component must be an anchor target
+				&& isset( $components[ $i + 1 ]['anchor'] )        // The SECOND must be the component to be anchored
+				&& 'body' == $components[ $i + 2 ]['role']         // The THIRD must be a body component
+				&& !isset( $components[ $i + 2 ]['identifier'] ) ) // which must not be an anchor target for another component
+			{
+				// Collect
+				if ( ! is_null( $body_collector ) ) {
+					$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
+					$new_components[] = $body_collector;
+					$body_collector   = null;
+				}
+
+				$new_components[] = $components[ $i + 1 ];
+				$body_collector   = $component;
+				$body_collector['text'] .= $components[ $i + 2 ]['text'];
+
+				$i += 3;
+				continue;
 			}
+
+			// Another case for anchor target grouping is when the component was anchored
+			// to the next element rather than the previous one, in that case:
+			if ( isset( $component['identifier'] )               // The FIRST component must be an anchor target
+				&& 'body' == $components[ $i + 1 ]['role']         // The SECOND must be a body component
+				&& !isset( $components[ $i + 1 ]['identifier'] ) ) // which must not be an anchor target for another component
+			{
+				// Collect
+				if ( ! is_null( $body_collector ) ) {
+					$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
+					$new_components[] = $body_collector;
+					$body_collector   = null;
+				}
+
+				$body_collector = $component;
+				$body_collector['text'] .= $components[ $i + 1 ]['text'];
+
+				$i += 2;
+				continue;
+			}
+
+			// If the component was an anchor target but failed to match the
+			// requirements for grouping, just add it, don't group it.
+			if ( isset( $component['identifier'] ) ) {
+				if ( ! is_null( $body_collector ) ) {
+					$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
+					$new_components[] = $body_collector;
+					$body_collector   = null;
+				}
+
+				$new_components[] = $component;
+			} else {
+				// The component is not an anchor target, just collect.
+				if ( is_null( $body_collector ) ) {
+					$body_collector = $component;
+				} else {
+					$body_collector['text'] .= $component['text'];
+				}
+			}
+
+			$i++;
 		}
 
 		// Make a final check for the body collector, as it might not be empty
