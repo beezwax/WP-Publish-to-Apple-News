@@ -48,62 +48,65 @@ class Component_Layouts extends Builder {
 	}
 
 	/**
-	 * When a component is the target of a layout, fix the column span and start
-	 * to accomodate. Not all components need this, the body component can flow
-	 * around text. @see \Exporter\Components\Component\$needs_layout_if_target
+	 * Sets the required layout for a component to anchor another component or
+	 * be anchored.
 	 */
-	public function set_anchor_target_layout_for( $component ) {
-		// TODO: What do? Show centered? Ignore anchoring for now
-		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
+	public function set_anchor_layout_for( $component ) {
+		// Are we anchoring left or right?
+		$position = null;
+		switch ( $component->anchor_position ) {
+		case Component::ANCHOR_NONE:
 			return;
+		case Component::ANCHOR_LEFT:
+			$position = 'left';
+			break;
+		case Component::ANCHOR_RIGHT:
+			$position = 'right';
+			break;
+		case Component::ANCHOR_AUTO:
+			// The alignment position is the opposite of the body_orientation
+			// setting. In the case of centered body orientation, use left alignment.
+			// This behaviour was chosen by design.
+			if ( 'left' == $this->get_setting( 'body_orientation' ) ) {
+				$position = 'right';
+			} else {
+				$position = 'left';
+			}
+			break;
 		}
 
-		if ( ! $this->layout_exists( 'anchor-target-layout' ) ) {
-			// Find out the starting column
-			$col_span = 0;
-			switch ( $this->get_setting( 'body_orientation' ) ) {
-			case 'right':
-				$col_span = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
-				break;
-			case 'left':
-				$col_span = 0;
-				break;
+		$layout_name = "anchor-layout-$position";
+
+		if ( ! $this->layout_exists( $layout_name ) ) {
+			// Find out the starting column. This is easy enough if we are anchoring
+			// left, but for right side alignment, we have to make some math :)
+			$col_start = 0;
+			if ( 'right' == $position ) {
+				$col_start = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
+
+				if ( $component->is_anchor_target() ) {
+					$col_start += 1;
+				}
 			}
 
-			$this->register_layout( 'anchor-target-layout', array(
-				'columnStart' => Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN + Component::ALIGNMENT_OFFSET,
+			// Find the column span. For the target element, let's use the same
+			// column span as the Body component, that is, 5 columns, minus the
+			// defined offset. The element to be anchored uses the remaining space.
+			$col_span = 0;
+			if ( $component->is_anchor_target() ) {
+				$col_span = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
+			} else {
+				$col_span = Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN + Component::ALIGNMENT_OFFSET;
+			}
+
+			// Finally, register the layout
+			$this->register_layout( $layout_name, array(
+				'columnStart' => $col_start,
 				'columnSpan'  => $col_span,
 			) );
 		}
 
-		$component->set_json( 'layout', 'anchor-target-layout' );
-	}
-
-	public function set_anchor_layout_for( $component ) {
-		// TODO: What do? Show centered? Ignore anchoring for now
-		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
-			return;
-		}
-
-		if ( ! $this->layout_exists( 'anchor-layout' ) ) {
-			// Find out the starting column
-			$col_start = 0;
-			switch ( $this->get_setting( 'body_orientation' ) ) {
-			case 'left':
-				$col_start = Body::COLUMN_SPAN - Component::ALIGNMENT_OFFSET;
-				break;
-			case 'right':
-				$col_start = 0;
-				break;
-			}
-
-			$this->register_layout( 'anchor-layout', array(
-				'columnStart' => $col_start,
-				'columnSpan'  => Exporter::LAYOUT_COLUMNS - Body::COLUMN_SPAN + Component::ALIGNMENT_OFFSET,
-			) );
-		}
-
-		$component->set_json( 'layout', 'anchor-layout' );
+		$component->set_json( 'layout', $layout_name );
 		// TODO: Use an animation manager
 		$component->set_json( 'animation', array(
 			'type'             => 'fade_in',

@@ -8,6 +8,11 @@ namespace Exporter\Components;
  */
 class Heading extends Component {
 
+	/**
+	 * Quotes can be anchor targets.
+	 */
+	protected $can_be_anchor_target = true;
+
 	public static function node_matches( $node ) {
 		if ( ! preg_match( '#h[1-6]#', $node->nodeName ) ) {
 			return null;
@@ -34,7 +39,6 @@ class Heading extends Component {
 		}
 
 		$image_html   = $matches[0];
-		$image_html   = str_replace( '<img', '<img class="alignleft" ', $image_html );
 		$heading_html = str_replace( $image_html, '', $html );
 
 		return array(
