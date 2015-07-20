@@ -15,7 +15,7 @@ class Heading extends Component {
 
 		$html = $node->ownerDocument->saveXML( $node );
 		if ( preg_match( '#<img.*?>#si', $html ) ) {
-			return array_filter( self::split_image( $html ) );
+			return self::split_image( $html );
 		}
 
 		return $node;
@@ -23,7 +23,7 @@ class Heading extends Component {
 
 	private static function split_image( $html ) {
 		if ( empty( $html ) ) {
-			return array( null );
+			return array();
 		}
 
 		// Find the first image inside
