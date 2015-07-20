@@ -93,4 +93,15 @@ class Settings {
 		return 'center' == $this->get( 'body_orientation' ) ? 7 : 5;
 	}
 
+	/**
+	 * When a component is displayed aligned relative to another one, slide the
+	 * other component a few columns. This varies for centered and non-centered
+	 * layouts, as centered layouts have more columns.
+	 *
+	 * @since 0.4.0
+	 */
+	public function alignment_offset() {
+		return 'center' == $this->get( 'body_orientation' ) ? 3 : 2;
+	}
+
 }
