@@ -10,11 +10,26 @@ class Audio extends Component {
 
 	public static function node_matches( $node ) {
 		// Is this an audio node?
-		if ( 'audio' == $node->nodeName ) {
+		if ( 'audio' == $node->nodeName && self::remote_file_exists( $node ) ) {
 			return $node;
 		}
 
 		return null;
+	}
+
+	private static function remote_file_exists( $node ) {
+		$html = $node->ownerDocument->saveXML( $node );
+		preg_match( '/src="([^"]*?)"/im', $html, $matches );
+		$path = $matches[1];
+
+		// Is it an URL? Check the headers in case of 404
+		if ( 0 === strpos( $path, 'http' ) ) {
+			$file_headers = @get_headers( $path );
+			return !preg_match( '#404 Not Found#', $file_headers[0] );
+		}
+
+		// It's not a valid URL
+		return false;
 	}
 
 	protected function build( $text ) {
@@ -24,19 +39,10 @@ class Audio extends Component {
 		}
 
 		$url = $match[1];
-		$filename = basename( $url );
-
-		if ( false !== strpos( $filename, '?' ) ) {
-			$parts    = explode( '?', $filename );
-			$filename = $parts[0];
-		}
-
-		// Save video into bundle
-		$this->bundle_source( $filename, $url );
 
 		$this->json = array(
 			'role' => 'audio',
-			'URL'  => 'bundle://' . $filename,
+			'URL'  => $url,
 		);
 	}
 
