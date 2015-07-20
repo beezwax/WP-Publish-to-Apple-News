@@ -33,8 +33,8 @@ class Components extends Builder {
 		$new_components = array();
 		$body_collector = null;
 
-		foreach( $components as $component ) {
-			if( 'body' != $component['role'] || isset( $component['identifier'] ) ) {
+		foreach ( $components as $component ) {
+			if ( 'body' != $component['role'] || isset( $component['identifier'] ) ) {
 				// If we have something stored in the collector, add it to the new
 				// components array and set to null again.
 				if ( ! is_null( $body_collector ) ) {
@@ -43,7 +43,7 @@ class Components extends Builder {
 					$body_collector   = null;
 				}
 
-				if( 'body' == $component['role'] && isset( $component['identifier'] ) ) {
+				if ( 'body' == $component['role'] && isset( $component['identifier'] ) ) {
 					$component['text'] = trim( $component['text'] ) . "\n";
 				}
 
@@ -53,7 +53,7 @@ class Components extends Builder {
 
 			// We can now assume $component is of role body and has no identifier.
 			// Let's collect the contents.
-			if( is_null( $body_collector ) ) {
+			if ( is_null( $body_collector ) ) {
 				$body_collector = $component;
 			} else {
 				$body_collector['text'] .= $component['text'];
@@ -148,6 +148,7 @@ class Components extends Builder {
 			if ( 'banner_advertisement' == $other_component->get_json( 'role' ) ) {
 				$other_component = $components[ $i + 1 ];
 			}
+			$other_component->set_anchor_target();
 
 			$component->set_json( 'anchor', array(
 				'targetComponentIdentifier' => $other_component->uid(),

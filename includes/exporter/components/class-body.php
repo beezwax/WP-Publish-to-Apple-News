@@ -18,6 +18,12 @@ class Body extends Component {
 	 */
 	const COLUMN_SPAN = 5;
 
+	/**
+	 * Override. This component doesn't need a layout update if marked as the
+	 * target of an anchor.
+	 */
+	public $needs_layout_if_target = false;
+
 	public static function node_matches( $node ) {
 		// We are only interested in p, ul and ol
 		if ( ! in_array( $node->nodeName, array( 'p', 'ul', 'ol' ) ) ) {
@@ -34,7 +40,7 @@ class Body extends Component {
 		// paragraph, split the paragraph.
 		if ( 'p' == $node->nodeName ) {
 			$html = $node->ownerDocument->saveXML( $node );
-			return array_filter( self::split_non_markdownable( $html ) );
+			return self::split_non_markdownable( $html );
 		}
 
 		return $node;
@@ -42,7 +48,7 @@ class Body extends Component {
 
 	private static function split_non_markdownable( $html ) {
 		if ( empty( $html ) ) {
-			return array( null );
+			return array();
 		}
 
 		preg_match( '#<(img|video|audio|iframe).*?(?:>(.*?)</\1>|/?>)#si', $html, $matches );
@@ -51,33 +57,16 @@ class Body extends Component {
 			return array( array( 'name' => 'p', 'value' => $html ) );
 		}
 
-		list( $whole, $tag )  = $matches;
-		list( $left, $right ) = explode( $whole, $html, 3 );
+		list( $whole, $tag_name ) = $matches;
+		list( $left, $right )     = explode( $whole, $html, 3 );
 
 		return array_merge(
 		 	array(
 				array( 'name'  => 'p',  'value' => self::clean_html( $left . '</p>' ) ),
-				array( 'name'  => $tag, 'value' => $whole ),
+				array( 'name'  => $tag_name, 'value' => $whole ),
 		 	),
 			self::split_non_markdownable( self::clean_html( '<p>' . $right ) )
 		);
-	}
-
-	/**
-	 * Use PHP's HTML parser to generate valid HTML out of potentially broken
-	 * input.
-	 */
-	private static function clean_html( $html ) {
-		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
-		$dom = new \DOMDocument();
-		libxml_use_internal_errors( true );
-		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $html );
-		libxml_clear_errors( true );
-
-		// Find the first-level nodes of the body tag.
-		$element = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes->item( 0 );
-		$html    = $dom->saveHTML( $element );
-		return preg_replace( '#<[^/>][^>]*></[^>]+>#', '', $html );
 	}
 
 	protected function build( $text ) {

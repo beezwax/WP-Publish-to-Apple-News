@@ -9,11 +9,38 @@ namespace Exporter\Components;
 class Heading extends Component {
 
 	public static function node_matches( $node ) {
-		if ( preg_match( '#h[1-6]#', $node->nodeName ) ) {
-			return $node;
+		if ( ! preg_match( '#h[1-6]#', $node->nodeName ) ) {
+			return null;
 		}
 
-		return null;
+		$html = $node->ownerDocument->saveXML( $node );
+		if ( preg_match( '#<img.*?>#si', $html ) ) {
+			return self::split_image( $html );
+		}
+
+		return $node;
+	}
+
+	private static function split_image( $html ) {
+		if ( empty( $html ) ) {
+			return array();
+		}
+
+		// Find the first image inside
+		preg_match( '#<img.*?>#si', $html, $matches );
+
+		if ( ! $matches ) {
+			return array( array( 'name' => 'heading', 'value' => $html ) );
+		}
+
+		$image_html   = $matches[0];
+		$image_html   = str_replace( '<img', '<img class="alignleft" ', $image_html );
+		$heading_html = str_replace( $image_html, '', $html );
+
+		return array(
+			array( 'name'  => 'heading', 'value' => self::clean_html( $heading_html ) ),
+			array( 'name'  => 'img'    , 'value' => $image_html ),
+		);
 	}
 
 	protected function build( $text ) {
@@ -29,8 +56,9 @@ class Heading extends Component {
 		$text  = preg_replace( '#</?\.+?>#', '', $matches[2] );
 
 		$this->json = array(
-			'role' => 'heading' . $level,
-			'text' => $text,
+			'role'   => 'heading' . $level,
+			'text'   => trim( $this->markdown->parse( $text ) ),
+			'format' => 'markdown',
 		);
 
 		$this->set_style( $level );
