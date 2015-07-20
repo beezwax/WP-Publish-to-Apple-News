@@ -20,6 +20,7 @@ class Admin_Post_Sync {
 		if ( 'yes' == $settings->get( 'api_autosync' ) ) {
 			add_action( 'publish_post', array( $this, 'on_publish' ), 10, 2 );
 			add_action( 'before_delete_post', array( $this, 'on_delete' ) );
+			add_filter( 'redirect_post_location', array( $this, 'on_redirect' ) );
 		}
 	}
 
@@ -41,9 +42,10 @@ class Admin_Post_Sync {
 		}
 
 		$action = new Actions\Index\Push( $this->settings, $id );
-		$error = $action->perform();
-		if ( $error ) {
-			wp_die( $error );
+		try {
+			$action->perform();
+		} catch ( Actions\Action_Exception $e ) {
+			$this->flash( $e->getMessage() );
 		}
 	}
 
@@ -59,10 +61,27 @@ class Admin_Post_Sync {
 		}
 
 		$action = new Actions\Index\Delete( $this->settings, $id );
-		$error  = $action->perform();
-		if ( $error ) {
-			wp_die( $error );
+		try {
+			$action->perform();
+		} catch ( Actions\Action_Exception $e ) {
+			$this->flash( $e->getMessage() );
 		}
+	}
+
+	public function on_redirect( $location ) {
+		if( $this->has_flash() ) {
+			return 'admin.php?page=apple_export_index';
+		}
+
+		return $location;
+	}
+
+	private function flash( $message ) {
+		$_SESSION[ 'apple_export_flash' ] = $message;
+	}
+
+	private function has_flash() {
+		return isset( $_SESSION[ 'apple_export_flash' ] );
 	}
 
 }

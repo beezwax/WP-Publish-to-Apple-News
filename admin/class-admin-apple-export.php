@@ -8,7 +8,7 @@
 
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-post-sync.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-admin-page-index.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-index-page.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-bulk-export-page.php';
 
 /**
@@ -19,6 +19,8 @@ class Admin_Apple_Export extends Apple_Export {
 	function __construct() {
 		// This is required to download files and setting headers.
 		ob_start();
+		// Use sessions too
+		session_start();
 
 		// Register hooks
 		add_action( 'admin_head', array( $this, 'plugin_styles' ) );
@@ -30,7 +32,7 @@ class Admin_Apple_Export extends Apple_Export {
 		$settings       = $admin_settings->fetch_settings();
 
 		// Set up main page
-		new Admin_Page_Index( $settings );
+		new Admin_Index_Page( $settings );
 		// Set up all sub pages
 		new Admin_Bulk_Export_Page( $settings );
 		// Set up posts syncing if enabled in the settings
