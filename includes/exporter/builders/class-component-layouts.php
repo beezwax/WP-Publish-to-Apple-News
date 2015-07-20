@@ -98,11 +98,6 @@ class Component_Layouts extends Builder {
 			} else {
 				$col_span = $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' ) + Component::ALIGNMENT_OFFSET;
 			}
-			var_dump( 'is anchor target: ' , $component->is_anchor_target() );
-			var_dump( 'position: ' . $position );
-			var_dump( 'col start: ' . $col_start );
-			var_dump( 'col span: ' . $col_span );
-			var_dump( '-----' );
 
 			// Finally, register the layout
 			$this->register_layout( $layout_name, array(
