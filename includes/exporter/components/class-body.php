@@ -40,7 +40,7 @@ class Body extends Component {
 		// paragraph, split the paragraph.
 		if ( 'p' == $node->nodeName ) {
 			$html = $node->ownerDocument->saveXML( $node );
-			return array_filter( self::split_non_markdownable( $html ) );
+			return self::split_non_markdownable( $html );
 		}
 
 		return $node;
@@ -48,7 +48,7 @@ class Body extends Component {
 
 	private static function split_non_markdownable( $html ) {
 		if ( empty( $html ) ) {
-			return array( null );
+			return array();
 		}
 
 		preg_match( '#<(img|video|audio|iframe).*?(?:>(.*?)</\1>|/?>)#si', $html, $matches );
