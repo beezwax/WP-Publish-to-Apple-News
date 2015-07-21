@@ -144,7 +144,6 @@ class Admin_Index_Page extends Apple_Export {
 			$action->perform();
 			$this->show_message( 'Success', 'Your article has been pushed successfully!' );
 		} catch( Actions\Action_Exception $e ) {
-
 			$this->show_message( 'Oops, something went wrong', $e->getMessage() );
 		}
 	}
