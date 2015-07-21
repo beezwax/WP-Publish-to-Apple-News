@@ -103,6 +103,7 @@ class Image extends Component {
 					'textStyle' => array(
 						'textAlignment' => 'center',
 						'fontSize'      => $this->get_setting( 'body_size' ) - 2,
+						'fontName'      => $this->get_setting( 'body_font' ),
 					),
 					'layout' => array(
 						'margin' => array( 'top' => 20 ),
