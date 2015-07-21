@@ -77,8 +77,15 @@ class Admin_Index_Page extends Apple_Export {
 		}
 	}
 
-	private function show_message( $title, $message ) {
-		include plugin_dir_path( __FILE__ ) . 'partials/page_message.php';
+	private function flash_success( $message ) {
+		Flash::success( $message );
+		wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+		wp_die(); // Ignore everything else that would be rendered otherwise
+	}
+
+	private function flash_error( $message ) {
+		Flash::error( $message );
+		wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
 		wp_die(); // Ignore everything else that would be rendered otherwise
 	}
 
@@ -134,7 +141,7 @@ class Admin_Index_Page extends Apple_Export {
 			$action->perform();
 			$this->download_zipfile( $path );
 		} catch( Actions\Action_Exception $e ) {
-			$this->show_message( 'Oops, something went wrong', $e->getMessage() );
+			$this->flash_error( $e->getMessage() );
 		}
 	}
 
@@ -142,9 +149,9 @@ class Admin_Index_Page extends Apple_Export {
 		$action = new Actions\Index\Push( $this->settings, $id );
 		try {
 			$action->perform();
-			$this->show_message( 'Success', 'Your article has been pushed successfully!' );
+			$this->flash_success( 'Your article has been pushed successfully!' );
 		} catch( Actions\Action_Exception $e ) {
-			$this->show_message( 'Oops, something went wrong', $e->getMessage() );
+			$this->flash_error( $e->getMessage() );
 		}
 	}
 
@@ -152,10 +159,9 @@ class Admin_Index_Page extends Apple_Export {
 		$action = new Actions\Index\Delete( $this->settings, $id );
 		try {
 			$action->perform();
-			$this->show_message( 'Success', 'Your article has been pushed successfully!' );
+			$this->flash_success( 'Your article has been pushed successfully!' );
 		} catch( Actions\Action_Exception $e ) {
-
-			$this->show_message( 'Oops, something went wrong', $e->getMessage() );
+			$this->flash_error( $e->getMessage() );
 		}
 	}
 

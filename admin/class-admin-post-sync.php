@@ -45,7 +45,7 @@ class Admin_Post_Sync {
 		try {
 			$action->perform();
 		} catch ( Actions\Action_Exception $e ) {
-			$this->flash( $e->getMessage() );
+			Flash::error( $e->getMessage() );
 		}
 	}
 
@@ -64,24 +64,16 @@ class Admin_Post_Sync {
 		try {
 			$action->perform();
 		} catch ( Actions\Action_Exception $e ) {
-			$this->flash( $e->getMessage() );
+			Flash::error( $e->getMessage() );
 		}
 	}
 
 	public function on_redirect( $location ) {
-		if( $this->has_flash() ) {
+		if( Flash::has_flash() ) {
 			return 'admin.php?page=apple_export_index';
 		}
 
 		return $location;
-	}
-
-	private function flash( $message ) {
-		$_SESSION[ 'apple_export_flash' ] = $message;
-	}
-
-	private function has_flash() {
-		return isset( $_SESSION[ 'apple_export_flash' ] );
 	}
 
 }
