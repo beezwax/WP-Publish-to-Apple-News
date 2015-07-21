@@ -42,7 +42,7 @@ class Components extends Builder {
 			// If the component is not body, no need to group, just add.
 			if ( 'body' != $component['role'] ) {
 				if ( ! is_null( $body_collector ) ) {
-					$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
+					$body_collector['text'] = trim( $body_collector['text'] );
 					$new_components[] = $body_collector;
 					$body_collector   = null;
 				}
@@ -61,7 +61,7 @@ class Components extends Builder {
 			{
 				// Collect
 				if ( ! is_null( $body_collector ) ) {
-					$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
+					$body_collector['text'] = trim( $body_collector['text'] );
 					$new_components[] = $body_collector;
 					$body_collector   = null;
 				}
@@ -82,7 +82,7 @@ class Components extends Builder {
 			{
 				// Collect
 				if ( ! is_null( $body_collector ) ) {
-					$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
+					$body_collector['text'] = trim( $body_collector['text'] );
 					$new_components[] = $body_collector;
 					$body_collector   = null;
 				}
@@ -98,7 +98,7 @@ class Components extends Builder {
 			// requirements for grouping, just add it, don't group it.
 			if ( isset( $component['identifier'] ) ) {
 				if ( ! is_null( $body_collector ) ) {
-					$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
+					$body_collector['text'] = trim( $body_collector['text'] );
 					$new_components[] = $body_collector;
 					$body_collector   = null;
 				}
