@@ -75,7 +75,33 @@ class Image extends Component {
 		if ( preg_match( '#<figcaption.*?>(.*?)</figcaption>#m', $text, $matches ) ) {
 			$caption = trim( $matches[1] );
 			$this->json['caption'] = $caption;
+			$this->group_component( $caption );
 		}
+	}
+
+	/**
+	 * If the image has a caption, we have to also show a caption component.
+	 * Let's instead, return the JSON as a Container instead of an Image.
+	 */
+	private function group_component( $caption ) {
+		$image_component = $this->json;
+		$this->json = array(
+			'role' => 'container',
+			'components' => array(
+				$image_component,
+				array(
+					'role'      => 'caption',
+					'text'      => $caption,
+					'textStyle' => array(
+						'textAlignment' => 'center',
+						'fontSize'      => $this->get_setting( 'body_size' ) - 2,
+					),
+					'layout' => array(
+						'margin' => array( 'top' => 20 ),
+					),
+				),
+			),
+		);
 	}
 
 }
