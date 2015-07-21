@@ -159,7 +159,7 @@ class Admin_Index_Page extends Apple_Export {
 		$action = new Actions\Index\Delete( $this->settings, $id );
 		try {
 			$action->perform();
-			$this->flash_success( 'Your article has been pushed successfully!' );
+			$this->flash_success( 'Your article has been removed from apple news.' );
 		} catch( Actions\Action_Exception $e ) {
 			$this->flash_error( $e->getMessage() );
 		}
