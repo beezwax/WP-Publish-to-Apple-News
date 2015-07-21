@@ -71,6 +71,14 @@ class Image extends Component {
 			$this->set_anchor_position( Component::ANCHOR_AUTO );
 		}
 
+		// Full width images have top margin
+		if ( Component::ANCHOR_NONE == $this->anchor_position ) {
+			$this->json['layout'] = 'full-width-image';
+			$this->register_layout( 'full-width-image', array(
+				'margin'      => array( 'top' => 20 ),
+			) );
+		}
+
 		// Check for caption
 		if ( preg_match( '#<figcaption.*?>(.*?)</figcaption>#m', $text, $matches ) ) {
 			$caption = trim( $matches[1] );
