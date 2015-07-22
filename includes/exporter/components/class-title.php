@@ -17,7 +17,7 @@ class Title extends Component {
 		$this->register_style( 'default-title', array(
 			'fontName' => $this->get_setting( 'header_font' ),
 			'fontSize' => $this->get_setting( 'header1_size' ),
-			'relativeLineHeight' => 1.2,
+			'lineHeight' => $this->get_setting( 'header1_size' ) * $this->get_setting( 'header_line_height' ),
 			'textColor' => $this->get_setting( 'header_color' ),
 		) );
 	}

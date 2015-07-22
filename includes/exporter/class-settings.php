@@ -41,6 +41,7 @@ class Settings {
 		'header4_size'    => 21,
 		'header5_size'    => 18,
 		'header6_size'    => 16,
+		'header_line_height' => 1.3,
 
 		'pullquote_font'  => 'DINCondensed-Bold',
 		'pullquote_size'  => 48,

@@ -19,12 +19,16 @@ class Admin_Settings_Section_Advanced extends Admin_Settings_Section {
 			'label'   => 'Pullquote Line Height',
 			'type'    => 'float',
 		),
+		'header_line_height' => array(
+			'label'   => 'Heading Line Height',
+			'type'    => 'float',
+		),
  	);
 
 	protected $groups = array(
 		'line_heights' => array(
 			'label'       => 'Line Heights',
-			'settings'    => array( 'body_line_height', 'pullquote_line_height' ),
+			'settings'    => array( 'body_line_height', 'pullquote_line_height', 'header_line_height' ),
 		),
 	);
 

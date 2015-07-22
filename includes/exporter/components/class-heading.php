@@ -83,7 +83,7 @@ class Heading extends Component {
 		$this->register_style( 'default-heading-' . $level, array(
 			'fontName' => $this->get_setting( 'header_font' ),
 			'fontSize' => $this->get_setting( 'header' . $level . '_size' ),
-			'relativeLineHeight' => 1.5,
+			'lineHeight' => $this->get_setting( 'header' . $level . '_size' ) * $this->get_setting( 'header_line_height' ),
 			'textColor' => $this->get_setting( 'header_color' ),
 		) );
 	}
