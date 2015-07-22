@@ -124,7 +124,7 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 	protected $groups = array(
 		'layout' => array(
 			'label'       => 'Layout Spacing',
-			'description' => 'The spacing for the base layout of the exporter article',
+			'description' => 'The spacing for the base layout of the exported articles',
 			'settings'    => array( 'layout_margin', 'layout_gutter' ),
 		),
 		'body' => array(
