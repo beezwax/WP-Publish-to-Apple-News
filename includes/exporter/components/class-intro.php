@@ -21,10 +21,10 @@ class Intro extends Component {
 	private function set_style() {
 		$this->json[ 'textStyle' ] = 'default-intro';
 		$this->register_style( 'default-intro', array(
-			'fontName' => $this->get_setting( 'body_font' ),
-			'fontSize' => $this->get_setting( 'body_size' ),
-			'relativeLineHeight' => 1.2,
-			'textColor' => $this->get_setting( 'body_color' ),
+			'fontName'   => $this->get_setting( 'body_font' ),
+			'fontSize'   => $this->get_setting( 'body_size' ),
+			'lineHeight' => $this->get_setting( 'body_size' ) * $this->get_setting( 'body_line_height' ),
+			'textColor'  => $this->get_setting( 'body_color' ),
 		) );
 	}
 
