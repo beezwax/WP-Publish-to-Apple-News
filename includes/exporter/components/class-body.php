@@ -112,7 +112,7 @@ class Body extends Component {
 			'textAlignment' => 'left',
 			'fontName' => $this->get_setting( 'body_font' ),
 			'fontSize' => $this->get_setting( 'body_size' ),
-			'relativeLineHeight' => 1.2,
+			'lineHeight' => $this->get_setting( 'body_size' ) * $this->get_setting( 'body_line_height' ),
 			'textColor' => $this->get_setting( 'body_color' ),
 			'linkStyle' => array( 'textColor' => $this->get_setting( 'body_link_color' ) ),
 		);

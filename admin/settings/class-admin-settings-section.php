@@ -417,6 +417,8 @@ class Admin_Settings_Section extends Apple_Export {
 			$field .= '</select>';
 		} else if ( 'integer' == $type ) {
 			$field = '<input required type="number" name="%s" value="%s">';
+		} else if ( 'float' == $type ) {
+			$field = '<input class="input-float" required type="text" step="any" name="%s" value="%s">';
 		} else if ( 'color' == $type ) {
 			$field = '<input required type="color" name="%s" value="%s">';
 		} else if ( 'password' == $type ) {
