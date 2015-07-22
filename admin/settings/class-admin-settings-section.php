@@ -354,7 +354,11 @@ class Admin_Settings_Section extends Apple_Export {
 	 	);
 
 		foreach ( $this->settings as $name => $options ) {
-			register_setting( $this->page, $name );
+			// Register setting
+			$callback = isset( $options['sanitize'] ) ? array( $this, $options['sanitize'] ) : '';
+			register_setting( $this->page, $name, $callback );
+
+			// Add to settings section
 			add_settings_field(
 				$name,                                          // ID
 				$options['label'],                              // Title
