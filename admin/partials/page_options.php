@@ -11,7 +11,7 @@
 				<th scope="row"><?php _e( $group['label'] ); ?></th>
 				<td>
 					<fieldset>
-						<?php foreach( $group['settings'] as $setting_name => $setting_meta ): ?>
+						<?php foreach ( $group['settings'] as $setting_name => $setting_meta ): ?>
 						<label class="setting-container">
 							<?php $section->render_field( array( $setting_name, $setting_meta['default'] ) ); ?>
 							<span class="label-name"><?php echo $setting_meta['label']; ?></span>

@@ -324,9 +324,9 @@ class Admin_Settings_Section extends Apple_Export {
 	 */
 	public function groups() {
 		$result = array();
-		foreach( $this->groups as $name => $info ) {
+		foreach ( $this->groups as $name => $info ) {
 			$settings = array();
-			foreach( $info['settings'] as $name ) {
+			foreach ( $info['settings'] as $name ) {
 				$settings[ $name ] = $this->settings[ $name ];
 				$settings[ $name ]['default'] = $this->get_default_for( $name );
 			}

@@ -140,7 +140,7 @@ class Admin_Index_Page extends Apple_Export {
 		try {
 			$action->perform();
 			$this->download_zipfile( $path );
-		} catch( Actions\Action_Exception $e ) {
+		} catch ( Actions\Action_Exception $e ) {
 			$this->flash_error( $e->getMessage() );
 		}
 	}
@@ -150,7 +150,7 @@ class Admin_Index_Page extends Apple_Export {
 		try {
 			$action->perform();
 			$this->flash_success( 'Your article has been pushed successfully!' );
-		} catch( Actions\Action_Exception $e ) {
+		} catch ( Actions\Action_Exception $e ) {
 			$this->flash_error( $e->getMessage() );
 		}
 	}
@@ -160,7 +160,7 @@ class Admin_Index_Page extends Apple_Export {
 		try {
 			$action->perform();
 			$this->flash_success( 'Your article has been removed from apple news.' );
-		} catch( Actions\Action_Exception $e ) {
+		} catch ( Actions\Action_Exception $e ) {
 			$this->flash_error( $e->getMessage() );
 		}
 	}

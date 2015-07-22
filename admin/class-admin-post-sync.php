@@ -69,7 +69,7 @@ class Admin_Post_Sync {
 	}
 
 	public function on_redirect( $location ) {
-		if( Flash::has_flash() ) {
+		if ( Flash::has_flash() ) {
 			return 'admin.php?page=apple_export_index';
 		}
 
