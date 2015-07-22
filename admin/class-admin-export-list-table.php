@@ -87,6 +87,11 @@ class Admin_Export_List_Table extends WP_List_Table {
 			$actions['delete'] = sprintf( "<a title='This will NOT delete your local copy' href='$base_url'>Delete from Apple News</a>", $page, 'delete', $item->ID );
 		}
 
+		$share_url = get_post_meta( $item->ID, 'apple_export_api_share_url', true );
+		if ( $share_url ) {
+			$actions['share'] = sprintf( "<a title='Preview in News app' href='%s'>See in News app</a>", $share_url );
+		}
+
 		return sprintf( '%1$s <span>(id:%2$s)</span> %3$s',
 			$item->post_title,             // %1$s
 			$item->ID,                     // %2$s

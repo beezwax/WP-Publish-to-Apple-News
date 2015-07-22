@@ -64,6 +64,7 @@ class Push extends API_Action {
 			update_post_meta( $this->id, 'apple_export_api_id', $result->data->id );
 			update_post_meta( $this->id, 'apple_export_api_created_at', $result->data->createdAt );
 			update_post_meta( $this->id, 'apple_export_api_modified_at', $result->data->modifiedAt );
+			update_post_meta( $this->id, 'apple_export_api_share_url', $result->data->shareUrl );
 			// If it's marked as deleted, remove the mark. Ignore otherwise.
 			delete_post_meta( $this->id, 'apple_export_api_deleted' );
 		} catch ( \Push_API\Request\Request_Exception $e ) {
