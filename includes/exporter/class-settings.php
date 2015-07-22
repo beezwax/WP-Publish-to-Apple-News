@@ -46,6 +46,7 @@ class Settings {
 		'pullquote_size'  => 48,
 		'pullquote_color' => '#53585F',
 		'pullquote_transform' => 'uppercase',
+		'pullquote_line_height' => 1,
 
 		// This can either be gallery or mosaic.
 		'gallery_type'   => 'gallery',

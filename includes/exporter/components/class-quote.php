@@ -36,7 +36,7 @@ class Quote extends Component {
 			'fontSize' => $this->get_setting( 'pullquote_size' ),
 			'textColor' => $this->get_setting( 'pullquote_color' ),
 			'textTransform' => $this->get_setting( 'pullquote_transform' ),
-			'relativeLineHeight' => 0.7,
+			'lineHeight' => $this->get_setting( 'pullquote_size' ) * $this->get_setting( 'pullquote_line_height' ),
 		) );
 	}
 
