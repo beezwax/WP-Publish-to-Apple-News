@@ -304,13 +304,41 @@ class Admin_Settings_Section extends Apple_Export {
 	protected $name;
 	protected $slug;
 	protected $page;
-	protected $settings = array();
 	protected $base_settings;
+	protected $settings = array();
+	protected $groups   = array();
 
 	function __construct( $page ) {
 		$this->page          = $page;
 		$base_settings       = new \Exporter\Settings;
 		$this->base_settings = $base_settings->all();
+	}
+
+	public function name() {
+		return $this->name;
+	}
+
+	/**
+	 * Return an array which contains all groups and their related settings,
+	 * embedded.
+	 */
+	public function groups() {
+		$result = array();
+		foreach( $this->groups as $name => $info ) {
+			$settings = array();
+			foreach( $info['settings'] as $name ) {
+				$settings[ $name ] = $this->settings[ $name ];
+				$settings[ $name ]['default'] = $this->get_default_for( $name );
+			}
+
+			$result[ $name ] = array(
+				'label'       => $info['label'],
+				'description' => @$info['description'] ?: null,
+				'settings'    => $settings,
+			);
+		}
+
+		return $result;
 	}
 
 	public function id() {
