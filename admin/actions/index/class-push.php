@@ -26,9 +26,14 @@ class Push extends API_Action {
 	}
 
 	private function is_post_in_sync() {
+		$post = get_post( $this->id );
+
+		if ( ! $post ) {
+			throw new \Actions\Action_Exception( 'Could not find post with id ' . $this->id );
+		}
+
 		$api_time   = get_post_meta( $this->id, 'apple_export_api_modified_at', true );
 		$api_time   = strtotime( $api_time );
-		$post       = get_post( $this->id );
 		$local_time = strtotime( $post->post_modified );
 		return $api_time >= $local_time;
 	}
@@ -56,10 +61,10 @@ class Push extends API_Action {
 			// If there's an API ID, delete the post before pushing the new version
 			$remote_id = get_post_meta( $this->id, 'apple_export_api_id', true );
 			if ( $remote_id ) {
-				$this->fetch_api()->delete_article( $remote_id );
+				$this->get_api()->delete_article( $remote_id );
 			}
 
-			$result = $this->fetch_api()->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles );
+			$result = $this->get_api()->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles );
 			// Save the ID that was assigned to this post in by the API
 			update_post_meta( $this->id, 'apple_export_api_id', $result->data->id );
 			update_post_meta( $this->id, 'apple_export_api_created_at', $result->data->createdAt );

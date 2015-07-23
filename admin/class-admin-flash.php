@@ -9,7 +9,7 @@ class Flash {
 	const PREFIX = 'apple_export_flash_';
 
 	function __construct() {
-		session_start();
+		@session_start();
 		add_action( 'admin_head', array( $this, 'register_styles' ) );
 	}
 

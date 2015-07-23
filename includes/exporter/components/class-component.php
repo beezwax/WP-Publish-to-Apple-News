@@ -139,6 +139,10 @@ abstract class Component {
 		$this->anchor_position = $position;
 	}
 
+	public function get_anchor_position() {
+		return $this->anchor_position;
+	}
+
 	/**
 	 * Sets the anchor layout for this component
 	 *

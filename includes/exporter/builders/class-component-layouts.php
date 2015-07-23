@@ -54,7 +54,7 @@ class Component_Layouts extends Builder {
 	public function set_anchor_layout_for( $component ) {
 		// Are we anchoring left or right?
 		$position = null;
-		switch ( $component->anchor_position ) {
+		switch ( $component->get_anchor_position() ) {
 		case Component::ANCHOR_NONE:
 			return;
 		case Component::ANCHOR_LEFT:
