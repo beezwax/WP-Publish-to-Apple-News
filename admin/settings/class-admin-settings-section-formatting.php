@@ -121,6 +121,47 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 		),
  	);
 
+	protected $groups = array(
+		'layout' => array(
+			'label'       => 'Layout Spacing',
+			'description' => 'The spacing for the base layout of the exported articles',
+			'settings'    => array( 'layout_margin', 'layout_gutter' ),
+		),
+		'body' => array(
+			'label'       => 'Body',
+			'settings'    => array( 'body_font', 'body_size', 'body_color', 'body_link_color', 'body_orientation' ),
+		),
+		'dropcap' => array(
+			'label'       => 'Dropcap',
+			'settings'    => array( 'initial_dropcap', 'dropcap_font', 'dropcap_color' ),
+		),
+		'byline' => array(
+			'label'       => 'Byline',
+			'description' => 'The byline displays the article\'s author and date',
+			'settings'    => array( 'byline_font', 'byline_size', 'byline_color' ),
+		),
+		'headings' => array(
+			'label'       => 'Headings',
+			'settings'    => array( 'header_font', 'header_color', 'header1_size',
+			  'header2_size', 'header3_size', 'header4_size', 'header4_size',
+			  'header5_size', 'header6_size' ),
+		),
+		'pullquote' => array(
+			'label'       => 'Pullquote',
+			'description' => 'Articles can have an optional <a href="https://en.wikipedia.org/wiki/Pull_quote">Pullquote</a>.',
+			'settings'    => array( 'pullquote_font', 'pullquote_size', 'pullquote_color', 'pullquote_transform' ),
+		),
+		'gallery' => array(
+			'label'       => 'Gallery',
+			'description' => 'Can either be a standard gallery, or mosaic.',
+			'settings'    => array( 'gallery_type' ),
+		),
+		'advertisement' => array(
+			'label'       => 'Advertisement',
+			'settings'    => array( 'enable_advertisement' ),
+		),
+	);
+
 	public function print_section_info() {
 		echo 'Configuration on the look and feel of the generated articles';
 	}

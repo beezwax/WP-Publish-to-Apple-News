@@ -44,6 +44,20 @@ class Admin_Settings extends Apple_Export {
 
 		add_action( 'admin_init', array( $this, 'register_sections' ) );
 		add_action( 'admin_menu', array( $this, 'setup_options_page' ) );
+		add_action( 'admin_head', array( $this, 'settings_styles' ) );
+	}
+
+	public function settings_styles() {
+		echo '<style type="text/css">';
+		echo '.form-table.apple-export input[type=text],';
+		echo '.form-table.apple-export .select2,';
+		echo '.form-table.apple-export input[type=password] { display: block; width: 285px; margin-bottom: 5px; }';
+
+		echo '.form-table.apple-export select,';
+		echo '.form-table.apple-export input[type=color] { display: inline-block; margin-right: 15px; }';
+
+		echo '.form-table.apple-export input[type=number] { width: 45px; display: inline-block; margin-right: 15px; }';
+		echo '</style>';
 	}
 
 	private function add_sections() {
@@ -86,6 +100,7 @@ class Admin_Settings extends Apple_Export {
 		if ( ! current_user_can( 'manage_options' ) )
 			wp_die( __( 'You do not have permissions to access this page.' ) );
 
+		$sections = $this->sections;
 		include plugin_dir_path( __FILE__ ) . 'partials/page_options.php';
 	}
 
