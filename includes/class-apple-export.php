@@ -10,6 +10,6 @@ class Apple_Export {
 
 	protected $plugin_slug   = 'apple_export';
 	protected $plugin_domain = 'apple-export';
-	protected $version       = '0.2.0';
+	protected $version       = '0.6.0';
 
 }
