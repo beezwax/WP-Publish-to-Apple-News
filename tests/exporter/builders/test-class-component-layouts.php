@@ -3,6 +3,7 @@
 use \Exporter\Exporter_Content as Exporter_Content;
 use \Exporter\Settings as Settings;
 use \Exporter\Builders\Component_Layouts as Component_Layouts;
+use \Exporter\Components\Component as Component;
 
 class Component_Layouts_Test extends PHPUnit_Framework_TestCase {
 
@@ -29,13 +30,19 @@ class Component_Layouts_Test extends PHPUnit_Framework_TestCase {
 		$this->assertEquals( 'val2', $result[ 'l2' ] );
 	}
 
-	public function testAnchoringLayout() {
+	public function testLeftLayoutGetsAdded() {
 		$layouts = new Component_Layouts( $this->content, $this->settings );
 
-		$this->assertFalse( array_key_exists( 'anchor-layout', $layouts->to_array() ) );
+		$this->assertFalse( array_key_exists( 'anchor-layout-left', $layouts->to_array() ) );
 
 		$component = $this->prophet->prophesize( '\Exporter\Components\Component' );
-		$component->set_json( 'layout', 'anchor-layout' )->shouldBeCalled();
+		$component->get_anchor_position()
+			->willReturn( Component::ANCHOR_LEFT )
+			->shouldBeCalled();
+		$component->is_anchor_target()
+			->willReturn( false )
+			->shouldBeCalled();
+		$component->set_json( 'layout', 'anchor-layout-left' )->shouldBeCalled();
 		$component->set_json( 'animation', array(
 			'type'             => 'fade_in',
 			'userControllable' => 'true',
@@ -44,7 +51,7 @@ class Component_Layouts_Test extends PHPUnit_Framework_TestCase {
 
 		$layouts->set_anchor_layout_for( $component->reveal() );
 
-		$this->assertTrue( array_key_exists( 'anchor-layout', $layouts->to_array() ) );
+		$this->assertTrue( array_key_exists( 'anchor-layout-left', $layouts->to_array() ) );
 	}
 
 }

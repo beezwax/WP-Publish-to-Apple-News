@@ -72,7 +72,7 @@ class Image extends Component {
 		}
 
 		// Full width images have top margin
-		if ( Component::ANCHOR_NONE == $this->anchor_position ) {
+		if ( Component::ANCHOR_NONE == $this->get_anchor_position() ) {
 			$this->json['layout'] = 'full-width-image';
 			$this->register_layout( 'full-width-image', array(
 				'margin'      => array( 'top' => 20 ),
