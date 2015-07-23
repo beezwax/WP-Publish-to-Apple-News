@@ -15,8 +15,6 @@ class Embed_Web_Video_Test extends Component_TestCase {
 				'role' => 'embedwebvideo',
 				'URL' => 'https://exampleurl.com',
 				'aspectRatio' => '1.777',
-				'caption' => 'test',
-				'accessibilityCaption' => 'test',
 		 	),
 			$component->to_array()
 		);

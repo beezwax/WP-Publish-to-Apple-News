@@ -19,15 +19,11 @@ class Heading_Test extends Component_TestCase {
 	public function testValidInput() {
 		$component = new Heading( '<h1>This is a heading</h1>', null,
 			$this->settings, $this->styles, $this->layouts );
+		$json = $component->to_array();
 
-		$this->assertEquals(
-			array(
-				'role' => 'heading1',
-				'text' => 'This is a heading',
-				'textStyle' => 'default-heading-1',
-		 	),
-			$component->to_array()
-		);
+		$this->assertEquals( 'heading1', $json['role'] );
+		$this->assertEquals( 'This is a heading', $json['text'] );
+		$this->assertEquals( 'markdown', $json['format'] );
 	}
 
 }
