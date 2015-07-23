@@ -43,6 +43,7 @@ class Gallery extends Component {
 		$this->register_layout( 'gallery-layout', array(
 			'columnStart' => 0,
 			'margin' => array(
+				'top'    => 50,
 				'bottom' => 30,
 			)
 		) );

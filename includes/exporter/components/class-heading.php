@@ -73,8 +73,7 @@ class Heading extends Component {
 		$this->json['layout'] = 'heading-layout';
 		$this->register_layout( 'heading-layout', array(
 			'margin' => array(
-				'top'    => 20,
-				'bottom' => 30,
+				'top' => 20,
 			),
 		) );
 	}

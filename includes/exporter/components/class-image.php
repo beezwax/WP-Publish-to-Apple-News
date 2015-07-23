@@ -71,11 +71,46 @@ class Image extends Component {
 			$this->set_anchor_position( Component::ANCHOR_AUTO );
 		}
 
+		// Full width images have top margin
+		if ( Component::ANCHOR_NONE == $this->anchor_position ) {
+			$this->json['layout'] = 'full-width-image';
+			$this->register_layout( 'full-width-image', array(
+				'margin'      => array( 'top' => 20 ),
+			) );
+		}
+
 		// Check for caption
 		if ( preg_match( '#<figcaption.*?>(.*?)</figcaption>#m', $text, $matches ) ) {
 			$caption = trim( $matches[1] );
 			$this->json['caption'] = $caption;
+			$this->group_component( $caption );
 		}
+	}
+
+	/**
+	 * If the image has a caption, we have to also show a caption component.
+	 * Let's instead, return the JSON as a Container instead of an Image.
+	 */
+	private function group_component( $caption ) {
+		$image_component = $this->json;
+		$this->json = array(
+			'role' => 'container',
+			'components' => array(
+				$image_component,
+				array(
+					'role'      => 'caption',
+					'text'      => $caption,
+					'textStyle' => array(
+						'textAlignment' => 'center',
+						'fontSize'      => $this->get_setting( 'body_size' ) - 2,
+						'fontName'      => $this->get_setting( 'body_font' ),
+					),
+					'layout' => array(
+						'margin' => array( 'top' => 20 ),
+					),
+				),
+			),
+		);
 	}
 
 }
