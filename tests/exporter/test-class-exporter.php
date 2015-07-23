@@ -16,6 +16,10 @@ class Exporter_Test extends WP_UnitTestCase {
 
 	public function testExport() {
 		$workspace = $this->prophet->prophesize( '\Exporter\Workspace' );
+		// Cleans up workspace
+		$workspace
+			->clean_up()
+			->shouldBeCalled();
 		// Creates the article.json file
 		$workspace
 			->write_tmp_file( 'article.json', \Prophecy\Argument::type( 'string' ) )
@@ -34,6 +38,10 @@ class Exporter_Test extends WP_UnitTestCase {
 
 	public function testBuildersGetCalled() {
 		$workspace = $this->prophet->prophesize( '\Exporter\Workspace' );
+		// Cleans up workspace
+		$workspace
+			->clean_up()
+			->shouldBeCalled();
 		// Creates the article.json file
 		$workspace
 			->write_tmp_file( 'article.json', \Prophecy\Argument::type( 'string' ) )
