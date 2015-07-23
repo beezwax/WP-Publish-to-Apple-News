@@ -11,14 +11,6 @@ use \Exporter\Exporter as Exporter;
 class Body extends Component {
 
 	/**
-	 * Body components always span 5 columns. This is related with
-	 * Exporter::LAYOUT_COLUMNS, which is fixed at 7.
-	 *
-	 * @since 0.4.0
-	 */
-	const COLUMN_SPAN = 5;
-
-	/**
 	 * Override. This component doesn't need a layout update if marked as the
 	 * target of an anchor.
 	 */
@@ -99,10 +91,10 @@ class Body extends Component {
 		$col_start = 0;
 		switch ( $this->get_setting( 'body_orientation' ) ) {
 		case 'right':
-			$col_start = Exporter::LAYOUT_COLUMNS - self::COLUMN_SPAN;
+			$col_start = $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' );
 			break;
 		case 'center':
-			$col_start = floor( ( Exporter::LAYOUT_COLUMNS - self::COLUMN_SPAN ) / 2 );
+			$col_start = floor( ( $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' ) ) / 2 );
 			break;
 		}
 
@@ -110,7 +102,7 @@ class Body extends Component {
 		$this->json[ 'layout' ] = 'body-layout';
 		$this->register_layout( 'body-layout', array(
 			'columnStart' => $col_start,
-			'columnSpan'  => self::COLUMN_SPAN,
+			'columnSpan'  => $this->get_setting( 'body_column_span' ),
 		) );
 	}
 

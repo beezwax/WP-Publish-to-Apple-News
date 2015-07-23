@@ -17,12 +17,6 @@ namespace Exporter;
 class Exporter {
 
 	/**
-	 * Default layout values for exporter
-	 */
-	const LAYOUT_COLUMNS = 7;
-	const LAYOUT_WIDTH   = 1024;
-
-	/**
 	 * The content object to be exported.
 	 *
 	 * @var  Exporter_Content

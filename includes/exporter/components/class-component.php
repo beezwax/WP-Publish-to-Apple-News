@@ -15,14 +15,6 @@ require_once __DIR__ . '/../class-markdown.php';
 abstract class Component {
 
 	/**
-	 * When a component is displayed aligned relative to another one, slide the
-	 * other component a few columns, in this case, 2.
-	 *
-	 * @since 0.4.0
-	 */
-	const ALIGNMENT_OFFSET = 2;
-
-	/**
 	 * Possible anchoring positions
 	 */
 	const ANCHOR_NONE  = 0;

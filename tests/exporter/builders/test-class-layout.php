@@ -18,8 +18,8 @@ class Layout_Test extends PHPUnit_Framework_TestCase {
 		$layout = new Layout( $this->content, $this->settings );
 		$result = $layout->to_array();
 
-		$this->assertEquals( Exporter::LAYOUT_COLUMNS, $result[ 'columns' ] );
-		$this->assertEquals( Exporter::LAYOUT_WIDTH, $result[ 'width' ] );
+		$this->assertEquals( $this->settings->get( 'layout_columns' ), $result[ 'columns' ] );
+		$this->assertEquals( $this->settings->get( 'layout_width' ), $result[ 'width' ] );
 		$this->assertEquals( 123, $result[ 'margin' ] );
 		$this->assertEquals( 222, $result[ 'gutter' ] );
 	}
