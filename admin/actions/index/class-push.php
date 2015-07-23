@@ -52,7 +52,6 @@ class Push extends API_Action {
 		$this->clean_workspace();
 		list( $json, $bundles ) = $this->generate_article();
 
-		$error = null;
 		try {
 			// If there's an API ID, delete the post before pushing the new version
 			$remote_id = get_post_meta( $this->id, 'apple_export_api_id', true );
@@ -67,11 +66,10 @@ class Push extends API_Action {
 			update_post_meta( $this->id, 'apple_export_api_modified_at', $result->data->modifiedAt );
 			// If it's marked as deleted, remove the mark. Ignore otherwise.
 			delete_post_meta( $this->id, 'apple_export_api_deleted' );
-		} catch ( \Exception $e ) {
-			$error = $e->getMessage();
+		} catch ( \Push_API\Request\Request_Exception $e ) {
+			throw new \Actions\Action_Exception( 'There has been an error with the API. Please make sure your API settings are correct and try again.' );
 		} finally {
 			$this->clean_workspace();
-			return $error;
 		}
 	}
 
