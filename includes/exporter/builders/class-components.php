@@ -205,7 +205,7 @@ class Components extends Builder {
 				// Check whether this is the only component of the article, if it is,
 				// just ignore anchoring.
 				if ( ! $other_component ) {
-					continue;
+					return;
 				}
 			}
 
