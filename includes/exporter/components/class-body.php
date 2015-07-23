@@ -110,11 +110,11 @@ class Body extends Component {
 	private function get_default_style() {
 		return array(
 			'textAlignment' => 'left',
-			'fontName' => $this->get_setting( 'body_font' ),
-			'fontSize' => $this->get_setting( 'body_size' ),
-			'relativeLineHeight' => 1.2,
-			'textColor' => $this->get_setting( 'body_color' ),
-			'linkStyle' => array( 'textColor' => $this->get_setting( 'body_link_color' ) ),
+			'fontName'      => $this->get_setting( 'body_font' ),
+			'fontSize'      => $this->get_setting( 'body_size' ),
+			'lineHeight'    => $this->get_setting( 'body_size' ) * $this->get_setting( 'body_line_height' ),
+			'textColor'     => $this->get_setting( 'body_color' ),
+			'linkStyle'     => array( 'textColor' => $this->get_setting( 'body_link_color' ) ),
 		);
 	}
 

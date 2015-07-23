@@ -324,9 +324,9 @@ class Admin_Settings_Section extends Apple_Export {
 	 */
 	public function groups() {
 		$result = array();
-		foreach( $this->groups as $name => $info ) {
+		foreach ( $this->groups as $name => $info ) {
 			$settings = array();
-			foreach( $info['settings'] as $name ) {
+			foreach ( $info['settings'] as $name ) {
 				$settings[ $name ] = $this->settings[ $name ];
 				$settings[ $name ]['default'] = $this->get_default_for( $name );
 			}
@@ -354,7 +354,11 @@ class Admin_Settings_Section extends Apple_Export {
 	 	);
 
 		foreach ( $this->settings as $name => $options ) {
-			register_setting( $this->page, $name );
+			// Register setting
+			$callback = isset( $options['sanitize'] ) ? array( $this, $options['sanitize'] ) : '';
+			register_setting( $this->page, $name, $callback );
+
+			// Add to settings section
 			add_settings_field(
 				$name,                                          // ID
 				$options['label'],                              // Title
@@ -417,6 +421,8 @@ class Admin_Settings_Section extends Apple_Export {
 			$field .= '</select>';
 		} else if ( 'integer' == $type ) {
 			$field = '<input required type="number" name="%s" value="%s">';
+		} else if ( 'float' == $type ) {
+			$field = '<input class="input-float" required type="text" step="any" name="%s" value="%s">';
 		} else if ( 'color' == $type ) {
 			$field = '<input required type="color" name="%s" value="%s">';
 		} else if ( 'password' == $type ) {

@@ -81,10 +81,10 @@ class Heading extends Component {
 	private function set_style( $level ) {
 		$this->json[ 'textStyle' ] = 'default-heading-' . $level;
 		$this->register_style( 'default-heading-' . $level, array(
-			'fontName' => $this->get_setting( 'header_font' ),
-			'fontSize' => $this->get_setting( 'header' . $level . '_size' ),
-			'relativeLineHeight' => 1.5,
-			'textColor' => $this->get_setting( 'header_color' ),
+			'fontName'   => $this->get_setting( 'header_font' ),
+			'fontSize'   => $this->get_setting( 'header' . $level . '_size' ),
+			'lineHeight' => $this->get_setting( 'header' . $level . '_size' ) * $this->get_setting( 'header_line_height' ),
+			'textColor'  => $this->get_setting( 'header_color' ),
 		) );
 	}
 
