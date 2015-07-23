@@ -18,7 +18,11 @@ abstract class API_Action extends Action {
 
 	private $api;
 
-	protected function fetch_api() {
+	public function set_api( $api ) {
+		$this->api = $api;
+	}
+
+	protected function get_api() {
 		if ( is_null( $this->api ) ) {
 			$this->api = new API( self::API_ENDPOINT, $this->fetch_credentials() );
 		}
