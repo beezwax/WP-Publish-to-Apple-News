@@ -218,8 +218,8 @@ class Components extends Builder {
 				$other_component = $components[ $i + $counter ];
 				$counter++;
 			}
-			// If the last element is still an anchor target, this element cannot be
-			// anchored.
+			// If the last element still isn't an anchor target, this element cannot
+			// be anchored.
 			if ( !$other_component->is_anchor_target() ) {
 				return;
 			}
