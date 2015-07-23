@@ -197,8 +197,18 @@ class Components extends Builder {
 				continue;
 			}
 
-			// Anchor this component to previous component
-			$other_component = $components[ $i - 1 ];
+			// Anchor this component to previous component. If there's no previous
+			// component available, try with the next one.
+			$other_component = @$components[ $i - 1 ];
+			if ( ! $other_component ) {
+				$other_component = @$components[ $i + 1 ];
+				// Check whether this is the only component of the article, if it is,
+				// just ignore anchoring.
+				if ( ! $other_component ) {
+					continue;
+				}
+			}
+
 			// Skip advertisement elements, they must span all width. If the previous
 			// element is an ad, use next instead. If the element is already
 			// anchoring something, also skip.
@@ -210,7 +220,7 @@ class Components extends Builder {
 			}
 			// If the last element is still an anchor target, this element cannot be
 			// anchored.
-			if ( $other_component->is_anchor_target() ) {
+			if ( !$other_component->is_anchor_target() ) {
 				return;
 			}
 
