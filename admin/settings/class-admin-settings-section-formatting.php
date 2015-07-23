@@ -144,7 +144,7 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 			'label'       => 'Headings',
 			'settings'    => array( 'header_font', 'header_color', 'header1_size',
 			  'header2_size', 'header3_size', 'header4_size', 'header4_size',
-			  'header5_size', 'header6_size'	),
+			  'header5_size', 'header6_size' ),
 		),
 		'pullquote' => array(
 			'label'       => 'Pullquote',
