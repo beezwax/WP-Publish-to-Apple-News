@@ -3,7 +3,7 @@ Installation is similar to all other plugins for WordPress:
 
  1. Upload the entire `apple-news` folder to the `./wp-content/plugins`
     directory in your web server.
- 2. Active the plugin though the 'Plugins' menu in WordPress.
+ 2. Activate the plugin though the 'Plugins' menu in WordPress.
 
  You will now find 'Apple News' in your WordPress admin panel. For usage
  documentation see [Usage](usage.md).
