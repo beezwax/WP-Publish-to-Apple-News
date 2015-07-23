@@ -11,9 +11,10 @@ require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-export.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-export-list-table.php';
 
-class Admin_Page_Index extends Apple_Export {
+class Admin_Index_Page extends Apple_Export {
 
 	private $settings;
+	private $messager;
 
 	function __construct( $settings ) {
 		$this->settings = $settings;
@@ -76,8 +77,9 @@ class Admin_Page_Index extends Apple_Export {
 		}
 	}
 
-	private function display_message( $title, $message ) {
+	private function show_message( $title, $message ) {
 		include plugin_dir_path( __FILE__ ) . 'partials/page_message.php';
+		wp_die(); // Ignore everything else that would be rendered otherwise
 	}
 
 	/**
@@ -128,26 +130,33 @@ class Admin_Page_Index extends Apple_Export {
 	private function export_action( $id ) {
 		$action = new Actions\Index\Export( $this->settings, $id );
 		$path   = $action->perform();
-		$this->download_zipfile( $path );
+		try {
+			$action->perform();
+			$this->download_zipfile( $path );
+		} catch( Actions\Action_Exception $e ) {
+			$this->show_message( 'Oops, something went wrong', $e->getMessage() );
+		}
 	}
 
 	private function push_action( $id ) {
 		$action = new Actions\Index\Push( $this->settings, $id );
-		$error  = $action->perform();
-		if ( is_null( $error ) ) {
-			$this->display_message( 'Success', 'Your article has been pushed successfully!' );
-		} else {
-			$this->display_message( 'Oops, something went wrong', $error );
+		try {
+			$action->perform();
+			$this->show_message( 'Success', 'Your article has been pushed successfully!' );
+		} catch( Actions\Action_Exception $e ) {
+
+			$this->show_message( 'Oops, something went wrong', $e->getMessage() );
 		}
 	}
 
 	private function delete_action( $id ) {
 		$action = new Actions\Index\Delete( $this->settings, $id );
-		$error  = $action->perform();
-		if ( is_null( $error ) ) {
-			$this->display_message( 'Success', 'Your article has been removed from Apple News.' );
-		} else {
-			$this->display_message( 'Oops, something went wrong', $error );
+		try {
+			$action->perform();
+			$this->show_message( 'Success', 'Your article has been pushed successfully!' );
+		} catch( Actions\Action_Exception $e ) {
+
+			$this->show_message( 'Oops, something went wrong', $e->getMessage() );
 		}
 	}
 

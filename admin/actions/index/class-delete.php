@@ -30,15 +30,13 @@ class Delete extends API_Action {
 	 */
 	private function delete() {
 		if ( ! $this->is_api_configuration_valid() ) {
-			wp_die( 'Your API settings seem to be empty. Please fill the API key, API
+			throw new \Actions\Action_Exception( 'Your API settings seem to be empty. Please fill the API key, API
 				secret and API channel fields in the plugin configuration page.' );
-			return;
 		}
 
 		$remote_id = get_post_meta( $this->id, 'apple_export_api_id', true );
 		if ( ! $remote_id ) {
-			wp_die( 'This post has not been pushed to Apple News, cannot delete.' );
-			return;
+			throw new \Actions\Action_Exception( 'This post has not been pushed to Apple News, cannot delete.' );
 		}
 
 		$error = null;
