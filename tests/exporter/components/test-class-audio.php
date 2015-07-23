@@ -13,11 +13,9 @@ class Audio_Test extends Component_TestCase {
 		$component = new Audio( '<audio><source src="http://someurl.com/audio-file.mp3?some_query=string"></audio>',
 			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
 
-		// Test for valid JSON
-		$this->assertEquals(
-			array( 'role' => 'audio', 'URL' => 'http://someurl.com/audio-file.mp3?some_query=string' ),
-			$component->to_array()
-		);
+		$json = $component->to_array();
+		$this->assertEquals( 'audio', $json['role'] );
+		$this->assertEquals( 'http://someurl.com/audio-file.mp3?some_query=string', $json['URL'] );
 	}
 
 }

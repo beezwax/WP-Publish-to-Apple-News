@@ -13,11 +13,9 @@ class Video_Test extends Component_TestCase {
 		$component = new Video( '<video><source src="http://someurl.com/video-file.mp4?some_query=string"></video>',
 			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
 
-		// Test for valid JSON
-		$this->assertEquals(
-			array( 'role' => 'video', 'URL' => 'http://someurl.com/video-file.mp4?some_query=string' ),
-			$component->to_array()
-		);
+		$json = $component->to_array();
+		$this->assertEquals( 'video', $json['role'] );
+		$this->assertEquals( 'http://someurl.com/video-file.mp4?some_query=string', $json['URL'] );
 	}
 
 }
