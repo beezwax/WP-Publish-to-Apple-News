@@ -29,6 +29,14 @@ class Quote extends Component {
 		$this->set_style();
 	}
 
+	private function find_text_alignment() {
+		if( 'center' == $this->get_setting( 'body_orientation' ) ) {
+			return 'center';
+		}
+
+		return 'left';
+	}
+
 	private function set_style() {
 		$this->json[ 'textStyle' ] = 'default-pullquote';
 		$this->register_style( 'default-pullquote', array(
@@ -37,6 +45,7 @@ class Quote extends Component {
 			'textColor' => $this->get_setting( 'pullquote_color' ),
 			'textTransform' => $this->get_setting( 'pullquote_transform' ),
 			'lineHeight' => $this->get_setting( 'pullquote_size' ) * $this->get_setting( 'pullquote_line_height' ),
+			'textAlignment' => $this->find_text_alignment(),
 		) );
 	}
 
