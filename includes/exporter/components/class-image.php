@@ -73,10 +73,7 @@ class Image extends Component {
 
 		// Full width images have top margin
 		if ( Component::ANCHOR_NONE == $this->get_anchor_position() ) {
-			$this->json['layout'] = 'full-width-image';
-			$this->register_layout( 'full-width-image', array(
-				'margin'      => array( 'top' => 20 ),
-			) );
+			$this->register_full_width_layout();
 		}
 
 		// Check for caption
@@ -85,6 +82,30 @@ class Image extends Component {
 			$this->json['caption'] = $caption;
 			$this->group_component( $caption );
 		}
+	}
+
+	private function register_full_width_layout() {
+		$this->json['layout'] = 'full-width-image';
+
+		// If the body is centered, don't span the full width
+		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
+			$col_start = floor( ( $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' ) ) / 2 );
+			$col_span  = $this->get_setting( 'body_column_span' );
+
+			$this->register_layout( 'full-width-image', array(
+				'margin'      => array( 'top' => 20 ),
+				'columnStart' => $col_start,
+				'columnSpan'  => $col_span,
+			) );
+
+			return;
+		}
+
+		// Otherwise, ignore the col span and start, making the image take all the
+		// available width
+		$this->register_layout( 'full-width-image', array(
+			'margin' => array( 'top' => 20 ),
+		) );
 	}
 
 	private function find_caption_alignment() {
