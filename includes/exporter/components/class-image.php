@@ -87,6 +87,24 @@ class Image extends Component {
 		}
 	}
 
+	private function find_caption_alignment() {
+		$text_alignment = null;
+		if ( Component::ANCHOR_NONE == $this->get_anchor_position() ) {
+			return 'center';
+		}
+
+		switch ( $this->get_anchor_position() ) {
+		case Component::ANCHOR_LEFT:
+			return 'left';
+		case Component::ANCHOR_AUTO:
+			if ( 'right' == $this->get_setting( 'body_orientation' ) ) {
+				return 'left';
+			}
+		}
+
+		return 'right';
+	}
+
 	/**
 	 * If the image has a caption, we have to also show a caption component.
 	 * Let's instead, return the JSON as a Container instead of an Image.
@@ -101,7 +119,7 @@ class Image extends Component {
 					'role'      => 'caption',
 					'text'      => $caption,
 					'textStyle' => array(
-						'textAlignment' => 'center',
+						'textAlignment' => $this->find_caption_alignment(),
 						'fontSize'      => $this->get_setting( 'body_size' ) - 2,
 						'fontName'      => $this->get_setting( 'body_font' ),
 					),
