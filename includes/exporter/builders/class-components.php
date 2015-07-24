@@ -193,7 +193,7 @@ class Components extends Builder {
 		for ( $i = 0; $i < $len; $i++ ) {
 			$component = $components[ $i ];
 
-			if ( $component->is_anchor_target() || Component::ANCHOR_NONE == $component->anchor_position ) {
+			if ( $component->is_anchor_target() || Component::ANCHOR_NONE == $component->get_anchor_position() ) {
 				continue;
 			}
 
@@ -233,10 +233,10 @@ class Components extends Builder {
 
 			// Given $component, find out the opposite position.
 			$other_position = null;
-			if ( Component::ANCHOR_AUTO == $component->anchor_position ) {
+			if ( Component::ANCHOR_AUTO == $component->get_anchor_position() ) {
 				$other_position = 'left' == $this->get_setting( 'body_orientation' ) ? Component::ANCHOR_LEFT : Component::ANCHOR_RIGHT;
 			} else {
-				$other_position = Component::ANCHOR_LEFT == $component->anchor_position ? Component::ANCHOR_RIGHT : Component::ANCHOR_LEFT;
+				$other_position = Component::ANCHOR_LEFT == $component->get_anchor_position() ? Component::ANCHOR_RIGHT : Component::ANCHOR_LEFT;
 			}
 			$other_component->set_anchor_position( $other_position );
 			// The anchor method adds the required layout, thus making the actual
