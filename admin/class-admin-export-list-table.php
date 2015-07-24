@@ -17,7 +17,7 @@ class Admin_Export_List_Table extends WP_List_Table {
 	 *
 	 * @since 0.4.0
 	 */
-	const PER_PAGE = 10;
+	const PER_PAGE = 20;
 
 	function __construct() {
 		parent::__construct( array(
