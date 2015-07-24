@@ -138,8 +138,7 @@ class Admin_Index_Page extends Apple_Export {
 		$action = new Actions\Index\Export( $this->settings, $id );
 		try {
 			$path = $action->perform();
-			//$this->download_zipfile( $path );
-			echo $path;
+			$this->download_zipfile( $path );
 		} catch ( Actions\Action_Exception $e ) {
 			$this->flash_error( $e->getMessage() );
 		}
