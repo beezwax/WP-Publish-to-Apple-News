@@ -58,7 +58,7 @@ class Push extends API_Action {
 		list( $json, $bundles ) = $this->generate_article();
 
 		try {
-			// If there's an API ID, delete the post before pushing the new version
+			// If there's an API ID, update, otherwise create.
 			$remote_id = get_post_meta( $this->id, 'apple_export_api_id', true );
 			$result    = null;
 			if ( $remote_id ) {
