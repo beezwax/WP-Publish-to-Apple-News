@@ -17,7 +17,6 @@ class Settings {
 
 		'layout_margin'   => 100,
 		'layout_gutter'   => 20,
-		'layout_width'    => 1024,
 
 		'body_font'        => 'AvenirNext-Regular',
 		'body_size'        => 18,
@@ -82,9 +81,13 @@ class Settings {
 	// COMPUTED SETTINGS are those settings which are not shown in the frontend
 	// and cannot be changed directly, instead, they are a logical representation
 	// of a combination of other settings. For example, if the body orientation
-	// is "center", the layout_columns computed property is 9, otherwise, it's
-	// 7.
+	// is "center", the layout_width computed property is 768, otherwise, it's
+	// 1024.
 	// -------------------------------------------------------------------------
+
+	public function layout_width() {
+		return 'center' == $this->get( 'body_orientation' ) ? 768 : 1024;
+	}
 
 	public function layout_columns() {
 		return 'center' == $this->get( 'body_orientation' ) ? 9 : 7;
