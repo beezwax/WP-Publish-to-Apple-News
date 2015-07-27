@@ -4,12 +4,10 @@ namespace Exporter;
 /**
  * Export a Exporter_Content instance to Apple format.
  *
- * TODO: This class is designed to work outside of WordPress just fine, so it
- * can be a dependency. It can be used to create other plugins, for example,
- * a Joomla or Drupal plugin.
- *
- * NOTE: Even though this is not a WordPress class it follows its coding
- * conventions.
+ * NOTE: This class is designed to work outside of WordPress just fine, so it
+ * can be a dependency. It can be used to create other plugins, for example, a
+ * Joomla or Drupal plugin. Even though this is not a WordPress class it
+ * follows its coding conventions.
  *
  * @author  Federico Ramirez
  * @since   0.2.0
