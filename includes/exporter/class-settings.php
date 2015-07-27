@@ -30,7 +30,7 @@ class Settings {
 		'dropcap_color'   => '#000',
 
 		'byline_font'     => 'AvenirNext-Medium',
-		'byline_size'     => 16,
+		'byline_size'     => 17,
 		'byline_color'    => '#53585F',
 
 		'header_font'     => 'AvenirNext-Bold',
@@ -43,7 +43,7 @@ class Settings {
 		'header6_size'    => 16,
 		'header_line_height' => 1.3,
 
-		'pullquote_font'  => 'HelveticaNeue-CondensedBold',
+		'pullquote_font'  => 'AvenirNext-Bold',
 		'pullquote_size'  => 48,
 		'pullquote_color' => '#53585F',
 		'pullquote_transform' => 'uppercase',
