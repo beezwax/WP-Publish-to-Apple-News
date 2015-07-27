@@ -31,8 +31,8 @@ class Cover extends Component {
 					'fillMode' => 'cover',
 				),
 			),
-			'behaviour' => array(
-				'type' => 'parallax',
+			'behavior' => array(
+				'type' => 'background_parallax',
 			),
 		);
 
