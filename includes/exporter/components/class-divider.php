@@ -23,7 +23,7 @@ class Divider extends Component {
 			'stroke' => array( 'color' => '#E6E6E6', 'width' => 1 ),
 		);
 
-		$this->register_layout( 'divider-layout', array(
+		$this->register_full_width_layout( 'divider-layout', array(
 			'margin' => array(
 				'top'    => 30,
 				'bottom' => 30,

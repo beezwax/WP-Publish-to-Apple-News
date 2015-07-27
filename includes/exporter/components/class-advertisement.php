@@ -15,16 +15,13 @@ class Advertisement extends Component {
 			'bannerType' => 'standard',
 		);
 
-		$this->set_default_layout();
+		$this->set_layout();
 	}
 
-	private function set_default_layout() {
+	private function set_layout() {
 		$this->json['layout'] = 'advertisement-layout';
-		$this->register_layout( 'advertisement-layout', array(
-			'margin' => array(
-				'top'    => 50,
-				'bottom' => 20,
-			),
+		$this->register_full_width_layout( 'advertisement-layout', array(
+			'margin' => array( 'top' => 25, 'bottom' => 25 ),
 		) );
 	}
 
