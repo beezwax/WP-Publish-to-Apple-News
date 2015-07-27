@@ -97,12 +97,12 @@ class Image extends Component {
 		case Component::ANCHOR_LEFT:
 			return 'left';
 		case Component::ANCHOR_AUTO:
-			if ( 'right' == $this->get_setting( 'body_orientation' ) ) {
-				return 'left';
+			if ( 'left' == $this->get_setting( 'body_orientation' ) ) {
+				return 'right';
 			}
 		}
 
-		return 'right';
+		return 'left';
 	}
 
 	/**
