@@ -15,10 +15,10 @@ class Title extends Component {
 	private function set_style() {
 		$this->json[ 'textStyle' ] = 'default-title';
 		$this->register_style( 'default-title', array(
-			'fontName'   => $this->get_setting( 'header_font' ),
-			'fontSize'   => intval( $this->get_setting( 'header1_size' ) ),
-			'lineHeight' => intval( $this->get_setting( 'header_line_height' ) ),
-			'textColor'  => $this->get_setting( 'header_color' ),
+			'fontName'      => $this->get_setting( 'header_font' ),
+			'fontSize'      => intval( $this->get_setting( 'header1_size' ) ),
+			'lineHeight'    => intval( $this->get_setting( 'header_line_height' ) ),
+			'textColor'     => $this->get_setting( 'header_color' ),
 			'textAlignment' => $this->find_text_alignment(),
 		) );
 	}
