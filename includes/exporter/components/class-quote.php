@@ -41,7 +41,7 @@ class Quote extends Component {
 		$this->json[ 'textStyle' ] = 'default-pullquote';
 		$this->register_style( 'default-pullquote', array(
 			'fontName'      => $this->get_setting( 'pullquote_font' ),
-			'fontSize'      => $this->get_setting( 'pullquote_size' ),
+			'fontSize'      => intval( $this->get_setting( 'pullquote_size' ) ),
 			'textColor'     => $this->get_setting( 'pullquote_color' ),
 			'textTransform' => $this->get_setting( 'pullquote_transform' ),
 			'lineHeight'    => $this->get_setting( 'pullquote_size' ) * $this->get_setting( 'pullquote_line_height' ),

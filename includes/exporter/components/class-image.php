@@ -133,7 +133,7 @@ class Image extends Component {
 					'text'      => $caption,
 					'textStyle' => array(
 						'textAlignment' => $this->find_caption_alignment(),
-						'fontSize'      => $this->get_setting( 'body_size' ) - 2,
+						'fontSize'      => intval( $this->get_setting( 'body_size' ) - 2 ),
 						'fontName'      => $this->get_setting( 'body_font' ),
 					),
 					'layout' => array(

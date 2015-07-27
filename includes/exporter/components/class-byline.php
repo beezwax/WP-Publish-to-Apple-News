@@ -25,7 +25,7 @@ class Byline extends Component {
 		$this->register_style( 'default-byline', array(
 			'textAlignment' => $this->find_text_alignment(),
 			'fontName'      => $this->get_setting( 'byline_font' ),
-			'fontSize'      => $this->get_setting( 'byline_size' ),
+			'fontSize'      => intval( $this->get_setting( 'byline_size' ) ),
 			'textColor'     => $this->get_setting( 'byline_color' ),
 		) );
 	}
