@@ -44,7 +44,7 @@ class Quote extends Component {
 			'fontSize'      => intval( $this->get_setting( 'pullquote_size' ) ),
 			'textColor'     => $this->get_setting( 'pullquote_color' ),
 			'textTransform' => $this->get_setting( 'pullquote_transform' ),
-			'lineHeight'    => $this->get_setting( 'pullquote_size' ) * $this->get_setting( 'pullquote_line_height' ),
+			'lineHeight'    => intval( $this->get_setting( 'pullquote_line_height' ) ),
 			'textAlignment' => $this->find_text_alignment(),
 		) );
 	}
