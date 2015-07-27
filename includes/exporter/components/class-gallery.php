@@ -18,6 +18,24 @@ class Gallery extends Component {
 		return null;
 	}
 
+	private function register_full_width_layout() {
+		$base_layout = array(
+			'margin' => array( 'top' => 50, 'bottom' => 30 ),
+		);
+
+		// If the body is centered, don't span the full width
+		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
+			$col_start = floor( ( $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' ) ) / 2 );
+			$col_span  = $this->get_setting( 'body_column_span' );
+
+			$base_layout['columnStart'] = $col_start;
+			$base_layout['columnSpan']  = $col_span;
+		}
+
+		$this->json['layout'] = 'gallery-layout';
+		$this->register_layout( 'gallery-layout', $base_layout  );
+	}
+
 	protected function build( $text ) {
 		preg_match_all( '/src="([^"]+)"/', $text, $matches );
 		$urls  = $matches[1];
@@ -37,16 +55,9 @@ class Gallery extends Component {
 		$this->json = array(
 			'role'   => $this->get_setting( 'gallery_type' ),
 			'items'  => $items,
-			'layout' => 'gallery-layout',
 		);
 
-		$this->register_layout( 'gallery-layout', array(
-			'columnStart' => 0,
-			'margin' => array(
-				'top'    => 50,
-				'bottom' => 30,
-			)
-		) );
+		$this->register_full_width_layout();
 	}
 
 }

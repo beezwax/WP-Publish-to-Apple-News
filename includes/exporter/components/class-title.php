@@ -13,7 +13,7 @@ class Title extends Component {
 	}
 
 	private function find_text_alignment() {
-		if( 'center' == $this->get_setting( 'body_orientation' ) ) {
+		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
 			return 'center';
 		}
 
