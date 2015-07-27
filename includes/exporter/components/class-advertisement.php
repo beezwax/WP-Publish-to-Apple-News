@@ -11,7 +11,7 @@ class Advertisement extends Component {
 
 	protected function build( $text ) {
 		$this->json = array(
-			'role' => 'banner_advertisement',
+			'role'       => 'banner_advertisement',
 			'bannerType' => 'standard',
 		);
 
@@ -26,4 +26,3 @@ class Advertisement extends Component {
 	}
 
 }
-
