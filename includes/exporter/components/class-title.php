@@ -12,14 +12,6 @@ class Title extends Component {
 		$this->set_style();
 	}
 
-	private function find_text_alignment() {
-		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
-			return 'center';
-		}
-
-		return 'left';
-	}
-
 	private function set_style() {
 		$this->json[ 'textStyle' ] = 'default-title';
 		$this->register_style( 'default-title', array(
