@@ -35,6 +35,11 @@ class Tweet extends Component {
 			'role' => 'tweet',
 			'URL'  => $url,
 		);
+
+		$this->json['layout'] = 'tweet-layout';
+		$this->register_full_width_layout( 'tweet-layout', array(
+			'margin' => array( 'top' => 30, 'bottom' => 30 )
+		) );
 	}
 
 }
