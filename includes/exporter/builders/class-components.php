@@ -139,9 +139,6 @@ class Components extends Builder {
 			$components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() )->to_array();
 		}
 
-		// Add title
-		$components[] = $this->get_component_from_shortname( 'title', $this->content_title() )->to_array();
-
 		// Add byline
 		if ( $this->content_byline() ) {
 			$components[] = $this->get_component_from_shortname( 'byline', $this->content_byline() )->to_array();
