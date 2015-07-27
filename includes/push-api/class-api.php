@@ -46,6 +46,13 @@ class API {
 		return $this->send_post_request( $url, $article, $bundles );
 	}
 
+	public function update_article( $uid, $revision, $article, $bundles = array() ) {
+		$url = $this->endpoint . '/articles/' . $uid;
+		return $this->send_post_request( $url, $article, $bundles, array(
+			'data' => array( 'revision' => $revision ),
+		) );
+	}
+
 	/**
 	 * Gets a channel information.
 	 *
@@ -108,8 +115,8 @@ class API {
 		return $this->request->delete( $url );
 	}
 
-	private function send_post_request( $url, $article, $bundles ) {
-		return $this->request->post( $url, $article, $bundles );
+	private function send_post_request( $url, $article, $bundles, $meta = null ) {
+		return $this->request->post( $url, $article, $bundles, $meta );
 	}
 
 }

@@ -27,6 +27,17 @@ class MIME_Builder {
 		return $this->boundary;
 	}
 
+	public function add_metadata( $meta ) {
+		$eol  = "\r\n";
+
+		$attachment  = '--' . $this->boundary . $eol;
+		$attachment .= 'Content-Type: application/json' . $eol;
+		$attachment .= 'Content-Disposition: form-data; name=metadata' . $eol . $eol;
+		$attachment .= json_encode( $meta ) . $eol;
+
+		return $attachment;
+	}
+
 	public function add_json_string( $name, $filename, $content ) {
 		return $this->build_attachment( $name, $filename, $content, 'application/json' );
 	}

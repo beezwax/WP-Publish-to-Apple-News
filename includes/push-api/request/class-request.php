@@ -48,8 +48,8 @@ class Request {
 	 *
 	 * @since 0.2.0
 	 */
-	public function post( $url, $article, $bundles = array() ) {
-		$content   = $this->build_content( $article, $bundles );
+	public function post( $url, $article, $bundles = array(), $meta = null ) {
+		$content   = $this->build_content( $article, $bundles, $meta );
 		$signature = $this->sign( $url, $content );
 		$response  = $this->curl_post( $url, $content, $this->mime_builder->boundary(), $signature );
 
@@ -103,8 +103,14 @@ class Request {
 
 	// TODO The exporter has an abstracted article class. Should we have
 	// something similar here? That way this method could live there.
-	private function build_content( $article, $bundles = array() ) {
-		$content = $this->mime_builder->add_json_string( 'my_article', 'article.json', $article );
+	private function build_content( $article, $bundles = array(), $meta = null ) {
+		$content = '';
+
+		if ( $meta ) {
+			$content .= $this->mime_builder->add_metadata( $meta );
+		}
+
+		$content .= $this->mime_builder->add_json_string( 'my_article', 'article.json', $article );
 		foreach ( $bundles as $bundle ) {
 			$content .= $this->mime_builder->add_content_from_file( $bundle );
 		}
