@@ -118,7 +118,7 @@ class Components extends Builder {
 
 		// Make a final check for the body collector, as it might not be empty
 		if ( ! is_null( $body_collector ) ) {
-			$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
+			$body_collector['text'] = trim( $body_collector['text'] );
 			$new_components[] = $body_collector;
 		}
 

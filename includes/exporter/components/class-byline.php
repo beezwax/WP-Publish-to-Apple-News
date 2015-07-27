@@ -33,7 +33,7 @@ class Byline extends Component {
 	private function set_default_layout() {
 		$this->json[ 'layout' ] = 'byline-layout';
 		$this->register_layout( 'byline-layout', array(
-			'margin'      => array( 'top' => 10, 'bottom' => 30 ),
+			'margin'      => array( 'top' => 10, 'bottom' => 10 ),
 			'columnStart' => 0,
 			'columnSpan'  => $this->get_setting( 'layout_columns' ),
 		) );

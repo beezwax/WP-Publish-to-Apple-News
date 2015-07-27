@@ -24,10 +24,7 @@ class Divider extends Component {
 		);
 
 		$this->register_full_width_layout( 'divider-layout', array(
-			'margin' => array(
-				'top'    => 30,
-				'bottom' => 30,
-			)
+			'margin' => array( 'top' => 25, 'bottom' => 25 )
 		) );
 	}
 

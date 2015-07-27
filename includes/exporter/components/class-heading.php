@@ -72,7 +72,7 @@ class Heading extends Component {
 	private function set_layout() {
 		$this->json['layout'] = 'heading-layout';
 		$this->register_full_width_layout( 'heading-layout', array(
-			'margin' => array( 'top' => 0, 'bottom' => 25 ),
+			'margin' => array( 'top' => 15, 'bottom' => 15 ),
 		) );
 	}
 

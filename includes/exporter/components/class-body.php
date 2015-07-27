@@ -103,7 +103,7 @@ class Body extends Component {
 		$this->register_layout( 'body-layout', array(
 			'columnStart' => $col_start,
 			'columnSpan'  => $this->get_setting( 'body_column_span' ),
-			'margin'      => array( 'top' => 20 ),
+			'margin'      => array( 'top' => 25, 'bottom' => 25 ),
 		) );
 	}
 
