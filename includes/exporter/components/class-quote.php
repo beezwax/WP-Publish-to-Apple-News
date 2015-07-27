@@ -27,6 +27,14 @@ class Quote extends Component {
 		);
 
 		$this->set_style();
+		$this->set_layout();
+	}
+
+	private function set_layout() {
+		$this->json['layout'] = 'quote-layout';
+		$this->register_layout( 'quote-layout', array(
+			'margin' => array( 'top' => 15, 'bottom' => 15 ),
+		) );
 	}
 
 	private function set_style() {
