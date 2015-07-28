@@ -17,7 +17,7 @@ class Admin_Settings_Section_Advanced extends Admin_Settings_Section {
 			'sanitize' => 'sanitize_float',
 		),
 		'pullquote_line_height' => array(
-			'label'   => 'Pullquote Line Height',
+			'label'   => 'Pull quote Line Height',
 			'type'    => 'float',
 			'sanitize' => 'sanitize_float',
 		),

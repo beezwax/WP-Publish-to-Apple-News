@@ -38,7 +38,9 @@ class Admin_Settings_Section_API extends Admin_Settings_Section {
 	);
 
 	public function print_section_info() {
-		echo 'Information about the Apple News API.';
+		echo 'Enter your Apple News credentials below. See <a target="_blank"
+			href="https://developer.apple.com/news-publisher/">the Apple News
+			documentation</a> for detailed information.';
 	}
 
 }
