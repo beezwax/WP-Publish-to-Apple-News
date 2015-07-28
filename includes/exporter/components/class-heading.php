@@ -8,11 +8,6 @@ namespace Exporter\Components;
  */
 class Heading extends Component {
 
-	/**
-	 * Quotes can be anchor targets.
-	 */
-	protected $can_be_anchor_target = true;
-
 	public static function node_matches( $node ) {
 		if ( ! preg_match( '#h[1-6]#', $node->nodeName ) ) {
 			return null;
@@ -71,10 +66,8 @@ class Heading extends Component {
 
 	private function set_layout() {
 		$this->json['layout'] = 'heading-layout';
-		$this->register_layout( 'heading-layout', array(
-			'margin' => array(
-				'top' => 20,
-			),
+		$this->register_full_width_layout( 'heading-layout', array(
+			'margin' => array( 'top' => 15, 'bottom' => 15 ),
 		) );
 	}
 
@@ -82,8 +75,8 @@ class Heading extends Component {
 		$this->json[ 'textStyle' ] = 'default-heading-' . $level;
 		$this->register_style( 'default-heading-' . $level, array(
 			'fontName'   => $this->get_setting( 'header_font' ),
-			'fontSize'   => $this->get_setting( 'header' . $level . '_size' ),
-			'lineHeight' => $this->get_setting( 'header' . $level . '_size' ) * $this->get_setting( 'header_line_height' ),
+			'fontSize'   => intval( $this->get_setting( 'header' . $level . '_size' ) ),
+			'lineHeight' => intval( $this->get_setting( 'header_line_height' ) ),
 			'textColor'  => $this->get_setting( 'header_color' ),
 		) );
 	}

@@ -27,24 +27,24 @@ class Quote extends Component {
 		);
 
 		$this->set_style();
+		$this->set_layout();
 	}
 
-	private function find_text_alignment() {
-		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
-			return 'center';
-		}
-
-		return 'left';
+	private function set_layout() {
+		$this->json['layout'] = 'quote-layout';
+		$this->register_layout( 'quote-layout', array(
+			'margin' => array( 'top' => 15, 'bottom' => 15 ),
+		) );
 	}
 
 	private function set_style() {
 		$this->json[ 'textStyle' ] = 'default-pullquote';
 		$this->register_style( 'default-pullquote', array(
-			'fontName' => $this->get_setting( 'pullquote_font' ),
-			'fontSize' => $this->get_setting( 'pullquote_size' ),
-			'textColor' => $this->get_setting( 'pullquote_color' ),
+			'fontName'      => $this->get_setting( 'pullquote_font' ),
+			'fontSize'      => intval( $this->get_setting( 'pullquote_size' ) ),
+			'textColor'     => $this->get_setting( 'pullquote_color' ),
 			'textTransform' => $this->get_setting( 'pullquote_transform' ),
-			'lineHeight' => $this->get_setting( 'pullquote_size' ) * $this->get_setting( 'pullquote_line_height' ),
+			'lineHeight'    => intval( $this->get_setting( 'pullquote_line_height' ) ),
 			'textAlignment' => $this->find_text_alignment(),
 		) );
 	}

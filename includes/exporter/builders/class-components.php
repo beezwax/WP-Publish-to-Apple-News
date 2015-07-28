@@ -118,7 +118,7 @@ class Components extends Builder {
 
 		// Make a final check for the body collector, as it might not be empty
 		if ( ! is_null( $body_collector ) ) {
-			$body_collector['text'] = trim( $body_collector['text'] ) . "\n";
+			$body_collector['text'] = trim( $body_collector['text'] );
 			$new_components[] = $body_collector;
 		}
 
@@ -138,9 +138,6 @@ class Components extends Builder {
 		if ( $this->content_cover() ) {
 			$components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() )->to_array();
 		}
-
-		// Add title
-		$components[] = $this->get_component_from_shortname( 'title', $this->content_title() )->to_array();
 
 		// Add byline
 		if ( $this->content_byline() ) {

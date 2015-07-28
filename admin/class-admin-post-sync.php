@@ -28,10 +28,6 @@ class Admin_Post_Sync {
 	 * When a post is published, or a published post updated, trigger this
 	 * function.
 	 *
-	 * TODO: UPDATE method is not yet supported by the API, for now, the
-	 * Exporter's push method DELETEs a post if it has an API ID and then sends a
-	 * POST request to create a new one.
-	 *
 	 * @since 0.4.0
 	 */
 	public function on_publish( $id, $post ) {

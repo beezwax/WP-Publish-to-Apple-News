@@ -103,7 +103,7 @@ class Body extends Component {
 		$this->register_layout( 'body-layout', array(
 			'columnStart' => $col_start,
 			'columnSpan'  => $this->get_setting( 'body_column_span' ),
-			'margin'      => array( 'top' => 20 ),
+			'margin'      => array( 'top' => 25, 'bottom' => 25 ),
 		) );
 	}
 
@@ -111,8 +111,8 @@ class Body extends Component {
 		return array(
 			'textAlignment' => 'left',
 			'fontName'      => $this->get_setting( 'body_font' ),
-			'fontSize'      => $this->get_setting( 'body_size' ),
-			'lineHeight'    => $this->get_setting( 'body_size' ) * $this->get_setting( 'body_line_height' ),
+			'fontSize'      => intval( $this->get_setting( 'body_size' ) ),
+			'lineHeight'    => intval( $this->get_setting( 'body_line_height' ) ),
 			'textColor'     => $this->get_setting( 'body_color' ),
 			'linkStyle'     => array( 'textColor' => $this->get_setting( 'body_link_color' ) ),
 		);

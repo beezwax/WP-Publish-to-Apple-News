@@ -234,6 +234,50 @@ abstract class Component {
 		$this->layouts->register_layout( $name, $spec );
 	}
 
+	/**
+	 * Register a new layout which will be displayed as full-width, so no need to
+	 * specify columnStart and columnSpan in the layout specs. This is useful
+	 * because when the body is centered, the full-width layout spans the same
+	 * colums as the body.
+	 */
+	protected function register_full_width_layout( $name, $spec ) {
+		// Initial colStart and colSpan
+		$col_start = 0;
+		$col_span  = $this->get_setting( 'layout_columns' );
+
+		// If the body is centered, don't span the full width, but the same with of
+		// the body.
+		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
+			$col_start = floor( ( $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' ) ) / 2 );
+			$col_span  = $this->get_setting( 'body_column_span' );
+		}
+
+		$this->register_layout( $name, array_merge(
+			array(
+				'columnStart' => $col_start,
+				'columnSpan'  => $col_span,
+			),
+			$spec
+		) );
+	}
+
+	/**
+	 * Some components follow this rule:
+	 *  1. If the body is centered, text here should be centered too
+	 *  2. Otherwise, align left
+	 *
+	 * This method returns either 'center' or 'left', as needed.
+	 *
+	 * @since 0.8.0
+	 */
+	protected function find_text_alignment() {
+		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
+			return 'center';
+		}
+
+		return 'left';
+	}
+
 	protected static function node_has_class( $node, $classname ) {
 		if ( ! method_exists( $node, 'getAttribute' ) ) {
 			return false;

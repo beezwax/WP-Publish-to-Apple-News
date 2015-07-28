@@ -15,22 +15,22 @@ class Settings {
 		'api_channel'     => '',
 		'api_autosync'    => 'yes',
 
-		'layout_margin'   => '75',
-		'layout_gutter'   => '20',
+		'layout_margin'   => 100,
+		'layout_gutter'   => 20,
 
 		'body_font'        => 'AvenirNext-Regular',
 		'body_size'        => 18,
 		'body_color'       => '#000',
 		'body_link_color'  => '#428BCA',
 		'body_orientation' => 'left',
-		'body_line_height' => 1.35,
+		'body_line_height' => 24,
 
 		'initial_dropcap' => 'yes',
 		'dropcap_font'    => 'Georgia-Bold',
 		'dropcap_color'   => '#000',
 
 		'byline_font'     => 'AvenirNext-Medium',
-		'byline_size'     => 16,
+		'byline_size'     => 17,
 		'byline_color'    => '#53585F',
 
 		'header_font'     => 'AvenirNext-Bold',
@@ -41,13 +41,13 @@ class Settings {
 		'header4_size'    => 21,
 		'header5_size'    => 18,
 		'header6_size'    => 16,
-		'header_line_height' => 1.3,
+		'header_line_height' => 52,
 
-		'pullquote_font'  => 'HelveticaNeue-CondensedBold',
+		'pullquote_font'  => 'AvenirNext-Bold',
 		'pullquote_size'  => 48,
 		'pullquote_color' => '#53585F',
 		'pullquote_transform' => 'uppercase',
-		'pullquote_line_height' => 1,
+		'pullquote_line_height' => 48,
 
 		// This can either be gallery or mosaic.
 		'gallery_type'   => 'gallery',

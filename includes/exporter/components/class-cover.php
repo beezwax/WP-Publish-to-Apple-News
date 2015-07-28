@@ -31,8 +31,8 @@ class Cover extends Component {
 					'fillMode' => 'cover',
 				),
 			),
-			'behaviour' => array(
-				'type' => 'parallax',
+			'behavior' => array(
+				'type' => 'background_parallax',
 			),
 		);
 
@@ -45,6 +45,7 @@ class Cover extends Component {
 			'columnSpan'           => $this->get_setting( 'layout_columns' ),
 			'ignoreDocumentMargin' => true,
 			'minimumHeight'        => '50vh',
+			'margin'               => array( 'top' => 0, 'bottom' => 25 ),
 		) );
 	}
 
