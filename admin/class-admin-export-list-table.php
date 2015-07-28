@@ -31,11 +31,23 @@ class Admin_Export_List_Table extends WP_List_Table {
 		switch ( $column_name ) {
 		case 'title':
 			return $item[ $column_name ];
+		case 'updated_at':
+			return $this->get_updated_at( $item );
 		case 'sync':
 			return $this->get_synced_status_for( $item );
 		default:
 			return print_r( $item, true ); // For debugging
 		}
+	}
+
+	private function get_updated_at( $post ) {
+		$updated_at = get_post_meta( $post->ID, 'apple_export_api_modified_at', true );
+
+		if ( $updated_at ) {
+			return date( 'F j, h:i a', strtotime( $updated_at ) );
+		}
+
+		return 'Never';
 	}
 
 	private function get_synced_status_for( $post ) {
@@ -108,9 +120,10 @@ class Admin_Export_List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return array(
-			'cb'    => '<input type="checkbox">',
-			'title' => 'Title',
-			'sync'  => 'Apple News Status',
+			'cb'         => '<input type="checkbox">',
+			'title'      => 'Title',
+			'updated_at' => 'Last updated at',
+			'sync'       => 'Apple News Status',
 		);
 	}
 

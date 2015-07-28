@@ -51,6 +51,7 @@ class Admin_Apple_Export extends Apple_Export {
 		// Styles are tiny, for now just embed them.
 		echo '<style type="text/css">';
 		echo '.wp-list-table .column-sync { width: 15%; }';
+		echo '.wp-list-table .column-updated_at { width: 15%; }';
 		echo '</style>';
 	}
 
