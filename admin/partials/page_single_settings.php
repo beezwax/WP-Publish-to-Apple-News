@@ -1,5 +1,5 @@
 <div class="wrap">
-	<h1>&ldquo;<?php echo $post->post_title; ?>&rdquo; Settings</h1>
+	<h1>&ldquo;<?php echo $post->post_title; ?>&rdquo; Options</h1>
 
 	<?php if ( isset( $message ) ): ?>
 	<div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible">
