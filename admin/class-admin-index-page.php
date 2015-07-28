@@ -23,6 +23,8 @@ class Admin_Index_Page extends Apple_Export {
 	}
 
 	public function setup_admin_page() {
+		$this->setup_assets();
+
 		// Set up main page. This page reads parameters and handles actions
 		// accordingly.
 		add_menu_page(
@@ -111,6 +113,15 @@ class Admin_Index_Page extends Apple_Export {
 		flush();
 		readfile( $path );
 		exit;
+	}
+
+	private function setup_assets() {
+		wp_enqueue_script( $this->plugin_slug . '_zeroclipboard', plugin_dir_url(
+			__FILE__) .  '../vendor/zeroclipboard/ZeroClipboard.min.js', array(
+				'jquery' ), $this->version, true );
+		wp_enqueue_script( $this->plugin_slug . '_export_table_js', plugin_dir_url(
+			__FILE__ ) .  '../assets/js/export-table.js', array( 'jquery',
+			$this->plugin_slug . '_zeroclipboard' ), $this->version, true );
 	}
 
 	// Actions
