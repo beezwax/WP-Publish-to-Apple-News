@@ -40,7 +40,7 @@ class Admin_Settings_Section_Advanced extends Admin_Settings_Section {
 	);
 
 	public function print_section_info() {
-		echo 'Settings for advanced users and designers. These are optional and have good defaults, so don\'t worry if you don\'t quite understand them.';
+		echo 'Delete values to restore defaults.';
 	}
 
 }
