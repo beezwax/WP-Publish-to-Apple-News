@@ -52,6 +52,9 @@ class Admin_Apple_Export extends Apple_Export {
 		echo '<style type="text/css">';
 		echo '.wp-list-table .column-sync { width: 15%; }';
 		echo '.wp-list-table .column-updated_at { width: 15%; }';
+		// Clipboard fix
+		echo '.row-actions .zeroclipboard-is-hover { color: #00a0d2; }';
+		echo '.row-actions.is-active { visibility: visible }';
 		echo '</style>';
 	}
 
