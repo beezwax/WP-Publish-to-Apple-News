@@ -1,0 +1,23 @@
+.form-table.apple-export input[type=text],
+.form-table.apple-export .select2,
+.form-table.apple-export input[type=password] {
+  display: block;
+  width: 285px;
+  margin-bottom: 5px;
+}
+
+.form-table.apple-export select,
+.form-table.apple-export input[type=color] {
+  display: inline-block;
+  margin-right: 15px;
+}
+
+.form-table.apple-export input[type=number] {
+  width: 45px;
+  display: inline-block;
+  margin-right: 15px;
+}
+
+.form-table.apple-export input.input-float {
+  width: 60px;
+}
