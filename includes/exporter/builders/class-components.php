@@ -162,9 +162,9 @@ class Components extends Builder {
 		// Process the result some more. It gets passed by reference for efficiency.
 		// It's not like it's a big memory save but still relevant.
 		// FIXME: Maybe this could have been done in a better way?
-		$this->add_pullquote_if_needed( $result );
 		$this->add_advertisement_if_needed( $result );
 		$this->anchor_components( $result );
+		$this->add_pullquote_if_needed( $result );
 
 		return $result;
 	}
@@ -196,12 +196,12 @@ class Components extends Builder {
 
 			// Anchor this component to previous component. If there's no previous
 			// component available, try with the next one.
-			$other_component = @$components[ $i - 1 ];
-			if ( ! $other_component ) {
-				$other_component = @$components[ $i + 1 ];
+			$target_component = @$components[ $i - 1 ];
+			if ( ! $target_component ) {
+				$target_component = @$components[ $i + 1 ];
 				// Check whether this is the only component of the article, if it is,
 				// just ignore anchoring.
-				if ( ! $other_component ) {
+				if ( ! $target_component ) {
 					return;
 				}
 			}
@@ -211,53 +211,86 @@ class Components extends Builder {
 			// anchoring something, also skip.
 			$counter = 1;
 			$len     = count( $components );
-			while ( !$other_component->can_be_anchor_target() && $i + $counter < $len ) {
-				$other_component = $components[ $i + $counter ];
+			while ( !$target_component->can_be_anchor_target() && $i + $counter < $len ) {
+				$target_component = $components[ $i + $counter ];
 				$counter++;
 			}
-			// If the last element is still an anchor target, this element cannot be
-			// anchored.
-			if ( $other_component->is_anchor_target() ) {
-				return;
-			}
 
-			$component->set_json( 'anchor', array(
-				'targetComponentIdentifier' => $other_component->uid(),
-				'targetAnchorPosition'      => 'center',
-				'rangeStart'                => 0,
-				'rangeLength'               => 1,
-			) );
-
-			// Given $component, find out the opposite position.
-			$other_position = null;
-			if ( Component::ANCHOR_AUTO == $component->get_anchor_position() ) {
-				$other_position = 'left' == $this->get_setting( 'body_orientation' ) ? Component::ANCHOR_LEFT : Component::ANCHOR_RIGHT;
-			} else {
-				$other_position = Component::ANCHOR_LEFT == $component->get_anchor_position() ? Component::ANCHOR_RIGHT : Component::ANCHOR_LEFT;
-			}
-			$other_component->set_anchor_position( $other_position );
-			// The anchor method adds the required layout, thus making the actual
-			// anchoring. This must be called after using the UID, because we need to
-			// distinguish target components from anchor ones and components with
-			// UIDs are always anchor targets.
-			$other_component->anchor();
-			$component->anchor();
+			$this->anchor_together( $component, $target_component );
 		}
+	}
+
+	/**
+	 * Given two components, anchor the first one to the second.
+	 */
+	private function anchor_together( $component, $target_component ) {
+		if ( $target_component->is_anchor_target() ) {
+			return;
+		}
+
+		$component->set_json( 'anchor', array(
+			'targetComponentIdentifier' => $target_component->uid(),
+			'targetAnchorPosition'      => 'center',
+			'rangeStart'                => 0,
+			'rangeLength'               => 1,
+		) );
+
+		// Given $component, find out the opposite position.
+		$other_position = null;
+		if ( Component::ANCHOR_AUTO == $component->get_anchor_position() ) {
+			$other_position = 'left' == $this->get_setting( 'body_orientation' ) ? Component::ANCHOR_LEFT : Component::ANCHOR_RIGHT;
+		} else {
+			$other_position = Component::ANCHOR_LEFT == $component->get_anchor_position() ? Component::ANCHOR_RIGHT : Component::ANCHOR_LEFT;
+		}
+		$target_component->set_anchor_position( $other_position );
+		// The anchor method adds the required layout, thus making the actual
+		// anchoring. This must be called after using the UID, because we need to
+		// distinguish target components from anchor ones and components with
+		// UIDs are always anchor targets.
+		$target_component->anchor();
+		$component->anchor();
 	}
 
 	private function add_pullquote_if_needed( &$components ) {
 		// Must we add a pullquote?
 		$pullquote          = $this->content_setting( 'pullquote' );
 		$pullquote_position = $this->content_setting( 'pullquote_position' );
+		$valid_positions    = array( 'top', 'middle', 'bottom' );
 
-		if ( empty( $pullquote ) || $pullquote_position <= 0 || $pullquote_position >= count( $components ) ) {
+		if ( empty( $pullquote ) || !in_array( $pullquote_position, $valid_positions ) ) {
 			return;
 		}
 
+		// Find position for pullquote
+		$start = 0; // Assume top position, which is the easiest, as it's always 0
+		$len   = count( $components );
+
+		// If the position is not top, make some math for middle and bottom
+		if ( 'middle' == $pullquote_position ) {
+			$start = floor( $len / 3 );         // Start looking at the second third
+		} else if ( 'bottom' == $pullquote_position ) {
+			$start = floor( ( $len / 4 ) * 3 ); // Start looking at the third quarter
+		}
+
+		for ( $position = $start; $position < $len; $position++ ) {
+			if ( $components[ $position ]->can_be_anchor_target() ) {
+				break;
+			}
+		}
+
+		// If none was found, do not add
+		if ( ! $components[ $position ]->can_be_anchor_target() ) {
+			return;
+		}
+
+		// Build a new component and set the anchor position to AUTO
 		$component = $this->get_component_from_shortname( 'blockquote', "<blockquote>$pullquote</blockquote>" );
 		$component->set_anchor_position( Component::ANCHOR_AUTO );
+		// Anchor $component to the target component: $components[ $position ]
+		$this->anchor_together( $component, $components[ $position ] );
+
 		// Add component in position
-		array_splice( $components, $pullquote_position, 0, array( $component ) );
+		array_splice( $components, $position, 0, array( $component ) );
 	}
 
 	private function get_component_from_shortname( $shortname, $html = null ) {

@@ -137,7 +137,7 @@ class Admin_Index_Page extends Apple_Export {
 	private function settings_action( $id ) {
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
 			update_post_meta( $id, 'apple_export_pullquote', $_POST['pullquote'] );
-			update_post_meta( $id, 'apple_export_pullquote_position', intval( $_POST['pullquote_position'] ) );
+			update_post_meta( $id, 'apple_export_pullquote_position', $_POST['pullquote_position'] );
 			$message = 'Settings saved.';
 		}
 
