@@ -86,7 +86,7 @@ class Markdown {
 	}
 
 	private function parse_text_node( $node ) {
-		return $node->nodeValue;
+		return str_replace( '!', '\\!', $node->nodeValue );
 	}
 
 	private function parse_linebreak_node( $node ) {
@@ -111,7 +111,7 @@ class Markdown {
 	 */
 	private function parse_hyperlink_node( $node ) {
 		$url = $node->getAttribute( 'href' );
-		return ' [' . $this->parse_nodes( $node->childNodes ) . '](' . $url . ')';
+		return '[' . $this->parse_nodes( $node->childNodes ) . '](' . $url . ')';
 	}
 
 	private function parse_unordered_list_node( $node ) {
