@@ -45,21 +45,6 @@ class Admin_Settings extends Apple_Export {
 
 		add_action( 'admin_init', array( $this, 'register_sections' ) );
 		add_action( 'admin_menu', array( $this, 'setup_options_page' ) );
-		add_action( 'admin_head', array( $this, 'settings_styles' ) );
-	}
-
-	public function settings_styles() {
-		echo '<style type="text/css">';
-		echo '.form-table.apple-export input[type=text],';
-		echo '.form-table.apple-export .select2,';
-		echo '.form-table.apple-export input[type=password] { display: block; width: 285px; margin-bottom: 5px; }';
-
-		echo '.form-table.apple-export select,';
-		echo '.form-table.apple-export input[type=color] { display: inline-block; margin-right: 15px; }';
-
-		echo '.form-table.apple-export input[type=number] { width: 45px; display: inline-block; margin-right: 15px; }';
-		echo '.form-table.apple-export input.input-float { width: 60px; }';
-		echo '</style>';
 	}
 
 	private function add_sections() {
@@ -110,6 +95,8 @@ class Admin_Settings extends Apple_Export {
 	private function register_assets() {
 		wp_enqueue_style( 'apple-export-select2-css', plugin_dir_url( __FILE__ ) .
 			'../vendor/select2/select2.min.css', array() );
+		wp_enqueue_style( 'apple-export-settings-css', plugin_dir_url( __FILE__ ) .
+			'../assets/css/settings.css', array() );
 
 		wp_enqueue_script( 'apple-export-select2-js', plugin_dir_url( __FILE__ ) .
 			'../vendor/select2/select2.full.min.js', array( 'jquery' ) );

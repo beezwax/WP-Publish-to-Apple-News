@@ -20,7 +20,7 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 			'type'    => 'integer',
 		),
 		'body_font' => array(
-			'label'   => 'Body font',
+			'label'   => '',
 			'type'    => 'font',
 		),
 		'body_size' => array(
@@ -52,7 +52,7 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 			'type'    => 'color',
 		),
 		'byline_font' => array(
-			'label'   => 'Byline font',
+			'label'   => '',
 			'type'    => 'font',
 		),
 		'byline_size' => array(
@@ -64,7 +64,7 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 			'type'    => 'color',
 		),
 		'header_font' => array(
-			'label'   => 'Header font',
+			'label'   => '',
 			'type'    => 'font',
 		),
 		'header_color' => array(
