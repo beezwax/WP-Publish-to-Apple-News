@@ -13,7 +13,9 @@
 					<fieldset>
 						<?php foreach ( $group['settings'] as $setting_name => $setting_meta ): ?>
 						<label class="setting-container">
-							<span class="label-name"><?php echo $setting_meta['label']; ?></span>
+							<?php if ( !empty( $setting_meta['label'] ) ): ?>
+								<span class="label-name"><?php echo $setting_meta['label']; ?></span>
+							<?php endif; ?>
 							<?php $section->render_field( array( $setting_name, $setting_meta['default'] ) ); ?>
 						</label>
 						<br />
