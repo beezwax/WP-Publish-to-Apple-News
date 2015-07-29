@@ -9,7 +9,7 @@ class Exporter_Content_Settings {
 	// Exporter's default settings.
 	private $settings = array(
 		'pullquote'          => '',
-		'pullquote_position' => '2',
+		'pullquote_position' => 'top',
 	);
 
 	public function get( $name ) {
