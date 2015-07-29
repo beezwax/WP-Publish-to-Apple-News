@@ -96,19 +96,19 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 			'type'    => 'integer',
 		),
 		'pullquote_font' => array(
-			'label'   => 'Pullquote font',
+			'label'   => '',
 			'type'    => 'font',
 		),
 		'pullquote_size' => array(
-			'label'   => 'Pullquote font size',
+			'label'   => 'Pull quote font size',
 			'type'    => 'integer',
 		),
 		'pullquote_color' => array(
-			'label'   => 'Pullquote color',
+			'label'   => 'Pull quote color',
 			'type'    => 'color',
 		),
 		'pullquote_transform' => array(
-			'label'   => 'Pullquote transformation',
+			'label'   => 'Pull quote transformation',
 			'type'    => array( 'none', 'uppercase' ),
 		),
 		'gallery_type' => array(
@@ -147,8 +147,8 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 			  'header5_size', 'header6_size' ),
 		),
 		'pullquote' => array(
-			'label'       => 'Pullquote',
-			'description' => 'Articles can have an optional <a href="https://en.wikipedia.org/wiki/Pull_quote">Pullquote</a>.',
+			'label'       => 'Pull quote',
+			'description' => 'Articles can have an optional <a href="https://en.wikipedia.org/wiki/Pull_quote">Pull quote</a>.',
 			'settings'    => array( 'pullquote_font', 'pullquote_size', 'pullquote_color', 'pullquote_transform' ),
 		),
 		'gallery' => array(

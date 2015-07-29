@@ -12,7 +12,7 @@
 		<?php wp_nonce_field( 'export', 'apple-export-nonce' ); ?>
 		<table class="form-table">
 			<tr>
-				<th scope="row">Pullquote</th>
+				<th scope="row">Pull quote</th>
 				<td>
 				<textarea name="pullquote" placeholder="Lorem ipsum..." rows="10" class="large-text"><?php echo @$post_meta[ 'apple_export_pullquote' ][0] ?></textarea>
 					<p class="description">This is optional and can be left blank. A pull
@@ -22,7 +22,7 @@
 				</td>
 			</tr>
 			<tr>
-				<th scope="row">Pullquote position</th>
+				<th scope="row">Pull quote position</th>
 				<td>
 					<input name="pullquote_position" type="number" class="small-text" value="<?php echo @$post_meta[ 'apple_export_pullquote_position' ][0] ?>">
 					<p class="description">The position in the article the pullquote will appear.</p>
