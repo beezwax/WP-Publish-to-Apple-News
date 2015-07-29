@@ -13,8 +13,8 @@
 					<fieldset>
 						<?php foreach ( $group['settings'] as $setting_name => $setting_meta ): ?>
 						<label class="setting-container">
-							<?php $section->render_field( array( $setting_name, $setting_meta['default'] ) ); ?>
 							<span class="label-name"><?php echo $setting_meta['label']; ?></span>
+							<?php $section->render_field( array( $setting_name, $setting_meta['default'] ) ); ?>
 						</label>
 						<br />
 						<?php endforeach; ?>
