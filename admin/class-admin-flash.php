@@ -10,16 +10,6 @@ class Flash {
 
 	function __construct() {
 		@session_start();
-		add_action( 'admin_head', array( $this, 'register_styles' ) );
-	}
-
-	public function register_styles() {
-		echo '<style type="text/css">';
-		echo '.apple-export.flash-message { margin: 2em 0; border-radius: 2px; padding: 0.5em 1em; border: 1px solid #bce8f1; background-color: #d9edf7; color: #31708f; }';
-		echo '.apple-export.flash-message h3 { margin: 0.25em 0 0.5em; padding: 0; }';
-		echo '.apple-export.flash-message.success { border-color: #d6e9c6; background-color: #dff0d8; color: #3c763d; }';
-		echo '.apple-export.flash-message.error { border-color: #ebccd1; background-color: #f2dede; color: #a94442; }';
-		echo '</style>';
 	}
 
 	public static function message( $message, $type ) {
@@ -69,26 +59,27 @@ class Flash {
 
 	private static function show_error_flash( $message ) {
 		?>
-		<div class="apple-export flash-message error">
-			<h3>Oops! Something went wrong</h3>
-			<?php echo $message; ?>
+		<div class="notice error is-dismissible">
+			<p><strong><?php echo $message ?></strong></p>
+			<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
 		</div>
 		<?php
 	}
 
 	private static function show_success_flash( $message ) {
 		?>
-		<div class="apple-export flash-message success">
-			<h3>Success</h3>
-			<?php echo $message; ?>
+		<div class="notice updated is-dismissible">
+			<p><strong><?php echo $message ?></strong></p>
+			<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
 		</div>
 		<?php
 	}
 
 	private static function show_info_flash( $message ) {
 		?>
-		<div class="apple-export flash-message info">
-			<?php echo $message; ?>
+		<div class="notice is-dismissible">
+			<p><strong><?php echo $message ?></strong></p>
+			<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
 		</div>
 		<?php
 	}
