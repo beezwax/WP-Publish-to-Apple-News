@@ -10,15 +10,12 @@ class Quote_Test extends Component_TestCase {
 		$component = new Quote( '<blockquote><p>my quote</p></blockquote>',
 			null, $this->settings, $this->styles, $this->layouts );
 
-		$this->assertEquals(
-			array(
-				'role' => 'quote',
-				'text' => "my quote\n\n",
-				'textStyle' => 'default-pullquote',
-				'format' => 'markdown',
-		 	),
-			$component->to_array()
-		);
+		$result = $component->to_array();
+		$this->assertEquals( 'quote', $result['role'] );
+		$this->assertEquals( "my quote\n\n", $result['text'] );
+		$this->assertEquals( 'markdown', $result['format'] );
+		$this->assertEquals( 'default-pullquote', $result['textStyle'] );
+		$this->assertEquals( 'quote-layout', $result['layout'] );
 	}
 
 }

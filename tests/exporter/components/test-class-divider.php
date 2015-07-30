@@ -9,14 +9,11 @@ class Divider_Test extends Component_TestCase {
 	public function testBuildingRemovesTags() {
 		$component = new Divider( '<hr/>', null, $this->settings,
 			$this->styles, $this->layouts );
+		$result = $component->to_array();
 
-		$this->assertEquals(
-			array(
-				'role'   => 'divider',
-				'layout' => 'divider-layout',
-		 	),
-			$component->to_array()
-		);
+		$this->assertEquals( 'divider', $result['role'] );
+		$this->assertEquals( 'divider-layout', $result['layout'] );
+		$this->assertNotNull( $result['stroke'] );
 	}
 
 }

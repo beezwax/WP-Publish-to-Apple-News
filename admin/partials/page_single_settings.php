@@ -25,9 +25,9 @@
 				<th scope="row">Pull quote position</th>
 				<td>
 					<select name="pullquote_position">
-						<option <?php if ( 'top' == @$post_meta[ 'apple_export_pullquote_position' ][0] ) echo 'selected' ?> value="top">top</option>
-						<option <?php if ( 'middle' == @$post_meta[ 'apple_export_pullquote_position' ][0] ) echo 'selected' ?> value="middle">middle</option>
-						<option <?php if ( 'bottom' == @$post_meta[ 'apple_export_pullquote_position' ][0] ) echo 'selected' ?> value="bottom">bottom</option>
+						<option <?php if ( 'top' == @$post_meta['apple_export_pullquote_position'][0] ) echo 'selected' ?> value="top">top</option>
+						<option <?php if ( 'middle' == @$post_meta['apple_export_pullquote_position'][0] ) echo 'selected' ?> value="middle">middle</option>
+						<option <?php if ( 'bottom' == @$post_meta['apple_export_pullquote_position'][0] ) echo 'selected' ?> value="bottom">bottom</option>
 					</select>
 					<p class="description">The position in the article the pullquote will appear.</p>
 				</td>

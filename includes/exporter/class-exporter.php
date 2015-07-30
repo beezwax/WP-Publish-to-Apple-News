@@ -129,7 +129,7 @@ class Exporter {
 			'version'    => '0.10',
 			'identifier' => 'post-' . $this->content_id(),
 			'language'   => 'en',
-			'title'			 => $this->content_title(),
+			'title'      => $this->content_title(),
 		);
 
 		// Builders
