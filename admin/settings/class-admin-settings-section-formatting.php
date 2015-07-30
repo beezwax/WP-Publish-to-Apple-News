@@ -44,7 +44,7 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 			'type'    => array( 'yes', 'no' ),
 		),
 		'dropcap_font' => array(
-			'label'   => 'Dropcap font',
+			'label'   => '',
 			'type'    => 'font',
 		),
 		'dropcap_color' => array(
@@ -133,7 +133,7 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 		),
 		'dropcap' => array(
 			'label'       => 'Dropcap',
-			'settings'    => array( 'initial_dropcap', 'dropcap_font', 'dropcap_color' ),
+			'settings'    => array( 'dropcap_font', 'initial_dropcap', 'dropcap_color' ),
 		),
 		'byline' => array(
 			'label'       => 'Byline',
