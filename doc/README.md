@@ -3,9 +3,9 @@
 ##Installation
 
 Installing the Publish to Apple News plugin is similar to the process of
-installing any other WordPress plugin. Simply perform these steps:
+installing other WordPress plugins. Simply perform these steps:
 
-1. Download the Apple News plugin.
+1. Download the Publish to Apple News plugin.
 2. Upload the entire “apple-news” folder to the “./wp-content/plugins” directory
    on your web server.
 3. Activate the Publish to Apple News plugin using the “Plugins” menu in
@@ -38,26 +38,26 @@ This plugin is not responsible for setting up or managing your News Publisher
 channel with Apple, nor does using this plugin guarantee that Apple News will
 accept your content. Some information and links to documentation are provided
 here to point you in the right direction for this process. Please see the Apple
-Developer and Apple News Publisher documentation and terms for complete
-information.
+Developer and Apple News Publisher documentation and terms on Apple’s website
+for complete information.
 
-To enable content from your WordPress blog to be published to Apple News, you
-must obtain and enter your Apple News API credentials from Apple to enable your
-WordPress content to be published to Apple News.
+To enable content from your WordPress blog to be published to your Apple News
+channel, you must obtain and enter your Apple News API credentials from Apple to
+enable your WordPress content to be published to Apple News.
 
-To obtain them, click the “Apple News documentation” link at the top of the “API
-Settings” subsection of *Settings > Apple News*. This link will direct you to
-instructions for obtaining your credentials. Once you receive them from Apple,
-simply enter your private API Key, Secret, and Channel settings into the “Apple
-News API” fields. Once entered, you can begin publishing WordPress site content
-to Apple News.
+To obtain these credentials, click the “Apple News documentation” link at the
+top of the “API Settings” subsection of *Settings > Apple News*. This link will
+direct you to instructions for obtaining your credentials. Once you receive them
+from Apple, enter your private API Key, Secret, and Channel settings into the
+“Apple News API” fields. Once entered, you can begin publishing WordPress site
+content to Apple News.
 
 ###General (Site-wide) Settings
 
 Once your WordPress site has been linked to your Apple News channel, your next
 step is to configure site-wide general settings that determine how your content
-will be published to Apple News. You may want to review and revise these
-site-wide settings on occasion.
+will be published to Apple News. You may want to review these site-wide settings
+on occasion.
 
 ####Choosing How Content is Published to Apple News
 
@@ -66,18 +66,18 @@ located at the bottom of the “Apple News API” subsection of *Settings > Appl
 News*.
 
 By default, this option is set to **Yes**, so that whenever you publish or
-update an article to your own WordPress site, the article will also be
+update an article on your own WordPress site, the article will also be
 automatically pushed to your Apple News channel, without any additional action
 or customization on your part. In most cases, this setting is recommended.
 
-If you would instead prefer more granular control of which content is posted to
-your Apple News channel, set “Automatically Publish…” to **No**. With this
+If you would instead prefer more granular control over which content is posted
+to your Apple News channel, set “Automatically Publish…” to **No**. With this
 setting, new content posted to your site will *not* be automatically pushed to
 your Apple News channel. In this case, you will need to manually push any posts
 you create, or later modify, to Apple News (this process is described in
 “Per-Post Settings” below).
 
-####Setting Default Post Formatting
+####Set Default Formatting
 
 The “Formatting” subsection of *Settings > Apple News* provides options that
 determine the general appearance for how posts in Apple News should appear.
@@ -99,8 +99,8 @@ Once the above steps are completed, you’re ready to publish content to Apple
 News. If you’ve chosen to automatically publish your blog content to Apple News,
 all posts created and updated from this time forward will automatically be
 pushed to your Apple News channel. If you’ve disabled Automatic Publishing to
-Apple News, this section describes the tools you’ll use to manually publish
-selected posts from your WordPress site to Apple News.
+Apple News, the following section describes the tools you’ll use to manually
+publish selected posts from your WordPress site to Apple News.
 
 In addition, no matter which Automatic Publishing option you’ve selected, this
 section describes how you can override general settings for any specific post as
@@ -108,20 +108,20 @@ desired.
 
 ###The “Apple News” Admin Panel Menu
 
-The “Apple News” Menu (not to be confused with the site-wide Settings > Apple
-News described in the previous section) provides important tools and settings
+The “Apple News” menu (not to be confused with the site-wide *Settings > Apple
+News* described in the previous section) provides important tools and settings
 for specific posts.
 
 ####Controlling Individual Posts
 
 The top section of the “Apple News” pane provides a dashboard-like view that
-displays each post you’ve published to your WordPress blog, as well as whether
-each post has been published to Apple News, and if so, the date of the latest
-update. In addition, individual and bulk controls give you granular control over
-each post.
+displays each post you’ve published on your WordPress blog, as well as whether
+each post has been published to your Apple News channel, and if so, the date of
+the latest update. In addition, individual and bulk controls give you granular
+control over each post.
 
 As described above, if you’ve chosen to automatically publish content to Apple
-News, each new post that you publish (or later update) to your own WordPress
+News, each new post that you publish (or later update) on your own WordPress
 site will also be automatically pushed to your Apple News channel. In this case,
 your primary use of these settings will likely be to override any posts you
 choose not to publish to Apple News.
@@ -142,9 +142,9 @@ displayed: “Delete from Apple News” and “Copy News URL“.
 
 Choosing “Publish” or “Delete from Apple News” will either push the current
 version of the selected post to Apple News, or permanently remove the post from
-Apple News. You can override either choice if desired at any future time (e.g.,
-a post deleted from Apple News can later be published once again if desired).
-Note that once a post has been deleted from Apple News, no further updates will
+Apple News. You can override either choice at any future time (e.g., a post
+deleted from Apple News can later be published once again if desired). Note that
+once a post has been deleted from Apple News, no further updates will
 automatically be published to Apple News, regardless of whether you’ve enabled
 “Automatically Publish to Apple News” in your general settings.
 
@@ -152,38 +152,37 @@ The “Download” option will generate a ZIP compressed file containing a JSON
 document describing the selected post, along with any related images, to your
 browser’s default Downloads location.
 
-Finally, the “Options” menu allows you to select a Pull Quote for the selected
+Finally, the “Options” menu allows you to create a Pull Quote for the selected
 post. In addition to entering a pull quote, you can choose to place it at the
 top, middle, or bottom of the selected post.
 
 ####Bulk Publishing Controls
 
-Bulk actions can be particularly helpful for pushing older content to Apple
-News. This is because Automatic Publishing only takes effect on content created
-or modified after the Apple News Plugin has been installed. Therefore, to push a
-number of pre-existing posts to Apple News, Bulk Publishing can save significant
-time and redundant steps.
+Bulk actions can be particularly helpful for pushing older content to your Apple
+News channel. This is because Automatic Publishing only takes effect on content
+created or modified after the Publish to Apple News plugin has been installed.
+Therefore, to push a number of pre-existing posts to Apple News, Bulk Publishing
+can save significant time and redundant steps.
 
 *Warning: Using Bulk Publishing for a large number of pre-existing posts at one
 time may require significant processing time and server resources. It is
 recommended that you test this feature with smaller batches of pre-existing
 posts first.*
 
-You can also choose to publish several posts to your Apple News channel at once,
-using the bulk control located at the top left of this section. Simply check any
-number of desired posts, then select “publish” from the Bulk Actions menu. This
-will open a page displaying the posts you’ve selected, and the status of each
-post as it is pushed to Apple News. Note that while bulk publishing actions are
-in progress, you should not close your browser window or navigate away from this
-page. Doing so will not cause any problems, but will halt the bulk action in
-progress.
+You can choose to publish several posts to your Apple News channel at once,
+using the *Bulk Actions* control located at the top left of this section. Simply
+check any number of desired posts, then select “publish” from the Bulk Actions
+menu. This will open a page displaying the posts you’ve selected, and the status
+of each post as it is pushed to Apple News. Note that while bulk publishing
+actions are in progress, you should not close your browser window or navigate
+away from this page. Doing so will halt the bulk action in progress.
 
 
 ###Tips
 
-In general, very little effort should be required to configure content once
-you’ve configured this plugin to your desired settings. Even so, these simple
-tips will help your content look its best:
+In general, little effort should be required to prepare your content itself for
+publishing to Apple News once you’ve configured this plugin to your desired
+settings. Even so, these simple tips will help your content look its best:
 
 ####Controlling Image Placement
 
@@ -215,7 +214,13 @@ slide; if desired, you can change this to “Mosaic” style in the plugin setti
 
 ####Advertisement
 
-By default, your exported posts will contain advertisement somewhere in the
-middle of your content. If you don’t want to profit with ads, simply set the
-“Advertisement” option in the plugin settings to **No**.
+While this plugin is not responsible for managing advertising options for your
+Apple News channel, it does provide simple settings to help you prepare your
+content for this. Please see the Apple News Publisher and iAds documentation and
+terms on Apple’s website for more information about advertising options on Apple
+News.
 
+By default, your exported posts should be ready to include advertising content
+somewhere in the middle of your content. If you don’t want your WordPress
+content to be prepared in this way, simply set the “Advertisement” option in the
+plugin settings to **No**.
