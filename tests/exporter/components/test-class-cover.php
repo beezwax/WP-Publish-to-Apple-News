@@ -27,8 +27,8 @@ class Cover_Test extends Component_TestCase {
 						'fillMode' => 'cover',
 					),
 				),
-				'behaviour' => array(
-					'type' => 'parallax',
+				'behavior' => array(
+					'type' => 'background_parallax',
 				),
 			),
 			$component->to_array()

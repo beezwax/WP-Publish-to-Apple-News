@@ -17,11 +17,10 @@ class Image_Test extends Component_TestCase {
 		$component = new Image( '<img src="http://someurl.com/filename.jpg" alt="Example" />',
 			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
 
-		// Test for valid JSON
-		$this->assertEquals(
-			array( 'role' => 'photo', 'URL' => 'bundle://filename.jpg' ),
-			$component->to_array()
-		);
+		$result = $component->to_array();
+		$this->assertEquals( 'photo', $result['role'] );
+		$this->assertEquals( 'bundle://filename.jpg', $result['URL'] );
+		$this->assertEquals( 'anchored-image', $result['layout'] );
 	}
 
 }

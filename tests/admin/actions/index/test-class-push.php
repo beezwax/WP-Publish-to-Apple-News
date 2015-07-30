@@ -29,6 +29,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 		$response->data->createdAt = time();
 		$response->data->modifiedAt = time();
 		$response->data->shareUrl = 'http://test.url/some-path';
+		$response->data->revision = uniqid();
 		return $response;
 	}
 

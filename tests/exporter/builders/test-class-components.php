@@ -31,9 +31,8 @@ class Component_Tests extends PHPUnit_Framework_TestCase {
 		$builder = new Components( $this->content, $this->settings );
 		$result  = $builder->to_array();
 
-		$this->assertEquals( 2, count( $result ) );
-		$this->assertEquals( 'title', $result[0]['role'] );
-		$this->assertEquals( 'body', $result[1]['role'] );
+		$this->assertEquals( 1, count( $result ) );
+		$this->assertEquals( 'body', $result[0]['role'] );
 	}
 
 }

@@ -10,18 +10,12 @@ class Tweet_Test extends Component_TestCase {
 		$component = new Tweet( '<blockquote class="twitter-tweet" lang="en">Invalid content. No URL.</blockquote>',
 			null, $this->settings, $this->styles, $this->layouts );
 
-		$this->assertEquals(
-			null,
-			$component->to_array()
-		);
+		$this->assertEquals( null, $component->to_array() );
 	}
 
 	public function testMatchesASingleURL() {
 		$node = $this->build_node( 'https://twitter.com/gosukiwi/status/608069908044390400' );
-
-		$this->assertNotNull(
-			Tweet::node_matches( $node )
-		);
+		$this->assertNotNull( Tweet::node_matches( $node ) );
 	}
 
 	public function testGetsURLFromNewFormat() {
@@ -33,13 +27,9 @@ class Tweet_Test extends Component_TestCase {
 			href="https://twitter.com/gosukiwi/status/608069908044390400">June 9,
 			2015</a></blockquote>', null, $this->settings, $this->styles, $this->layouts );
 
-		$this->assertEquals(
-			array(
-				'role' => 'tweet',
-				'URL' => 'https://twitter.com/gosukiwi/status/608069908044390400',
-		 	),
-			$component->to_array()
-		);
+		$result = $component->to_array();
+		$this->assertEquals( 'tweet', $result['role'] );
+		$this->assertEquals( 'https://twitter.com/gosukiwi/status/608069908044390400', $result['URL'] );
 	}
 
 	public function testGetsURLFromOldFormat() {
@@ -49,13 +39,9 @@ class Tweet_Test extends Component_TestCase {
 			data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
 			null, $this->settings, $this->styles, $this->layouts );
 
-		$this->assertEquals(
-			array(
-				'role' => 'tweet',
-				'URL' => 'https://twitter.com/wordpressdotcom/status/204557548249026561',
-		 	),
-			$component->to_array()
-		);
+		$result = $component->to_array();
+		$this->assertEquals( 'tweet', $result['role'] );
+		$this->assertEquals( 'https://twitter.com/wordpressdotcom/status/204557548249026561', $result['URL'] );
 	}
 
 	public function testGetUsingWWW() {
@@ -65,13 +51,9 @@ class Tweet_Test extends Component_TestCase {
 			data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
 			null, $this->settings, $this->styles, $this->layouts );
 
-		$this->assertEquals(
-			array(
-				'role' => 'tweet',
-				'URL' => 'https://twitter.com/wordpressdotcom/status/204557548249026561',
-		 	),
-			$component->to_array()
-		);
+		$result = $component->to_array();
+		$this->assertEquals( 'tweet', $result['role'] );
+		$this->assertEquals( 'https://twitter.com/wordpressdotcom/status/204557548249026561', $result['URL'] );
 	}
 
 	public function testGetUsingStatuses() {
@@ -81,13 +63,9 @@ class Tweet_Test extends Component_TestCase {
 			data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
 			null, $this->settings, $this->styles, $this->layouts );
 
-		$this->assertEquals(
-			array(
-				'role' => 'tweet',
-				'URL' => 'https://twitter.com/wordpressdotcom/status/204557548249026561',
-		 	),
-			$component->to_array()
-		);
+		$result = $component->to_array();
+		$this->assertEquals( 'tweet', $result['role'] );
+		$this->assertEquals( 'https://twitter.com/wordpressdotcom/status/204557548249026561', $result['URL'] );
 	}
 
 	public function testGetLastLink() {
@@ -99,13 +77,9 @@ class Tweet_Test extends Component_TestCase {
 			data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
 			null, $this->settings, $this->styles, $this->layouts );
 
-		$this->assertEquals(
-			array(
-				'role' => 'tweet',
-				'URL' => 'https://twitter.com/wordpressdotcom/status/123',
-		 	),
-			$component->to_array()
-		);
+		$result = $component->to_array();
+		$this->assertEquals( 'tweet', $result['role'] );
+		$this->assertEquals( 'https://twitter.com/wordpressdotcom/status/123', $result['URL'] );
 	}
 
 }
