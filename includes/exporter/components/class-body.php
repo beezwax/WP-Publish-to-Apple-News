@@ -58,6 +58,15 @@ class Body extends Component {
 		list( $whole, $tag_name ) = $matches;
 		list( $left, $right )     = explode( $whole, $html, 3 );
 
+		// If the paragraph is empty, just return the right-hand-side
+		$para = array( 'name' => 'p', 'value' => self::clean_html( $left . '</p>' ) );
+		if ( '<p></p>' == $para['value'] ) {
+			return array_merge(
+				array( array( 'name' => $tag_name, 'value' => $whole ) ),
+				self::split_non_markdownable( self::clean_html( '<p>' . $right ) )
+			);
+		}
+
 		return array_merge(
 		 	array(
 				array( 'name'  => 'p',  'value' => self::clean_html( $left . '</p>' ) ),
