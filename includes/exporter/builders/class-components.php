@@ -123,7 +123,7 @@ class Components extends Builder {
 		}
 
 		// Trim all body components before returning
-		foreach( $new_components as $i => $component ) {
+		foreach ( $new_components as $i => $component ) {
 			if ( 'body' == $component['role'] ) {
 				$new_components[$i]['text'] = trim( $new_components[$i]['text'] );
 			}
