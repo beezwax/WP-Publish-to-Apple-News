@@ -29,7 +29,7 @@
 						<option <?php if ( 'middle' == @$post_meta['apple_export_pullquote_position'][0] ) echo 'selected' ?> value="middle">middle</option>
 						<option <?php if ( 'bottom' == @$post_meta['apple_export_pullquote_position'][0] ) echo 'selected' ?> value="bottom">bottom</option>
 					</select>
-					<p class="description">The position in the article the pullquote will appear.</p>
+					<p class="description">The position in the article the pull quote will appear.</p>
 				</td>
 			</tr>
 		</table>
