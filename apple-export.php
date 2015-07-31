@@ -44,9 +44,14 @@ function activate_wp_plugin() {
 	}
 }
 
+require plugin_dir_path( __FILE__ ) . 'includes/exporter/class-settings.php';
 // Plugin deactivation. Clean up everything.
 function deactivate_wp_plugin() {
 	// Do something
+	$settings = new Exporter\Settings;
+	foreach ( $settings->all() as $name => $value ) {
+		delete_option( $name );
+	}
 }
 
 register_activation_hook( __FILE__,   'activate_wp_plugin' );
