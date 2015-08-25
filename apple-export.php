@@ -12,7 +12,7 @@
  * Plugin Name: Apple Export
  * Plugin URI:  http://beezwax.net
  * Description: Export and sync posts to Apple format.
- * Version:     0.2.0
+ * Version:     0.9.0
  * Author:      Beezwax
  * Author URI:  http://beezwax.net
  * Text Domain: apple-export
@@ -23,28 +23,23 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-// Plugin activation. Create tables and stuff.
+// Plugin activation.
 function activate_wp_plugin() {
 	// Check for PHP version
 	if ( version_compare( PHP_VERSION, '5.3.0' ) < 0 ) {
 		deactivate_plugins( basename( __FILE__ ) );
-		wp_die('<p>This plugin requires at least PHP 5.3.0</p>');
+		wp_die( __( 'This plugin requires at least PHP 5.3.0', 'apple-export' ) );
 	}
 
 	// Check for ZipArchive dependency
 	if ( ! class_exists( 'ZipArchive' ) ) {
 		deactivate_plugins( basename( __FILE__ ) );
-		wp_die('<p>This PHP installation was not compiled with ZipArchive, which is required by this plugin.</p>');
-	}
-
-	// Check for CURL
-	if ( ! function_exists( 'curl_version' ) ) {
-		deactivate_plugins( basename( __FILE__ ) );
-		wp_die('<p>This PHP installation does not include CURL, which is required by this plugin.</p>');
+		wp_die( __( 'This PHP installation was not compiled with ZipArchive, which is required by this plugin.', 'apple-export' ) );
 	}
 }
 
 require plugin_dir_path( __FILE__ ) . 'includes/exporter/class-settings.php';
+
 // Plugin deactivation. Clean up everything.
 function deactivate_wp_plugin() {
 	// Do something
@@ -54,8 +49,11 @@ function deactivate_wp_plugin() {
 	}
 }
 
-register_activation_hook( __FILE__,   'activate_wp_plugin' );
-register_deactivation_hook( __FILE__, 'deactivate_wp_plugin' );
+// WordPress VIP plugins do not execute these hooks, so ignore in that environment.
+if ( ! defined( 'WPCOM_IS_VIP_ENV' ) || ! WPCOM_IS_VIP_ENV ) {
+	register_activation_hook( __FILE__,   'activate_wp_plugin' );
+	register_deactivation_hook( __FILE__, 'deactivate_wp_plugin' );
+}
 
 // Initiate plugin class
 require plugin_dir_path( __FILE__ ) . 'includes/class-apple-export.php';
