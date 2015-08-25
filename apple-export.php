@@ -28,13 +28,13 @@ function activate_wp_plugin() {
 	// Check for PHP version
 	if ( version_compare( PHP_VERSION, '5.3.0' ) < 0 ) {
 		deactivate_plugins( basename( __FILE__ ) );
-		wp_die('<p>This plugin requires at least PHP 5.3.0</p>');
+		wp_die( __( 'This plugin requires at least PHP 5.3.0', 'apple-export' ) );
 	}
 
 	// Check for ZipArchive dependency
 	if ( ! class_exists( 'ZipArchive' ) ) {
 		deactivate_plugins( basename( __FILE__ ) );
-		wp_die('<p>This PHP installation was not compiled with ZipArchive, which is required by this plugin.</p>');
+		wp_die( __( 'This PHP installation was not compiled with ZipArchive, which is required by this plugin.', 'apple-export' ) );
 	}
 }
 
