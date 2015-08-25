@@ -157,7 +157,7 @@ class Request {
 	private function parse_response( $response, $json = true ) {
 		// Ensure we have an expected response type
 		if ( ( ! is_array( $response ) || ! isset( $response['body'] ) ) && ! is_wp_error( $response ) ) {
-			throw new Request_Exception( "Invalid response:" . $response );
+			throw new Request_Exception( __( 'Invalid response:', 'apple-export' ) . $response );
 		}
 
 		// Check for errors
@@ -166,7 +166,7 @@ class Request {
 			foreach ( $response->get_error_messages() as $error ) {
 				$string_errors .= $error . "\n";
 			}
-			throw new Request_Exception( "There has been an error with your request:\n$string_errors" );
+			throw new Request_Exception( __( 'There has been an error with your request:', 'apple-export' ) . "\n$string_errors" );
 		}
 
 		// Return the response in the desired format
