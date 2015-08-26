@@ -52,6 +52,7 @@ class Request {
 		// Set the default WordPress HTTP API args
 		$this->default_args = apply_filters( 'apple_export_request_args', array(
 			'sslverify' => false, // required until an endpoint certificate issue is resolved
+			'timeout' => 30, // required because we need to package all images
 			'reject_unsafe_urls' => true,
 		) );
 	}
