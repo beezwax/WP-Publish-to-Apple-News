@@ -1,120 +1,101 @@
 <?php
 namespace Exporter;
 
-use \ZipArchive as ZipArchive;
-use \RecursiveIteratorIterator as RecursiveIteratorIterator;
-use \RecursiveDirectoryIterator as RecursiveDirectoryIterator;
-
 /**
- * Manage the exporter's workspace. This class is able to write to the
- * workspace as well as zipping it.
+ * Manage the exporter's workspace.
+ * For WordPress, this is entirely handled using meta fields
+ * since the filesystem is unavailable on WordPress VIP and
+ * potentially other enterprise WordPress hosts.
  *
  * @author  Federico Ramirez
+ * @author	Bradford Campeau-Laurion
  * @since   0.2.0
  */
 class Workspace {
 
 	/**
-	 * Base path of the workspace directory. This should have 775 permissions,
-	 * assuming the folder is owned by the webserver group (which is recommended
-	 * but could also be the user). If not existant, the plugin will try to
-	 * create it.
+	 * Meta key used to store the json content with the post.
 	 *
 	 * @var string
-	 * @since 0.2.0
+	 * @since 0.9.0
 	 */
-	private $base_path;
+	const JSON_META_KEY = 'apple_export_api_json';
 
 	/**
-	 * Inside the workspace directory there's a tmp directory, it's used as a
-	 * place to generate files into so they can then be zipped and stored in the
-	 * workspace. The tmp directory gets cleaned up after each zipfile
-	 * generation.
+	 * Meta key used to store bundled assets with the post.
 	 *
 	 * @var string
+	 * @since 0.9.0
+	 */
+	const BUNDLE_META_KEY = 'apple_export_api_bundle';
+
+	/**
+	 * Current ID of the content we are constructing a workspace for.
+	 *
+	 * @var int
+	 * @since 0.9.0
+	 */
+	public $content_id;
+
+	/**
+	 * Initialize.
+	 *
+	 * @param int $content_id
 	 * @since 0.2.0
 	 */
-	private $tmp_path;
-
-	function __construct() {
-		$this->base_path = realpath( plugin_dir_path( __FILE__ ) . '../../workspace' ) . '/';
-		$this->tmp_path  = $this->base_path . 'tmp/';
-
-		if ( ! file_exists( $this->base_path ) ) {
-			mkdir( $this->base_path, 0775, true );
-		}
-
-		if ( ! file_exists( $this->tmp_path ) ) {
-			mkdir( $this->tmp_path, 0775, true );
-		}
+	function __construct( $content_id ) {
+		$this->content_id = $content_id;
 	}
 
 	/**
-	 * Delete all files from the workspace directory.
+	 * Delete all bundle data from the post.
 	 *
-	 * @since   0.2.0
+	 * @param int $content_id
+	 * @since 0.2.0
 	 */
 	public function clean_up() {
-		$files = glob( $this->tmp_path . '*', GLOB_BRACE );
-		foreach ( $files as $file ) {
-			if ( is_file( $file ) ) {
-				unlink( $file );
-			}
-		}
+		delete_post_meta( $this->content_id, self::JSON_META_KEY );
+		delete_post_meta( $this->content_id, self::BUNDLE_META_KEY );
 	}
 
 	/**
-	 * Write a file to the workspace.
+	 * Adds a source file to be included later in the bundle.
 	 *
-	 * @since   0.2.0
+	 * @param string $filename
+	 * @param string $source
+	 * @since 0.9.0
 	 */
-	public function write_tmp_file( $file, $contents ) {
-		file_put_contents( $this->tmp_path . $file, $contents );
+	public function bundle_source( $filename, $source ) {
+		add_post_meta( $this->content_id, self::BUNDLE_META_KEY, $source );
 	}
 
 	/**
-	 * Reads the contents of a file or URL.
+	 * Stores the JSON file for this workspace to be included in the bundle.
 	 *
-	 * @since   0.2.0
+	 * @param string $content
+	 * @since 0.9.0
 	 */
-	public function get_file_contents( $file ) {
-		return file_get_contents( $file );
+	public function write_json( $content ) {
+		update_post_meta( $this->content_id, self::JSON_META_KEY, $content );
 	}
 
 	/**
-	 * Compresses the workspace directory recursively into a ZIP.
+	 * Gets the JSON content.
 	 *
-	 * @since   0.2.0
-	 * @return  The full path to the generated zipfile
+	 * @return string
+	 * @since 0.9.0
 	 */
-	public function zip( $filename ) {
-		$zipfile_path = $this->base_path . $filename;
-
-		$zip = new ZipArchive();
-		$zip->open( $zipfile_path, ZipArchive::CREATE | ZipArchive::OVERWRITE );
-
-		$files = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator( $this->tmp_path ),
-			RecursiveIteratorIterator::LEAVES_ONLY
-		);
-
-		foreach ( $files as $name => $file ) {
-			if ( ! $file->isDir() ) {
-				$file_path     = $file->getRealPath();
-				$relative_path = 'article/' . substr( $file_path, strlen( $this->tmp_path ) );
-
-				$zip->addFile( $file_path, $relative_path );
-			}
-		}
-
-		// Write the zipfile
-		$zip->close();
-		// Clean up tmp dir and return generated zipfile path
-		$this->clean_up();
-		return $zipfile_path;
+	public function get_json() {
+		return get_post_meta( $this->content_id, self::JSON_META_KEY, true );
 	}
 
-	public function tmp_path() {
-		return $this->tmp_path;
+	/**
+	 * Gets any bundles.
+	 *
+	 * @return array
+	 * @since 0.9.0
+	 */
+	public function get_bundles() {
+		return get_post_meta( $this->content_id, self::BUNDLE_META_KEY );
 	}
 }

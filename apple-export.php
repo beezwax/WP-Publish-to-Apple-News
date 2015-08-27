@@ -30,12 +30,6 @@ function activate_wp_plugin() {
 		deactivate_plugins( basename( __FILE__ ) );
 		wp_die( __( 'This plugin requires at least PHP 5.3.0', 'apple-export' ) );
 	}
-
-	// Check for ZipArchive dependency
-	if ( ! class_exists( 'ZipArchive' ) ) {
-		deactivate_plugins( basename( __FILE__ ) );
-		wp_die( __( 'This PHP installation was not compiled with ZipArchive, which is required by this plugin.', 'apple-export' ) );
-	}
 }
 
 require plugin_dir_path( __FILE__ ) . 'includes/exporter/class-settings.php';

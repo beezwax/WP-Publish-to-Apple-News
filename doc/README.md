@@ -148,8 +148,8 @@ once a post has been deleted from Apple News, no further updates will
 automatically be published to Apple News, regardless of whether you’ve enabled
 “Automatically Publish to Apple News” in your general settings.
 
-The “Download” option will generate a ZIP compressed file containing a JSON
-document describing the selected post, along with any related images, to your
+The “Download” option will generate a JSON
+document describing the selected post to your
 browser’s default Downloads location.
 
 Finally, the “Options” menu allows you to create a Pull Quote for the selected

@@ -18,14 +18,16 @@ class Exporter {
 	 * The content object to be exported.
 	 *
 	 * @var  Exporter_Content
+	 * @access private
 	 * @since 0.2.0
 	 */
 	private $content;
 
 	/**
-	 * The workspace object, used to write and zip files.
+	 * The workspace object, used to create the bundle.
 	 *
 	 * @var  Workspace
+
 	 * @since 0.2.0
 	 */
 	private $workspace;
@@ -49,11 +51,18 @@ class Exporter {
 
 	function __construct( $content, $workspace = null, $settings = null ) {
 		$this->content   = $content;
-		$this->workspace = $workspace ?: new Workspace();
+		$this->workspace = $workspace ?: new Workspace( $this->content_id() );
 		$this->settings  = $settings  ?: new Settings();
 		$this->builders  = array();
 	}
 
+	/**
+	 * An ordered hash of builders. They will be executed in order when building
+	 * the JSON array.
+	 *
+	 * @var array
+	 * @since 0.4.0
+	 */
 	public function initialize_builders( $builders = null ) {
 		if ( $builders ) {
 			$this->builders = $builders;
@@ -90,7 +99,7 @@ class Exporter {
 			$this->initialize_builders();
 		}
 
-		$this->write_to_workspace( 'article.json', $this->generate_json() );
+		$this->write_json( $this->generate_json() );
 	}
 
 	/**
@@ -103,18 +112,20 @@ class Exporter {
 	}
 
 	/**
-	 * Based on the content this instance holds, create an Article Format zipfile
+	 * Based on the content this instance holds, create an Article Format bundle.
 	 * and return the path.
-	 * This function builds the article, zips it and cleans up after.
+	 * This function builds the article and cleans up after.
 	 */
 	public function export() {
 		// If an export or push was cancelled, the workspace might be polluted.
 		// Clean beforehand.
 		$this->clean_workspace();
-		// Build the ./workspace/tmp folder.
+
+		// Build the bundle content.
 		$this->generate();
-		// ZIP files inside that folder. This also cleans the workspace when done.
-		return $this->zip_workspace( $this->content_id() );
+
+		// Some use cases for this function expect it to return the JSON.
+		return $this->get_json();
 	}
 
 	/**
@@ -147,16 +158,20 @@ class Exporter {
 	/**
 	 * Isolate all dependencies.
 	 */
-	private function write_to_workspace( $filename, $contents ) {
-		$this->workspace->write_tmp_file( $filename, $contents );
+	private function write_json( $content ) {
+		$this->workspace->write_json( $content );
+	}
+
+	public function get_json() {
+		return $this->workspace->get_json();
+	}
+
+	public function get_bundles() {
+		return $this->workspace->get_bundles();
 	}
 
 	private function clean_workspace() {
 		$this->workspace->clean_up();
-	}
-
-	private function zip_workspace( $id ) {
-		return $this->workspace->zip( 'article-' . $id . '.zip' );
 	}
 
 	private function build_article_style() {
