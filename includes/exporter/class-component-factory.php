@@ -39,6 +39,9 @@ class Component_Factory {
 		self::register_component( 'title'        ,   '\\Exporter\\Components\\Title'           );
 		self::register_component( 'byline'       ,   '\\Exporter\\Components\\Byline'          );
 		self::register_component( 'advertisement',   '\\Exporter\\Components\\Advertisement'   );
+
+		// Allow built-in components and order to be overridden
+		self::$components = apply_filters( 'apple_export_initialize_components', self::$components );
 	}
 
 	private static function register_component( $shortname, $classname ) {
