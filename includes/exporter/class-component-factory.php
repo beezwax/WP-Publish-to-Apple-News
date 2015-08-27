@@ -45,7 +45,7 @@ class Component_Factory {
 	}
 
 	private static function register_component( $shortname, $classname ) {
-		self::$components[ $shortname ] = $classname;
+		self::$components[ $shortname ] = apply_filters( 'apple_export_register_component', $classname, $shortname );
 	}
 
 	public static function get_component( $shortname, $html ) {
