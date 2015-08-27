@@ -101,17 +101,14 @@ class Admin_Index_Page extends Apple_Export {
 	}
 
 	/**
-	 * Given the full path to a zip file INSIDE THE PLUGN DIRECTORY, redirect
-	 * to the appropriate URL to download it.
+	 * Downloads the JSON file for troubleshooting purposes.
 	 */
-	private function download_zipfile( $path ) {
-		header( 'Content-Type: application/zip, application/octet-stream' );
-		header( 'Content-Transfer-Encoding: Binary' );
-		header( 'Content-Disposition: attachment; filename="' . basename( $path ) . '"' );
-
+	private function download_json( $json, $id ) {
+		header( 'Content-Type: application/json' );
+		header( 'Content-Disposition: attachment; filename="article-' . absint( $id ) . '.json"' );
 		ob_clean();
 		flush();
-		readfile( $path );
+		echo $json;
 		exit;
 	}
 
@@ -149,8 +146,8 @@ class Admin_Index_Page extends Apple_Export {
 	private function export_action( $id ) {
 		$action = new Actions\Index\Export( $this->settings, $id );
 		try {
-			$path = $action->perform();
-			$this->download_zipfile( $path );
+			$json = $action->perform();
+			$this->download_json( $json, $id );
 		} catch ( Actions\Action_Exception $e ) {
 			$this->flash_error( $e->getMessage() );
 		}

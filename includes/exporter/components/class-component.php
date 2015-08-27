@@ -183,16 +183,15 @@ abstract class Component {
 	}
 
 	/**
-	 * Given a source (either a file path or an URL) gets the contents and writes
-	 * them into a file with the given filename.
+	 * Calls the current workspace bundle_source method to allow for
+	 * different implementations of the bundling technique.
 	 *
 	 * @param string $filename  The name of the file to be created
 	 * @param string $source    The path or URL of the resource which is going to
 	 *                          be bundled
 	 */
 	protected function bundle_source( $filename, $source ) {
-		$content = $this->workspace->get_file_contents( $source );
-		$this->workspace->write_tmp_file( $filename, $content );
+		$this->workspace->bundle_source( $filename, $source );
 	}
 
 	// Isolate settings dependency
