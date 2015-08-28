@@ -151,9 +151,9 @@ class Admin_Export_List_Table extends WP_List_Table {
 	public function get_columns() {
 		return array(
 			'cb'         => '<input type="checkbox">',
-			'title'      => 'Title',
-			'updated_at' => 'Last updated at',
-			'sync'       => 'Apple News Status',
+			'title'      => __( 'Title', 'apple-news' ),
+			'updated_at' => __( 'Last updated at', 'apple-news' ),
+			'sync'       => __( 'Apple News Status', 'apple-news' ),
 		);
 	}
 
@@ -181,7 +181,7 @@ class Admin_Export_List_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'push' => 'Publish',
+			'push' => __( 'Publish', 'apple-news' ),
 		);
 	}
 

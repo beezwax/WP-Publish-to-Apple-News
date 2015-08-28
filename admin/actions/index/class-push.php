@@ -57,7 +57,7 @@ class Push extends API_Action {
 		$post = get_post( $this->id );
 
 		if ( ! $post ) {
-			throw new \Actions\Action_Exception( __( 'Could not find post with id ', 'apple-export' ) . $this->id );
+			throw new \Actions\Action_Exception( __( 'Could not find post with id ', 'apple-news' ) . $this->id );
 		}
 
 		$api_time   = get_post_meta( $this->id, 'apple_export_api_modified_at', true );
@@ -73,8 +73,7 @@ class Push extends API_Action {
 	 */
 	private function push() {
 		if ( ! $this->is_api_configuration_valid() ) {
-			throw new \Actions\Action_Exception( __( 'Your API settings seem to be empty. Please fill in the API key, API
-				secret and API channel fields in the plugin configuration page.', 'apple-export' ) );
+			throw new \Actions\Action_Exception( __( 'Your API settings seem to be empty. Please fill in the API key, API secret and API channel fields in the plugin configuration page.', 'apple-news' ) );
 		}
 
 		// Ignore if the post is already in sync
@@ -108,10 +107,10 @@ class Push extends API_Action {
 			delete_post_meta( $this->id, 'apple_export_api_deleted' );
 		} catch ( \Push_API\Request\Request_Exception $e ) {
 			if ( preg_match( '#WRONG_REVISION#', $e->getMessage() ) ) {
-				throw new \Actions\Action_Exception( __( 'It seems like the article was updated by another call. If the problem persist, try removing and pushing again.', 'apple-export' ) );
+				throw new \Actions\Action_Exception( __( 'It seems like the article was updated by another call. If the problem persist, try removing and pushing again.', 'apple-news' ) );
 			}
 
-			throw new \Actions\Action_Exception( __( 'There has been an error with the API. Please make sure your API settings are correct and try again.', 'apple-export' ) );
+			throw new \Actions\Action_Exception( __( 'There has been an error with the API. Please make sure your API settings are correct and try again.', 'apple-news' ) );
 		} finally {
 			$this->clean_workspace();
 		}
