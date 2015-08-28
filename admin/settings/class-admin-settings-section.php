@@ -11,6 +11,8 @@ class Admin_Settings_Section extends Apple_Export {
 	 * All available iOS fonts.
 	 *
 	 * @since 0.4.0
+	 * @var array
+	 * @access protected
 	 */
 	protected static $fonts = array(
 		'AcademyEngravedLetPlain',
@@ -301,19 +303,69 @@ class Admin_Settings_Section extends Apple_Export {
 		'Zapfino',
 	);
 
+	/**
+	 * Name of the settings section.
+	 *
+	 * @var string
+	 * @access protected
+	 */
 	protected $name;
+
+	/**
+	 * Slug of the settings section.
+	 *
+	 * @var string
+	 * @access protected
+	 */
 	protected $slug;
+
+	/**
+	 * Settings page.
+	 *
+	 * @var string
+	 * @access protected
+	 */
 	protected $page;
+
+	/**
+	 * Base settings.
+	 *
+	 * @var Settings
+	 * @access protected
+	 */
 	protected $base_settings;
+
+	/**
+	 * Settings for the section.
+	 *
+	 * @var array
+	 * @access protected
+	 */
 	protected $settings = array();
+
+	/**
+	 * Groups for the section.
+	 *
+	 * @var array
+	 * @access protected
+	 */
 	protected $groups   = array();
 
+	/**
+	 * Constructor.
+	 */
 	function __construct( $page ) {
 		$this->page          = $page;
 		$base_settings       = new \Exporter\Settings;
 		$this->base_settings = $base_settings->all();
 	}
 
+	/**
+	 * Get the settings section name.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function name() {
 		return $this->name;
 	}
@@ -321,6 +373,9 @@ class Admin_Settings_Section extends Apple_Export {
 	/**
 	 * Return an array which contains all groups and their related settings,
 	 * embedded.
+	 *
+	 * @return array
+	 * @access public
 	 */
 	public function groups() {
 		$result = array();
@@ -341,10 +396,21 @@ class Admin_Settings_Section extends Apple_Export {
 		return $result;
 	}
 
+	/**
+	 * Get the ID of the settings section.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function id() {
 		return $this->plugin_slug . '_options_section_' . $this->slug;
 	}
 
+	/**
+	 * Register the settings section.
+	 *
+	 * @access public
+	 */
 	public function register() {
 		add_settings_section(
 			$this->id(),
@@ -370,6 +436,12 @@ class Admin_Settings_Section extends Apple_Export {
 		}
 	}
 
+	/**
+	 * Render a settings field.
+	 *
+	 * @param array $args
+	 * @access public
+	 */
 	public function render_field( $args ) {
 		list( $name, $default_value ) = $args;
 		$type  = $this->get_type_for( $name );
@@ -435,14 +507,33 @@ class Admin_Settings_Section extends Apple_Export {
 		printf( $field, $name, $value );
 	}
 
+	/**
+	 * Get the type for a field.
+	 *
+	 * @param string $name
+	 * @return string
+	 * @access private
+	 */
 	private function get_type_for( $name ) {
 		return @$this->settings[ $name ]['type'] ?: 'string';
 	}
 
+	/**
+	 * Get the default for a field.
+	 *
+	 * @param string $name
+	 * @return string
+	 * @access private
+	 */
 	private function get_default_for( $name ) {
 		return $this->base_settings[ $name ];
 	}
 
+	/**
+	 * Prints section info.
+	 *
+	 * @access public
+	 */
 	public function print_section_info() {
 		return;
 	}

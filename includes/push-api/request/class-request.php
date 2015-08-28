@@ -16,6 +16,7 @@ class Request {
 	 * Helper class used to build the MIME parts of the request.
 	 *
 	 * @var MIME_Builder
+	 * @access private
 	 * @since 0.2.0
 	 */
 	private $mime_builder;
@@ -24,6 +25,7 @@ class Request {
 	 * Whether or not we are debugging using a reverse proxy, like Charles.
 	 *
 	 * @var boolean
+	 * @access private
 	 * @since 0.2.0
 	 */
 	private $debug;
@@ -32,6 +34,7 @@ class Request {
 	 * The credentials that will be used to sign sent requests.
 	 *
 	 * @var Credentials
+	 * @access private
 	 * @since 0.2.0
 	 */
 	private $credentials;
@@ -40,10 +43,18 @@ class Request {
 	 * Default arguments passed to the WordPress HTTP API functions.
 	 *
 	 * @var array
+	 * @access private
 	 * @since 0.9.0
 	 */
 	private $default_args;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param Credentials $credentials
+	 * @param boolean $debug
+	 * @param Mime_Builder $mime_builder
+	 */
 	function __construct( $credentials, $debug = false, $mime_builder = null ) {
 		$this->credentials  = $credentials;
 		$this->debug        = $debug;

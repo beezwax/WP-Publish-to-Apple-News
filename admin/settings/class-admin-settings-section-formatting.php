@@ -7,9 +7,28 @@
  */
 class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 
+	/**
+	 * Name of the formatting settings section.
+	 *
+	 * @var string
+	 * @access protected
+	 */
 	protected $name = 'Formatting';
+
+	/**
+	 * Slug of the formatting settings section.
+	 *
+	 * @var string
+	 * @access protected
+	 */
 	protected $slug = 'formatting-options';
 
+	/**
+	 * Formatting settings.
+	 *
+	 * @var array
+	 * @access protected
+	 */
 	protected $settings = array(
 		'layout_margin' => array(
 			'label'   => 'Layout margin',
@@ -121,6 +140,12 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 		),
  	);
 
+	/**
+	 * Formatting groups.
+	 *
+	 * @var array
+	 * @access protected
+	 */
 	protected $groups = array(
 		'layout' => array(
 			'label'       => 'Layout Spacing',
@@ -162,6 +187,11 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 		),
 	);
 
+	/**
+	 * Prints section info.
+	 *
+	 * @access public
+	 */
 	public function print_section_info() {
 		echo 'Configuration on the look and feel of the generated articles';
 	}

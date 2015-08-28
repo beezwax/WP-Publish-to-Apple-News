@@ -10,6 +10,14 @@ use \Exporter\Exporter as Exporter;
  */
 class Image extends Component {
 
+	/**
+	 * Look for node matches for this component.
+	 *
+	 * @param DomNode $node
+	 * @return mixed
+	 * @static
+	 * @access public
+	 */
 	public static function node_matches( $node ) {
 		// Is this an image node?
 		if (
@@ -22,6 +30,13 @@ class Image extends Component {
 		return null;
 	}
 
+	/**
+	 * Check if the image file exists.
+	 *
+	 * @param DomNode $node
+	 * @return boolean
+	 * @access private
+	 */
 	private static function image_exists( $node ) {
 		$html = $node->ownerDocument->saveXML( $node );
 		preg_match( '/src="([^"]*?)"/im', $html, $matches );
@@ -37,6 +52,12 @@ class Image extends Component {
 		return file_exists( $path );
 	}
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		preg_match( '/src="([^"]*?)"/im', $text, $matches );
 		$url      = $matches[1];
@@ -86,6 +107,11 @@ class Image extends Component {
 		}
 	}
 
+	/**
+	 * Register the anchor layout.
+	 *
+	 * @access private
+	 */
 	private function register_anchor_layout() {
 		$this->json['layout'] = 'anchored-image';
 		$this->register_layout( 'anchored-image', array(
@@ -93,6 +119,11 @@ class Image extends Component {
 		) );
 	}
 
+	/**
+	 * Register the non-anchor layout.
+	 *
+	 * @access private
+	 */
 	private function register_non_anchor_layout() {
 		$this->json['layout'] = 'full-width-image';
 		$this->register_full_width_layout( 'full-width-image', array(
@@ -100,6 +131,12 @@ class Image extends Component {
 		) );
 	}
 
+	/**
+	 * Find the caption alignment to use.
+	 *
+	 * @return string
+	 * @access private
+	 */
 	private function find_caption_alignment() {
 		$text_alignment = null;
 		if ( Component::ANCHOR_NONE == $this->get_anchor_position() ) {
@@ -121,6 +158,9 @@ class Image extends Component {
 	/**
 	 * If the image has a caption, we have to also show a caption component.
 	 * Let's instead, return the JSON as a Container instead of an Image.
+	 *
+	 * @param string $caption
+	 * @access private
 	 */
 	private function group_component( $caption ) {
 		$image_component = $this->json;

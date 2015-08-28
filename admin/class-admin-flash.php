@@ -6,6 +6,11 @@
  */
 class Flash {
 
+	/**
+	 * Prepare items for the table.
+	 *
+	 * @access public
+	 */
 	const PREFIX = 'apple_export_flash_';
 
 	function __construct() {

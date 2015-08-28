@@ -10,6 +10,7 @@ class Credentials {
 	 *
 	 * @var string
 	 * @since 0.2.0
+	 * @access private
 	 */
 	private $key;
 
@@ -20,20 +21,39 @@ class Credentials {
 	 *
 	 * @var string
 	 * @since 0.2.0
+	 * @access private
 	 */
 	private $secret;
 
 
+	/**
+	 * Constructor.
+	 *
+	 * @param string $key
+	 * @param string $secret
+	 */
 	function __construct( $key, $secret ) {
 		$this->secret = $secret;
 		$this->key    = $key;
 	}
 
-	function key() {
+	/**
+	 * Get the key.
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function key() {
 		return $this->key;
 	}
 
-	function secret() {
+	/**
+	 * Get the secret.
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function secret() {
 		return $this->secret;
 	}
 

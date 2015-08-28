@@ -13,8 +13,17 @@ use \Exporter\Exporter as Exporter;
  */
 class Component_Layouts extends Builder {
 
+	/**
+	 * All layouts.
+	 *
+	 * @var array
+	 * @access private
+	 */
 	private $layouts;
 
+	/**
+	 * Constructor.
+	 */
 	function __construct( $content, $settings ) {
 		parent::__construct( $content, $settings );
 		$this->layouts  = array();
@@ -24,6 +33,9 @@ class Component_Layouts extends Builder {
 	 * Register a layout into the exporter.
 	 *
 	 * @since 0.4.0
+	 * @param string $name
+	 * @param string $spec
+	 * @access public
 	 */
 	public function register_layout( $name, $spec ) {
 		// Only register once, layouts have unique names.
@@ -38,11 +50,21 @@ class Component_Layouts extends Builder {
 	 * Returns all layouts registered so far.
 	 *
 	 * @since 0.4.0
+	 * @return array
+	 * @access protected
 	 */
 	protected function build() {
 		return $this->layouts;
 	}
 
+	/**
+	 * Check if a layout already exists.
+	 *
+	 * @since 0.4.0
+	 * @param string $name
+	 * @return boolean
+	 * @access private
+	 */
 	private function layout_exists( $name ) {
 		return array_key_exists( $name, $this->layouts );
 	}
@@ -50,6 +72,9 @@ class Component_Layouts extends Builder {
 	/**
 	 * Sets the required layout for a component to anchor another component or
 	 * be anchored.
+	 *
+	 * @param Component $component
+	 * @access public
 	 */
 	public function set_anchor_layout_for( $component ) {
 		// Are we anchoring left or right?

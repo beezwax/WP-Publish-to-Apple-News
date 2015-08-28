@@ -28,7 +28,8 @@ class Push extends API_Action {
 	/**
 	 * Constructor.
 	 *
-	 * @access public
+	 * @param Settings $settings
+	 * @param int $id
 	 */
 	function __construct( $settings, $id ) {
 		parent::__construct( $settings );

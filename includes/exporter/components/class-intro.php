@@ -9,6 +9,12 @@ namespace Exporter\Components;
  */
 class Intro extends Component {
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		$this->json = array(
 			'role' => 'intro',
@@ -18,6 +24,11 @@ class Intro extends Component {
 		$this->set_style();
 	}
 
+	/**
+	 * Set the style for the component.
+	 *
+	 * @access private
+	 */
 	private function set_style() {
 		$this->json[ 'textStyle' ] = 'default-intro';
 		$this->register_style( 'default-intro', array(

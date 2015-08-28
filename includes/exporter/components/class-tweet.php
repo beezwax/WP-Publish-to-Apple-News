@@ -9,6 +9,14 @@ namespace Exporter\Components;
  */
 class Tweet extends Component {
 
+	/**
+	 * Look for node matches for this component.
+	 *
+	 * @param DomNode $node
+	 * @return mixed
+	 * @static
+	 * @access public
+	 */
 	public static function node_matches( $node ) {
 		// Check if the body of a node is solely a tweet URL
 		$is_twitter_url = $node->nodeName == 'p' && preg_match(
@@ -22,6 +30,12 @@ class Tweet extends Component {
 		return null;
 	}
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		// Find tweeter URL in HTML string
 		if ( ! preg_match_all( '/https?:\/\/(?:www\.)?twitter.com\/(?:#!\/)?([^\/]*)\/status(?:es)?\/(\d+)/', $text, $matches, PREG_SET_ORDER ) ) {

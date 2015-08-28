@@ -23,7 +23,9 @@ if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-// Plugin activation.
+/**
+ * Activate the plugin.
+ */
 function activate_wp_plugin() {
 	// Check for PHP version
 	if ( version_compare( PHP_VERSION, '5.3.0' ) < 0 ) {
@@ -34,7 +36,9 @@ function activate_wp_plugin() {
 
 require plugin_dir_path( __FILE__ ) . 'includes/exporter/class-settings.php';
 
-// Plugin deactivation. Clean up everything.
+/**
+ * Deactivate the plugin.
+ */
 function deactivate_wp_plugin() {
 	// Do something
 	$settings = new Exporter\Settings;
@@ -49,7 +53,7 @@ if ( ! defined( 'WPCOM_IS_VIP_ENV' ) || ! WPCOM_IS_VIP_ENV ) {
 	register_deactivation_hook( __FILE__, 'deactivate_wp_plugin' );
 }
 
-// Initiate plugin class
+// Initialize plugin class
 require plugin_dir_path( __FILE__ ) . 'includes/class-apple-export.php';
 require plugin_dir_path( __FILE__ ) . 'admin/class-admin-apple-export.php';
 

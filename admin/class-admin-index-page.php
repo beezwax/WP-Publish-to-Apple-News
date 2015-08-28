@@ -13,18 +13,30 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-export-list-table.php';
 
 class Admin_Index_Page extends Apple_Export {
 
+	/**
+	 * Current plugin settings.
+	 *
+	 * @var array
+	 * @access private
+	 */
 	private $settings;
-	private $messager;
 
+	/**
+	 * Constructor.
+	 */
 	function __construct( $settings ) {
 		$this->settings = $settings;
 
 		add_action( 'admin_menu', array( $this, 'setup_admin_page' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'setup_assets' ) );
 	}
 
+	/**
+	 * Sets up the admin page.
+	 *
+	 * @access public
+	 */
 	public function setup_admin_page() {
-		$this->setup_assets();
-
 		// Set up main page. This page reads parameters and handles actions
 		// accordingly.
 		add_menu_page(
@@ -46,6 +58,8 @@ class Admin_Index_Page extends Apple_Export {
 	 * their own class.
 	 *
 	 * @since 0.4.0
+	 * @return mixed
+	 * @access public
 	 */
 	public function page_router() {
 		$id     = intval( @$_GET['post_id'] );
@@ -79,12 +93,24 @@ class Admin_Index_Page extends Apple_Export {
 		}
 	}
 
+	/**
+	 * Shows a success message.
+	 *
+	 * @param string $message
+	 * @access public
+	 */
 	private function flash_success( $message ) {
 		Flash::success( $message );
 		wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
 		wp_die(); // Ignore everything else that would be rendered otherwise
 	}
 
+	/**
+	 * Shows an error message.
+	 *
+	 * @param string $message
+	 * @access public
+	 */
 	private function flash_error( $message ) {
 		Flash::error( $message );
 		wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
@@ -95,6 +121,9 @@ class Admin_Index_Page extends Apple_Export {
 	 * Gets a setting by name which was loaded from WordPress options.
 	 *
 	 * @since 0.4.0
+	 * @param string $name
+	 * @return mixed
+	 * @access private
 	 */
 	private function get_setting( $name ) {
 		return $this->settings->get( $name );
@@ -102,6 +131,10 @@ class Admin_Index_Page extends Apple_Export {
 
 	/**
 	 * Downloads the JSON file for troubleshooting purposes.
+	 *
+	 * @param string $json
+	 * @param int $id
+	 * @access private
 	 */
 	private function download_json( $json, $id ) {
 		header( 'Content-Type: application/json' );
@@ -112,6 +145,11 @@ class Admin_Index_Page extends Apple_Export {
 		exit;
 	}
 
+	/**
+	 * Sets up admin assets.
+	 *
+	 * @access public
+	 */
 	private function setup_assets() {
 		wp_enqueue_script( $this->plugin_slug . '_zeroclipboard', plugin_dir_url(
 			__FILE__) .  '../vendor/zeroclipboard/ZeroClipboard.min.js', array(
@@ -122,15 +160,23 @@ class Admin_Index_Page extends Apple_Export {
 			$this->plugin_slug . '_zeroclipboard' ), $this->version, true );
 	}
 
-	// Actions
-	// -------------------------------------------------------------------------
-
+	/**
+	 * Shows a post from the list table.
+	 *
+	 * @access private
+	 */
 	private function show_post_list_action() {
 		$table = new Admin_Export_List_Table();
 		$table->prepare_items();
 		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
 	}
 
+	/**
+	 * Handles all settings actions.
+	 *
+	 * @param int $id
+	 * @access private
+	 */
 	private function settings_action( $id ) {
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
 			update_post_meta( $id, 'apple_export_pullquote', $_POST['pullquote'] );
@@ -143,6 +189,12 @@ class Admin_Index_Page extends Apple_Export {
 		include plugin_dir_path( __FILE__ ) . 'partials/page_single_settings.php';
 	}
 
+	/**
+	 * Handles an export action.
+	 *
+	 * @param int $id
+	 * @access private
+	 */
 	private function export_action( $id ) {
 		$action = new Actions\Index\Export( $this->settings, $id );
 		try {
@@ -153,6 +205,12 @@ class Admin_Index_Page extends Apple_Export {
 		}
 	}
 
+	/**
+	 * Handles a push to Apple News action.
+	 *
+	 * @param int $id
+	 * @access private
+	 */
 	private function push_action( $id ) {
 		$action = new Actions\Index\Push( $this->settings, $id );
 		try {
@@ -163,6 +221,12 @@ class Admin_Index_Page extends Apple_Export {
 		}
 	}
 
+	/**
+	 * Handles a delete from Apple News action.
+	 *
+	 * @param int $id
+	 * @access private
+	 */
 	private function delete_action( $id ) {
 		$action = new Actions\Index\Delete( $this->settings, $id );
 		try {

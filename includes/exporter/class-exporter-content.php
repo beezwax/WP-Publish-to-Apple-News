@@ -9,14 +9,73 @@ namespace Exporter;
  */
 class Exporter_Content {
 
+	/**
+	 * ID of the content being exported.
+	 *
+	 * @var int
+	 * @access private
+	 */
 	private $id;
+
+	/**
+	 * Title of the content being exported.
+	 *
+	 * @var string
+	 * @access private
+	 */
 	private $title;
+
+	/**
+	 * The content being exported.
+	 *
+	 * @var string
+	 * @access private
+	 */
 	private $content;
+
+	/**
+	 * Intro for the content being exported.
+	 *
+	 * @var string
+	 * @access private
+	 */
 	private $intro;
+
+	/**
+	 * Cover image for the content being exported.
+	 *
+	 * @var string
+	 * @access private
+	 */
 	private $cover;
+
+	/**
+	 * Byline for the content being exported.
+	 *
+	 * @var string
+	 * @access private
+	 */
 	private $byline;
+
+	/**
+	 * Settings for the content being exported.
+	 *
+	 * @var Settings
+	 * @access private
+	 */
 	private $settings;
 
+	/**
+	 * Contstructor.
+	 *
+	 * @param int $id
+	 * @param string $title
+	 * @param string $content
+	 * @param string $intro
+	 * @param string $cover
+	 * @param string $byline
+	 * @param Settings $settings
+	 */
 	function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $settings = null ) {
 		$this->id       = $id;
 		$this->title    = $title;
@@ -27,34 +86,82 @@ class Exporter_Content {
 		$this->settings = $settings ?: new Exporter_Content_Settings();
 	}
 
+	/**
+	 * Get the content ID.
+	 *
+	 * @return int
+	 * @access public
+	 */
 	public function id() {
 		return $this->id;
 	}
 
+	/**
+	 * Get the content title.
+	 *
+	 * @return strings
+	 * @access public
+	 */
 	public function title() {
 		return $this->title;
 	}
 
+	/**
+	 * Get the content.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function content() {
 		return $this->content;
 	}
 
+	/**
+	 * Get the content intro.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function intro() {
 		return $this->intro;
 	}
 
+	/**
+	 * Get the content cover.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function cover() {
 		return $this->cover;
 	}
 
+	/**
+	 * Get the content byline.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function byline() {
 		return $this->byline;
 	}
 
+	/**
+	 * Get the content settings.
+	 *
+	 * @return Settings
+	 * @access public
+	 */
 	public function get_setting( $name ) {
 		return $this->settings->get( $name );
 	}
 
+	/**
+	 * Get the DOM nodes.
+	 *
+	 * @return array of DomNodes
+	 * @access public
+	 */
 	public function nodes() {
 		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
 		$dom = new \DOMDocument();
