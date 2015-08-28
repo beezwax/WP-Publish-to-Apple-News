@@ -17,6 +17,9 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-flash.php';
  */
 class Admin_Apple_Export extends Apple_Export {
 
+	/**
+	 * Constructor.
+	 */
 	function __construct() {
 		// This is required to download files and setting headers.
 		ob_start();
@@ -41,6 +44,9 @@ class Admin_Apple_Export extends Apple_Export {
 		new Admin_Post_Sync( $settings );
 	}
 
+	/**
+	 * Implements certain plugin styles inline.
+	 */
 	public function plugin_styles() {
 		$page = ( isset( $_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : null;
 

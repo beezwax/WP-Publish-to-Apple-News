@@ -8,6 +8,14 @@ namespace Exporter\Components;
  */
 class Quote extends Component {
 
+	/**
+	 * Look for node matches for this component.
+	 *
+	 * @param DomNode $node
+	 * @return mixed
+	 * @static
+	 * @access public
+	 */
 	public static function node_matches( $node ) {
 		if ( 'blockquote' == $node->nodeName ) {
 			return $node;
@@ -16,6 +24,12 @@ class Quote extends Component {
 		return null;
 	}
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		preg_match( '#<blockquote.*?>(.*?)</blockquote>#si', $text, $matches );
 		$text = $matches[1];
@@ -30,6 +44,11 @@ class Quote extends Component {
 		$this->set_layout();
 	}
 
+	/**
+	 * Set the layout for the component.
+	 *
+	 * @access private
+	 */
 	private function set_layout() {
 		$this->json['layout'] = 'quote-layout';
 		$this->register_layout( 'quote-layout', array(
@@ -37,6 +56,11 @@ class Quote extends Component {
 		) );
 	}
 
+	/**
+	 * Set the style for the component.
+	 *
+	 * @access private
+	 */
 	private function set_style() {
 		$this->json[ 'textStyle' ] = 'default-pullquote';
 		$this->register_style( 'default-pullquote', array(

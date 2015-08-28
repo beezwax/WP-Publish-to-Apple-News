@@ -7,9 +7,28 @@
  */
 class Admin_Settings_Section_API extends Admin_Settings_Section {
 
+	/**
+	 * Name of the API settings section.
+	 *
+	 * @var string
+	 * @access protected
+	 */
 	protected $name = 'API Settings';
+
+	/**
+	 * Slug of the API settings section.
+	 *
+	 * @var string
+	 * @access protected
+	 */
 	protected $slug = 'api-options';
 
+	/**
+	 * API settings.
+	 *
+	 * @var array
+	 * @access protected
+	 */
 	protected $settings = array(
 		'api_key' => array(
 			'label'   => 'API Key',
@@ -29,6 +48,12 @@ class Admin_Settings_Section_API extends Admin_Settings_Section {
 		),
  	);
 
+	/**
+	 * API groups.
+	 *
+	 * @var array
+	 * @access protected
+	 */
 	protected $groups = array(
 		'apple_news' => array(
 			'label'       => 'Apple News API',
@@ -37,6 +62,11 @@ class Admin_Settings_Section_API extends Admin_Settings_Section {
 		),
 	);
 
+	/**
+	 * Prints section info.
+	 *
+	 * @access public
+	 */
 	public function print_section_info() {
 		echo 'Enter your Apple News credentials below. See <a target="_blank"
 			href="https://developer.apple.com/news-publisher/">the Apple News

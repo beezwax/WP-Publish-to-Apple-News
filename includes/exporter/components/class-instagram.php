@@ -10,6 +10,14 @@ namespace Exporter\Components;
  */
 class Instagram extends Component {
 
+	/**
+	 * Look for node matches for this component.
+	 *
+	 * @param DomNode $node
+	 * @return mixed
+	 * @static
+	 * @access public
+	 */
 	public static function node_matches( $node ) {
 		if ( self::node_has_class( $node, 'instagram-media' ) ) {
 			return $node;
@@ -18,6 +26,12 @@ class Instagram extends Component {
 		return null;
 	}
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		// Find instagram URL in HTML string
 		if ( ! preg_match( '#https?://instagr(\.am|am\.com)/p/([^/]+)/#', $text, $matches ) ) {

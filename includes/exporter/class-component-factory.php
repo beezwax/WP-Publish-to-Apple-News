@@ -9,12 +9,61 @@ namespace Exporter;
  */
 class Component_Factory {
 
+	/**
+	 * Available components.
+	 *
+	 * @var array
+	 * @static
+	 * @access private
+	 */
 	private static $components = array();
-	private static $workspace  = null;
-	private static $settings   = null;
-	private static $styles     = null;
-	private static $layouts    = null;
 
+	/**
+	 * Current workspace.
+	 *
+	 * @var Workspace
+	 * @static
+	 * @access private
+	 */
+	private static $workspace = null;
+
+	/**
+	 * Current settings.
+	 *
+	 * @var Settings
+	 * @static
+	 * @access private
+	 */
+	private static $settings = null;
+
+	/**
+	 * Current styles.
+	 *
+	 * @var Component_Text_Styles
+	 * @static
+	 * @access private
+	 */
+	private static $styles = null;
+
+	/**
+	 * Current layouts.
+	 *
+	 * @var Component_Layouts
+	 * @static
+	 * @access private
+	 */
+	private static $layouts = null;
+
+	/**
+	 * Initialize the component factory.
+	 *
+	 * @param Workspace $workspace
+	 * @param Settings $settings
+	 * @param Component_Text_Styles $styles
+	 * @param Component_Layouts $layouts
+	 * @static
+	 * @access public
+	 */
 	public static function initialize( $workspace, $settings, $styles, $layouts ) {
 		self::$workspace = $workspace;
 		self::$settings  = $settings;
@@ -44,10 +93,27 @@ class Component_Factory {
 		self::$components = apply_filters( 'apple_export_initialize_components', self::$components );
 	}
 
+	/**
+	 * Register a component.
+	 *
+	 * @param string $shortname
+	 * @param string $classname
+	 * @static
+	 * @access private
+	 */
 	private static function register_component( $shortname, $classname ) {
 		self::$components[ $shortname ] = apply_filters( 'apple_export_register_component', $classname, $shortname );
 	}
 
+	/**
+	 * Get a component.
+	 *
+	 * @param string $shortname
+	 * @param string $html
+	 * @return Component
+	 * @static
+	 * @access public
+	 */
 	public static function get_component( $shortname, $html ) {
 		$class = self::$components[ $shortname ];
 
@@ -61,6 +127,11 @@ class Component_Factory {
 	/**
 	 * Given a node, returns an array of all the components inside that node. If
 	 * the node is a component itself, returns an array of only one element.
+	 *
+	 * @param DomNode $node
+	 * @return array
+	 * @static
+	 * @access public
 	 */
 	public static function get_components_from_node( $node ) {
 		$result = array();

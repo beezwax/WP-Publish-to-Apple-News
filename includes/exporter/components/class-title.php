@@ -3,6 +3,12 @@ namespace Exporter\Components;
 
 class Title extends Component {
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		$this->json = array(
 			'role' => 'title',
@@ -12,6 +18,11 @@ class Title extends Component {
 		$this->set_style();
 	}
 
+	/**
+	 * Set the style for the component.
+	 *
+	 * @access private
+	 */
 	private function set_style() {
 		$this->json[ 'textStyle' ] = 'default-title';
 		$this->register_style( 'default-title', array(

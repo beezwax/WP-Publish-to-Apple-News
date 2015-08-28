@@ -1,5 +1,7 @@
 <?php
-// Autoload push API classes
+/**
+ * Autoload push API classes.
+ */
 spl_autoload_register( function ( $class ) {
 	$path = strtolower( $class );
 	$path = str_replace( '_', '-',  $path );

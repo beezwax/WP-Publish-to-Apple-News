@@ -11,6 +11,9 @@ class Components extends Builder {
 
 	/**
 	 * Builds an array with all the components of this WordPress content.
+	 *
+	 * @return array
+	 * @access protected
 	 */
 	protected function build() {
 		$components = $this->meta_components();
@@ -29,6 +32,9 @@ class Components extends Builder {
 	 * proper paragraph spacing.
 	 *
 	 * @since 0.6.0
+	 * @param array $components
+	 * @return array
+	 * @access private
 	 */
 	private function group_body_components( $components ) {
 		$new_components = array();
@@ -136,6 +142,9 @@ class Components extends Builder {
 	 * Meta components are those which were not created from HTML, instead, they
 	 * contain only text. This text is normally created from the article
 	 * metadata.
+	 *
+	 * @return array
+	 * @access private
 	 */
 	private function meta_components() {
 		$components = array();
@@ -156,6 +165,9 @@ class Components extends Builder {
 
 	/**
 	 * Split components from the source WordPress content.
+	 *
+	 * @return array
+	 * @access private
 	 */
 	private function split_into_components() {
 		// Loop though the first-level nodes of the body element. Components
@@ -176,6 +188,11 @@ class Components extends Builder {
 		return $result;
 	}
 
+	/**
+	 * Add an iAd unit if required.
+	 *
+	 * @access private
+	 */
 	private function add_advertisement_if_needed( &$components ) {
 		if ( 'yes' != $this->get_setting( 'enable_advertisement' ) ) {
 			return;
@@ -189,7 +206,10 @@ class Components extends Builder {
 	}
 
 	/**
-	 * Anchor components that are marked as can_be_anchor_target
+	 * Anchor components that are marked as can_be_anchor_target.
+	 *
+	 * @param array &$components
+	 * @access private
 	 */
 	private function anchor_components( &$components ) {
 		$len = count( $components );
@@ -229,6 +249,10 @@ class Components extends Builder {
 
 	/**
 	 * Given two components, anchor the first one to the second.
+	 *
+	 * @param Component $component
+	 * @param Component $target_component
+	 * @access private
 	 */
 	private function anchor_together( $component, $target_component ) {
 		if ( $target_component->is_anchor_target() ) {
@@ -258,6 +282,12 @@ class Components extends Builder {
 		$component->anchor();
 	}
 
+	/**
+	 * Add a pullquote component if needed.
+	 *
+	 * @param array &$components
+	 * @access private
+	 */
 	private function add_pullquote_if_needed( &$components ) {
 		// Must we add a pullquote?
 		$pullquote          = $this->content_setting( 'pullquote' );
@@ -300,10 +330,25 @@ class Components extends Builder {
 		array_splice( $components, $position, 0, array( $component ) );
 	}
 
+	/**
+	 * Get a component from the shortname.
+	 *
+	 * @param string $shortname
+	 * @param string $html
+	 * @return Component
+	 * @access private
+	 */
 	private function get_component_from_shortname( $shortname, $html = null ) {
 		return Component_Factory::get_component( $shortname, $html );
 	}
 
+	/**
+	 * Get a component from a node.
+	 *
+	 * @param DomNode $node
+	 * @return Component
+	 * @access private
+	 */
 	private function get_components_from_node( $node ) {
 		return Component_Factory::get_components_from_node( $node );
 	}

@@ -8,8 +8,20 @@ use Actions\API_Action as API_Action;
 
 class Delete extends API_Action {
 
+	/**
+	 * ID of the post to be deleted.
+	 *
+	 * @var int
+	 * @access private
+	 */
 	private $id;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param Settings $settings
+	 * @param int $id
+	 */
 	function __construct( $settings, $id ) {
 		parent::__construct( $settings );
 		$this->id = $id;
@@ -20,13 +32,18 @@ class Delete extends API_Action {
 	 * errors if any, null otherwise.
 	 *
 	 * @since 0.6.0
+	 * @return object
+	 * @access public
 	 */
 	public function perform() {
 		return $this->delete();
 	}
 
 	/**
-	 * Push the post using the API data.
+	 * Delete the post using the API data.
+	 *
+	 * @return mixed
+	 * @access private
 	 */
 	private function delete() {
 		if ( ! $this->is_api_configuration_valid() ) {

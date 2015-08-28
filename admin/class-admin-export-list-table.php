@@ -19,6 +19,9 @@ class Admin_Export_List_Table extends WP_List_Table {
 	 */
 	const PER_PAGE = 20;
 
+	/**
+	 * Constructor.
+	 */
 	function __construct() {
 		parent::__construct( array(
 			'singular' => 'article',
@@ -27,19 +30,32 @@ class Admin_Export_List_Table extends WP_List_Table {
 		) );
 	}
 
+	/**
+	 * Set column defaults.
+	 *
+	 * @param mixed $item
+	 * @param string $column_name
+	 * @return string
+	 * @access public
+	 */
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
-		case 'title':
-			return $item[ $column_name ];
-		case 'updated_at':
-			return $this->get_updated_at( $item );
-		case 'sync':
-			return $this->get_synced_status_for( $item );
-		default:
-			return print_r( $item, true ); // For debugging
+			case 'title':
+				return $item[ $column_name ];
+			case 'updated_at':
+				return $this->get_updated_at( $item );
+			case 'sync':
+				return $this->get_synced_status_for( $item );
 		}
 	}
 
+	/**
+	 * Get the updated at time.
+	 *
+	 * @param WP_Post $post
+	 * @return string
+	 * @access private
+	 */
 	private function get_updated_at( $post ) {
 		$updated_at = get_post_meta( $post->ID, 'apple_export_api_modified_at', true );
 
@@ -47,9 +63,16 @@ class Admin_Export_List_Table extends WP_List_Table {
 			return date( 'F j, h:i a', strtotime( $updated_at ) );
 		}
 
-		return 'Never';
+		return __( 'Never', 'apple-news' );
 	}
 
+	/**
+	 * Get the synced status.
+	 *
+	 * @param WP_Post $post
+	 * @return string
+	 * @access private
+	 */
 	private function get_synced_status_for( $post ) {
 		$remote_id = get_post_meta( $post->ID, 'apple_export_api_id', true );
 
@@ -69,10 +92,10 @@ class Admin_Export_List_Table extends WP_List_Table {
 		$local   = strtotime( $post->post_modified );
 
 		if ( $local > $updated ) {
-			return 'Needs to be updated';
+			return __( 'Needs to be updated'. 'apple-news' );
 		}
 
-		return 'Published';
+		return __( 'Published', 'apple-news' );
 	}
 
 	/**
@@ -84,6 +107,10 @@ class Admin_Export_List_Table extends WP_List_Table {
 	 * column_default() is called.
 	 *
 	 * Actions can be generated here.
+	 *
+	 * @param WP_Post $item
+	 * @return string
+	 * @access public
 	 */
 	public function column_title( $item ) {
 		$admin_url = get_admin_url() . 'admin.php';
@@ -117,6 +144,9 @@ class Admin_Export_List_Table extends WP_List_Table {
 	 *
 	 * @return array An array where the key is the column slug and the value is
 	 * the title text.
+	 *
+	 * @return array
+	 * @access public
 	 */
 	public function get_columns() {
 		return array(
@@ -131,6 +161,10 @@ class Admin_Export_List_Table extends WP_List_Table {
 	 * Required IF using checkboxes or bulk actions. The 'cb' column gets special
 	 * treatment when columns are processed. It ALWAYS needs to have it's own
 	 * method.
+	 *
+	 * @param WP_Post $item
+	 * @return string
+	 * @access public
 	 */
 	public function column_cb( $item ) {
 		return sprintf( '<input type="checkbox" name="%1$s[]" value="%2$s">',
@@ -139,12 +173,23 @@ class Admin_Export_List_Table extends WP_List_Table {
 		);
 	}
 
+	/**
+	 * Get bulk actions.
+	 *
+	 * @return array
+	 * @access public
+	 */
 	public function get_bulk_actions() {
 		return array(
 			'push' => 'Publish',
 		);
 	}
 
+	/**
+	 * Prepare items for the table.
+	 *
+	 * @access public
+	 */
 	public function prepare_items() {
 		// Set column headers. It expects an array of columns, and as second
 		// argument an array of hidden columns, which in this case is empty.

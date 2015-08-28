@@ -1,5 +1,7 @@
 <?php
-// Autoload exporter classes
+/**
+ * Autoload exporter classes.
+ */
 spl_autoload_register( function ( $class ) {
 	$path = strtolower( $class );
 	$path = str_replace( '_', '-',  $path );

@@ -8,6 +8,14 @@ namespace Exporter\Components;
  */
 class Heading extends Component {
 
+	/**
+	 * Look for node matches for this component.
+	 *
+	 * @param DomNode $node
+	 * @return mixed
+	 * @static
+	 * @access public
+	 */
 	public static function node_matches( $node ) {
 		if ( ! preg_match( '#h[1-6]#', $node->nodeName ) ) {
 			return null;
@@ -21,6 +29,13 @@ class Heading extends Component {
 		return $node;
 	}
 
+	/**
+	 * Split the image parts.
+	 *
+	 * @param string $html
+	 * @return array
+	 * @access private
+	 */
 	private static function split_image( $html ) {
 		if ( empty( $html ) ) {
 			return array();
@@ -42,6 +57,12 @@ class Heading extends Component {
 		);
 	}
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		if ( 0 === preg_match( '#<h(\d).*?>(.*?)</h\1>#si', $text, $matches ) ) {
 			return;
@@ -64,6 +85,11 @@ class Heading extends Component {
 		$this->set_layout();
 	}
 
+	/**
+	 * Set the layout for the component.
+	 *
+	 * @access private
+	 */
 	private function set_layout() {
 		$this->json['layout'] = 'heading-layout';
 		$this->register_full_width_layout( 'heading-layout', array(
@@ -71,6 +97,11 @@ class Heading extends Component {
 		) );
 	}
 
+	/**
+	 * Set the style for the component.
+	 *
+	 * @access private
+	 */
 	private function set_style( $level ) {
 		$this->json[ 'textStyle' ] = 'default-heading-' . $level;
 		$this->register_style( 'default-heading-' . $level, array(

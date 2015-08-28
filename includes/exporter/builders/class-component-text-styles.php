@@ -9,8 +9,17 @@ namespace Exporter\Builders;
  */
 class Component_Text_Styles extends Builder {
 
+	/**
+	 * All styles.
+	 *
+	 * @var array
+	 * @access private
+	 */
 	private $styles;
 
+	/**
+	 * Constructor.
+	 */
 	function __construct( $content, $settings ) {
 		parent::__construct( $content, $settings );
 		$this->styles = array();
@@ -20,6 +29,9 @@ class Component_Text_Styles extends Builder {
 	 * Register a style into the exporter.
 	 *
 	 * @since 0.4.0
+	 * @param string $name
+	 * @param array $spec
+	 * @access public
 	 */
 	public function register_style( $name, $spec ) {
 		// Only register once, styles have unique names.
@@ -34,6 +46,8 @@ class Component_Text_Styles extends Builder {
 	 * Returns all styles defined so far.
 	 *
 	 * @since 0.4.0
+	 * @return array
+	 * @access protected
 	 */
 	protected function build() {
 		return $this->styles;

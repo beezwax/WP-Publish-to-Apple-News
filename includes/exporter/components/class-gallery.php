@@ -10,6 +10,14 @@ namespace Exporter\Components;
  */
 class Gallery extends Component {
 
+	/**
+	 * Look for node matches for this component.
+	 *
+	 * @param DomNode $node
+	 * @return mixed
+	 * @static
+	 * @access public
+	 */
 	public static function node_matches( $node ) {
 		if ( self::node_has_class( $node, 'gallery' ) ) {
 			return $node;
@@ -18,6 +26,12 @@ class Gallery extends Component {
 		return null;
 	}
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		preg_match_all( '/src="([^"]+)"/', $text, $matches );
 		$urls  = $matches[1];
@@ -42,6 +56,11 @@ class Gallery extends Component {
 		$this->set_layout();
 	}
 
+	/**
+	 * Set the layout for the component.
+	 *
+	 * @access private
+	 */
 	private function set_layout() {
 		$this->json['layout'] = 'gallery-layout';
 		$this->register_full_width_layout( 'gallery-layout', array(

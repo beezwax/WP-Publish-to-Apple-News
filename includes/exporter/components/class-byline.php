@@ -10,6 +10,12 @@ use \Exporter\Exporter as Exporter;
  */
 class Byline extends Component {
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		$this->json = array(
 			'role' => 'byline',
@@ -20,6 +26,11 @@ class Byline extends Component {
 		$this->set_default_layout();
 	}
 
+	/**
+	 * Set the default style for the component.
+	 *
+	 * @access private
+	 */
 	private function set_default_style() {
 		$this->json[ 'textStyle' ] = 'default-byline';
 		$this->register_style( 'default-byline', array(
@@ -30,6 +41,11 @@ class Byline extends Component {
 		) );
 	}
 
+	/**
+	 * Set the default layout for the component.
+	 *
+	 * @access private
+	 */
 	private function set_default_layout() {
 		$this->json[ 'layout' ] = 'byline-layout';
 		$this->register_layout( 'byline-layout', array(

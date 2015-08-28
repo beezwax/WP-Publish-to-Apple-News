@@ -12,13 +12,31 @@ use Exporter\Exporter_Content_Settings as Exporter_Content_Settings;
 
 class Export extends Action {
 
+	/**
+	 * ID of the post being exported.
+	 *
+	 * @var int
+	 * @access private
+	 */
 	private $id;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param Settings $settings
+	 * @param int $id
+	 */
 	function __construct( $settings, $id ) {
 		parent::__construct( $settings );
 		$this->id = $id;
 	}
 
+	/**
+	 * Perform the export and return the results.
+	 *
+	 * @return string The JSON data
+	 * @access public
+	 */
 	public function perform() {
 		$exporter = $this->fetch_exporter();
 		return $exporter->export();
@@ -26,6 +44,9 @@ class Export extends Action {
 
 	/**
 	 * Fetches an instance of Exporter.
+	 *
+	 * @return Exporter
+	 * @access public
 	 */
 	public function fetch_exporter() {
 		// Fetch WP_Post object, and all required post information to fill up the
@@ -56,6 +77,8 @@ class Export extends Action {
 	 * Loads settings for the Exporter_Content from the WordPress post metadata.
 	 *
 	 * @since 0.4.0
+	 * @return Settings
+	 * @access private
 	 */
 	private function fetch_content_settings() {
 		$settings = new Exporter_Content_Settings();

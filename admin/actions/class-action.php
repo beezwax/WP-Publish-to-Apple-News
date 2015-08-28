@@ -5,10 +5,16 @@ abstract class Action {
 
 	protected $settings;
 
+	/**
+	 * Constructor.
+	 */
 	function __construct( $settings ) {
 		$this->settings = $settings;
 	}
 
+	/**
+	 * Abstract function implemented by all child class to perform the given action.
+	 */
 	public abstract function perform();
 
 	/**
