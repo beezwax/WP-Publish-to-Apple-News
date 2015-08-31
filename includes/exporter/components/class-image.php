@@ -144,12 +144,12 @@ class Image extends Component {
 		}
 
 		switch ( $this->get_anchor_position() ) {
-		case Component::ANCHOR_LEFT:
-			return 'left';
-		case Component::ANCHOR_AUTO:
-			if ( 'left' == $this->get_setting( 'body_orientation' ) ) {
-				return 'right';
-			}
+			case Component::ANCHOR_LEFT:
+				return 'left';
+			case Component::ANCHOR_AUTO:
+				if ( 'left' == $this->get_setting( 'body_orientation' ) ) {
+					return 'right';
+				}
 		}
 
 		return 'left';

@@ -131,7 +131,7 @@ class Components extends Builder {
 		// Trim all body components before returning
 		foreach ( $new_components as $i => $component ) {
 			if ( 'body' == $component['role'] ) {
-				$new_components[$i]['text'] = trim( $new_components[$i]['text'] );
+				$new_components[ $i ]['text'] = trim( $new_components[ $i ]['text'] );
 			}
 		}
 
@@ -201,6 +201,7 @@ class Components extends Builder {
 		// Always position the advertisement in the middle
 		$index     = ceil( count( $components ) / 2 );
 		$component = $this->get_component_from_shortname( 'advertisement' );
+
 		// Add component in position
 		array_splice( $components, $index, 0, array( $component ) );
 	}
@@ -238,7 +239,7 @@ class Components extends Builder {
 			// anchoring something, also skip.
 			$counter = 1;
 			$len     = count( $components );
-			while ( !$target_component->can_be_anchor_target() && $i + $counter < $len ) {
+			while ( ! $target_component->can_be_anchor_target() && $i + $counter < $len ) {
 				$target_component = $components[ $i + $counter ];
 				$counter++;
 			}

@@ -90,6 +90,7 @@ class Push extends API_Action {
 			// If there's an API ID, update, otherwise create.
 			$remote_id = get_post_meta( $this->id, 'apple_export_api_id', true );
 			$result    = null;
+
 			if ( $remote_id ) {
 				$revision = get_post_meta( $this->id, 'apple_export_api_revision', true );
 				$result   = $this->get_api()->update_article( $remote_id, $revision, $json, $bundles );
@@ -103,6 +104,7 @@ class Push extends API_Action {
 			update_post_meta( $this->id, 'apple_export_api_modified_at', $result->data->modifiedAt );
 			update_post_meta( $this->id, 'apple_export_api_share_url', $result->data->shareUrl );
 			update_post_meta( $this->id, 'apple_export_api_revision', $result->data->revision );
+
 			// If it's marked as deleted, remove the mark. Ignore otherwise.
 			delete_post_meta( $this->id, 'apple_export_api_deleted' );
 		} catch ( \Push_API\Request\Request_Exception $e ) {

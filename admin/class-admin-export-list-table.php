@@ -237,7 +237,7 @@ class Admin_Export_List_Table extends WP_List_Table {
 		$current_page = $this->get_pagenum();
 		$data = get_posts( array(
 			'posts_per_page' => self::PER_PAGE,
-			'offset'         => ($current_page - 1) * self::PER_PAGE,
+			'offset'         => ( $current_page - 1 ) * self::PER_PAGE,
 			'orderby'        => 'ID',
 			'order'          => 'DESC',
 		) );

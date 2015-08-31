@@ -73,7 +73,8 @@ class Admin_Bulk_Export_Page extends Apple_Export {
 	 * @access public
 	 */
 	public function ajax_push_post() {
-		$id     = absint( $_GET['id'] );
+		$id = absint( $_GET['id'] );
+
 		// TODO: Move push action to shared
 		$action = new Actions\Index\Push( $this->settings, $id );
 		$errors = $action->perform();
