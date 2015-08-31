@@ -66,7 +66,7 @@ class Flash {
 		?>
 		<div class="notice error is-dismissible">
 			<p><strong><?php echo $message ?></strong></p>
-			<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+			<button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'apple-news' ) ?></span></button>
 		</div>
 		<?php
 	}
@@ -75,7 +75,7 @@ class Flash {
 		?>
 		<div class="notice updated is-dismissible">
 			<p><strong><?php echo $message ?></strong></p>
-			<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+			<button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'apple-news' ) ?></span></button>
 		</div>
 		<?php
 	}
@@ -84,7 +84,7 @@ class Flash {
 		?>
 		<div class="notice is-dismissible">
 			<p><strong><?php echo $message ?></strong></p>
-			<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+			<button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'apple-news' ) ?></span></button>
 		</div>
 		<?php
 	}

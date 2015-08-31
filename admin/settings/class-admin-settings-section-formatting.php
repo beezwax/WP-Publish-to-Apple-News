@@ -8,14 +8,6 @@
 class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 
 	/**
-	 * Name of the formatting settings section.
-	 *
-	 * @var string
-	 * @access protected
-	 */
-	protected $name = 'Formatting';
-
-	/**
 	 * Slug of the formatting settings section.
 	 *
 	 * @var string
@@ -24,176 +16,183 @@ class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
 	protected $slug = 'formatting-options';
 
 	/**
-	 * Formatting settings.
+	 * Constructor.
 	 *
-	 * @var array
-	 * @access protected
+	 * @param string $page
 	 */
-	protected $settings = array(
-		'layout_margin' => array(
-			'label'   => 'Layout margin',
-			'type'    => 'integer',
-		),
-		'layout_gutter' => array(
-			'label'   => 'Layout gutter',
-			'type'    => 'integer',
-		),
-		'body_font' => array(
-			'label'   => '',
-			'type'    => 'font',
-		),
-		'body_size' => array(
-			'label'   => 'Body font size',
-			'type'    => 'integer',
-		),
-		'body_color' => array(
-			'label'   => 'Body font color',
-			'type'    => 'color',
-		),
-		'body_link_color' => array(
-			'label'   => 'Body font hyperlink color',
-			'type'    => 'color',
-		),
-		'body_orientation' => array(
-			'label'   => 'Body alignment',
-			'type'    => array( 'left', 'center', 'right' ),
-		),
-		'initial_dropcap' => array(
-			'label'   => 'Use initial dropcap',
-			'type'    => array( 'yes', 'no' ),
-		),
-		'dropcap_font' => array(
-			'label'   => '',
-			'type'    => 'font',
-		),
-		'dropcap_color' => array(
-			'label'   => 'Dropcap font color',
-			'type'    => 'color',
-		),
-		'byline_font' => array(
-			'label'   => '',
-			'type'    => 'font',
-		),
-		'byline_size' => array(
-			'label'   => 'Byline font size',
-			'type'    => 'integer',
-		),
-		'byline_color' => array(
-			'label'   => 'Byline font color',
-			'type'    => 'color',
-		),
-		'header_font' => array(
-			'label'   => '',
-			'type'    => 'font',
-		),
-		'header_color' => array(
-			'label'   => 'Header font color',
-			'type'    => 'color',
-		),
-		'header1_size' => array(
-			'label'   => 'Header 1 font size',
-			'type'    => 'integer',
-		),
-		'header2_size' => array(
-			'label'   => 'Header 2 font size',
-			'type'    => 'integer',
-		),
-		'header3_size' => array(
-			'label'   => 'Header 3 font size',
-			'type'    => 'integer',
-		),
-		'header4_size' => array(
-			'label'   => 'Header 4 font size',
-			'type'    => 'integer',
-		),
-		'header5_size' => array(
-			'label'   => 'Header 5 font size',
-			'type'    => 'integer',
-		),
-		'header6_size' => array(
-			'label'   => 'Header 6 font size',
-			'type'    => 'integer',
-		),
-		'pullquote_font' => array(
-			'label'   => '',
-			'type'    => 'font',
-		),
-		'pullquote_size' => array(
-			'label'   => 'Pull quote font size',
-			'type'    => 'integer',
-		),
-		'pullquote_color' => array(
-			'label'   => 'Pull quote color',
-			'type'    => 'color',
-		),
-		'pullquote_transform' => array(
-			'label'   => 'Pull quote transformation',
-			'type'    => array( 'none', 'uppercase' ),
-		),
-		'gallery_type' => array(
-			'label'   => 'Gallery type',
-			'type'    => array( 'gallery', 'mosaic' ),
-		),
-		'enable_advertisement' => array(
-			'label'   => 'Enable advertisement',
-			'type'    => array( 'yes', 'no' ),
-		),
- 	);
+	function __construct( $page ) {
+		// Set the name
+		$this->name =  __( 'Formatting', 'apple-news' );
+
+		// Add the settings
+		$this->settings = array(
+			'layout_margin' => array(
+				'label'   => __( 'Layout margin', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'layout_gutter' => array(
+				'label'   => __( 'Layout gutter', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'body_font' => array(
+				'label'   => '',
+				'type'    => 'font',
+			),
+			'body_size' => array(
+				'label'   => __( 'Body font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'body_color' => array(
+				'label'   => __( 'Body font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'body_link_color' => array(
+				'label'   => __( 'Body font hyperlink color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'body_orientation' => array(
+				'label'   => __( 'Body alignment', 'apple-news' ),
+				'type'    => array( 'left', 'center', 'right' ),
+			),
+			'initial_dropcap' => array(
+				'label'   => __( 'Use initial dropcap', 'apple-news' ),
+				'type'    => array( 'yes', 'no' ),
+			),
+			'dropcap_font' => array(
+				'label'   => '',
+				'type'    => 'font',
+			),
+			'dropcap_color' => array(
+				'label'   => __( 'Dropcap font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'byline_font' => array(
+				'label'   => '',
+				'type'    => 'font',
+			),
+			'byline_size' => array(
+				'label'   => __( 'Byline font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'byline_color' => array(
+				'label'   => __( 'Byline font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'header_font' => array(
+				'label'   => '',
+				'type'    => 'font',
+			),
+			'header_color' => array(
+				'label'   => __( 'Header font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'header1_size' => array(
+				'label'   => __( 'Header 1 font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'header2_size' => array(
+				'label'   => __( 'Header 2 font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'header3_size' => array(
+				'label'   => __( 'Header 3 font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'header4_size' => array(
+				'label'   => __( 'Header 4 font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'header5_size' => array(
+				'label'   => __( 'Header 5 font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'header6_size' => array(
+				'label'   => __( 'Header 6 font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'pullquote_font' => array(
+				'label'   => '',
+				'type'    => 'font',
+			),
+			'pullquote_size' => array(
+				'label'   => __( 'Pull quote font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'pullquote_color' => array(
+				'label'   => __( 'Pull quote color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'pullquote_transform' => array(
+				'label'   => __( 'Pull quote transformation', 'apple-news' ),
+				'type'    => array( 'none', 'uppercase' ),
+			),
+			'gallery_type' => array(
+				'label'   => __( 'Gallery type', 'apple-news' ),
+				'type'    => array( 'gallery', 'mosaic' ),
+			),
+			'enable_advertisement' => array(
+				'label'   => __( 'Enable advertisement', 'apple-news' ),
+				'type'    => array( 'yes', 'no' ),
+			),
+		);
+
+		// Add the groups
+		$this->groups = array(
+			'layout' => array(
+				'label'       => __( 'Layout Spacing', 'apple-news' ),
+				'description' => __( 'The spacing for the base layout of the exported articles', 'apple-news' ),
+				'settings'    => array( 'layout_margin', 'layout_gutter' ),
+			),
+			'body' => array(
+				'label'       => __( 'Body', 'apple-news' ),
+				'settings'    => array( 'body_font', 'body_size', 'body_color', 'body_link_color', 'body_orientation' ),
+			),
+			'dropcap' => array(
+				'label'       => __( 'Dropcap', 'apple-news' ),
+				'settings'    => array( 'dropcap_font', 'initial_dropcap', 'dropcap_color' ),
+			),
+			'byline' => array(
+				'label'       => __( 'Byline', 'apple-news' ),
+				'description' => __( "The byline displays the article's author and date", 'apple-news' ),
+				'settings'    => array( 'byline_font', 'byline_size', 'byline_color' ),
+			),
+			'headings' => array(
+				'label'       => __( 'Headings', 'apple-news' ),
+				'settings'    => array( 'header_font', 'header_color', 'header1_size',
+				  'header2_size', 'header3_size', 'header4_size', 'header4_size',
+				  'header5_size', 'header6_size' ),
+			),
+			'pullquote' => array(
+				'label'       => __( 'Pull quote', 'apple-news' ),
+				'description' => sprintf(
+					'%s <a href="https://en.wikipedia.org/wiki/Pull_quote">%s</a>.',
+					__( 'Articles can have an optional', 'apple-news' ),
+					__( 'Pull quote', 'apple-news' )
+				),
+				'settings'    => array( 'pullquote_font', 'pullquote_size', 'pullquote_color', 'pullquote_transform' ),
+			),
+			'gallery' => array(
+				'label'       => __( 'Gallery', 'apple-news' ),
+				'description' => __( 'Can either be a standard gallery, or mosaic.', 'apple-news' ),
+				'settings'    => array( 'gallery_type' ),
+			),
+			'advertisement' => array(
+				'label'       => __( 'Advertisement', 'apple-news' ),
+				'settings'    => array( 'enable_advertisement' ),
+			),
+		);
+
+		parent::__construct( $page );
+	}
 
 	/**
-	 * Formatting groups.
+	 * Gets section info.
 	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $groups = array(
-		'layout' => array(
-			'label'       => 'Layout Spacing',
-			'description' => 'The spacing for the base layout of the exported articles',
-			'settings'    => array( 'layout_margin', 'layout_gutter' ),
-		),
-		'body' => array(
-			'label'       => 'Body',
-			'settings'    => array( 'body_font', 'body_size', 'body_color', 'body_link_color', 'body_orientation' ),
-		),
-		'dropcap' => array(
-			'label'       => 'Dropcap',
-			'settings'    => array( 'dropcap_font', 'initial_dropcap', 'dropcap_color' ),
-		),
-		'byline' => array(
-			'label'       => 'Byline',
-			'description' => 'The byline displays the article\'s author and date',
-			'settings'    => array( 'byline_font', 'byline_size', 'byline_color' ),
-		),
-		'headings' => array(
-			'label'       => 'Headings',
-			'settings'    => array( 'header_font', 'header_color', 'header1_size',
-			  'header2_size', 'header3_size', 'header4_size', 'header4_size',
-			  'header5_size', 'header6_size' ),
-		),
-		'pullquote' => array(
-			'label'       => 'Pull quote',
-			'description' => 'Articles can have an optional <a href="https://en.wikipedia.org/wiki/Pull_quote">Pull quote</a>.',
-			'settings'    => array( 'pullquote_font', 'pullquote_size', 'pullquote_color', 'pullquote_transform' ),
-		),
-		'gallery' => array(
-			'label'       => 'Gallery',
-			'description' => 'Can either be a standard gallery, or mosaic.',
-			'settings'    => array( 'gallery_type' ),
-		),
-		'advertisement' => array(
-			'label'       => 'Advertisement',
-			'settings'    => array( 'enable_advertisement' ),
-		),
-	);
-
-	/**
-	 * Prints section info.
-	 *
+	 * @return string
 	 * @access public
 	 */
-	public function print_section_info() {
-		echo 'Configuration on the look and feel of the generated articles';
+	public function get_section_info() {
+		return __( 'Configuration on the look and feel of the generated articles', 'apple-news' );
 	}
 
 }

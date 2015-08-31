@@ -1,21 +1,20 @@
 <div class="wrap">
-	<h1>Bulk Export Articles</h1>
-	<p>The following articles will be published to Apple News. Once started, it
-	might take a while, please don't close the browser window.</p>
+	<h1><?php esc_html_e( 'Bulk Export Articles', 'apple-news' ) ?></h1>
+	<p><?php esc_html_e( "The following articles will be published to Apple News. Once started, it might take a while, please don't close the browser window.", 'apple-news' ) ?></p>
 
 	<ul class="bulk-export-list">
 		<?php foreach ( $articles as $post ): ?>
-		<li class="bulk-export-list-item" data-post-id="<?php echo $post->ID ?>">
+		<li class="bulk-export-list-item" data-post-id="<?php echo esc_attr( $post->ID ) ?>">
 			<span class="bulk-export-list-item-title">
-				<?php echo $post->post_title ?>
+				<?php echo esc_html( $post->post_title ) ?>
 			</span>
 			<span class="bulk-export-list-item-status pending">
-				Pending
+				<?php esc_html_e( 'Pending', 'apple-news' ) ?>
 			</span>
 		</li>
 		<?php endforeach; ?>
 	</ul>
 
-	<a class="button" href="<?php menu_page_url( $this->plugin_slug . '_index' ) ?>">Back</a>
-	<a class="button button-primary bulk-export-submit" href="#">Publish All</a>
+	<a class="button" href="<?php menu_page_url( $this->plugin_slug . '_index' ) ?>"><?php esc_html_e( 'Back', 'apple-news' ) ?></a>
+	<a class="button button-primary bulk-export-submit" href="#"><?php esc_html_e( 'Publish All', 'apple-news' ) ?></a>
 </div>

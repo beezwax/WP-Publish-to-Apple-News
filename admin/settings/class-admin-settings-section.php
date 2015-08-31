@@ -349,10 +349,37 @@ class Admin_Settings_Section extends Apple_Export {
 	 * @var array
 	 * @access protected
 	 */
-	protected $groups   = array();
+	protected $groups = array();
+
+	/**
+	 * Allowed HTML for settings pages.
+	 *
+	 * @var array
+	 * @access public
+	 */
+	const ALLOWED_HTML = array(
+		'select' => array(
+			'class' => array(),
+			'name' => array(),
+		),
+		'option' => array(
+			'value' => array(),
+		),
+		'input' => array(
+			'class' => array(),
+			'name' => array(),
+			'value' => array(),
+			'placeholder' => array(),
+			'step' => array(),
+			'type' => array(),
+			'required' => array(),
+		),
+	);
 
 	/**
 	 * Constructor.
+	 *
+	 * @param string $page
 	 */
 	function __construct( $page ) {
 		$this->page          = $page;
@@ -504,7 +531,7 @@ class Admin_Settings_Section extends Apple_Export {
 			$field = '<input required type="text" name="%s" value="%s">';
 		}
 
-		printf( $field, $name, $value );
+		return sprintf( $field, $name, $value );
 	}
 
 	/**
@@ -530,12 +557,13 @@ class Admin_Settings_Section extends Apple_Export {
 	}
 
 	/**
-	 * Prints section info.
+	 * Gets section info.
 	 *
+	 * @return string
 	 * @access public
 	 */
-	public function print_section_info() {
-		return;
+	public function get_section_info() {
+		return '';
 	}
 
 }
