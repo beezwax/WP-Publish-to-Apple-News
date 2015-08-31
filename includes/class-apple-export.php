@@ -14,7 +14,7 @@ class Apple_Export {
 	 * @var string
 	 * @access protected
 	 */
-	protected $plugin_slug   = 'apple_export';
+	protected $plugin_slug = 'apple_export';
 
 	/**
 	 * Plugin domain.
@@ -30,6 +30,6 @@ class Apple_Export {
 	 * @var string
 	 * @access protected
 	 */
-	protected $version       = '0.9.0';
+	protected $version = '0.9.0';
 
 }

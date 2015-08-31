@@ -24,7 +24,7 @@ class Embed_Web_Video extends Component {
 	 * @access private
 	 */
 	private static function is_vimeo_url( $text ) {
-		return 1 == preg_match( self::VIMEO_MATCH, trim( $text ) );
+		return 1 === preg_match( self::VIMEO_MATCH, trim( $text ) );
 	}
 
 	/**
@@ -74,7 +74,7 @@ class Embed_Web_Video extends Component {
 				$attributes[ $match[1] ] = $match[2];
 			}
 			$aspect_ratio = substr( ( $attributes['width'] / $attributes['height'] ), 0, 5 );
-			$src          = $attributes['src'];
+			$src = $attributes['src'];
 		}
 
 		$this->json = array(

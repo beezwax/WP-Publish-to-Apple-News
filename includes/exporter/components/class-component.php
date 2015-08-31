@@ -414,7 +414,7 @@ abstract class Component {
 			return false;
 		}
 
-		return 1 == preg_match( "/(?:\s+|^)$classname(?:\s+|$)/", $classes );
+		return 1 === preg_match( "/(?:\s+|^)$classname(?:\s+|$)/", $classes );
 	}
 
 	/**

@@ -114,8 +114,8 @@ class Admin_Settings extends Apple_Export {
 		$this->register_assets();
 
 		add_options_page(
-			'Apple News Options',
-			'Apple News',
+			__( 'Apple News Options', 'apple-news' ),
+			__( 'Apple News', 'apple-news' ),
 			'manage_options',
 			$this->page_name,
 			array( $this, 'page_options_render' )
@@ -129,7 +129,7 @@ class Admin_Settings extends Apple_Export {
 	 */
 	public function page_options_render() {
 		if ( ! current_user_can( 'manage_options' ) )
-			wp_die( __( 'You do not have permissions to access this page.' ) );
+			wp_die( __( 'You do not have permissions to access this page.', 'apple-news' ) );
 
 		$sections = $this->sections;
 		include plugin_dir_path( __FILE__ ) . 'partials/page_options.php';

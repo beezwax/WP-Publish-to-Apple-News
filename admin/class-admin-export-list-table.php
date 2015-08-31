@@ -24,8 +24,8 @@ class Admin_Export_List_Table extends WP_List_Table {
 	 */
 	function __construct() {
 		parent::__construct( array(
-			'singular' => 'article',
-			'plural'   => 'articles',
+			'singular' => __( 'article', 'apple-news' ),
+			'plural'   => __( 'articles', 'apple-news' ),
 			'ajax'     => false,
 		) );
 	}
@@ -80,11 +80,11 @@ class Admin_Export_List_Table extends WP_List_Table {
 			// There is no remote id, check for a delete mark
 			$deleted = get_post_meta( $post->ID, 'apple_export_api_deleted', true );
 			if ( $deleted ) {
-				return 'Deleted';
+				return __( 'Deleted', 'apple-news' );
 			}
 
 			// No delete mark, this has not been published yet.
-			return 'Not published';
+			return __( 'Not published', 'apple-news' );
 		}
 
 		$updated = get_post_meta( $post->ID, 'apple_export_api_modified_at', true );
@@ -113,28 +113,65 @@ class Admin_Export_List_Table extends WP_List_Table {
 	 * @access public
 	 */
 	public function column_title( $item ) {
-		$admin_url = get_admin_url() . 'admin.php';
-		$base_url  = "$admin_url?page=%s&amp;action=%s&amp;post_id=%s";
-		$page      = htmlentities( $_REQUEST['page'] );
-		$actions   = array(
-			'settings' => sprintf( "<a href='$base_url'>Options</a>", $page, 'settings', $item->ID ),
-			'export'   => sprintf( "<a href='$base_url'>Download</a>", $page, 'export', $item->ID ),
-			'push'     => sprintf( "<a href='$base_url'>Publish</a>", $page, 'push', $item->ID ),
+		$current_screen = get_current_screen();
+		if ( empty( $current_screen->parent_base ) ) {
+			return;
+		}
+
+		// Build the base URL
+		$base_url = add_query_arg(
+			array(
+				'page' => $current_screen->parent_base,
+				'post_id' => $item->ID,
+			),
+			get_admin_url( null, 'admin.php' )
 		);
 
+		// Add common actions
+		$actions = array(
+			'settings' => sprintf(
+				"<a href='%s'>%s</a>",
+				esc_url( add_query_arg( 'action', 'settings', $base_url ) ),
+				esc_html__( 'Options', 'apple-news' )
+			),
+			'export' => sprintf(
+				"<a href='%s'>%s</a>",
+				esc_url( add_query_arg( 'action', 'export', $base_url ) ),
+				esc_html__( 'Download', 'apple-news' )
+			),
+			'push' => sprintf(
+				"<a href='%s'>%s</a>",
+				esc_url( add_query_arg( 'action', 'push', $base_url ) ),
+				esc_html__( 'Publish', 'apple-news' )
+			),
+		);
+
+		// Add the delete action, if required
 		if ( get_post_meta( $item->ID, 'apple_export_api_id', true ) ) {
-			$actions['delete'] = sprintf( "<a title='This will NOT delete your local copy' href='$base_url'>Delete from Apple News</a>", $page, 'delete', $item->ID );
+			$actions['delete'] = sprintf(
+				"<a title='%s' href='%s'>%s</a>",
+				esc_html__( 'Delete from Apple News', 'apple-news' ),
+				esc_url( add_query_arg( 'action', 'delete', $base_url ) ),
+				esc_html__( 'Delete', 'apple-news' )
+			);
 		}
 
+		// Create the share URL
 		$share_url = get_post_meta( $item->ID, 'apple_export_api_share_url', true );
 		if ( $share_url ) {
-			$actions['share'] = sprintf( "<a class='share-url-button' title='Preview in News app' href='javascript:' data-clipboard-text='%s'>Copy News URL</a>", $share_url );
+			$actions['share'] = sprintf(
+				"<a class='share-url-button' title='%s' href='javascript:' data-clipboard-text='%s'>%s</a>",
+				esc_html__( 'Preview in News app', 'apple-news' ),
+				esc_url( $share_url ),
+				esc_html__( 'Copy News URL', 'apple-news' )
+			);
 		}
 
+		// Return the row action HTML
 		return sprintf( '%1$s <span>(id:%2$s)</span> %3$s',
-			$item->post_title,             // %1$s
-			$item->ID,                     // %2$s
-			$this->row_actions( $actions ) // %3$s
+			esc_html( $item->post_title ),
+			absint( $item->ID ),
+			$this->row_actions( $actions ) // can't be escaped but all elements are fully escaped above
 		);
 	}
 
@@ -151,9 +188,9 @@ class Admin_Export_List_Table extends WP_List_Table {
 	public function get_columns() {
 		return array(
 			'cb'         => '<input type="checkbox">',
-			'title'      => 'Title',
-			'updated_at' => 'Last updated at',
-			'sync'       => 'Apple News Status',
+			'title'      => __( 'Title', 'apple-news' ),
+			'updated_at' => __( 'Last updated at', 'apple-news' ),
+			'sync'       => __( 'Apple News Status', 'apple-news' ),
 		);
 	}
 
@@ -168,8 +205,8 @@ class Admin_Export_List_Table extends WP_List_Table {
 	 */
 	public function column_cb( $item ) {
 		return sprintf( '<input type="checkbox" name="%1$s[]" value="%2$s">',
-			$this->_args['singular'], // %1$s
-			$item->ID                 // %2$s
+			esc_attr( $this->_args['singular'] ),
+			absint( $item->ID )
 		);
 	}
 
@@ -181,7 +218,7 @@ class Admin_Export_List_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		return array(
-			'push' => 'Publish',
+			'push' => __( 'Publish', 'apple-news' ),
 		);
 	}
 
@@ -200,7 +237,7 @@ class Admin_Export_List_Table extends WP_List_Table {
 		$current_page = $this->get_pagenum();
 		$data = get_posts( array(
 			'posts_per_page' => self::PER_PAGE,
-			'offset'         => ($current_page - 1) * self::PER_PAGE,
+			'offset'         => ( $current_page - 1 ) * self::PER_PAGE,
 			'orderby'        => 'ID',
 			'order'          => 'DESC',
 		) );

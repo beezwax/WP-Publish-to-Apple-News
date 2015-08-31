@@ -57,7 +57,7 @@ class Push extends API_Action {
 		$post = get_post( $this->id );
 
 		if ( ! $post ) {
-			throw new \Actions\Action_Exception( __( 'Could not find post with id ', 'apple-export' ) . $this->id );
+			throw new \Actions\Action_Exception( __( 'Could not find post with id ', 'apple-news' ) . $this->id );
 		}
 
 		$api_time   = get_post_meta( $this->id, 'apple_export_api_modified_at', true );
@@ -73,8 +73,7 @@ class Push extends API_Action {
 	 */
 	private function push() {
 		if ( ! $this->is_api_configuration_valid() ) {
-			throw new \Actions\Action_Exception( __( 'Your API settings seem to be empty. Please fill in the API key, API
-				secret and API channel fields in the plugin configuration page.', 'apple-export' ) );
+			throw new \Actions\Action_Exception( __( 'Your API settings seem to be empty. Please fill in the API key, API secret and API channel fields in the plugin configuration page.', 'apple-news' ) );
 		}
 
 		// Ignore if the post is already in sync
@@ -91,6 +90,7 @@ class Push extends API_Action {
 			// If there's an API ID, update, otherwise create.
 			$remote_id = get_post_meta( $this->id, 'apple_export_api_id', true );
 			$result    = null;
+
 			if ( $remote_id ) {
 				$revision = get_post_meta( $this->id, 'apple_export_api_revision', true );
 				$result   = $this->get_api()->update_article( $remote_id, $revision, $json, $bundles );
@@ -104,14 +104,15 @@ class Push extends API_Action {
 			update_post_meta( $this->id, 'apple_export_api_modified_at', $result->data->modifiedAt );
 			update_post_meta( $this->id, 'apple_export_api_share_url', $result->data->shareUrl );
 			update_post_meta( $this->id, 'apple_export_api_revision', $result->data->revision );
+
 			// If it's marked as deleted, remove the mark. Ignore otherwise.
 			delete_post_meta( $this->id, 'apple_export_api_deleted' );
 		} catch ( \Push_API\Request\Request_Exception $e ) {
 			if ( preg_match( '#WRONG_REVISION#', $e->getMessage() ) ) {
-				throw new \Actions\Action_Exception( __( 'It seems like the article was updated by another call. If the problem persist, try removing and pushing again.', 'apple-export' ) );
+				throw new \Actions\Action_Exception( __( 'It seems like the article was updated by another call. If the problem persist, try removing and pushing again.', 'apple-news' ) );
 			}
 
-			throw new \Actions\Action_Exception( __( 'There has been an error with the API. Please make sure your API settings are correct and try again.', 'apple-export' ) );
+			throw new \Actions\Action_Exception( __( 'There has been an error with the API. Please make sure your API settings are correct and try again.', 'apple-news' ) );
 		} finally {
 			$this->clean_workspace();
 		}

@@ -8,14 +8,6 @@
 class Admin_Settings_Section_API extends Admin_Settings_Section {
 
 	/**
-	 * Name of the API settings section.
-	 *
-	 * @var string
-	 * @access protected
-	 */
-	protected $name = 'API Settings';
-
-	/**
 	 * Slug of the API settings section.
 	 *
 	 * @var string
@@ -24,53 +16,59 @@ class Admin_Settings_Section_API extends Admin_Settings_Section {
 	protected $slug = 'api-options';
 
 	/**
-	 * API settings.
+	 * Constructor.
 	 *
-	 * @var array
-	 * @access protected
+	 * @param string $page
 	 */
-	protected $settings = array(
-		'api_key' => array(
-			'label'   => 'API Key',
-			'type'    => 'string',
-		),
-		'api_secret' => array(
-			'label'   => 'API Secret',
-			'type'    => 'password',
-		),
-		'api_channel' => array(
-			'label'   => 'API Channel',
-			'type'    => 'string',
-		),
-		'api_autosync' => array(
-			'label'   => 'Automatically publish to Apple News',
-			'type'    => array( 'yes', 'no' ),
-		),
- 	);
+	function __construct( $page ) {
+		// Set the name
+		$this->name =  __( 'API Settings', 'apple-news' );
+
+		// Add the settings
+		$this->settings = array(
+			'api_key' => array(
+				'label'   => __( 'API Key', 'apple-news' ),
+				'type'    => 'string',
+			),
+			'api_secret' => array(
+				'label'   => __( 'API Secret', 'apple-news' ),
+				'type'    => 'password',
+			),
+			'api_channel' => array(
+				'label'   => __( 'API Channel', 'apple-news' ),
+				'type'    => 'string',
+			),
+			'api_autosync' => array(
+				'label'   => __( 'Automatically publish to Apple News', 'apple-news' ),
+				'type'    => array( 'yes', 'no' ),
+			),
+		);
+
+		// Add the groups
+		$this->groups = array(
+			'apple_news' => array(
+				'label'       => __( 'Apple News API', 'apple-news' ),
+				'description' => __( 'All of these settings are required for publishing to Apple News', 'apple-news' ),
+				'settings'    => array( 'api_key', 'api_secret', 'api_channel', 'api_autosync' ),
+			),
+		);
+
+		parent::__construct( $page );
+	}
 
 	/**
-	 * API groups.
+	 * Gets section info.
 	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $groups = array(
-		'apple_news' => array(
-			'label'       => 'Apple News API',
-			'description' => 'All of these settings are required for publishing to Apple News',
-			'settings'    => array( 'api_key', 'api_secret', 'api_channel', 'api_autosync' ),
-		),
-	);
-
-	/**
-	 * Prints section info.
-	 *
+	 * @return string
 	 * @access public
 	 */
-	public function print_section_info() {
-		echo 'Enter your Apple News credentials below. See <a target="_blank"
-			href="https://developer.apple.com/news-publisher/">the Apple News
-			documentation</a> for detailed information.';
+	public function get_section_info() {
+		return sprintf(
+			'%s <a target="_blank" href="https://developer.apple.com/news-publisher/">%s</a> %s.',
+			__( 'Enter your Apple News credentials below. See', 'apple-news' ),
+			__( 'the Apple News documentation', 'apple-news' ),
+			__( 'for detailed information', 'apple-news' )
+		);
 	}
 
 }

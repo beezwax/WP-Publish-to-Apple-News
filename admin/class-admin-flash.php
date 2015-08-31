@@ -65,8 +65,8 @@ class Flash {
 	private static function show_error_flash( $message ) {
 		?>
 		<div class="notice error is-dismissible">
-			<p><strong><?php echo $message ?></strong></p>
-			<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+			<p><strong><?php echo wp_kses_post( $message ) ?></strong></p>
+			<button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'apple-news' ) ?></span></button>
 		</div>
 		<?php
 	}
@@ -74,8 +74,8 @@ class Flash {
 	private static function show_success_flash( $message ) {
 		?>
 		<div class="notice updated is-dismissible">
-			<p><strong><?php echo $message ?></strong></p>
-			<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+			<p><strong><?php echo wp_kses_post( $message ) ?></strong></p>
+			<button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'apple-news' ) ?></span></button>
 		</div>
 		<?php
 	}
@@ -83,8 +83,8 @@ class Flash {
 	private static function show_info_flash( $message ) {
 		?>
 		<div class="notice is-dismissible">
-			<p><strong><?php echo $message ?></strong></p>
-			<button type="button" class="notice-dismiss"><span class="screen-reader-text">Dismiss this notice.</span></button>
+			<p><strong><?php echo wp_kses_post( $message ) ?></strong></p>
+			<button type="button" class="notice-dismiss"><span class="screen-reader-text"><?php esc_html_e( 'Dismiss this notice.', 'apple-news' ) ?></span></button>
 		</div>
 		<?php
 	}

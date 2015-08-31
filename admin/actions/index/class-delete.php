@@ -47,13 +47,12 @@ class Delete extends API_Action {
 	 */
 	private function delete() {
 		if ( ! $this->is_api_configuration_valid() ) {
-			throw new \Actions\Action_Exception( 'Your API settings seem to be empty. Please fill the API key, API
-				secret and API channel fields in the plugin configuration page.' );
+			throw new \Actions\Action_Exception( __( 'Your API settings seem to be empty. Please fill the API key, API secret and API channel fields in the plugin configuration page.', 'apple-news' ) );
 		}
 
 		$remote_id = get_post_meta( $this->id, 'apple_export_api_id', true );
 		if ( ! $remote_id ) {
-			throw new \Actions\Action_Exception( 'This post has not been pushed to Apple News, cannot delete.' );
+			throw new \Actions\Action_Exception( __( 'This post has not been pushed to Apple News, cannot delete.', 'apple-news' ) );
 		}
 
 		$error = null;
