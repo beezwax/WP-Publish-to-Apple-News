@@ -2,7 +2,7 @@
 <div class="wrap">
 	<h1><?php esc_html_e( 'Apple News', 'apple-news' ) ?></h1>
 
-	<?php Flash::show(); ?>
+	<?php Admin_Apple_Notice::show(); ?>
 
 	<?php if ( isset( $message ) ): ?>
 	<div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible">
