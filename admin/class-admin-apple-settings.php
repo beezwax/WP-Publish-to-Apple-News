@@ -85,7 +85,7 @@ class Admin_Apple_Settings extends Apple_Export {
 	/**
 	 * Add a settings section.
 	 *
-	 * @param Admin_Settings_Section
+	 * @param Admin_Apple_Settings_Section
 	 * @access private
 	 */
 	private function add_section( $section ) {

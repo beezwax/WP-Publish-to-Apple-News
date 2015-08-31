@@ -53,7 +53,7 @@ class Admin_Apple_Post_Sync {
 		try {
 			$action->perform();
 		} catch ( Actions\Action_Exception $e ) {
-			Apple_Admin_Notice::error( $e->getMessage() );
+			Admin_Apple_Notice::error( $e->getMessage() );
 		}
 	}
 
