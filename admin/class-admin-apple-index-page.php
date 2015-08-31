@@ -71,7 +71,10 @@ class Admin_Apple_Index_Page extends Apple_Export {
 			switch ( $action ) {
 			case 'push':
 				$url  = menu_page_url( $this->plugin_slug . '_bulk_export', false );
-				$url .= '&ids=' . implode( '.', $_GET['article'] );
+				if ( isset( $_GET['article'] ) ) {
+					$ids = is_array( $_GET['article'] ) ? array_map( 'absint', $_GET['article'] ) : absint( $_GET['article'] );
+					$url .= '&ids=' . implode( '.', $ids );
+				}
 				wp_safe_redirect( $url );
 				exit;
 			default:
