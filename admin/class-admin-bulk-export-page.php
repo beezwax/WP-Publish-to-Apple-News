@@ -50,7 +50,7 @@ class Admin_Bulk_Export_Page extends Apple_Export {
 	 * @access public
 	 */
 	public function build_page() {
-		$ids = @$_GET['ids'];
+		$ids = isset( $_GET['ids'] ) ? $_GET['ids'] : null;
 		if ( ! $ids ) {
 			wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
 			return;

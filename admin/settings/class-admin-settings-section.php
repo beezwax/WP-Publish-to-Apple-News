@@ -415,7 +415,7 @@ class Admin_Settings_Section extends Apple_Export {
 
 			$result[ $name ] = array(
 				'label'       => $info['label'],
-				'description' => @$info['description'] ?: null,
+				'description' => empty( $info['description'] ) ? null : $info['description'],
 				'settings'    => $settings,
 			);
 		}
@@ -546,7 +546,7 @@ class Admin_Settings_Section extends Apple_Export {
 	 * @access private
 	 */
 	private function get_type_for( $name ) {
-		return @$this->settings[ $name ]['type'] ?: 'string';
+		return empty( $this->settings[ $name ]['type'] ) ? 'string' : $this->settings[ $name ]['type'];
 	}
 
 	/**

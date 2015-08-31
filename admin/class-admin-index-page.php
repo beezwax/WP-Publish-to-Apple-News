@@ -62,8 +62,8 @@ class Admin_Index_Page extends Apple_Export {
 	 * @access public
 	 */
 	public function page_router() {
-		$id     = intval( @$_GET['post_id'] );
-		$action = sanitize_text_field( @$_GET['action'] );
+		$id     = isset( $_GET['post_id'] ) ? intval( $_GET['post_id'] ) : null;
+		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
 
 		// Given an action and ID, map the attributes to corresponding actions.
 
