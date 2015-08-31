@@ -1,3 +1,4 @@
+<?php $current_screen = get_current_screen(); ?>
 <div class="wrap">
 	<h1><?php esc_html_e( 'Apple News', 'apple-news' ) ?></h1>
 
@@ -11,7 +12,9 @@
 	<?php endif; ?>
 
 	<form method="get">
-		<input type="hidden" name="page" value="<?php echo htmlentities( $_REQUEST['page'] ) ?>">
+		<?php if ( ! empty( $current_screen->parent_base ) ): ?>
+		<input type="hidden" name="page" value="<?php echo esc_attr( $current_screen->parent_base ) ?>">
+		<?php endif; ?>
 		<?php $table->display(); ?>
 	</form>
 </div>

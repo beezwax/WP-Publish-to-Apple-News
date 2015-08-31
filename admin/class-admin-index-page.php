@@ -63,7 +63,7 @@ class Admin_Index_Page extends Apple_Export {
 	 */
 	public function page_router() {
 		$id     = intval( @$_GET['post_id'] );
-		$action = htmlentities( @$_GET['action'] );
+		$action = sanitize_text_field( @$_GET['action'] );
 
 		// Given an action and ID, map the attributes to corresponding actions.
 
@@ -71,9 +71,9 @@ class Admin_Index_Page extends Apple_Export {
 			switch ( $action ) {
 			case 'push':
 				$url  = menu_page_url( $this->plugin_slug . '_bulk_export', false );
-				$url .= '&ids=' . implode( '.', $_REQUEST['article'] );
-				wp_redirect( $url );
-				return;
+				$url .= '&ids=' . implode( '.', $_GET['article'] );
+				wp_safe_redirect( $url );
+				exit;
 			default:
 				return $this->show_post_list_action();
 			}
@@ -179,8 +179,8 @@ class Admin_Index_Page extends Apple_Export {
 	 */
 	private function settings_action( $id ) {
 		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
-			update_post_meta( $id, 'apple_export_pullquote', $_POST['pullquote'] );
-			update_post_meta( $id, 'apple_export_pullquote_position', $_POST['pullquote_position'] );
+			update_post_meta( $id, 'apple_export_pullquote', sanitize_text_field( $_POST['pullquote'] ) );
+			update_post_meta( $id, 'apple_export_pullquote_position', sanitize_text_field( $_POST['pullquote_position'] ) );
 			$message = 'Settings saved.';
 		}
 

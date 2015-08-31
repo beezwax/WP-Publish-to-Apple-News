@@ -36,8 +36,8 @@ class Admin_Bulk_Export_Page extends Apple_Export {
 	public function register_page() {
 		add_submenu_page(
 			null,                                // Parent, if null, it won't appear in any menu
-			'Bulk Export',                       // Page title
-			'Bulk Export',                       // Menu title
+			__( 'Bulk Export', 'apple-news' ),   // Page title
+			__( 'Bulk Export', 'apple-news' ),   // Menu title
 			'manage_options',                    // Capability
 			$this->plugin_slug . '_bulk_export', // Menu Slug
 			array( $this, 'build_page' )         // Function
@@ -50,7 +50,7 @@ class Admin_Bulk_Export_Page extends Apple_Export {
 	 * @access public
 	 */
 	public function build_page() {
-		$ids = @$_REQUEST['ids'];
+		$ids = @$_GET['ids'];
 		if ( ! $ids ) {
 			wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
 			return;
@@ -59,7 +59,7 @@ class Admin_Bulk_Export_Page extends Apple_Export {
 		// Populate $articles array with a set of valid posts
 		$articles = array();
 		foreach ( explode( '.', $ids ) as $id ) {
-			if ( $post = get_post( $id ) ) {
+			if ( $post = get_post( absint( $id ) ) ) {
 				$articles[] = $post;
 			}
 		}
@@ -73,7 +73,7 @@ class Admin_Bulk_Export_Page extends Apple_Export {
 	 * @access public
 	 */
 	public function ajax_push_post() {
-		$id     = intval( $_REQUEST['id'] );
+		$id     = absint( $_GET['id'] );
 		// TODO: Move push action to shared
 		$action = new Actions\Index\Push( $this->settings, $id );
 		$errors = $action->perform();
