@@ -52,8 +52,8 @@ class Admin_Bulk_Export_Page extends Apple_Export {
 	public function build_page() {
 		$ids = isset( $_GET['ids'] ) ? $_GET['ids'] : null;
 		if ( ! $ids ) {
-			wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
-			return;
+			wp_safe_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+			exit;
 		}
 
 		// Populate $articles array with a set of valid posts

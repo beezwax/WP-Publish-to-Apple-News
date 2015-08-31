@@ -101,8 +101,8 @@ class Admin_Index_Page extends Apple_Export {
 	 */
 	private function flash_success( $message ) {
 		Flash::success( $message );
-		wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
-		wp_die(); // Ignore everything else that would be rendered otherwise
+		wp_safe_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+		exit;
 	}
 
 	/**
@@ -113,8 +113,8 @@ class Admin_Index_Page extends Apple_Export {
 	 */
 	private function flash_error( $message ) {
 		Flash::error( $message );
-		wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
-		wp_die(); // Ignore everything else that would be rendered otherwise
+		wp_safe_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+		exit;
 	}
 
 	/**
