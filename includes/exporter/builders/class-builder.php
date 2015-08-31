@@ -73,7 +73,7 @@ abstract class Builder {
 	 * @return string
 	 */
 	protected function content_title() {
-		return $this->content->title() ?: 'Untitled Article';
+		return $this->content->title() ?: __( 'Untitled Article', 'apple-news' );
 	}
 
 	/**

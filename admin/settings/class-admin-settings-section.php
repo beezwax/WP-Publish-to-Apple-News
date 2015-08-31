@@ -349,10 +349,37 @@ class Admin_Settings_Section extends Apple_Export {
 	 * @var array
 	 * @access protected
 	 */
-	protected $groups   = array();
+	protected $groups = array();
+
+	/**
+	 * Allowed HTML for settings pages.
+	 *
+	 * @var array
+	 * @access public
+	 */
+	const ALLOWED_HTML = array(
+		'select' => array(
+			'class' => array(),
+			'name' => array(),
+		),
+		'option' => array(
+			'value' => array(),
+		),
+		'input' => array(
+			'class' => array(),
+			'name' => array(),
+			'value' => array(),
+			'placeholder' => array(),
+			'step' => array(),
+			'type' => array(),
+			'required' => array(),
+		),
+	);
 
 	/**
 	 * Constructor.
+	 *
+	 * @param string $page
 	 */
 	function __construct( $page ) {
 		$this->page          = $page;
@@ -388,7 +415,7 @@ class Admin_Settings_Section extends Apple_Export {
 
 			$result[ $name ] = array(
 				'label'       => $info['label'],
-				'description' => @$info['description'] ?: null,
+				'description' => empty( $info['description'] ) ? null : $info['description'],
 				'settings'    => $settings,
 			);
 		}
@@ -445,7 +472,7 @@ class Admin_Settings_Section extends Apple_Export {
 	public function render_field( $args ) {
 		list( $name, $default_value ) = $args;
 		$type  = $this->get_type_for( $name );
-		$value = esc_attr( get_option( $name ) ) ?: $default_value;
+		$value = get_option( $name ) ?: $default_value;
 		$field = null;
 
 		// FIXME: A cleaner object-oriented solution would create Input objects
@@ -458,21 +485,21 @@ class Admin_Settings_Section extends Apple_Export {
 				$field = '<select name="%s">';
 			}
 			foreach ( $type as $option ) {
-				$field .= "<option value='$option'";
+				$field .= "<option value='" . esc_attr( $option ) . "'";
 				if ( $option == $value ) {
 					$field .= ' selected ';
 				}
-				$field .= ">$option</option>";
+				$field .= ">" . esc_html( $option ) . "</option>";
 			}
 			$field .= '</select>';
 		} else if ( 'font' == $type ) {
 			$field = '<select class="select2" name="%s">';
 			foreach ( self::$fonts as $option ) {
-				$field .= "<option value='$option'";
+				$field .= "<option value='" . esc_attr( $option ) . "'";
 				if ( $option == $value ) {
 					$field .= ' selected ';
 				}
-				$field .= ">$option</option>";
+				$field .= ">" . esc_html( $option ) . "</option>";
 			}
 			$field .= '</select>';
 		} else if ( 'boolean' == $type ) {
@@ -494,7 +521,7 @@ class Admin_Settings_Section extends Apple_Export {
 		} else if ( 'integer' == $type ) {
 			$field = '<input required type="number" name="%s" value="%s">';
 		} else if ( 'float' == $type ) {
-			$field = '<input class="input-float" placeholder="' . $default_value . '" type="text" step="any" name="%s" value="%s">';
+			$field = '<input class="input-float" placeholder="' . esc_attr( $default_value ) . '" type="text" step="any" name="%s" value="%s">';
 		} else if ( 'color' == $type ) {
 			$field = '<input required type="color" name="%s" value="%s">';
 		} else if ( 'password' == $type ) {
@@ -504,7 +531,11 @@ class Admin_Settings_Section extends Apple_Export {
 			$field = '<input required type="text" name="%s" value="%s">';
 		}
 
-		printf( $field, $name, $value );
+		return sprintf(
+			$field,
+			esc_attr( $name ),
+			esc_attr( $value )
+		);
 	}
 
 	/**
@@ -515,7 +546,7 @@ class Admin_Settings_Section extends Apple_Export {
 	 * @access private
 	 */
 	private function get_type_for( $name ) {
-		return @$this->settings[ $name ]['type'] ?: 'string';
+		return empty( $this->settings[ $name ]['type'] ) ? 'string' : $this->settings[ $name ]['type'];
 	}
 
 	/**
@@ -530,12 +561,13 @@ class Admin_Settings_Section extends Apple_Export {
 	}
 
 	/**
-	 * Prints section info.
+	 * Gets section info.
 	 *
+	 * @return string
 	 * @access public
 	 */
-	public function print_section_info() {
-		return;
+	public function get_section_info() {
+		return '';
 	}
 
 }

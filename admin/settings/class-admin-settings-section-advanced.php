@@ -8,14 +8,6 @@
 class Admin_Settings_Section_Advanced extends Admin_Settings_Section {
 
 	/**
-	 * Name of the advanced settings section.
-	 *
-	 * @var string
-	 * @access protected
-	 */
-	protected $name = 'Advanced Settings';
-
-	/**
 	 * Slug of the advanced settings section.
 	 *
 	 * @var string
@@ -24,48 +16,51 @@ class Admin_Settings_Section_Advanced extends Admin_Settings_Section {
 	protected $slug = 'advanced-options';
 
 	/**
-	 * Advanced settings.
+	 * Constructor.
 	 *
-	 * @var array
-	 * @access protected
+	 * @param string $page
 	 */
-	protected $settings = array(
-		'body_line_height' => array(
-			'label'    => 'Body Line Height',
-			'type'     => 'float',
-			'sanitize' => 'floatval',
-		),
-		'pullquote_line_height' => array(
-			'label'   => 'Pull quote Line Height',
-			'type'    => 'float',
-			'sanitize' => 'floatval',
-		),
-		'header_line_height' => array(
-			'label'   => 'Heading Line Height',
-			'type'    => 'float',
-			'sanitize' => 'floatval',
-		),
- 	);
+	function __construct( $page ) {
+		// Set the name
+		$this->name =  __( 'Advanced Settings', 'apple-news' );
 
- 	/**
-	 * Groups for advanced settings.
-	 *
-	 * @var array
-	 * @access protected
-	 */
- 	protected $groups = array(
-		'line_heights' => array(
-			'label'       => 'Line Heights',
-			'settings'    => array( 'body_line_height', 'pullquote_line_height', 'header_line_height' ),
-		),
-	);
+		// Add the settings
+		$this->settings = array(
+			'body_line_height' => array(
+				'label'    => __( 'Body Line Height', 'apple-news' ),
+				'type'     => 'float',
+				'sanitize' => 'floatval',
+			),
+			'pullquote_line_height' => array(
+				'label'   => __( 'Pull quote Line Height', 'apple-news' ),
+				'type'    => 'float',
+				'sanitize' => 'floatval',
+			),
+			'header_line_height' => array(
+				'label'   => __( 'Heading Line Height', 'apple-news' ),
+				'type'    => 'float',
+				'sanitize' => 'floatval',
+			),
+		);
+
+		// Add the groups
+		$this->groups = array(
+			'line_heights' => array(
+				'label'       => __( 'Line Heights', 'apple-news' ),
+				'settings'    => array( 'body_line_height', 'pullquote_line_height', 'header_line_height' ),
+			),
+		);
+
+		parent::__construct( $page );
+	}
 
 	/**
-	 * Prints section info.
+	 * Gets section info.
 	 *
+	 * @return string
 	 * @access public
 	 */
-	public function print_section_info() {
-		echo 'Delete values to restore defaults.';
+	public function get_section_info() {
+		return __( 'Delete values to restore defaults.', 'apple-news' );
 	}
 }

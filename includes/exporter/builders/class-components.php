@@ -62,7 +62,8 @@ class Components extends Builder {
 			// grouping an anchor target body several things need to happen:
 			if ( isset( $component['identifier'] )               // The FIRST component must be an anchor target
 				&& isset( $components[ $i + 1 ]['anchor'] )        // The SECOND must be the component to be anchored
-				&& 'body' == @$components[ $i + 2 ]['role']        // The THIRD must be a body component
+				&& isset( $components[ $i + 2 ]['role'] )
+				&& 'body' == $components[ $i + 2 ]['role']        // The THIRD must be a body component
 				&& !isset( $components[ $i + 2 ]['identifier'] ) ) // which must not be an anchor target for another component
 			{
 				// Collect
@@ -83,7 +84,8 @@ class Components extends Builder {
 			// Another case for anchor target grouping is when the component was anchored
 			// to the next element rather than the previous one, in that case:
 			if ( isset( $component['identifier'] )               // The FIRST component must be an anchor target
-				&& 'body' == @$components[ $i + 1 ]['role']        // The SECOND must be a body component
+				&& isset( $components[ $i + 1 ]['role'] )
+				&& 'body' == $components[ $i + 1 ]['role']        // The SECOND must be a body component
 				&& !isset( $components[ $i + 1 ]['identifier'] ) ) // which must not be an anchor target for another component
 			{
 				// Collect
@@ -131,7 +133,7 @@ class Components extends Builder {
 		// Trim all body components before returning
 		foreach ( $new_components as $i => $component ) {
 			if ( 'body' == $component['role'] ) {
-				$new_components[$i]['text'] = trim( $new_components[$i]['text'] );
+				$new_components[ $i ]['text'] = trim( $new_components[ $i ]['text'] );
 			}
 		}
 
@@ -201,6 +203,7 @@ class Components extends Builder {
 		// Always position the advertisement in the middle
 		$index     = ceil( count( $components ) / 2 );
 		$component = $this->get_component_from_shortname( 'advertisement' );
+
 		// Add component in position
 		array_splice( $components, $index, 0, array( $component ) );
 	}
@@ -223,14 +226,16 @@ class Components extends Builder {
 
 			// Anchor this component to previous component. If there's no previous
 			// component available, try with the next one.
-			$target_component = @$components[ $i - 1 ];
-			if ( ! $target_component ) {
-				$target_component = @$components[ $i + 1 ];
+			if ( empty( $components[ $i - 1 ] ) ) {
 				// Check whether this is the only component of the article, if it is,
 				// just ignore anchoring.
-				if ( ! $target_component ) {
+				if ( empty( $components[ $i + 1 ] ) ) {
 					return;
+				} else {
+					$target_component = $components[ $i + 1 ];
 				}
+			} else {
+				$target_component = $components[ $i - 1 ];
 			}
 
 			// Skip advertisement elements, they must span all width. If the previous
@@ -238,7 +243,7 @@ class Components extends Builder {
 			// anchoring something, also skip.
 			$counter = 1;
 			$len     = count( $components );
-			while ( !$target_component->can_be_anchor_target() && $i + $counter < $len ) {
+			while ( ! $target_component->can_be_anchor_target() && $i + $counter < $len ) {
 				$target_component = $components[ $i + $counter ];
 				$counter++;
 			}

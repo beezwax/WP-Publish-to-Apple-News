@@ -40,12 +40,12 @@ class Admin_Index_Page extends Apple_Export {
 		// Set up main page. This page reads parameters and handles actions
 		// accordingly.
 		add_menu_page(
-			'Apple News',                  // Page Title
-			'Apple News',                  // Menu Title
-			'manage_options',              // Capability
-			$this->plugin_slug . '_index', // Menu Slug
-			array( $this, 'page_router' ), // Function
-			'dashicons-format-aside'       // Icon
+			__( 'Apple News', 'apple-news' ),	// Page Title
+			__( 'Apple News', 'apple-news' ),	// Menu Title
+			'manage_options',              		// Capability
+			$this->plugin_slug . '_index', 		// Menu Slug
+			array( $this, 'page_router' ), 		// Function
+			'dashicons-format-aside'       		// Icon
 		);
 	}
 
@@ -62,8 +62,8 @@ class Admin_Index_Page extends Apple_Export {
 	 * @access public
 	 */
 	public function page_router() {
-		$id     = intval( @$_GET['post_id'] );
-		$action = htmlentities( @$_GET['action'] );
+		$id     = isset( $_GET['post_id'] ) ? intval( $_GET['post_id'] ) : null;
+		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
 
 		// Given an action and ID, map the attributes to corresponding actions.
 
@@ -71,9 +71,12 @@ class Admin_Index_Page extends Apple_Export {
 			switch ( $action ) {
 			case 'push':
 				$url  = menu_page_url( $this->plugin_slug . '_bulk_export', false );
-				$url .= '&ids=' . implode( '.', $_REQUEST['article'] );
-				wp_redirect( $url );
-				return;
+				if ( isset( $_GET['article'] ) ) {
+					$ids = is_array( $_GET['article'] ) ? array_map( 'absint', $_GET['article'] ) : absint( $_GET['article'] );
+					$url .= '&ids=' . implode( '.', $ids );
+				}
+				wp_safe_redirect( $url );
+				exit;
 			default:
 				return $this->show_post_list_action();
 			}
@@ -89,7 +92,7 @@ class Admin_Index_Page extends Apple_Export {
 		case 'delete':
 			return $this->delete_action( $id );
 		default:
-			wp_die( 'Invalid action: ' . $action );
+			wp_die( __( 'Invalid action: ', 'apple-news' ) . $action );
 		}
 	}
 
@@ -150,7 +153,7 @@ class Admin_Index_Page extends Apple_Export {
 	 *
 	 * @access public
 	 */
-	private function setup_assets() {
+	public function setup_assets() {
 		wp_enqueue_script( $this->plugin_slug . '_zeroclipboard', plugin_dir_url(
 			__FILE__) .  '../vendor/zeroclipboard/ZeroClipboard.min.js', array(
 				'jquery' ), $this->version, true );
@@ -178,10 +181,13 @@ class Admin_Index_Page extends Apple_Export {
 	 * @access private
 	 */
 	private function settings_action( $id ) {
-		if ( 'POST' == $_SERVER['REQUEST_METHOD'] ) {
-			update_post_meta( $id, 'apple_export_pullquote', $_POST['pullquote'] );
-			update_post_meta( $id, 'apple_export_pullquote_position', $_POST['pullquote_position'] );
-			$message = 'Settings saved.';
+		if ( isset( $_POST['pullquote'] ) ) {
+			update_post_meta( $id, 'apple_export_pullquote', sanitize_text_field( $_POST['pullquote'] ) );
+		}
+
+		if ( isset( $_POST['pullquote_position'] ) ) {
+			update_post_meta( $id, 'apple_export_pullquote_position', sanitize_text_field( $_POST['pullquote_position'] ) );
+			$message = __( 'Settings saved.', 'apple-news' );
 		}
 
 		$post      = get_post( $id );
@@ -215,7 +221,7 @@ class Admin_Index_Page extends Apple_Export {
 		$action = new Actions\Index\Push( $this->settings, $id );
 		try {
 			$action->perform();
-			$this->flash_success( 'Your article has been pushed successfully!' );
+			$this->flash_success( __( 'Your article has been pushed successfully!', 'apple-news' ) );
 		} catch ( Actions\Action_Exception $e ) {
 			$this->flash_error( $e->getMessage() );
 		}
@@ -231,7 +237,7 @@ class Admin_Index_Page extends Apple_Export {
 		$action = new Actions\Index\Delete( $this->settings, $id );
 		try {
 			$action->perform();
-			$this->flash_success( 'Your article has been removed from apple news.' );
+			$this->flash_success( __( 'Your article has been removed from apple news.', 'apple-news' ) );
 		} catch ( Actions\Action_Exception $e ) {
 			$this->flash_error( $e->getMessage() );
 		}
