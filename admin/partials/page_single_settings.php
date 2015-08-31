@@ -12,7 +12,7 @@
 		<?php wp_nonce_field( 'export', 'apple-export-nonce' ); ?>
 		<table class="form-table">
 			<tr>
-				<th scope="row">Pull quote</th>
+				<th scope="row"><?php esc_html_e( 'Pull quote', 'apple-news' ) ?></th>
 				<td>
 				<textarea name="pullquote" placeholder="Lorem ipsum..." rows="10" class="large-text"><?php echo @$post_meta[ 'apple_export_pullquote' ][0] ?></textarea>
 					<p class="description"><?php esc_html_e( 'This is optional and can be left blank. A pull quote is a key phrase, quotation, or excerpt that has been pulled from an article and used as a graphic element, serving to entice readers into the article or to highlight a key topic.', 'apple-news' ) ?></p>

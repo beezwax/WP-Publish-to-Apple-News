@@ -89,7 +89,7 @@ class Admin_Index_Page extends Apple_Export {
 		case 'delete':
 			return $this->delete_action( $id );
 		default:
-			wp_die( 'Invalid action: ' . $action );
+			wp_die( __( 'Invalid action: ', 'apple-news' ) . $action );
 		}
 	}
 
