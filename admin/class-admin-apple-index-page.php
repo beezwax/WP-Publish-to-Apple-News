@@ -42,7 +42,7 @@ class Admin_Apple_Index_Page extends Apple_Export {
 		add_menu_page(
 			__( 'Apple News', 'apple-news' ),	// Page Title
 			__( 'Apple News', 'apple-news' ),	// Menu Title
-			'manage_options',              		// Capability
+			apply_filters( 'apple_news_list_capability', 'manage_options' ), // Capability
 			$this->plugin_slug . '_index', 		// Menu Slug
 			array( $this, 'page_router' ), 		// Function
 			'dashicons-format-aside'       		// Icon
