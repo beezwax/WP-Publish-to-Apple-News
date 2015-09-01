@@ -382,9 +382,11 @@ class Admin_Apple_Settings_Section extends Apple_Export {
 	 * @param string $page
 	 */
 	function __construct( $page ) {
-		$this->page          = $page;
-		$base_settings       = new \Exporter\Settings;
-		$this->base_settings = $base_settings->all();
+		$this->page				= $page;
+		$base_settings			= new \Exporter\Settings;
+		$this->base_settings	= $base_settings->all();
+		$this->settings			= apply_filters( 'apple_news_section_settings', $this->settings, $page );
+		$this->groups			= apply_filters( 'apple_news_section_groups', $this->groups, $page );
 	}
 
 	/**

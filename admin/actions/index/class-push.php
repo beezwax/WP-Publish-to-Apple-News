@@ -63,7 +63,10 @@ class Push extends API_Action {
 		$api_time   = get_post_meta( $this->id, 'apple_export_api_modified_at', true );
 		$api_time   = strtotime( $api_time );
 		$local_time = strtotime( $post->post_modified );
-		return $api_time >= $local_time;
+
+		$in_sync = $api_time >= $local_time;
+
+		return apply_filters( 'apple_news_is_post_in_sync', $in_sync, $this->id, $api_time, $local_time );
 	}
 
 	/**
@@ -91,6 +94,8 @@ class Push extends API_Action {
 			$remote_id = get_post_meta( $this->id, 'apple_export_api_id', true );
 			$result    = null;
 
+			do_action( 'apple_news_before_push', $this->id );
+
 			if ( $remote_id ) {
 				$revision = get_post_meta( $this->id, 'apple_export_api_revision', true );
 				$result   = $this->get_api()->update_article( $remote_id, $revision, $json, $bundles );
@@ -107,6 +112,8 @@ class Push extends API_Action {
 
 			// If it's marked as deleted, remove the mark. Ignore otherwise.
 			delete_post_meta( $this->id, 'apple_export_api_deleted' );
+
+			do_action( 'apple_news_after_push', $this->id, $result );
 		} catch ( \Push_API\Request\Request_Exception $e ) {
 			if ( preg_match( '#WRONG_REVISION#', $e->getMessage() ) ) {
 				throw new \Actions\Action_Exception( __( 'It seems like the article was updated by another call. If the problem persist, try removing and pushing again.', 'apple-news' ) );
@@ -143,7 +150,7 @@ class Push extends API_Action {
 		$this->exporter = $export_action->fetch_exporter();
 		$this->exporter->generate();
 
-		return array( $this->exporter->get_json(), $this->exporter->get_bundles() );
+		return apply_filters( 'apple_news_generate_article', array( $this->exporter->get_json(), $this->exporter->get_bundles() ), $this->id );
 	}
 
 }

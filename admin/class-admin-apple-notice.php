@@ -118,7 +118,7 @@ class Admin_Apple_Notice {
 	private static function show_notice( $message, $type ) {
 		?>
 		<div class="notice <?php echo esc_attr( $type ) ?> is-dismissible">
-			<p><strong><?php echo wp_kses_post( $message ) ?></strong></p>
+			<p><strong><?php echo wp_kses_post( apply_filters( 'apple_news_notice_message', $message, $type ) ) ?></strong></p>
 		</div>
 		<?php
 	}

@@ -10,6 +10,7 @@
 
 	<form method="post">
 		<?php wp_nonce_field( 'export', 'apple-export-nonce' ); ?>
+		<?php do_action( 'apple_news_before_single_settings' ); ?>
 		<table class="form-table">
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Pull quote', 'apple-news' ) ?></th>
@@ -30,6 +31,7 @@
 				</td>
 			</tr>
 		</table>
+		<?php do_action( 'apple_news_after_single_settings' ); ?>
 
 		<p class="submit">
 			<a href="<?php echo esc_url( admin_url( 'admin.php?page=apple_export_index' ) ); ?>" class="button"><?php esc_html_e( 'Back', 'apple-news' ) ?></a>

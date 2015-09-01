@@ -89,7 +89,7 @@ class Export extends Action {
 				$settings->set( $name, $value );
 			}
 		}
-		return $settings;
+		return apply_filters( 'apple_news_content_settings', $settings );
 	}
 
 }

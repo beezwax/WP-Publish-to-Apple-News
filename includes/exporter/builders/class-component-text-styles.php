@@ -50,7 +50,7 @@ class Component_Text_Styles extends Builder {
 	 * @access protected
 	 */
 	protected function build() {
-		return $this->styles;
+		return apply_filters( 'apple_news_component_text_styles', $this->styles );
 	}
 
 }

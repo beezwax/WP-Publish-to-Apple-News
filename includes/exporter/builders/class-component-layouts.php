@@ -54,7 +54,7 @@ class Component_Layouts extends Builder {
 	 * @access protected
 	 */
 	protected function build() {
-		return $this->layouts;
+		return apply_filters( 'apple_news_component_layouts', $this->layouts );
 	}
 
 	/**

@@ -183,6 +183,8 @@ class Exporter {
 			}
 		}
 
+		$json = apply_filters( 'apple_news_generate_json', $json, $this->content_id() );
+
 		return json_encode( $json );
 	}
 
