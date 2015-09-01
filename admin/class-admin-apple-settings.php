@@ -1,9 +1,9 @@
 <?php
 require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-settings.php';
-require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-settings-section.php';
-require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-settings-section-api.php';
-require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-settings-section-formatting.php';
-require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-settings-section-advanced.php';
+require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section.php';
+require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-api.php';
+require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-formatting.php';
+require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-advanced.php';
 
 use Exporter\Settings as Settings;
 
@@ -11,7 +11,7 @@ use Exporter\Settings as Settings;
  * This class is in charge of creating a WordPress page to manage the
  * Exporter's settings class.
  */
-class Admin_Settings extends Apple_Export {
+class Admin_Apple_Settings extends Apple_Export {
 
 	/**
 	 * Associative array of fields and types. If not present, defaults to string.
@@ -77,15 +77,15 @@ class Admin_Settings extends Apple_Export {
 	 * @access private
 	 */
 	private function add_sections() {
-		$this->add_section( new Admin_Settings_Section_API( $this->page_name ) );
-		$this->add_section( new Admin_Settings_Section_Formatting( $this->page_name ) );
-		$this->add_section( new Admin_Settings_Section_Advanced( $this->page_name ) );
+		$this->add_section( new Admin_Apple_Settings_Section_API( $this->page_name ) );
+		$this->add_section( new Admin_Apple_Settings_Section_Formatting( $this->page_name ) );
+		$this->add_section( new Admin_Apple_Settings_Section_Advanced( $this->page_name ) );
 	}
 
 	/**
 	 * Add a settings section.
 	 *
-	 * @param Admin_Settings_Section
+	 * @param Admin_Apple_Settings_Section
 	 * @access private
 	 */
 	private function add_section( $section ) {

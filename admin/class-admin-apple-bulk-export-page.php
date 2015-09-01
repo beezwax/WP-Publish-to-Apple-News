@@ -7,7 +7,7 @@ require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
  *
  * @since 0.6.0
  */
-class Admin_Bulk_Export_Page extends Apple_Export {
+class Admin_Apple_Bulk_Export_Page extends Apple_Export {
 
 	/**
 	 * Current plugin settings.
@@ -52,8 +52,8 @@ class Admin_Bulk_Export_Page extends Apple_Export {
 	public function build_page() {
 		$ids = isset( $_GET['ids'] ) ? sanitize_text_field( $_GET['ids'] ) : null;
 		if ( ! $ids ) {
-			wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
-			return;
+			wp_safe_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+			exit;
 		}
 
 		// Populate $articles array with a set of valid posts

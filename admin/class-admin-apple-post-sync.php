@@ -9,7 +9,7 @@ require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
  *
  * @since 0.4.0
  */
-class Admin_Post_Sync {
+class Admin_Apple_Post_Sync {
 
 	/**
 	 * Current settings.
@@ -53,7 +53,7 @@ class Admin_Post_Sync {
 		try {
 			$action->perform();
 		} catch ( Actions\Action_Exception $e ) {
-			Flash::error( $e->getMessage() );
+			Admin_Apple_Notice::error( $e->getMessage() );
 		}
 	}
 
@@ -74,7 +74,7 @@ class Admin_Post_Sync {
 		try {
 			$action->perform();
 		} catch ( Actions\Action_Exception $e ) {
-			Flash::error( $e->getMessage() );
+			Admin_Apple_Notice::error( $e->getMessage() );
 		}
 	}
 
@@ -87,7 +87,7 @@ class Admin_Post_Sync {
 	 * @access public
 	 */
 	public function on_redirect( $location ) {
-		if ( Flash::has_flash() ) {
+		if ( Admin_Apple_Notice::has_notice() ) {
 			return 'admin.php?page=apple_export_index';
 		}
 
