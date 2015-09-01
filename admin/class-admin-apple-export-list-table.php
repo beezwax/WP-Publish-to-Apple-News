@@ -168,10 +168,11 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 		$share_url = get_post_meta( $item->ID, 'apple_export_api_share_url', true );
 		if ( $share_url ) {
 			$actions['share'] = sprintf(
-				"<a class='share-url-button' title='%s' href='javascript:' data-clipboard-text='%s'>%s</a>",
+				"<a class='share-url-button' title='%s' href='#'>%s</a><br/><input type='text' name='share-url-%s' class='apple-share-url' value='%s' />",
 				esc_html__( 'Preview in News app', 'apple-news' ),
-				esc_url( $share_url ),
-				esc_html__( 'Copy News URL', 'apple-news' )
+				esc_html__( 'Copy News URL', 'apple-news' ),
+				absint( $item->ID ),
+				esc_url( $share_url )
 			);
 		}
 

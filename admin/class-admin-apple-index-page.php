@@ -154,13 +154,8 @@ class Admin_Apple_Index_Page extends Apple_Export {
 	 * @access public
 	 */
 	public function setup_assets() {
-		wp_enqueue_script( $this->plugin_slug . '_zeroclipboard', plugin_dir_url(
-			__FILE__) .  '../vendor/zeroclipboard/ZeroClipboard.min.js', array(
-				'jquery' ), $this->version, true );
-
 		wp_enqueue_script( $this->plugin_slug . '_export_table_js', plugin_dir_url(
-			__FILE__ ) .  '../assets/js/export-table.js', array( 'jquery',
-			$this->plugin_slug . '_zeroclipboard' ), $this->version, true );
+			__FILE__ ) .  '../assets/js/export-table.js', array( 'jquery' ), $this->version, true );
 	}
 
 	/**
