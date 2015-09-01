@@ -60,7 +60,7 @@ class Push extends API_Action {
 			throw new \Actions\Action_Exception( __( 'Could not find post with id ', 'apple-news' ) . $this->id );
 		}
 
-		$api_time   = get_post_meta( $this->id, 'apple_export_api_modified_at', true );
+		$api_time   = get_post_meta( $this->id, 'apple_news_api_modified_at', true );
 		$api_time   = strtotime( $api_time );
 		$local_time = strtotime( $post->post_modified );
 
@@ -91,27 +91,27 @@ class Push extends API_Action {
 
 		try {
 			// If there's an API ID, update, otherwise create.
-			$remote_id = get_post_meta( $this->id, 'apple_export_api_id', true );
+			$remote_id = get_post_meta( $this->id, 'apple_news_api_id', true );
 			$result    = null;
 
 			do_action( 'apple_news_before_push', $this->id );
 
 			if ( $remote_id ) {
-				$revision = get_post_meta( $this->id, 'apple_export_api_revision', true );
+				$revision = get_post_meta( $this->id, 'apple_news_api_revision', true );
 				$result   = $this->get_api()->update_article( $remote_id, $revision, $json, $bundles );
 			} else {
 				$result = $this->get_api()->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles );
 			}
 
 			// Save the ID that was assigned to this post in by the API
-			update_post_meta( $this->id, 'apple_export_api_id', $result->data->id );
-			update_post_meta( $this->id, 'apple_export_api_created_at', $result->data->createdAt );
-			update_post_meta( $this->id, 'apple_export_api_modified_at', $result->data->modifiedAt );
-			update_post_meta( $this->id, 'apple_export_api_share_url', $result->data->shareUrl );
-			update_post_meta( $this->id, 'apple_export_api_revision', $result->data->revision );
+			update_post_meta( $this->id, 'apple_news_api_id', $result->data->id );
+			update_post_meta( $this->id, 'apple_news_api_created_at', $result->data->createdAt );
+			update_post_meta( $this->id, 'apple_news_api_modified_at', $result->data->modifiedAt );
+			update_post_meta( $this->id, 'apple_news_api_share_url', $result->data->shareUrl );
+			update_post_meta( $this->id, 'apple_news_api_revision', $result->data->revision );
 
 			// If it's marked as deleted, remove the mark. Ignore otherwise.
-			delete_post_meta( $this->id, 'apple_export_api_deleted' );
+			delete_post_meta( $this->id, 'apple_news_api_deleted' );
 
 			do_action( 'apple_news_after_push', $this->id, $result );
 		} catch ( \Push_API\Request\Request_Exception $e ) {

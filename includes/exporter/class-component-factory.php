@@ -90,7 +90,7 @@ class Component_Factory {
 		self::register_component( 'advertisement',   '\\Exporter\\Components\\Advertisement'   );
 
 		// Allow built-in components and order to be overridden
-		self::$components = apply_filters( 'apple_export_initialize_components', self::$components );
+		self::$components = apply_filters( 'apple_news_initialize_components', self::$components );
 	}
 
 	/**
@@ -102,7 +102,7 @@ class Component_Factory {
 	 * @access private
 	 */
 	private static function register_component( $shortname, $classname ) {
-		self::$components[ $shortname ] = apply_filters( 'apple_export_register_component', $classname, $shortname );
+		self::$components[ $shortname ] = apply_filters( 'apple_news_register_component', $classname, $shortname );
 	}
 
 	/**

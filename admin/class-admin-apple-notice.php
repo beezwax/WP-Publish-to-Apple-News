@@ -11,7 +11,7 @@ class Admin_Apple_Notice {
 	 *
 	 * @access public
 	 */
-	const KEY = 'apple_export_notice';
+	const KEY = 'apple_news_notice';
 
 	/**
 	 * Constructor.

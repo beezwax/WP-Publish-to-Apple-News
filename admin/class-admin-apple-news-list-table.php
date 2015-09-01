@@ -10,7 +10,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * @since 0.4.0
  */
-class Admin_Apple_Export_List_Table extends WP_List_Table {
+class Admin_Apple_News_List_Table extends WP_List_Table {
 
 	/**
 	 * How many entries per page will be displayed.
@@ -77,7 +77,7 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 	 * @access private
 	 */
 	private function get_updated_at( $post ) {
-		$updated_at = get_post_meta( $post->ID, 'apple_export_api_modified_at', true );
+		$updated_at = get_post_meta( $post->ID, 'apple_news_api_modified_at', true );
 
 		if ( $updated_at ) {
 			return date( 'F j, h:i a', strtotime( $updated_at ) );
@@ -94,11 +94,11 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 	 * @access private
 	 */
 	private function get_synced_status_for( $post ) {
-		$remote_id = get_post_meta( $post->ID, 'apple_export_api_id', true );
+		$remote_id = get_post_meta( $post->ID, 'apple_news_api_id', true );
 
 		if ( ! $remote_id ) {
 			// There is no remote id, check for a delete mark
-			$deleted = get_post_meta( $post->ID, 'apple_export_api_deleted', true );
+			$deleted = get_post_meta( $post->ID, 'apple_news_api_deleted', true );
 			if ( $deleted ) {
 				return __( 'Deleted', 'apple-news' );
 			}
@@ -107,7 +107,7 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 			return __( 'Not published', 'apple-news' );
 		}
 
-		$updated = get_post_meta( $post->ID, 'apple_export_api_modified_at', true );
+		$updated = get_post_meta( $post->ID, 'apple_news_api_modified_at', true );
 		$updated = strtotime( $updated );
 		$local   = strtotime( $post->post_modified );
 
@@ -167,7 +167,7 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 		);
 
 		// Add the delete action, if required
-		if ( get_post_meta( $item->ID, 'apple_export_api_id', true ) ) {
+		if ( get_post_meta( $item->ID, 'apple_news_api_id', true ) ) {
 			$actions['delete'] = sprintf(
 				"<a title='%s' href='%s'>%s</a>",
 				esc_html__( 'Delete from Apple News', 'apple-news' ),
@@ -177,7 +177,7 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 		}
 
 		// Create the share URL
-		$share_url = get_post_meta( $item->ID, 'apple_export_api_share_url', true );
+		$share_url = get_post_meta( $item->ID, 'apple_news_api_share_url', true );
 		if ( $share_url ) {
 			$actions['share'] = sprintf(
 				"<a class='share-url-button' title='%s' href='#'>%s</a><br/><input type='text' name='share-url-%s' class='apple-share-url' value='%s' />",

@@ -56,7 +56,7 @@ class Admin_Apple_Post_Sync {
 		}
 
 		// If the post has been marked as deleted from the API, ignore this update
-		$deleted = get_post_meta( $id, 'apple_export_api_deleted', true );
+		$deleted = get_post_meta( $id, 'apple_news_api_deleted', true );
 		if ( $deleted ) {
 			return;
 		}
@@ -82,7 +82,7 @@ class Admin_Apple_Post_Sync {
 		}
 
 		// If it does not have a remote API ID just ignore
-		if ( ! get_post_meta( $id, 'apple_export_api_id', true ) ) {
+		if ( ! get_post_meta( $id, 'apple_news_api_id', true ) ) {
 			return;
 		}
 
@@ -104,7 +104,7 @@ class Admin_Apple_Post_Sync {
 	 */
 	public function do_redirect( $location ) {
 		if ( Admin_Apple_Notice::has_notice() ) {
-			return 'admin.php?page=apple_export_index';
+			return 'admin.php?page=apple_news_index';
 		}
 
 		return $location;

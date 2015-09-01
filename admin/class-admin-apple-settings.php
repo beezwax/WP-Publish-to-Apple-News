@@ -12,7 +12,7 @@ use Exporter\Settings as Settings;
  * This class is in charge of creating a WordPress page to manage the
  * Exporter's settings class.
  */
-class Admin_Apple_Settings extends Apple_Export {
+class Admin_Apple_Settings extends Apple_News {
 
 	/**
 	 * Associative array of fields and types. If not present, defaults to string.
@@ -145,15 +145,15 @@ class Admin_Apple_Settings extends Apple_Export {
 	 * @access public
 	 */
 	public function register_assets() {
-		wp_enqueue_style( 'apple-export-select2-css', plugin_dir_url( __FILE__ ) .
+		wp_enqueue_style( 'apple-news-select2-css', plugin_dir_url( __FILE__ ) .
 			'../vendor/select2/select2.min.css', array() );
-		wp_enqueue_style( 'apple-export-settings-css', plugin_dir_url( __FILE__ ) .
+		wp_enqueue_style( 'apple-news-settings-css', plugin_dir_url( __FILE__ ) .
 			'../assets/css/settings.css', array() );
 
-		wp_enqueue_script( 'apple-export-select2-js', plugin_dir_url( __FILE__ ) .
+		wp_enqueue_script( 'apple-news-select2-js', plugin_dir_url( __FILE__ ) .
 			'../vendor/select2/select2.full.min.js', array( 'jquery' ) );
-		wp_enqueue_script( 'apple-export-settings-js', plugin_dir_url( __FILE__ ) .
-			'../assets/js/settings.js', array( 'jquery', 'apple-export-select2-js' )
+		wp_enqueue_script( 'apple-news-settings-js', plugin_dir_url( __FILE__ ) .
+			'../assets/js/settings.js', array( 'jquery', 'apple-news-select2-js' )
 		);
 	}
 

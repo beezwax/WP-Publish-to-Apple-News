@@ -61,7 +61,7 @@ class Request {
 		$this->mime_builder = $mime_builder ?: new MIME_Builder();
 
 		// Set the default WordPress HTTP API args
-		$this->default_args = apply_filters( 'apple_export_request_args', array(
+		$this->default_args = apply_filters( 'apple_news_request_args', array(
 			'sslverify' => false, // required until an endpoint certificate issue is resolved
 			'timeout' => 30, // required because we need to package all images
 			'reject_unsafe_urls' => true,
@@ -93,7 +93,7 @@ class Request {
 		);
 
 		// Allow filtering and merge with the default args
-		$args = apply_filters( 'apple_export_post_args', wp_parse_args( $args, $this->default_args ) );
+		$args = apply_filters( 'apple_news_post_args', wp_parse_args( $args, $this->default_args ) );
 
 		// Perform the request
 		$response = wp_safe_remote_post( $url, $args );
@@ -119,7 +119,7 @@ class Request {
 		);
 
 		// Allow filtering and merge with the default args
-		$args = apply_filters( 'apple_export_delete_args', wp_parse_args( $args, $this->default_args ) );
+		$args = apply_filters( 'apple_news_delete_args', wp_parse_args( $args, $this->default_args ) );
 
 		// Perform the delete
 		$response = wp_safe_remote_request( $url, $args );
@@ -149,7 +149,7 @@ class Request {
 		);
 
 		// Allow filtering and merge with the default args
-		$args = apply_filters( 'apple_export_get_args', wp_parse_args( $args, $this->default_args ) );
+		$args = apply_filters( 'apple_news_get_args', wp_parse_args( $args, $this->default_args ) );
 
 		// Perform the delete
 		$response = wp_safe_remote_get( $url, $args );

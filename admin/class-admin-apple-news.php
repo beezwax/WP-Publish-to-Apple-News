@@ -16,7 +16,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-meta-boxes.php';
 /**
  * Entry-point class for the plugin.
  */
-class Admin_Apple_Export extends Apple_Export {
+class Admin_Apple_News extends Apple_News {
 
 	/**
 	 * Constructor.
