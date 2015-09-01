@@ -10,6 +10,12 @@ use \Exporter\Exporter as Exporter;
  */
 class Layout extends Builder {
 
+	/**
+	 * Build the layout
+	 *
+	 * @return array
+	 * @access protected
+	 */
 	protected function build() {
 		return array(
 			'columns' => $this->get_setting( 'layout_columns' ),

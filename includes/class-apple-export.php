@@ -8,8 +8,28 @@
  */
 class Apple_Export {
 
-	protected $plugin_slug   = 'apple_export';
+	/**
+	 * Plugin slug.
+	 *
+	 * @var string
+	 * @access protected
+	 */
+	protected $plugin_slug = 'apple_export';
+
+	/**
+	 * Plugin domain.
+	 *
+	 * @var string
+	 * @access protected
+	 */
 	protected $plugin_domain = 'apple-export';
-	protected $version       = '0.6.0';
+
+	/**
+	 * Plugin version.
+	 *
+	 * @var string
+	 * @access protected
+	 */
+	protected $version = '0.9.0';
 
 }

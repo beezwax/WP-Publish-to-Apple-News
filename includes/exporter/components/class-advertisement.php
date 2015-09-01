@@ -9,6 +9,12 @@ namespace Exporter\Components;
  */
 class Advertisement extends Component {
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		$this->json = array(
 			'role'       => 'banner_advertisement',
@@ -18,6 +24,11 @@ class Advertisement extends Component {
 		$this->set_layout();
 	}
 
+	/**
+	 * Set the layout for the component.
+	 *
+	 * @access private
+	 */
 	private function set_layout() {
 		$this->json['layout'] = 'advertisement-layout';
 		$this->register_full_width_layout( 'advertisement-layout', array(

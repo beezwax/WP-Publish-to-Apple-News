@@ -7,7 +7,12 @@ namespace Exporter;
  */
 class Settings {
 
-	// Exporter's default settings.
+	/**
+	 * Exporter's default settings.
+	 *
+	 * @var array
+	 * @access private
+	 */
 	private $settings = array(
 		// API information.
 		'api_key'         => '',
@@ -55,6 +60,13 @@ class Settings {
 		'enable_advertisement' => 'yes',
 	);
 
+	/**
+	 * Get a setting.
+	 *
+	 * @param string $name
+	 * @return mixed
+	 * @access public
+	 */
 	public function get( $name ) {
 		// Check for computed settings
 		if ( method_exists( $this, $name ) ) {
@@ -69,11 +81,25 @@ class Settings {
 		return $this->settings[ $name ];
 	}
 
+	/**
+	 * Set a setting.
+	 *
+	 * @param string $name
+	 * @param mixed $value
+	 * @return mixed
+	 * @access public
+	 */
 	public function set( $name, $value ) {
 		$this->settings[ $name ] = $value;
 		return $value;
 	}
 
+	/**
+	 * Get all settings.
+	 *
+	 * @return array
+	 * @access public
+	 */
 	public function all() {
 		return $this->settings;
 	}
@@ -85,14 +111,32 @@ class Settings {
 	// 1024.
 	// -------------------------------------------------------------------------
 
+	/**
+	 * Get the layout width.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function layout_width() {
 		return 'center' == $this->get( 'body_orientation' ) ? 768 : 1024;
 	}
 
+	/**
+	 * Get the layout columns.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function layout_columns() {
 		return 'center' == $this->get( 'body_orientation' ) ? 9 : 7;
 	}
 
+	/**
+	 * Get the body column span.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function body_column_span() {
 		return 'center' == $this->get( 'body_orientation' ) ? 7 : 5;
 	}
@@ -103,6 +147,8 @@ class Settings {
 	 * layouts, as centered layouts have more columns.
 	 *
 	 * @since 0.4.0
+	 * @return string
+	 * @access public
 	 */
 	public function alignment_offset() {
 		return 'center' == $this->get( 'body_orientation' ) ? 3 : 2;

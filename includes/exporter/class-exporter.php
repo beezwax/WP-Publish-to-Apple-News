@@ -17,15 +17,17 @@ class Exporter {
 	/**
 	 * The content object to be exported.
 	 *
-	 * @var  Exporter_Content
+	 * @var Exporter_Content
+	 * @access private
 	 * @since 0.2.0
 	 */
 	private $content;
 
 	/**
-	 * The workspace object, used to write and zip files.
+	 * The workspace object, used to create the bundle.
 	 *
-	 * @var  Workspace
+	 * @var Workspace
+	 * @access private
 	 * @since 0.2.0
 	 */
 	private $workspace;
@@ -33,7 +35,8 @@ class Exporter {
 	/**
 	 * The settings object which is used to configure the output of the exporter.
 	 *
-	 * @var  Settings
+	 * @var Settings
+	 * @access private
 	 * @since 0.4.0
 	 */
 	private $settings;
@@ -43,17 +46,33 @@ class Exporter {
 	 * the JSON array.
 	 *
 	 * @var array
+	 * @access private
 	 * @since 0.4.0
 	 */
 	private $builders;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param Exporter_Content $content
+	 * @param Workspace $workspace
+	 * @param Settings $settings
+	 */
 	function __construct( $content, $workspace = null, $settings = null ) {
 		$this->content   = $content;
-		$this->workspace = $workspace ?: new Workspace();
+		$this->workspace = $workspace ?: new Workspace( $this->content_id() );
 		$this->settings  = $settings  ?: new Settings();
 		$this->builders  = array();
 	}
 
+	/**
+	 * An ordered hash of builders. They will be executed in order when building
+	 * the JSON array.
+	 *
+	 * @since 0.4.0
+	 * @param array $builders
+	 * @access public
+	 */
 	public function initialize_builders( $builders = null ) {
 		if ( $builders ) {
 			$this->builders = $builders;
@@ -68,10 +87,24 @@ class Exporter {
 		Component_Factory::initialize( $this->workspace, $this->settings, $this->get_builder( 'componentTextStyles' ), $this->get_builder( 'componentLayouts' ) );
 	}
 
+	/**
+	 * Register a builder.
+	 *
+	 * @param string $name
+	 * @param Builder $builder
+	 * @access private
+	 */
 	private function register_builder( $name, $builder ) {
 		$this->builders[ $name ] = $builder;
 	}
 
+	/**
+	 * Get a builder.
+	 *
+	 * @param string $name
+	 * @return Builder
+	 * @access private
+	 */
 	private function get_builder( $name ) {
 		return $this->builders[ $name ];
 	}
@@ -84,37 +117,45 @@ class Exporter {
 	 * afterwards.
 	 *
 	 * @since 0.4.0
+	 * @access public
 	 */
 	public function generate() {
 		if ( ! $this->builders ) {
 			$this->initialize_builders();
 		}
 
-		$this->write_to_workspace( 'article.json', $this->generate_json() );
+		$this->write_json( $this->generate_json() );
 	}
 
 	/**
 	 * Gets the instance of the current workspace.
 	 *
 	 * @since 0.4.0
+	 * @return Workspace
+	 * @access public
 	 */
 	public function workspace() {
 		return $this->workspace;
 	}
 
 	/**
-	 * Based on the content this instance holds, create an Article Format zipfile
+	 * Based on the content this instance holds, create an Article Format bundle.
 	 * and return the path.
-	 * This function builds the article, zips it and cleans up after.
+	 * This function builds the article and cleans up after.
+	 *
+	 * @return string
+	 * @access public
 	 */
 	public function export() {
 		// If an export or push was cancelled, the workspace might be polluted.
 		// Clean beforehand.
 		$this->clean_workspace();
-		// Build the ./workspace/tmp folder.
+
+		// Build the bundle content.
 		$this->generate();
-		// ZIP files inside that folder. This also cleans the workspace when done.
-		return $this->zip_workspace( $this->content_id() );
+
+		// Some use cases for this function expect it to return the JSON.
+		return $this->get_json();
 	}
 
 	/**
@@ -122,6 +163,7 @@ class Exporter {
 	 * generating valid JSON and adding attachments to workspace/tmp directory.
 	 *
 	 * @return string The generated JSON for article.json
+	 * @access private
 	 */
 	private function generate_json() {
 		// Base JSON
@@ -145,30 +187,71 @@ class Exporter {
 	}
 
 	/**
-	 * Isolate all dependencies.
+	 * Write the JSON output to the Workspace.
+	 *
+	 * @access private
 	 */
-	private function write_to_workspace( $filename, $contents ) {
-		$this->workspace->write_tmp_file( $filename, $contents );
+	private function write_json( $content ) {
+		$this->workspace->write_json( $content );
 	}
 
+	/**
+	 * Get the JSON output from the workspace.
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function get_json() {
+		return $this->workspace->get_json();
+	}
+
+	/**
+	 * Get the bundles from the workspace.
+	 *
+	 * @return array
+	 * @access public
+	 */
+	public function get_bundles() {
+		return $this->workspace->get_bundles();
+	}
+
+	/**
+	 * Clean up the current workspace.
+	 *
+	 * @access private
+	 */
 	private function clean_workspace() {
 		$this->workspace->clean_up();
 	}
 
-	private function zip_workspace( $id ) {
-		return $this->workspace->zip( 'article-' . $id . '.zip' );
-	}
-
+	/**
+	 * Build the article style.
+	 *
+	 * @return array
+	 * @access private
+	 */
 	private function build_article_style() {
 		return array(
 			'backgroundColor' => '#FFFFFF',
 		);
 	}
 
+	/**
+	 * Get the content ID.
+	 *
+	 * @return int
+	 * @access private
+	 */
 	private function content_id() {
 		return $this->content->id();
 	}
 
+	/**
+	 * Get the content title.
+	 *
+	 * @return string
+	 * @access private
+	 */
 	private function content_title() {
 		return $this->content->title() ?: 'Untitled Article';
 	}

@@ -3,8 +3,21 @@ namespace Push_API;
 
 class MIME_Builder {
 
+	/**
+	 * Boundary to separate bundle items in the MIME request.
+	 *
+	 * @var string
+	 * @access private
+	 */
 	private $boundary;
 
+	/**
+	 * Valid MIME types for Apple News bundles.
+	 *
+	 * @var array
+	 * @static
+	 * @access private
+	 */
 	private static $valid_mime_types = array (
 		'image/jpeg',
 		'image/png',
@@ -18,15 +31,30 @@ class MIME_Builder {
 		'application/octet-stream',
 	);
 
-
+	/**
+	 * Constructor.
+	 */
 	function __construct() {
 		$this->boundary = md5( microtime() );
 	}
 
+	/**
+	 * Get the boundary.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function boundary() {
 		return $this->boundary;
 	}
 
+	/**
+	 * Add metadata to the MIME request.
+	 *
+	 * @param mixed $meta
+	 * @return string
+	 * @access public
+	 */
 	public function add_metadata( $meta ) {
 		$eol  = "\r\n";
 
@@ -38,10 +66,27 @@ class MIME_Builder {
 		return $attachment;
 	}
 
+	/**
+	 * Add a JSON string to the MIME request.
+	 *
+	 * @param string $name
+	 * @param string $filename
+	 * @param string $content
+	 * @return string
+	 * @access public
+	 */
 	public function add_json_string( $name, $filename, $content ) {
 		return $this->build_attachment( $name, $filename, $content, 'application/json' );
 	}
 
+	/**
+	 * Add file contents to the MIME request.
+	 *
+	 * @param string $filepath
+	 * @param string $name
+	 * @return string
+	 * @access public
+	 */
 	public function add_content_from_file( $filepath, $name = 'a_file' ) {
 		$filename     = basename( $filepath );
 		$file_content = file_get_contents( $filepath );
@@ -50,10 +95,26 @@ class MIME_Builder {
 		return $this->build_attachment( $name, $filename, $file_content, $file_mime );
 	}
 
+	/**
+	 * Close a file added to the MIME request.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function close() {
 		return '--' . $this->boundary . '--';
 	}
 
+	/**
+	 * Build an attachment in the MIME request.
+	 *
+	 * @param string $name
+	 * @param string $filename
+	 * @param string $content
+	 * @param string $mime_type
+	 * @return string
+	 * @access private
+	 */
 	private function build_attachment( $name, $filename, $content, $mime_type ) {
 		$eol  = "\r\n";
 		$size = strlen( $content );
@@ -66,7 +127,14 @@ class MIME_Builder {
 		return $attachment;
 	}
 
-
+	/**
+	 * Get the MIME type for a file.
+	 *
+	 * @todo replace with the proper WordPress function.
+	 * @param string $filepath
+	 * @return string
+	 * @access private
+	 */
 	private function get_mime_type_for( $filepath ) {
 		$finfo = finfo_open( FILEINFO_MIME_TYPE );
 		$type  = finfo_file( $finfo, $filepath );
@@ -78,6 +146,13 @@ class MIME_Builder {
 		return 'application/octet-stream';
 	}
 
+	/**
+	 * Check if this file is a valid MIME type to be included in the bundle.
+	 *
+	 * @param string $type
+	 * @return boolean
+	 * @access private
+	 */
 	private function is_valid_mime_type( $type ) {
 		return in_array( $type, self::$valid_mime_types );
 	}

@@ -9,10 +9,19 @@ require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
  *
  * @since 0.4.0
  */
-class Admin_Post_Sync {
+class Admin_Apple_Post_Sync {
 
+	/**
+	 * Current settings.
+	 *
+	 * @var array
+	 * @access private
+	 */
 	private $settings;
 
+	/**
+	 * Constructor.
+	 */
 	function __construct( $settings ) {
 		$this->settings = $settings;
 
@@ -29,6 +38,9 @@ class Admin_Post_Sync {
 	 * function.
 	 *
 	 * @since 0.4.0
+	 * @param int $id
+	 * @param WP_Post $post
+	 * @access public
 	 */
 	public function on_publish( $id, $post ) {
 		// If the post has been marked as deleted from the API, ignore this update
@@ -41,7 +53,7 @@ class Admin_Post_Sync {
 		try {
 			$action->perform();
 		} catch ( Actions\Action_Exception $e ) {
-			Flash::error( $e->getMessage() );
+			Admin_Apple_Notice::error( $e->getMessage() );
 		}
 	}
 
@@ -49,6 +61,8 @@ class Admin_Post_Sync {
 	 * When a post is deleted, remove it from Apple News.
 	 *
 	 * @since 0.4.0
+	 * @param int $id
+	 * @access public
 	 */
 	public function on_delete( $id ) {
 		// If it does not have a remote API ID just ignore
@@ -60,12 +74,20 @@ class Admin_Post_Sync {
 		try {
 			$action->perform();
 		} catch ( Actions\Action_Exception $e ) {
-			Flash::error( $e->getMessage() );
+			Admin_Apple_Notice::error( $e->getMessage() );
 		}
 	}
 
+	/**
+	 * Handle redirects.
+	 *
+	 * @since 0.4.0
+	 * @param string $location
+	 * @return string
+	 * @access public
+	 */
 	public function on_redirect( $location ) {
-		if ( Flash::has_flash() ) {
+		if ( Admin_Apple_Notice::has_notice() ) {
 			return 'admin.php?page=apple_export_index';
 		}
 

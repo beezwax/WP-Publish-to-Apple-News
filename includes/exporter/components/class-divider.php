@@ -8,6 +8,14 @@ namespace Exporter\Components;
  */
 class Divider extends Component {
 
+	/**
+	 * Look for node matches for this component.
+	 *
+	 * @param DomNode $node
+	 * @return mixed
+	 * @static
+	 * @access public
+	 */
 	public static function node_matches( $node ) {
 		if ( 'hr' == $node->nodeName ) {
 			return $node;
@@ -16,6 +24,12 @@ class Divider extends Component {
 		return null;
 	}
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		$this->json = array(
 			'role'   => 'divider',

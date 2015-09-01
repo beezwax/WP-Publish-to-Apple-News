@@ -14,14 +14,35 @@ use Push_API\Credentials as Credentials;
  */
 abstract class API_Action extends Action {
 
+	/**
+	 * The API endpoint for all Apple News requests.
+	 */
 	const API_ENDPOINT = 'https://u48r14.digitalhub.com';
 
+	/**
+	 * Instance of the API class.
+	 *
+	 * @var API
+	 * @access private
+	 */
 	private $api;
 
+	/**
+	 * Set the instance of the API class.
+	 *
+	 * @param API $api
+	 * @access public
+	 */
 	public function set_api( $api ) {
 		$this->api = $api;
 	}
 
+	/**
+	 * Get the instance of the API class.
+	 *
+	 * @return API
+	 * @access protected
+	 */
 	protected function get_api() {
 		if ( is_null( $this->api ) ) {
 			$this->api = new API( self::API_ENDPOINT, $this->fetch_credentials() );
@@ -30,12 +51,24 @@ abstract class API_Action extends Action {
 		return $this->api;
 	}
 
+	/**
+	 * Fetch the current API credentials.
+	 *
+	 * @return Credentials
+	 * @access private
+	 */
 	private function fetch_credentials() {
 		$key    = $this->get_setting( 'api_key' );
 		$secret = $this->get_setting( 'api_secret' );
 		return new Credentials( $key, $secret );
 	}
 
+	/**
+	 * Check if the API configuration is valid.
+	 *
+	 * @return boolean
+	 * @access protected
+	 */
 	protected function is_api_configuration_valid() {
 		if ( empty( $this->get_setting( 'api_key' ) )
 			|| empty( $this->get_setting( 'api_secret' ) )

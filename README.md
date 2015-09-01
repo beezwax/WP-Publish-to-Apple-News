@@ -24,8 +24,7 @@ as a plugin. You can do so by doing `chmod o+x /home/my-user`.
 
 ### PHP Configuration
 Make sure PHP's `memory_limit` setting is big enough, or set to -1, as the
-plugin might work with big images and may move files
-around. Also make sure PHP's upload limit is big enough.
+plugin might work with big images. Also make sure PHP's upload limit is big enough.
 
 ## Running tests
 You'll need PHPUnit v4.5+ to run tests. Initially you'll need to set up the

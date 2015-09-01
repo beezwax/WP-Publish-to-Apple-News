@@ -28,6 +28,8 @@ abstract class Component {
 	 * attaches to the next instead of the previous element.
 	 *
 	 * @since 0.6.0
+	 * @var int
+	 * @access public
 	 */
 	public $anchor_position = self::ANCHOR_NONE;
 
@@ -41,6 +43,8 @@ abstract class Component {
 	 * components.
 	 *
 	 * @since 0.6.0
+	 * @var boolean
+	 * @access public
 	 */
 	public $needs_layout_if_anchored = true;
 
@@ -48,39 +52,84 @@ abstract class Component {
 	 * Whether this component can be an anchor target.
 	 *
 	 * @since 0.6.0
+	 * @var boolean
+	 * @access protected
 	 */
 	protected $can_be_anchor_target = false;
 
 	/**
+	 * Workspace for this component.
+	 *
 	 * @since 0.2.0
+	 * @var Workspace
+	 * @access protected
 	 */
 	protected $workspace;
 
 	/**
+	 * Text for this component.
+	 *
 	 * @since 0.2.0
+	 * @var string
+	 * @access protected
 	 */
 	protected $text;
 
 	/**
+	 * JSON for this component.
+	 *
 	 * @since 0.2.0
+	 * @var array
+	 * @access protected
 	 */
 	protected $json;
 
 	/**
+	 * Settings for this component.
+	 *
 	 * @since 0.4.0
+	 * @var Settings
+	 * @access protected
 	 */
 	protected $settings;
 
 	/**
+	 * Styles for this component.
+	 *
 	 * @since 0.4.0
+	 * @var Component_Text_Styles
+	 * @access protected
 	 */
 	protected $styles;
 
 	/**
+	 * Layouts for this component.
+	 *
 	 * @since 0.4.0
+	 * @var Component_Layouts
+	 * @access protected
+	 */
+	protected $layouts;
+
+	/**
+	 * UID for this component.
+	 *
+	 * @since 0.4.0
+	 * @var string
+	 * @access private
 	 */
 	private $uid;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param string $text
+	 * @param Workspace $workspace
+	 * @param Settings $settings
+	 * @param Component_Text_Styles $styles
+	 * @param Component_Layouts $layouts
+	 * @param Markdown $markdown
+	 */
 	function __construct( $text, $workspace, $settings, $styles, $layouts, $markdown = null ) {
 		$this->workspace = $workspace;
 		$this->settings  = $settings;
@@ -97,6 +146,10 @@ abstract class Component {
 	/**
 	 * Given a DomNode, if it matches the component, return the relevant node to
 	 * work on. Otherwise, return null.
+	 *
+	 * @param DomNode $node
+	 * @return mixed
+	 * @access public
 	 */
 	public static function node_matches( $node ) {
 		return null;
@@ -105,6 +158,10 @@ abstract class Component {
 	/**
 	 * Use PHP's HTML parser to generate valid HTML out of potentially broken
 	 * input.
+	 *
+	 * @param string $html
+	 * @return string
+	 * @access protected
 	 */
 	protected static function clean_html( $html ) {
 		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
@@ -122,23 +179,52 @@ abstract class Component {
 	/**
 	 * Transforms HTML into an array that describes the component using the build
 	 * function.
+	 *
+	 * @return array
+	 * @access public
 	 */
 	public function to_array() {
 		return $this->json;
 	}
 
+	/**
+	 * Set a JSON value.
+	 *
+	 * @param string $name
+	 * @param mixed $value
+	 * @access public
+	 */
 	public function set_json( $name, $value ) {
 		$this->json[ $name ] = $value;
 	}
 
+	/**
+	 * Get a JSON value
+	 *
+	 * @param string $name
+	 * @return mixed
+	 * @access public
+	 */
 	public function get_json( $name ) {
 		return $this->json[ $name ];
 	}
 
+	/**
+	 * Set the anchor position.
+	 *
+	 * @param int $position
+	 * @access public
+	 */
 	public function set_anchor_position( $position ) {
 		$this->anchor_position = $position;
 	}
 
+	/**
+	 * Get the anchor position.
+	 *
+	 * @return int
+	 * @access public
+	 */
 	public function get_anchor_position() {
 		return $this->anchor_position;
 	}
@@ -147,6 +233,7 @@ abstract class Component {
 	 * Sets the anchor layout for this component
 	 *
 	 * @since 0.6.0
+	 * @access public
 	 */
 	public function anchor() {
 		if ( ! $this->needs_layout_if_anchored ) {
@@ -161,6 +248,8 @@ abstract class Component {
 	 * component is an anchor target.
 	 *
 	 * @since 0.6.0
+	 * @return boolean
+	 * @access public
 	 */
 	public function is_anchor_target() {
 		return !is_null( $this->uid );
@@ -168,11 +257,20 @@ abstract class Component {
 
 	/**
 	 * Check if it's can_be_anchor_target and it hasn't been anchored already.
+	 *
+	 * @return boolean
+	 * @access public
 	 */
 	public function can_be_anchor_target() {
 		return $this->can_be_anchor_target && is_null( $this->uid );
 	}
 
+	/**
+	 * Get the current UID.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function uid() {
 		if ( is_null( $this->uid ) ) {
 			$this->uid = 'component-' . uniqid();
@@ -183,16 +281,15 @@ abstract class Component {
 	}
 
 	/**
-	 * Given a source (either a file path or an URL) gets the contents and writes
-	 * them into a file with the given filename.
+	 * Calls the current workspace bundle_source method to allow for
+	 * different implementations of the bundling technique.
 	 *
 	 * @param string $filename  The name of the file to be created
 	 * @param string $source    The path or URL of the resource which is going to
 	 *                          be bundled
 	 */
 	protected function bundle_source( $filename, $source ) {
-		$content = $this->workspace->get_file_contents( $source );
-		$this->workspace->write_tmp_file( $filename, $content );
+		$this->workspace->bundle_source( $filename, $source );
 	}
 
 	// Isolate settings dependency
@@ -202,6 +299,9 @@ abstract class Component {
 	 * Gets an exporter setting.
 	 *
 	 * @since 0.4.0
+	 * @param string $name
+	 * @return mixed
+	 * @access protected
 	 */
 	protected function get_setting( $name ) {
 		return $this->settings->get( $name );
@@ -211,6 +311,10 @@ abstract class Component {
 	 * Sets an exporter setting.
 	 *
 	 * @since 0.4.0
+	 * @param string $name
+	 * @param mixed $value
+	 * @return boolean
+	 * @access protected
 	 */
 	protected function set_setting( $name, $value ) {
 		return $this->settings->set( $name, $value );
@@ -220,6 +324,9 @@ abstract class Component {
 	 * Using the style service, register a new style.
 	 *
 	 * @since 0.4.0
+	 * @param string $name
+	 * @param array $spec
+	 * @access protected
 	 */
 	protected function register_style( $name, $spec ) {
 		$this->styles->register_style( $name, $spec );
@@ -229,6 +336,9 @@ abstract class Component {
 	 * Using the layouts service, register a new layout.
 	 *
 	 * @since 0.4.0
+	 * @param string $name
+	 * @param array $spec
+	 * @access protected
 	 */
 	protected function register_layout( $name, $spec ) {
 		$this->layouts->register_layout( $name, $spec );
@@ -238,7 +348,11 @@ abstract class Component {
 	 * Register a new layout which will be displayed as full-width, so no need to
 	 * specify columnStart and columnSpan in the layout specs. This is useful
 	 * because when the body is centered, the full-width layout spans the same
-	 * colums as the body.
+	 * columns as the body.
+	 *
+	 * @param string $name
+	 * @param array $spec
+	 * @access protected
 	 */
 	protected function register_full_width_layout( $name, $spec ) {
 		// Initial colStart and colSpan
@@ -269,6 +383,8 @@ abstract class Component {
 	 * This method returns either 'center' or 'left', as needed.
 	 *
 	 * @since 0.8.0
+	 * @return string
+	 * @access protected
 	 */
 	protected function find_text_alignment() {
 		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
@@ -278,6 +394,15 @@ abstract class Component {
 		return 'left';
 	}
 
+	/**
+	 * Check if a node has a class.
+	 *
+	 * @param DomNode $node
+	 * @param string $classname
+	 * @return boolean
+	 * @static
+	 * @access protected
+	 */
 	protected static function node_has_class( $node, $classname ) {
 		if ( ! method_exists( $node, 'getAttribute' ) ) {
 			return false;
@@ -289,12 +414,15 @@ abstract class Component {
 			return false;
 		}
 
-		return 1 == preg_match( "/(?:\s+|^)$classname(?:\s+|$)/", $classes );
+		return 1 === preg_match( "/(?:\s+|^)$classname(?:\s+|$)/", $classes );
 	}
 
 	/**
 	 * This function is in charge of transforming HTML into a Article Format
 	 * valid array.
+	 *
+	 * @param string $text
+	 * @abstract
 	 */
 	abstract protected function build( $text );
 

@@ -6,23 +6,26 @@
  * @since   0.0.0
  */
 
-require_once plugin_dir_path( __FILE__ ) . 'class-admin-settings.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-admin-post-sync.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-admin-index-page.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-admin-bulk-export-page.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-admin-flash.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-post-sync.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-index-page.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-bulk-export-page.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-notice.php';
 
 /**
  * Entry-point class for the plugin.
  */
 class Admin_Apple_Export extends Apple_Export {
 
+	/**
+	 * Constructor.
+	 */
 	function __construct() {
 		// This is required to download files and setting headers.
 		ob_start();
 
-		// Initialize flash messaging utility
-		new Flash;
+		// Initialize notice messaging utility
+		new Admin_Apple_Notice;
 
 		// Register hooks
 		add_action( 'admin_head', array( $this, 'plugin_styles' ) );
@@ -30,17 +33,20 @@ class Admin_Apple_Export extends Apple_Export {
 		// Admin_Settings builds the settings page for the plugin. Besides setting
 		// it up, let's get the settings getter and setter object and save it into
 		// $settings.
-		$admin_settings = new Admin_Settings;
+		$admin_settings = new Admin_Apple_Settings;
 		$settings       = $admin_settings->fetch_settings();
 
 		// Set up main page
-		new Admin_Index_Page( $settings );
+		new Admin_Apple_Index_Page( $settings );
 		// Set up all sub pages
-		new Admin_Bulk_Export_Page( $settings );
+		new Admin_Apple_Bulk_Export_Page( $settings );
 		// Set up posts syncing if enabled in the settings
-		new Admin_Post_Sync( $settings );
+		new Admin_Apple_Post_Sync( $settings );
 	}
 
+	/**
+	 * Implements certain plugin styles inline.
+	 */
 	public function plugin_styles() {
 		$page = ( isset( $_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : null;
 

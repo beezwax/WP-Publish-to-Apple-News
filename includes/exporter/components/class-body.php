@@ -13,15 +13,28 @@ class Body extends Component {
 	/**
 	 * Override. This component doesn't need a layout update if marked as the
 	 * target of an anchor.
+	 *
+	 * @var boolean
+	 * @access public
 	 */
 	public $needs_layout_if_anchored = false;
 
 	/**
 	 * Quotes can be anchor targets.
+	 *
+	 * @var boolean
+	 * @access protected
 	 */
 	protected $can_be_anchor_target = true;
 
-
+	/**
+	 * Look for node matches for this component.
+	 *
+	 * @param DomNode $node
+	 * @return mixed
+	 * @static
+	 * @access public
+	 */
 	public static function node_matches( $node ) {
 		// We are only interested in p, ul and ol
 		if ( ! in_array( $node->nodeName, array( 'p', 'ul', 'ol' ) ) ) {
@@ -44,6 +57,14 @@ class Body extends Component {
 		return $node;
 	}
 
+	/**
+	 * Split the non markdownable content for processing.
+	 *
+	 * @param string $html
+	 * @return array
+	 * @static
+	 * @access private
+	 */
 	private static function split_non_markdownable( $html ) {
 		if ( empty( $html ) ) {
 			return array();
@@ -76,6 +97,12 @@ class Body extends Component {
 		);
 	}
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $text ) {
 		$this->json = array(
 			'role'   => 'body',
@@ -94,6 +121,11 @@ class Body extends Component {
 		$this->set_default_layout();
 	}
 
+	/**
+	 * Set the default layout for the component.
+	 *
+	 * @access private
+	 */
 	private function set_default_layout() {
 		// Find out where the body must start according to the body orientation.
 		// Orientation defaults to left, thus, col_start is 0.
@@ -116,6 +148,12 @@ class Body extends Component {
 		) );
 	}
 
+	/**
+	 * Get the default style for the component.
+	 *
+	 * @return array
+	 * @access private
+	 */
 	private function get_default_style() {
 		return array(
 			'textAlignment' => 'left',
@@ -127,11 +165,21 @@ class Body extends Component {
 		);
 	}
 
+	/**
+	 * Set the default style for the component.
+	 *
+	 * @access private
+	 */
 	private function set_default_style() {
 		$this->json[ 'textStyle' ] = 'default-body';
 		$this->register_style( 'default-body', $this->get_default_style() );
 	}
 
+	/**
+	 * Set the initial dropcap style for the component.
+	 *
+	 * @access private
+	 */
 	private function set_initial_dropcap_style() {
 		$this->json[ 'textStyle' ] = 'dropcapBodyStyle';
 		$this->register_style( 'dropcapBodyStyle', array_merge(

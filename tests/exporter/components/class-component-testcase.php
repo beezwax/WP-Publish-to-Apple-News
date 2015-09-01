@@ -12,7 +12,7 @@ abstract class Component_TestCase extends PHPUnit_Framework_TestCase {
 	protected function setup() {
 		$this->prophet  = new \Prophecy\Prophet;
 		$this->settings = new Settings();
-		$this->content  = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>' );
+		$this->content  = new Exporter_Content( 1, __( 'My Title', 'apple-news' ), '<p>' . __( 'Hello, World!', 'apple-news' ) . '</p>' );
 		$this->styles   = new Component_Text_Styles( $this->content, $this->settings );
 		$this->layouts  = new Component_Layouts( $this->content, $this->settings );
 	}

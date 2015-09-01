@@ -5,12 +5,14 @@
  *
  * @since 0.6.0
  */
-class Admin_Settings_Section extends Apple_Export {
+class Admin_Apple_Settings_Section extends Apple_Export {
 
 	/**
 	 * All available iOS fonts.
 	 *
 	 * @since 0.4.0
+	 * @var array
+	 * @access protected
 	 */
 	protected static $fonts = array(
 		'AcademyEngravedLetPlain',
@@ -301,19 +303,96 @@ class Admin_Settings_Section extends Apple_Export {
 		'Zapfino',
 	);
 
+	/**
+	 * Name of the settings section.
+	 *
+	 * @var string
+	 * @access protected
+	 */
 	protected $name;
-	protected $slug;
-	protected $page;
-	protected $base_settings;
-	protected $settings = array();
-	protected $groups   = array();
 
+	/**
+	 * Slug of the settings section.
+	 *
+	 * @var string
+	 * @access protected
+	 */
+	protected $slug;
+
+	/**
+	 * Settings page.
+	 *
+	 * @var string
+	 * @access protected
+	 */
+	protected $page;
+
+	/**
+	 * Base settings.
+	 *
+	 * @var Settings
+	 * @access protected
+	 */
+	protected $base_settings;
+
+	/**
+	 * Settings for the section.
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	protected $settings = array();
+
+	/**
+	 * Groups for the section.
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	protected $groups = array();
+
+	/**
+	 * Allowed HTML for settings pages.
+	 *
+	 * @var array
+	 * @access public
+	 */
+	const ALLOWED_HTML = array(
+		'select' => array(
+			'class' => array(),
+			'name' => array(),
+		),
+		'option' => array(
+			'value' => array(),
+		),
+		'input' => array(
+			'class' => array(),
+			'name' => array(),
+			'value' => array(),
+			'placeholder' => array(),
+			'step' => array(),
+			'type' => array(),
+			'required' => array(),
+		),
+	);
+
+	/**
+	 * Constructor.
+	 *
+	 * @param string $page
+	 */
 	function __construct( $page ) {
 		$this->page          = $page;
 		$base_settings       = new \Exporter\Settings;
 		$this->base_settings = $base_settings->all();
 	}
 
+	/**
+	 * Get the settings section name.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function name() {
 		return $this->name;
 	}
@@ -321,6 +400,9 @@ class Admin_Settings_Section extends Apple_Export {
 	/**
 	 * Return an array which contains all groups and their related settings,
 	 * embedded.
+	 *
+	 * @return array
+	 * @access public
 	 */
 	public function groups() {
 		$result = array();
@@ -333,7 +415,7 @@ class Admin_Settings_Section extends Apple_Export {
 
 			$result[ $name ] = array(
 				'label'       => $info['label'],
-				'description' => @$info['description'] ?: null,
+				'description' => empty( $info['description'] ) ? null : $info['description'],
 				'settings'    => $settings,
 			);
 		}
@@ -341,10 +423,21 @@ class Admin_Settings_Section extends Apple_Export {
 		return $result;
 	}
 
+	/**
+	 * Get the ID of the settings section.
+	 *
+	 * @return string
+	 * @access public
+	 */
 	public function id() {
 		return $this->plugin_slug . '_options_section_' . $this->slug;
 	}
 
+	/**
+	 * Register the settings section.
+	 *
+	 * @access public
+	 */
 	public function register() {
 		add_settings_section(
 			$this->id(),
@@ -370,10 +463,16 @@ class Admin_Settings_Section extends Apple_Export {
 		}
 	}
 
+	/**
+	 * Render a settings field.
+	 *
+	 * @param array $args
+	 * @access public
+	 */
 	public function render_field( $args ) {
 		list( $name, $default_value ) = $args;
 		$type  = $this->get_type_for( $name );
-		$value = esc_attr( get_option( $name ) ) ?: $default_value;
+		$value = get_option( $name ) ?: $default_value;
 		$field = null;
 
 		// FIXME: A cleaner object-oriented solution would create Input objects
@@ -386,21 +485,21 @@ class Admin_Settings_Section extends Apple_Export {
 				$field = '<select name="%s">';
 			}
 			foreach ( $type as $option ) {
-				$field .= "<option value='$option'";
+				$field .= "<option value='" . esc_attr( $option ) . "'";
 				if ( $option == $value ) {
 					$field .= ' selected ';
 				}
-				$field .= ">$option</option>";
+				$field .= ">" . esc_html( $option ) . "</option>";
 			}
 			$field .= '</select>';
 		} else if ( 'font' == $type ) {
 			$field = '<select class="select2" name="%s">';
 			foreach ( self::$fonts as $option ) {
-				$field .= "<option value='$option'";
+				$field .= "<option value='" . esc_attr( $option ) . "'";
 				if ( $option == $value ) {
 					$field .= ' selected ';
 				}
-				$field .= ">$option</option>";
+				$field .= ">" . esc_html( $option ) . "</option>";
 			}
 			$field .= '</select>';
 		} else if ( 'boolean' == $type ) {
@@ -422,7 +521,7 @@ class Admin_Settings_Section extends Apple_Export {
 		} else if ( 'integer' == $type ) {
 			$field = '<input required type="number" name="%s" value="%s">';
 		} else if ( 'float' == $type ) {
-			$field = '<input class="input-float" placeholder="' . $default_value . '" type="text" step="any" name="%s" value="%s">';
+			$field = '<input class="input-float" placeholder="' . esc_attr( $default_value ) . '" type="text" step="any" name="%s" value="%s">';
 		} else if ( 'color' == $type ) {
 			$field = '<input required type="color" name="%s" value="%s">';
 		} else if ( 'password' == $type ) {
@@ -432,19 +531,43 @@ class Admin_Settings_Section extends Apple_Export {
 			$field = '<input required type="text" name="%s" value="%s">';
 		}
 
-		printf( $field, $name, $value );
+		return sprintf(
+			$field,
+			esc_attr( $name ),
+			esc_attr( $value )
+		);
 	}
 
+	/**
+	 * Get the type for a field.
+	 *
+	 * @param string $name
+	 * @return string
+	 * @access private
+	 */
 	private function get_type_for( $name ) {
-		return @$this->settings[ $name ]['type'] ?: 'string';
+		return empty( $this->settings[ $name ]['type'] ) ? 'string' : $this->settings[ $name ]['type'];
 	}
 
+	/**
+	 * Get the default for a field.
+	 *
+	 * @param string $name
+	 * @return string
+	 * @access private
+	 */
 	private function get_default_for( $name ) {
 		return $this->base_settings[ $name ];
 	}
 
-	public function print_section_info() {
-		return;
+	/**
+	 * Gets section info.
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function get_section_info() {
+		return '';
 	}
 
 }

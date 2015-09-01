@@ -15,6 +15,12 @@ use \Exporter\Exporter as Exporter;
  */
 class Cover extends Component {
 
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
 	protected function build( $url ) {
 		$filename = basename( $url );
 
@@ -39,6 +45,11 @@ class Cover extends Component {
 		$this->set_default_layout();
 	}
 
+	/**
+	 * Set the default layout for the component.
+	 *
+	 * @access private
+	 */
 	private function set_default_layout() {
 		$this->register_layout( 'headerContainerLayout', array(
 			'columnStart'          => 0,

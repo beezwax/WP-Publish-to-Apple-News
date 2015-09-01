@@ -7,6 +7,9 @@ if ( ! $_tests_dir ) {
 
 require_once $_tests_dir . '/includes/functions.php';
 
+/**
+ * Manually load the plugin for tests.
+ */
 function _manually_load_plugin() {
 	require dirname( dirname( __FILE__ ) ) . '/apple-export.php';
 }
