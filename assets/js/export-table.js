@@ -1,8 +1,6 @@
 (function ( $, window, undefined ) {
 	'use strict';
 
-	new ZeroClipboard( $( '.share-url-button' ) );
-
 	$( '.share-url-button' ).click(function () {
 		var el	= $( this );
 		var old = el.text();
