@@ -22,8 +22,16 @@ class Admin_Apple_Post_Sync {
 	/**
 	 * Constructor.
 	 */
-	function __construct( $settings ) {
-		$this->settings = $settings;
+	function __construct( $settings = null ) {
+		// Don't re-fetch settings if they've been previously obtained.
+		// However, this class may be used within themes and therefore may
+		// need to get it's own settings.
+		if ( ! empty( $settings ) ) {
+			$this->settings = $settings;
+		} else {
+			$admin_settings = new Admin_Apple_Settings;
+			$this->settings = $admin_settings->fetch_settings();
+		}
 
 		// Register update hooks if needed
 		if ( 'yes' == $settings->get( 'api_autosync' ) ) {
