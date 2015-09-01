@@ -43,6 +43,10 @@ class Admin_Apple_Post_Sync {
 	 * @access public
 	 */
 	public function on_publish( $id, $post ) {
+		if ( ! current_user_can( apply_filters( 'apple_news_publish_capability', 'manage_options' ) ) ) {
+			return;
+		}
+
 		// If the post has been marked as deleted from the API, ignore this update
 		$deleted = get_post_meta( $id, 'apple_export_api_deleted', true );
 		if ( $deleted ) {
@@ -65,6 +69,10 @@ class Admin_Apple_Post_Sync {
 	 * @access public
 	 */
 	public function on_delete( $id ) {
+		if ( ! current_user_can( apply_filters( 'apple_news_delete_capability', 'manage_options' ) ) ) {
+			return;
+		}
+
 		// If it does not have a remote API ID just ignore
 		if ( ! get_post_meta( $id, 'apple_export_api_id', true ) ) {
 			return;

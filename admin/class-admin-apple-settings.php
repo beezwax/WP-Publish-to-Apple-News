@@ -116,7 +116,7 @@ class Admin_Apple_Settings extends Apple_Export {
 		add_options_page(
 			__( 'Apple News Options', 'apple-news' ),
 			__( 'Apple News', 'apple-news' ),
-			'manage_options',
+			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->page_name,
 			array( $this, 'page_options_render' )
 		);
@@ -128,8 +128,9 @@ class Admin_Apple_Settings extends Apple_Export {
 	 * @access public
 	 */
 	public function page_options_render() {
-		if ( ! current_user_can( 'manage_options' ) )
+		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
 			wp_die( __( 'You do not have permissions to access this page.', 'apple-news' ) );
+		}
 
 		$sections = $this->sections;
 		include plugin_dir_path( __FILE__ ) . 'partials/page_options.php';

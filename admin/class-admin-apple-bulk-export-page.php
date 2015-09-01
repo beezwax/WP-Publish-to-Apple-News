@@ -38,7 +38,7 @@ class Admin_Apple_Bulk_Export_Page extends Apple_Export {
 			null,                                // Parent, if null, it won't appear in any menu
 			__( 'Bulk Export', 'apple-news' ),   // Page title
 			__( 'Bulk Export', 'apple-news' ),   // Menu title
-			'manage_options',                    // Capability
+			apply_filters( 'apple_news_bulk_export_capability', 'manage_options' ),	// Capability
 			$this->plugin_slug . '_bulk_export', // Menu Slug
 			array( $this, 'build_page' )         // Function
 	 	);
