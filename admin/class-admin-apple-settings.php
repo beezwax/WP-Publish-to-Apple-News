@@ -100,6 +100,7 @@ class Admin_Apple_Settings extends Apple_Export {
 	 */
 	public function register_sections() {
 		$this->add_sections();
+		$this->sections = apply_filters( 'apple_news_settings_sections', $this->sections );
 		foreach ( $this->sections as $section ) {
 			$section->register();
 		}
@@ -168,7 +169,7 @@ class Admin_Apple_Settings extends Apple_Export {
 			$this->loaded_settings = $settings;
 		}
 
-		return $this->loaded_settings;
+		return apply_filters( 'apple_news_loaded_settings', $this->loaded_settings );
 	}
 
 }

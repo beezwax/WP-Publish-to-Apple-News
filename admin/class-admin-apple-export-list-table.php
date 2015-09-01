@@ -15,14 +15,17 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 	/**
 	 * How many entries per page will be displayed.
 	 *
+	 * @var int
 	 * @since 0.4.0
 	 */
-	const PER_PAGE = 20;
+	public $per_page = 20;
 
 	/**
 	 * Constructor.
 	 */
 	function __construct() {
+		$this->per_page = apply_filters( 'apple_news_export_list_per_page', $this->per_page );
+
 		parent::__construct( array(
 			'singular' => __( 'article', 'apple-news' ),
 			'plural'   => __( 'articles', 'apple-news' ),
@@ -41,12 +44,17 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 	public function column_default( $item, $column_name ) {
 		switch ( $column_name ) {
 			case 'title':
-				return $item[ $column_name ];
+				$default = $item[ $column_name ];
+				break;
 			case 'updated_at':
-				return $this->get_updated_at( $item );
+				$default = $this->get_updated_at( $item );
+				break;
 			case 'sync':
-				return $this->get_synced_status_for( $item );
+				$default = $this->get_synced_status_for( $item );
+				break;
 		}
+
+		return apply_filters( 'apple_news_column_default', $default, $column_name, $item );
 	}
 
 	/**
@@ -168,11 +176,11 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 		}
 
 		// Return the row action HTML
-		return sprintf( '%1$s <span>(id:%2$s)</span> %3$s',
+		return apply_filters( 'apple_news_column_title', sprintf( '%1$s <span>(id:%2$s)</span> %3$s',
 			esc_html( $item->post_title ),
 			absint( $item->ID ),
 			$this->row_actions( $actions ) // can't be escaped but all elements are fully escaped above
-		);
+		), $item, $actions );
 	}
 
 	/**
@@ -186,12 +194,12 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 	 * @access public
 	 */
 	public function get_columns() {
-		return array(
+		return apply_filters( 'apple_news_export_list_columns', array(
 			'cb'         => '<input type="checkbox">',
 			'title'      => __( 'Title', 'apple-news' ),
 			'updated_at' => __( 'Last updated at', 'apple-news' ),
 			'sync'       => __( 'Apple News Status', 'apple-news' ),
-		);
+		) );
 	}
 
 	/**
@@ -217,9 +225,9 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 	 * @access public
 	 */
 	public function get_bulk_actions() {
-		return array(
+		return apply_filters( 'apple_news_bulk_actions', array(
 			'push' => __( 'Publish', 'apple-news' ),
-		);
+		) );
 	}
 
 	/**
@@ -235,21 +243,21 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 
 		// Data fetch
 		$current_page = $this->get_pagenum();
-		$data = get_posts( array(
-			'posts_per_page' => self::PER_PAGE,
-			'offset'         => ( $current_page - 1 ) * self::PER_PAGE,
+		$data = get_posts( apply_filters( 'apple_news_export_table_get_posts_args', array(
+			'posts_per_page' => $this->per_page,
+			'offset'         => ( $current_page - 1 ) * $this->per_page,
 			'orderby'        => 'ID',
 			'order'          => 'DESC',
-		) );
+		) ) );
 
 		// Set data
 		$this->items = $data;
 		$total_items = wp_count_posts()->publish;
-		$this->set_pagination_args( array(
+		$this->set_pagination_args( apply_filters( 'apple_news_export_table_pagination_args', array(
 			'total_items' => $total_items,
-			'per_page'    => self::PER_PAGE,
-			'total_pages' => ceil( $total_items / self::PER_PAGE ),
-		) );
+			'per_page'    => $this->per_page,
+			'total_pages' => ceil( $total_items / $this->per_page ),
+		) ) );
 	}
 
 }

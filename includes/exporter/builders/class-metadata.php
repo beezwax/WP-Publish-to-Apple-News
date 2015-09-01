@@ -28,7 +28,7 @@ class Metadata extends Builder {
 			$meta['thumbnailURL'] = $thumb_url;
 		}
 
-		return $meta;
+		return apply_filters( 'apple_news_metadata', $meta, $this->content_id() );
 	}
 
 }

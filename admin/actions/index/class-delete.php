@@ -57,6 +57,7 @@ class Delete extends API_Action {
 
 		$error = null;
 		try {
+			do_action( 'apple_news_before_delete', $remote_id, $this->id );
 			$this->get_api()->delete_article( $remote_id );
 			// Delete the API references and mark as deleted
 			delete_post_meta( $this->id, 'apple_export_api_id' );
@@ -64,6 +65,7 @@ class Delete extends API_Action {
 			delete_post_meta( $this->id, 'apple_export_api_modified_at' );
 			delete_post_meta( $this->id, 'apple_export_api_share_url' );
 			update_post_meta( $this->id, 'apple_export_api_deleted', time() );
+			do_action( 'apple_news_after_delete', $remote_id, $this->id );
 		} catch ( \Exception $e ) {
 			return $e->getMessage();
 		}
