@@ -5,7 +5,7 @@
  *
  * @since 0.6.0
  */
-class Admin_Settings_Section extends Apple_Export {
+class Admin_Apple_Settings_Section extends Apple_Export {
 
 	/**
 	 * All available iOS fonts.

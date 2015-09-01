@@ -9,9 +9,9 @@
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-export.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-admin-export-list-table.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-export-list-table.php';
 
-class Admin_Index_Page extends Apple_Export {
+class Admin_Apple_Index_Page extends Apple_Export {
 
 	/**
 	 * Current plugin settings.
@@ -102,10 +102,10 @@ class Admin_Index_Page extends Apple_Export {
 	 * @param string $message
 	 * @access public
 	 */
-	private function flash_success( $message ) {
-		Flash::success( $message );
-		wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
-		wp_die(); // Ignore everything else that would be rendered otherwise
+	private function notice_success( $message ) {
+		Admin_Apple_Notice::success( $message );
+		wp_safe_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+		exit;
 	}
 
 	/**
@@ -114,10 +114,10 @@ class Admin_Index_Page extends Apple_Export {
 	 * @param string $message
 	 * @access public
 	 */
-	private function flash_error( $message ) {
-		Flash::error( $message );
-		wp_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
-		wp_die(); // Ignore everything else that would be rendered otherwise
+	private function notice_error( $message ) {
+		Admin_Apple_Notice::error( $message );
+		wp_safe_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+		exit;
 	}
 
 	/**
@@ -169,7 +169,7 @@ class Admin_Index_Page extends Apple_Export {
 	 * @access private
 	 */
 	private function show_post_list_action() {
-		$table = new Admin_Export_List_Table();
+		$table = new Admin_Apple_Export_List_Table();
 		$table->prepare_items();
 		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
 	}
@@ -207,7 +207,7 @@ class Admin_Index_Page extends Apple_Export {
 			$json = $action->perform();
 			$this->download_json( $json, $id );
 		} catch ( Actions\Action_Exception $e ) {
-			$this->flash_error( $e->getMessage() );
+			$this->notice_error( $e->getMessage() );
 		}
 	}
 
@@ -221,9 +221,9 @@ class Admin_Index_Page extends Apple_Export {
 		$action = new Actions\Index\Push( $this->settings, $id );
 		try {
 			$action->perform();
-			$this->flash_success( __( 'Your article has been pushed successfully!', 'apple-news' ) );
+			$this->notice_success( __( 'Your article has been pushed successfully!', 'apple-news' ) );
 		} catch ( Actions\Action_Exception $e ) {
-			$this->flash_error( $e->getMessage() );
+			$this->notice_error( $e->getMessage() );
 		}
 	}
 
@@ -237,9 +237,9 @@ class Admin_Index_Page extends Apple_Export {
 		$action = new Actions\Index\Delete( $this->settings, $id );
 		try {
 			$action->perform();
-			$this->flash_success( __( 'Your article has been removed from apple news.', 'apple-news' ) );
+			$this->notice_success( __( 'Your article has been removed from apple news.', 'apple-news' ) );
 		} catch ( Actions\Action_Exception $e ) {
-			$this->flash_error( $e->getMessage() );
+			$this->notice_error( $e->getMessage() );
 		}
 	}
 

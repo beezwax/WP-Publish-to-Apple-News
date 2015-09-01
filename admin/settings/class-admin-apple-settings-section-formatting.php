@@ -5,7 +5,7 @@
  *
  * @since 0.6.0
  */
-class Admin_Settings_Section_Formatting extends Admin_Settings_Section {
+class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Section {
 
 	/**
 	 * Slug of the formatting settings section.
