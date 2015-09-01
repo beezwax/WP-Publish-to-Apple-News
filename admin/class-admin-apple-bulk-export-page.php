@@ -7,7 +7,7 @@ require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
  *
  * @since 0.6.0
  */
-class Admin_Apple_Bulk_Export_Page extends Apple_Export {
+class Admin_Apple_Bulk_Export_Page extends Apple_News {
 
 	/**
 	 * Current plugin settings.

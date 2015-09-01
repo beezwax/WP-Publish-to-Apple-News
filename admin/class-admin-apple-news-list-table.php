@@ -10,7 +10,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
  *
  * @since 0.4.0
  */
-class Admin_Apple_Export_List_Table extends WP_List_Table {
+class Admin_Apple_News_List_Table extends WP_List_Table {
 
 	/**
 	 * How many entries per page will be displayed.
@@ -21,9 +21,21 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 	public $per_page = 20;
 
 	/**
-	 * Constructor.
+	 * Current settings.
+	 *
+	 * @var Settings
+	 * @since 0.9.0
 	 */
-	function __construct() {
+	public $settings;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param Settings $settings
+	 */
+	function __construct( $settings ) {
+		$this->settings = $settings;
+
 		$this->per_page = apply_filters( 'apple_news_export_list_per_page', $this->per_page );
 
 		parent::__construct( array(
@@ -65,7 +77,7 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 	 * @access private
 	 */
 	private function get_updated_at( $post ) {
-		$updated_at = get_post_meta( $post->ID, 'apple_export_api_modified_at', true );
+		$updated_at = get_post_meta( $post->ID, 'apple_news_api_modified_at', true );
 
 		if ( $updated_at ) {
 			return date( 'F j, h:i a', strtotime( $updated_at ) );
@@ -82,11 +94,11 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 	 * @access private
 	 */
 	private function get_synced_status_for( $post ) {
-		$remote_id = get_post_meta( $post->ID, 'apple_export_api_id', true );
+		$remote_id = get_post_meta( $post->ID, 'apple_news_api_id', true );
 
 		if ( ! $remote_id ) {
 			// There is no remote id, check for a delete mark
-			$deleted = get_post_meta( $post->ID, 'apple_export_api_deleted', true );
+			$deleted = get_post_meta( $post->ID, 'apple_news_api_deleted', true );
 			if ( $deleted ) {
 				return __( 'Deleted', 'apple-news' );
 			}
@@ -95,7 +107,7 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 			return __( 'Not published', 'apple-news' );
 		}
 
-		$updated = get_post_meta( $post->ID, 'apple_export_api_modified_at', true );
+		$updated = get_post_meta( $post->ID, 'apple_news_api_modified_at', true );
 		$updated = strtotime( $updated );
 		$local   = strtotime( $post->post_modified );
 
@@ -155,7 +167,7 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 		);
 
 		// Add the delete action, if required
-		if ( get_post_meta( $item->ID, 'apple_export_api_id', true ) ) {
+		if ( get_post_meta( $item->ID, 'apple_news_api_id', true ) ) {
 			$actions['delete'] = sprintf(
 				"<a title='%s' href='%s'>%s</a>",
 				esc_html__( 'Delete from Apple News', 'apple-news' ),
@@ -165,7 +177,7 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 		}
 
 		// Create the share URL
-		$share_url = get_post_meta( $item->ID, 'apple_export_api_share_url', true );
+		$share_url = get_post_meta( $item->ID, 'apple_news_api_share_url', true );
 		if ( $share_url ) {
 			$actions['share'] = sprintf(
 				"<a class='share-url-button' title='%s' href='#'>%s</a><br/><input type='text' name='share-url-%s' class='apple-share-url' value='%s' />",
@@ -244,7 +256,8 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 
 		// Data fetch
 		$current_page = $this->get_pagenum();
-		$data = get_posts( apply_filters( 'apple_news_export_table_get_posts_args', array(
+		$query = new WP_Query( apply_filters( 'apple_news_export_table_get_posts_args', array(
+			'post_type'     => $this->settings->get( 'post_types' ),
 			'posts_per_page' => $this->per_page,
 			'offset'         => ( $current_page - 1 ) * $this->per_page,
 			'orderby'        => 'ID',
@@ -252,8 +265,8 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 		) ) );
 
 		// Set data
-		$this->items = $data;
-		$total_items = wp_count_posts()->publish;
+		$this->items = $query->posts;;
+		$total_items = $query->found_posts;
 		$this->set_pagination_args( apply_filters( 'apple_news_export_table_pagination_args', array(
 			'total_items' => $total_items,
 			'per_page'    => $this->per_page,

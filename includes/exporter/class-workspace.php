@@ -19,7 +19,7 @@ class Workspace {
 	 * @var string
 	 * @since 0.9.0
 	 */
-	const JSON_META_KEY = 'apple_export_api_json';
+	const JSON_META_KEY = 'apple_news_api_json';
 
 	/**
 	 * Meta key used to store bundled assets with the post.
@@ -27,7 +27,7 @@ class Workspace {
 	 * @var string
 	 * @since 0.9.0
 	 */
-	const BUNDLE_META_KEY = 'apple_export_api_bundle';
+	const BUNDLE_META_KEY = 'apple_news_api_bundle';
 
 	/**
 	 * Current ID of the content we are constructing a workspace for.

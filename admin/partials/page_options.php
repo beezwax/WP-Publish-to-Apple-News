@@ -1,11 +1,11 @@
 <div class="wrap">
 	<form method="post" action="options.php">
-		<?php settings_fields( 'apple-export-options' ); ?>
+		<?php settings_fields( 'apple-news-options' ); ?>
 
 		<?php foreach ( $sections as $section ): ?>
 		<h3><?php echo esc_html( $section->name() ); ?></h3>
 		<?php echo wp_kses_post( $section->get_section_info() ); ?>
-		<table class="form-table apple-export">
+		<table class="form-table apple-news">
 			<?php foreach ( $section->groups() as $group ): ?>
 			<?php do_action( 'apple_news_before_setting_group', $group ); ?>
 			<tr>

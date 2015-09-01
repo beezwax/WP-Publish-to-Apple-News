@@ -9,9 +9,9 @@
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-export.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-export-list-table.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-news-list-table.php';
 
-class Admin_Apple_Index_Page extends Apple_Export {
+class Admin_Apple_Index_Page extends Apple_News {
 
 	/**
 	 * Current plugin settings.
@@ -164,7 +164,7 @@ class Admin_Apple_Index_Page extends Apple_Export {
 	 * @access private
 	 */
 	private function show_post_list_action() {
-		$table = new Admin_Apple_Export_List_Table();
+		$table = new Admin_Apple_News_List_Table( $this->settings );
 		$table->prepare_items();
 		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
 	}
@@ -177,11 +177,11 @@ class Admin_Apple_Index_Page extends Apple_Export {
 	 */
 	private function settings_action( $id ) {
 		if ( isset( $_POST['pullquote'] ) ) {
-			update_post_meta( $id, 'apple_export_pullquote', sanitize_text_field( $_POST['pullquote'] ) );
+			update_post_meta( $id, 'apple_news_pullquote', sanitize_text_field( $_POST['pullquote'] ) );
 		}
 
 		if ( isset( $_POST['pullquote_position'] ) ) {
-			update_post_meta( $id, 'apple_export_pullquote_position', sanitize_text_field( $_POST['pullquote_position'] ) );
+			update_post_meta( $id, 'apple_news_pullquote_position', sanitize_text_field( $_POST['pullquote_position'] ) );
 			$message = __( 'Settings saved.', 'apple-news' );
 		}
 

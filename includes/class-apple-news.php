@@ -6,7 +6,7 @@
  * @author  Federico Ramirez
  * @since   0.2.0
  */
-class Apple_Export {
+class Apple_News {
 
 	/**
 	 * Plugin slug.
@@ -14,7 +14,7 @@ class Apple_Export {
 	 * @var string
 	 * @access protected
 	 */
-	protected $plugin_slug = 'apple_export';
+	protected $plugin_slug = 'apple_news';
 
 	/**
 	 * Plugin domain.
@@ -22,7 +22,7 @@ class Apple_Export {
 	 * @var string
 	 * @access protected
 	 */
-	protected $plugin_domain = 'apple-export';
+	protected $plugin_domain = 'apple-news';
 
 	/**
 	 * Plugin version.
