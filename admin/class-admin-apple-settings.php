@@ -4,6 +4,7 @@ require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-
 require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-api.php';
 require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-formatting.php';
 require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-advanced.php';
+require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-post-types.php';
 
 use Exporter\Settings as Settings;
 
@@ -78,6 +79,7 @@ class Admin_Apple_Settings extends Apple_Export {
 	 */
 	private function add_sections() {
 		$this->add_section( new Admin_Apple_Settings_Section_API( $this->page_name ) );
+		$this->add_section( new Admin_Apple_Settings_Section_Post_Types( $this->page_name ) );
 		$this->add_section( new Admin_Apple_Settings_Section_Formatting( $this->page_name ) );
 		$this->add_section( new Admin_Apple_Settings_Section_Advanced( $this->page_name ) );
 	}
@@ -162,7 +164,10 @@ class Admin_Apple_Settings extends Apple_Export {
 		if ( is_null( $this->loaded_settings ) ) {
 			$settings = new Settings();
 			foreach ( $settings->all() as $key => $value ) {
-				$wp_value = esc_attr( get_option( $key ) ) ?: $value;
+				$wp_value = get_option( $key );
+				if ( empty( $wp_value ) ) {
+					$wp_value = $value;
+				}
 				$settings->set( $key, $wp_value );
 			}
 			$this->loaded_settings = $settings;

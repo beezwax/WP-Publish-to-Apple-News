@@ -20,6 +20,9 @@ class Settings {
 		'api_channel'     => '',
 		'api_autosync'    => 'yes',
 
+		'post_types'      => array( 'post' ),
+		'show_metabox'    => 'no',
+
 		'layout_margin'   => 100,
 		'layout_gutter'   => 20,
 

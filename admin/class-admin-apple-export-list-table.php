@@ -21,9 +21,21 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 	public $per_page = 20;
 
 	/**
-	 * Constructor.
+	 * Current settings.
+	 *
+	 * @var Settings
+	 * @since 0.9.0
 	 */
-	function __construct() {
+	public $settings;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param Settings $settings
+	 */
+	function __construct( $settings ) {
+		$this->settings = $settings;
+
 		$this->per_page = apply_filters( 'apple_news_export_list_per_page', $this->per_page );
 
 		parent::__construct( array(
@@ -244,7 +256,8 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 
 		// Data fetch
 		$current_page = $this->get_pagenum();
-		$data = get_posts( apply_filters( 'apple_news_export_table_get_posts_args', array(
+		$query = new WP_Query( apply_filters( 'apple_news_export_table_get_posts_args', array(
+			'post_type'     => $this->settings->get( 'post_types' ),
 			'posts_per_page' => $this->per_page,
 			'offset'         => ( $current_page - 1 ) * $this->per_page,
 			'orderby'        => 'ID',
@@ -252,8 +265,8 @@ class Admin_Apple_Export_List_Table extends WP_List_Table {
 		) ) );
 
 		// Set data
-		$this->items = $data;
-		$total_items = wp_count_posts()->publish;
+		$this->items = $query->posts;;
+		$total_items = $query->found_posts;
 		$this->set_pagination_args( apply_filters( 'apple_news_export_table_pagination_args', array(
 			'total_items' => $total_items,
 			'per_page'    => $this->per_page,

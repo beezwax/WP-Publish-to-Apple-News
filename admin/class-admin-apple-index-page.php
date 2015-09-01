@@ -164,7 +164,7 @@ class Admin_Apple_Index_Page extends Apple_Export {
 	 * @access private
 	 */
 	private function show_post_list_action() {
-		$table = new Admin_Apple_Export_List_Table();
+		$table = new Admin_Apple_Export_List_Table( $this->settings );
 		$table->prepare_items();
 		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
 	}
