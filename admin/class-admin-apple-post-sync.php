@@ -27,9 +27,9 @@ class Admin_Apple_Post_Sync {
 
 		// Register update hooks if needed
 		if ( 'yes' == $settings->get( 'api_autosync' ) ) {
-			add_action( 'publish_post', array( $this, 'on_publish' ), 10, 2 );
-			add_action( 'before_delete_post', array( $this, 'on_delete' ) );
-			add_filter( 'redirect_post_location', array( $this, 'on_redirect' ) );
+			add_action( 'publish_post', array( $this, 'do_publish' ), 10, 2 );
+			add_action( 'before_delete_post', array( $this, 'do_delete' ) );
+			add_filter( 'redirect_post_location', array( $this, 'do_redirect' ) );
 		}
 	}
 
@@ -42,7 +42,7 @@ class Admin_Apple_Post_Sync {
 	 * @param WP_Post $post
 	 * @access public
 	 */
-	public function on_publish( $id, $post ) {
+	public function do_publish( $id, $post ) {
 		// If the post has been marked as deleted from the API, ignore this update
 		$deleted = get_post_meta( $id, 'apple_export_api_deleted', true );
 		if ( $deleted ) {
@@ -64,7 +64,7 @@ class Admin_Apple_Post_Sync {
 	 * @param int $id
 	 * @access public
 	 */
-	public function on_delete( $id ) {
+	public function do_delete( $id ) {
 		// If it does not have a remote API ID just ignore
 		if ( ! get_post_meta( $id, 'apple_export_api_id', true ) ) {
 			return;
@@ -86,7 +86,7 @@ class Admin_Apple_Post_Sync {
 	 * @return string
 	 * @access public
 	 */
-	public function on_redirect( $location ) {
+	public function do_redirect( $location ) {
 		if ( Admin_Apple_Notice::has_notice() ) {
 			return 'admin.php?page=apple_export_index';
 		}
