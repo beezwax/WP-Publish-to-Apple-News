@@ -112,9 +112,16 @@ class Admin_Apple_Meta_Boxes extends Apple_Export {
 	 * @param WP_Post $post
 	 * @access public
 	 */
-	public function publish_meta_box( $post_type, $post ) {
+	public function publish_meta_box( $post ) {
 		// Only show the publish feature if the user is authorized and auto sync is not enabled.
-		if ( 'yes' != $settings->get( 'api_autosync' ) ):
+		// Also check if the post has been previously published and/or deleted.
+		$api_id = get_post_meta( $post->ID, 'apple_export_api_id', true );
+		$deleted = get_post_meta( $post->ID, 'apple_export_api_deleted', true );
+
+		if ( 'yes' != $this->settings->get( 'api_autosync' )
+			&& current_user_can( apply_filters( 'apple_news_publish_capability', 'manage_options' ) )
+			&& empty( $api_id )
+			&& empty( $deleted ) ):
 		?>
 		<p><?php esc_html_e( 'Click the button below to publish this article to Apple News', 'apple-news' ); ?></p>
 		<div id="apple-news-publish">
@@ -124,6 +131,26 @@ class Admin_Apple_Meta_Boxes extends Apple_Export {
 		</div>
 		<?php
 		endif;
+
+		// Add data about the article if it exists
+		if ( ! empty( $deleted ) ) {
+			?>
+			<p><b><?php esc_html_e( 'This post has been deleted from Apple News', 'apple-news' ) ?></b></p>
+			<?php
+		}
+
+		if ( ! empty( $api_id ) ) {
+			$share_url = get_post_meta( $post->ID, 'apple_export_api_share_url', true );
+			?>
+			<p><b><?php esc_html_e( 'Apple News Publish Information', 'apple-news' ) ?></b>
+			<br/><?php esc_html_e( 'ID', 'apple-news' ) ?>: <?php echo esc_html( $api_id ) ?>
+			<br/><?php esc_html_e( 'Created at', 'apple-news' ) ?>: <?php echo esc_html( date( 'Y-m-d h:m a', strtotime( get_post_meta( $post->ID, 'apple_export_api_created_at', true ) ) ) ) ?>
+			<br/><?php esc_html_e( 'Modified at', 'apple-news' ) ?>: <?php echo esc_html( date( 'Y-m-d h:m a', strtotime( get_post_meta( $post->ID, 'apple_export_api_modified_at', true ) ) ) ) ?>
+			<br/><?php esc_html_e( 'Share URL', 'apple-news' ) ?>: <a href="<?php echo esc_url( $share_url ) ?>" target="_blank"><?php echo esc_html( $share_url ) ?></a>
+			<br/><?php esc_html_e( 'Revision', 'apple-news' ) ?>: <?php echo esc_html( get_post_meta( $post->ID, 'apple_export_api_revision', true ) ) ?>
+			<?php
+		}
+
 	}
 
 	/**
