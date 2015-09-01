@@ -1,12 +1,9 @@
 (function ( $, window, undefined ) {
 	'use strict';
 
-	$( '.share-url-button' ).click(function () {
-		var el	= $( this );
-		var old = el.text();
-
-		el.text( 'Copied' );
-		setTimeout( function () { el.text( old ); }, 1500 );
+	$( '.share-url-button' ).click(function ( e ) {
+		e.preventDefault();
+		$(this).siblings( '.apple-share-url' ).toggle();
 	});
 
 	$( '.row-actions' ).mouseenter (function () {
