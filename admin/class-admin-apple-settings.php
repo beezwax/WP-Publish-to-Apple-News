@@ -4,6 +4,7 @@ require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-
 require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-api.php';
 require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-formatting.php';
 require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-advanced.php';
+require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-post-types.php';
 
 use Exporter\Settings as Settings;
 
@@ -11,7 +12,7 @@ use Exporter\Settings as Settings;
  * This class is in charge of creating a WordPress page to manage the
  * Exporter's settings class.
  */
-class Admin_Apple_Settings extends Apple_Export {
+class Admin_Apple_Settings extends Apple_News {
 
 	/**
 	 * Associative array of fields and types. If not present, defaults to string.
@@ -78,6 +79,7 @@ class Admin_Apple_Settings extends Apple_Export {
 	 */
 	private function add_sections() {
 		$this->add_section( new Admin_Apple_Settings_Section_API( $this->page_name ) );
+		$this->add_section( new Admin_Apple_Settings_Section_Post_Types( $this->page_name ) );
 		$this->add_section( new Admin_Apple_Settings_Section_Formatting( $this->page_name ) );
 		$this->add_section( new Admin_Apple_Settings_Section_Advanced( $this->page_name ) );
 	}
@@ -100,6 +102,7 @@ class Admin_Apple_Settings extends Apple_Export {
 	 */
 	public function register_sections() {
 		$this->add_sections();
+		$this->sections = apply_filters( 'apple_news_settings_sections', $this->sections );
 		foreach ( $this->sections as $section ) {
 			$section->register();
 		}
@@ -116,7 +119,7 @@ class Admin_Apple_Settings extends Apple_Export {
 		add_options_page(
 			__( 'Apple News Options', 'apple-news' ),
 			__( 'Apple News', 'apple-news' ),
-			'manage_options',
+			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->page_name,
 			array( $this, 'page_options_render' )
 		);
@@ -128,8 +131,9 @@ class Admin_Apple_Settings extends Apple_Export {
 	 * @access public
 	 */
 	public function page_options_render() {
-		if ( ! current_user_can( 'manage_options' ) )
+		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
 			wp_die( __( 'You do not have permissions to access this page.', 'apple-news' ) );
+		}
 
 		$sections = $this->sections;
 		include plugin_dir_path( __FILE__ ) . 'partials/page_options.php';
@@ -141,15 +145,15 @@ class Admin_Apple_Settings extends Apple_Export {
 	 * @access public
 	 */
 	public function register_assets() {
-		wp_enqueue_style( 'apple-export-select2-css', plugin_dir_url( __FILE__ ) .
+		wp_enqueue_style( 'apple-news-select2-css', plugin_dir_url( __FILE__ ) .
 			'../vendor/select2/select2.min.css', array() );
-		wp_enqueue_style( 'apple-export-settings-css', plugin_dir_url( __FILE__ ) .
+		wp_enqueue_style( 'apple-news-settings-css', plugin_dir_url( __FILE__ ) .
 			'../assets/css/settings.css', array() );
 
-		wp_enqueue_script( 'apple-export-select2-js', plugin_dir_url( __FILE__ ) .
+		wp_enqueue_script( 'apple-news-select2-js', plugin_dir_url( __FILE__ ) .
 			'../vendor/select2/select2.full.min.js', array( 'jquery' ) );
-		wp_enqueue_script( 'apple-export-settings-js', plugin_dir_url( __FILE__ ) .
-			'../assets/js/settings.js', array( 'jquery', 'apple-export-select2-js' )
+		wp_enqueue_script( 'apple-news-settings-js', plugin_dir_url( __FILE__ ) .
+			'../assets/js/settings.js', array( 'jquery', 'apple-news-select2-js' )
 		);
 	}
 
@@ -161,13 +165,16 @@ class Admin_Apple_Settings extends Apple_Export {
 		if ( is_null( $this->loaded_settings ) ) {
 			$settings = new Settings();
 			foreach ( $settings->all() as $key => $value ) {
-				$wp_value = esc_attr( get_option( $key ) ) ?: $value;
+				$wp_value = get_option( $key );
+				if ( empty( $wp_value ) ) {
+					$wp_value = $value;
+				}
 				$settings->set( $key, $wp_value );
 			}
 			$this->loaded_settings = $settings;
 		}
 
-		return $this->loaded_settings;
+		return apply_filters( 'apple_news_loaded_settings', $this->loaded_settings );
 	}
 
 }

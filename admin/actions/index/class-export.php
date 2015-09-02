@@ -83,13 +83,13 @@ class Export extends Action {
 	private function fetch_content_settings() {
 		$settings = new Exporter_Content_Settings();
 		foreach ( get_post_meta( $this->id ) as $name => $value ) {
-			if ( 0 === strpos( $name, 'apple_export_' ) ) {
-				$name  = str_replace( 'apple_export_', '', $name );
+			if ( 0 === strpos( $name, 'apple_news_' ) ) {
+				$name  = str_replace( 'apple_news_', '', $name );
 				$value = $value[0];
 				$settings->set( $name, $value );
 			}
 		}
-		return $settings;
+		return apply_filters( 'apple_news_content_settings', $settings );
 	}
 
 }

@@ -60,7 +60,7 @@ class Markdown {
 		$nodes = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes;
 
 		// Parse them and return result
-		return $this->parse_nodes( $nodes );
+		return apply_filters( 'apple_news_parse_markdown', $this->parse_nodes( $nodes ), $nodes );
 	}
 
 	/**

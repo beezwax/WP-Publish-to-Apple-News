@@ -9,9 +9,9 @@
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
 require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-export.php';
-require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-export-list-table.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-news-list-table.php';
 
-class Admin_Apple_Index_Page extends Apple_Export {
+class Admin_Apple_Index_Page extends Apple_News {
 
 	/**
 	 * Current plugin settings.
@@ -42,7 +42,7 @@ class Admin_Apple_Index_Page extends Apple_Export {
 		add_menu_page(
 			__( 'Apple News', 'apple-news' ),	// Page Title
 			__( 'Apple News', 'apple-news' ),	// Menu Title
-			'manage_options',              		// Capability
+			apply_filters( 'apple_news_list_capability', 'manage_options' ), // Capability
 			$this->plugin_slug . '_index', 		// Menu Slug
 			array( $this, 'page_router' ), 		// Function
 			'dashicons-format-aside'       		// Icon
@@ -154,13 +154,8 @@ class Admin_Apple_Index_Page extends Apple_Export {
 	 * @access public
 	 */
 	public function setup_assets() {
-		wp_enqueue_script( $this->plugin_slug . '_zeroclipboard', plugin_dir_url(
-			__FILE__) .  '../vendor/zeroclipboard/ZeroClipboard.min.js', array(
-				'jquery' ), $this->version, true );
-
 		wp_enqueue_script( $this->plugin_slug . '_export_table_js', plugin_dir_url(
-			__FILE__ ) .  '../assets/js/export-table.js', array( 'jquery',
-			$this->plugin_slug . '_zeroclipboard' ), $this->version, true );
+			__FILE__ ) .  '../assets/js/export-table.js', array( 'jquery' ), $this->version, true );
 	}
 
 	/**
@@ -169,7 +164,7 @@ class Admin_Apple_Index_Page extends Apple_Export {
 	 * @access private
 	 */
 	private function show_post_list_action() {
-		$table = new Admin_Apple_Export_List_Table();
+		$table = new Admin_Apple_News_List_Table( $this->settings );
 		$table->prepare_items();
 		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
 	}
@@ -182,11 +177,11 @@ class Admin_Apple_Index_Page extends Apple_Export {
 	 */
 	private function settings_action( $id ) {
 		if ( isset( $_POST['pullquote'] ) ) {
-			update_post_meta( $id, 'apple_export_pullquote', sanitize_text_field( $_POST['pullquote'] ) );
+			update_post_meta( $id, 'apple_news_pullquote', sanitize_text_field( $_POST['pullquote'] ) );
 		}
 
 		if ( isset( $_POST['pullquote_position'] ) ) {
-			update_post_meta( $id, 'apple_export_pullquote_position', sanitize_text_field( $_POST['pullquote_position'] ) );
+			update_post_meta( $id, 'apple_news_pullquote_position', sanitize_text_field( $_POST['pullquote_position'] ) );
 			$message = __( 'Settings saved.', 'apple-news' );
 		}
 

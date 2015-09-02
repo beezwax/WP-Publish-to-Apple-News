@@ -5,7 +5,7 @@
  *
  * @since 0.6.0
  */
-class Admin_Apple_Settings_Section extends Apple_Export {
+class Admin_Apple_Settings_Section extends Apple_News {
 
 	/**
 	 * All available iOS fonts.
@@ -361,9 +361,11 @@ class Admin_Apple_Settings_Section extends Apple_Export {
 		'select' => array(
 			'class' => array(),
 			'name' => array(),
+			'multiple' => array(),
 		),
 		'option' => array(
 			'value' => array(),
+			'selected' => array(),
 		),
 		'input' => array(
 			'class' => array(),
@@ -382,9 +384,11 @@ class Admin_Apple_Settings_Section extends Apple_Export {
 	 * @param string $page
 	 */
 	function __construct( $page ) {
-		$this->page          = $page;
-		$base_settings       = new \Exporter\Settings;
-		$this->base_settings = $base_settings->all();
+		$this->page				= $page;
+		$base_settings			= new \Exporter\Settings;
+		$this->base_settings	= $base_settings->all();
+		$this->settings			= apply_filters( 'apple_news_section_settings', $this->settings, $page );
+		$this->groups			= apply_filters( 'apple_news_section_groups', $this->groups, $page );
 	}
 
 	/**
@@ -478,16 +482,33 @@ class Admin_Apple_Settings_Section extends Apple_Export {
 		// FIXME: A cleaner object-oriented solution would create Input objects
 		// and instantiate them according to their type.
 		if ( is_array( $type ) ) {
+			// Check if this is a multiple select
+			$multiple_name = $multiple_attr = '';
+			if ( $this->is_multiple( $name ) ) {
+				$multiple_name = '[]';
+				$multiple_attr = 'multiple="multiple"';
+			}
+
+			// Check if we're using names as values
+			$keys = array_keys( $type );
+			$use_name_as_value = ( array_keys( $keys ) === $keys );
+
 			// Use select2 only when there is a considerable ammount of options available
 			if ( count( $type ) > 10 ) {
-				$field = '<select class="select2" name="%s">';
+				$field = '<select class="select2" name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
 			} else {
-				$field = '<select name="%s">';
+				$field = '<select name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
 			}
-			foreach ( $type as $option ) {
-				$field .= "<option value='" . esc_attr( $option ) . "'";
-				if ( $option == $value ) {
-					$field .= ' selected ';
+
+			foreach ( $type as $key => $option ) {
+				$store_value = $use_name_as_value ? $option : $key;
+				$field .= "<option value='" . esc_attr( $store_value ) . "' ";
+				if ( $this->is_multiple( $name ) ) {
+					if ( in_array( $store_value, $value ) ) {
+						$field .= 'selected="selected"';
+					}
+				} else {
+					$field .= selected( $value, $store_value, false );
 				}
 				$field .= ">" . esc_html( $option ) . "</option>";
 			}
@@ -547,6 +568,17 @@ class Admin_Apple_Settings_Section extends Apple_Export {
 	 */
 	private function get_type_for( $name ) {
 		return empty( $this->settings[ $name ]['type'] ) ? 'string' : $this->settings[ $name ]['type'];
+	}
+
+	/**
+	 * Check if the field can hold multiple values.
+	 *
+	 * @param string $name
+	 * @return boolean
+	 * @access private
+	 */
+	private function is_multiple( $name ) {
+		return ! empty( $this->settings[ $name ]['multiple'] );
 	}
 
 	/**

@@ -1,22 +1,17 @@
 (function ( $, window, undefined ) {
 	'use strict';
 
-	new ZeroClipboard( $( '.share-url-button' ) );
-
-	$( '.share-url-button' ).click(function () {
-		var el	= $( this );
-		var old = el.text();
-
-		el.text( 'Copied' );
-		setTimeout( function () { el.text( old ); }, 1500 );
+	$( '.share-url-button' ).click(function ( e ) {
+		e.preventDefault();
+		$( this ).siblings( '.apple-share-url' ).toggle();
 	});
 
 	$( '.row-actions' ).mouseenter (function () {
-		$(this).addClass( 'is-active' );
+		$( this ).addClass( 'is-active' );
 	});
 
 	$( '.row-actions' ).mouseleave(function () {
-		$(this).removeClass( 'is-active' );
+		$( this ).removeClass( 'is-active' );
 	});
 
 })( jQuery, window );

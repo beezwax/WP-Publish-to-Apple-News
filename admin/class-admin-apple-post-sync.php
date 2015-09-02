@@ -22,14 +22,22 @@ class Admin_Apple_Post_Sync {
 	/**
 	 * Constructor.
 	 */
-	function __construct( $settings ) {
-		$this->settings = $settings;
+	function __construct( $settings = null ) {
+		// Don't re-fetch settings if they've been previously obtained.
+		// However, this class may be used within themes and therefore may
+		// need to get it's own settings.
+		if ( ! empty( $settings ) ) {
+			$this->settings = $settings;
+		} else {
+			$admin_settings = new Admin_Apple_Settings;
+			$this->settings = $admin_settings->fetch_settings();
+		}
 
 		// Register update hooks if needed
 		if ( 'yes' == $settings->get( 'api_autosync' ) ) {
-			add_action( 'publish_post', array( $this, 'on_publish' ), 10, 2 );
-			add_action( 'before_delete_post', array( $this, 'on_delete' ) );
-			add_filter( 'redirect_post_location', array( $this, 'on_redirect' ) );
+			add_action( 'publish_post', array( $this, 'do_publish' ), 10, 2 );
+			add_action( 'before_delete_post', array( $this, 'do_delete' ) );
+			add_filter( 'redirect_post_location', array( $this, 'do_redirect' ) );
 		}
 	}
 
@@ -42,9 +50,13 @@ class Admin_Apple_Post_Sync {
 	 * @param WP_Post $post
 	 * @access public
 	 */
-	public function on_publish( $id, $post ) {
+	public function do_publish( $id, $post ) {
+		if ( ! current_user_can( apply_filters( 'apple_news_publish_capability', 'manage_options' ) ) ) {
+			return;
+		}
+
 		// If the post has been marked as deleted from the API, ignore this update
-		$deleted = get_post_meta( $id, 'apple_export_api_deleted', true );
+		$deleted = get_post_meta( $id, 'apple_news_api_deleted', true );
 		if ( $deleted ) {
 			return;
 		}
@@ -64,9 +76,13 @@ class Admin_Apple_Post_Sync {
 	 * @param int $id
 	 * @access public
 	 */
-	public function on_delete( $id ) {
+	public function do_delete( $id ) {
+		if ( ! current_user_can( apply_filters( 'apple_news_delete_capability', 'manage_options' ) ) ) {
+			return;
+		}
+
 		// If it does not have a remote API ID just ignore
-		if ( ! get_post_meta( $id, 'apple_export_api_id', true ) ) {
+		if ( ! get_post_meta( $id, 'apple_news_api_id', true ) ) {
 			return;
 		}
 
@@ -86,9 +102,9 @@ class Admin_Apple_Post_Sync {
 	 * @return string
 	 * @access public
 	 */
-	public function on_redirect( $location ) {
+	public function do_redirect( $location ) {
 		if ( Admin_Apple_Notice::has_notice() ) {
-			return 'admin.php?page=apple_export_index';
+			return 'admin.php?page=apple_news_index';
 		}
 
 		return $location;

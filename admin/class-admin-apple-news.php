@@ -11,11 +11,12 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-post-sync.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-index-page.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-bulk-export-page.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-notice.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-meta-boxes.php';
 
 /**
  * Entry-point class for the plugin.
  */
-class Admin_Apple_Export extends Apple_Export {
+class Admin_Apple_News extends Apple_News {
 
 	/**
 	 * Constructor.
@@ -38,10 +39,15 @@ class Admin_Apple_Export extends Apple_Export {
 
 		// Set up main page
 		new Admin_Apple_Index_Page( $settings );
+
 		// Set up all sub pages
 		new Admin_Apple_Bulk_Export_Page( $settings );
+
 		// Set up posts syncing if enabled in the settings
 		new Admin_Apple_Post_Sync( $settings );
+
+		// Set up the publish meta box if enabled in the settings
+		new Admin_Apple_Meta_Boxes( $settings );
 	}
 
 	/**
@@ -59,7 +65,6 @@ class Admin_Apple_Export extends Apple_Export {
 		echo '.wp-list-table .column-sync { width: 15%; }';
 		echo '.wp-list-table .column-updated_at { width: 15%; }';
 		// Clipboard fix
-		echo '.row-actions .zeroclipboard-is-hover { color: #00a0d2; }';
 		echo '.row-actions.is-active { visibility: visible }';
 		echo '</style>';
 	}

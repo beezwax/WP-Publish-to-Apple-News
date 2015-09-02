@@ -19,7 +19,7 @@ class Workspace {
 	 * @var string
 	 * @since 0.9.0
 	 */
-	const JSON_META_KEY = 'apple_export_api_json';
+	const JSON_META_KEY = 'apple_news_api_json';
 
 	/**
 	 * Meta key used to store bundled assets with the post.
@@ -27,7 +27,7 @@ class Workspace {
 	 * @var string
 	 * @since 0.9.0
 	 */
-	const BUNDLE_META_KEY = 'apple_export_api_bundle';
+	const BUNDLE_META_KEY = 'apple_news_api_bundle';
 
 	/**
 	 * Current ID of the content we are constructing a workspace for.
@@ -54,8 +54,10 @@ class Workspace {
 	 * @since 0.2.0
 	 */
 	public function clean_up() {
+		do_action( 'apple_news_before_clean_up' );
 		delete_post_meta( $this->content_id, self::JSON_META_KEY );
 		delete_post_meta( $this->content_id, self::BUNDLE_META_KEY );
+		do_action( 'apple_news_after_clean_up' );
 	}
 
 	/**
@@ -66,7 +68,7 @@ class Workspace {
 	 * @since 0.9.0
 	 */
 	public function bundle_source( $filename, $source ) {
-		add_post_meta( $this->content_id, self::BUNDLE_META_KEY, $source );
+		add_post_meta( $this->content_id, self::BUNDLE_META_KEY, apply_filters( 'apple_news_bundle_source', $source, $filename, $this->content_id ) );
 	}
 
 	/**
@@ -76,7 +78,7 @@ class Workspace {
 	 * @since 0.9.0
 	 */
 	public function write_json( $content ) {
-		update_post_meta( $this->content_id, self::JSON_META_KEY, $content );
+		update_post_meta( $this->content_id, self::JSON_META_KEY, apply_filters( 'apple_news_write_json', $content, $this->content_id ) );
 	}
 
 	/**
@@ -86,7 +88,7 @@ class Workspace {
 	 * @since 0.9.0
 	 */
 	public function get_json() {
-		return get_post_meta( $this->content_id, self::JSON_META_KEY, true );
+		return apply_filters( 'apple_news_get_json', get_post_meta( $this->content_id, self::JSON_META_KEY, true ), $this->content_id );
 	}
 
 	/**
@@ -96,6 +98,6 @@ class Workspace {
 	 * @since 0.9.0
 	 */
 	public function get_bundles() {
-		return get_post_meta( $this->content_id, self::BUNDLE_META_KEY );
+		return apply_filters( 'apple_news_get_bundles', get_post_meta( $this->content_id, self::BUNDLE_META_KEY ), $this->content_id );
 	}
 }
