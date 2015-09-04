@@ -18,7 +18,7 @@
 							<?php if ( ! empty( $setting_meta['label'] ) ): ?>
 								<span class="label-name"><?php echo esc_html( $setting_meta['label'] ); ?></span>
 							<?php endif; ?>
-							<?php echo wp_kses( $section->render_field( array( $setting_name, $setting_meta['default'] ) ), Admin_Apple_Settings_Section::ALLOWED_HTML ); ?>
+							<?php echo wp_kses( $section->render_field( array( $setting_name, $setting_meta['default'] ) ), Admin_Apple_Settings_Section::$allowed_html ); ?>
 						</label>
 						<?php do_action( 'apple_news_after_setting', $setting_name, $setting_meta ); ?>
 						<br />

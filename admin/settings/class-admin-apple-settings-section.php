@@ -357,7 +357,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @var array
 	 * @access public
 	 */
-	const ALLOWED_HTML = array(
+	public static $allowed_html = array(
 		'select' => array(
 			'class' => array(),
 			'name' => array(),
