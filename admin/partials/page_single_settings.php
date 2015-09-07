@@ -15,7 +15,7 @@
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Pull quote', 'apple-news' ) ?></th>
 				<td>
-				<textarea name="pullquote" placeholder="Lorem ipsum..." rows="10" class="large-text"><?php if ( ! empty( $post_meta[ 'apple_news_pullquote' ][0] ) ) { echo wp_kses_post( $post_meta[ 'apple_news_pullquote' ][0] ); } ?></textarea>
+				<textarea name="pullquote" placeholder="Lorem ipsum..." rows="10" class="large-text"><?php if ( ! empty( $post_meta[ 'apple_news_pullquote' ][0] ) ) { echo esc_textarea( $post_meta[ 'apple_news_pullquote' ][0] ); } ?></textarea>
 					<p class="description"><?php esc_html_e( 'This is optional and can be left blank. A pull quote is a key phrase, quotation, or excerpt that has been pulled from an article and used as a graphic element, serving to entice readers into the article or to highlight a key topic.', 'apple-news' ) ?></p>
 				</td>
 			</tr>
