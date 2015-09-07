@@ -73,7 +73,7 @@ class Heading extends Component {
 		// contents.
 		// *: No markdown because the apple format doesn't support markdown with
 		// textStyle in headings.
-		$text  = preg_replace( '#</?\.+?>#', '', $matches[2] );
+		$text = wp_strip_all_tags( $matches[2] );
 
 		$this->json = array(
 			'role'   => 'heading' . $level,
