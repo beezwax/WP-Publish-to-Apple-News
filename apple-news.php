@@ -57,4 +57,14 @@ if ( ! defined( 'WPCOM_IS_VIP_ENV' ) || ! WPCOM_IS_VIP_ENV ) {
 require plugin_dir_path( __FILE__ ) . 'includes/class-apple-news.php';
 require plugin_dir_path( __FILE__ ) . 'admin/class-admin-apple-news.php';
 
+/**
+ * Load plugin textdomain.
+ *
+ * @since 0.9.0
+ */
+function apple_news_load_textdomain() {
+	load_plugin_textdomain( 'apple-news', false, plugin_dir_path( __FILE__ ) . '/lang' );
+}
+add_action( 'plugins_loaded', 'apple_news_load_textdomain' );
+
 new Admin_Apple_News();
