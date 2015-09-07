@@ -104,7 +104,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 */
 	private function notice_success( $message ) {
 		Admin_Apple_Notice::success( $message );
-		wp_safe_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+		wp_safe_redirect( esc_url_raw( menu_page_url( $this->plugin_slug . '_index', false ) ) );
 		exit;
 	}
 
@@ -116,7 +116,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 */
 	private function notice_error( $message ) {
 		Admin_Apple_Notice::error( $message );
-		wp_safe_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+		wp_safe_redirect( esc_url_raw( menu_page_url( $this->plugin_slug . '_index', false ) ) );
 		exit;
 	}
 
