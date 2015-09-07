@@ -75,7 +75,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 					$ids = is_array( $_GET['article'] ) ? array_map( 'absint', $_GET['article'] ) : absint( $_GET['article'] );
 					$url .= '&ids=' . implode( '.', $ids );
 				}
-				wp_safe_redirect( $url );
+				wp_safe_redirect( esc_url_raw( $url ) );
 				exit;
 			default:
 				return $this->show_post_list_action();
