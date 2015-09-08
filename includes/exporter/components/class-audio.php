@@ -38,8 +38,8 @@ class Audio extends Component {
 		preg_match( '/src="([^"]*?)"/im', $html, $matches );
 		$path = $matches[1];
 
-		// Is it an URL? Check the headers in case of 404
-		if ( 0 === strpos( $path, 'http' ) ) {
+		// Is it a URL? Check the headers in case of 404
+		if ( false !== filter_var( $path, FILTER_VALIDATE_URL ) ) {
 			$file_headers = @get_headers( $path );
 			return !preg_match( '#404 Not Found#', $file_headers[0] );
 		}
