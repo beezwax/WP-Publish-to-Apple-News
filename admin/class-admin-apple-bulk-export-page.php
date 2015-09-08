@@ -10,6 +10,14 @@ require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
 class Admin_Apple_Bulk_Export_Page extends Apple_News {
 
 	/**
+	 * Action used for nonces
+	 *
+	 * @var array
+	 * @access private
+	 */
+	const ACTION = 'apple_news_push_post';
+
+	/**
 	 * Current plugin settings.
 	 *
 	 * @var array
@@ -52,7 +60,7 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 	public function build_page() {
 		$ids = isset( $_GET['ids'] ) ? sanitize_text_field( $_GET['ids'] ) : null;
 		if ( ! $ids ) {
-			wp_safe_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+			wp_safe_redirect( esc_url_raw( menu_page_url( $this->plugin_slug . '_index', false ) ) );
 			exit;
 		}
 
@@ -73,6 +81,10 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 	 * @access public
 	 */
 	public function ajax_push_post() {
+		// Check the nonce
+		check_ajax_referer( self::ACTION );
+
+		// Sanitize input data
 		$id = absint( $_GET['id'] );
 
 		// TODO: Move push action to shared
