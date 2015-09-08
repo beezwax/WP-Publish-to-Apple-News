@@ -55,8 +55,8 @@ class Workspace {
 	 */
 	public function clean_up() {
 		do_action( 'apple_news_before_clean_up' );
-		delete_post_meta( $this->content_id, self::JSON_META_KEY );
-		delete_post_meta( $this->content_id, self::BUNDLE_META_KEY );
+		//delete_post_meta( $this->content_id, self::JSON_META_KEY );
+		//delete_post_meta( $this->content_id, self::BUNDLE_META_KEY );
 		do_action( 'apple_news_after_clean_up' );
 	}
 
@@ -78,7 +78,13 @@ class Workspace {
 	 * @since 0.9.0
 	 */
 	public function write_json( $content ) {
-		update_post_meta( $this->content_id, self::JSON_META_KEY, sanitize_text_field( apply_filters( 'apple_news_write_json', $content, $this->content_id ) ) );
+		$json = apply_filters( 'apple_news_write_json', $content, $this->content_id );
+		if ( null === json_decode( $json ) ) {
+			// This is invalid JSON.
+			// Store as an empty string to be handled later down the line.
+			$json = '';
+		}
+		update_post_meta( $this->content_id, self::JSON_META_KEY, sanitize_text_field( $json ) );
 	}
 
 	/**
