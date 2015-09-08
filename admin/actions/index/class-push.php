@@ -117,11 +117,11 @@ class Push extends API_Action {
 			}
 
 			// Save the ID that was assigned to this post in by the API
-			update_post_meta( $this->id, 'apple_news_api_id', $result->data->id );
-			update_post_meta( $this->id, 'apple_news_api_created_at', $result->data->createdAt );
-			update_post_meta( $this->id, 'apple_news_api_modified_at', $result->data->modifiedAt );
-			update_post_meta( $this->id, 'apple_news_api_share_url', $result->data->shareUrl );
-			update_post_meta( $this->id, 'apple_news_api_revision', $result->data->revision );
+			update_post_meta( $this->id, 'apple_news_api_id', sanitize_text_field( $result->data->id ) );
+			update_post_meta( $this->id, 'apple_news_api_created_at', sanitize_text_field( $result->data->createdAt ) );
+			update_post_meta( $this->id, 'apple_news_api_modified_at', sanitize_text_field( $result->data->modifiedAt ) );
+			update_post_meta( $this->id, 'apple_news_api_share_url', sanitize_text_field( $result->data->shareUrl ) );
+			update_post_meta( $this->id, 'apple_news_api_revision', sanitize_text_field( $result->data->revision ) );
 
 			// If it's marked as deleted, remove the mark. Ignore otherwise.
 			delete_post_meta( $this->id, 'apple_news_api_deleted' );
