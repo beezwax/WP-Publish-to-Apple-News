@@ -89,7 +89,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 * @access public
 	 */
 	public function add_meta_boxes( $post_id, $post ) {
-		// Only add if this post is not an auto-draft
+		// Only add if this post is published
 		if ( 'auto-draft' == $post->post_status ) {
 			return;
 		}
@@ -141,11 +141,15 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 		if ( ! empty( $api_id ) ) {
 			$share_url = get_post_meta( $post->ID, 'apple_news_api_share_url', true );
+			$created_at = get_post_meta( $post->ID, 'apple_news_api_created_at', true );
+			$created_at = empty( $created_at ) ? __( 'None', 'apple-news' ) : date( 'Y-m-d h:m a', strtotime( $created_at ) );
+			$modified_at = get_post_meta( $post->ID, 'apple_news_api_modified_at', true );
+			$modified_at = empty( $modified_at ) ? __( 'None', 'apple-news' ) : date( 'Y-m-d h:m a', strtotime( $modified_at ) );
 			?>
 			<p><b><?php esc_html_e( 'Apple News Publish Information', 'apple-news' ) ?></b>
 			<br/><?php esc_html_e( 'ID', 'apple-news' ) ?>: <?php echo esc_html( $api_id ) ?>
-			<br/><?php esc_html_e( 'Created at', 'apple-news' ) ?>: <?php echo esc_html( date( 'Y-m-d h:m a', strtotime( get_post_meta( $post->ID, 'apple_news_api_created_at', true ) ) ) ) ?>
-			<br/><?php esc_html_e( 'Modified at', 'apple-news' ) ?>: <?php echo esc_html( date( 'Y-m-d h:m a', strtotime( get_post_meta( $post->ID, 'apple_news_api_modified_at', true ) ) ) ) ?>
+			<br/><?php esc_html_e( 'Created at', 'apple-news' ) ?>: <?php echo esc_html( $created_at ) ?>
+			<br/><?php esc_html_e( 'Modified at', 'apple-news' ) ?>: <?php echo esc_html( $modified_at ) ?>
 			<br/><?php esc_html_e( 'Share URL', 'apple-news' ) ?>: <a href="<?php echo esc_url( $share_url ) ?>" target="_blank"><?php echo esc_html( $share_url ) ?></a>
 			<br/><?php esc_html_e( 'Revision', 'apple-news' ) ?>: <?php echo esc_html( get_post_meta( $post->ID, 'apple_news_api_revision', true ) ) ?>
 			<?php
@@ -156,9 +160,14 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	/**
 	 * Registers assets used by meta boxes.
 	 *
+	 * @param string $hook
 	 * @access public
 	 */
-	public function register_assets() {
+	public function register_assets( $hook ) {
+		if ( 'post.php' != $hook ) {
+			return;
+		}
+
 		wp_enqueue_script( $this->plugin_slug . '_meta_boxes_js', plugin_dir_url(
 			__FILE__ ) .  '../assets/js/meta-boxes.js', array( 'jquery' ),
 			$this->version, true );

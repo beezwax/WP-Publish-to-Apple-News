@@ -6,9 +6,9 @@
  * @since   0.6.0
  */
 
-require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
-require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
-require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-export.php';
+require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-push.php';
+require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-delete.php';
+require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-export.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-news-list-table.php';
 
 class Admin_Apple_Index_Page extends Apple_News {
@@ -75,7 +75,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 					$ids = is_array( $_GET['article'] ) ? array_map( 'absint', $_GET['article'] ) : absint( $_GET['article'] );
 					$url .= '&ids=' . implode( '.', $ids );
 				}
-				wp_safe_redirect( $url );
+				wp_safe_redirect( esc_url_raw( $url ) );
 				exit;
 			default:
 				return $this->show_post_list_action();
@@ -104,7 +104,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 */
 	private function notice_success( $message ) {
 		Admin_Apple_Notice::success( $message );
-		wp_safe_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+		wp_safe_redirect( esc_url_raw( menu_page_url( $this->plugin_slug . '_index', false ) ) );
 		exit;
 	}
 
@@ -116,7 +116,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 */
 	private function notice_error( $message ) {
 		Admin_Apple_Notice::error( $message );
-		wp_safe_redirect( menu_page_url( $this->plugin_slug . '_index', false ) );
+		wp_safe_redirect( esc_url_raw( menu_page_url( $this->plugin_slug . '_index', false ) ) );
 		exit;
 	}
 
@@ -151,9 +151,14 @@ class Admin_Apple_Index_Page extends Apple_News {
 	/**
 	 * Sets up admin assets.
 	 *
+	 * @param string $hook
 	 * @access public
 	 */
-	public function setup_assets() {
+	public function setup_assets( $hook ) {
+		if ( 'toplevel_page_apple_news_index' != $hook ) {
+			return;
+		}
+
 		wp_enqueue_script( $this->plugin_slug . '_export_table_js', plugin_dir_url(
 			__FILE__ ) .  '../assets/js/export-table.js', array( 'jquery' ), $this->version, true );
 	}
@@ -197,11 +202,11 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access private
 	 */
 	private function export_action( $id ) {
-		$action = new Actions\Index\Export( $this->settings, $id );
+		$action = new Apple_Actions\Index\Export( $this->settings, $id );
 		try {
 			$json = $action->perform();
 			$this->download_json( $json, $id );
-		} catch ( Actions\Action_Exception $e ) {
+		} catch ( Apple_Actions\Action_Exception $e ) {
 			$this->notice_error( $e->getMessage() );
 		}
 	}
@@ -213,11 +218,11 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access private
 	 */
 	private function push_action( $id ) {
-		$action = new Actions\Index\Push( $this->settings, $id );
+		$action = new Apple_Actions\Index\Push( $this->settings, $id );
 		try {
 			$action->perform();
 			$this->notice_success( __( 'Your article has been pushed successfully!', 'apple-news' ) );
-		} catch ( Actions\Action_Exception $e ) {
+		} catch ( Apple_Actions\Action_Exception $e ) {
 			$this->notice_error( $e->getMessage() );
 		}
 	}
@@ -229,11 +234,11 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access private
 	 */
 	private function delete_action( $id ) {
-		$action = new Actions\Index\Delete( $this->settings, $id );
+		$action = new Apple_Actions\Index\Delete( $this->settings, $id );
 		try {
 			$action->perform();
 			$this->notice_success( __( 'Your article has been removed from apple news.', 'apple-news' ) );
-		} catch ( Actions\Action_Exception $e ) {
+		} catch ( Apple_Actions\Action_Exception $e ) {
 			$this->notice_error( $e->getMessage() );
 		}
 	}

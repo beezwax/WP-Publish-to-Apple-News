@@ -1,12 +1,12 @@
 <?php
-require_once plugin_dir_path( __FILE__ ) . '../includes/exporter/class-settings.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/apple-exporter/class-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section.php';
 require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-api.php';
 require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-formatting.php';
 require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-advanced.php';
 require_once plugin_dir_path( __FILE__ ) . 'settings/class-admin-apple-settings-section-post-types.php';
 
-use Exporter\Settings as Settings;
+use Apple_Exporter\Settings as Settings;
 
 /**
  * This class is in charge of creating a WordPress page to manage the
@@ -114,8 +114,6 @@ class Admin_Apple_Settings extends Apple_News {
 	 * @access public
 	 */
 	public function setup_options_page() {
-		$this->register_assets();
-
 		add_options_page(
 			__( 'Apple News Options', 'apple-news' ),
 			__( 'Apple News', 'apple-news' ),
@@ -142,9 +140,14 @@ class Admin_Apple_Settings extends Apple_News {
 	/**
 	 * Register assets for the options page.
 	 *
+	 * @param string $hook
 	 * @access public
 	 */
-	public function register_assets() {
+	public function register_assets( $hook ) {
+		if ( 'settings_page_apple-news-options' != $hook ) {
+			return;
+		}
+
 		wp_enqueue_style( 'apple-news-select2-css', plugin_dir_url( __FILE__ ) .
 			'../vendor/select2/select2.min.css', array() );
 		wp_enqueue_style( 'apple-news-settings-css', plugin_dir_url( __FILE__ ) .
@@ -158,7 +161,7 @@ class Admin_Apple_Settings extends Apple_News {
 	}
 
 	/**
-	 * Creates a new \Exporter\Settings instance and loads it with WordPress' saved
+	 * Creates a new \Apple_Exporter\Settings instance and loads it with WordPress' saved
 	 * settings.
 	 */
 	public function fetch_settings() {
