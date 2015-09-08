@@ -89,6 +89,19 @@ class Push extends API_Action {
 		$this->clean_workspace();
 		list( $json, $bundles ) = $this->generate_article();
 
+		// Validate the data before using since it's filterable.
+		// JSON should just be a string.
+		// Apple News format is complex and has too many options to validate otherwise.
+		// Let's just make sure it's not doing anything bad and is the right data type.
+		$json = sanitize_text_field( $json );
+
+		// Bundles should be an array of URLs
+		if ( ! empty( $bundles ) && is_array( $bundles ) ) {
+			$bundles = array_map( 'esc_url_raw', $bundles );
+		} else {
+			$bundles = array();
+		}
+
 		try {
 			// If there's an API ID, update, otherwise create.
 			$remote_id = get_post_meta( $this->id, 'apple_news_api_id', true );
