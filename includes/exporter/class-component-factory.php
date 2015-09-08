@@ -117,7 +117,7 @@ class Component_Factory {
 	public static function get_component( $shortname, $html ) {
 		$class = self::$components[ $shortname ];
 
-		if ( is_null( $class ) ) {
+		if ( is_null( $class ) || ! class_exists( $class ) ) {
 			return null;
 		}
 
