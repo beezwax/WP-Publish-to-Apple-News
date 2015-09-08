@@ -30,8 +30,8 @@ class Admin_Apple_Notice {
 	 */
 	public static function message( $message, $type ) {
 		update_user_meta( get_current_user_id(), self::KEY, array(
-			'message' => $message,
-			'type' => $type
+			'message' => sanitize_text_field( $message ),
+			'type' => sanitize_text_field( $type )
 		) );
 	}
 
