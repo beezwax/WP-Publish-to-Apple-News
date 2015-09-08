@@ -84,13 +84,12 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 * Add the Apple News meta boxes
 	 *
 	 * @since 0.9.0
-	 * @param int $post_id
 	 * @param WP_Post $post
 	 * @access public
 	 */
-	public function add_meta_boxes( $post_id, $post ) {
+	public function add_meta_boxes( $post ) {
 		// Only add if this post is published
-		if ( 'auto-draft' == $post->post_status ) {
+		if ( 'auto-draft' == get_post_status( $post ) ) {
 			return;
 		}
 
@@ -99,7 +98,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			'apple_news_publish',
 			__( 'Apple News', 'apple-news' ),
 			array( $this, 'publish_meta_box' ),
-			$post->post_type,
+			get_post_type( $post ),
 			apply_filters( 'apple_news_publish_meta_box_context', 'side' ),
 			apply_filters( 'apple_news_publish_meta_box_priority', 'high' )
 		);
