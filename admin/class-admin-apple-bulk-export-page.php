@@ -89,7 +89,11 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 
 		// TODO: Move push action to shared
 		$action = new Actions\Index\Push( $this->settings, $id );
-		$errors = $action->perform();
+		try {
+			$errors = $action->perform();
+		} catch( \Actions\Action_Exception $e ) {
+			$errors = $e->getMessage();
+		}
 
 		if ( $errors ) {
 			echo json_encode( array(
