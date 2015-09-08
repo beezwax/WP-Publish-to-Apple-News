@@ -29,7 +29,7 @@ class Admin_Apple_News extends Apple_News {
 		new Admin_Apple_Notice;
 
 		// Register hooks
-		add_action( 'admin_head', array( $this, 'plugin_styles' ) );
+		add_action( 'admin_print_styles-toplevel_page_apple_news_index', array( $this, 'plugin_styles' ) );
 
 		// Admin_Settings builds the settings page for the plugin. Besides setting
 		// it up, let's get the settings getter and setter object and save it into
@@ -54,12 +54,6 @@ class Admin_Apple_News extends Apple_News {
 	 * Implements certain plugin styles inline.
 	 */
 	public function plugin_styles() {
-		$page = ( isset( $_GET['page'] ) ) ? esc_attr( $_GET['page'] ) : null;
-
-		if ( $this->plugin_slug . '_index' != $page ) {
-			return;
-		}
-
 		// Styles are tiny, for now just embed them.
 		echo '<style type="text/css">';
 		echo '.wp-list-table .column-sync { width: 15%; }';
