@@ -55,8 +55,8 @@ class Workspace {
 	 */
 	public function clean_up() {
 		do_action( 'apple_news_before_clean_up' );
-		//delete_post_meta( $this->content_id, self::JSON_META_KEY );
-		//delete_post_meta( $this->content_id, self::BUNDLE_META_KEY );
+		delete_post_meta( $this->content_id, self::JSON_META_KEY );
+		delete_post_meta( $this->content_id, self::BUNDLE_META_KEY );
 		do_action( 'apple_news_after_clean_up' );
 	}
 

@@ -89,7 +89,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 * @access public
 	 */
 	public function add_meta_boxes( $post_id, $post ) {
-		// Only add if this post is not an auto-draft
+		// Only add if this post is published
 		if ( 'auto-draft' == $post->post_status ) {
 			return;
 		}
