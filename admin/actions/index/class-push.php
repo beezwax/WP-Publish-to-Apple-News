@@ -163,7 +163,7 @@ class Push extends API_Action {
 		$this->exporter = $export_action->fetch_exporter();
 		$this->exporter->generate();
 
-		return apply_filters( 'apple_news_generate_article', array( $this->exporter->get_json(), $this->exporter->get_bundles() ), $this->id );
+		return array( $this->exporter->get_json(), $this->exporter->get_bundles() );
 	}
 
 }
