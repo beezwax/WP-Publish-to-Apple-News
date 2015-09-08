@@ -96,7 +96,7 @@ class Request {
 		$args = apply_filters( 'apple_news_post_args', wp_parse_args( $args, $this->default_args ) );
 
 		// Perform the request
-		$response = wp_safe_remote_post( $url, $args );
+		$response = wp_safe_remote_post( esc_url_raw( $url ), $args );
 
 		// Parse and return the response
 		return $this->parse_response( $response );
@@ -122,7 +122,7 @@ class Request {
 		$args = apply_filters( 'apple_news_delete_args', wp_parse_args( $args, $this->default_args ) );
 
 		// Perform the delete
-		$response = wp_safe_remote_request( $url, $args );
+		$response = wp_safe_remote_request( esc_url_raw( $url ), $args );
 
 		// NULL is a valid response for DELETE
 		if ( is_null( $response ) ) {
@@ -152,7 +152,7 @@ class Request {
 		$args = apply_filters( 'apple_news_get_args', wp_parse_args( $args, $this->default_args ) );
 
 		// Perform the delete
-		$response = wp_safe_remote_get( $url, $args );
+		$response = wp_safe_remote_get( esc_url_raw( $url ), $args );
 
 		// Parse and return the response
 		return $this->parse_response( $response );
