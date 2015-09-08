@@ -84,6 +84,15 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 		// Check the nonce
 		check_ajax_referer( self::ACTION );
 
+		// Check capabilities
+		if ( ! current_user_can( apply_filters( 'apple_news_publish_capability', 'manage_options' ) ) ) {
+			echo json_encode( array(
+				'success' => false,
+				'error'   => __( 'You do not have permission to publish to Apple News', 'apple-news' ),
+			) );
+			wp_die();
+		}
+
 		// Sanitize input data
 		$id = absint( $_GET['id'] );
 
