@@ -104,7 +104,7 @@ class Admin_Apple_Post_Sync {
 	 */
 	public function do_redirect( $location ) {
 		if ( Admin_Apple_Notice::has_notice() ) {
-			return 'admin.php?page=apple_news_index';
+			return admin_url( 'admin.php?page=apple_news_index' );
 		}
 
 		return $location;
