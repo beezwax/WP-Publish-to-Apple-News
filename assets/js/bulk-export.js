@@ -23,7 +23,7 @@
 				id: id,
 				_ajax_nonce: nonce
 			},
-			function(res) {
+			function( res ) {
 				if ( res.success ) {
 					$status.removeClass( 'in-progress' ).addClass( 'success' ).text( 'Success' );
 				} else {
@@ -31,7 +31,7 @@
 				}
 				next();
 			},
-			function (err) {
+			function( err ) {
 				$status.removeClass( 'in-progress' ).addClass( 'failed' ).text( 'Server Error' );
 				next();
 			}
@@ -45,7 +45,7 @@
 		var index = -1;
 		var next = function () {
 			index += 1;
-			if( index < items.length ) {
+			if ( index < items.length ) {
 				pushItem( items.get( index ), next, $( '.bulk-export-list' ).data( 'nonce' ) );
 			} else {
 				done();
