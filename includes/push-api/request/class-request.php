@@ -151,7 +151,7 @@ class Request {
 		// Allow filtering and merge with the default args
 		$args = apply_filters( 'apple_news_get_args', wp_parse_args( $args, $this->default_args ) );
 
-		// Perform the delete
+		// Perform the get
 		$response = wp_safe_remote_get( esc_url_raw( $url ), $args );
 
 		// Parse and return the response
