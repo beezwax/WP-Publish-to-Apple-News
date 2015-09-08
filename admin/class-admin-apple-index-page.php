@@ -151,9 +151,14 @@ class Admin_Apple_Index_Page extends Apple_News {
 	/**
 	 * Sets up admin assets.
 	 *
+	 * @param string $hook
 	 * @access public
 	 */
-	public function setup_assets() {
+	public function setup_assets( $hook ) {
+		if ( 'toplevel_page_apple_news_index' != $hook ) {
+			return;
+		}
+
 		wp_enqueue_script( $this->plugin_slug . '_export_table_js', plugin_dir_url(
 			__FILE__ ) .  '../assets/js/export-table.js', array( 'jquery' ), $this->version, true );
 	}

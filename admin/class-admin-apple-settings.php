@@ -142,9 +142,14 @@ class Admin_Apple_Settings extends Apple_News {
 	/**
 	 * Register assets for the options page.
 	 *
+	 * @param string $hook
 	 * @access public
 	 */
-	public function register_assets() {
+	public function register_assets( $hook ) {
+		if ( 'settings_page_apple-news-options' != $hook ) {
+			return;
+		}
+
 		wp_enqueue_style( 'apple-news-select2-css', plugin_dir_url( __FILE__ ) .
 			'../vendor/select2/select2.min.css', array() );
 		wp_enqueue_style( 'apple-news-settings-css', plugin_dir_url( __FILE__ ) .

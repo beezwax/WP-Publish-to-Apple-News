@@ -426,4 +426,42 @@ abstract class Component {
 	 */
 	abstract protected function build( $text );
 
+	/**
+	 * Check if the remote file exists for this node.
+	 *
+	 * @param DomNode $node
+	 * @return boolean
+	 * @static
+	 * @access protected
+	 */
+	protected function remote_file_exists( $node ) {
+		$html = $node->ownerDocument->saveXML( $node );
+		preg_match( '/src="([^"]*?)"/im', $html, $matches );
+		$path = $matches[1];
+
+		// Is it a URL? Check the headers in case of 404
+		if ( false !== filter_var( $path, FILTER_VALIDATE_URL ) ) {
+			if ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) {
+				$result = vip_safe_wp_remote_get( $path );
+			} else {
+				$result = wp_safe_remote_get( $path );
+			}
+
+			if ( empty( $result['response']['code'] ) || 404 == $result['response']['code'] ) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+
+		// This could be a local file path.
+		// Check that, except on WordPress VIP where this is not possible.
+		if ( ! defined( 'WPCOM_IS_VIP_ENV' ) || ! WPCOM_IS_VIP_ENV ) {
+			return file_exists( $path );
+		}
+
+		// Nothing was found or no further validation is possible.
+		return false;
+	}
+
 }

@@ -26,29 +26,6 @@ class Video extends Component {
 	}
 
 	/**
-	 * Check if the remote file exists for this video.
-	 *
-	 * @param DomNode $node
-	 * @return boolean
-	 * @static
-	 * @access private
-	 */
-	private static function remote_file_exists( $node ) {
-		$html = $node->ownerDocument->saveXML( $node );
-		preg_match( '/src="([^"]*?)"/im', $html, $matches );
-		$path = $matches[1];
-
-		// Is it an URL? Check the headers in case of 404
-		if ( 0 === strpos( $path, 'http' ) ) {
-			$file_headers = @get_headers( $path );
-			return !preg_match( '#404 Not Found#', $file_headers[0] );
-		}
-
-		// It's not a valid URL
-		return false;
-	}
-
-	/**
 	 * Build the component.
 	 *
 	 * @param string $text

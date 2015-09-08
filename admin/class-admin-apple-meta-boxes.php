@@ -160,9 +160,14 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	/**
 	 * Registers assets used by meta boxes.
 	 *
+	 * @param string $hook
 	 * @access public
 	 */
-	public function register_assets() {
+	public function register_assets( $hook ) {
+		if ( 'post.php' != $hook ) {
+			return;
+		}
+
 		wp_enqueue_script( $this->plugin_slug . '_meta_boxes_js', plugin_dir_url(
 			__FILE__ ) .  '../assets/js/meta-boxes.js', array( 'jquery' ),
 			$this->version, true );

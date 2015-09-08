@@ -22,34 +22,12 @@ class Image extends Component {
 		// Is this an image node?
 		if (
 		 	( 'img' == $node->nodeName || 'figure' == $node->nodeName )
-			&& self::image_exists( $node )
+			&& self::remote_file_exists( $node )
 		) {
 			return $node;
 		}
 
 		return null;
-	}
-
-	/**
-	 * Check if the image file exists.
-	 *
-	 * @param DomNode $node
-	 * @return boolean
-	 * @access private
-	 */
-	private static function image_exists( $node ) {
-		$html = $node->ownerDocument->saveXML( $node );
-		preg_match( '/src="([^"]*?)"/im', $html, $matches );
-		$path = $matches[1];
-
-		// Is it a URL? Check the headers in case of 404
-		if ( false !== filter_var( $path, FILTER_VALIDATE_URL ) ) {
-			$file_headers = @get_headers( $path );
-			return !preg_match( '#404 Not Found#', $file_headers[0] );
-		}
-
-		// It's not an URL, check in the filesystem
-		return file_exists( $path );
 	}
 
 	/**

@@ -122,14 +122,18 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 	/**
 	 * Registers assets used by the bulk export process.
 	 *
+	 * @param string $hook
 	 * @access public
 	 */
-	public function register_assets() {
+	public function register_assets( $hook ) {
+		if ( 'admin_page_apple_news_bulk_export' != $hook ) {
+			return;
+		}
+
 		wp_enqueue_style( $this->plugin_slug . '_bulk_export_css', plugin_dir_url(
 			__FILE__ ) .  '../assets/css/bulk-export.css' );
 		wp_enqueue_script( $this->plugin_slug . '_bulk_export_js', plugin_dir_url(
 			__FILE__ ) .  '../assets/js/bulk-export.js', array( 'jquery' ),
 			$this->version, true );
 	}
-
 }
