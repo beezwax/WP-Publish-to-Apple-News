@@ -34,14 +34,14 @@ function activate_wp_plugin() {
 	}
 }
 
-require plugin_dir_path( __FILE__ ) . 'includes/exporter/class-settings.php';
+require plugin_dir_path( __FILE__ ) . 'includes/apple-exporter/class-settings.php';
 
 /**
  * Deactivate the plugin.
  */
 function deactivate_wp_plugin() {
 	// Do something
-	$settings = new Exporter\Settings;
+	$settings = new Apple_Exporter\Settings;
 	foreach ( $settings->all() as $name => $value ) {
 		delete_option( $name );
 	}

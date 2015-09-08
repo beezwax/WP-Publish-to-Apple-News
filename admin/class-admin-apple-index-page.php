@@ -6,9 +6,9 @@
  * @since   0.6.0
  */
 
-require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
-require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
-require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-export.php';
+require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-push.php';
+require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-delete.php';
+require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-export.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-news-list-table.php';
 
 class Admin_Apple_Index_Page extends Apple_News {
@@ -202,11 +202,11 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access private
 	 */
 	private function export_action( $id ) {
-		$action = new Actions\Index\Export( $this->settings, $id );
+		$action = new Apple_Actions\Index\Export( $this->settings, $id );
 		try {
 			$json = $action->perform();
 			$this->download_json( $json, $id );
-		} catch ( Actions\Action_Exception $e ) {
+		} catch ( Apple_Actions\Action_Exception $e ) {
 			$this->notice_error( $e->getMessage() );
 		}
 	}
@@ -218,11 +218,11 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access private
 	 */
 	private function push_action( $id ) {
-		$action = new Actions\Index\Push( $this->settings, $id );
+		$action = new Apple_Actions\Index\Push( $this->settings, $id );
 		try {
 			$action->perform();
 			$this->notice_success( __( 'Your article has been pushed successfully!', 'apple-news' ) );
-		} catch ( Actions\Action_Exception $e ) {
+		} catch ( Apple_Actions\Action_Exception $e ) {
 			$this->notice_error( $e->getMessage() );
 		}
 	}
@@ -234,11 +234,11 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access private
 	 */
 	private function delete_action( $id ) {
-		$action = new Actions\Index\Delete( $this->settings, $id );
+		$action = new Apple_Actions\Index\Delete( $this->settings, $id );
 		try {
 			$action->perform();
 			$this->notice_success( __( 'Your article has been removed from apple news.', 'apple-news' ) );
-		} catch ( Actions\Action_Exception $e ) {
+		} catch ( Apple_Actions\Action_Exception $e ) {
 			$this->notice_error( $e->getMessage() );
 		}
 	}

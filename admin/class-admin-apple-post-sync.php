@@ -1,7 +1,7 @@
 <?php
 
-require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
-require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-delete.php';
+require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-push.php';
+require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-delete.php';
 
 /**
  * This class is in charge of syncing posts creation, updates and deletions
@@ -61,10 +61,10 @@ class Admin_Apple_Post_Sync {
 			return;
 		}
 
-		$action = new Actions\Index\Push( $this->settings, $id );
+		$action = new Apple_Actions\Index\Push( $this->settings, $id );
 		try {
 			$action->perform();
-		} catch ( Actions\Action_Exception $e ) {
+		} catch ( Apple_Actions\Action_Exception $e ) {
 			Admin_Apple_Notice::error( $e->getMessage() );
 		}
 	}
@@ -86,10 +86,10 @@ class Admin_Apple_Post_Sync {
 			return;
 		}
 
-		$action = new Actions\Index\Delete( $this->settings, $id );
+		$action = new Apple_Actions\Index\Delete( $this->settings, $id );
 		try {
 			$action->perform();
-		} catch ( Actions\Action_Exception $e ) {
+		} catch ( Apple_Actions\Action_Exception $e ) {
 			Admin_Apple_Notice::error( $e->getMessage() );
 		}
 	}

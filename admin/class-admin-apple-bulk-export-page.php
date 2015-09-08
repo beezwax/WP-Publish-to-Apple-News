@@ -1,6 +1,6 @@
 <?php
 
-require_once plugin_dir_path( __FILE__ ) . 'actions/index/class-push.php';
+require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-push.php';
 
 /**
  * Bulk export page. Display progress on multiple articles export process.
@@ -97,10 +97,10 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 		$id = absint( $_GET['id'] );
 
 		// TODO: Move push action to shared
-		$action = new Actions\Index\Push( $this->settings, $id );
+		$action = new Apple_Actions\Index\Push( $this->settings, $id );
 		try {
 			$errors = $action->perform();
-		} catch( \Actions\Action_Exception $e ) {
+		} catch( \Apple_Actions\Action_Exception $e ) {
 			$errors = $e->getMessage();
 		}
 
