@@ -36,8 +36,6 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	function __construct( $settings ) {
 		$this->settings = $settings;
 
-		$this->per_page = apply_filters( 'apple_news_export_list_per_page', $this->per_page );
-
 		parent::__construct( array(
 			'singular' => __( 'article', 'apple-news' ),
 			'plural'   => __( 'articles', 'apple-news' ),
