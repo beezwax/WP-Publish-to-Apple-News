@@ -45,7 +45,7 @@ class Component_Layouts_Test extends PHPUnit_Framework_TestCase {
 		$component->set_json( 'layout', 'anchor-layout-left' )->shouldBeCalled();
 		$component->set_json( 'animation', array(
 			'type'             => 'fade_in',
-			'userControllable' => 'true',
+			'userControllable' => true,
 			'initialAlpha'     => 0.0,
 		) )->shouldBeCalled();
 
