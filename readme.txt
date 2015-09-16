@@ -1,5 +1,6 @@
 === Publish To Apple News ===
 Contributors: beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brian-schick, bcampeau
+Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 4.3
@@ -137,14 +138,23 @@ By default, your exported posts should be ready to include advertising content s
 
 == Frequently Asked Questions ==
 
+= What does the Publish To Apple News Plugin Do? =
+
+The Publish to Apple News plugin enables your WordPress blog content to be published to your Apple News channel.
 
 == Screenshots ==
 
+1.
 
 == Changelog ==
 
 = 1.0 =
-* Initial release.
+* Initial release. Includes changes for latest WP Plugin API compatibility and Apple News Publisher API.
+
+== Upgrade Notice ==
+
+= 1.0 = 
+Initial release. Recommended for production.
 
 
 == Developers ==
