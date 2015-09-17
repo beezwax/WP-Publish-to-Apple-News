@@ -354,29 +354,31 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	/**
 	 * Allowed HTML for settings pages.
 	 *
-	 * @var array
+	 * @return array
 	 * @access public
 	 */
-	const ALLOWED_HTML = array(
-		'select' => array(
-			'class' => array(),
-			'name' => array(),
-			'multiple' => array(),
-		),
-		'option' => array(
-			'value' => array(),
-			'selected' => array(),
-		),
-		'input' => array(
-			'class' => array(),
-			'name' => array(),
-			'value' => array(),
-			'placeholder' => array(),
-			'step' => array(),
-			'type' => array(),
-			'required' => array(),
-		),
-	);
+	public static function allowed_html() {
+		return array(
+			'select' => array(
+				'class' => array(),
+				'name' => array(),
+				'multiple' => array(),
+			),
+			'option' => array(
+				'value' => array(),
+				'selected' => array(),
+			),
+			'input' => array(
+				'class' => array(),
+				'name' => array(),
+				'value' => array(),
+				'placeholder' => array(),
+				'step' => array(),
+				'type' => array(),
+				'required' => array(),
+			),
+		);
+	}
 
 	/**
 	 * Constructor.
@@ -555,7 +557,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		return sprintf(
 			$field,
 			esc_attr( $name ),
-			esc_attr( $value )
+			$value
 		);
 	}
 
