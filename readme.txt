@@ -1,5 +1,5 @@
 === Publish To Apple News ===
-Contributors: beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brian-schick, bcampeau
+Contributors: beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brian-schick, potatomaster, alleyinteractive
 Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
@@ -153,7 +153,7 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 
 == Upgrade Notice ==
 
-= 1.0 = 
+= 1.0 =
 Initial release. Recommended for production.
 
 
