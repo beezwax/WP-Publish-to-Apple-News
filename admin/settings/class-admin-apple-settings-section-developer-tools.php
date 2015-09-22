@@ -8,7 +8,7 @@
 class Admin_Apple_Settings_Section_Developer_Tools extends Admin_Apple_Settings_Section {
 
 	/**
-	 * Slug of the advanced settings section.
+	 * Slug of the developer tools section.
 	 *
 	 * @var string
 	 * @access protected
