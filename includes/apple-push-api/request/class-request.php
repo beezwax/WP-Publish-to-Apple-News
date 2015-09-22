@@ -171,6 +171,19 @@ class Request {
 			throw new Request_Exception( __( 'Invalid response:', 'apple-news' ) . $response );
 		}
 
+		// If debugging mode is enabled, send an email
+		$debugging = get_option( 'apple_news_enable_debugging' );
+		if ( 'yes' === $debugging ) {
+			$admin_email = filter_var( get_option( 'apple_news_admin_email' ), FILTER_VALIDATE_EMAIL );
+			if ( ! empty( $admin_email ) ) {
+				wp_mail(
+					$admin_email,
+					esc_html__( 'Apple News Notification', 'apple-news' ),
+					print_r( $response, true )
+				);
+			}
+		}
+
 		// Check for errors
 		if ( is_wp_error( $response ) ) {
 			$string_errors = '';
