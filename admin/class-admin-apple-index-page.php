@@ -27,9 +27,12 @@ class Admin_Apple_Index_Page extends Apple_News {
 	function __construct( $settings ) {
 		$this->settings = $settings;
 
+		// Handle routing to various admin pages
 		add_action( 'admin_menu', array( $this, 'setup_admin_page' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'setup_assets' ) );
 	}
+
+
 
 	/**
 	 * Sets up the admin page.
@@ -194,7 +197,6 @@ class Admin_Apple_Index_Page extends Apple_News {
 	private function show_post_list_action() {
 		$table = new Admin_Apple_News_List_Table( $this->settings );
 		$table->prepare_items();
-		$table->search_box( __( 'Search', 'apple-news', 'apple-news' ) );
 		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
 	}
 

@@ -43,23 +43,6 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 			'plural'   => __( 'articles', 'apple-news' ),
 			'ajax'     => false,
 		) );
-
-		// Add query vars for the custom filters
-		add_filter( 'query_vars', array( $this, 'query_vars' ) );
-	}
-
-	/**
-	 * Adds query vars for the custom filters
-	 *
-	 * @access public
-	 * @param array $qvars
-	 * @return array
-	 */
-	public function query_vars( $qvars ) {
-		$qvars[] = 'apple_news_publish_status';
-		$qvars[] = 'apple_news_date_from';
-		$qvars[] = 'apple_news_date_to';
-		return $qvars;
 	}
 
 	/**
@@ -271,16 +254,59 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		$columns = $this->get_columns();
 		$this->_column_headers = array( $columns, array(), array() );
 
-		// Data fetch
+		// Build the default args for the query
 		$current_page = $this->get_pagenum();
-		$query = new WP_Query( apply_filters( 'apple_news_export_table_get_posts_args', array(
+		$args = array(
 			'post_type'     => $this->settings->get( 'post_types' ),
 			'post_status'	=> 'publish',
 			'posts_per_page' => $this->per_page,
 			'offset'         => ( $current_page - 1 ) * $this->per_page,
 			'orderby'        => 'ID',
 			'order'          => 'DESC',
-		) ) );
+		);
+
+		// Add the publish status filter if set
+		$publish_status = $this->get_publish_status_filter();
+		if ( ! empty( $publish_status ) ) {
+			switch ( $publish_status ) {
+				case 'published':
+					$args['meta_query'] = array(
+						'relation' => 'AND',
+						array(
+							'key' => 'apple_news_api_created_at',
+							'compare' => 'EXISTS',
+						),
+						array(
+							'key' => 'apple_news_api_created_at',
+							'compare' => '!=',
+							'value' => '',
+						),
+					);
+					break;
+				case 'not_published':
+					$args['meta_query'] = array(
+						array(
+							'key' => 'apple_news_api_revision',
+							'compare' => 'NOT EXISTS',
+						)
+					);
+					break;
+				case 'deleted':
+					$args['meta_query'] = array(
+						array(
+							'key' => 'apple_news_api_deleted',
+							'compare' => 'EXISTS',
+						)
+					);
+					break;
+			}
+
+			print_r( $args );
+
+		}
+
+		// Data fetch
+		$query = new WP_Query( apply_filters( 'apple_news_export_table_get_posts_args', $args ) );
 
 		// Set data
 		$this->items = $query->posts;
@@ -328,10 +354,10 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		<div class="alignleft actions">
 		<?php
 		// Add a publish state filter
-		$this->publish_status_filter();
+		$this->publish_status_filter_field();
 
 		// Add a dange range filter
-		$this->date_range_filter();
+		$this->date_range_filter_field();
 
 		// Allow for further options to be added within themes and plugins
 		do_action( 'apple_news_extra_tablenav' );
@@ -343,15 +369,46 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Get the current publish status filter value.
+	 *
+	 * @return string
+	 * @access protected
+	 */
+	protected function get_publish_status_filter() {
+		return ( empty( $_GET['apple_news_publish_status'] ) ) ? '' : sanitize_text_field( $_GET['apple_news_publish_status'] );
+	}
+
+	/**
+	 * Get the current date from filter value.
+	 *
+	 * @return string
+	 * @access protected
+	 */
+	protected function get_date_from_filter() {
+		return ( empty( $_GET['apple_news_date_from'] ) ) ? '' : sanitize_text_field( $_GET['apple_news_date_from'] );
+	}
+
+	/**
+	 * Get the current date to filter value.
+	 *
+	 * @return string
+	 * @access protected
+	 */
+	protected function get_date_to_filter() {
+		return ( empty( $_GET['apple_news_date_to'] ) ) ? '' : sanitize_text_field( $_GET['apple_news_date_to'] );
+	}
+
+	/**
 	 * Display a dropdown to filter by publish state.
 	 *
 	 * @access protected
 	 */
-	protected function publish_status_filter() {
+	protected function publish_status_filter_field() {
 		// Add available statuses
 		$publish_statuses = apply_filters( 'apple_news_publish_statuses', array(
 			'' => __( 'Show All Statuses', 'apple-news' ),
 			'published' => __( 'Published', 'apple-news' ),
+			'not_published' => __( 'Not Published', 'apple-news' ),
 			'deleted' => __( 'Deleted', 'apple-news' ),
 		) );
 
@@ -363,7 +420,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 			echo sprintf(
 				'<option value="%s" %s>%s</option>',
 				esc_attr( $value ),
-				checked( $value, get_query_var( 'apple_news_publish_status' ), false ),
+				selected( $value, $this->get_publish_status_filter(), false ),
 				esc_html( $label )
 			);
 		}
@@ -377,7 +434,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 *
 	 * @access protected
 	 */
-	protected function date_range_filter() {
+	protected function date_range_filter_field() {
 		?>
 		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts From', 'ev' ) ?>" name="apple_news_date_from" id="apple_news_date_from" value="<?php echo esc_attr( get_query_var( 'apple_news_date_from' ) ) ?>" />
 		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts To', 'ev' ) ?>" name="apple_news_date_to" id="apple_news_date_to" value="<?php echo esc_attr( get_query_var( 'apple_news_date_to' ) ) ?>" />
