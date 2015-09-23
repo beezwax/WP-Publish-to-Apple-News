@@ -376,7 +376,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		// Allow for further options to be added within themes and plugins
 		do_action( 'apple_news_extra_tablenav' );
 
-		submit_button( __( 'Filter' ), 'button', 'filter_action', false, array( 'id' => 'post-query-submit' ) );
+		submit_button( __( 'Filter', 'apple-news' ), 'button', 'filter_action', false, array( 'id' => 'post-query-submit' ) );
 		?>
 		</div>
 		<?php
