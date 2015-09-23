@@ -194,6 +194,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 	private function show_post_list_action() {
 		$table = new Admin_Apple_News_List_Table( $this->settings );
 		$table->prepare_items();
+		$table->search_box( __( 'Search', 'apple-news', 'apple-news' ) );
 		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
 	}
 
