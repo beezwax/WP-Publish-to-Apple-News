@@ -34,13 +34,32 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @param Settings $settings
 	 */
 	function __construct( $settings ) {
+		// Load current settings
 		$this->settings = $settings;
 
+		// Initialize the table
 		parent::__construct( array(
 			'singular' => __( 'article', 'apple-news' ),
 			'plural'   => __( 'articles', 'apple-news' ),
 			'ajax'     => false,
 		) );
+
+		// Add query vars for the custom filters
+		add_filter( 'query_vars', array( $this, 'query_vars' ) );
+	}
+
+	/**
+	 * Adds query vars for the custom filters
+	 *
+	 * @access public
+	 * @param array $qvars
+	 * @return array
+	 */
+	public function query_vars( $qvars ) {
+		$qvars[] = 'apple_news_publish_status';
+		$qvars[] = 'apple_news_date_from';
+		$qvars[] = 'apple_news_date_to';
+		return $qvars;
 	}
 
 	/**
@@ -264,7 +283,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		) ) );
 
 		// Set data
-		$this->items = $query->posts;;
+		$this->items = $query->posts;
 		$total_items = $query->found_posts;
 		$this->set_pagination_args( apply_filters( 'apple_news_export_table_pagination_args', array(
 			'total_items' => $total_items,
@@ -294,4 +313,77 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		return add_query_arg( $params, $url );
 	}
 
+	/**
+	 * Display extra filtering options.
+	 *
+	 * @param string $which
+	 * @access protected
+	 */
+	protected function extra_tablenav( $which ) {
+		// Only display on the top of the table
+		if ( 'top' != $which ) {
+			return;
+		}
+		?>
+		<div class="alignleft actions">
+		<?php
+		// Add a publish state filter
+		$this->publish_status_filter();
+
+		// Add a dange range filter
+		$this->date_range_filter();
+
+		// Allow for further options to be added within themes and plugins
+		do_action( 'apple_news_extra_tablenav' );
+
+		submit_button( __( 'Filter' ), 'button', 'filter_action', false, array( 'id' => 'post-query-submit' ) );
+		?>
+		</div>
+		<?php
+	}
+
+	/**
+	 * Display a dropdown to filter by publish state.
+	 *
+	 * @access protected
+	 */
+	protected function publish_status_filter() {
+		// Check if there is a current value
+		$publish_status = get_query_var( 'apple_news_publish_status' );
+
+		// Add available statuses
+		$publish_statuses = apply_filters( 'apple_news_publish_statuses', array(
+			'' => __( 'Show All Statuses', 'apple-news' ),
+			'published' => __( 'Published', 'apple-news' ),
+			'deleted' => __( 'Deleted', 'apple-news' ),
+		) );
+
+		// Build the dropdown
+		?>
+		<select name="apple_news_publish_status">
+		<?php
+		foreach ( $publish_statuses as $value => $label ) {
+			echo sprintf(
+				'<option value="%s" %s>%s</option>',
+				esc_attr( $value ),
+				checked( $value, $publish_status, false ),
+				esc_html( $label )
+			);
+		}
+		?>
+		</select>
+		<?php
+	}
+
+	/**
+	 * Display datepickers to filter by date range
+	 *
+	 * @access protected
+	 */
+	protected function date_range_filter() {
+		// Check if there are current values
+		$date_from = get_query_var( 'apple_news_date_from' );
+		$date_to = get_query_var( 'apple_news_date_to' );
+
+	}
 }
