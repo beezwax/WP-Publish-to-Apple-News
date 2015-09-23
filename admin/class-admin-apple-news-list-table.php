@@ -441,7 +441,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		<select name="apple_news_publish_status" id="apple_news_publish_status">
 		<?php
 		foreach ( $publish_statuses as $value => $label ) {
-			echo sprintf(
+			printf(
 				'<option value="%s" %s>%s</option>',
 				esc_attr( $value ),
 				selected( $value, $this->get_publish_status_filter(), false ),
