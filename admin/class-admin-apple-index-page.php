@@ -128,16 +128,45 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access public
 	 */
 	private function do_redirect() {
-		$url = menu_page_url( $this->plugin_slug . '_index', false );
+		// Perform the redirect
+		wp_safe_redirect( esc_url_raw( self::action_query_params( '', menu_page_url( $this->plugin_slug . '_index', false ) ) ) );
+		exit;
+	}
 
-		// Add a pagination parameter, if applicable
-		if ( ! empty( $_GET['paged'] ) ) {
-			$url = add_query_arg( 'paged', absint( $_GET['paged'] ), $url );
+	/**
+	 * Helps build query params for each row action.
+	 *
+	 * @param string $action
+	 * @param string $url
+	 * @return string
+	 * @access public
+	 * @static
+	 */
+	public static function action_query_params( $action, $url ) {
+		// Set the keys we need to pay attention to
+		$keys = array(
+			'apple_news_publish_status',
+			'apple_news_date_from',
+			'apple_news_date_to',
+			's',
+			'paged',
+		);
+
+		// Start the params
+		$params = array();
+		if ( ! empty( $action ) ) {
+			$params['action'] = $action;
 		}
 
-		// Perform the redirect
-		wp_safe_redirect( esc_url_raw( $url ) );
-		exit;
+		// Add the other params
+		foreach ( $keys as $key ) {
+			if ( ! empty( $_GET[ $key ] ) ) {
+				$params[ $key ] = urlencode( sanitize_text_field( $_GET[ $key ] ) );
+			}
+		}
+
+		// Add to the action URL
+		return add_query_arg( $params, $url );
 	}
 
 	/**
