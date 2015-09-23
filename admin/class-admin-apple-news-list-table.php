@@ -460,8 +460,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 */
 	protected function date_range_filter_field() {
 		?>
-		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts From', 'ev' ) ?>" name="apple_news_date_from" id="apple_news_date_from" value="<?php echo esc_attr( $this->get_date_from_filter() ) ?>" />
-		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts To', 'ev' ) ?>" name="apple_news_date_to" id="apple_news_date_to" value="<?php echo esc_attr( $this->get_date_to_filter() ) ?>" />
+		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts From', 'apple-news' ) ?>" name="apple_news_date_from" id="apple_news_date_from" value="<?php echo esc_attr( $this->get_date_from_filter() ) ?>" />
+		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts To', 'apple-news' ) ?>" name="apple_news_date_to" id="apple_news_date_to" value="<?php echo esc_attr( $this->get_date_to_filter() ) ?>" />
 		<?php
 	}
 }
