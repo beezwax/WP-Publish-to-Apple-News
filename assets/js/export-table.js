@@ -14,4 +14,7 @@
 		$( this ).removeClass( 'is-active' );
 	});
 
+	$( "#apple_news_date_from" ).datepicker();
+	$( "#apple_news_date_to" ).datepicker();
+
 })( jQuery, window );

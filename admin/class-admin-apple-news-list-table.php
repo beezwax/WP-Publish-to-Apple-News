@@ -348,9 +348,6 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @access protected
 	 */
 	protected function publish_status_filter() {
-		// Check if there is a current value
-		$publish_status = get_query_var( 'apple_news_publish_status' );
-
 		// Add available statuses
 		$publish_statuses = apply_filters( 'apple_news_publish_statuses', array(
 			'' => __( 'Show All Statuses', 'apple-news' ),
@@ -360,13 +357,13 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 
 		// Build the dropdown
 		?>
-		<select name="apple_news_publish_status">
+		<select name="apple_news_publish_status" id="apple_news_publish_status">
 		<?php
 		foreach ( $publish_statuses as $value => $label ) {
 			echo sprintf(
 				'<option value="%s" %s>%s</option>',
 				esc_attr( $value ),
-				checked( $value, $publish_status, false ),
+				checked( $value, get_query_var( 'apple_news_publish_status' ), false ),
 				esc_html( $label )
 			);
 		}
@@ -381,9 +378,9 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @access protected
 	 */
 	protected function date_range_filter() {
-		// Check if there are current values
-		$date_from = get_query_var( 'apple_news_date_from' );
-		$date_to = get_query_var( 'apple_news_date_to' );
-
+		?>
+		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts From', 'ev' ) ?>" name="apple_news_date_from" id="apple_news_date_from" value="<?php echo esc_attr( get_query_var( 'apple_news_date_from' ) ) ?>" />
+		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts To', 'ev' ) ?>" name="apple_news_date_to" id="apple_news_date_to" value="<?php echo esc_attr( get_query_var( 'apple_news_date_to' ) ) ?>" />
+		<?php
 	}
 }
