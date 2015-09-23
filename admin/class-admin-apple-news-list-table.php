@@ -271,13 +271,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 			switch ( $publish_status ) {
 				case 'published':
 					$args['meta_query'] = array(
-						'relation' => 'AND',
 						array(
-							'key' => 'apple_news_api_created_at',
-							'compare' => 'EXISTS',
-						),
-						array(
-							'key' => 'apple_news_api_created_at',
+							'key' => 'apple_news_api_id',
 							'compare' => '!=',
 							'value' => '',
 						),
