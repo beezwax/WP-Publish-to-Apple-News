@@ -300,9 +300,6 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 					);
 					break;
 			}
-
-			print_r( $args );
-
 		}
 
 		// Data fetch
