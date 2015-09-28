@@ -110,7 +110,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		$local   = strtotime( $post->post_modified );
 
 		if ( $local > $updated ) {
-			return __( 'Needs to be updated'. 'apple-news' );
+			return __( 'Needs to be updated', 'apple-news' );
 		}
 
 		return __( 'Published', 'apple-news' );
