@@ -106,7 +106,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		}
 
 		$updated = get_post_meta( $post->ID, 'apple_news_api_modified_at', true );
-		$updated = strtotime( $updated );
+		$updated = strtotime( get_date_from_gmt( date( 'Y-m-d H:i:s', strtotime( $updated ) ) ) );
 		$local   = strtotime( $post->post_modified );
 
 		if ( $local > $updated ) {

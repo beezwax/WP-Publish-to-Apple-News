@@ -60,8 +60,8 @@ class Push extends API_Action {
 			throw new \Apple_Actions\Action_Exception( __( 'Could not find post with id ', 'apple-news' ) . $this->id );
 		}
 
-		$api_time   = get_post_meta( $this->id, 'apple_news_api_modified_at', true );
-		$api_time   = strtotime( $api_time );
+		$api_time = get_post_meta( $this->id, 'apple_news_api_modified_at', true );
+		$api_time = strtotime( get_date_from_gmt( date( 'Y-m-d H:i:s', strtotime( $api_time ) ) ) );
 		$local_time = strtotime( $post->post_modified );
 
 		$in_sync = $api_time >= $local_time;
