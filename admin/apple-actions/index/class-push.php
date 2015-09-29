@@ -83,9 +83,10 @@ class Push extends API_Action {
 		}
 
 		// Get the article from the API
-		$result = $this->get_api()->get_article( $apple_id );
+		//$result = $this->get_api()->get_article( $apple_id );
 
-		print_r( $result );
+		//print_r( $result );
+		//die();
 	}
 
 	/**
@@ -139,7 +140,11 @@ class Push extends API_Action {
 				$result = $this->get_api()->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles );
 			}
 
-			// Save the ID that was assigned to this post in by the API
+			// Check for errors
+			//print_r( $result );
+			//die();
+
+			// Save the ID that was assigned to this post in by the API.
 			update_post_meta( $this->id, 'apple_news_api_id', sanitize_text_field( $result->data->id ) );
 			update_post_meta( $this->id, 'apple_news_api_created_at', sanitize_text_field( $result->data->createdAt ) );
 			update_post_meta( $this->id, 'apple_news_api_modified_at', sanitize_text_field( $result->data->modifiedAt ) );
