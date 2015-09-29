@@ -70,6 +70,25 @@ class Push extends API_Action {
 	}
 
 	/**
+	 * Get the post using the API data.
+	 * Updates the current relevant metadata stored for the post.
+	 *
+	 * @access private
+	 */
+	private function get() {
+		// Ensure we have a valid ID.
+		$apple_id = get_post_meta( $this->id, 'apple_news_api_id', true );
+		if ( empty( $apple_id ) ) {
+			throw new \Apple_Actions\Action_Exception( __( 'This post does not have a valid Apple News ID, so it cannot be retrieved from the API.', 'apple-news' ) );
+		}
+
+		// Get the article from the API
+		$result = $this->get_api()->get_article( $apple_id );
+
+		print_r( $result );
+	}
+
+	/**
 	 * Push the post using the API data.
 	 *
 	 * @access private
@@ -110,6 +129,10 @@ class Push extends API_Action {
 			do_action( 'apple_news_before_push', $this->id );
 
 			if ( $remote_id ) {
+				// Update the current article from the API in case the revision changed
+				$this->get();
+
+				// Get the current revision
 				$revision = get_post_meta( $this->id, 'apple_news_api_revision', true );
 				$result   = $this->get_api()->update_article( $remote_id, $revision, $json, $bundles );
 			} else {
