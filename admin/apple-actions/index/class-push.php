@@ -83,10 +83,13 @@ class Push extends API_Action {
 		}
 
 		// Get the article from the API
-		//$result = $this->get_api()->get_article( $apple_id );
+		$result = $this->get_api()->get_article( $apple_id );
+		if ( empty( $result->data->revision ) ) {
+			throw new \Apple_Actions\Action_Exception( __( 'The API returned invalid data for this article since the revision is empty.', 'apple-news' ) );
+		}
 
-		//print_r( $result );
-		//die();
+		// Update the revision
+		update_post_meta( $this->id, 'apple_news_api_revision', sanitize_text_field( $result->data->revision ) );
 	}
 
 	/**
@@ -140,10 +143,6 @@ class Push extends API_Action {
 				$result = $this->get_api()->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles );
 			}
 
-			// Check for errors
-			//print_r( $result );
-			//die();
-
 			// Save the ID that was assigned to this post in by the API.
 			update_post_meta( $this->id, 'apple_news_api_id', sanitize_text_field( $result->data->id ) );
 			update_post_meta( $this->id, 'apple_news_api_created_at', sanitize_text_field( $result->data->createdAt ) );
@@ -157,7 +156,7 @@ class Push extends API_Action {
 			do_action( 'apple_news_after_push', $this->id, $result );
 		} catch ( \Apple_Push_API\Request\Request_Exception $e ) {
 			if ( preg_match( '#WRONG_REVISION#', $e->getMessage() ) ) {
-				throw new \Apple_Actions\Action_Exception( __( 'It seems like the article was updated by another call. If the problem persist, try removing and pushing again.', 'apple-news' ) );
+				throw new \Apple_Actions\Action_Exception( __( 'It seems like the article was updated by another call. If the problem persists, try removing and pushing again.', 'apple-news' ) );
 			} else {
 				throw new \Apple_Actions\Action_Exception( __( 'There has been an error with the API. Please make sure your API settings are correct and try again: ', 'apple-news' ) .  $e->getMessage() );
 			}
