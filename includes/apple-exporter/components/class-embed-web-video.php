@@ -40,7 +40,7 @@ class Embed_Web_Video extends Component {
 		$is_vimeo_url   = $node->nodeName == 'p' && preg_match( self::VIMEO_MATCH  , trim( $node->nodeValue ) );
 
 		// Is this node an iframe?
-		if ( 'iframe' == $node->nodeName || $is_youtube_url || $is_vimeo_url ) {
+		if ( $is_youtube_url || $is_vimeo_url ) {
 			return $node;
 		}
 
