@@ -26,6 +26,14 @@ class Push extends API_Action {
 	private $exporter;
 
 	/**
+	 * Hook name for publishing in async mode
+	 *
+	 * @var Exporter
+	 * @access private
+	 */
+	public $async_hook = 'apple_news_async_push';
+
+	/**
 	 * Constructor.
 	 *
 	 * @param Settings $settings
@@ -35,6 +43,11 @@ class Push extends API_Action {
 		parent::__construct( $settings );
 		$this->id       = $id;
 		$this->exporter = null;
+
+		// If async mode is enabled and we're on VIP, enable the required filter
+		if ( 'yes' === $settings->get( 'api_async' ) && defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ) {
+			add_filter( 'wpcom_vip_passthrough_cron_to_jobs', array( $this, 'passthrough_cron_to_jobs' ) );
+		}
 	}
 
 	/**
@@ -193,4 +206,16 @@ class Push extends API_Action {
 		return array( $this->exporter->get_json(), $this->exporter->get_bundles() );
 	}
 
+	/**
+	 * On WordPress VIP only, run async publishing requests through the jobs system.
+	 * This will allow for a maximum publishing time up to 12 hours, which is
+	 * well in excess of even the most lengthy API request.
+	 *
+	 * @access public
+	 * @since 1.0.0
+	 */
+	public function passthrough_cron_to_jobs( $hooks ) {
+		$hooks[] = $this->async_hook;
+		return $hooks;
+	}
 }
