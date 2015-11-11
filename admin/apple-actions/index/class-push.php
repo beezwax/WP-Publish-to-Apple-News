@@ -44,7 +44,7 @@ class Push extends API_Action {
 		$this->id       = $id;
 		$this->exporter = null;
 
-		// If async mode is enabled and we're on VIP, enable the required filter
+		// If async mode is enabled and we're on VIP, set async mode to use the jobs system
 		if ( 'yes' === $settings->get( 'api_async' ) && defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ) {
 			add_filter( 'wpcom_vip_passthrough_cron_to_jobs', array( $this, 'passthrough_cron_to_jobs' ) );
 		}
@@ -57,7 +57,12 @@ class Push extends API_Action {
 	 * @return boolean
 	 */
 	public function perform() {
-		return $this->push();
+		if ( 'yes' === $this->settings->get( 'api_async' ) ) {
+			add_action( $this->async_hook, array( $this, 'push' ), 10, 2 );
+			wp_schedule_single_event( time(), $this->async_hook, array( $this->settings, $this->id ) );
+		} else {
+			return $this->push();
+		}
 	}
 
 	/**
@@ -109,8 +114,20 @@ class Push extends API_Action {
 	 * Push the post using the API data.
 	 *
 	 * @access private
+	 * @param Settings $settings
+	 * @param int $id
 	 */
-	private function push() {
+	private function push( $settings = null, $id = null ) {
+		// Settings and ID could be overridden for async publishing
+		// If defined, set them here
+		if ( null !== $settings ) {
+			$this->settings = $settings;
+		}
+
+		if ( null !== $id ) {
+			$this->id = $id;
+		}
+
 		if ( ! $this->is_api_configuration_valid() ) {
 			throw new \Apple_Actions\Action_Exception( __( 'Your API settings seem to be empty. Please fill in the API key, API secret and API channel fields in the plugin configuration page.', 'apple-news' ) );
 		}
