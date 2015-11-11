@@ -611,7 +611,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @access private
 	 */
 	private function get_default_for( $name ) {
-		return $this->base_settings[ $name ];
+		return isset( $this->base_settings[ $name ] ) ? $this->base_settings[ $name ] : '';
 	}
 
 	/**
