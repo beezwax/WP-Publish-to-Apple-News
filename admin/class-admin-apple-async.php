@@ -85,7 +85,7 @@ class Admin_Apple_Async extends Apple_News {
 	 * @since 1.0.0
 	 */
 	public function passthrough_cron_to_jobs( $hooks ) {
-		$hooks[] = $this->async_hook;
+		$hooks[] = self::ASYNC_PUSH_HOOK;
 		return $hooks;
 	}
 }
