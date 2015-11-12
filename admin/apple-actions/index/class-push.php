@@ -26,14 +26,6 @@ class Push extends API_Action {
 	private $exporter;
 
 	/**
-	 * Hook name for publishing in async mode
-	 *
-	 * @var Exporter
-	 * @access private
-	 */
-	public $async_hook = 'apple_news_async_push';
-
-	/**
 	 * Constructor.
 	 *
 	 * @param Settings $settings
@@ -43,23 +35,18 @@ class Push extends API_Action {
 		parent::__construct( $settings );
 		$this->id       = $id;
 		$this->exporter = null;
-
-		// If async mode is enabled and we're on VIP, set async mode to use the jobs system
-		if ( 'yes' === $settings->get( 'api_async' ) && defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ) {
-			add_filter( 'wpcom_vip_passthrough_cron_to_jobs', array( $this, 'passthrough_cron_to_jobs' ) );
-		}
 	}
 
 	/**
 	 * Perform the push action.
 	 *
 	 * @access public
+	 * @param boolean $doing_async
 	 * @return boolean
 	 */
-	public function perform() {
-		if ( 'yes' === $this->settings->get( 'api_async' ) ) {
-			add_action( $this->async_hook, array( $this, 'push' ), 10, 2 );
-			wp_schedule_single_event( time(), $this->async_hook, array( $this->settings, $this->id ) );
+	public function perform( $doing_async = false ) {
+		if ( 'yes' === $this->settings->get( 'api_async' ) && false === $doing_async ) {
+			wp_schedule_single_event( time(), \Admin_Apple_Async::ASYNC_PUSH_HOOK, array( $this->id, get_current_user_id() ) );
 		} else {
 			return $this->push();
 		}
@@ -114,20 +101,8 @@ class Push extends API_Action {
 	 * Push the post using the API data.
 	 *
 	 * @access private
-	 * @param Settings $settings
-	 * @param int $id
 	 */
-	private function push( $settings = null, $id = null ) {
-		// Settings and ID could be overridden for async publishing
-		// If defined, set them here
-		if ( null !== $settings ) {
-			$this->settings = $settings;
-		}
-
-		if ( null !== $id ) {
-			$this->id = $id;
-		}
-
+	private function push() {
 		if ( ! $this->is_api_configuration_valid() ) {
 			throw new \Apple_Actions\Action_Exception( __( 'Your API settings seem to be empty. Please fill in the API key, API secret and API channel fields in the plugin configuration page.', 'apple-news' ) );
 		}
@@ -221,18 +196,5 @@ class Push extends API_Action {
 		$this->exporter->generate();
 
 		return array( $this->exporter->get_json(), $this->exporter->get_bundles() );
-	}
-
-	/**
-	 * On WordPress VIP only, run async publishing requests through the jobs system.
-	 * This will allow for a maximum publishing time up to 12 hours, which is
-	 * well in excess of even the most lengthy API request.
-	 *
-	 * @access public
-	 * @since 1.0.0
-	 */
-	public function passthrough_cron_to_jobs( $hooks ) {
-		$hooks[] = $this->async_hook;
-		return $hooks;
 	}
 }
