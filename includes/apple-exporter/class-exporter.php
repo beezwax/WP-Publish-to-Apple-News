@@ -166,7 +166,6 @@ class Exporter {
 	 * @access private
 	 */
 	private function generate_json() {
-
 		// Base JSON
 		$json = array(
 			'version'    => '0.10',
