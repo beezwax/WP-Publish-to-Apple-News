@@ -110,6 +110,10 @@ class Push extends API_Action {
 			throw new \Apple_Actions\Action_Exception( __( 'Your API settings seem to be empty. Please fill in the API key, API secret and API channel fields in the plugin configuration page.', 'apple-news' ) );
 		}
 
+		if ( apply_filters( 'apple_news_skip_push', false, $this->id ) ) {
+			return;
+		}
+
 		// Ignore if the post is already in sync
 		if ( $this->is_post_in_sync() ) {
 			return;
