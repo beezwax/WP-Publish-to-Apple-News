@@ -50,7 +50,7 @@ class Export extends Action {
 	 */
 	public function fetch_exporter() {
 
-		do_action( 'apple_news_before_generate_article', $this->id );
+		do_action( 'apple_news_do_fetch_exporter', $this->id );
 
 		// Fetch WP_Post object, and all required post information to fill up the
 		// Exporter_Content instance.
