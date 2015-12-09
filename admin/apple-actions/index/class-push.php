@@ -209,6 +209,7 @@ class Push extends API_Action {
 	 * @since 0.6.0
 	 */
 	private function generate_article() {
+
 		$export_action = new Export( $this->settings, $this->id );
 		$this->exporter = $export_action->fetch_exporter();
 		$this->exporter->generate();
