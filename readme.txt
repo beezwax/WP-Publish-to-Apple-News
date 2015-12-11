@@ -148,12 +148,15 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.0 =
+* Major production release. Introduces asynchronous publishing for handling large posts, developer tools, new filters and bug fixes.
+
+= 0.9.0 =
 * Initial release. Includes changes for latest WP Plugin API compatibility and Apple News Publisher API.
 
 == Upgrade Notice ==
 
-= 1.0 =
+= 0.9.0 =
 Initial release. Recommended for production.
 
 
