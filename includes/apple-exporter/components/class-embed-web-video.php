@@ -62,7 +62,8 @@ class Embed_Web_Video extends Component {
 			$url = trim( $matches[1] );
 			// The URL is either a YouTube or Vimeo video.
 			if ( preg_match( self::YOUTUBE_MATCH, $url, $matches ) ) {
-				$src = 'https://www.youtube.com/embed/' . $matches[1] ?: $matches[2];
+				$id  = ! empty( $matches[1] ) ? $matches[1] : $matches[2];
+				$src = 'https://www.youtube.com/embed/';
 			} else {
 				preg_match( self::VIMEO_MATCH, $url, $matches );
 				$src = 'https://player.vimeo.com/video/' . $matches[2];
