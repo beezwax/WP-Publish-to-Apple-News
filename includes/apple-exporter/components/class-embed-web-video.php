@@ -74,7 +74,6 @@ class Embed_Web_Video extends Component {
 			'aspectRatio' => floatval( $aspect_ratio ),
 			'URL'         => $src,
 		);
-
 	}
 
 }
