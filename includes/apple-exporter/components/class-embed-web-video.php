@@ -67,14 +67,6 @@ class Embed_Web_Video extends Component {
 				preg_match( self::VIMEO_MATCH, $url, $matches );
 				$src = 'https://player.vimeo.com/video/' . $matches[2];
 			}
-		} else {
-			preg_match_all( '/(\w+)="([^"]*?)"/im', $text, $matches, PREG_SET_ORDER );
-			$attributes = array();
-			foreach ( $matches as $match ) {
-				$attributes[ $match[1] ] = $match[2];
-			}
-			$aspect_ratio = substr( ( $attributes['width'] / $attributes['height'] ), 0, 5 );
-			$src = $attributes['src'];
 		}
 
 		$this->json = array(
