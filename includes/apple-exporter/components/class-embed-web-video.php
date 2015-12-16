@@ -69,11 +69,13 @@ class Embed_Web_Video extends Component {
 			}
 		}
 
-		$this->json = array(
-			'role'        => 'embedwebvideo',
-			'aspectRatio' => floatval( $aspect_ratio ),
-			'URL'         => $src,
-		);
+		if ( $src ) {
+			$this->json = array(
+				'role'        => 'embedwebvideo',
+				'aspectRatio' => floatval( $aspect_ratio ),
+				'URL'         => $src,
+			);
+		}
 	}
 
 }
