@@ -4,7 +4,7 @@ Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 4.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -147,6 +147,9 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 1.
 
 == Changelog ==
+
+= 1.0.1 =
+* Bug fixes for removing HTML comments, fixing video embed URL regular expressions and fixing auto sync and auto update logic.
 
 = 1.0.0 =
 * Major production release. Introduces asynchronous publishing for handling large posts, developer tools, new filters and bug fixes.
