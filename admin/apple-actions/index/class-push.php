@@ -176,12 +176,6 @@ class Push extends API_Action {
 			// If it's marked as deleted, remove the mark. Ignore otherwise.
 			delete_post_meta( $this->id, 'apple_news_api_deleted' );
 
-			// Remove the pending designation if it exists
-			delete_post_meta( $this->id, 'apple_news_api_pending' );
-
-			// Remove the async in progress flag
-			delete_post_meta( $this->id, 'apple_news_api_async_in_progress' );
-
 			do_action( 'apple_news_after_push', $this->id, $result );
 		} catch ( \Apple_Push_API\Request\Request_Exception $e ) {
 			if ( preg_match( '#WRONG_REVISION#', $e->getMessage() ) ) {
@@ -190,6 +184,12 @@ class Push extends API_Action {
 				throw new \Apple_Actions\Action_Exception( __( 'There has been an error with the API. Please make sure your API settings are correct and try again: ', 'apple-news' ) .  $e->getMessage() );
 			}
 		}
+
+		// Remove the pending designation if it exists
+		delete_post_meta( $this->id, 'apple_news_api_pending' );
+
+		// Remove the async in progress flag
+		delete_post_meta( $this->id, 'apple_news_api_async_in_progress' );
 
 		$this->clean_workspace();
 	}
