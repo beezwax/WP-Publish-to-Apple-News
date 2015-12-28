@@ -148,6 +148,9 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 
 == Changelog ==
 
+= 1.0.2 =
+* Improvements to asynchronous publishing to ensure posts cannot get stuck in pending status and to return all error messages that may occur.
+
 = 1.0.1 =
 * Bug fixes for removing HTML comments, fixing video embed URL regular expressions and fixing auto sync and auto update logic.
 
