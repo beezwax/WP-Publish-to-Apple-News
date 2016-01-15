@@ -184,7 +184,7 @@ class Push extends API_Action {
 
 			do_action( 'apple_news_after_push', $this->id, $result );
 		} catch ( \Apple_Push_API\Request\Request_Exception $e ) {
-			
+
 			// Remove the pending designation if it exists
 			delete_post_meta( $this->id, 'apple_news_api_pending' );
 
