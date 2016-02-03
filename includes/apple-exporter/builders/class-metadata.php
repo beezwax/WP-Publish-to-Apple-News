@@ -28,6 +28,9 @@ class Metadata extends Builder {
 			$meta['thumbnailURL'] = $thumb_url;
 		}
 
+		// Add canonical URL.
+		$meta['canonicalURL'] = get_permalink( $this->content_id() );
+
 		return apply_filters( 'apple_news_metadata', $meta, $this->content_id() );
 	}
 
