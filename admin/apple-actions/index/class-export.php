@@ -55,6 +55,10 @@ class Export extends Action {
 		// Fetch WP_Post object, and all required post information to fill up the
 		// Exporter_Content instance.
 		$post       = get_post( $this->id );
+
+		// Build the excerpt if required
+		$excerpt = ( empty( $post->post_excerpt ) ) ? wp_trim_excerpt( $post->post_content ) : $post->post_excerpt;
+
 		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $this->id ) ) ?: null;
 		$author     = get_the_author_meta( 'display_name', $post->post_author );
 		$date       = date( 'M j, Y | g:i A', strtotime( $post->post_date ) );
@@ -62,7 +66,7 @@ class Export extends Action {
 
 		// Filter each of our items before passing into the exporter class.
 		$title      = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
-		$excerpt    = apply_filters( 'apple_news_exporter_excerpt', $post->post_excerpt, $post->ID );
+		$excerpt    = apply_filters( 'apple_news_exporter_excerpt', $excerpt, $post->ID );
 		$post_thumb = apply_filters( 'apple_news_exporter_post_thumb', $post_thumb, $post->ID );
 		$date       = apply_filters( 'apple_news_exporter_date', $date, $post->ID );
 		$byline     = apply_filters( 'apple_news_exporter_byline', $byline, $post->ID );
@@ -108,3 +112,4 @@ class Export extends Action {
 	}
 
 }
+
