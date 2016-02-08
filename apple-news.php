@@ -9,7 +9,7 @@
  * @since   0.2.0
  * @package WP_Plugin
  *
- * Plugin Name: Apple News
+ * Plugin Name: Publish to Apple News
  * Plugin URI:  http://github.com/alleyinteractive/apple-news
  * Description: Export and sync posts to Apple format.
  * Version:     1.0.3
@@ -66,5 +66,17 @@ function apple_news_load_textdomain() {
 	load_plugin_textdomain( 'apple-news', false, plugin_dir_path( __FILE__ ) . '/lang' );
 }
 add_action( 'plugins_loaded', 'apple_news_load_textdomain' );
+
+/**
+ * Gets plugin data.
+ * Used to provide generator info in the metadata class.
+ *
+ * @return array
+ *
+ * @since 1.0.4
+ */
+function apple_news_get_plugin_data() {
+	return get_plugin_data( plugin_dir_path( __FILE__ ) . '/apple-news.php' );
+}
 
 new Admin_Apple_News();
