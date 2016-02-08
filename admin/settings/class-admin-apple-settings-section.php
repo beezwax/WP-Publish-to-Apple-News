@@ -554,16 +554,16 @@ class Admin_Apple_Settings_Section extends Apple_News {
 
 			$field .= '</select>';
 		} else if ( 'integer' == $type ) {
-			$field = '<input required type="number" name="%s" value="%s" size="%s">';
+			$field = '<input type="number" name="%s" value="%s" size="%s" %s>';
 		} else if ( 'float' == $type ) {
 			$field = '<input class="input-float" placeholder="' . esc_attr( $default_value ) . '" type="text" step="any" name="%s" value="%s" size="%s">';
 		} else if ( 'color' == $type ) {
-			$field = '<input required type="color" name="%s" value="%s">';
+			$field = '<input type="color" name="%s" value="%s" %s>';
 		} else if ( 'password' == $type ) {
-			$field = '<input required type="password" name="%s" value="%s" size="%s">';
+			$field = '<input type="password" name="%s" value="%s" size="%s" %s>';
 		} else {
 			// If nothing else matches, it's a string.
-			$field = '<input required type="text" name="%s" value="%s" size="%s">';
+			$field = '<input type="text" name="%s" value="%s" size="%s" %s>';
 		}
 
 		// Add a description, if set.
@@ -576,7 +576,8 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			$field,
 			esc_attr( $name ),
 			esc_attr( $value ),
-			intval( $size )
+			intval( $size ),
+			$this->is_required( $name )
 		);
 	}
 
@@ -611,6 +612,18 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 */
 	private function get_size_for( $name ) {
 		return empty( $this->settings[ $name ]['size'] ) ? 20 : $this->settings[ $name ]['size'];
+	}
+
+	/**
+	 * Check if a field is required.
+	 *
+	 * @param string $name
+	 * @return int
+	 * @access private
+	 */
+	private function is_required( $name ) {
+		$required = ! isset( $this->settings[ $name ]['required'] ) ? true : $this->settings[ $name ]['required'];
+		return ( $required ) ? 'required' : '';
 	}
 
 	/**
