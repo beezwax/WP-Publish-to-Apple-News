@@ -326,11 +326,6 @@ class Components extends Builder {
 				}
 
 				if ( empty( $json_url ) ) {
-					// NoRL is defined, so we can't proceed here.
-					echo "json";
-					print_r( $component );
-					echo 'no url';
-					die();
 					return;
 				}
 
@@ -343,8 +338,6 @@ class Components extends Builder {
 				$bundles = $workspace->get_bundles();
 				if ( empty( $bundles ) ) {
 					// We can't proceed without the original URL and something odd has happened here anyway.
-					echo 'no bundles';
-					die();
 					return;
 				}
 
@@ -358,8 +351,6 @@ class Components extends Builder {
 
 				// If we can't find the original URL, we can't proceed.
 				if ( empty( $original_url ) ) {
-					echo 'no original';
-					die();
 					return;
 				}
 
