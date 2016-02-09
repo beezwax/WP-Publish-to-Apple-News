@@ -158,6 +158,9 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 * Fix matching of Instagram URL, so component is generated correctly (thanks @dashaluna)
 * Added logic to extract the thumbnail/cover from the body content when not explicitly set via the featured image
 * Added display of current Apple News publish state to admin screens
+* Added set_layout as a separate method for consistency in the Twitter component (thanks @dashaluna)
+* Use register_full_width_layout instead of register_layout for byline and cover for consistency (thanks @dashaluna)
+* Matching dashes and extra query parameters in YouTube URLs (thanks @smerriman)
 
 = 1.0.3 =
 * Added multiple checks for publish status throughout built-in publishing scenarios. Still allowing non-published posts to be pushed at the API level to not prevent custom scenarios. Fixed issue with auto publishing not respecting post type settings.
