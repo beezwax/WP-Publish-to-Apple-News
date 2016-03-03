@@ -3,8 +3,8 @@ Contributors: potatomaster, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jayg
 Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 4.4
-Stable tag: 1.0.3
+Tested up to: 4.4.2
+Stable tag: 1.0.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -147,6 +147,23 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 1.
 
 == Changelog ==
+
+= 1.0.5 =
+* Fixed performance issue caused by introduction of live post status, added 60 second cache and removed from email debugging.
+
+= 1.0.4 =
+* Added canonicalURL to metadata (thanks @dashaluna)
+* Added automatic excerpt to metadata following normal WordPress logic if a manual one is not present
+* Removed unnecessary redirect logic and allowed Apple News notices to display on any screen, updated vague error messages for clarity
+* Added plugin information to generator metadata
+* Added new field for adjusting byline format
+* Added the ability to set the field size and required attributes on the Apple News settings page
+* Fix matching of Instagram URL, so component is generated correctly (thanks @dashaluna)
+* Added logic to extract the thumbnail/cover from the body content when not explicitly set via the featured image
+* Added display of current Apple News publish state to admin screens
+* Added set_layout as a separate method for consistency in the Twitter component (thanks @dashaluna)
+* Use register_full_width_layout instead of register_layout for byline and cover for consistency (thanks @dashaluna)
+* Matching dashes and extra query parameters in YouTube URLs (thanks @smerriman)
 
 = 1.0.3 =
 * Added multiple checks for publish status throughout built-in publishing scenarios. Still allowing non-published posts to be pushed at the API level to not prevent custom scenarios. Fixed issue with auto publishing not respecting post type settings.

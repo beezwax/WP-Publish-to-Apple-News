@@ -4,6 +4,8 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 	require_once ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
+use \Apple_Push_API\API as API;
+
 /**
  * Use WordPress List_Table class to create a custom table displaying posts
  * information and actions.
@@ -61,6 +63,9 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 			case 'updated_at':
 				$default = $this->get_updated_at( $item );
 				break;
+			case 'status':
+				$default = $this->get_status_for( $item );
+				break;
 			case 'sync':
 				$default = $this->get_synced_status_for( $item );
 				break;
@@ -84,6 +89,17 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		}
 
 		return __( 'Never', 'apple-news' );
+	}
+
+	/**
+	 * Get the Apple News status.
+	 *
+	 * @param WP_Post $post
+	 * @return string
+	 * @access private
+	 */
+	private function get_status_for( $post ) {
+		return \Admin_Apple_News::get_post_status( $post->ID );
 	}
 
 	/**
@@ -219,10 +235,11 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return apply_filters( 'apple_news_export_list_columns', array(
-			'cb'         => '<input type="checkbox">',
-			'title'      => __( 'Title', 'apple-news' ),
-			'updated_at' => __( 'Last updated at', 'apple-news' ),
-			'sync'       => __( 'Apple News Status', 'apple-news' ),
+			'cb'					=> '<input type="checkbox">',
+			'title'				=> __( 'Title', 'apple-news' ),
+			'updated_at'	=> __( 'Last updated at', 'apple-news' ),
+			'status'			=> __( 'Apple News Status', 'apple-news' ),
+			'sync'				=> __( 'Sync Status', 'apple-news' ),
 		) );
 	}
 

@@ -98,7 +98,7 @@ class Request {
 		$response = wp_safe_remote_post( esc_url_raw( $url ), $args );
 
 		// Parse and return the response
-		return $this->parse_response( $response );
+		return $this->parse_response( $response, true, 'post' );
 	}
 
 	/**
@@ -129,7 +129,7 @@ class Request {
 		}
 
 		// Parse and return the response
-		return $this->parse_response( $response );
+		return $this->parse_response( $response, true, 'delete' );
 	}
 
 	/**
@@ -154,7 +154,7 @@ class Request {
 		$response = wp_safe_remote_get( esc_url_raw( $url ), $args );
 
 		// Parse and return the response
-		return $this->parse_response( $response );
+		return $this->parse_response( $response, true, 'get' );
 	}
 
 	/**
@@ -162,10 +162,11 @@ class Request {
 	 *
 	 * @param array $response
 	 * @param boolean $json
+	 * @param string $type
 	 * @return mixed
 	 * @since 0.2.0
 	 */
-	private function parse_response( $response, $json = true ) {
+	private function parse_response( $response, $json = true, $type = 'post' ) {
 		// Ensure we have an expected response type
 		if ( ( ! is_array( $response ) || ! isset( $response['body'] ) ) && ! is_wp_error( $response ) ) {
 			throw new Request_Exception( __( 'Invalid response:', 'apple-news' ) . $response );
@@ -173,7 +174,7 @@ class Request {
 
 		// If debugging mode is enabled, send an email
 		$debugging = get_option( 'apple_news_enable_debugging' );
-		if ( 'yes' === $debugging ) {
+		if ( 'yes' === $debugging && 'get' != $type ) {
 			$admin_email = filter_var( get_option( 'apple_news_admin_email' ), FILTER_VALIDATE_EMAIL );
 			if ( ! empty( $admin_email ) ) {
 				wp_mail(
@@ -218,6 +219,9 @@ class Request {
 	private function build_content( $article, $bundles = array(), $meta = null ) {
 		$bundles = array_unique( $bundles );
 		$content = '';
+
+		// Add custom meta for request.
+		$meta = apply_filters( 'apple_news_api_post_meta', $meta );
 
 		if ( $meta ) {
 			$content .= $this->mime_builder->add_metadata( $meta );
