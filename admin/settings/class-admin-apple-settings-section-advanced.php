@@ -41,10 +41,10 @@ class Admin_Apple_Settings_Section_Advanced extends Admin_Apple_Settings_Section
 				'type'    => 'float',
 				'sanitize' => 'floatval',
 			),
-			'content_alerts' => array(
-				'label'   => __( 'Content Alerts', 'apple-news' ),
+			'component_alerts' => array(
+				'label'   => __( 'Component Alerts', 'apple-news' ),
 				'type'    => array( 'none', 'warn', 'fail' ),
-				'description' => __( 'If a post has content that is unsupported by Apple News, choose "none" to generate no alert, "warn" to provide an admin warning notice, or "fail" to generate a notice and stop publishing.', 'apple-news' ),
+				'description' => __( 'If a post has a component that is unsupported by Apple News, choose "none" to generate no alert, "warn" to provide an admin warning notice, or "fail" to generate a notice and stop publishing.', 'apple-news' ),
 			),
 		);
 
@@ -56,7 +56,7 @@ class Admin_Apple_Settings_Section_Advanced extends Admin_Apple_Settings_Section
 			),
 			'alerts' => array(
 				'label'       => __( 'Alerts', 'apple-news' ),
-				'settings'    => array( 'content_alerts' ),
+				'settings'    => array( 'component_alerts' ),
 			),
 		);
 
