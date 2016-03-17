@@ -7,6 +7,9 @@ if ( ! $_tests_dir ) {
 
 require_once $_tests_dir . '/includes/functions.php';
 
+// Autoloading for prophecy
+require_once dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php';
+
 /**
  * Manually load the plugin for tests.
  */
