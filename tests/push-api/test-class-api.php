@@ -1,7 +1,7 @@
 <?php
 
-require_once __DIR__ . '/../../includes/push-api/class-api.php';
-require_once __DIR__ . '/../../includes/push-api/class-credentials.php';
+require_once __DIR__ . '/../../includes/apple-push-api/class-api.php';
+require_once __DIR__ . '/../../includes/apple-push-api/class-credentials.php';
 
 use \Push_API\API as API;
 use \Push_API\Credentials as Credentials;
