@@ -1,6 +1,6 @@
 <?php
 
-use \Exporter\Exporter_Content as Exporter_Content;
+use Apple_Exporter\Exporter_Content as Exporter_Content;
 
 class Exporter_Content_Test extends WP_UnitTestCase {
 
@@ -15,7 +15,7 @@ class Exporter_Content_Test extends WP_UnitTestCase {
 	}
 
 	public function testMinimalContent() {
-		$content  = new \Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>' );
+		$content  = new \Apple_Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>' );
 		$this->assertEquals( '3', $content->id() );
 		$this->assertEquals( 'Title', $content->title() );
 		$this->assertEquals( '<p>Example content</p>', $content->content() );
@@ -24,7 +24,7 @@ class Exporter_Content_Test extends WP_UnitTestCase {
 	}
 
 	public function testCompleteContent() {
-		$content  = new \Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>', 'some intro', 'someurl.com' );
+		$content  = new \Apple_Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>', 'some intro', 'someurl.com' );
 		$this->assertEquals( '3', $content->id() );
 		$this->assertEquals( 'Title', $content->title() );
 		$this->assertEquals( '<p>Example content</p>', $content->content() );

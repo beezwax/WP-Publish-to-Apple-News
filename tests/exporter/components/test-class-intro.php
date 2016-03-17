@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Intro as Intro;
+use Apple_Exporter\Components\Intro as Intro;
 
 class Intro_Test extends Component_TestCase {
 

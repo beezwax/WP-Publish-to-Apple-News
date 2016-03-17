@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Instagram as Instagram;
+use Apple_Exporter\Components\Instagram as Instagram;
 
 class Instagram_Test extends Component_TestCase {
 

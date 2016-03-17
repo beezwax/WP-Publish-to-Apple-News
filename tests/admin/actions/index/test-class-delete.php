@@ -1,7 +1,7 @@
 <?php
 
-use \Actions\Index\Delete as Delete;
-use \Exporter\Settings as Settings;
+use \Apple_Actions\Index\Delete as Delete;
+use \Apple_Exporter\Settings as Settings;
 use \Prophecy\Argument as Argument;
 
 class Admin_Action_Index_Delete_Test extends WP_UnitTestCase {

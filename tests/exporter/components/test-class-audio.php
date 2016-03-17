@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Audio as Audio;
+use Apple_Exporter\Components\Audio as Audio;
 
 class Audio_Test extends Component_TestCase {
 

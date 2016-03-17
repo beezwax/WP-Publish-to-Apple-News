@@ -1,7 +1,7 @@
 <?php
 
-use \Actions\Index\Push as Push;
-use \Exporter\Settings as Settings;
+use \Apple_Actions\Index\Push as Push;
+use \Apple_Exporter\Settings as Settings;
 use \Prophecy\Argument as Argument;
 
 class Admin_Action_Index_Push_Test extends WP_UnitTestCase {

@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Body as Body;
+use Apple_Exporter\Components\Body as Body;
 
 class Body_Test extends Component_TestCase {
 

@@ -1,11 +1,11 @@
 <?php
 
-use \Exporter\Component_Factory as Component_Factory;
-use \Exporter\Exporter_Content as Exporter_Content;
-use \Exporter\Settings as Settings;
-use \Exporter\Builders\Components as Components;
-use \Exporter\Builders\Component_Layouts as Component_Layouts;
-use \Exporter\Builders\Component_Text_Styles as Component_Text_Styles;
+use \Apple_Exporter\Component_Factory as Component_Factory;
+use \Apple_Exporter\Exporter_Content as Exporter_Content;
+use \Apple_Exporter\Settings as Settings;
+use \Apple_Exporter\Builders\Components as Components;
+use \Apple_Exporter\Builders\Component_Layouts as Component_Layouts;
+use \Apple_Exporter\Builders\Component_Text_Styles as Component_Text_Styles;
 
 class Component_Tests extends PHPUnit_Framework_TestCase {
 

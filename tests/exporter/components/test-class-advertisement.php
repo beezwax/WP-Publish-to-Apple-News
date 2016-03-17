@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Advertisement as Advertisement;
+use Apple_Exporter\Components\Advertisement as Advertisement;
 
 class Advertisement_Test extends Component_TestCase {
 

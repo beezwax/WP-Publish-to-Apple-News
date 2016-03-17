@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Cover as Cover;
+use Apple_Exporter\Components\Cover as Cover;
 
 class Cover_Test extends Component_TestCase {
 

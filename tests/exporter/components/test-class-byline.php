@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Byline as Byline;
+use Apple_Exporter\Components\Byline as Byline;
 
 class Byline_Test extends Component_TestCase {
 

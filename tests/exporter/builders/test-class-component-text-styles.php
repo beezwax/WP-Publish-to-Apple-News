@@ -1,8 +1,8 @@
 <?php
 
-use \Exporter\Exporter_Content as Exporter_Content;
-use \Exporter\Settings as Settings;
-use \Exporter\Builders\Component_Text_Styles as Component_Text_Styles;
+use \Apple_Exporter\Exporter_Content as Exporter_Content;
+use \Apple_Exporter\Settings as Settings;
+use \Apple_Exporter\Builders\Component_Text_Styles as Component_Text_Styles;
 
 class Component_Text_Styles_Tests extends PHPUnit_Framework_TestCase {
 

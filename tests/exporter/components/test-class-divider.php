@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Divider as Divider;
+use Apple_Exporter\Components\Divider as Divider;
 
 class Divider_Test extends Component_TestCase {
 

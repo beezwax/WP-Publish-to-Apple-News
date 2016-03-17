@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Tweet as Tweet;
+use Apple_Exporter\Components\Tweet as Tweet;
 
 class Tweet_Test extends Component_TestCase {
 

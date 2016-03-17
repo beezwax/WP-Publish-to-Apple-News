@@ -1,6 +1,6 @@
 <?php
 
-use \Exporter\Exporter as Exporter;
+use Apple_Exporter\Exporter as Exporter;
 
 class Exporter_Test extends WP_UnitTestCase {
 
@@ -31,7 +31,7 @@ class Exporter_Test extends WP_UnitTestCase {
 			->willReturn( true )
 			->shouldBeCalled();
 
-		$content  = new \Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>' );
+		$content  = new Apple_Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>' );
 		$exporter = new Exporter( $content, $workspace->reveal() );
 		$exporter->export();
 	}
@@ -60,7 +60,7 @@ class Exporter_Test extends WP_UnitTestCase {
 			->to_array()
 			->shouldBeCalled();
 
-		$content  = new \Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>' );
+		$content  = new Apple_Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>' );
 		$exporter = new Exporter( $content, $workspace->reveal() );
 		$exporter->initialize_builders( array(
 			'componentTextStyles' => $builder1->reveal(),

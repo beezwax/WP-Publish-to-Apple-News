@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Quote as Quote;
+use Apple_Exporter\Components\Quote as Quote;
 
 class Quote_Test extends Component_TestCase {
 

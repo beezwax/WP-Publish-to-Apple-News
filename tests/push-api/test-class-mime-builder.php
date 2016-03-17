@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../../includes/apple-push-api/class-credentials.php';
 
-use \Push_API\MIME_Builder as MIME_Builder;
+use Apple_Push_API\MIME_Builder as MIME_Builder;
 
 class MIME_Builder_Test extends WP_UnitTestCase {
 

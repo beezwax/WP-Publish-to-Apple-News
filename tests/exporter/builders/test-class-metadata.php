@@ -1,8 +1,8 @@
 <?php
 
-use \Exporter\Exporter_Content as Exporter_Content;
-use \Exporter\Settings as Settings;
-use \Exporter\Builders\Metadata as Metadata;
+use Apple_Exporter\Exporter_Content as Exporter_Content;
+use Apple_Exporter\Settings as Settings;
+use Apple_Exporter\Builders\Metadata as Metadata;
 
 class Metadata_Test extends PHPUnit_Framework_TestCase {
 

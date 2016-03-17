@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Title as Title;
+use Apple_Exporter\Components\Title as Title;
 
 class Title_Test extends Component_TestCase {
 

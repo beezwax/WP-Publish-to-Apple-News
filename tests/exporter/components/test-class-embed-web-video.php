@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Embed_Web_Video as Embed_Web_Video;
+use Apple_Exporter\Components\Embed_Web_Video as Embed_Web_Video;
 
 class Embed_Web_Video_Test extends Component_TestCase {
 

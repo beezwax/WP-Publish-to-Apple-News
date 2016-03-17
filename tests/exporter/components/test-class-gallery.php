@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Gallery as Gallery;
+use Apple_Exporter\Components\Gallery as Gallery;
 
 class Gallery_Test extends Component_TestCase {
 

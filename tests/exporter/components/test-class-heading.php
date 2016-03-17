@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/class-component-testcase.php';
 
-use \Exporter\Components\Heading as Heading;
+use Apple_Exporter\Components\Heading as Heading;
 
 class Heading_Test extends Component_TestCase {
 

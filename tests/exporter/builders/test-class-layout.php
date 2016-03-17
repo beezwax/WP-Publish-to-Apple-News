@@ -1,9 +1,9 @@
 <?php
 
-use \Exporter\Exporter as Exporter;
-use \Exporter\Exporter_Content as Exporter_Content;
-use \Exporter\Settings as Settings;
-use \Exporter\Builders\Layout as Layout;
+use Apple_Exporter\Exporter as Exporter;
+use Apple_Exporter\Exporter_Content as Exporter_Content;
+use Apple_Exporter\Settings as Settings;
+use Apple_Exporter\Builders\Layout as Layout;
 
 class Layout_Test extends PHPUnit_Framework_TestCase {
 

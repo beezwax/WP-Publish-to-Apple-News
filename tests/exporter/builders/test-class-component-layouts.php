@@ -1,9 +1,9 @@
 <?php
 
-use \Exporter\Exporter_Content as Exporter_Content;
-use \Exporter\Settings as Settings;
-use \Exporter\Builders\Component_Layouts as Component_Layouts;
-use \Exporter\Components\Component as Component;
+use \Apple_Exporter\Exporter_Content as Exporter_Content;
+use \Apple_Exporter\Settings as Settings;
+use \Apple_Exporter\Builders\Component_Layouts as Component_Layouts;
+use \Apple_Exporter\Components\Component as Component;
 
 class Component_Layouts_Test extends PHPUnit_Framework_TestCase {
 
