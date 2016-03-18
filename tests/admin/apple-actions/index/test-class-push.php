@@ -9,6 +9,8 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 
 	private $prophet;
 
+	private $original_user_id;
+
 	private $component_message = 'The following components are unsupported by Apple News and were removed: iframe';
 
 	public function setup() {
@@ -19,9 +21,12 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 		$this->settings->set( 'api_key', 'foo' );
 		$this->settings->set( 'api_secret', 'bar' );
 		$this->settings->set( 'api_channel', 'baz' );
+
+		$this->original_user_id = get_current_user_id();
 	}
 
 	public function tearDown() {
+		wp_set_current_user( $this->original_user_id );
 		$this->prophet->checkPredictions();
 	}
 
