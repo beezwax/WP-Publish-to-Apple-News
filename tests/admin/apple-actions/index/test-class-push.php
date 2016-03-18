@@ -42,6 +42,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			grant_super_admin( $user_id );
 		}
 		wp_set_current_user( $user_id );
+		return $user_id;
 	}
 
 	public function testCreate() {
@@ -101,7 +102,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			->shouldBeCalled();
 
 		// We need to create an iframe, so run as administrator
-		$this->set_admin();
+		$user_id = $this->set_admin();
 
 		// Create post
 		$post_id = $this->factory->post->create( array(
@@ -130,7 +131,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			->shouldBeCalled();
 
 		// We need to create an iframe, so run as administrator
-		$this->set_admin();
+		$user_id = $this->set_admin();
 
 		// Create post
 		$post_id = $this->factory->post->create( array(
@@ -169,7 +170,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			->shouldNotBeCalled();
 
 		// We need to create an iframe, so run as administrator
-		$this->set_admin();
+		$user_id = $this->set_admin();
 
 		// Create post
 		$post_id = $this->factory->post->create( array(
