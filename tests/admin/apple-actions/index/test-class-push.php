@@ -1,12 +1,15 @@
 <?php
 
 use \Apple_Actions\Index\Push as Push;
+use \Apple_Actions\Action_Exception as Action_Exception;
 use \Apple_Exporter\Settings as Settings;
 use \Prophecy\Argument as Argument;
 
 class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 
 	private $prophet;
+
+	private $component_message = 'The following components are unsupported by Apple News and were removed: iframe';
 
 	public function setup() {
 		parent::setup();
@@ -77,6 +80,113 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
 		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
 		$this->assertEquals( $response->data->shareUrl, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
+		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
+	}
+
+	public function testComponentErrorsNone() {
+		$this->settings->set( 'component_alerts', 'none' );
+
+		$response = $this->dummy_response();
+		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
+		$api->post_article_to_channel( Argument::cetera() )
+			->willReturn( $response )
+			->shouldBeCalled();
+
+		// We need to create an iframe, so run as administrator
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+
+		// Create post
+		$post_id = $this->factory->post->create( array(
+			'post_content' => '<p><iframe width="460" height="460" src="http://unsupportedservice.com/embed.html?video=1232345&autoplay=0" frameborder="0" allowfullscreen></iframe></p>',
+		) );
+
+		$action = new Push( $this->settings, $post_id );
+		$action->set_api( $api->reveal() );
+		$action->perform();
+
+		// The post was still quietly sent to Apple News despite the removal of the iframe
+		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
+		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
+		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
+		$this->assertEquals( $response->data->shareUrl, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
+		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
+	}
+
+	public function testComponentErrorsWarn() {
+		$this->settings->set( 'component_alerts', 'warn' );
+
+		$response = $this->dummy_response();
+		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
+		$api->post_article_to_channel( Argument::cetera() )
+			->willReturn( $response )
+			->shouldBeCalled();
+
+		// We need to create an iframe, so run as administrator
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+
+		// Create post
+		$post_id = $this->factory->post->create( array(
+			'post_content' => '<p><iframe width="460" height="460" src="http://unsupportedservice.com/embed.html?video=1232345&autoplay=0" frameborder="0" allowfullscreen></iframe></p>',
+		) );
+
+		$action = new Push( $this->settings, $post_id );
+		$action->set_api( $api->reveal() );
+		$action->perform();
+
+		// An admin error notice was created
+		$notices = get_user_meta( $user_id, 'apple_news_notice', true );
+		$this->assertNotEmpty( $notices );
+
+		$component_notice = end( $notices );
+		$this->assertEquals( $this->component_message, $component_notice['message'] );
+
+		// The post was still sent to Apple News
+		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
+		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
+		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
+		$this->assertEquals( $response->data->shareUrl, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
+		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
+	}
+
+	/**
+	 * @expectedException \Apple_Actions\Action_Exception
+	 */
+	public function testComponentErrorsFail() {
+		$this->settings->set( 'component_alerts', 'fail' );
+
+		$response = $this->dummy_response();
+		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
+		$api->post_article_to_channel( Argument::cetera() )
+			->willReturn( $response )
+			->shouldNotBeCalled();
+
+		// We need to create an iframe, so run as administrator
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		wp_set_current_user( $user_id );
+
+		// Create post
+		$post_id = $this->factory->post->create( array(
+			'post_content' => '<p><iframe width="460" height="460" src="http://unsupportedservice.com/embed.html?video=1232345&autoplay=0" frameborder="0" allowfullscreen></iframe></p>',
+		) );
+
+		$action = new Push( $this->settings, $post_id );
+		$action->set_api( $api->reveal() );
+		$action->perform();
+
+		// An admin error notice was created
+		$notices = get_user_meta( $user_id, 'apple_news_notice', true );
+		$this->assertNotEmpty( $notices );
+
+		$component_notice = end( $notices );
+		$this->assertEquals( $this->component_message, $component_notice['message'] );
+
+		// The post was not sent to Apple News
+		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_id', true ) );
+		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
+		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
+		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
 		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
 	}
 
