@@ -95,7 +95,6 @@ class Export extends Action {
 		$title      = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
 		$excerpt    = apply_filters( 'apple_news_exporter_excerpt', $excerpt, $post->ID );
 		$post_thumb = apply_filters( 'apple_news_exporter_post_thumb', $post_thumb, $post->ID );
-		$date       = apply_filters( 'apple_news_exporter_date', $date, $post->ID );
 		$byline     = apply_filters( 'apple_news_exporter_byline', $byline, $post->ID );
 
 		// The post_content is not raw HTML, as WordPress editor cleans up

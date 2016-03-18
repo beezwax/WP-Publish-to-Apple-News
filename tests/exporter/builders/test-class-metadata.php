@@ -14,7 +14,7 @@ class Metadata_Test extends PHPUnit_Framework_TestCase {
 		$content = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>' );
 		$builder = new Metadata( $content, $this->settings );
 		$result  = $builder->to_array();
-		$this->assertEquals( 0, count( $result ) );
+		$this->assertEquals( 4, count( $result ) );
 	}
 
 	public function testIntro() {
@@ -22,7 +22,7 @@ class Metadata_Test extends PHPUnit_Framework_TestCase {
 		$builder = new Metadata( $content, $this->settings );
 		$result  = $builder->to_array();
 
-		$this->assertEquals( 1, count( $result ) );
+		$this->assertEquals( 5, count( $result ) );
 		$this->assertEquals( 'This is an intro.', $result[ 'excerpt' ] );
 	}
 
@@ -31,7 +31,7 @@ class Metadata_Test extends PHPUnit_Framework_TestCase {
 		$builder = new Metadata( $content, $this->settings );
 		$result  = $builder->to_array();
 
-		$this->assertEquals( 1, count( $result ) );
+		$this->assertEquals( 5, count( $result ) );
 		$this->assertEquals( 'bundle://somefile.jpg', $result[ 'thumbnailURL' ] );
 	}
 
@@ -40,7 +40,7 @@ class Metadata_Test extends PHPUnit_Framework_TestCase {
 		$builder = new Metadata( $content, $this->settings );
 		$result  = $builder->to_array();
 
-		$this->assertEquals( 2, count( $result ) );
+		$this->assertEquals( 6, count( $result ) );
 		$this->assertEquals( 'This is an intro.', $result[ 'excerpt' ] );
 		$this->assertEquals( 'bundle://somefile.jpg', $result[ 'thumbnailURL' ] );
 	}

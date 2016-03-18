@@ -28,7 +28,7 @@ class API_Test extends WP_UnitTestCase {
 		$this->assertNotNull( $this->api->post_article_to_channel( $article, $this->channel_id ) );
 
 		// Test article with invalid json
-		$this->setExpectedException( 'Push_API\\Request\\Request_Exception', 'INVALID_DOCUMENT' );
+		$this->setExpectedException( 'Apple_Push_API\\Request\\Request_Exception', 'INVALID_DOCUMENT' );
 		$this->api->post_article_to_channel( '{invalid json}', $this->channel_id );
 	}
 
@@ -41,7 +41,7 @@ class API_Test extends WP_UnitTestCase {
 		$this->assertNotNull( $this->api->post_article_to_channel( $article, $this->channel_id, $files ) );
 
 		// Test article with no files
-		$this->setExpectedException( 'Push_API\\Request\\Request_Exception', 'INVALID_DOCUMENT' );
+		$this->setExpectedException( 'Apple_Push_API\\Request\\Request_Exception', 'INVALID_DOCUMENT' );
 		$this->api->post_article_to_channel( $article, $this->channel_id );
 	}
 
@@ -55,7 +55,7 @@ class API_Test extends WP_UnitTestCase {
 		$this->assertTrue( count( $sections->data ) > 0 );
 
 		// Test for an invalid channel ID
-		$this->setExpectedException( 'Push_API\\Request\\Request_Exception', 'INVALID_TYPE' );
+		$this->setExpectedException( 'Apple_Push_API\\Request\\Request_Exception', 'INVALID_TYPE' );
 		$fetched_section = $this->api->get_sections( 'some-invalid-id' );
 	}
 
@@ -75,7 +75,7 @@ class API_Test extends WP_UnitTestCase {
 		);
 
 		// Test for an invalid channel ID
-		$this->setExpectedException( 'Push_API\\Request\\Request_Exception', 'INVALID_TYPE' );
+		$this->setExpectedException( 'Apple_Push_API\\Request\\Request_Exception', 'INVALID_TYPE' );
 		$fetched_section = $this->api->get_section( 'some-invalid-id' );
 	}
 

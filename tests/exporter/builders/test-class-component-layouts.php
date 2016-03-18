@@ -35,7 +35,7 @@ class Component_Layouts_Test extends PHPUnit_Framework_TestCase {
 
 		$this->assertFalse( array_key_exists( 'anchor-layout-left', $layouts->to_array() ) );
 
-		$component = $this->prophet->prophesize( '\Exporter\Components\Component' );
+		$component = $this->prophet->prophesize( '\Apple_Exporter\Components\Component' );
 		$component->get_anchor_position()
 			->willReturn( Component::ANCHOR_LEFT )
 			->shouldBeCalled();

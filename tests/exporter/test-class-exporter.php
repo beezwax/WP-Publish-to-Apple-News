@@ -1,6 +1,7 @@
 <?php
 
 use Apple_Exporter\Exporter as Exporter;
+use Prophecy\Argument;
 
 class Exporter_Test extends WP_UnitTestCase {
 
@@ -15,20 +16,20 @@ class Exporter_Test extends WP_UnitTestCase {
 	}
 
 	public function testExport() {
-		$workspace = $this->prophet->prophesize( '\Exporter\Workspace' );
+		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
 		// Cleans up workspace
 		$workspace
 			->clean_up()
 			->shouldBeCalled();
-		// Creates the article.json file
+
+		// Writes JSON
 		$workspace
-			->write_tmp_file( 'article.json', \Prophecy\Argument::type( 'string' ) )
-			->willReturn( true )
+			->write_json( Argument::that( array( $this, 'isValidJSON' ) ) )
 			->shouldBeCalled();
-		// Creates a zipfile with the id
+
+		// Get JSON
 		$workspace
-			->zip( 'article-3.zip' )
-			->willReturn( true )
+			->get_json()
 			->shouldBeCalled();
 
 		$content  = new Apple_Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>' );
@@ -36,26 +37,32 @@ class Exporter_Test extends WP_UnitTestCase {
 		$exporter->export();
 	}
 
+	public function isValidJSON( $json ) {
+		return ( null !== json_decode( $json ) );
+	}
+
 	public function testBuildersGetCalled() {
-		$workspace = $this->prophet->prophesize( '\Exporter\Workspace' );
+		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
 		// Cleans up workspace
 		$workspace
 			->clean_up()
 			->shouldBeCalled();
-		// Creates the article.json file
-		$workspace
-			->write_tmp_file( 'article.json', \Prophecy\Argument::type( 'string' ) )
-			->willReturn( true );
-		// Creates a zipfile with the id
-		$workspace
-			->zip( 'article-3.zip' )
-			->willReturn( true );
 
-		$builder1 = $this->prophet->prophesize( '\Exporter\Builders\Builder' );
+		// Writes JSON
+		$workspace
+			->write_json( Argument::that( array( $this, 'isValidJSON' ) ) )
+			->shouldBeCalled();
+
+		// Get JSON
+		$workspace
+			->get_json()
+			->shouldBeCalled();
+
+		$builder1 = $this->prophet->prophesize( '\Apple_Exporter\Builders\Builder' );
 		$builder1
 			->to_array()
 			->shouldBeCalled();
-		$builder2 = $this->prophet->prophesize( '\Exporter\Builders\Builder' );
+		$builder2 = $this->prophet->prophesize( '\Apple_Exporter\Builders\Builder' );
 		$builder2
 			->to_array()
 			->shouldBeCalled();
