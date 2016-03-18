@@ -36,6 +36,14 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 		return $response;
 	}
 
+	protected function set_admin() {
+		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
+		if ( function_exists( 'grant_super_admin' ) ) {
+			grant_super_admin( $user_id );
+		}
+		wp_set_current_user( $user_id );
+	}
+
 	public function testCreate() {
 		$response = $this->dummy_response();
 		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
@@ -93,8 +101,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			->shouldBeCalled();
 
 		// We need to create an iframe, so run as administrator
-		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
-		wp_set_current_user( $user_id );
+		$this->set_admin();
 
 		// Create post
 		$post_id = $this->factory->post->create( array(
@@ -123,8 +130,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			->shouldBeCalled();
 
 		// We need to create an iframe, so run as administrator
-		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
-		wp_set_current_user( $user_id );
+		$this->set_admin();
 
 		// Create post
 		$post_id = $this->factory->post->create( array(
@@ -163,8 +169,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			->shouldNotBeCalled();
 
 		// We need to create an iframe, so run as administrator
-		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
-		wp_set_current_user( $user_id );
+		$this->set_admin();
 
 		// Create post
 		$post_id = $this->factory->post->create( array(
