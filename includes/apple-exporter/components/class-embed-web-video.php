@@ -12,7 +12,7 @@ class Embed_Web_Video extends Component {
 	/**
 	 * Regex patterns to match supported embed types.
 	 */
-	const YOUTUBE_MATCH = '#^https?://(?:www\.)?(?:youtube\.com/watch\?v=([\w\-]+)|youtu\.be/([\w\-]+))[^ ]+$#';
+	const YOUTUBE_MATCH = '#^https?://(?:www\.)?(?:youtube\.com/watch\?v=([\w\-]+)|youtu\.be/([\w\-]+))[^ ]*$#';
 	const VIMEO_MATCH   = '#^https?://(?:.+\.)?vimeo\.com/(:?.+/)?(\d+)$#';
 
 	/**
@@ -71,7 +71,7 @@ class Embed_Web_Video extends Component {
 
 		$this->json = array(
 			'role'        => 'embedwebvideo',
-			'aspectRatio' => floatval( $aspect_ratio ),
+			'aspectRatio' => round( floatval( $aspect_ratio ), 3 ),
 			'URL'         => $src,
 		);
 	}
