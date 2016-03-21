@@ -1,3 +1,6 @@
 .DS_Store
 *.zip
 tags
+composer.lock
+vendor
+npm-debug.log

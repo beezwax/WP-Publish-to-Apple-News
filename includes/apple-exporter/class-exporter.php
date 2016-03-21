@@ -223,6 +223,16 @@ class Exporter {
 	}
 
 	/**
+	 * Get the errors from the workspace.
+	 *
+	 * @return array
+	 * @access public
+	 */
+	public function get_errors() {
+		return $this->workspace->get_errors();
+	}
+
+	/**
 	 * Clean up the current workspace.
 	 *
 	 * @access private
