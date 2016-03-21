@@ -1,5 +1,0 @@
-{
-    "require-dev": {
-        "phpspec/prophecy": "~1.0"
-    }
-}

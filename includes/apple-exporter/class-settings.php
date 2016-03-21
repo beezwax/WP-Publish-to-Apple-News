@@ -60,8 +60,6 @@ class Settings {
 		'pullquote_transform' => 'uppercase',
 		'pullquote_line_height' => 48,
 
-		'component_alerts' => 'none',
-
 		// This can either be gallery or mosaic.
 		'gallery_type'   => 'gallery',
 		'enable_advertisement' => 'yes',

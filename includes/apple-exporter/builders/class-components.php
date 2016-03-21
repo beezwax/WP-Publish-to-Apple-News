@@ -188,7 +188,6 @@ class Components extends Builder {
 		// Loop though the first-level nodes of the body element. Components
 		// might include child-components, like an Cover and Image.
 		$result = array();
-		$errors = array();
 		foreach ( $this->content_nodes() as $node ) {
 			$components = $this->get_components_from_node( $node );
 			$result     = array_merge( $result, $components );
