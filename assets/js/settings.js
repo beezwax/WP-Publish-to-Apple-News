@@ -8,7 +8,7 @@
 	function appleNewsSettingsSortInit( selector, key ) {
 		$( selector ).sortable( {
 			'stop' : function( event, ui ) {
-				appleNewsSettingsSortUpdate( $( this ), key )
+				appleNewsSettingsSortUpdate( $( this ), key );
 			},
 		} );
    	$( selector ).disableSelection();
