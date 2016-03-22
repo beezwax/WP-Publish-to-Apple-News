@@ -18,6 +18,8 @@ class Components extends Builder {
 	 * @access protected
 	 */
 	protected function build() {
+		$components = array();
+
 		// Handle body components first
 		foreach ( $this->split_into_components() as $component ) {
 			$components[] = $component->to_array();
