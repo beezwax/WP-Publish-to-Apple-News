@@ -69,6 +69,9 @@ class Settings {
 		'enable_advertisement' => 'yes',
 		'ad_frequency' => 1,
 		'ad_margin' => 15,
+
+		// Default component order
+		'meta_component_order' => array( 'title', 'cover', 'byline' ),
 	);
 
 	/**

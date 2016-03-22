@@ -149,9 +149,8 @@ class Components extends Builder {
 	}
 
 	/**
-	 * Meta components are those which were not created from HTML, instead, they
-	 * contain only text. This text is normally created from the article
-	 * metadata.
+	 * Meta components are those which were not created from the HTML content.
+	 * These include the title, the cover (i.e. post thumbnail) and the byline.
 	 *
 	 * @return array
 	 * @access private
@@ -159,20 +158,15 @@ class Components extends Builder {
 	private function meta_components() {
 		$components = array();
 
-		// Title
-		if ( $this->content_title() ) {
-			$components[] = $this->get_component_from_shortname( 'title', $this->content_title() )->to_array();
-		}
-
-		// The content's cover is optional. In WordPress, it's a post's thumbnail
-		// or featured image.
-		if ( $this->content_cover() ) {
-			$components[] = $this->get_component_from_shortname( 'cover', $this->content_cover() )->to_array();
-		}
-
-		// Add byline
-		if ( $this->content_byline() ) {
-			$components[] = $this->get_component_from_shortname( 'byline', $this->content_byline() )->to_array();
+		// Get the component order
+		$meta_component_order = $this->get_setting( 'meta_component_order' );
+		if ( ! empty( $meta_component_order ) && is_array( $meta_component_order ) ) {
+			foreach ( $meta_component_order as $component ) {
+				$method = 'content_' . $component;
+				if ( method_exists( $this, $method ) && $this->$method() ) {
+					$components[] = $this->get_component_from_shortname( $component, $this->$method() )->to_array();
+				}
+			}
 		}
 
 		return $components;
