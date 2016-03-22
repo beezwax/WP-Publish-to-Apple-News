@@ -65,6 +65,9 @@ class Settings {
 		// This can either be gallery or mosaic.
 		'gallery_type'   => 'gallery',
 		'enable_advertisement' => 'yes',
+
+		// Default component order
+		'component_order' => array( 'title', 'cover', 'byline' ),
 	);
 
 	/**
