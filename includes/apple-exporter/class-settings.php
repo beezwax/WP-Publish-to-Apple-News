@@ -67,7 +67,7 @@ class Settings {
 		'enable_advertisement' => 'yes',
 
 		// Default component order
-		'component_order' => array( 'title', 'cover', 'byline' ),
+		'meta_component_order' => array( 'title', 'cover', 'byline' ),
 	);
 
 	/**

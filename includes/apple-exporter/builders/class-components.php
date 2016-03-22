@@ -159,9 +159,9 @@ class Components extends Builder {
 		$components = array();
 
 		// Get the component order
-		$component_order = $this->get_setting( 'component_order' );
-		if ( ! empty( $component_order ) ) {
-			foreach ( $component_order as $component ) {
+		$meta_component_order = $this->get_setting( 'meta_component_order' );
+		if ( ! empty( $meta_component_order ) && is_array( $meta_component_order ) ) {
+			foreach ( $meta_component_order as $component ) {
 				$method = 'content_' . $component;
 				if ( method_exists( $this, $method ) && $this->$method() ) {
 					$components[] = $this->get_component_from_shortname( $component, $this->$method() )->to_array();

@@ -32,3 +32,16 @@
 	overflow: auto;
 	zoom: 1;
 }
+
+ul#meta-component-order-sort {
+	margin-top: 0px;
+}
+
+ul#meta-component-order-sort li {
+	padding: 2px 5px 2px 0px;
+	max-width: 100px;
+}
+
+ul#meta-component-order-sort .ui-icon {
+	float: left;
+}
