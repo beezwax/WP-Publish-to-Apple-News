@@ -216,14 +216,14 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	 */
 	public function render_meta_component_order() {
 		?>
-		<ul id="meta-component-order-sort" class="component-order">
+		<ul id="meta-component-order-sort" class="component-order ui-sortable">
 			<?php
 				// Get the current order
 				$component_order = get_option( 'meta_component_order' ) ?: $this->get_default_for( 'meta_component_order' );
 				if ( ! empty( $component_order ) && is_array( $component_order ) ) {
 					foreach ( $component_order as $component_name ) {
 						echo sprintf(
-							'<li id="%s" class="ui-state-default"><span class="ui-icon ui-icon-arrowthick-2-n-s"></span>%s</li>',
+							'<li id="%s" class="ui-sortable-handle">%s</li>',
 							esc_attr( $component_name ),
 							esc_html( ucwords( $component_name ) )
 						);
@@ -231,7 +231,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 				}
 			?>
 		</ul>
-		<p class="description"><?php esc_html_e( 'Set the order of the meta components at the top of the article. These include the title, the cover (i.e. featured image) and byline which also includes the date.', 'apple-news' ) ?></p>
+		<p class="description"><?php esc_html_e( 'Drag to set the order of the meta components at the top of the article. These include the title, the cover (i.e. featured image) and byline which also includes the date.', 'apple-news' ) ?></p>
 		<?php
 	}
 
