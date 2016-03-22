@@ -64,7 +64,11 @@ class Settings {
 
 		// This can either be gallery or mosaic.
 		'gallery_type'   => 'gallery',
+
+		// Ad settings
 		'enable_advertisement' => 'yes',
+		'ad_frequency' => 1,
+		'ad_margin' => 15,
 	);
 
 	/**

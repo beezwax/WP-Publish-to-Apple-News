@@ -141,6 +141,16 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 				'label'   => __( 'Enable advertisement', 'apple-news' ),
 				'type'    => array( 'yes', 'no' ),
 			),
+			'ad_frequency' => array(
+				'label'   		=> __( 'Ad Frequency', 'apple-news' ),
+				'type'    		=> 'integer',
+				'description'	=> __( 'A number between 0 and 10 defining the frequency for automatically inserting Banner Advertisement components into articles. Setting this to 0 will disable ads regardless of any other settings.', 'apple-news' ),
+			),
+			'ad_margin' => array(
+				'label'   => __( 'Ad Margin', 'apple-news' ),
+				'type'    => 'integer',
+				'description'	=> __( 'The margin to use above and below inserted ads.', 'apple-news' ),
+			),
 		);
 
 		// Add the groups
@@ -185,7 +195,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 			),
 			'advertisement' => array(
 				'label'       => __( 'Advertisement', 'apple-news' ),
-				'settings'    => array( 'enable_advertisement' ),
+				'settings'    => array( 'enable_advertisement', 'ad_frequency', 'ad_margin' ),
 			),
 		);
 

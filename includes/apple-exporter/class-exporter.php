@@ -77,11 +77,12 @@ class Exporter {
 		if ( $builders ) {
 			$this->builders = $builders;
 		} else {
-			$this->register_builder( 'layout'             , new Builders\Layout( $this->content, $this->settings ) );
-			$this->register_builder( 'components'         , new Builders\Components( $this->content, $this->settings ) );
-			$this->register_builder( 'componentTextStyles', new Builders\Component_Text_Styles( $this->content, $this->settings ) );
-			$this->register_builder( 'componentLayouts'   , new Builders\Component_Layouts( $this->content, $this->settings ) );
-			$this->register_builder( 'metadata'           , new Builders\Metadata( $this->content, $this->settings ) );
+			$this->register_builder( 'layout'             	, new Builders\Layout( $this->content, $this->settings ) );
+			$this->register_builder( 'components'        		, new Builders\Components( $this->content, $this->settings ) );
+			$this->register_builder( 'componentTextStyles'	, new Builders\Component_Text_Styles( $this->content, $this->settings ) );
+			$this->register_builder( 'componentLayouts'   	, new Builders\Component_Layouts( $this->content, $this->settings ) );
+			$this->register_builder( 'metadata'           	, new Builders\Metadata( $this->content, $this->settings ) );
+			$this->register_builder( 'advertisingSettings'	, new Builders\Advertising_Settings( $this->content, $this->settings ) );
 		}
 
 		Component_Factory::initialize( $this->workspace, $this->settings, $this->get_builder( 'componentTextStyles' ), $this->get_builder( 'componentLayouts' ) );
@@ -173,7 +174,7 @@ class Exporter {
 	private function generate_json() {
 		// Base JSON
 		$json = array(
-			'version'    => '0.10',
+			'version'    => '1.1',
 			'identifier' => 'post-' . $this->content_id(),
 			'language'   => 'en',
 			'title'      => $this->content_title(),
