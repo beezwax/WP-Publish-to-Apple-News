@@ -426,6 +426,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			foreach ( $info['settings'] as $name ) {
 				$settings[ $name ] = $this->settings[ $name ];
 				$settings[ $name ]['default'] = $this->get_default_for( $name );
+				$settings[ $name ]['callback'] = ( ! empty( $this->settings[ $name ]['callback'] ) ) ? $this->settings[ $name ]['callback'] : '';
 			}
 
 			$result[ $name ] = array(
@@ -457,23 +458,25 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		add_settings_section(
 			$this->id(),
 			$this->name,
-			array( $this, 'print_section_info' ),
+			array( $this, 'get_section_info' ),
 			$this->page
 	 	);
 
 		foreach ( $this->settings as $name => $options ) {
 			// Register setting
-			$callback = ( isset( $options['sanitize'] ) && function_exists( $options['sanitize'] ) ) ? $options['sanitize'] : '';
-			register_setting( $this->page, $name, $callback );
+			$sanitize_callback = ( isset( $options['sanitize'] ) && function_exists( $options['sanitize'] ) ) ? $options['sanitize'] : '';
+			register_setting( $this->page, $name, $sanitize_callback );
+
+			$render_callback = ( ! empty( $options['callback'] ) ) ? $options['callback'] : '';
 
 			// Add to settings section
 			add_settings_field(
-				$name,                                          // ID
-				$options['label'],                              // Title
-				array( $this, 'render_field' ),                 // Render calback
-				$this->page,                                    // Page
-				$this->id(),                                    // Section
-				array( $name, $this->get_default_for( $name ) ) // Args passed to the render callback
+				$name,																															// ID
+				$options['label'],																									// Title
+				array( $this, 'render_field' ),																		  // Render callback
+				$this->page,																												// Page
+				$this->id(),																												// Section
+				array( $name, $this->get_default_for( $name ), $render_callback )		// Args passed to the render callback
 		 	);
 		}
 	}
@@ -485,7 +488,14 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @access public
 	 */
 	public function render_field( $args ) {
-		list( $name, $default_value ) = $args;
+		list( $name, $default_value, $callback ) = $args;
+
+		// If the field has it's own render callback, use that here.
+		// This is because the options page doesn't actually use do_settings_section.
+		if ( ! empty( $callback ) ) {
+			return call_user_func( $callback );
+		}
+
 		$type  = $this->get_type_for( $name );
 		$value = get_option( $name ) ?: $default_value;
 		$field = null;
@@ -586,9 +596,9 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @param string $name
 	 * @return string
-	 * @access private
+	 * @access protected
 	 */
-	private function get_type_for( $name ) {
+	protected function get_type_for( $name ) {
 		return empty( $this->settings[ $name ]['type'] ) ? 'string' : $this->settings[ $name ]['type'];
 	}
 
@@ -597,9 +607,9 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @param string $name
 	 * @return string
-	 * @access private
+	 * @access protected
 	 */
-	private function get_description_for( $name ) {
+	protected function get_description_for( $name ) {
 		return empty( $this->settings[ $name ]['description'] ) ? '' : $this->settings[ $name ]['description'];
 	}
 
@@ -608,9 +618,9 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @param string $name
 	 * @return int
-	 * @access private
+	 * @access protected
 	 */
-	private function get_size_for( $name ) {
+	protected function get_size_for( $name ) {
 		return empty( $this->settings[ $name ]['size'] ) ? 20 : $this->settings[ $name ]['size'];
 	}
 
@@ -619,9 +629,9 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @param string $name
 	 * @return int
-	 * @access private
+	 * @access protected
 	 */
-	private function is_required( $name ) {
+	protected function is_required( $name ) {
 		$required = ! isset( $this->settings[ $name ]['required'] ) ? true : $this->settings[ $name ]['required'];
 		return ( $required ) ? 'required' : '';
 	}
@@ -631,9 +641,9 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @param string $name
 	 * @return boolean
-	 * @access private
+	 * @access protected
 	 */
-	private function is_multiple( $name ) {
+	protected function is_multiple( $name ) {
 		return ! empty( $this->settings[ $name ]['multiple'] );
 	}
 
@@ -642,9 +652,9 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @param string $name
 	 * @return string
-	 * @access private
+	 * @access protected
 	 */
-	private function get_default_for( $name ) {
+	protected function get_default_for( $name ) {
 		return isset( $this->base_settings[ $name ] ) ? $this->base_settings[ $name ] : '';
 	}
 
