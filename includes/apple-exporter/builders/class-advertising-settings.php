@@ -27,7 +27,7 @@ class Advertising_Settings extends Builder {
 					'margin' => array(
 						'top' => $ad_margin,
 						'bottom' => $ad_margin,
-					)
+					),
 				);
 			}
 		}
