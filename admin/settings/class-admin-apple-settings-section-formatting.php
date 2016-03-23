@@ -138,8 +138,18 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 				'type'    => array( 'gallery', 'mosaic' ),
 			),
 			'enable_advertisement' => array(
-				'label'   => __( 'Enable advertisement', 'apple-news' ),
+				'label'   => __( 'Enable advertisements', 'apple-news' ),
 				'type'    => array( 'yes', 'no' ),
+			),
+			'ad_frequency' => array(
+				'label'   		=> __( 'Ad Frequency', 'apple-news' ),
+				'type'    		=> 'integer',
+				'description'	=> __( 'A number between 1 and 10 defining the frequency for automatically inserting Banner Advertisement components into articles.', 'apple-news' ),
+			),
+			'ad_margin' => array(
+				'label'   => __( 'Ad Margin', 'apple-news' ),
+				'type'    => 'integer',
+				'description'	=> __( 'The margin to use above and below inserted ads.', 'apple-news' ),
 			),
 			'meta_component_order' => array(
 				'callback'	=> array( get_class( $this ), 'render_meta_component_order' ),
@@ -188,7 +198,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 			),
 			'advertisement' => array(
 				'label'       => __( 'Advertisement', 'apple-news' ),
-				'settings'    => array( 'enable_advertisement' ),
+				'settings'    => array( 'enable_advertisement', 'ad_frequency', 'ad_margin' ),
 			),
 			'component_order' => array(
 				'label'       => __( 'Component Order', 'apple-news' ),
