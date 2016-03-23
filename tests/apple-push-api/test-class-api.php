@@ -37,7 +37,7 @@ class API_Test extends WP_UnitTestCase {
 		$files = array(
 			realpath( __DIR__ . '/resources/367f66381fd0be912e6d1744135e528b.jpg' ),
 			realpath( __DIR__ . '/resources/54dd603249541ae4dc6356aeb186e47b.jpg' ),
-			'http://images.apple.com/home/images/og.jpg',
+			'https://s.w.org/about/images/logos/wordpress-logo-simplified-rgb.png',
 		);
 		$this->assertNotNull( $this->api->post_article_to_channel( $article, $this->channel_id, $files ) );
 
