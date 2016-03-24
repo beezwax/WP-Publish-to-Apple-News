@@ -28,5 +28,14 @@ class MIME_Builder_Test extends WP_UnitTestCase {
 		);
 	}
 
+	public function testInvalidJSON() {
+		$name     = 'some-name';
+		$filename = 'article.json';
+		$json     = '';
+
+		$this->setExpectedException( 'Apple_Push_API\\Request\\Request_Exception', 'The attachment article.json could not be included in the request because it was empty.' );
+		$this->builder->add_json_string( $name, $filename, $json );
+	}
+
 }
 
