@@ -594,7 +594,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 				esc_attr( $name ),
 				esc_attr( $value ),
 				intval( $size ),
-				$this->is_required( $name )
+				esc_attr( $this->is_required( $name ) )
 			);
 
 		}
