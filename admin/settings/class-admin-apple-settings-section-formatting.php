@@ -222,9 +222,10 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	/**
 	 * Renders the component order field.
 	 *
+	 * @static
 	 * @access public
 	 */
-	public function render_meta_component_order() {
+	public static function render_meta_component_order() {
 		?>
 		<ul id="meta-component-order-sort" class="component-order ui-sortable">
 			<?php

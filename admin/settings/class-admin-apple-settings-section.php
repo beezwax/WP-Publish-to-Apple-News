@@ -472,7 +472,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			// Add to settings section
 			add_settings_field(
 				$name,																															// ID
-				$options['label'],																									// Title
+				( ! empty( $options['label'] ) ) ? $options['label'] : '',						// Title
 				array( $this, 'render_field' ),																		  // Render callback
 				$this->page,																												// Page
 				$this->id(),																												// Section
@@ -582,13 +582,22 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			$field .= apply_filters( 'apple_news_field_description_output_html', '<br/><i>' . $description . '</i>', $name );
 		}
 
-		return sprintf(
-			$field,
-			esc_attr( $name ),
-			esc_attr( $value ),
-			intval( $size ),
-			$this->is_required( $name )
-		);
+		// Use the proper template to build the field
+		if ( is_array( $type ) || 'font' === $type || 'boolean' === $type ) {
+			return sprintf(
+				$field,
+				esc_attr( $name )
+			);
+		} else {
+			return sprintf(
+				$field,
+				esc_attr( $name ),
+				esc_attr( $value ),
+				intval( $size ),
+				$this->is_required( $name )
+			);
+
+		}
 	}
 
 	/**
