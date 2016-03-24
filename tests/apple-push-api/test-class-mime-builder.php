@@ -15,6 +15,7 @@ class MIME_Builder_Test extends WP_UnitTestCase {
 		$name     = 'some-name';
 		$filename = 'article.json';
 		$json     = '{"hello": "world"}';
+		$size     = strlen( $json );
 
 		$expected = '--' . $this->builder->boundary() . $eol .
 			'Content-Type: application/json' . $eol .
