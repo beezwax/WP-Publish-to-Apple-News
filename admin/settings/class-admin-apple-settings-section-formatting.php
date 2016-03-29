@@ -144,7 +144,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 			'ad_frequency' => array(
 				'label'   		=> __( 'Ad Frequency', 'apple-news' ),
 				'type'    		=> 'integer',
-				'description'	=> __( 'A number between 1 and 10 defining the frequency for automatically inserting Banner Advertisement components into articles.', 'apple-news' ),
+				'description'	=> __( 'A number between 1 and 10 defining the frequency for automatically inserting Banner Advertisement components into articles. For more information, see the <a href="https://developer.apple.com/library/ios/documentation/General/Conceptual/Apple_News_Format_Ref/AdvertisingSettings.html#//apple_ref/doc/uid/TP40015408-CH93-SW1" target="_blank">Apple News Format Reference</a>.', 'apple-news' ),
 			),
 			'ad_margin' => array(
 				'label'   => __( 'Ad Margin', 'apple-news' ),

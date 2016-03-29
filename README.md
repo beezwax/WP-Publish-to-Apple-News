@@ -194,6 +194,10 @@ display a contextual alignment menu. This will provide you with a series of
 simple granular controls, allowing you to determine more precisely where each
 image will be displayed when your post appears in Apple News.
 
+The featured image on your post will automatically be used as the Apple News cover
+image. If no featured image is found, the first available image in the post will be used
+as the cover and will be automatically removed from the body in order to avoid duplication.
+
 Note that images smaller than the body width (~1024px) will always be aligned.
 If you want to display an image without alignment, make sure it’s big enough.
 
