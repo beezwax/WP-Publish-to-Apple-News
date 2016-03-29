@@ -230,7 +230,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 		<ul id="meta-component-order-sort" class="component-order ui-sortable">
 			<?php
 				// Get the current order
-				$component_order = get_option( 'meta_component_order' ) ?: $this->get_default_for( 'meta_component_order' );
+				$component_order = get_option( 'meta_component_order' ) ?: array( 'title', 'cover', 'byline' );
 				if ( ! empty( $component_order ) && is_array( $component_order ) ) {
 					foreach ( $component_order as $component_name ) {
 						echo sprintf(
