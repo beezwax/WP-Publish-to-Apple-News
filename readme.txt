@@ -4,7 +4,7 @@ Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 4.4.2
-Stable tag: 1.0.5
+Stable tag: 1.0.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -119,6 +119,8 @@ In general, little effort should be required to prepare your content itself for 
 
 By default, images inserted in your content will be placed inline, and will follow WordPress placement rules. You may find your images will be presented better within Apple News if you take the time to set the appearance of each image. To do this, in the WordPress text editor, click on an image, which will display a contextual alignment menu. This will provide you with a series of simple granular controls, allowing you to determine more precisely where each image will be displayed when your post appears in Apple News.
 
+The featured image on your post will automatically be used as the Apple News cover image. If no featured image is found, the first available image in the post will be used as the cover and will be automatically removed from the body in order to avoid duplication.
+
 Note that images smaller than the body width (~1024px) will always be aligned. If you want to display an image without alignment, make sure it’s big enough.
 
 **Banners**
@@ -148,8 +150,17 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 
 == Changelog ==
 
+= 1.0.6 =
+* Updated the plugin from 0.10 to 1.1 Apple News format.
+* Added alert options when unsupported embeds are found in the post content while publishing.
+* Added better handling for MIME_PART_INVALID_SIZE errors.
+* Added the ability to reorder the title, cover and byline components.
+* Updated ads to use new features available in the 1.1 Apple News format.
+* Minor settings page updates.
+* Resolved some PHP warnings on the dashboard.
+
 = 1.0.5 =
-* Fixed performance issue caused by introduction of live post status, added 60 second cache and removed from email debugging.
+* Fixed a performance issue caused by introduction of live post status, added 60 second cache and removed from email debugging.
 
 = 1.0.4 =
 * Added canonicalURL to metadata (thanks @dashaluna)
