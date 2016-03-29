@@ -158,6 +158,7 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 * Updated ads to use new features available in the 1.1 Apple News format.
 * Minor settings page updates.
 * Resolved some PHP warnings on the dashboard.
+* Updated all unit tests and improved test coverage.
 
 = 1.0.5 =
 * Fixed a performance issue caused by introduction of live post status, added 60 second cache and removed from email debugging.
