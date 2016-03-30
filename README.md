@@ -14,6 +14,14 @@ installing other WordPress plugins. Simply perform these steps:
 Once activated, the "Apple News" menu should appear in your WordPress Admin
 panel.
 
+IMPORTANT NOTE: Apple News format requires that all images are bundled with the content
+when pushed to the API. It is required that web your host enable `allow_url_fopen` in your
+PHP configuration in order for this to function properly. Please ensure this is enabled
+and supported by your web host before reporting any issues with image errors from the
+plugin or API.
+
+[Please read this for more information.](http://php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen)
+
 ###Troubleshooting: Resolving Potential Permissions Issues
 
 In most cases, the Publish to Apple News plugin should function immediately once
