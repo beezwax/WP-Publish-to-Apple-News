@@ -5,11 +5,11 @@ use Apple_Exporter\Settings as Settings;
 use Apple_Exporter\Builders\Component_Layouts as Component_Layouts;
 use Apple_Exporter\Builders\Component_Text_Styles as Component_Text_Styles;
 
-abstract class Component_TestCase extends PHPUnit_Framework_TestCase {
+abstract class Component_TestCase extends WP_UnitTestCase {
 
 	protected $prophet;
 
-	protected function setup() {
+	public function setup() {
 		$this->prophet  = new \Prophecy\Prophet;
 		$this->settings = new Settings();
 		$this->content  = new Exporter_Content( 1, __( 'My Title', 'apple-news' ), '<p>' . __( 'Hello, World!', 'apple-news' ) . '</p>' );
@@ -17,7 +17,7 @@ abstract class Component_TestCase extends PHPUnit_Framework_TestCase {
 		$this->layouts  = new Component_Layouts( $this->content, $this->settings );
 	}
 
-	protected function tearDown() {
+	public function tearDown() {
 		$this->prophet->checkPredictions();
 	}
 
