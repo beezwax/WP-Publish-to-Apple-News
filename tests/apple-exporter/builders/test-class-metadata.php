@@ -4,9 +4,9 @@ use Apple_Exporter\Exporter_Content as Exporter_Content;
 use Apple_Exporter\Settings as Settings;
 use Apple_Exporter\Builders\Metadata as Metadata;
 
-class Metadata_Test extends PHPUnit_Framework_TestCase {
+class Metadata_Test extends WP_UnitTestCase {
 
-	protected function setup() {
+	public function setup() {
 		$this->settings = new Settings();
 	}
 
@@ -43,6 +43,26 @@ class Metadata_Test extends PHPUnit_Framework_TestCase {
 		$this->assertEquals( 6, count( $result ) );
 		$this->assertEquals( 'This is an intro.', $result[ 'excerpt' ] );
 		$this->assertEquals( 'bundle://somefile.jpg', $result[ 'thumbnailURL' ] );
+	}
+
+	public function testDates() {
+		$title = 'My Title';
+		$content = '<p>Hello, World!</p>';
+
+		$post_id = $this->factory->post->create( array(
+			'post_title' => $title,
+			'post_content' => $content,
+			'post_date' => '2016-04-01 00:00:00',
+		) );
+
+		$content = new Exporter_Content( $post_id, $title, $content, null, '/etc/somefile.jpg' );
+		$builder = new Metadata( $content, $this->settings );
+		$result  = $builder->to_array();
+
+		$this->assertEquals( 8, count( $result ) );
+		$this->assertEquals( '2016-04-01T00:00:00+00:00', $result[ 'dateCreated' ] );
+		$this->assertEquals( '2016-04-01T00:00:00+00:00', $result[ 'dateModified' ] );
+		$this->assertEquals( '2016-04-01T00:00:00+00:00', $result[ 'datePublished' ] );
 	}
 
 }
