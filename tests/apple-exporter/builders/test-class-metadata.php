@@ -4,9 +4,9 @@ use Apple_Exporter\Exporter_Content as Exporter_Content;
 use Apple_Exporter\Settings as Settings;
 use Apple_Exporter\Builders\Metadata as Metadata;
 
-class Metadata_Test extends PHPUnit_Framework_TestCase {
+class Metadata_Test extends WP_UnitTestCase {
 
-	protected function setup() {
+	public function setup() {
 		$this->settings = new Settings();
 	}
 

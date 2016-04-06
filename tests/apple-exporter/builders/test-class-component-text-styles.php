@@ -4,9 +4,9 @@ use \Apple_Exporter\Exporter_Content as Exporter_Content;
 use \Apple_Exporter\Settings as Settings;
 use \Apple_Exporter\Builders\Component_Text_Styles as Component_Text_Styles;
 
-class Component_Text_Styles_Tests extends PHPUnit_Framework_TestCase {
+class Component_Text_Styles_Tests extends WP_UnitTestCase {
 
-	protected function setup() {
+	public function setup() {
 		$this->settings = new Settings();
 		$this->content  = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>' );
 	}
