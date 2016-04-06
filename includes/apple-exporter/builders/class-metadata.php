@@ -52,9 +52,6 @@ class Metadata extends Builder {
 		$meta['generatorName'] = $plugin_data['Name'];
 		$meta['generatorVersion'] = $plugin_data['Version'];
 
-		// Add the date fields
-
-
 		return apply_filters( 'apple_news_metadata', $meta, $this->content_id() );
 	}
 
