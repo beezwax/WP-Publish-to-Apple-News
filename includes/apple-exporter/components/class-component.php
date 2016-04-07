@@ -184,7 +184,7 @@ abstract class Component {
 	 * @access public
 	 */
 	public function to_array() {
-		return $this->json;
+		return apply_filters( 'apple_news_' . $this->get_component_name() . '_json', $this->json );
 	}
 
 	/**
@@ -425,6 +425,15 @@ abstract class Component {
 	 * @abstract
 	 */
 	abstract protected function build( $text );
+
+	/**
+	 * Gets the name of this component from the class name.
+	 *
+	 * @return string
+	 */
+	protected function get_component_name() {
+		return strtolower( end( explode( '\\', get_class( $this ) ) ) );
+	}
 
 	/**
 	 * Check if the remote file exists for this node.
