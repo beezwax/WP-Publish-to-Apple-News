@@ -82,5 +82,22 @@ class Tweet_Test extends Component_TestCase {
 		$this->assertEquals( 'https://twitter.com/wordpressdotcom/status/123', $result['URL'] );
 	}
 
+	public function testFilter() {
+		$component = new Tweet( '<blockquote class="twitter-tweet"
+			lang="en"><p><a
+			href="https://twitter.com/foo/status/1111">twitter.com/foo/status/1111</a></p>&mdash;
+		<br />WordPress.com (@wordpressdotcom) <a
+			href="http://twitter.com/#!/wordpressdotcom/status/123"
+			data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
+			null, $this->settings, $this->styles, $this->layouts );
+
+		add_filter( 'apple_news_tweet_json', function( $json ) {
+			$json['URL'] = 'https://twitter.com/alleydev/status/123';
+			return $json;
+		} );
+
+		$result = $component->to_array();
+		$this->assertEquals( 'https://twitter.com/alleydev/status/123', $result['URL'] );
+	}
 }
 

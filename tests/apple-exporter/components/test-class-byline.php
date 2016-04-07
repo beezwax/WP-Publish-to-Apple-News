@@ -21,5 +21,25 @@ class Byline_Test extends Component_TestCase {
 		);
 	}
 
+	public function testFilter() {
+		$component = new Byline( 'This is the byline', null, $this->settings,
+			$this->styles, $this->layouts );
+
+		add_filter( 'apple_news_byline_json', function( $json ) {
+			$json['layout'] = 'fancy-layout';
+			return $json;
+		} );
+
+		$this->assertEquals(
+			array(
+				'text' => "This is the byline",
+				'role' => 'byline',
+				'textStyle' => 'default-byline',
+				'layout' => 'fancy-layout',
+		 	),
+			$component->to_array()
+		);
+	}
+
 }
 
