@@ -18,5 +18,18 @@ class Quote_Test extends Component_TestCase {
 		$this->assertEquals( 'quote-layout', $result['layout'] );
 	}
 
+	public function testFilter() {
+		$component = new Quote( '<blockquote><p>my quote</p></blockquote>',
+			null, $this->settings, $this->styles, $this->layouts );
+
+		add_filter( 'apple_news_quote_json', function( $json ) {
+			$json['textStyle'] = 'fancy-quote';
+			return $json;
+		} );
+
+		$result = $component->to_array();
+		$this->assertEquals( 'fancy-quote', $result['textStyle'] );
+	}
+
 }
 

@@ -20,5 +20,24 @@ class Intro_Test extends Component_TestCase {
 		);
 	}
 
+	public function testFilter() {
+		$component = new Intro( 'Test intro text.', null, $this->settings,
+			$this->styles, $this->layouts );
+
+		add_filter( 'apple_news_intro_json', function( $json ) {
+			$json['textStyle'] = 'fancy-intro';
+			return $json;
+		} );
+
+		$this->assertEquals(
+			array(
+				'role' => 'intro',
+				'text' => "Test intro text.\n",
+				'textStyle' => 'fancy-intro',
+		 	),
+			$component->to_array()
+		);
+	}
+
 }
 
