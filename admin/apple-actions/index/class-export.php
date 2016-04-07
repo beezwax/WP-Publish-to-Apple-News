@@ -54,10 +54,14 @@ class Export extends Action {
 
 		// Fetch WP_Post object, and all required post information to fill up the
 		// Exporter_Content instance.
-		$post       = get_post( $this->id );
+		$post = get_post( $this->id );
 
 		// Build the excerpt if required
-		$excerpt = ( empty( $post->post_excerpt ) ) ? wp_trim_excerpt( $post->post_content ) : $post->post_excerpt;
+		if ( empty( $post->post_excerpt ) ) {
+			$excerpt = wp_trim_words( strip_tags( strip_shortcodes( $post->post_content ) ), 55, '...' );
+		} else {
+			$excerpt = strip_tags( $post->post_excerpt );
+		}
 
 		// Get the post thumbnail
 		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $this->id ) ) ?: null;

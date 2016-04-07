@@ -255,6 +255,16 @@ class Exporter {
 	}
 
 	/**
+	 * Get the Exporter_Content object
+	 *
+	 * @return Exporter_Content
+	 * @access public
+	 */
+	public function get_content() {
+		return $this->content;
+	}
+
+	/**
 	 * Get the content ID.
 	 *
 	 * @return int
