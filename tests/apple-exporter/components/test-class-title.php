@@ -20,5 +20,24 @@ class Title_Test extends Component_TestCase {
 		);
 	}
 
+	public function testFilter() {
+		$body_component = new Title( 'Example Title', null, $this->settings,
+			$this->styles, $this->layouts );
+
+		add_filter( 'apple_news_title_json', function( $json ) {
+			$json['textStyle'] = 'fancy-title';
+			return $json;
+		} );
+
+		$this->assertEquals(
+			array(
+				'role' => 'title',
+				'text' => 'Example Title',
+				'textStyle' => 'fancy-title',
+		 	),
+			$body_component->to_array()
+		);
+	}
+
 }
 

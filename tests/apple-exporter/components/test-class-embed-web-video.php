@@ -48,5 +48,24 @@ class Embed_Web_Video_Test extends Component_TestCase {
 		);
 	}
 
+	public function testFilter() {
+		$component = new Embed_Web_Video( '<p>https://vimeo.com/12819723</p>',
+			null, $this->settings, $this->styles, $this->layouts );
+
+		add_filter( 'apple_news_embed_web_video_json', function( $json ) {
+			$json['aspectRatio'] = '1.4';
+			return $json;
+		} );
+
+		$this->assertEquals(
+			array(
+				'role' => 'embedwebvideo',
+				'URL' => 'https://player.vimeo.com/video/12819723',
+				'aspectRatio' => '1.4',
+		 	),
+			$component->to_array()
+		);
+	}
+
 }
 

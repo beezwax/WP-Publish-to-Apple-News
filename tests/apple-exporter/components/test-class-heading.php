@@ -26,5 +26,18 @@ class Heading_Test extends Component_TestCase {
 		$this->assertEquals( 'markdown', $json['format'] );
 	}
 
+	public function testFilter() {
+		$component = new Heading( '<h1>This is a heading</h1>', null,
+			$this->settings, $this->styles, $this->layouts );
+
+		add_filter( 'apple_news_heading_json', function( $json ) {
+			$json['format'] = 'none';
+			return $json;
+		} );
+
+		$json = $component->to_array();
+		$this->assertEquals( 'none', $json['format'] );
+	}
+
 }
 

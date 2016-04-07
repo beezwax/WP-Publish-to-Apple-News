@@ -39,5 +39,27 @@ class Body_Test extends Component_TestCase {
 		);
 	}
 
+	public function testFilter() {
+		$this->settings->set( 'initial_dropcap', 'no' );
+		$body_component = new Body( '<p>my text</p>', null, $this->settings,
+			$this->styles, $this->layouts );
+
+		add_filter( 'apple_news_body_json', function( $json ) {
+			$json['textStyle'] = 'fancy-body';
+			return $json;
+		} );
+
+		$this->assertEquals(
+			array(
+				'text' => "my text\n\n",
+				'role' => 'body',
+				'format' => 'markdown',
+				'textStyle' => 'fancy-body',
+				'layout' => 'body-layout',
+		 	),
+			$body_component->to_array()
+		);
+	}
+
 }
 
