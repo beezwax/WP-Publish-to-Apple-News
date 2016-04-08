@@ -30,6 +30,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 
 		// Handle routing to various admin pages
 		add_action( 'admin_init', array( $this, 'export_action' ) );
+		add_action( 'admin_init', array( $this, 'push_action' ) );
 		add_action( 'admin_menu', array( $this, 'setup_admin_page' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'setup_assets' ) );
 	}
@@ -71,7 +72,6 @@ class Admin_Apple_Index_Page extends Apple_News {
 		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
 
 		// Given an action and ID, map the attributes to corresponding actions.
-
 		if ( ! $id ) {
 			switch ( $action ) {
 			case 'push':

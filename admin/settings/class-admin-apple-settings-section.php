@@ -411,9 +411,6 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		$this->groups           = apply_filters( 'apple_news_section_groups', $this->groups, $page );
 		self::$fonts            = apply_filters( 'apple_news_fonts_list', self::$fonts );
 
-		// Load saved settings
-		$this->saved_settings = get_option( $this->option_name, array() );
-
 		// Save settings if necessary
 		$this->save_settings();
 	}
@@ -463,38 +460,6 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 */
 	public function id() {
 		return $this->plugin_slug . '_options_section_' . $this->slug;
-	}
-
-	/**
-	 * Register the settings section.
-	 *
-	 * @access public
-	 */
-	public function register() {
-		add_settings_section(
-			$this->id(),
-			$this->name,
-			array( $this, 'get_section_info' ),
-			$this->page
-	 	);
-
-		foreach ( $this->settings as $name => $options ) {
-			// Register setting
-			$sanitize_callback = ( isset( $options['sanitize'] ) && function_exists( $options['sanitize'] ) ) ? $options['sanitize'] : '';
-			register_setting( $this->page, $name, $sanitize_callback );
-
-			$render_callback = ( ! empty( $options['callback'] ) ) ? $options['callback'] : '';
-
-			// Add to settings section
-			add_settings_field(
-				$name,																															// ID
-				( ! empty( $options['label'] ) ) ? $options['label'] : '',						// Title
-				array( $this, 'render_field' ),																		  // Render callback
-				$this->page,																												// Page
-				$this->id(),																												// Section
-				array( $name, $this->get_default_for( $name ), $render_callback )		// Args passed to the render callback
-		 	);
-		}
 	}
 
 	/**
@@ -707,7 +672,8 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * Get the current value for an option.
 	 */
 	public function get_value( $key ) {
-		return ( ! empty( $this->saved_settings[ $key ] ) ) ? $this->saved_settings[ $key ] : '';
+		$saved_settings = get_option( $this->option_name );
+		return ( ! empty( $saved_settings[ $key ] ) ) ? $saved_settings[ $key ] : '';
 	}
 
 	/**

@@ -61,4 +61,29 @@ class Apple_News {
 		// Remove any spaces and return the filename
 		return str_replace( ' ', '', $filename );
 	}
+
+	/**
+	 * Attempt to migrate settings from an older version of this plugin
+	 *
+	 * @param Settings $settings
+	 */
+	public function migrate_settings( $settings ) {
+		$migrated_settings = array();
+
+		// For each potential value, see if the WordPress option exists.
+		// If so, migrate its value into the new array format.
+		// If it doesn't exist, just use the default value.
+		foreach ( $settings->all() as $key => $default ) {
+			$value = get_option( $key, $default );
+			$migrated_settings[ $key ] = $value;
+
+			// Delete the option in case it existed to clean up
+			delete_option( $key );
+		}
+
+		// Store these settings
+		update_option( $this->option_name, $migrated_settings );
+
+		return $migrated_settings;
+	}
 }
