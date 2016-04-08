@@ -29,7 +29,6 @@ class Admin_Apple_Index_Page extends Apple_News {
 		$this->settings = $settings;
 
 		// Handle routing to various admin pages
-		add_action( 'admin_init', array( $this, 'export_action' ) );
 		add_action( 'admin_menu', array( $this, 'setup_admin_page' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'setup_assets' ) );
 	}
@@ -90,6 +89,8 @@ class Admin_Apple_Index_Page extends Apple_News {
 		switch ( $action ) {
 		case 'settings':
 			return $this->settings_action( $id );
+		case 'export':
+			return $this->export_action( $id );
 		case 'push':
 			return $this->push_action( $id );
 		case 'delete':
@@ -189,11 +190,12 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access private
 	 */
 	private function download_json( $json, $id ) {
-		header( 'Content-Description: File Transfer' );
 		header( 'Content-Type: application/json' );
 		header( 'Content-Disposition: attachment; filename="article-' . absint( $id ) . '.json"' );
+		ob_clean();
+		flush();
 		echo $json;
-		die();
+		exit;
 	}
 
 	/**
@@ -253,19 +255,12 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * Handles an export action.
 	 *
 	 * @param int $id
-	 * @access public
+	 * @access private
 	 */
-	public function export_action( $id ) {
-		$id     = isset( $_GET['post_id'] ) ? intval( $_GET['post_id'] ) : null;
-		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
-
-		if ( 'export' !== $action ) {
-			return;
-		}
-
-		$export = new Apple_Actions\Index\Export( $this->settings, $id );
+	private function export_action( $id ) {
+		$action = new Apple_Actions\Index\Export( $this->settings, $id );
 		try {
-			$json = $export->perform();
+			$json = $action->perform();
 			$this->download_json( $json, $id );
 		} catch ( Apple_Actions\Action_Exception $e ) {
 			$this->notice_error( $e->getMessage() );
