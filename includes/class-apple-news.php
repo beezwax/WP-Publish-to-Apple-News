@@ -25,6 +25,14 @@ class Apple_News {
 	protected $plugin_domain = 'apple-news';
 
 	/**
+	 * Option name for settings.
+	 *
+	 * @var string
+	 * @access public
+	 */
+	public $option_name = 'apple_news_settings';
+
+	/**
 	 * Plugin version.
 	 *
 	 * @var string

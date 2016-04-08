@@ -1,5 +1,7 @@
 <?php
 
+use Apple_Exporter\Settings as Settings;
+
 /**
  * Describes a WordPress setting section
  *
@@ -336,6 +338,14 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	protected $base_settings;
 
 	/**
+	 * Saved settings.
+	 *
+	 * @var array
+	 * @access protected
+	 */
+	protected $saved_settings;
+
+	/**
 	 * Settings for the section.
 	 *
 	 * @var array
@@ -400,6 +410,12 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		$this->settings         = apply_filters( 'apple_news_section_settings', $this->settings, $page );
 		$this->groups           = apply_filters( 'apple_news_section_groups', $this->groups, $page );
 		self::$fonts            = apply_filters( 'apple_news_fonts_list', self::$fonts );
+
+		// Load saved settings
+		$this->saved_settings = get_option( $this->option_name, array() );
+
+		// Save settings if necessary
+		$this->save_settings();
 	}
 
 	/**
@@ -497,7 +513,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		}
 
 		$type  = $this->get_type_for( $name );
-		$value = get_option( $name ) ?: $default_value;
+		$value = $this->get_value( $name ) ?: $default_value;
 		$field = null;
 
 		// Get the field size
@@ -675,6 +691,63 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 */
 	public function get_section_info() {
 		return '';
+	}
+
+	/**
+	 * Sanitizes a single dimension array with text values.
+	 *
+	 * @param array $value
+	 * return array
+	 */
+	public function sanitize_array( $value ) {
+		return array_map( 'sanitize_text_field', $value );
+	}
+
+	/**
+	 * Get the current value for an option.
+	 */
+	public function get_value( $key ) {
+		return ( ! empty( $this->saved_settings[ $key ] ) ) ? $this->saved_settings[ $key ] : '';
+	}
+
+	/**
+	 * Each section is responsible for saving its own settings
+	 * since only it knows the nature of the fields and sanitization methods.
+	 */
+	public function save_settings() {
+		// Check if we're saving options and that there are settings to svae
+		if ( empty( $_POST['action'] )
+			|| 'apple_news_options' !== $_POST['action']
+			|| empty( $this->settings ) ) {
+			return;
+		}
+
+		// Form nonce check
+		check_admin_referer( 'apple_news_options', 'apple_news_options' );
+
+		// Get the current Apple News settings
+		$settings = get_option( $this->option_name, array() );
+
+		// Iterate over the settings and save each value.
+		// Settings can't be empty unless allowed, so if no value is found
+		// use the default value to be safe.
+		$default_settings = new Settings();
+		foreach ( $this->settings as $key => $attributes ) {
+			if ( ! empty( $_POST[ $key ] ) ) {
+				// Sanitize the value
+				$sanitize = ( empty( $attributes['sanitize'] ) || ! is_callable( $attributes['sanitize'] ) ) ? 'sanitize_text_field' : $attributes['sanitize'];
+				$value = call_user_func( $sanitize, $_POST[ $key ] );
+			} else {
+				// Use the default value
+				$value = $default_settings->get( $key );
+			}
+
+			// Add to the array
+			$settings[ $key ] = $value;
+		}
+
+		// Save to options
+		update_option( $this->option_name, $settings );
 	}
 
 }

@@ -169,11 +169,9 @@ class Admin_Apple_Settings extends Apple_News {
 	public function fetch_settings() {
 		if ( is_null( $this->loaded_settings ) ) {
 			$settings = new Settings();
+			$wp_settings = get_option( $this->option_name, array() );
 			foreach ( $settings->all() as $key => $value ) {
-				$wp_value = get_option( $key );
-				if ( empty( $wp_value ) ) {
-					$wp_value = $value;
-				}
+				$wp_value = ( empty( $wp_settings[ $key ] ) ) ? $value : $wp_settings[ $key ];
 				$settings->set( $key, $wp_value );
 			}
 			$this->loaded_settings = $settings;

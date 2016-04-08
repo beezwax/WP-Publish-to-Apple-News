@@ -153,6 +153,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 			),
 			'meta_component_order' => array(
 				'callback'	=> array( get_class( $this ), 'render_meta_component_order' ),
+				'sanitize' 	=> array( $this, 'sanitize_array' ),
 			),
 		);
 

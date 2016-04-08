@@ -1,7 +1,7 @@
 <div class="wrap">
-	<form method="post" action="options.php">
-		<?php settings_fields( 'apple-news-options' ); ?>
-
+	<form method="post" action="">
+		<?php wp_nonce_field( 'apple_news_options', 'apple_news_options' ); ?>
+		<input type="hidden" name="action" value="apple_news_options" />
 		<?php foreach ( $sections as $section ): ?>
 		<h3><?php echo esc_html( $section->name() ); ?></h3>
 		<?php echo wp_kses_post( $section->get_section_info() ); ?>
