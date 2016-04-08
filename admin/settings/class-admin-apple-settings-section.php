@@ -338,14 +338,6 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	protected $base_settings;
 
 	/**
-	 * Saved settings.
-	 *
-	 * @var array
-	 * @access protected
-	 */
-	protected $saved_settings;
-
-	/**
 	 * Settings for the section.
 	 *
 	 * @var array
