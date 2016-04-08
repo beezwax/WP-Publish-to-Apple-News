@@ -166,7 +166,7 @@ class Admin_Apple_Settings extends Apple_News {
 	public function fetch_settings() {
 		if ( is_null( $this->loaded_settings ) ) {
 			$settings = new Settings();
-			$wp_settings = get_option( $this->option_name );
+			$wp_settings = get_option( self::$option_name );
 
 			// If this option doesn't exist, either the site has never installed this plugin
 			// or they may be using an old version with individual options.
