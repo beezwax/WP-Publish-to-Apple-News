@@ -470,7 +470,8 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		}
 
 		$type  = $this->get_type_for( $name );
-		$value = $this->get_value( $name ) ?: $default_value;
+		$settings = get_option( self::$option_name );
+		$value = self::get_value( $name, $settings ) ?: $default_value;
 		$field = null;
 
 		// Get the field size
@@ -654,7 +655,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * Sanitizes a single dimension array with text values.
 	 *
 	 * @param array $value
-	 * return array
+	 * @return array
 	 */
 	public function sanitize_array( $value ) {
 		return array_map( 'sanitize_text_field', $value );
@@ -662,9 +663,16 @@ class Admin_Apple_Settings_Section extends Apple_News {
 
 	/**
 	 * Get the current value for an option.
+	 *
+	 * @param string $key
+	 * @param array $saved_settings
+	 * @return mixed
+	 * @static
 	 */
-	public function get_value( $key ) {
-		$saved_settings = get_option( $this->option_name );
+	public static function get_value( $key, $saved_settings = null ) {
+		if ( empty( $saved_settings ) ) {
+			$saved_settings = get_option( self::$option_name );
+		}
 		return ( ! empty( $saved_settings[ $key ] ) ) ? $saved_settings[ $key ] : '';
 	}
 
@@ -684,7 +692,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		check_admin_referer( 'apple_news_options', 'apple_news_options' );
 
 		// Get the current Apple News settings
-		$settings = get_option( $this->option_name, array() );
+		$settings = get_option( self::$option_name, array() );
 
 		// Iterate over the settings and save each value.
 		// Settings can't be empty unless allowed, so if no value is found
@@ -705,7 +713,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		}
 
 		// Save to options
-		update_option( $this->option_name, $settings );
+		update_option( self::$option_name, $settings, 'no' );
 	}
 
 }

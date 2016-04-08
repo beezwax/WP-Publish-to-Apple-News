@@ -30,7 +30,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public $option_name = 'apple_news_settings';
+	public static $option_name = 'apple_news_settings';
 
 	/**
 	 * Plugin version.
@@ -76,13 +76,13 @@ class Apple_News {
 		foreach ( $settings->all() as $key => $default ) {
 			$value = get_option( $key, $default );
 			$migrated_settings[ $key ] = $value;
-
-			// Delete the option in case it existed to clean up
-			delete_option( $key );
 		}
 
 		// Store these settings
-		update_option( $this->option_name, $migrated_settings );
+		update_option( self::$option_name, $migrated_settings, 'no' );
+
+		// Delete the options to clean up
+		array_map( 'delete_option', array_keys( $migrated_settings ) );
 
 		return $migrated_settings;
 	}
