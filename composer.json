@@ -6,7 +6,7 @@
     "license"    : "GPL-3.0+",
     "require"    : {
         "composer/installers": "~1.0"
-    }
+    },
     "require-dev": {
         "phpspec/prophecy": "~1.0"
     }
