@@ -1,5 +1,7 @@
 <?php
 
+use Apple_Exporter\Settings as Settings;
+
 /**
  * Describes a WordPress setting section
  *
@@ -400,6 +402,9 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		$this->settings         = apply_filters( 'apple_news_section_settings', $this->settings, $page );
 		$this->groups           = apply_filters( 'apple_news_section_groups', $this->groups, $page );
 		self::$fonts            = apply_filters( 'apple_news_fonts_list', self::$fonts );
+
+		// Save settings if necessary
+		$this->save_settings();
 	}
 
 	/**
@@ -450,38 +455,6 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	}
 
 	/**
-	 * Register the settings section.
-	 *
-	 * @access public
-	 */
-	public function register() {
-		add_settings_section(
-			$this->id(),
-			$this->name,
-			array( $this, 'get_section_info' ),
-			$this->page
-	 	);
-
-		foreach ( $this->settings as $name => $options ) {
-			// Register setting
-			$sanitize_callback = ( isset( $options['sanitize'] ) && function_exists( $options['sanitize'] ) ) ? $options['sanitize'] : '';
-			register_setting( $this->page, $name, $sanitize_callback );
-
-			$render_callback = ( ! empty( $options['callback'] ) ) ? $options['callback'] : '';
-
-			// Add to settings section
-			add_settings_field(
-				$name,																															// ID
-				( ! empty( $options['label'] ) ) ? $options['label'] : '',						// Title
-				array( $this, 'render_field' ),																		  // Render callback
-				$this->page,																												// Page
-				$this->id(),																												// Section
-				array( $name, $this->get_default_for( $name ), $render_callback )		// Args passed to the render callback
-		 	);
-		}
-	}
-
-	/**
 	 * Render a settings field.
 	 *
 	 * @param array $args
@@ -497,7 +470,8 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		}
 
 		$type  = $this->get_type_for( $name );
-		$value = get_option( $name ) ?: $default_value;
+		$settings = get_option( self::$option_name );
+		$value = self::get_value( $name, $settings ) ?: $default_value;
 		$field = null;
 
 		// Get the field size
@@ -675,6 +649,71 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 */
 	public function get_section_info() {
 		return '';
+	}
+
+	/**
+	 * Sanitizes a single dimension array with text values.
+	 *
+	 * @param array $value
+	 * @return array
+	 */
+	public function sanitize_array( $value ) {
+		return array_map( 'sanitize_text_field', $value );
+	}
+
+	/**
+	 * Get the current value for an option.
+	 *
+	 * @param string $key
+	 * @param array $saved_settings
+	 * @return mixed
+	 * @static
+	 */
+	public static function get_value( $key, $saved_settings = null ) {
+		if ( empty( $saved_settings ) ) {
+			$saved_settings = get_option( self::$option_name );
+		}
+		return ( ! empty( $saved_settings[ $key ] ) ) ? $saved_settings[ $key ] : '';
+	}
+
+	/**
+	 * Each section is responsible for saving its own settings
+	 * since only it knows the nature of the fields and sanitization methods.
+	 */
+	public function save_settings() {
+		// Check if we're saving options and that there are settings to svae
+		if ( empty( $_POST['action'] )
+			|| 'apple_news_options' !== $_POST['action']
+			|| empty( $this->settings ) ) {
+			return;
+		}
+
+		// Form nonce check
+		check_admin_referer( 'apple_news_options', 'apple_news_options' );
+
+		// Get the current Apple News settings
+		$settings = get_option( self::$option_name, array() );
+
+		// Iterate over the settings and save each value.
+		// Settings can't be empty unless allowed, so if no value is found
+		// use the default value to be safe.
+		$default_settings = new Settings();
+		foreach ( $this->settings as $key => $attributes ) {
+			if ( ! empty( $_POST[ $key ] ) ) {
+				// Sanitize the value
+				$sanitize = ( empty( $attributes['sanitize'] ) || ! is_callable( $attributes['sanitize'] ) ) ? 'sanitize_text_field' : $attributes['sanitize'];
+				$value = call_user_func( $sanitize, $_POST[ $key ] );
+			} else {
+				// Use the default value
+				$value = $default_settings->get( $key );
+			}
+
+			// Add to the array
+			$settings[ $key ] = $value;
+		}
+
+		// Save to options
+		update_option( self::$option_name, $settings, 'no' );
 	}
 
 }
