@@ -6,8 +6,22 @@ use Apple_Exporter\Components\Embed_Web_Video as Embed_Web_Video;
 
 class Embed_Web_Video_Test extends Component_TestCase {
 
-	public function testYouTubeLink() {
+	public function testYouTubeWatchLink() {
 		$component = new Embed_Web_Video( '<p>https://www.youtube.com/watch?v=0qwALOOvUik</p>',
+			null, $this->settings, $this->styles, $this->layouts );
+
+		$this->assertEquals(
+			array(
+				'role' => 'embedwebvideo',
+				'URL' => 'https://www.youtube.com/embed/0qwALOOvUik',
+				'aspectRatio' => '1.777',
+		 	),
+			$component->to_array()
+		);
+	}
+
+	public function testYouTubeEmbedLink() {
+		$component = new Embed_Web_Video( '<p>https://www.youtube.com/embed/0qwALOOvUik</p>',
 			null, $this->settings, $this->styles, $this->layouts );
 
 		$this->assertEquals(

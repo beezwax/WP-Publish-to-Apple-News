@@ -12,7 +12,7 @@ class Embed_Web_Video extends Component {
 	/**
 	 * Regex patterns to match supported embed types.
 	 */
-	const YOUTUBE_MATCH = '#^https?://(?:www\.)?(?:youtube\.com/watch\?v=([\w\-]+)|youtu\.be/([\w\-]+))[^ ]*$#';
+	const YOUTUBE_MATCH = '#^https?://(?:www\.)?(?:youtube\.com/((watch\?v=)|(embed/))([\w\-]+)|youtu\.be/([\w\-]+))[^ ]*$#';
 	const VIMEO_MATCH   = '#^https?://(?:.+\.)?vimeo\.com/(:?.+/)?(\d+)$#';
 
 	/**
@@ -60,12 +60,13 @@ class Embed_Web_Video extends Component {
 		// If a paragraph was matched, it's because it only contains a EWV URL.
 		if ( preg_match( '#<p.*?>(.*?)</p>#', $text, $matches ) ) {
 			$url = trim( $matches[1] );
+
 			// The URL is either a YouTube or Vimeo video.
 			if ( preg_match( self::YOUTUBE_MATCH, $url, $matches ) ) {
-				$src = 'https://www.youtube.com/embed/' . ( $matches[1] ?: $matches[2] );
+				$src = 'https://www.youtube.com/embed/' . end( $matches );
 			} else {
 				preg_match( self::VIMEO_MATCH, $url, $matches );
-				$src = 'https://player.vimeo.com/video/' . $matches[2];
+				$src = 'https://player.vimeo.com/video/' . end( $matches );
 			}
 		}
 
