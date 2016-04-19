@@ -4,7 +4,7 @@ Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 4.4.2
-Stable tag: 1.0.7
+Stable tag: 1.0.8
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -153,6 +153,15 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 1.
 
 == Changelog ==
+
+= 1.0.8 =
+* Added support for date metadata (https://developer.apple.com/library/ios/documentation/General/Conceptual/Apple_News_Format_Ref/Metadata.html#//apple_ref/doc/uid/TP40015408-CH3-SW1)
+* Fixed issue with shortcodes appearing in excerpt metadata
+* Added the ability to alter a component's style property via a filter
+* Refactored plugin settings to save as a single option value
+* Settings are now only deleted on uninstall and not deactivation
+* Removed unit tests that were making remote calls to the API
+* Added improved support for known YouTube and Vimeo embed formats
 
 = 1.0.7 =
 * Addressed issue with component order settings field for users with PHP strict mode enabled.
