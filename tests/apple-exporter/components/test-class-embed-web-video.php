@@ -286,6 +286,20 @@ class Embed_Web_Video_Test extends Component_TestCase {
 		);
 	}
 
+	public function testVimeoIframeWithParams() {
+		$component = new Embed_Web_Video( '<iframe src="//player.vimeo.com/video/12819723?title=0&byline=0&portrait=0" width="560" height="315" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
+			null, $this->settings, $this->styles, $this->layouts );
+
+		$this->assertEquals(
+			array(
+				'role' => 'embedwebvideo',
+				'URL' => 'https://player.vimeo.com/video/12819723',
+				'aspectRatio' => '1.777',
+		 	),
+			$component->to_array()
+		);
+	}
+
 	public function testFilter() {
 		$component = new Embed_Web_Video( '<p>https://vimeo.com/12819723</p>',
 			null, $this->settings, $this->styles, $this->layouts );
