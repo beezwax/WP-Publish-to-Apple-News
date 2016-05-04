@@ -92,7 +92,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 		$action		= isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
 		$action2	= isset( $_GET['action2'] ) ? sanitize_text_field( $_GET['action2'] ) : null;
 
-		// Allow for bulk actions
+		// Allow for bulk actions from top or bottom
 		if ( ( empty( $action ) || -1 == $action ) && ! empty( $action2 ) ) {
 			$action = $action2;
 		}
