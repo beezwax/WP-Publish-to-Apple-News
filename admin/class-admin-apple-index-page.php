@@ -99,7 +99,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 				return $this->export_action( $id );
 			case self::namespace_action( 'push' ):
 				if ( ! $id ) {
-					$url  = menu_page_url( $this->plugin_slug . '_bulk_export', false );
+					$url = menu_page_url( $this->plugin_slug . '_bulk_export', false );
 					if ( isset( $_GET['article'] ) ) {
 						$ids = is_array( $_GET['article'] ) ? array_map( 'absint', $_GET['article'] ) : absint( $_GET['article'] );
 						$url .= '&ids=' . implode( '.', $ids );
