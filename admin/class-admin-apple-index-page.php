@@ -88,8 +88,14 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access public
 	 */
 	public function page_router() {
-		$id     = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : null;
-		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
+		$id				= isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : null;
+		$action		= isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
+		$action2	= isset( $_GET['action2'] ) ? sanitize_text_field( $_GET['action2'] ) : null;
+
+		// Allow for bulk actions from top or bottom
+		if ( ( empty( $action ) || -1 == $action ) && ! empty( $action2 ) ) {
+			$action = $action2;
+		}
 
 		// Given an action and ID, map the attributes to corresponding actions.
 		switch ( $action ) {
