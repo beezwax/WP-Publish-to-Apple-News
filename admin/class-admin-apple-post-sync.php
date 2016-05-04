@@ -41,8 +41,7 @@ class Admin_Apple_Post_Sync {
 	}
 
 	/**
-	 * When a post is published, or a published post updated, trigger this
-	 * function.
+	 * When a post is published, or a published post updated, trigger this function.
 	 *
 	 * @since 0.4.0
 	 * @param int $id

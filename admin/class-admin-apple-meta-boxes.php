@@ -75,9 +75,13 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			return;
 		}
 
-		// Do the publish
-		$post_sync = new Admin_Apple_Post_Sync( $this->settings );
-		$post_sync->do_publish( $post_id, $post );
+		// Proceed with the push
+		$action = new Apple_Actions\Index\Push( $this->settings, $post_id );
+		try {
+			$action->perform();
+		} catch ( Apple_Actions\Action_Exception $e ) {
+			Admin_Apple_Notice::error( $e->getMessage() );
+		}
 	}
 
 	/**
