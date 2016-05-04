@@ -29,6 +29,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 		$this->settings = $settings;
 
 		// Handle routing to various admin pages
+		add_action( 'admin_init', array( $this, 'page_router' ) );
 		add_action( 'admin_menu', array( $this, 'setup_admin_page' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'setup_assets' ) );
 	}
@@ -44,13 +45,34 @@ class Admin_Apple_Index_Page extends Apple_News {
 		// Set up main page. This page reads parameters and handles actions
 		// accordingly.
 		add_menu_page(
-			__( 'Apple News', 'apple-news' ),	// Page Title
-			__( 'Apple News', 'apple-news' ),	// Menu Title
-			apply_filters( 'apple_news_list_capability', 'manage_options' ), // Capability
-			$this->plugin_slug . '_index', 		// Menu Slug
-			array( $this, 'page_router' ), 		// Function
-			'dashicons-format-aside'       		// Icon
+			__( 'Apple News', 'apple-news' ),
+			__( 'Apple News', 'apple-news' ),
+			apply_filters( 'apple_news_list_capability', 'manage_options' ),
+			$this->plugin_slug . '_index',
+			array( $this, 'admin_page' ),
+			'dashicons-format-aside'
 		);
+	}
+
+	/**
+	 * Decide which template to load for the Apple News admin page
+	 *
+	 * @access public
+	 */
+	public function admin_page() {
+		$id     = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : null;
+		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
+
+		switch ( $action ) {
+			case self::namespace_action( 'settings' ):
+				$post = get_post( $id );
+				$post_meta = get_post_meta( $id );
+				include plugin_dir_path( __FILE__ ) . 'partials/page_single_settings.php';
+				break;
+			default:
+				$this->show_post_list_action();
+				break;
+		}
 	}
 
 	/**
@@ -66,36 +88,29 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access public
 	 */
 	public function page_router() {
-		$id     = isset( $_GET['post_id'] ) ? intval( $_GET['post_id'] ) : null;
+		$id     = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : null;
 		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
 
 		// Given an action and ID, map the attributes to corresponding actions.
-		if ( ! $id ) {
-			switch ( $action ) {
-			case 'push':
-				$url  = menu_page_url( $this->plugin_slug . '_bulk_export', false );
-				if ( isset( $_GET['article'] ) ) {
-					$ids = is_array( $_GET['article'] ) ? array_map( 'absint', $_GET['article'] ) : absint( $_GET['article'] );
-					$url .= '&ids=' . implode( '.', $ids );
-				}
-				wp_safe_redirect( esc_url_raw( $url ) );
-				exit;
-			default:
-				return $this->show_post_list_action();
-			}
-		}
-
 		switch ( $action ) {
-		case 'settings':
-			return $this->settings_action( $id );
-		case 'export':
-			return $this->export_action( $id );
-		case 'push':
-			return $this->push_action( $id );
-		case 'delete':
-			return $this->delete_action( $id );
-		default:
-			wp_die( __( 'Invalid action: ', 'apple-news' ) . $action );
+			case self::namespace_action( 'settings' ):
+				return $this->settings_action( $id );
+			case self::namespace_action( 'export' ):
+				return $this->export_action( $id );
+			case self::namespace_action( 'push' ):
+				if ( ! $id ) {
+					$url = menu_page_url( $this->plugin_slug . '_bulk_export', false );
+					if ( isset( $_GET['article'] ) ) {
+						$ids = is_array( $_GET['article'] ) ? array_map( 'absint', $_GET['article'] ) : absint( $_GET['article'] );
+						$url .= '&ids=' . implode( '.', $ids );
+					}
+					wp_safe_redirect( esc_url_raw( $url ) );
+					exit;
+				} else {
+					return $this->push_action( $id );
+				}
+			case self::namespace_action( 'delete' ):
+				return $this->delete_action( $id );
 		}
 	}
 
@@ -134,6 +149,18 @@ class Admin_Apple_Index_Page extends Apple_News {
 	}
 
 	/**
+	 * Adds a namespace to all actions
+	 *
+	 * @param string $action
+	 * @return string
+	 * @access public
+	 * @static
+	 */
+	public static function namespace_action( $action ) {
+		return 'apple_news_' . $action;
+	}
+
+	/**
 	 * Helps build query params for each row action.
 	 *
 	 * @param string $action
@@ -155,7 +182,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 		// Start the params
 		$params = array();
 		if ( ! empty( $action ) ) {
-			$params['action'] = $action;
+			$params['action'] = self::namespace_action( $action );
 		}
 
 		// Add the other params
@@ -189,12 +216,11 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access private
 	 */
 	private function download_json( $json, $id ) {
+		header( 'Content-Description: File Transfer' );
 		header( 'Content-Type: application/json' );
 		header( 'Content-Disposition: attachment; filename="article-' . absint( $id ) . '.json"' );
-		ob_clean();
-		flush();
 		echo $json;
-		exit;
+		die();
 	}
 
 	/**
@@ -219,11 +245,11 @@ class Admin_Apple_Index_Page extends Apple_News {
 	}
 
 	/**
-	 * Shows a post from the list table.
+	 * Shows the list of articles available for publishing to Apple News.
 	 *
-	 * @access private
+	 * @access public
 	 */
-	private function show_post_list_action() {
+	public function show_post_list_action() {
 		$table = new Admin_Apple_News_List_Table( $this->settings );
 		$table->prepare_items();
 		include plugin_dir_path( __FILE__ ) . 'partials/page_index.php';
@@ -244,22 +270,18 @@ class Admin_Apple_Index_Page extends Apple_News {
 			update_post_meta( $id, 'apple_news_pullquote_position', sanitize_text_field( $_POST['pullquote_position'] ) );
 			$message = __( 'Settings saved.', 'apple-news' );
 		}
-
-		$post      = get_post( $id );
-		$post_meta = get_post_meta( $id );
-		include plugin_dir_path( __FILE__ ) . 'partials/page_single_settings.php';
 	}
 
 	/**
 	 * Handles an export action.
 	 *
 	 * @param int $id
-	 * @access private
+	 * @access public
 	 */
-	private function export_action( $id ) {
-		$action = new Apple_Actions\Index\Export( $this->settings, $id );
+	public function export_action( $id ) {
+		$export = new Apple_Actions\Index\Export( $this->settings, $id );
 		try {
-			$json = $action->perform();
+			$json = $export->perform();
 			$this->download_json( $json, $id );
 		} catch ( Apple_Actions\Action_Exception $e ) {
 			$this->notice_error( $e->getMessage() );
