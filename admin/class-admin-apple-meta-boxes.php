@@ -33,8 +33,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 		// Register hooks if enabled
 		if ( 'yes' == $settings->get( 'show_metabox' ) ) {
-			// Handle a publish action on save.
-			// However, if auto sync is enabled, don't bother.
+			// Handle a publish action and saving fields
 			if ( 'yes' != $settings->get( 'api_autosync' ) ) {
 				add_action( 'save_post', array( $this, 'do_publish' ), 10, 2 );
 			}
@@ -64,14 +63,51 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 */
 	public function do_publish( $post_id, $post ) {
 		// Check if the values we want are present in $_REQUEST params.
-		if ( empty( $_POST['apple_news_publish_action'] )
-			|| empty( $_POST['apple_news_publish_nonce'] )
+		if ( empty( $_POST['apple_news_publish_nonce'] )
 			|| empty( $_POST['post_ID'] ) ) {
 			return;
 		}
 
 		// Check the nonce
 		if ( ! wp_verify_nonce( $_POST['apple_news_publish_nonce'], $this->publish_action ) ) {
+			return;
+		}
+
+		$post_id = absint( $_POST['post_ID'] );
+
+		// Save fields from the meta box
+		if ( ! empty( $_POST['apple_news_sections'] ) ) {
+			$sections = array_map( 'sanitize_text_field', $_POST['apple_news_sections'] );
+		} else {
+			$sections = array();
+		}
+		update_post_meta( $post_id, 'apple_news_sections', $sections );
+
+		if ( ! empty( $_POST['apple_news_is_preview'] ) && 1 === intval( $_POST['apple_news_is_preview'] ) ) {
+			$is_preview = true;
+		} else {
+			$is_preview = false;
+		}
+		update_post_meta( $post_id, 'apple_news_is_preview', $is_preview );
+
+		if ( ! empty( $_POST['apple_news_pullquote'] ) ) {
+			$pullquote = sanitize_text_field( $_POST['apple_news_pullquote'] );
+		} else {
+			$pullquote = '';
+		}
+		update_post_meta( $post_id, 'apple_news_pullquote', $pullquote );
+
+		if ( ! empty( $_POST['apple_news_pullquote_position'] ) ) {
+			$pullquote_position = sanitize_text_field( $_POST['apple_news_pullquote_position'] );
+		} else {
+			$pullquote_position = 'top';
+		}
+		update_post_meta( $post_id, 'apple_news_pullquote_position', $pullquote_position );
+
+		// If this is set to autosync or no action is set, we're done here
+		if ( 'yes' == $this->settings->get( 'api_autosync' )
+			|| empty( $_POST['apple_news_publish_action'] )
+			|| $this->publish_action != $_POST['apple_news_publish_action'] ) {
 			return;
 		}
 
@@ -139,7 +175,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 				?>
 				<h3><?php esc_html_e( 'Sections', 'apple-news' ) ?></h3>
 				<?php
-				self::build_sections_field( $sections );
+				self::build_sections_field( $sections, $post->ID );
 			endif;
 		?>
 		<p class="description"><?php esc_html_e( 'Select the sections in which to publish this article. Uncheck them all for a standalone article.' , 'apple-news' ) ?></p>
@@ -225,7 +261,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		}
 
 		// Get current sections and determine if the article was previously published
-		$apple_news_sections = get_post_meta( $post->ID, 'apple_news_sections', true );
+		$apple_news_sections = get_post_meta( $post_id, 'apple_news_sections', true );
 
 		// Iterate over the list of sections.
 		foreach ( $sections as $section ) :
