@@ -128,10 +128,25 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			&& empty( $deleted )
 			&& empty( $pending ) ):
 		?>
-		<p><?php esc_html_e( 'Click the button below to publish this article to Apple News', 'apple-news' ); ?></p>
+		<p><?php esc_html_e( 'Enter optional settings and then click the button to publish to Apple News', 'apple-news' ); ?></p>
 		<div id="apple-news-publish">
 		<input type="hidden" id="apple-news-publish-action" name="apple_news_publish_action" value="">
 		<input type="hidden" id="apple-news-publish-nonce" name="apple_news_publish_nonce" value="<?php echo esc_attr( wp_create_nonce( $this->publish_action ) ) ?>" >
+		<?php
+			$section = new Apple_Actions\Index\Section( $this->settings );
+			try {
+				$sections = $section->get_sections();
+			} catch ( Apple_Actions\Action_Exception $e ) {
+				Admin_Apple_Notice::error( $e->getMessage() );
+			}
+
+			if ( ! empty( $sections ) ) :
+				?>
+				<h3><?php esc_html_e( 'Sections', 'apple-news' ) ?></h3>
+				<?php
+				self::build_sections_field( $sections );
+			endif;
+		?>
 		<input type="button" id="apple-news-publish-submit" name="apple_news_publish_submit" value="<?php esc_attr_e( 'Publish to Apple News', 'apple-news' ) ?>" class="button-primary" />
 		</div>
 		<?php
@@ -178,6 +193,56 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	}
 
 	/**
+	 * Builds the sections dropdown
+	 *
+	 * @param array $sections
+	 * @param int $post_id
+	 * @access public
+	 * @static
+	 */
+	public static function build_sections_field( $sections, $post_id ) {
+		// Make sure we have sections
+		if ( empty( $sections ) ) {
+			return '';
+		}
+
+		// Get current sections and determine if the article was previously published
+		$apple_news_sections = get_post_meta( $post->ID, 'apple_news_sections', true );
+
+		// If no sections are specified and this hasn't been previously saved, use the default
+
+
+		// Iterate over the list of sections.
+		// Always select the default section.
+		foreach ( $sections as $section ) :
+			?>
+			<input id="apple-news-sections" name="apple_news_sections[]" type="checkbox" value="<?php echo esc_attr( $section->id ) ?>" <?php checked( self::section_is_checked( $apple_news_sections, $section->id, $section->isDefault ) ) ?>><label><?php echo esc_html( $section->name ) ?></label>
+			<?php
+		endforeach;
+	}
+
+	/**
+	 * Determine if a section is checked
+	 *
+	 * @param array $sections
+	 * @param int $section_id
+	 * @param int $is_default
+	 * @access public
+	 * @static
+	 */
+	public static function section_is_checked( $sections, $section_id, $is_default ) {
+		// If no sections exist, return true if this is the default.
+		// If sections is an empty array, this is intentional though and nothing should be checked.
+		// If sections are provided, then only use those for matching.
+		if ( ( empty( $sections ) && ! is_array( $sections ) && 1 == $is_default )
+			|| ( ! empty( $sections ) && is_array( $sections ) && in_array( $section_id, $sections ) ) ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
 	 * Registers assets used by meta boxes.
 	 *
 	 * @param string $hook
@@ -187,6 +252,9 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		if ( 'post.php' != $hook ) {
 			return;
 		}
+
+		wp_enqueue_style( $this->plugin_slug . '_meta_boxes_css', plugin_dir_url(
+			__FILE__ ) .  '../assets/css/meta-boxes.css' );
 
 		wp_enqueue_script( $this->plugin_slug . '_meta_boxes_js', plugin_dir_url(
 			__FILE__ ) .  '../assets/js/meta-boxes.js', array( 'jquery' ),

@@ -64,6 +64,7 @@ class Section extends API_Action {
 	 * @access public
 	 */
 	public function get_sections() {
-		return $this->get_api()->get_sections( $this->get_setting( 'api_channel' ) );
+		$sections = $this->get_api()->get_sections( $this->get_setting( 'api_channel' ) );
+		return ( ! empty( $sections->data ) ) ? $sections->data : array();
 	}
 }
