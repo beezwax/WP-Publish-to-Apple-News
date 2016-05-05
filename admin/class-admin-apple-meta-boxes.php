@@ -63,13 +63,13 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 */
 	public function do_publish( $post_id, $post ) {
 		// Check if the values we want are present in $_REQUEST params.
-		if ( empty( $_POST['apple_news_publish_nonce'] )
+		if ( empty( $_POST['apple_news_nonce'] )
 			|| empty( $_POST['post_ID'] ) ) {
 			return;
 		}
 
 		// Check the nonce
-		if ( ! wp_verify_nonce( $_POST['apple_news_publish_nonce'], $this->publish_action ) ) {
+		if ( ! wp_verify_nonce( $_POST['apple_news_nonce'], $this->publish_action ) ) {
 			return;
 		}
 
@@ -162,7 +162,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		$pullquote_position = get_post_meta( $post->ID, 'apple_news_pullquote_position', true );
 		?>
 		<div id="apple-news-publish">
-		<input type="hidden" id="apple-news-publish-nonce" name="apple_news_publish_nonce" value="<?php echo esc_attr( wp_create_nonce( $this->publish_action ) ) ?>" >
+		<?php wp_nonce_field( $this->publish_action, 'apple_news_nonce' ); ?>
 		<?php
 			$section = new Apple_Actions\Index\Section( $this->settings );
 			try {

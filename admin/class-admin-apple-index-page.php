@@ -24,6 +24,15 @@ class Admin_Apple_Index_Page extends Apple_News {
 	private $settings;
 
 	/**
+	 * Publish action.
+	 *
+	 * @since 0.9.0
+	 * @var array
+	 * @access private
+	 */
+	private $publish_action = 'apple_news_publish';
+
+	/**
 	 * Constructor.
 	 */
 	function __construct( $settings ) {
@@ -63,6 +72,13 @@ class Admin_Apple_Index_Page extends Apple_News {
 	public function admin_page() {
 		$id     = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : null;
 		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
+
+		$section = new Apple_Actions\Index\Section( $this->settings );
+		try {
+			$sections = $section->get_sections();
+		} catch ( Apple_Actions\Action_Exception $e ) {
+			Admin_Apple_Notice::error( $e->getMessage() );
+		}
 
 		switch ( $action ) {
 			case self::namespace_action( 'settings' ):
@@ -265,18 +281,45 @@ class Admin_Apple_Index_Page extends Apple_News {
 	/**
 	 * Handles all settings actions.
 	 *
-	 * @param int $id
+	 * @param int $post_id
 	 * @access private
 	 */
-	private function settings_action( $id ) {
-		if ( isset( $_POST['pullquote'] ) ) {
-			update_post_meta( $id, 'apple_news_pullquote', sanitize_text_field( $_POST['pullquote'] ) );
+	private function settings_action( $post_id ) {
+		// Check the nonce
+		if ( ! wp_verify_nonce( $_POST['apple_news_nonce'], 'publish' ) ) {
+			return;
 		}
 
-		if ( isset( $_POST['pullquote_position'] ) ) {
-			update_post_meta( $id, 'apple_news_pullquote_position', sanitize_text_field( $_POST['pullquote_position'] ) );
-			$message = __( 'Settings saved.', 'apple-news' );
+		// Save fields from the meta box
+		if ( ! empty( $_POST['apple_news_sections'] ) ) {
+			$sections = array_map( 'sanitize_text_field', $_POST['apple_news_sections'] );
+		} else {
+			$sections = array();
 		}
+		update_post_meta( $post_id, 'apple_news_sections', $sections );
+
+		if ( ! empty( $_POST['apple_news_is_preview'] ) && 1 === intval( $_POST['apple_news_is_preview'] ) ) {
+			$is_preview = true;
+		} else {
+			$is_preview = false;
+		}
+		update_post_meta( $post_id, 'apple_news_is_preview', $is_preview );
+
+		if ( ! empty( $_POST['apple_news_pullquote'] ) ) {
+			$pullquote = sanitize_text_field( $_POST['apple_news_pullquote'] );
+		} else {
+			$pullquote = '';
+		}
+		update_post_meta( $post_id, 'apple_news_pullquote', $pullquote );
+
+		if ( ! empty( $_POST['apple_news_pullquote_position'] ) ) {
+			$pullquote_position = sanitize_text_field( $_POST['apple_news_pullquote_position'] );
+		} else {
+			$pullquote_position = 'top';
+		}
+		update_post_meta( $post_id, 'apple_news_pullquote_position', $pullquote_position );
+
+		$message = __( 'Settings saved.', 'apple-news' );
 	}
 
 	/**
