@@ -10,6 +10,7 @@ require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-get.php';
 require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-push.php';
 require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-delete.php';
 require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-export.php';
+require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-section.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-news-list-table.php';
 
 class Admin_Apple_Index_Page extends Apple_News {
