@@ -57,14 +57,20 @@ class Section extends API_Action {
 	}
 
 	/**
-	 * Get all available sections
+	 * Get all available sections.
+	 * Cache for 5 minutes to avoid too many API requests.
 	 *
 	 * @param string $type 	Either 'display' or 'raw'.
 	 * @return array
 	 * @access public
 	 */
 	public function get_sections() {
-		$sections = $this->get_api()->get_sections( $this->get_setting( 'api_channel' ) );
-		return ( ! empty( $sections->data ) ) ? $sections->data : array();
+		if ( false === ( $sections = get_transient( 'apple_news_sections' ) ) ) {
+			$apple_news_sections = $this->get_api()->get_sections( $this->get_setting( 'api_channel' ) );
+			$sections = ( ! empty( $apple_news_sections->data ) ) ? $apple_news_sections->data : array();
+			set_transient( 'apple_news_sections', $sections, 300 );
+		}
+
+		return $sections;
 	}
 }

@@ -6,6 +6,10 @@
     display: block;
 }
 
+#apple-news-publish .section {
+	display: block;
+}
+
 #apple-news-publish-submit {
 	margin-top: 10px;
 }

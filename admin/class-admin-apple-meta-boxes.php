@@ -209,14 +209,12 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		// Get current sections and determine if the article was previously published
 		$apple_news_sections = get_post_meta( $post->ID, 'apple_news_sections', true );
 
-		// If no sections are specified and this hasn't been previously saved, use the default
-
-
 		// Iterate over the list of sections.
-		// Always select the default section.
 		foreach ( $sections as $section ) :
 			?>
-			<input id="apple-news-sections" name="apple_news_sections[]" type="checkbox" value="<?php echo esc_attr( $section->id ) ?>" <?php checked( self::section_is_checked( $apple_news_sections, $section->id, $section->isDefault ) ) ?>><label><?php echo esc_html( $section->name ) ?></label>
+			<div class="section">
+				<input id="apple-news-sections" name="apple_news_sections[]" type="checkbox" value="<?php echo esc_attr( $section->id ) ?>" <?php checked( self::section_is_checked( $apple_news_sections, $section->id, $section->isDefault ) ) ?>><label><?php echo esc_html( $section->name ) ?></label>
+			</div>
 			<?php
 		endforeach;
 	}
