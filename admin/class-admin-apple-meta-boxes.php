@@ -73,8 +73,34 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			return;
 		}
 
+		// Save meta box fields
 		$post_id = absint( $_POST['post_ID'] );
+		self::save_post_meta( $post_id );
 
+		// If this is set to autosync or no action is set, we're done here
+		if ( 'yes' == $this->settings->get( 'api_autosync' )
+			|| empty( $_POST['apple_news_publish_action'] )
+			|| $this->publish_action != $_POST['apple_news_publish_action'] ) {
+			return;
+		}
+
+		// Proceed with the push
+		$action = new Apple_Actions\Index\Push( $this->settings, $post_id );
+		try {
+			$action->perform();
+		} catch ( Apple_Actions\Action_Exception $e ) {
+			Admin_Apple_Notice::error( $e->getMessage() );
+		}
+	}
+
+	/**
+	 * Saves the Apple News meta fields associated with a post
+	 *
+	 * @param int $post_id
+	 * @access public
+	 * @static
+	 */
+	public static function save_post_meta( $post_id ) {
 		// Save fields from the meta box
 		if ( ! empty( $_POST['apple_news_sections'] ) ) {
 			$sections = array_map( 'sanitize_text_field', $_POST['apple_news_sections'] );
@@ -103,21 +129,6 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			$pullquote_position = 'top';
 		}
 		update_post_meta( $post_id, 'apple_news_pullquote_position', $pullquote_position );
-
-		// If this is set to autosync or no action is set, we're done here
-		if ( 'yes' == $this->settings->get( 'api_autosync' )
-			|| empty( $_POST['apple_news_publish_action'] )
-			|| $this->publish_action != $_POST['apple_news_publish_action'] ) {
-			return;
-		}
-
-		// Proceed with the push
-		$action = new Apple_Actions\Index\Push( $this->settings, $post_id );
-		try {
-			$action->perform();
-		} catch ( Apple_Actions\Action_Exception $e ) {
-			Admin_Apple_Notice::error( $e->getMessage() );
-		}
 	}
 
 	/**

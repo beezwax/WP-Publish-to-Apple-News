@@ -319,34 +319,8 @@ class Admin_Apple_Index_Page extends Apple_News {
 			$this->notice_error( __( 'Invalid nonce.', 'apple-news' ) );
 		}
 
-		// Save fields from the form
-		if ( ! empty( $_POST['apple_news_sections'] ) ) {
-			$sections = array_map( 'sanitize_text_field', $_POST['apple_news_sections'] );
-		} else {
-			$sections = array();
-		}
-		update_post_meta( $post_id, 'apple_news_sections', $sections );
-
-		if ( ! empty( $_POST['apple_news_is_preview'] ) && 1 === intval( $_POST['apple_news_is_preview'] ) ) {
-			$is_preview = true;
-		} else {
-			$is_preview = false;
-		}
-		update_post_meta( $post_id, 'apple_news_is_preview', $is_preview );
-
-		if ( ! empty( $_POST['apple_news_pullquote'] ) ) {
-			$pullquote = sanitize_text_field( $_POST['apple_news_pullquote'] );
-		} else {
-			$pullquote = '';
-		}
-		update_post_meta( $post_id, 'apple_news_pullquote', $pullquote );
-
-		if ( ! empty( $_POST['apple_news_pullquote_position'] ) ) {
-			$pullquote_position = sanitize_text_field( $_POST['apple_news_pullquote_position'] );
-		} else {
-			$pullquote_position = 'top';
-		}
-		update_post_meta( $post_id, 'apple_news_pullquote_position', $pullquote_position );
+		// Save fields
+		\Admin_Apple_Meta_Boxes::save_post_meta( $id );
 
 		$message = __( 'Settings saved.', 'apple-news' );
 
