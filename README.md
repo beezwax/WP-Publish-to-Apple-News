@@ -14,7 +14,7 @@ installing other WordPress plugins. Simply perform these steps:
 Once activated, the "Apple News" menu should appear in your WordPress Admin
 panel.
 
-BREAKING CHANGE IN 1.0.9: Please note the "Options" page has been merged into a single
+BREAKING CHANGE IN 1.1: Please note the "Options" page has been merged into a single
 page for setting sections, preview and pull quotes when pushing content to Apple News.
 This both adds functionality and streamlines the workflow.
 

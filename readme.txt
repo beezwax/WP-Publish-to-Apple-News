@@ -4,7 +4,7 @@ Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 4.4.2
-Stable tag: 1.0.9
+Stable tag: 1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -39,7 +39,7 @@ Installing the Publish to Apple News plugin is similar to the process of install
 
 Once activated, the "Apple News" menu should appear in your WordPress Admin panel.
 
-BREAKING CHANGE IN 1.0.9: Please note the "Options" page has been merged into a single page for setting sections, preview and pull quotes when pushing content to Apple News. This both adds functionality and streamlines the workflow.
+BREAKING CHANGE IN 1.1: Please note the "Options" page has been merged into a single page for setting sections, preview and pull quotes when pushing content to Apple News. This both adds functionality and streamlines the workflow.
 
 IMPORTANT NOTE: Apple News format requires that all images are bundled with the content when pushed to the API. It is required that web your host enable `allow_url_fopen` in your PHP configuration in order for this to function properly. Please ensure this is enabled and supported by your web host before reporting any issues with image errors from the plugin or API.
 
