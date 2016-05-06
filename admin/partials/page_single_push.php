@@ -52,7 +52,7 @@
 
 		<p class="submit">
 			<a href="<?php echo esc_url( Admin_Apple_Index_Page::action_query_params( '', admin_url( 'admin.php?page=apple_news_index' ) ) ) ?>" class="button"><?php esc_html_e( 'Back', 'apple-news' ) ?></a>
-			<button type="submit" class="button button-primary"><?php esc_html_e( 'Save Changes', 'apple-news' ) ?></button>
+			<button type="submit" class="button button-primary"><?php esc_html_e( 'Save Settings and Publish to Apple News', 'apple-news' ) ?></button>
 		</p>
 	</form>
 </div>

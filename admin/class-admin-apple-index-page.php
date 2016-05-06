@@ -81,10 +81,10 @@ class Admin_Apple_Index_Page extends Apple_News {
 		}
 
 		switch ( $action ) {
-			case self::namespace_action( 'settings' ):
+			case self::namespace_action( 'push' ):
 				$post = get_post( $id );
 				$post_meta = get_post_meta( $id );
-				include plugin_dir_path( __FILE__ ) . 'partials/page_single_settings.php';
+				include plugin_dir_path( __FILE__ ) . 'partials/page_single_push.php';
 				break;
 			default:
 				$this->show_post_list_action();
@@ -116,8 +116,6 @@ class Admin_Apple_Index_Page extends Apple_News {
 
 		// Given an action and ID, map the attributes to corresponding actions.
 		switch ( $action ) {
-			case self::namespace_action( 'settings' ):
-				return $this->settings_action( $id );
 			case self::namespace_action( 'export' ):
 				return $this->export_action( $id );
 			case self::namespace_action( 'push' ):
@@ -279,50 +277,6 @@ class Admin_Apple_Index_Page extends Apple_News {
 	}
 
 	/**
-	 * Handles all settings actions.
-	 *
-	 * @param int $post_id
-	 * @access private
-	 */
-	private function settings_action( $post_id ) {
-		// Check the nonce
-		if ( ! wp_verify_nonce( $_POST['apple_news_nonce'], 'publish' ) ) {
-			return;
-		}
-
-		// Save fields from the meta box
-		if ( ! empty( $_POST['apple_news_sections'] ) ) {
-			$sections = array_map( 'sanitize_text_field', $_POST['apple_news_sections'] );
-		} else {
-			$sections = array();
-		}
-		update_post_meta( $post_id, 'apple_news_sections', $sections );
-
-		if ( ! empty( $_POST['apple_news_is_preview'] ) && 1 === intval( $_POST['apple_news_is_preview'] ) ) {
-			$is_preview = true;
-		} else {
-			$is_preview = false;
-		}
-		update_post_meta( $post_id, 'apple_news_is_preview', $is_preview );
-
-		if ( ! empty( $_POST['apple_news_pullquote'] ) ) {
-			$pullquote = sanitize_text_field( $_POST['apple_news_pullquote'] );
-		} else {
-			$pullquote = '';
-		}
-		update_post_meta( $post_id, 'apple_news_pullquote', $pullquote );
-
-		if ( ! empty( $_POST['apple_news_pullquote_position'] ) ) {
-			$pullquote_position = sanitize_text_field( $_POST['apple_news_pullquote_position'] );
-		} else {
-			$pullquote_position = 'top';
-		}
-		update_post_meta( $post_id, 'apple_news_pullquote_position', $pullquote_position );
-
-		$message = __( 'Settings saved.', 'apple-news' );
-	}
-
-	/**
 	 * Handles an export action.
 	 *
 	 * @param int $id
@@ -353,6 +307,48 @@ class Admin_Apple_Index_Page extends Apple_News {
 			) );
 			return;
 		}
+
+		// Check the nonce.
+		// If it isn't set, this isn't a form submission so we need to just display the form.
+		if ( ! isset( $_POST['apple_news_nonce'] ) ) {
+			return;
+		}
+
+		// If invalid, we need to display an error.
+		if ( ! wp_verify_nonce( $_POST['apple_news_nonce'], 'publish' ) ) {
+			$this->notice_error( __( 'Invalid nonce.', 'apple-news' ) );
+		}
+
+		// Save fields from the form
+		if ( ! empty( $_POST['apple_news_sections'] ) ) {
+			$sections = array_map( 'sanitize_text_field', $_POST['apple_news_sections'] );
+		} else {
+			$sections = array();
+		}
+		update_post_meta( $post_id, 'apple_news_sections', $sections );
+
+		if ( ! empty( $_POST['apple_news_is_preview'] ) && 1 === intval( $_POST['apple_news_is_preview'] ) ) {
+			$is_preview = true;
+		} else {
+			$is_preview = false;
+		}
+		update_post_meta( $post_id, 'apple_news_is_preview', $is_preview );
+
+		if ( ! empty( $_POST['apple_news_pullquote'] ) ) {
+			$pullquote = sanitize_text_field( $_POST['apple_news_pullquote'] );
+		} else {
+			$pullquote = '';
+		}
+		update_post_meta( $post_id, 'apple_news_pullquote', $pullquote );
+
+		if ( ! empty( $_POST['apple_news_pullquote_position'] ) ) {
+			$pullquote_position = sanitize_text_field( $_POST['apple_news_pullquote_position'] );
+		} else {
+			$pullquote_position = 'top';
+		}
+		update_post_meta( $post_id, 'apple_news_pullquote_position', $pullquote_position );
+
+		$message = __( 'Settings saved.', 'apple-news' );
 
 		// Push the post
 		$action = new Apple_Actions\Index\Push( $this->settings, $id );
