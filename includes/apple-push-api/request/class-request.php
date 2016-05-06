@@ -183,7 +183,7 @@ class Request {
 			$admin_email = filter_var( $settings['apple_news_admin_email'], FILTER_VALIDATE_EMAIL );
 			$body = print_r( $response, true );
 			if ( ! empty( $meta ) ) {
-				$body .= "\n\nrequest meta:\n\n" . print_r( $meta, true );
+				$body .= "\n\n" . esc_html__( 'request meta', 'apple-news' ) . ":\n\n" . print_r( $meta, true );
 			}
 			if ( ! empty( $admin_email ) ) {
 				wp_mail(
