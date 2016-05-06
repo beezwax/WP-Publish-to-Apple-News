@@ -191,7 +191,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			<option <?php selected( $pullquote_position, 'middle' ) ?> value="middle"><?php esc_html_e( 'middle', 'apple-news' ) ?></option>
 			<option <?php selected( $pullquote_position, 'bottom' ) ?> value="bottom"><?php esc_html_e( 'bottom', 'apple-news' ) ?></option>
 		</select>
-		<p class="description"><?php esc_html_e( 'The position in the article the pull quote will appear.', 'apple-news' ) ?></p>
+		<p class="description"><?php esc_html_e( 'The position in the article where the pull quote will appear.', 'apple-news' ) ?></p>
 		<?php
 		if ( 'yes' != $this->settings->get( 'api_autosync' )
 			&& current_user_can( apply_filters( 'apple_news_publish_capability', 'manage_options' ) )
@@ -267,7 +267,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		foreach ( $sections as $section ) :
 			?>
 			<div class="section">
-				<input id="apple-news-section-<?php echo esc_attr( $section->id ) ?>" name="apple_news_sections[]" type="checkbox" value="<?php echo esc_attr( $section->id ) ?>" <?php checked( self::section_is_checked( $apple_news_sections, $section->id, $section->isDefault ) ) ?>>
+				<input id="apple-news-section-<?php echo esc_attr( $section->id ) ?>" name="apple_news_sections[]" type="checkbox" value="<?php echo esc_attr( $section->links->self ) ?>" <?php checked( self::section_is_checked( $apple_news_sections, $section->links->self, $section->isDefault ) ) ?>>
 				<label for="apple-news-section-<?php echo esc_attr( $section->id ) ?>"><?php echo esc_html( $section->name ) ?></label>
 			</div>
 			<?php

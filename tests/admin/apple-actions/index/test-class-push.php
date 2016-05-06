@@ -74,7 +74,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 	public function testUpdate() {
 		$response = $this->dummy_response();
 		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
-		$api->update_article( "123", Argument::Any(), Argument::Any(), array() )
+		$api->update_article( "123", Argument::Any(), Argument::Any(), array(), array( 'data' => array() ) )
 			->willReturn( $response )
 			->shouldBeCalled();
 

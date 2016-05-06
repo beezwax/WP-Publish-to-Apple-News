@@ -1,5 +1,5 @@
 <div class="wrap">
-	<h1>&ldquo;<?php echo esc_html( $post->post_title ); ?>&rdquo; <?php esc_html_e( 'Options', 'apple-news' ) ?></h1>
+	<h1><?php esc_html_e( 'Publish', 'apple-news' ) ?> &ldquo;<?php echo esc_html( $post->post_title ); ?>&rdquo;</h1>
 
 	<?php if ( isset( $message ) ): ?>
 	<div id="setting-error-settings_updated" class="updated settings-error notice is-dismissible">
@@ -44,7 +44,7 @@
 						<option <?php selected( $pullquote_position, 'middle' ) ?> value="middle"><?php esc_html_e( 'middle', 'apple-news' ) ?></option>
 						<option <?php selected( $pullquote_position, 'bottom' ) ?> value="bottom"><?php esc_html_e( 'bottom', 'apple-news' ) ?></option>
 					</select>
-					<p class="description"><?php esc_html_e( 'The position in the article the pull quote will appear.', 'apple-news' ) ?></p>
+					<p class="description"><?php esc_html_e( 'The position in the article where the pull quote will appear.', 'apple-news' ) ?></p>
 				</td>
 			</tr>
 		</table>
