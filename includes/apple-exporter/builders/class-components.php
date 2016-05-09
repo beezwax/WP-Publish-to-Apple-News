@@ -70,11 +70,11 @@ class Components extends Builder {
 
 			// If the component is a body, test if it is an anchor target. For
 			// grouping an anchor target body several things need to happen:
-			if ( isset( $component['identifier'] )               // The FIRST component must be an anchor target
-				&& isset( $components[ $i + 1 ]['anchor'] )        // The SECOND must be the component to be anchored
+			if ( isset( $component['identifier'] )               	// The FIRST component must be an anchor target
+				&& isset( $components[ $i + 1 ]['anchor'] )      	// The SECOND must be the component to be anchored
 				&& isset( $components[ $i + 2 ]['role'] )
-				&& 'body' == $components[ $i + 2 ]['role']        // The THIRD must be a body component
-				&& !isset( $components[ $i + 2 ]['identifier'] ) ) // which must not be an anchor target for another component
+				&& 'body' == $components[ $i + 2 ]['role']        	// The THIRD must be a body component
+				&& !isset( $components[ $i + 2 ]['identifier'] ) ) 	// which must not be an anchor target for another component
 			{
 				// Collect
 				if ( ! is_null( $body_collector ) ) {
@@ -93,10 +93,10 @@ class Components extends Builder {
 
 			// Another case for anchor target grouping is when the component was anchored
 			// to the next element rather than the previous one, in that case:
-			if ( isset( $component['identifier'] )               // The FIRST component must be an anchor target
+			if ( isset( $component['identifier'] )               	// The FIRST component must be an anchor target
 				&& isset( $components[ $i + 1 ]['role'] )
-				&& 'body' == $components[ $i + 1 ]['role']        // The SECOND must be a body component
-				&& !isset( $components[ $i + 1 ]['identifier'] ) ) // which must not be an anchor target for another component
+				&& 'body' == $components[ $i + 1 ]['role']        	// The SECOND must be a body component
+				&& !isset( $components[ $i + 1 ]['identifier'] ) )	// which must not be an anchor target for another component
 			{
 				// Collect
 				if ( ! is_null( $body_collector ) ) {

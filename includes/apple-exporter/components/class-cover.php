@@ -28,17 +28,16 @@ class Cover extends Component {
 		$this->bundle_source( $filename, $url );
 
 		$this->json = array(
-			'role' => 'container',
-			'layout' => 'headerContainerLayout',
-			'style' => array(
-				'fill' => array(
-					'type' => 'image',
-					'URL' => 'bundle://' . $filename,
-					'fillMode' => 'cover',
-				),
-			),
-			'behavior' => array(
-				'type' => 'background_parallax',
+			'role' 			=> 'header',
+			'layout' 		=> 'headerPhotoLayout',
+			'components' 	=> array(array(
+				'role' 			=> 'photo',
+				'layout' 		=> 'headerPhotoLayout',
+				'URL' 			=> 'bundle://' . $filename,
+			)),
+			'behavior' 		=> array(
+				'type' 			=> 'parallax',
+				'factor' 		=> 0.8,
 			),
 		);
 
@@ -51,9 +50,8 @@ class Cover extends Component {
 	 * @access private
 	 */
 	private function set_default_layout() {
-		$this->register_full_width_layout( 'headerContainerLayout', array(
+		$this->register_full_width_layout( 'headerPhotoLayout', array(
 			'ignoreDocumentMargin' => true,
-			'minimumHeight'        => '50vh',
 			'margin'               => array( 'top' => 0, 'bottom' => 25 ),
 		) );
 	}

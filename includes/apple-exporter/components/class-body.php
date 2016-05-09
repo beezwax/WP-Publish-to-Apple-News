@@ -156,12 +156,14 @@ class Body extends Component {
 	 */
 	private function get_default_style() {
 		return array(
-			'textAlignment' => 'left',
-			'fontName'      => $this->get_setting( 'body_font' ),
-			'fontSize'      => intval( $this->get_setting( 'body_size' ) ),
-			'lineHeight'    => intval( $this->get_setting( 'body_line_height' ) ),
-			'textColor'     => $this->get_setting( 'body_color' ),
-			'linkStyle'     => array( 'textColor' => $this->get_setting( 'body_link_color' ) ),
+			'textAlignment' 			=> 'left',
+			'fontName'      			=> $this->get_setting( 'body_font' ),
+			'fontSize'      			=> intval( $this->get_setting( 'body_size' ) ),
+			'lineHeight'    			=> intval( $this->get_setting( 'body_line_height' ) ),
+			'textColor'     			=> $this->get_setting( 'body_color' ),
+			'linkStyle'     			=> array( 'textColor' => $this->get_setting( 'body_link_color' ) ),
+			'paragraphSpacingBefore' 	=> 18,
+			'paragraphSpacingAfter'		=> 18,
 		);
 	}
 
@@ -186,10 +188,11 @@ class Body extends Component {
 			$this->get_default_style(),
 		 	array(
 				'dropCapStyle' => array (
-					'numberOfLines' => 2,
-					'numberOfCharacters' => 1,
-					'fontName' => $this->get_setting( 'dropcap_font' ),
-					'textColor' => $this->get_setting( 'dropcap_color' ),
+					'numberOfLines' 		=> 4,
+					'numberOfCharacters' 	=> 1,
+					'padding' 				=> 5,
+					'fontName' 				=> $this->get_setting( 'dropcap_font' ),
+					'textColor'				=> $this->get_setting( 'dropcap_color' ),
 				),
 			)
 	 	) );
