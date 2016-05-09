@@ -4,7 +4,7 @@ Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 4.4.2
-Stable tag: 1.0.8
+Stable tag: 1.1
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -38,6 +38,8 @@ Installing the Publish to Apple News plugin is similar to the process of install
 1. Activate the Publish to Apple News plugin using the “Plugins” menu in WordPress.
 
 Once activated, the "Apple News" menu should appear in your WordPress Admin panel.
+
+BREAKING CHANGE IN 1.1: Please note the "Options" page has been merged into a single page for setting sections, preview and pull quotes when pushing content to Apple News. This both adds functionality and streamlines the workflow.
 
 IMPORTANT NOTE: Apple News format requires that all images are bundled with the content when pushed to the API. It is required that web your host enable `allow_url_fopen` in your PHP configuration in order for this to function properly. Please ensure this is enabled and supported by your web host before reporting any issues with image errors from the plugin or API.
 
@@ -99,13 +101,13 @@ On the other hand, if you’ve chosen not to automatically publish your content 
 
 **Individual Controls**
 
-To publish a single post to your Apple News channel (or perform other actions), locate the desired post in the list of your locally published content, and hover your mouse immediately below the post’s title. This will display a contextual menu, presenting the following choices: “Options”, “Download”, and “Publish”. In addition, for posts already published to Apple News, two more choices will be displayed: “Delete from Apple News” and “Copy News URL“.
+To publish a single post to your Apple News channel (or perform other actions), locate the desired post in the list of your locally published content, and hover your mouse immediately below the post’s title. This will display a contextual menu, presenting the following choices: “Download” and “Publish”. In addition, for posts already published to Apple News, two more choices will be displayed: “Delete from Apple News” and “Copy News URL“.
 
-Choosing “Publish” or “Delete from Apple News” will either push the current version of the selected post to Apple News, or permanently remove the post from Apple News. You can override either choice at any future time (e.g., a post deleted from Apple News can later be published once again if desired). Note that once a post has been deleted from Apple News, no further updates will automatically be published to Apple News, regardless of whether you’ve enabled “Automatically Publish to Apple News” in your general settings.
+Choosing “Publish” will take you to a screen where you can select the sections to publish to, set the article as a preview, and optionally add a Pull Quote for the selected post. In addition to entering a pull quote, you can choose to place it at the top, middle, or bottom of the selected post. Click the button at the bottom to push the current version of the selected post to Apple News
+
+Choosing “Delete from Apple News” will permanently remove the post from Apple News. You can override either choice at any future time (e.g., a post deleted from Apple News can later be published once again if desired). Note that once a post has been deleted from Apple News, no further updates will automatically be published to Apple News, regardless of whether you’ve enabled “Automatically Publish to Apple News” in your general settings.
 
 The “Download” option will generate a JSON document describing the selected post to your browser’s default Downloads location.
-
-Finally, the “Options” menu allows you to create a Pull Quote for the selected post. In addition to entering a pull quote, you can choose to place it at the top, middle, or bottom of the selected post.
 
 **Bulk Publishing Controls**
 
@@ -114,6 +116,8 @@ Bulk actions can be particularly helpful for pushing older content to your Apple
 Warning: Using Bulk Publishing for a large number of pre-existing posts at one time may require significant processing time and server resources. It is recommended that you test this feature with smaller batches of pre-existing posts first.
 
 You can choose to publish several posts to your Apple News channel at once, using the Bulk Actions control located at the top left of this section. Simply check any number of desired posts, then select “publish” from the Bulk Actions menu. This will open a page displaying the posts you’ve selected, and the status of each post as it is pushed to Apple News. Note that while bulk publishing actions are in progress, you should not close your browser window or navigate away from this page. Doing so will halt the bulk action in progress.
+
+Bulk publishing will use the default section for your channel unless you have previously set the channel via the Apple News meta box on the post edit screen.
 
 = Tips =
 
@@ -153,6 +157,14 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 1.
 
 == Changelog ==
+
+= 1.0.9 =
+* Added composer support (thanks ryanmarkel!)
+* Removed unnecessary ob_start() on every page load
+* Fixed issue with manual publish button on post edit screen
+* Fixed issue with bottom bulk actions menu on Apple News list table
+* Added ability to publish to any section
+* Added ability to publish preview articles
 
 = 1.0.8 =
 * Added support for date metadata (https://developer.apple.com/library/ios/documentation/General/Conceptual/Apple_News_Format_Ref/Metadata.html#//apple_ref/doc/uid/TP40015408-CH3-SW1)

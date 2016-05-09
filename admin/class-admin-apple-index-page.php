@@ -10,6 +10,7 @@ require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-get.php';
 require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-push.php';
 require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-delete.php';
 require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-export.php';
+require_once plugin_dir_path( __FILE__ ) . 'apple-actions/index/class-section.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-news-list-table.php';
 
 class Admin_Apple_Index_Page extends Apple_News {
@@ -21,6 +22,15 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access private
 	 */
 	private $settings;
+
+	/**
+	 * Publish action.
+	 *
+	 * @since 0.9.0
+	 * @var array
+	 * @access private
+	 */
+	private $publish_action = 'apple_news_publish';
 
 	/**
 	 * Constructor.
@@ -63,11 +73,18 @@ class Admin_Apple_Index_Page extends Apple_News {
 		$id     = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : null;
 		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
 
+		$section = new Apple_Actions\Index\Section( $this->settings );
+		try {
+			$sections = $section->get_sections();
+		} catch ( Apple_Actions\Action_Exception $e ) {
+			Admin_Apple_Notice::error( $e->getMessage() );
+		}
+
 		switch ( $action ) {
-			case self::namespace_action( 'settings' ):
+			case self::namespace_action( 'push' ):
 				$post = get_post( $id );
 				$post_meta = get_post_meta( $id );
-				include plugin_dir_path( __FILE__ ) . 'partials/page_single_settings.php';
+				include plugin_dir_path( __FILE__ ) . 'partials/page_single_push.php';
 				break;
 			default:
 				$this->show_post_list_action();
@@ -99,8 +116,6 @@ class Admin_Apple_Index_Page extends Apple_News {
 
 		// Given an action and ID, map the attributes to corresponding actions.
 		switch ( $action ) {
-			case self::namespace_action( 'settings' ):
-				return $this->settings_action( $id );
 			case self::namespace_action( 'export' ):
 				return $this->export_action( $id );
 			case self::namespace_action( 'push' ):
@@ -262,23 +277,6 @@ class Admin_Apple_Index_Page extends Apple_News {
 	}
 
 	/**
-	 * Handles all settings actions.
-	 *
-	 * @param int $id
-	 * @access private
-	 */
-	private function settings_action( $id ) {
-		if ( isset( $_POST['pullquote'] ) ) {
-			update_post_meta( $id, 'apple_news_pullquote', sanitize_text_field( $_POST['pullquote'] ) );
-		}
-
-		if ( isset( $_POST['pullquote_position'] ) ) {
-			update_post_meta( $id, 'apple_news_pullquote_position', sanitize_text_field( $_POST['pullquote_position'] ) );
-			$message = __( 'Settings saved.', 'apple-news' );
-		}
-	}
-
-	/**
 	 * Handles an export action.
 	 *
 	 * @param int $id
@@ -309,6 +307,22 @@ class Admin_Apple_Index_Page extends Apple_News {
 			) );
 			return;
 		}
+
+		// Check the nonce.
+		// If it isn't set, this isn't a form submission so we need to just display the form.
+		if ( ! isset( $_POST['apple_news_nonce'] ) ) {
+			return;
+		}
+
+		// If invalid, we need to display an error.
+		if ( ! wp_verify_nonce( $_POST['apple_news_nonce'], 'publish' ) ) {
+			$this->notice_error( __( 'Invalid nonce.', 'apple-news' ) );
+		}
+
+		// Save fields
+		\Admin_Apple_Meta_Boxes::save_post_meta( $id );
+
+		$message = __( 'Settings saved.', 'apple-news' );
 
 		// Push the post
 		$action = new Apple_Actions\Index\Push( $this->settings, $id );

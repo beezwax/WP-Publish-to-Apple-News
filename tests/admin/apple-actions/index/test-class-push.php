@@ -71,10 +71,87 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
 	}
 
+	public function testCreateWithSections() {
+		$response = $this->dummy_response();
+		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
+		$api->post_article_to_channel(
+			Argument::Any(),
+			Argument::Any(),
+			Argument::Any(),
+			array(
+				'data' => array(
+					'links' => array(
+						'section' => array(
+							'http://news-api.apple.com/sections/123',
+						),
+					),
+					'isPreview' => false
+				)
+			)
+		)
+			->willReturn( $response )
+			->shouldBeCalled();
+
+		// Create post
+		$post_id = $this->factory->post->create();
+		update_post_meta( $post_id, 'apple_news_sections', array( 'http://news-api.apple.com/sections/123' ) );
+
+		$action = new Push( $this->settings, $post_id );
+		$action->set_api( $api->reveal() );
+		$action->perform();
+
+		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
+		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
+		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
+		$this->assertEquals( $response->data->shareUrl, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
+		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
+	}
+
+	public function testCreateIsPreview() {
+		$response = $this->dummy_response();
+		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
+		$api->post_article_to_channel(
+			Argument::Any(),
+			Argument::Any(),
+			Argument::Any(),
+			array(
+				'data' => array(
+					'isPreview' => true
+				)
+			)
+		)
+			->willReturn( $response )
+			->shouldBeCalled();
+
+		// Create post
+		$post_id = $this->factory->post->create();
+		update_post_meta( $post_id, 'apple_news_is_preview', true );
+
+		$action = new Push( $this->settings, $post_id );
+		$action->set_api( $api->reveal() );
+		$action->perform();
+
+		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
+		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
+		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
+		$this->assertEquals( $response->data->shareUrl, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
+		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
+	}
+
 	public function testUpdate() {
 		$response = $this->dummy_response();
 		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
-		$api->update_article( "123", Argument::Any(), Argument::Any(), array() )
+		$api->update_article(
+			"123",
+			Argument::Any(),
+			Argument::Any(),
+			array(),
+			array(
+				'data' => array(
+					'isPreview' => false
+				)
+			)
+		)
 			->willReturn( $response )
 			->shouldBeCalled();
 
