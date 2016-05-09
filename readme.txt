@@ -158,7 +158,7 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 
 == Changelog ==
 
-= 1.0.9 =
+= 1.1 =
 * Added composer support (thanks ryanmarkel!)
 * Removed unnecessary ob_start() on every page load
 * Fixed issue with manual publish button on post edit screen
