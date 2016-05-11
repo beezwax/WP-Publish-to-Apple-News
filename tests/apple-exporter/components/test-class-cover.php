@@ -19,7 +19,7 @@ class Cover_Test extends Component_TestCase {
 			array(
 				'role' => 'header',
 				'layout' => 'headerPhotoLayout',
-				'component' => array( array(
+				'components' => array( array(
 					'role' => 'photo',
 					'layout' => 'headerPhotoLayout',
 					'URL' => 'bundle://filename.jpg'
@@ -51,13 +51,13 @@ class Cover_Test extends Component_TestCase {
 			array(
 				'role' => 'header',
 				'layout' => 'headerPhotoLayout',
-				'component' => array( array(
+				'components' => array( array(
 					'role' => 'photo',
 					'layout' => 'headerPhotoLayout',
 					'URL' => 'bundle://filename.jpg'
 				) ),
 				'behavior' => array(
-					'type' => 'parallax',
+					'type' => 'background_motion',
 					'factor' => 0.8
 				),
 			),
