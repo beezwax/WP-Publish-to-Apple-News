@@ -17,10 +17,16 @@ class Cover_Test extends Component_TestCase {
 
 		$this->assertEquals(
 			array(
-				'role' => 'container',
-				'layout' => 'headerContainerLayout',
+				'role' => 'header',
+				'layout' => 'headerPhotoLayout',
+				'component' => array( array(
+					'role' => 'photo',
+					'layout' => 'headerPhotoLayout',
+					'URL' => 'bundle://filename.jpg'
+				) ),
 				'behavior' => array(
-					'type' => 'background_parallax',
+					'type' => 'parallax',
+					'factor' => 0.8
 				),
 			),
 			$component->to_array()
@@ -43,10 +49,16 @@ class Cover_Test extends Component_TestCase {
 
 		$this->assertEquals(
 			array(
-				'role' => 'container',
-				'layout' => 'headerContainerLayout',
+				'role' => 'header',
+				'layout' => 'headerPhotoLayout',
+				'component' => array( array(
+					'role' => 'photo',
+					'layout' => 'headerPhotoLayout',
+					'URL' => 'bundle://filename.jpg'
+				) ),
 				'behavior' => array(
-					'type' => 'background_motion',
+					'type' => 'parallax',
+					'factor' => 0.8
 				),
 			),
 			$component->to_array()

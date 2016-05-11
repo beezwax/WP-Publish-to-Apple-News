@@ -30,11 +30,11 @@ class Cover extends Component {
 		$this->json = array(
 			'role' 			=> 'header',
 			'layout' 		=> 'headerPhotoLayout',
-			'components' 	=> array(array(
+			'components' 	=> array( array(
 				'role' 			=> 'photo',
 				'layout' 		=> 'headerPhotoLayout',
 				'URL' 			=> 'bundle://' . $filename,
-			)),
+			) ),
 			'behavior' 		=> array(
 				'type' 			=> 'parallax',
 				'factor' 		=> 0.8,
