@@ -30,7 +30,67 @@ class Components extends Builder {
 		// such as if a thumbnail was used from the body.
 		$components = array_merge( $this->meta_components(), $components );
 
-		return $this->group_body_components( $components );
+		$grouped_components = $this->group_body_components( $components );
+		$grouped_components = $this->componentize( $grouped_components );
+
+		return $grouped_components;
+	}
+
+	/**
+	 * Give an array of components in array format, transform
+	 * all that are needed into components
+	 *
+	 * @param array $components
+	 * @return array
+	 * @access private
+	 */
+	private function componentize( $components ) {
+		$heading_items = array();
+		$header_pos = 0;
+
+		foreach ( $components as $i => $component) {
+			if ( 'title' === $component['role'] || 'byline' === $component['role'] ) {
+				$header_pos = ( 'title' === $component['role'] ) ? $i : $header_pos;
+				$heading_items[] = $component;
+			}
+			if ( 'quote' === $component['role'] ) {
+				array_splice( $components, $i, 1, array( array(
+					'role' => 'container',
+					'layout' => array(
+						'columnStart' => 3,
+						'columnSpan' => 4
+					),
+					'style' => array(
+						'border' => array(
+							'all' => array(
+								'width' => 3,
+								'style' => 'solid',
+								'color' => '#53585F'
+							),
+							'left' => false,
+							'right' => false
+						)
+					),
+					'anchor' => array(
+						'targetComponentIdentifier' => 'pullquoteAnchor',
+						'originAnchorPosition' => 'top',
+						'targetAnchorPosition' => 'top',
+						'rangeStart' => 0,
+						'rangeLength' => 10
+					),
+					'components' => array( $component )
+				) ) );
+			}
+		}
+		array_splice( $components, $header_pos, 2, array( array(
+			'role' => 'container',
+			// @TODO add these to the styles
+			// 'layout' => 'bodyContainerLayout',
+			// 'style' => 'bodyContainerStyle',
+			'components' => $heading_items,
+		) ) );
+
+		return $components;
 	}
 
 	/**
@@ -146,7 +206,6 @@ class Components extends Builder {
 				$new_components[ $i ]['text'] = trim( $new_components[ $i ]['text'] );
 			}
 		}
-
 		return $new_components;
 	}
 
