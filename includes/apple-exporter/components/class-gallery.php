@@ -38,12 +38,9 @@ class Gallery extends Component {
 		$items = array();
 
 		foreach ( $urls as $url ) {
-			// Save to bundle
-			$filename = \Apple_News::get_filename( $url );
-
 			// Collect into to items array
 			$items[] = array(
-				'URL' => $this->maybe_bundle_source( $filename, $url ),
+				'URL' => $this->maybe_bundle_source( $url ),
 			);
 		}
 

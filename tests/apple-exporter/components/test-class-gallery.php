@@ -10,6 +10,7 @@ class Gallery_Test extends Component_TestCase {
 		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
 		// get_file_contents and write_tmp_files must be caleld with the specified
 		// params
+		$this->settings->set( 'use_remote_images', 'no' );
 		$workspace->bundle_source( 'filename-1.jpg', 'http://someurl.com/filename-1.jpg' )->shouldBeCalled();
 		$workspace->bundle_source( 'another-filename-2.jpg', 'http://someurl.com/another-filename-2.jpg' )->shouldBeCalled();
 
@@ -38,6 +39,8 @@ class Gallery_Test extends Component_TestCase {
 	}
 
 	public function testFilter() {
+		$this->settings->set( 'use_remote_images', 'no' );
+
 		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
 		// get_file_contents and write_tmp_files must be caleld with the specified
 		// params
