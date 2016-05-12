@@ -28,7 +28,7 @@ class Cover extends Component {
 			'style' => array(
 				'fill' => array(
 					'type' => 'image',
-					'URL' => $this->maybe_bundle_source( $url );
+					'URL' => $this->maybe_bundle_source( $url ),
 					'fillMode' => 'cover',
 				),
 			),
