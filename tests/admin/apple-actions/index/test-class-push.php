@@ -81,7 +81,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			array(
 				'data' => array(
 					'links' => array(
-						'section' => array(
+						'sections' => array(
 							'http://news-api.apple.com/sections/123',
 						),
 					),
