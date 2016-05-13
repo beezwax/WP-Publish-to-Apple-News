@@ -66,9 +66,13 @@ class Section extends API_Action {
 	 */
 	public function get_sections() {
 		if ( false === ( $sections = get_transient( 'apple_news_sections' ) ) ) {
-			$apple_news_sections = $this->get_api()->get_sections( $this->get_setting( 'api_channel' ) );
-			$sections = ( ! empty( $apple_news_sections->data ) ) ? $apple_news_sections->data : array();
-			set_transient( 'apple_news_sections', $sections, 300 );
+			$sections = array();
+			$channel = $this->get_setting( 'api_channel' );
+			if ( ! empty( $channel ) ) {
+				$apple_news_sections = $this->get_api()->get_sections( $channel );
+				$sections = ( ! empty( $apple_news_sections->data ) ) ? $apple_news_sections->data : array();
+				set_transient( 'apple_news_sections', $sections, 300 );
+			}
 		}
 
 		return $sections;

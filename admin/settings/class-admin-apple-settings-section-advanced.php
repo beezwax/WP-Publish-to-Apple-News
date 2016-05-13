@@ -49,7 +49,7 @@ class Admin_Apple_Settings_Section_Advanced extends Admin_Apple_Settings_Section
 			'use_remote_images' => array(
 				'label'   => __( 'Use Remote Images?', 'apple-news' ),
 				'type'    => array( 'yes', 'no' ),
-				'description' => __( 'Allow the Apple News API to retrieve images remotely rather than bundle them. This setting is recommended if you are having any issues with publishing images.', 'apple-news' ),
+				'description' => __( 'Allow the Apple News API to retrieve images remotely rather than bundle them. This setting is recommended if you are having any issues with publishing images. If your images are not publicly accessible, such as on a development site, you cannot use this feature.', 'apple-news' ),
 			),
 		);
 
