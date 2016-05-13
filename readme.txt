@@ -45,7 +45,7 @@ Please read this for more information: http://php.net/manual/en/filesystem.confi
 
 = Troubleshooting: Resolving Image Issues =
 
-Until recently, Apple News required all images to be bundled with the API request. Some hosts do not support allow_url_fopen, which is required for this functionality to work. Apple News now supports remote images so if you are experiencing any errors with images, please go to Settings > Advanced Settings and set Use Remote Images to 'yes'. Please note that in order for this to work, your images must be publicly accessible which is the case for most sites. However, if you're testing on a local development site, your images are likely not accessible and therefore you should set this to 'no'.
+Until recently, Apple News required all images to be bundled with the API request. Some hosts do not support allow_url_fopen, which is required for this functionality to work. Apple News now supports remote images so if you are experiencing any errors with images, please go to Settings > Apple News and set Use Remote Images to 'yes' under Advanced Settings. Please note that in order for this to work, your images must be publicly accessible which is the case for most sites. However, if you're testing on a local development site, your images are likely not accessible and therefore you should set this to 'no'.
 
 = Troubleshooting: Resolving Potential Permissions Issues =
 
