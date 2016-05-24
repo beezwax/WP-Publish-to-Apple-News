@@ -3,8 +3,8 @@ Contributors: potatomaster, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jayg
 Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 4.4.2
-Stable tag: 1.1.2
+Tested up to: 4.5.2
+Stable tag: 1.1.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -159,6 +159,9 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 1.
 
 == Changelog ==
+
+= 1.1.3 =
+* Fixed issue with the Apple News plugin not respecting the site's timezone offset
 
 = 1.1.2 =
 * Added support for remote images
