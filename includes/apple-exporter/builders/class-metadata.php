@@ -23,8 +23,13 @@ class Metadata extends Builder {
 
 		// If the content has a cover, use it as thumb.
 		if ( $this->content_cover() ) {
-			$filename  = \Apple_News::get_filename( $this->content_cover() );
-			$thumb_url = 'bundle://' . $filename;
+			if ( 'yes' === $this->get_setting( 'use_remote_images' ) ) {
+				$thumb_url = $this->content_cover();
+			} else {
+				$filename = \Apple_News::get_filename( $this->content_cover() );
+				$thumb_url = 'bundle://' . $filename;
+			}
+
 			$meta['thumbnailURL'] = $thumb_url;
 		}
 
@@ -33,8 +38,8 @@ class Metadata extends Builder {
 		// since the date functions are inconsistent.
 		$post = get_post( $this->content_id() );
 		if ( ! empty( $post ) ) {
-			$post_date = date( 'c', strtotime( $post->post_date ) );
-			$post_modified = date( 'c', strtotime( $post->post_modified ) );
+			$post_date = date( 'c', strtotime( get_gmt_from_date( $post->post_date ) ) );
+			$post_modified = date( 'c', strtotime( get_gmt_from_date( $post->post_modified ) ) );
 
 			$meta['dateCreated'] = $post_date;
 			$meta['dateModified'] = $post_modified;

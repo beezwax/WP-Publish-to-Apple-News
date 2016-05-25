@@ -18,13 +18,16 @@ BREAKING CHANGE IN 1.1: Please note the "Options" page has been merged into a si
 page for setting sections, preview and pull quotes when pushing content to Apple News.
 This both adds functionality and streamlines the workflow.
 
-IMPORTANT NOTE: Apple News format requires that all images are bundled with the content
-when pushed to the API. It is required that web your host enable `allow_url_fopen` in your
-PHP configuration in order for this to function properly. Please ensure this is enabled
-and supported by your web host before reporting any issues with image errors from the
-plugin or API.
+### Troubleshooting: Resolving Image Issues
 
-[Please read this for more information.](http://php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen)
+Until recently, Apple News required all images to be bundled with the API request.
+Some hosts do not support [allow_url_fopen](http://php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen), which is required for this functionality to work.
+Apple News now supports remote images so if you are experiencing any errors with images,
+please go to Settings > Apple News and set Use Remote Images to 'yes' under Advanced Settings.
+Please note that in order for this to work, your images must be publicly accessible which
+is the case for most sites. However, if you're testing on a local development site, your
+images are likely not accessible and therefore you should set this to 'no'.
+
 
 ###Troubleshooting: Resolving Potential Permissions Issues
 

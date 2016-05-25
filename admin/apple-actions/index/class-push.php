@@ -201,7 +201,7 @@ class Push extends API_Action {
 			// Get sections
 			$sections = get_post_meta( $this->id, 'apple_news_sections', true );
 			if ( is_array( $sections ) ) {
-				$meta['data']['links'] = array( 'section' => $sections );
+				$meta['data']['links'] = array( 'sections' => $sections );
 			}
 
 			// Get the isPreview setting

@@ -73,15 +73,15 @@ class Admin_Apple_Index_Page extends Apple_News {
 		$id     = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : null;
 		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
 
-		$section = new Apple_Actions\Index\Section( $this->settings );
-		try {
-			$sections = $section->get_sections();
-		} catch ( Apple_Actions\Action_Exception $e ) {
-			Admin_Apple_Notice::error( $e->getMessage() );
-		}
-
 		switch ( $action ) {
 			case self::namespace_action( 'push' ):
+				$section = new Apple_Actions\Index\Section( $this->settings );
+				try {
+					$sections = $section->get_sections();
+				} catch ( Apple_Actions\Action_Exception $e ) {
+					Admin_Apple_Notice::error( $e->getMessage() );
+				}
+
 				$post = get_post( $id );
 				$post_meta = get_post_meta( $id );
 				include plugin_dir_path( __FILE__ ) . 'partials/page_single_push.php';

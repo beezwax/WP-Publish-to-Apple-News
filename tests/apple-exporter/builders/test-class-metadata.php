@@ -27,6 +27,8 @@ class Metadata_Test extends WP_UnitTestCase {
 	}
 
 	public function testCover() {
+		$this->settings->set( 'use_remote_images', 'no' );
+
 		$content = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>', null, '/etc/somefile.jpg' );
 		$builder = new Metadata( $content, $this->settings );
 		$result  = $builder->to_array();
@@ -35,7 +37,20 @@ class Metadata_Test extends WP_UnitTestCase {
 		$this->assertEquals( 'bundle://somefile.jpg', $result[ 'thumbnailURL' ] );
 	}
 
+	public function testCoverRemoteImages() {
+		$this->settings->set( 'use_remote_images', 'yes' );
+
+		$content = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>', null, 'http://someurl.com/somefile.jpg' );
+		$builder = new Metadata( $content, $this->settings );
+		$result  = $builder->to_array();
+
+		$this->assertEquals( 5, count( $result ) );
+		$this->assertEquals( 'http://someurl.com/somefile.jpg', $result[ 'thumbnailURL' ] );
+	}
+
 	public function testIntroAndCover() {
+		$this->settings->set( 'use_remote_images', 'no' );
+
 		$content = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>', 'This is an intro.', '/etc/somefile.jpg' );
 		$builder = new Metadata( $content, $this->settings );
 		$result  = $builder->to_array();
@@ -43,6 +58,18 @@ class Metadata_Test extends WP_UnitTestCase {
 		$this->assertEquals( 6, count( $result ) );
 		$this->assertEquals( 'This is an intro.', $result[ 'excerpt' ] );
 		$this->assertEquals( 'bundle://somefile.jpg', $result[ 'thumbnailURL' ] );
+	}
+
+	public function testIntroAndCoverRemoteImages() {
+		$this->settings->set( 'use_remote_images', 'yes' );
+
+		$content = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>', 'This is an intro.', 'http://someurl.com/somefile.jpg' );
+		$builder = new Metadata( $content, $this->settings );
+		$result  = $builder->to_array();
+
+		$this->assertEquals( 6, count( $result ) );
+		$this->assertEquals( 'This is an intro.', $result[ 'excerpt' ] );
+		$this->assertEquals( 'http://someurl.com/somefile.jpg', $result[ 'thumbnailURL' ] );
 	}
 
 	public function testDates() {

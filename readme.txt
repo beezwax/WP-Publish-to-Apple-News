@@ -3,8 +3,8 @@ Contributors: potatomaster, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jayg
 Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 4.4.2
-Stable tag: 1.1
+Tested up to: 4.5.2
+Stable tag: 1.1.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -41,9 +41,11 @@ Once activated, the "Apple News" menu should appear in your WordPress Admin pane
 
 BREAKING CHANGE IN 1.1: Please note the "Options" page has been merged into a single page for setting sections, preview and pull quotes when pushing content to Apple News. This both adds functionality and streamlines the workflow.
 
-IMPORTANT NOTE: Apple News format requires that all images are bundled with the content when pushed to the API. It is required that web your host enable `allow_url_fopen` in your PHP configuration in order for this to function properly. Please ensure this is enabled and supported by your web host before reporting any issues with image errors from the plugin or API.
-
 Please read this for more information: http://php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen
+
+= Troubleshooting: Resolving Image Issues =
+
+Until recently, Apple News required all images to be bundled with the API request. Some hosts do not support allow_url_fopen, which is required for this functionality to work. Apple News now supports remote images so if you are experiencing any errors with images, please go to Settings > Apple News and set Use Remote Images to 'yes' under Advanced Settings. Please note that in order for this to work, your images must be publicly accessible which is the case for most sites. However, if you're testing on a local development site, your images are likely not accessible and therefore you should set this to 'no'.
 
 = Troubleshooting: Resolving Potential Permissions Issues =
 
@@ -158,7 +160,17 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 
 == Changelog ==
 
-= 1.0.9 =
+= 1.1.3 =
+* Fixed issue with the Apple News plugin not respecting the site's timezone offset
+
+= 1.1.2 =
+* Added support for remote images
+* Fixed error on loading the Apple News list view before channel details are entered
+
+= 1.1.1 =
+* Fixed issue with publishing to sections
+
+= 1.1 =
 * Added composer support (thanks ryanmarkel!)
 * Removed unnecessary ob_start() on every page load
 * Fixed issue with manual publish button on post edit screen
