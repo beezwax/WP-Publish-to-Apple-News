@@ -28,7 +28,7 @@ class Cover extends Component {
 			'components' 	=> array( array(
 				'role' 			=> 'photo',
 				'layout' 		=> 'headerPhotoLayout',
-				'URL' 			=> 'bundle://' . $filename,
+				'URL' 			=> $this->maybe_bundle_source( $url ),
 			) ),
 			'behavior' 		=> array(
 				'type' 			=> 'parallax',
