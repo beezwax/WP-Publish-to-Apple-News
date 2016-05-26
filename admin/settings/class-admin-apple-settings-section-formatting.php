@@ -129,6 +129,18 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 				'label'   => __( 'Pull quote color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'pullquote_border_color' => array(
+				'label'   => __( 'Pull quote border color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'pullquote_border_style' => array(
+				'label'   => __( 'Pull quote border style', 'apple-news' ),
+				'type'    => array( 'solid', 'dashed', 'dotted' ),
+			),
+			'pullquote_border_width' => array(
+				'label'   => __( 'Pull quote border width', 'apple-news' ),
+				'type'    => 'integer',
+			),
 			'pullquote_transform' => array(
 				'label'   => __( 'Pull quote transformation', 'apple-news' ),
 				'type'    => array( 'none', 'uppercase' ),
@@ -190,7 +202,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 					__( 'Articles can have an optional', 'apple-news' ),
 					__( 'Pull quote', 'apple-news' )
 				),
-				'settings'    => array( 'pullquote_font', 'pullquote_size', 'pullquote_color', 'pullquote_transform' ),
+				'settings'    => array( 'pullquote_font', 'pullquote_size', 'pullquote_color', 'pullquote_border_color', 'pullquote_border_style', 'pullquote_border_width', 'pullquote_transform' ),
 			),
 			'gallery' => array(
 				'label'       => __( 'Gallery', 'apple-news' ),

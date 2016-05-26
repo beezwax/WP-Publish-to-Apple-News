@@ -30,67 +30,7 @@ class Components extends Builder {
 		// such as if a thumbnail was used from the body.
 		$components = array_merge( $this->meta_components(), $components );
 
-		$grouped_components = $this->group_body_components( $components );
-		$grouped_components = $this->componentize( $grouped_components );
-
-		return $grouped_components;
-	}
-
-	/**
-	 * Give an array of components in array format, transform
-	 * all that are needed into components
-	 *
-	 * @param array $components
-	 * @return array
-	 * @access private
-	 */
-	private function componentize( $components ) {
-		$heading_items = array();
-		$header_pos = 0;
-
-		foreach ( $components as $i => $component) {
-			if ( 'title' === $component['role'] || 'byline' === $component['role'] ) {
-				$header_pos = ( 'title' === $component['role'] ) ? $i : $header_pos;
-				$heading_items[] = $component;
-			}
-			if ( 'quote' === $component['role'] ) {
-				array_splice( $components, $i, 1, array( array(
-					'role' => 'container',
-					'layout' => array(
-						'columnStart' => 3,
-						'columnSpan' => 4
-					),
-					'style' => array(
-						'border' => array(
-							'all' => array(
-								'width' => 3,
-								'style' => 'solid',
-								'color' => '#53585F'
-							),
-							'left' => false,
-							'right' => false
-						)
-					),
-					'anchor' => array(
-						'targetComponentIdentifier' => 'pullquoteAnchor',
-						'originAnchorPosition' => 'top',
-						'targetAnchorPosition' => 'top',
-						'rangeStart' => 0,
-						'rangeLength' => 10
-					),
-					'components' => array( $component )
-				) ) );
-			}
-		}
-		array_splice( $components, $header_pos, 2, array( array(
-			'role' => 'container',
-			// @TODO add these to the styles
-			// 'layout' => 'bodyContainerLayout',
-			// 'style' => 'bodyContainerStyle',
-			'components' => $heading_items,
-		) ) );
-
-		return $components;
+		return $this->group_body_components( $components );
 	}
 
 	/**
@@ -320,12 +260,25 @@ class Components extends Builder {
 			return;
 		}
 
-		$component->set_json( 'anchor', array(
-			'targetComponentIdentifier' => $target_component->uid(),
-			'targetAnchorPosition'      => 'center',
-			'rangeStart'                => 0,
-			'rangeLength'               => 1,
-		) );
+		// Get the component's anchor settings, if set
+		$anchor_json = $component->get_json( 'anchor' );
+
+		// If the component doesn't have it's own anchor settings, use the defaults.
+		if ( empty( $anchor_json ) ) {
+			$anchor_json = array(
+				'targetAnchorPosition'      => 'center',
+				'rangeStart'                => 0,
+				'rangeLength'               => 1,
+			);
+		}
+
+		// Regardless of what the component class specifies,
+		// add the targetComponentIdentifier here.
+		// There's no way for the class to know what this is before this point.
+		$anchor_json['targetComponentIdentifier'] = $target_component->uid();
+
+		// Add the JSON back to the component
+		$component->set_json( 'anchor', $anchor_json );
 
 		// Given $component, find out the opposite position.
 		$other_position = null;

@@ -42,6 +42,7 @@ class Quote extends Component {
 
 		$this->set_style();
 		$this->set_layout();
+		$this->set_anchor();
 	}
 
 	/**
@@ -52,7 +53,12 @@ class Quote extends Component {
 	private function set_layout() {
 		$this->json['layout'] = 'quote-layout';
 		$this->register_layout( 'quote-layout', array(
-			'margin' => array( 'top' => 12, 'bottom' => 12 ),
+			'margin' => array(
+				'top' => 12,
+				'bottom' => 12
+			),
+			'columnStart' => 3,
+			'columnSpan' => 4
 		) );
 	}
 
@@ -62,7 +68,7 @@ class Quote extends Component {
 	 * @access private
 	 */
 	private function set_style() {
-		$this->json[ 'textStyle' ] = 'default-pullquote';
+		$this->json['textStyle'] = 'default-pullquote';
 		$this->register_style( 'default-pullquote', array(
 			'fontName'      => $this->get_setting( 'pullquote_font' ),
 			'fontSize'      => intval( $this->get_setting( 'pullquote_size' ) ),
@@ -70,7 +76,33 @@ class Quote extends Component {
 			'textTransform' => $this->get_setting( 'pullquote_transform' ),
 			'lineHeight'    => intval( $this->get_setting( 'pullquote_line_height' ) ),
 			'textAlignment' => $this->find_text_alignment(),
+			'border' => array(
+				'all' => array(
+					'width' => $this->get_setting( 'pullquote_border_width' ),
+					'style' => $this->get_setting( 'pullquote_border_style' ),
+					'color' => $this->get_setting( 'pullquote_border_color' ),
+				),
+				'left' => false,
+				'right' => false,
+			),
 		) );
+	}
+
+	/**
+	 * Sets the anchor settings for this component.
+	 *
+	 * @access private
+	 */
+	private function set_anchor() {
+		$this->set_anchor_position( Component::ANCHOR_AUTO );
+
+		$this->json['anchor'] = array(
+			'targetComponentIdentifier' => 'pullquoteAnchor',
+			'originAnchorPosition' => 'top',
+			'targetAnchorPosition' => 'top',
+			'rangeStart' => 0,
+			'rangeLength' => 10,
+		);
 	}
 
 }

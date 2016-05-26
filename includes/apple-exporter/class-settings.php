@@ -57,6 +57,9 @@ class Settings {
 		'pullquote_font'  => 'AvenirNext-Bold',
 		'pullquote_size'  => 48,
 		'pullquote_color' => '#53585F',
+		'pullquote_border_color' => '#53585F',
+		'pullquote_border_style' => 'solid',
+		'pullquote_border_width' => '3',
 		'pullquote_transform' => 'uppercase',
 		'pullquote_line_height' => 48,
 

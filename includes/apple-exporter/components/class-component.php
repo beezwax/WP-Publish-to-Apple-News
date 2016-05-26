@@ -252,7 +252,7 @@ abstract class Component {
 	 * @access public
 	 */
 	public function is_anchor_target() {
-		return !is_null( $this->uid );
+		return ! is_null( $this->uid );
 	}
 
 	/**
