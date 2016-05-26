@@ -47,7 +47,8 @@ class Cover extends Component {
 	private function set_default_layout() {
 		$this->register_full_width_layout( 'headerPhotoLayout', array(
 			'ignoreDocumentMargin' => true,
-			'margin'               => array( 'top' => 0, 'bottom' => 25 ),
+			'columnStart' => 0,
+			'columnSpan' => 7,
 		) );
 	}
 
