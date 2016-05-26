@@ -10,7 +10,9 @@ class Quote_Test extends Component_TestCase {
 		$component = new Quote( '<blockquote><p>my quote</p></blockquote>',
 			null, $this->settings, $this->styles, $this->layouts );
 
-		$result = $component->to_array();
+		$result_wrapper = $component->to_array();
+		$result = $result_wrapper['components'][0];
+		$this->assertEquals( 'container', $result_wrapper['role'] );
 		$this->assertEquals( 'quote', $result['role'] );
 		$this->assertEquals( "my quote\n\n", $result['text'] );
 		$this->assertEquals( 'markdown', $result['format'] );
