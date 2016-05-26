@@ -183,21 +183,14 @@ class Components extends Builder {
 				}
 				$components[] = array(
 					'role' => 'container',
-					// 'layout' => 'bodyContainerLayout', // Need to set this
-					// "componentLayouts": { // This is root level
-				    //		"bodyContainerLayout": {
-					//      "columnStart": 0,
-					//      "columnSpan": 7,
-					//      "ignoreDocumentMargin": true
-					//    },
-					//  }
-				    //
-					// 'style' => 'bodyContainerStyle', // Need to set this
-					// "componentStyles": {
-					// 	"bodyContainerStyle": {
-					//   		"backgroundColor": "#FAFAFA"
-					// 	}
-					// }
+					'layout' => array(
+						'columnStart' => 0,
+						'columnSpan' => 7,
+						'ignoreDocumentMargin' => true,
+					),
+					'style' => array(
+						'backgroundColor' => '#FAFAFA',
+					),
 					'components' => $nesting,
 				);
 			}
