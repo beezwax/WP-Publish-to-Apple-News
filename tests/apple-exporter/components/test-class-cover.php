@@ -20,11 +20,13 @@ class Cover_Test extends Component_TestCase {
 			array(
 				'role' => 'header',
 				'layout' => 'headerPhotoLayout',
-				'components' => array( array(
-					'role' => 'photo',
-					'layout' => 'headerPhotoLayout',
-					'URL' => 'bundle://filename.jpg'
-				) ),
+				'components' => array(
+					array(
+						'role' => 'photo',
+						'layout' => 'headerPhotoLayout',
+						'URL' => 'bundle://filename.jpg'
+						)
+					),
 				'behavior' => array(
 					'type' => 'parallax',
 					'factor' => 0.8
@@ -45,17 +47,18 @@ class Cover_Test extends Component_TestCase {
 
 		$this->assertEquals(
 			array(
-				'role' => 'container',
-				'layout' => 'headerContainerLayout',
-				'style' => array(
-					'fill' => array(
-						'type' => 'image',
-						'URL' => 'http://someurl.com/filename.jpg',
-						'fillMode' => 'cover',
-					),
+				'role' => 'header',
+				'layout' => 'headerPhotoLayout',
+				'components' => array(
+					array(
+						'role' => 'photo',
+						'layout' => 'headerPhotoLayout',
+						'URL' => 'http://someurl.com/filename.jpg'
+					)
 				),
 				'behavior' => array(
-					'type' => 'background_parallax',
+					'type' => 'parallax',
+					'factor' => 0.8
 				),
 			),
 			$component->to_array()

@@ -31,10 +31,10 @@ class Component_Tests extends WP_UnitTestCase {
 		$builder = new Components( $this->content, $this->settings );
 		$result  = $builder->to_array();
 
-		$this->assertEquals( 2, count( $result ) );
-		$this->assertEquals( 'title', $result[0]['components'][0]['role'] );
-		$this->assertEquals( 'byline', $result[0]['components'][1]['role'] );
-		$this->assertEquals( 'body', $result[1]['role'] );
+		$this->assertEquals( 3, count( $result ) );
+		$this->assertEquals( 'title', $result[0]['role'] );
+		$this->assertEquals( 'byline', $result[1]['role'] );
+		$this->assertEquals( 'body', $result[2]['role'] );
 	}
 
 	public function testMetaComponentOrdering() {
@@ -43,7 +43,7 @@ class Component_Tests extends WP_UnitTestCase {
 		$builder = new Components( $this->content, $this->settings );
 		$result  = $builder->to_array();
 
-		$this->assertEquals( 2, count( $result ) );
+		$this->assertEquals( 3, count( $result ) );
 		$this->assertEquals( 'byline', $result[0]['role'] );
 		$this->assertEquals( 'title', $result[1]['role'] );
 		$this->assertEquals( 'body', $result[2]['role'] );
