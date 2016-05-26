@@ -32,9 +32,8 @@ class Component_Tests extends WP_UnitTestCase {
 		$result  = $builder->to_array();
 
 		$this->assertEquals( 2, count( $result ) );
-		$this->assertEquals( 'header', $result[0]['role'] );
-		$this->assertEquals( 'container', $result[1]['role'] );
-		$this->assertEquals( 'body', $result[2]['role'] );
+		$this->assertEquals( 'container', $result[0]['role'] );
+		$this->assertEquals( 'body', $result[1]['role'] );
 	}
 
 	public function testMetaComponentOrdering() {
