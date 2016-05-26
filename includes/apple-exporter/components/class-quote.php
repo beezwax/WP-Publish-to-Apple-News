@@ -43,9 +43,9 @@ class Quote extends Component {
 			'style' => array(
 				'border' => array (
 					'all' => array (
-						'width' => 3,
-						'style' => 'solid',
-						'color' => '#53585F',
+						'width' => $this->get_setting( 'pullquote_border_width' ),
+						'style' => $this->get_setting( 'pullquote_border_style' ),
+						'color' => $this->get_setting( 'pullquote_border_color' ),
 					),
 					'left' => false,
 					'right' => false,
