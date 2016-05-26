@@ -35,9 +35,29 @@ class Quote extends Component {
 		$text = $matches[1];
 
 		$this->json = array(
-			'role'   => 'quote',
-			'text'   => $this->markdown->parse( $text ),
-			'format' => 'markdown',
+			'role' => 'container',
+			'layout' => array(
+				'columnStart' => 3,
+				'columnSpan' => 4
+			),
+			'style' => array(
+				'border' => array (
+					'all' => array (
+						'width' => $this->get_setting( 'pullquote_border_width' ),
+						'style' => $this->get_setting( 'pullquote_border_style' ),
+						'color' => $this->get_setting( 'pullquote_border_color' ),
+					),
+					'left' => false,
+					'right' => false,
+				),
+			),
+			'components' => array( array(
+				'role'   => 'quote',
+				'text'   => $this->markdown->parse( $text ),
+				'format' => 'markdown',
+				'layout' => 'quote-layout',
+				'textStyle' => 'default-pullquote',
+			) ),
 		);
 
 		$this->set_style();
@@ -51,14 +71,11 @@ class Quote extends Component {
 	 * @access private
 	 */
 	private function set_layout() {
-		$this->json['layout'] = 'quote-layout';
 		$this->register_layout( 'quote-layout', array(
 			'margin' => array(
 				'top' => 12,
-				'bottom' => 12
+				'bottom' => 12,
 			),
-			'columnStart' => 3,
-			'columnSpan' => 4
 		) );
 	}
 
@@ -76,15 +93,6 @@ class Quote extends Component {
 			'textTransform' => $this->get_setting( 'pullquote_transform' ),
 			'lineHeight'    => intval( $this->get_setting( 'pullquote_line_height' ) ),
 			'textAlignment' => $this->find_text_alignment(),
-			'border' => array(
-				'all' => array(
-					'width' => $this->get_setting( 'pullquote_border_width' ),
-					'style' => $this->get_setting( 'pullquote_border_style' ),
-					'color' => $this->get_setting( 'pullquote_border_color' ),
-				),
-				'left' => false,
-				'right' => false,
-			),
 		) );
 	}
 

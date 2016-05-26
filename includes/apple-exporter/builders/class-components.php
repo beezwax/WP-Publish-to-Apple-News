@@ -162,11 +162,37 @@ class Components extends Builder {
 		// Get the component order
 		$meta_component_order = $this->get_setting( 'meta_component_order' );
 		if ( ! empty( $meta_component_order ) && is_array( $meta_component_order ) ) {
-			foreach ( $meta_component_order as $component ) {
-				$method = 'content_' . $component;
-				if ( method_exists( $this, $method ) && $this->$method() ) {
-					$components[] = $this->get_component_from_shortname( $component, $this->$method() )->to_array();
+			if ( 'cover' !== $meta_component_order[0] ) {
+				foreach ( $meta_component_order as $component ) {
+					$method = 'content_' . $component;
+					if ( method_exists( $this, $method ) && $this->$method() ) {
+						$components[] = $this->get_component_from_shortname( $component, $this->$method() )->to_array();
+					}
 				}
+			} else {
+				$nesting = array();
+				foreach ( $meta_component_order as $component ) {
+					$method = 'content_' . $component;
+					if ( method_exists( $this, $method ) && $this->$method() ) {
+						if ( 'cover' === $component ) {
+							$components[] = $this->get_component_from_shortname( $component, $this->$method() )->to_array();
+						} else {
+							$nesting[] = $this->get_component_from_shortname( $component, $this->$method() )->to_array();
+						}
+					}
+				}
+				$components[] = array(
+					'role' => 'container',
+					'layout' => array(
+						'columnStart' => 0,
+						'columnSpan' => 7,
+						'ignoreDocumentMargin' => true,
+					),
+					'style' => array(
+						'backgroundColor' => '#FAFAFA',
+					),
+					'components' => $nesting,
+				);
 			}
 		}
 
