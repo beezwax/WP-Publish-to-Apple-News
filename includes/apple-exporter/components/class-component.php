@@ -452,7 +452,7 @@ abstract class Component {
 	 *
 	 * @return string
 	 */
-	protected function get_component_name() {
+	public function get_component_name() {
 		$class_name = get_class( $this );
 		$class_name_path = explode( '\\', $class_name );
 		$class_name_no_namespace = end( $class_name_path );

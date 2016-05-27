@@ -30,6 +30,7 @@ class Components extends Builder {
 		// such as if a thumbnail was used from the body.
 		$components = array_merge( $this->meta_components(), $components );
 
+		// Group body components to improve text flow at all orientations
 		return $this->group_body_components( $components );
 	}
 
@@ -140,10 +141,15 @@ class Components extends Builder {
 			$new_components[] = $body_collector;
 		}
 
-		// Trim all body components before returning
+		// Trim all body components before returning.
+		// Also set the layout for the final body component.
 		foreach ( $new_components as $i => $component ) {
 			if ( 'body' == $component['role'] ) {
 				$new_components[ $i ]['text'] = trim( $new_components[ $i ]['text'] );
+
+				if ( $i +1 === count( $new_components ) ) {
+					$new_components[ $i ]['layout'] = 'body-layout-last';
+				}
 			}
 		}
 		return $new_components;
@@ -211,9 +217,8 @@ class Components extends Builder {
 		$result = array();
 		$errors = array();
 
-		foreach ( $this->content_nodes() as $node ) {
-			$components = $this->get_components_from_node( $node );
-			$result     = array_merge( $result, $components );
+		foreach ( $this->content_nodes() as $node_index => $node ) {
+			$result = array_merge( $result, $this->get_components_from_node( $node ) );
 		}
 
 		// Process the result some more. It gets passed by reference for efficiency.

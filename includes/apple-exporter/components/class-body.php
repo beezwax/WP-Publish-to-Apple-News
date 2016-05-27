@@ -138,14 +138,16 @@ class Body extends Component {
 			$col_start = floor( ( $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' ) ) / 2 );
 			break;
 		}
+
+		return $col_start;
 	}
 
 	/**
 	 * Set the default layout for the component.
 	 *
-	 * @access public
+	 * @access private
 	 */
-	public function set_default_layout() {
+	private function set_default_layout() {
 		$this->json[ 'layout' ] = 'body-layout';
 		$this->register_layout( 'body-layout', array(
 			'columnStart' => $this->get_col_start(),
@@ -155,15 +157,8 @@ class Body extends Component {
 				'bottom' => 12
 			),
 		) );
-	}
 
-	/**
-	 * Set the layout for the last body component.
-	 *
-	 * @access public
-	 */
-	public function set_last_layout() {
-		$this->json[ 'layout' ] = 'body-layout-last';
+		// Also pre-register the layout that will be used later for the last body component
 		$this->register_layout( 'body-layout-last', array(
 			'columnStart' => $this->get_col_start(),
 			'columnSpan'  => $this->get_setting( 'body_column_span' ),
