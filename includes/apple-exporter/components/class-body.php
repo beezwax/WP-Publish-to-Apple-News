@@ -122,11 +122,11 @@ class Body extends Component {
 	}
 
 	/**
-	 * Set the default layout for the component.
+	 * Get the start column for the body based on the layout.
 	 *
 	 * @access private
 	 */
-	private function set_default_layout() {
+	private function get_col_start() {
 		// Find out where the body must start according to the body orientation.
 		// Orientation defaults to left, thus, col_start is 0.
 		$col_start = 0;
@@ -138,13 +138,39 @@ class Body extends Component {
 			$col_start = floor( ( $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' ) ) / 2 );
 			break;
 		}
+	}
 
-		// Now that we have the appropriate col_start, register the layout
+	/**
+	 * Set the default layout for the component.
+	 *
+	 * @access public
+	 */
+	public function set_default_layout() {
 		$this->json[ 'layout' ] = 'body-layout';
 		$this->register_layout( 'body-layout', array(
-			'columnStart' => $col_start,
+			'columnStart' => $this->get_col_start(),
 			'columnSpan'  => $this->get_setting( 'body_column_span' ),
-			'margin'      => array( 'top' => 25, 'bottom' => 25 ),
+			'margin'      => array(
+				'top' => 12,
+				'bottom' => 12
+			),
+		) );
+	}
+
+	/**
+	 * Set the layout for the last body component.
+	 *
+	 * @access public
+	 */
+	public function set_last_layout() {
+		$this->json[ 'layout' ] = 'body-layout-last';
+		$this->register_layout( 'body-layout-last', array(
+			'columnStart' => $this->get_col_start(),
+			'columnSpan'  => $this->get_setting( 'body_column_span' ),
+			'margin'      => array(
+				'top' => 12,
+				'bottom' => 30
+			),
 		) );
 	}
 
@@ -161,7 +187,9 @@ class Body extends Component {
 			'fontSize'      			=> intval( $this->get_setting( 'body_size' ) ),
 			'lineHeight'    			=> intval( $this->get_setting( 'body_line_height' ) ),
 			'textColor'     			=> $this->get_setting( 'body_color' ),
-			'linkStyle'     			=> array( 'textColor' => $this->get_setting( 'body_link_color' ) ),
+			'linkStyle'     			=> array(
+				'textColor' => $this->get_setting( 'body_link_color' )
+			),
 			'paragraphSpacingBefore' 	=> 18,
 			'paragraphSpacingAfter'		=> 18,
 		);
@@ -170,9 +198,9 @@ class Body extends Component {
 	/**
 	 * Set the default style for the component.
 	 *
-	 * @access private
+	 * @access public
 	 */
-	private function set_default_style() {
+	public function set_default_style() {
 		$this->json[ 'textStyle' ] = 'default-body';
 		$this->register_style( 'default-body', $this->get_default_style() );
 	}

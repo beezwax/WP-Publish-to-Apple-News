@@ -210,6 +210,7 @@ class Components extends Builder {
 		// might include child-components, like an Cover and Image.
 		$result = array();
 		$errors = array();
+
 		foreach ( $this->content_nodes() as $node ) {
 			$components = $this->get_components_from_node( $node );
 			$result     = array_merge( $result, $components );
@@ -405,7 +406,7 @@ class Components extends Builder {
 
 		// If the position is not top, make some math for middle and bottom
 		if ( 'middle' == $pullquote_position ) {
-			$start = floor( $len / 3 );         // Start looking at the second third
+			$start = floor( $len / 2 );         // Place it in the middle
 		} else if ( 'bottom' == $pullquote_position ) {
 			$start = floor( ( $len / 4 ) * 3 ); // Start looking at the third quarter
 		}
