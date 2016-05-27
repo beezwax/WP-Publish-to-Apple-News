@@ -406,9 +406,11 @@ class Components extends Builder {
 
 		// If the position is not top, make some math for middle and bottom
 		if ( 'middle' == $pullquote_position ) {
-			$start = floor( $len / 2 );         // Place it in the middle
+			// Place it in the middle
+			$start = floor( $len / 2 );
 		} else if ( 'bottom' == $pullquote_position ) {
-			$start = floor( ( $len / 4 ) * 3 ); // Start looking at the third quarter
+			// Start looking at the third quarter
+			$start = floor( ( $len / 4 ) * 3 );
 		}
 
 		for ( $position = $start; $position < $len; $position++ ) {
@@ -425,6 +427,7 @@ class Components extends Builder {
 		// Build a new component and set the anchor position to AUTO
 		$component = $this->get_component_from_shortname( 'blockquote', "<blockquote>$pullquote</blockquote>" );
 		$component->set_anchor_position( Component::ANCHOR_AUTO );
+
 		// Anchor $component to the target component: $components[ $position ]
 		$this->anchor_together( $component, $components[ $position ] );
 
