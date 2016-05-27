@@ -14,6 +14,10 @@ installing other WordPress plugins. Simply perform these steps:
 Once activated, the "Apple News" menu should appear in your WordPress Admin
 panel.
 
+NEW IN 1.1.4: We've made some improvements to the default template built into the plugin.
+Although it won't override your current settings, we strongly recommend placing the
+Cover image at the top of the Component Order settings for the best experience.
+
 BREAKING CHANGE IN 1.1: Please note the "Options" page has been merged into a single
 page for setting sections, preview and pull quotes when pushing content to Apple News.
 This both adds functionality and streamlines the workflow.

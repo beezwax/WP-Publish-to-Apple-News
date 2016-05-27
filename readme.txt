@@ -4,7 +4,7 @@ Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 4.5.2
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -38,6 +38,8 @@ Installing the Publish to Apple News plugin is similar to the process of install
 1. Activate the Publish to Apple News plugin using the “Plugins” menu in WordPress.
 
 Once activated, the "Apple News" menu should appear in your WordPress Admin panel.
+
+NEW IN 1.1.4: We've made some improvements to the default template built into the plugin. Although it won't override your current settings, we strongly recommend placing the Cover image at the top of the Component Order settings for the best experience.
 
 BREAKING CHANGE IN 1.1: Please note the "Options" page has been merged into a single page for setting sections, preview and pull quotes when pushing content to Apple News. This both adds functionality and streamlines the workflow.
 
@@ -159,6 +161,11 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 1.
 
 == Changelog ==
+
+= 1.1.4 =
+* Released updates to the default settings for the Apple News template
+* Added customizable settings for pull quote border color, style and width
+* Refactored logic to obtain size of bundled images for wider web host compatibility
 
 = 1.1.3 =
 * Fixed issue with the Apple News plugin not respecting the site's timezone offset
