@@ -43,11 +43,6 @@ class Component_Layouts_Test extends WP_UnitTestCase {
 			->willReturn( false )
 			->shouldBeCalled();
 		$component->set_json( 'layout', 'anchor-layout-left' )->shouldBeCalled();
-		$component->set_json( 'animation', array(
-			'type'             => 'fade_in',
-			'userControllable' => true,
-			'initialAlpha'     => 0.0,
-		) )->shouldBeCalled();
 
 		$layouts->set_anchor_layout_for( $component->reveal() );
 
