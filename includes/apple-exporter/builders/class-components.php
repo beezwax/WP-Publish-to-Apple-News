@@ -147,7 +147,7 @@ class Components extends Builder {
 			if ( 'body' == $component['role'] ) {
 				$new_components[ $i ]['text'] = trim( $new_components[ $i ]['text'] );
 
-				if ( $i +1 === count( $new_components ) ) {
+				if ( ( $i + 1 ) === count( $new_components ) ) {
 					$new_components[ $i ]['layout'] = 'body-layout-last';
 				}
 			}
@@ -168,6 +168,7 @@ class Components extends Builder {
 		// Get the component order
 		$meta_component_order = $this->get_setting( 'meta_component_order' );
 		if ( ! empty( $meta_component_order ) && is_array( $meta_component_order ) ) {
+			// If the cover is the first meta components, we want to make it a header
 			if ( 'cover' !== $meta_component_order[0] ) {
 				foreach ( $meta_component_order as $component ) {
 					$method = 'content_' . $component;
@@ -176,6 +177,7 @@ class Components extends Builder {
 					}
 				}
 			} else {
+				// Otherwise we want to nest the components a bit differently
 				$nesting = array();
 				foreach ( $meta_component_order as $component ) {
 					$method = 'content_' . $component;
@@ -217,7 +219,7 @@ class Components extends Builder {
 		$result = array();
 		$errors = array();
 
-		foreach ( $this->content_nodes() as $node_index => $node ) {
+		foreach ( $this->content_nodes() as $node ) {
 			$result = array_merge( $result, $this->get_components_from_node( $node ) );
 		}
 
