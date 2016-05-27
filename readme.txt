@@ -39,6 +39,8 @@ Installing the Publish to Apple News plugin is similar to the process of install
 
 Once activated, the "Apple News" menu should appear in your WordPress Admin panel.
 
+NEW IN 1.1.4: We've made some improvements to the default template built into the plugin. Although it won't override your current settings, we strongly recommend placing the Cover image at the top of the Component Order settings for the best experience.
+
 BREAKING CHANGE IN 1.1: Please note the "Options" page has been merged into a single page for setting sections, preview and pull quotes when pushing content to Apple News. This both adds functionality and streamlines the workflow.
 
 Please read this for more information: http://php.net/manual/en/filesystem.configuration.php#ini.allow-url-fopen
@@ -161,7 +163,7 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 == Changelog ==
 
 = 1.1.4 =
-* Released a new built-in Apple News template
+* Released updates to the default settings for the Apple News template
 * Added customizable settings for pull quote border color, style and width
 * Refactored logic to obtain size of bundled images for wider web host compatibility
 
