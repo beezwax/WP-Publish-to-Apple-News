@@ -197,7 +197,7 @@ class Components extends Builder {
 						'ignoreDocumentMargin' => true,
 					),
 					'style' => array(
-						'backgroundColor' => '#FAFAFA',
+						'backgroundColor' => $this->get_setting( 'body_background_color' ),
 					),
 					'components' => $nesting,
 				);
