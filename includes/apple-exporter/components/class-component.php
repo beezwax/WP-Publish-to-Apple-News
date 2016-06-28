@@ -206,7 +206,7 @@ abstract class Component {
 	 * @access public
 	 */
 	public function get_json( $name ) {
-		return $this->json[ $name ];
+		return ( isset( $this->json[ $name ] ) ) ? $this->json[ $name ] : null;
 	}
 
 	/**
