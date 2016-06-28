@@ -4,7 +4,7 @@ Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 4.5.2
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -161,6 +161,13 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 1.
 
 == Changelog ==
+
+= 1.1.5 =
+* Updated logic for creating a unique ID for anchored components to avoid occasional conflicts due to lack of entropy.
+* Fixed issue with lack of container for components when cover isn't the first component causing text to scroll awkwardly over the image with the parallax effect.
+* Added the ability to set the body background color.
+* Fixed issue with empty but valid JSON components causing an "Undefined index" error in Apple News validation.
+* Fixed issue with an invalid API response or unreachable endpoint causing the post edit screen to break when trying to load the Apple News meta box.
 
 = 1.1.4 =
 * Released updates to the default settings for the Apple News template
