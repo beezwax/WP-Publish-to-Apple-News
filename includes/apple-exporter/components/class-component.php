@@ -273,7 +273,7 @@ abstract class Component {
 	 */
 	public function uid() {
 		if ( is_null( $this->uid ) ) {
-			$this->uid = 'component-' . uniqid();
+			$this->uid = 'component-' . md5( uniqid( $this->text, true ) );
 			$this->set_json( 'identifier', $this->uid );
 		}
 
