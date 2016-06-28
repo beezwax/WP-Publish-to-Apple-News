@@ -51,7 +51,7 @@ class Byline extends Component {
 		$this->register_full_width_layout( 'byline-layout', array(
 			'margin' => array(
 				'top' => 10,
-				'bottom' => 10
+				'bottom' => 10,
 			),
 		) );
 	}
