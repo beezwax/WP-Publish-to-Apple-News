@@ -235,7 +235,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		endif;
 
 		if ( ! empty( $api_id ) ) :
-			//$state = \Admin_Apple_News::get_post_status( $post->ID );
+			$state = \Admin_Apple_News::get_post_status( $post->ID );
 
 			$share_url = get_post_meta( $post->ID, 'apple_news_api_share_url', true );
 			$created_at = get_post_meta( $post->ID, 'apple_news_api_created_at', true );
