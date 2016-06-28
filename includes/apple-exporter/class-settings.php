@@ -32,6 +32,7 @@ class Settings {
 		'body_size'        				=> 18,
 		'body_color'       				=> '#4f4f4f',
 		'body_link_color'  				=> '#428BCA',
+		'body_background_color'   => '#FAFAFA',
 		'body_orientation' 				=> 'left',
 		'body_line_height' 				=> 24,
 
