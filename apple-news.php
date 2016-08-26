@@ -13,8 +13,8 @@
  * Plugin URI:  http://github.com/alleyinteractive/apple-news
  * Description: Export and sync posts to Apple format.
  * Version:     1.1.5
- * Author:      Beezwax, Alley Interactive
- * Author URI:  http://alleyinteractive.com, http://beezwax.net
+ * Author:      Alley Interactive
+ * Author URI:  https://www.alleyinteractive.com
  * Text Domain: apple-news
  * Domain Path: lang/
  */
