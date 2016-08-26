@@ -28,9 +28,9 @@ if ( ! defined( 'WPINC' ) ) {
  */
 function apple_news_activate_wp_plugin() {
 	// Check for PHP version
-	if ( version_compare( PHP_VERSION, '5.3.0' ) < 0 ) {
+	if ( version_compare( PHP_VERSION, '5.3.6' ) < 0 ) {
 		deactivate_plugins( basename( __FILE__ ) );
-		wp_die( __( 'This plugin requires at least PHP 5.3.0', 'apple-news' ) );
+		wp_die( __( 'This plugin requires at least PHP 5.3.6', 'apple-news' ) );
 	}
 }
 
