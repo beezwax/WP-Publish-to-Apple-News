@@ -23,7 +23,7 @@ class Settings {
 		'api_async'    						=> 'no',
 
 		'post_types'      				=> array( 'post' ),
-		'show_metabox'    				=> 'no',
+		'show_metabox'    				=> 'yes',
 
 		'layout_margin'   				=> 100,
 		'layout_gutter'   				=> 20,
