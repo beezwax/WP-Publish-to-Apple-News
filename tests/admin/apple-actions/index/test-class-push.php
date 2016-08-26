@@ -85,7 +85,6 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 							'http://news-api.apple.com/sections/123',
 						),
 					),
-					'isPreview' => false
 				)
 			)
 		)
@@ -146,11 +145,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			Argument::Any(),
 			Argument::Any(),
 			array(),
-			array(
-				'data' => array(
-					'isPreview' => false
-				)
-			)
+			array()
 		)
 			->willReturn( $response )
 			->shouldBeCalled();
