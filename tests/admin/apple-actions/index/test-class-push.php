@@ -145,7 +145,9 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			Argument::Any(),
 			Argument::Any(),
 			array(),
-			array()
+			array(
+				'data' => array(),
+			)
 		)
 			->willReturn( $response )
 			->shouldBeCalled();
