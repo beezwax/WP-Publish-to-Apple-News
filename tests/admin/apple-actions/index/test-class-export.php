@@ -43,5 +43,53 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 		$this->assertEquals( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue...', $exporter_content->intro() );
 	}
 
+	public function testBylineFormat() {
+		$user_id = $this->factory->user->create( array(
+			'role' => 'administrator',
+			'display_name' => 'Testuser',
+		) );
+
+		$title = 'My Title';
+		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
+
+		$post_id = $this->factory->post->create( array(
+			'post_title' => $title,
+			'post_content' => $content,
+			'post_excerpt' => '',
+			'post_author' => $user_id,
+			'post_date' => '2016-08-26 12:00',
+		) );
+
+		$export = new Export( $this->settings, $post_id );
+		$exporter = $export->fetch_exporter();
+		$exporter_content = $exporter->get_content();
+
+		$this->assertEquals( 'by Testuser | Aug 26, 2016 | 12:00 PM', $exporter_content->byline() );
+	}
+
+	public function testBylineFormatWithHashtag() {
+		$user_id = $this->factory->user->create( array(
+			'role' => 'administrator',
+			'display_name' => '#Testuser',
+		) );
+
+		$title = 'My Title';
+		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
+
+		$post_id = $this->factory->post->create( array(
+			'post_title' => $title,
+			'post_content' => $content,
+			'post_excerpt' => '',
+			'post_author' => $user_id,
+			'post_date' => '2016-08-26 12:00',
+		) );
+
+		$export = new Export( $this->settings, $post_id );
+		$exporter = $export->fetch_exporter();
+		$exporter_content = $exporter->get_content();
+
+		$this->assertEquals( 'by #Testuser | Aug 26, 2016 | 12:00 PM', $exporter_content->byline() );
+	}
+
 }
 
