@@ -14,7 +14,7 @@
  * Description: Export and sync posts to Apple format.
  * Version:     1.1.5
  * Author:      Alley Interactive
- * Author URI:  http://alleyinteractive.com
+ * Author URI:  https://www.alleyinteractive.com
  * Text Domain: apple-news
  * Domain Path: lang/
  */
