@@ -98,7 +98,7 @@ class Request {
 		$response = wp_safe_remote_post( esc_url_raw( $url ), $args );
 
 		// Parse and return the response
-		return $this->parse_response( $response, true, 'post', $meta );
+		return $this->parse_response( $response, true, 'post', $meta, $bundles, $article );
 	}
 
 	/**
@@ -164,10 +164,12 @@ class Request {
 	 * @param boolean $json
 	 * @param string $type
 	 * @param array $meta
+	 * @param array $bundles
+	 * @param string $article
 	 * @return mixed
 	 * @since 0.2.0
 	 */
-	private function parse_response( $response, $json = true, $type = 'post', $meta = null ) {
+	private function parse_response( $response, $json = true, $type = 'post', $meta = null, $bundles = null, $article = '' ) {
 		// Ensure we have an expected response type
 		if ( ( ! is_array( $response ) || ! isset( $response['body'] ) ) && ! is_wp_error( $response ) ) {
 			throw new Request_Exception( __( 'Invalid response:', 'apple-news' ) . $response );
@@ -175,17 +177,47 @@ class Request {
 
 		// If debugging mode is enabled, send an email
 		$settings = get_option( 'apple_news_settings' );
-		$debugging = get_option( 'apple_news_enable_debugging' );
+
 		if ( ! empty( $settings['apple_news_enable_debugging'] )
 			&& ! empty( $settings['apple_news_admin_email'] )
 			&& 'yes' === $settings['apple_news_enable_debugging']
 			&& 'get' != $type ) {
+
+			// Get the admin email
 			$admin_email = filter_var( $settings['apple_news_admin_email'], FILTER_VALIDATE_EMAIL );
-			$body = print_r( $response, true );
-			if ( ! empty( $meta ) ) {
-				$body .= "\n\n" . esc_html__( 'request meta', 'apple-news' ) . ":\n\n" . print_r( $meta, true );
+			if ( empty( $admin_email ) ) {
+				return;
 			}
-			if ( ! empty( $admin_email ) ) {
+
+			// Add the API response
+			$body = print_r( $response, true );
+
+			// Add the meta sent with the API request, if set
+			if ( ! empty( $meta ) ) {
+				$body .= "\n\n" . esc_html__( 'Request Meta', 'apple-news' ) . ":\n\n" . print_r( $meta, true );
+			}
+
+			// Note image settings
+			$body .= "\n\n"  . esc_html__( 'Image Settings', 'apple-news' ) . "\n";
+			if ( 'yes' === $settings['use_remote_images'] ) {
+				$body .= esc_html__( 'Use Remote images enabled ', 'apple-news' );
+			} else {
+				if ( ! empty( $bundles ) ) {
+					$body .= implode( "\n", $bundles );
+				} else {
+					$body .= esc_html__( 'No bundled images found.', 'apple-news' );
+				}
+			}
+
+			// Add the JSON for the post
+			$body .= "\n\n" . esc_html__( 'JSON', 'apple-news' ) . ":\n" . $article . "\n";
+
+			// Send the email
+			if ( ! empty( $body ) ) {
+				print_r( $body );
+
+				die();
+
 				wp_mail(
 					$admin_email,
 					esc_html__( 'Apple News Notification', 'apple-news' ),
