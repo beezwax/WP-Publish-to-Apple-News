@@ -205,9 +205,9 @@ class Push extends API_Action {
 			}
 
 			// Get the isPreview setting
-			$is_preview = get_post_meta( $this->id, 'apple_news_is_preview', true );
-			if ( isset( $is_preview ) ) {
-				$meta['data']['isPreview'] = (bool) $is_preview;
+			$is_preview = (bool) get_post_meta( $this->id, 'apple_news_is_preview', true );
+			if ( true === $is_preview ) {
+				$meta['data']['isPreview'] = $is_preview;
 			}
 
 			if ( $remote_id ) {

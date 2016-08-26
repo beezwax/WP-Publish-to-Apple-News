@@ -139,11 +139,6 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 * @access public
 	 */
 	public function add_meta_boxes( $post ) {
-		// Only add if this post is published
-		if ( 'auto-draft' == $post->post_status ) {
-			return;
-		}
-
 		// Add the publish meta box
 		add_meta_box(
 			'apple_news_publish',
@@ -206,6 +201,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		<?php
 		if ( 'yes' != $this->settings->get( 'api_autosync' )
 			&& current_user_can( apply_filters( 'apple_news_publish_capability', 'manage_options' ) )
+			&& 'publish' === $post->post_status
 			&& empty( $api_id )
 			&& empty( $deleted )
 			&& empty( $pending ) ):
@@ -313,7 +309,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 * @access public
 	 */
 	public function register_assets( $hook ) {
-		if ( 'post.php' != $hook ) {
+		if ( 'post.php' !== $hook && 'post-new.php' !== $hook ) {
 			return;
 		}
 
