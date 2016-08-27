@@ -19,10 +19,17 @@ class Components extends Builder {
 	 */
 	protected function build() {
 		$components = array();
+		$workspace = new Workspace( $this->content_id() );
 
 		// Handle body components first
 		foreach ( $this->split_into_components() as $component ) {
-			$components[] = $component->to_array();
+			// Check if the component is valid
+			$component_array = $component->to_array();
+			if ( is_wp_error( $component_array ) ) {
+				$workspace->log_error( 'component_errors', $component_array->get_error_message() );
+			} else {
+				$components[] = $component_array;
+			}
 		}
 
 		// Meta components are handled after and then prepended since

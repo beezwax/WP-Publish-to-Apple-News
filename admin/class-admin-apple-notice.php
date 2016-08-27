@@ -46,7 +46,7 @@ class Admin_Apple_Notice {
 		}
 
 		self::add_user_meta( $user_id, self::KEY, array(
-			'message' => sanitize_text_field( $message ),
+			'message' => wp_kses_post( $message ),
 			'type' => sanitize_text_field( $type )
 		) );
 	}
