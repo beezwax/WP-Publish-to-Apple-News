@@ -96,8 +96,17 @@ class MIME_Builder {
 	 * @access public
 	 */
 	public function add_content_from_file( $filepath, $name = 'a_file' ) {
-		// Get the contents of the file
-		$contents = file_get_contents( $filepath );
+		// Get the contents of the file.
+		$contents = '';
+
+		// Try wp_remote_get first.
+		$request = wp_remote_get( $filepath );
+		if ( is_wp_error( $request ) ) {
+			// Try file_get_contents instead. This could be a local path.
+			$contents = file_get_contents( $filepath );
+		} else {
+			$contents = wp_remote_retrieve_body( $request );
+		}
 
 		// Attempt to get the size
 		$size = strlen( $contents );
@@ -112,6 +121,7 @@ class MIME_Builder {
 					}
 				}
 			} else {
+				// This will be the final catch for local files
 				$size = filesize( $filepath );
 			}
 		}
