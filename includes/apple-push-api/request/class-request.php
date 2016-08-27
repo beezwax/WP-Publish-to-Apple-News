@@ -227,17 +227,47 @@ class Request {
 		// Check for errors with the request itself
 		if ( is_wp_error( $response ) ) {
 			$string_errors = '';
-			foreach ( $response->get_error_messages() as $error ) {
-				$string_errors .= $error . "\n";
+			$error_messages = $response->get_error_messages();
+			if ( is_array( $error_messages ) && ! empty( $error_messages ) ) {
+				$string_errors = implode( ', ', $error_messages );
 			}
-			throw new Request_Exception( __( 'There has been an error with your request:', 'apple-news' ) . "\n$string_errors" );
+			throw new Request_Exception( __( 'There has been an error with your request:', 'apple-news' ) . " $string_errors" );
 		}
 
 		// Check for errors from the API
 		$response_decoded = json_decode( $response['body'] );
-		if ( ! empty( $response_decoded->errors ) ) {
-			$messages = implode( ', ', wp_list_pluck( $response_decoded->errors, 'code' ) );
-			throw new Request_Exception( $messages );
+		if ( ! empty( $response_decoded->errors ) && is_array( $response_decoded->errors ) ) {
+			$message = '';
+			$messages = array();
+			foreach ( $response_decoded->errors as $error ) {
+				// If there is a keyPath, build it into a string
+				$key_path = '';
+				if ( ! empty( $error->keyPath ) && is_array( $error->keyPath ) ) {
+					foreach ( $error->keyPath as $i => $path ) {
+						if ( $i > 0 ) {
+							$key_path .= "->$path";
+						} else {
+							$key_path .= $path;
+						}
+					}
+
+					$key_path = " (keyPath $key_path)";
+				}
+
+				// Add the code, message and keyPath
+				$messages[] = sprintf(
+					'%s - %s%s',
+					$error->code,
+					$error->message,
+					$key_path
+				);
+			}
+
+			if ( ! empty( $messages ) ) {
+				$message = implode( ', ', $messages );
+			}
+
+			throw new Request_Exception( $message );
 		}
 
 		// Return the response in the desired format
