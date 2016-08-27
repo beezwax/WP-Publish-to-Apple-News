@@ -190,7 +190,8 @@ class Request {
 			}
 
 			// Add the API response
-			$body = print_r( $response, true );
+			$body = esc_html__( 'API Response', 'apple-news' ) . ":\n";
+			$body .= print_r( $response, true );
 
 			// Add the meta sent with the API request, if set
 			if ( ! empty( $meta ) ) {
@@ -198,11 +199,12 @@ class Request {
 			}
 
 			// Note image settings
-			$body .= "\n\n"  . esc_html__( 'Image Settings', 'apple-news' ) . "\n";
+			$body .= "\n\n"  . esc_html__( 'Image Settings', 'apple-news' ) . ":\n";
 			if ( 'yes' === $settings['use_remote_images'] ) {
 				$body .= esc_html__( 'Use Remote images enabled ', 'apple-news' );
 			} else {
 				if ( ! empty( $bundles ) ) {
+					$body .= "\n"  . esc_html__( 'Bundled images', 'apple-news' ) . ":\n";
 					$body .= implode( "\n", $bundles );
 				} else {
 					$body .= esc_html__( 'No bundled images found.', 'apple-news' );
@@ -214,10 +216,6 @@ class Request {
 
 			// Send the email
 			if ( ! empty( $body ) ) {
-				print_r( $body );
-
-				die();
-
 				wp_mail(
 					$admin_email,
 					esc_html__( 'Apple News Notification', 'apple-news' ),
