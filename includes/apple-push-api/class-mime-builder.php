@@ -100,7 +100,12 @@ class MIME_Builder {
 		$contents = '';
 
 		// Try wp_remote_get first.
-		$request = wp_remote_get( $filepath );
+		if ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) {
+			$request = vip_safe_wp_remote_get( $filepath );
+		} else {
+			$request = wp_remote_get( $filepath );
+		}
+
 		if ( is_wp_error( $request ) ) {
 			// Try file_get_contents instead. This could be a local path.
 			$contents = file_get_contents( $filepath );
