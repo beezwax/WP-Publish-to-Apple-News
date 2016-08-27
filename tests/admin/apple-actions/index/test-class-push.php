@@ -11,7 +11,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 
 	private $original_user_id;
 
-	private $component_message = 'The following components are unsupported by Apple News and were removed:<br />iframe';
+	private $component_message = 'The following components are unsupported by Apple News and were removed:iframe';
 
 	public function setup() {
 		parent::setup();

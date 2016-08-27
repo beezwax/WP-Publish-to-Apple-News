@@ -139,7 +139,7 @@ class Push extends API_Action {
 		// If there were errors, decide how to proceed based on the component alert settings
 		if ( ! empty( $errors[0]['component_errors'] ) ) {
 			// Build an list of the components that caused errors
-			$component_names = '<br />' . implode( '<br />', $errors[0]['component_errors'] );
+			$component_names = implode( ', ', $errors[0]['component_errors'] );
 
 			// Decide if we need to handle this
 			$component_alerts = $this->get_setting( 'component_alerts' );
