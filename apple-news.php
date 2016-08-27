@@ -12,7 +12,7 @@
  * Plugin Name: Publish to Apple News
  * Plugin URI:  http://github.com/alleyinteractive/apple-news
  * Description: Export and sync posts to Apple format.
- * Version:     1.1.5
+ * Version:     1.1.6
  * Author:      Alley Interactive
  * Author URI:  https://www.alleyinteractive.com
  * Text Domain: apple-news

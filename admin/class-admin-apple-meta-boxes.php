@@ -88,6 +88,13 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		$action = new Apple_Actions\Index\Push( $this->settings, $post_id );
 		try {
 			$action->perform();
+
+			// In async mode, success or failure will be displayed later
+			if ( 'yes' !== $this->settings->get( 'api_async' ) ) {
+				Admin_Apple_Notice::success( __( 'Your article has been pushed successfully to Apple News!', 'apple-news' ) );
+			} else {
+				Admin_Apple_Notice::success( __( 'Your article will be pushed shortly to Apple News.', 'apple-news' ) );
+			}
 		} catch ( Apple_Actions\Action_Exception $e ) {
 			Admin_Apple_Notice::error( $e->getMessage() );
 		}

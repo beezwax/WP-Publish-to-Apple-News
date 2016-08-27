@@ -3,8 +3,8 @@ Contributors: potatomaster, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jayg
 Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 4.5.2
-Stable tag: 1.1.5
+Tested up to: 4.6
+Stable tag: 1.1.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -38,6 +38,8 @@ Installing the Publish to Apple News plugin is similar to the process of install
 1. Activate the Publish to Apple News plugin using the “Plugins” menu in WordPress.
 
 Once activated, the "Apple News" menu should appear in your WordPress Admin panel.
+
+NEW IN 1.1.6: More descriptive errors messages to allow for easier troubleshooting, especially for those without access to the News Preview tool.
 
 NEW IN 1.1.4: We've made some improvements to the default template built into the plugin. Although it won't override your current settings, we strongly recommend placing the Cover image at the top of the Component Order settings for the best experience.
 
@@ -162,6 +164,18 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 
 == Changelog ==
 
+= 1.1.6 =
+* Fixed a bug with automatically publishing scheduled posts (thanks, smerriman!).
+* Apple News meta box is now displayed by default on posts.
+* Displaying the Apple News meta box even on draft posts to allow saving settings before publish.
+* Updated minimum PHP version to 5.3.6 due to usage of DOMDocument::saveHTML.
+* Fixed invalid formatting for plugin author name and plugin URI.
+* isPreview=false is no longer sent passively to the API. Only isPreview=true is sent when explicitly specified.
+* Fixed an issue where author names with hashtags were breaking the byline format.
+* Added image settings, bundled images (if applicable) and JSON to the debug email.
+* Checking for blank body nodes early enough to remove and log them as component errors.
+* Retrieving and displaying more descriptive error messages from the API response.
+
 = 1.1.5 =
 * Updated logic for creating a unique ID for anchored components to avoid occasional conflicts due to lack of entropy.
 * Fixed issue with lack of container for components when cover isn't the first component causing text to scroll awkwardly over the image with the parallax effect.
@@ -264,7 +278,7 @@ Using EditorConfig is recommended so files always use the same formatting.
 
 = Requirements =
 
-In order to work with the plugin, you'll need a webserver such as Apache with PHP 5.3+ and MySQL 5+.
+In order to work with the plugin, you'll need a webserver such as Apache with PHP 5.3.6+ and MySQL 5+.
 
 It's recommended to create a symbolic link for better code organization.
 
