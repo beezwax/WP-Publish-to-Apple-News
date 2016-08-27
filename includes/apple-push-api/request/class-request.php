@@ -256,8 +256,9 @@ class Request {
 
 				// Add the code, message and keyPath
 				$messages[] = sprintf(
-					'%s - %s%s',
+					'%s%s%s%s',
 					$error->code,
+					( ! empty( $error->message ) ) ? ' - ' : '',
 					$error->message,
 					$key_path
 				);

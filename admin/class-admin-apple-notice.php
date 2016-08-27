@@ -140,7 +140,7 @@ class Admin_Apple_Notice {
 			// If it's not 2, it's too unclear how to proceed.
 			// Try to split the second param on commas
 			$errors = explode( ',', $message_array[1] );
-			if ( count( $errors > 1 ) ) {
+			if ( count( $errors ) > 1 ) {
 				// If there isn't more than one error, this isn't worth it
 				$errors_formatted = implode( '<br />', array_map( 'trim', $errors ) );
 				$message = sprintf(
