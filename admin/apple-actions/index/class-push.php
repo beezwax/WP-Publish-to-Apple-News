@@ -146,7 +146,7 @@ class Push extends API_Action {
 
 			if ( 'warn' === $component_alerts ) {
 				$alert_message = sprintf(
-					__( 'The following components are unsupported by Apple News and were removed:%s', 'apple-news' ),
+					__( 'The following components are unsupported by Apple News and were removed: %s', 'apple-news' ),
 					$component_names
 				);
 
