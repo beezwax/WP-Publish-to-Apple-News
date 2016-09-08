@@ -1,21 +1,13 @@
 <?php
 
 use \Apple_Exporter\Settings as Settings;
-use \Prophecy\Argument as Argument;
 
 class Admin_Apple_Meta_Boxes_Test extends WP_UnitTestCase {
-
-	private $prophet;
 
 	public function setup() {
 		parent::setup();
 
-		$this->prophet = new \Prophecy\Prophet;
 		$this->settings = new Settings();
-	}
-
-	public function tearDown() {
-		$this->prophet->checkPredictions();
 	}
 
 	public function testSaveNoAutoSync() {
@@ -52,11 +44,6 @@ class Admin_Apple_Meta_Boxes_Test extends WP_UnitTestCase {
 		// Set API settings to not auto sync and to enable the meta box
 		$this->settings->set( 'api_autosync', 'yes' );
 		$this->settings->set( 'show_metabox', 'yes' );
-
-		// Prophesize that push will not be called.
-		// We're just saving a meta box.
-		$push = $this->prophet->prophesize( '\Apple_Actions\Index\Push' );
-		$push->perform()->shouldNotBeCalled();
 
 		// Create post
 		$post_id = $this->factory->post->create();
