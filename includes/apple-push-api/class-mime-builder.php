@@ -14,6 +14,22 @@ class MIME_Builder {
 	private $boundary;
 
 	/**
+	 * Holds a debug version of the MIME request content, minus binary data.
+	 *
+	 * @var string
+	 * @access private
+	 */
+	private $debug_content;
+
+	/**
+	 * End of line format for MIME requests
+	 *
+	 * @var string
+	 * @access private
+	 */
+	private $eol = "\r\n";
+
+	/**
 	 * Valid MIME types for Apple News bundles.
 	 *
 	 * @var array
@@ -58,12 +74,12 @@ class MIME_Builder {
 	 * @access public
 	 */
 	public function add_metadata( $meta ) {
-		$eol  = "\r\n";
+		$attachment  = '--' . $this->boundary . $this->eol;
+		$attachment .= 'Content-Type: application/json' . $this->eol;
+		$attachment .= 'Content-Disposition: form-data; name=metadata' . $this->eol . $this->eol;
+		$attachment .= json_encode( $meta ) . $this->eol;
 
-		$attachment  = '--' . $this->boundary . $eol;
-		$attachment .= 'Content-Type: application/json' . $eol;
-		$attachment .= 'Content-Disposition: form-data; name=metadata' . $eol . $eol;
-		$attachment .= json_encode( $meta ) . $eol;
+		$this->debug_content .= $attachment;
 
 		return $attachment;
 	}
@@ -95,7 +111,7 @@ class MIME_Builder {
 	 * @return string
 	 * @access public
 	 */
-	public function add_content_from_file( $filepath, $name = 'a_file' ) {
+	public function add_content_from_file( $filepath, $name = null ) {
 		// Get the contents of the file.
 		$contents = '';
 
@@ -131,9 +147,15 @@ class MIME_Builder {
 			}
 		}
 
+		// If the name wasn't specified, build it from the filename
+		$filename = \Apple_News::get_filename( $filepath );
+		if ( empty( $name ) ) {
+			$name = sanitize_key( $filename );
+		}
+
 		return $this->build_attachment(
 			$name,
-			\Apple_News::get_filename( $filepath ),
+			$filename,
 			$contents,
 			$this->get_mime_type_for( $filepath ),
 			$size
@@ -147,7 +169,9 @@ class MIME_Builder {
 	 * @access public
 	 */
 	public function close() {
-		return '--' . $this->boundary . '--';
+		$close = '--' . $this->boundary . '--';
+		$this->debug_content .= $close;
+		return $close;
 	}
 
 	/**
@@ -180,12 +204,19 @@ class MIME_Builder {
 		}
 
 		// Build the attachment
-		$eol  = "\r\n";
+		$attachment  = '--' . $this->boundary . $this->eol;
+		$attachment .= 'Content-Type: ' . $mime_type . $this->eol;
+		$attachment .= 'Content-Disposition: form-data; name=' . $name . '; filename=' . $filename . '; size=' . $size . $this->eol . $this->eol;
 
-		$attachment  = '--' . $this->boundary . $eol;
-		$attachment .= 'Content-Type: ' . $mime_type . $eol;
-		$attachment .= 'Content-Disposition: form-data; name=' . $name . '; filename=' . $filename . '; size=' . $size . $eol . $eol;
-		$attachment .= $content . $eol;
+		$this->debug_content .= $attachment;
+
+		$attachment .= $content . $this->eol;
+
+		if ( 'application/json' === $mime_type ) {
+			$this->debug_content .= $content . $this->eol;
+		} else {
+			$this->debug_content .= "(binary contents of $filename)" . $this->eol;
+		}
 
 		return $attachment;
 	}
@@ -212,6 +243,34 @@ class MIME_Builder {
 	 */
 	private function is_valid_mime_type( $type ) {
 		return in_array( $type, self::$valid_mime_types );
+	}
+
+	/**
+	 * Gets the debug version of the MIME content
+	 *
+	 * @param array $args
+	 * @return string
+	 * @access public
+	 */
+	public function get_debug_content( $args ) {
+		$content = '';
+
+		// Parse the header from the args and convert it into the format
+		// that would actually be sent to the API.
+		if ( ! empty( $args['headers'] ) && is_array( $args['headers'] ) ) {
+			foreach ( $args['headers'] as $key => $value ) {
+				$content .= sprintf(
+					'%s: %s%s',
+					$key,
+					$value,
+					$this->eol
+				);
+			}
+		}
+
+		$content .= $this->eol . $this->debug_content;
+
+		return $content;
 	}
 
 }

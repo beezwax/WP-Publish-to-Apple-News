@@ -1,10 +1,10 @@
-=== Publish To Apple News ===
+m=== Publish To Apple News ===
 Contributors: potatomaster, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brianschick
 Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 4.6
-Stable tag: 1.1.8
+Tested up to: 4.6.1
+Stable tag: 1.1.9
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -163,6 +163,9 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 1.
 
 == Changelog ==
+
+= 1.1.9 =
+* Updated the logic for bundling images for the Apple News API's new, stricter MIME parsing logic.
 
 = 1.1.8 =
 * Fixed a bug with the Apple News meta box not saving values when "Automatically publish to Apple News" was set to "Yes".
