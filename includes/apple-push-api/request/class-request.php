@@ -219,7 +219,10 @@ class Request {
 			$body .= "\n\n" . esc_html__( 'JSON', 'apple-news' ) . ":\n" . $article . "\n";
 
 			// Add the MIME request
-			$body .= "\n\n" . esc_html__( 'MIME request', 'apple-news' ) . ":\n" . print_r( $debug_mime_request, true ) . "\n";
+			$body .= "\n\n" . esc_html__( 'MIME request', 'apple-news' ) . ":\n" . $debug_mime_request . "\n";
+
+			print_r( $body );
+			die();
 
 			// Send the email
 			if ( ! empty( $body ) ) {
