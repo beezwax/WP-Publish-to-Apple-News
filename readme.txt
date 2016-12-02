@@ -1,4 +1,4 @@
-m=== Publish To Apple News ===
+=== Publish To Apple News ===
 Contributors: potatomaster, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brianschick
 Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
