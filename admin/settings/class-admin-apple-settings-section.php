@@ -542,7 +542,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		} else if ( 'float' == $type ) {
 			$field = '<input class="input-float" placeholder="' . esc_attr( $default_value ) . '" type="text" step="any" name="%s" value="%s" size="%s">';
 		} else if ( 'color' == $type ) {
-			$field = '<input type="color" name="%s" value="%s" %s>';
+			$field = '<input type="text" name="%s" value="%s" class="apple-news-color-picker" %s>';
 		} else if ( 'password' == $type ) {
 			$field = '<input type="password" name="%s" value="%s" size="%s" %s>';
 		} else {
