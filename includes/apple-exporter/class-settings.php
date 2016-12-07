@@ -31,8 +31,8 @@ class Settings {
 		'body_font'        				=> 'AvenirNext-Regular',
 		'body_size'        				=> 18,
 		'body_color'       				=> '#4f4f4f',
-		'body_link_color'  				=> '#428BCA',
-		'body_background_color'   => '#FAFAFA',
+		'body_link_color'  				=> '#428bca',
+		'body_background_color'   => '#fafafa',
 		'body_orientation' 				=> 'left',
 		'body_line_height' 				=> 24,
 
@@ -57,8 +57,8 @@ class Settings {
 
 		'pullquote_font'  				=> 'AvenirNext-Bold',
 		'pullquote_size'  				=> 48,
-		'pullquote_color' 				=> '#53585F',
-		'pullquote_border_color' 	=> '#53585F',
+		'pullquote_color' 				=> '#53585f',
+		'pullquote_border_color' 	=> '#53585f',
 		'pullquote_border_style' 	=> 'solid',
 		'pullquote_border_width' 	=> '3',
 		'pullquote_transform'			=> 'uppercase',

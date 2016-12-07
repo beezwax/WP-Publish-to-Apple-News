@@ -41,6 +41,11 @@
 		$( '.apple-news-color-picker' ).iris({
 			palettes: true
 		});
+
+		$( '.apple-news-color-picker' ).on( 'click', function() {
+			$( '.apple-news-color-picker' ).iris( 'hide' );
+			$( this ).iris( 'show' );
+		});
 	}
 
 }( jQuery ) );
