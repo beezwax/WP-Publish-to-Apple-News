@@ -3,6 +3,7 @@
 		<?php wp_nonce_field( 'apple_news_options', 'apple_news_options' ); ?>
 		<input type="hidden" name="action" value="apple_news_options" />
 		<?php foreach ( $sections as $section ): ?>
+		<?php $section->before_section() ?>
 		<h3><?php echo esc_html( $section->name() ); ?></h3>
 		<?php echo wp_kses_post( $section->get_section_info() ); ?>
 		<table class="form-table apple-news">
@@ -44,6 +45,7 @@
 			<?php do_action( 'apple_news_after_setting_group', $group ); ?>
 			<?php endforeach; ?>
 		</table>
+		<?php $section->after_section() ?>
 		<?php endforeach; ?>
 
 		<?php submit_button(); ?>

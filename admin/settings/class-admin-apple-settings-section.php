@@ -652,6 +652,26 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	}
 
 	/**
+	 * HTML to display before the section.
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function before_section() {
+		echo '';
+	}
+
+	/**
+	 * HTML to display after the section.
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function after_section() {
+		echo '';
+	}
+
+	/**
 	 * Sanitizes a single dimension array with text values.
 	 *
 	 * @param array $value

@@ -237,6 +237,30 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	}
 
 	/**
+	 * HTML to display before the section.
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function before_section() {
+		?>
+		<div class="apple-news-settings-left">
+		<?php
+	}
+
+	/**
+	 * HTML to display after the section.
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function after_section() {
+		?>
+		</div><div class="apple-news-settings-preview"></div>
+		<?php
+	}
+
+	/**
 	 * Renders the component order field.
 	 *
 	 * @static
