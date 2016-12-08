@@ -493,7 +493,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 
 			// Use select2 only when there is a considerable ammount of options available
 			if ( count( $type ) > 10 ) {
-				$field = '<select class="select2" name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
+				$field = '<select class="select2 standard" name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
 			} else {
 				$field = '<select name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
 			}
@@ -512,7 +512,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			}
 			$field .= '</select>';
 		} else if ( 'font' == $type ) {
-			$field = '<select class="select2" name="%s">';
+			$field = '<select class="select2 font" name="%s">';
 			foreach ( self::$fonts as $option ) {
 				$field .= "<option value='" . esc_attr( $option ) . "'";
 				if ( $option == $value ) {

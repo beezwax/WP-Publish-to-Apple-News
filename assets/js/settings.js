@@ -1,10 +1,22 @@
 (function ($) {
 
 	$(document).ready(function () {
-		$( '.select2' ).select2();
+		$( '.select2.standard' ).select2();
+		$( '.select2.font' ).select2({
+			templateResult: appleNewsFontSelectTemplate,
+			templateSelection: appleNewsFontSelectTemplate
+		});
 		appleNewsSettingsSortInit( '#meta-component-order-sort', 'meta_component_order' );
 		appleNewsColorPickerInit();
 	});
+
+	function appleNewsFontSelectTemplate( font ) {
+		var $fontOption = $( '<span>' )
+			.attr( 'style', 'font-family: ' + font.text )
+			.text( font.text );
+
+		return $fontOption;
+	}
 
 	function appleNewsSettingsSortInit( selector, key ) {
 		$( selector ).sortable( {
