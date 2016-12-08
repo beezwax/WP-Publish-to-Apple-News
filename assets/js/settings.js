@@ -3,6 +3,7 @@
 	$(document).ready(function () {
 		$( '.select2' ).select2();
 		appleNewsSettingsSortInit( '#meta-component-order-sort', 'meta_component_order' );
+		appleNewsColorPickerInit();
 	});
 
 	function appleNewsSettingsSortInit( selector, key ) {
@@ -34,6 +35,18 @@
 				$sortableElement.after( $hidden );
 			} );
 		}
+	}
+
+	function appleNewsColorPickerInit() {
+		$( '.apple-news-color-picker' ).iris({
+			palettes: true,
+			width: 320
+		});
+
+		$( '.apple-news-color-picker' ).on( 'click', function() {
+			$( '.apple-news-color-picker' ).iris( 'hide' );
+			$( this ).iris( 'show' );
+		});
 	}
 
 }( jQuery ) );
