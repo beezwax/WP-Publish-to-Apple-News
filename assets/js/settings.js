@@ -1,11 +1,7 @@
 (function ($) {
 
 	$(document).ready(function () {
-		$( '.select2.standard' ).select2();
-		$( '.select2.font' ).select2({
-			templateResult: appleNewsFontSelectTemplate,
-			templateSelection: appleNewsFontSelectTemplate
-		});
+		appleNewsSelectInit();
 		appleNewsSettingsSortInit( '#meta-component-order-sort', 'meta_component_order' );
 		appleNewsColorPickerInit();
 	});
@@ -16,6 +12,24 @@
 			.text( font.text );
 
 		return $fontOption;
+	}
+
+	function appleNewsSelectInit() {
+		// Only show fonts on Macs since they're system fonts
+		if ( 'MacIntel' === navigator.platform ) {
+			$( '.select2.standard' ).select2();
+			$( '.select2.font' ).select2({
+				templateResult: appleNewsFontSelectTemplate,
+				templateSelection: appleNewsFontSelectTemplate
+			});
+		} else {
+			$( '.select2' ).select2();
+			$( 'span.select2' ).after(
+				$( '<div>' )
+					.addClass( 'font-notice' )
+					.text( appleNewsSettings.fontNotice )
+			)
+		}
 	}
 
 	function appleNewsSettingsSortInit( selector, key ) {
