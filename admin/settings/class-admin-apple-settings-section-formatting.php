@@ -244,7 +244,8 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	 */
 	public function before_section() {
 		?>
-		<div class="apple-news-settings-left">
+		<div id="apple-news-formatting">
+			<div class="apple-news-settings-left">
 		<?php
 	}
 
@@ -256,7 +257,9 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	 */
 	public function after_section() {
 		?>
-		</div><div class="apple-news-settings-preview"></div>
+			</div>
+			<div class="apple-news-settings-preview">Test content</div>
+		</div>
 		<?php
 	}
 

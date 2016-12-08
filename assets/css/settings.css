@@ -55,3 +55,30 @@ ul#meta-component-order-sort li:hover {
 .font-notice {
 	font-size: 10px;
 }
+
+.apple-news-settings-left {
+	max-width: 500px;
+	float: left;
+}
+
+.apple-news-settings-preview {
+	width: 320px;
+	float: left;
+	background-color: #FFF;
+}
+
+.apple-news-settings h3 {
+	clear: both;
+}
+
+@media only screen and (min-width: 1072px) {
+	.apple-news-settings-preview {
+		margin-left: 50px;
+	}
+}
+
+@media only screen and (max-width: 1072px) {
+	.apple-news-settings-preview {
+		margin: 10px 0px;
+	}
+}

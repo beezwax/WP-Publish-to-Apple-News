@@ -1,4 +1,4 @@
-<div class="wrap">
+<div class="wrap apple-news-settings">
 	<form method="post" action="">
 		<?php wp_nonce_field( 'apple_news_options', 'apple_news_options' ); ?>
 		<input type="hidden" name="action" value="apple_news_options" />
