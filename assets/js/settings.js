@@ -39,7 +39,8 @@
 
 	function appleNewsColorPickerInit() {
 		$( '.apple-news-color-picker' ).iris({
-			palettes: true
+			palettes: true,
+			width: 320
 		});
 
 		$( '.apple-news-color-picker' ).on( 'click', function() {
