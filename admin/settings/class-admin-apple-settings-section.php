@@ -334,8 +334,9 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @var Settings
 	 * @access protected
+	 * @static
 	 */
-	protected $base_settings;
+	protected static $base_settings;
 
 	/**
 	 * Settings for the section.
@@ -398,7 +399,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	function __construct( $page ) {
 		$this->page             = $page;
 		$base_settings          = new \Apple_Exporter\Settings;
-		$this->base_settings    = $base_settings->all();
+		self::$base_settings    = $base_settings->all();
 		$this->settings         = apply_filters( 'apple_news_section_settings', $this->settings, $page );
 		$this->groups           = apply_filters( 'apple_news_section_groups', $this->groups, $page );
 		self::$fonts            = apply_filters( 'apple_news_fonts_list', self::$fonts );
@@ -430,7 +431,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			$settings = array();
 			foreach ( $info['settings'] as $name ) {
 				$settings[ $name ] = $this->settings[ $name ];
-				$settings[ $name ]['default'] = $this->get_default_for( $name );
+				$settings[ $name ]['default'] = self::get_default_for( $name );
 				$settings[ $name ]['callback'] = ( ! empty( $this->settings[ $name ]['callback'] ) ) ? $this->settings[ $name ]['callback'] : '';
 			}
 
@@ -471,7 +472,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 
 		$type  = $this->get_type_for( $name );
 		$settings = get_option( self::$option_name );
-		$value = self::get_value( $name, $settings ) ?: $default_value;
+		$value = self::get_value( $name, $settings );
 		$field = null;
 
 		// Get the field size
@@ -636,9 +637,10 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @param string $name
 	 * @return string
 	 * @access protected
+	 * @static
 	 */
-	protected function get_default_for( $name ) {
-		return isset( $this->base_settings[ $name ] ) ? $this->base_settings[ $name ] : '';
+	protected static function get_default_for( $name ) {
+		return isset( self::$base_settings[ $name ] ) ? self::$base_settings[ $name ] : '';
 	}
 
 	/**
@@ -693,7 +695,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		if ( empty( $saved_settings ) ) {
 			$saved_settings = get_option( self::$option_name );
 		}
-		return ( ! empty( $saved_settings[ $key ] ) ) ? $saved_settings[ $key ] : '';
+		return ( isset( $saved_settings[ $key ] ) ) ? $saved_settings[ $key ] : self::get_default_for( $key );
 	}
 
 	/**

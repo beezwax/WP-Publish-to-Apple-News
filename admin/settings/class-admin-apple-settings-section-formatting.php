@@ -243,6 +243,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	 * @access public
 	 */
 	public function before_section() {
+		print_r( $this->settings );
 		?>
 		<div id="apple-news-formatting">
 			<div class="apple-news-settings-left">
@@ -258,7 +259,21 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	public function after_section() {
 		?>
 			</div>
-			<div class="apple-news-settings-preview">Test content</div>
+			<div class="apple-news-settings-preview">
+				<?php
+					// Build sample content
+					$title = __( 'Sample Article', 'apple-news' );
+					$author = __( 'John Doe', 'apple-news' );
+					$date = time();
+					$pullquote = __( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit', 'apple-news' );
+					$image = '<div class="apple-news-featured-image"></div>';
+				?>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sagittis, augue vitae iaculis euismod, libero nulla pellentesque quam, non venenatis massa odio id dolor. Vestibulum accumsan metus ut urna aliquet imperdiet. In malesuada lorem sed dapibus porta. Vivamus feugiat pellentesque feugiat. Donec id nunc ut orci tincidunt commodo. Sed turpis nunc, eleifend a odio quis, convallis vulputate leo. Aenean auctor ante lorem, sed consequat neque varius nec. Nullam semper, sapien sit amet cursus tristique, est leo sodales eros, a dignissim nisl augue et ligula. Nam malesuada nunc eros, vitae faucibus nibh tincidunt non.</p>
+				<p>Praesent eget odio vel sapien scelerisque euismod. Phasellus eros sapien, rutrum ac nibh nec, tristique commodo neque. Cras non risus nec justo fringilla sodales. Donec ullamcorper quis nisi id egestas. Mauris ut enim risus. Cras porta, lectus sit amet vehicula auctor, tortor odio placerat sem, in mollis metus est id dolor. Vivamus ultricies justo eu sapien elementum tincidunt.</p>
+				<p>Quisque efficitur sit amet ex et venenatis. Morbi nisi nisi, ornare id iaculis eget, pulvinar ac dolor. Nam rutrum eros non neque ornare semper. Proin urna ipsum, consectetur et interdum sed, faucibus sit amet orci. Mauris fermentum efficitur ligula sed blandit. In vel diam imperdiet, blandit metus et, suscipit ligula. Aliquam erat volutpat. Nunc dapibus in tellus vulputate volutpat.</p>
+				<p>In eu lacus porttitor, pellentesque diam et, tristique elit. Mauris justo odio, efficitur sit amet aliquet id, aliquam placerat turpis. Donec sit amet sem dictum, pharetra lectus at, blandit diam. Maecenas posuere, nibh nec iaculis ultrices, leo eros faucibus arcu, vitae ullamcorper dui lacus ut ligula. Donec magna tortor, cursus id felis in, dignissim porta elit. Duis et malesuada nisi, sit amet lobortis est. Suspendisse vitae porta urna. Pellentesque vehicula pulvinar risus non commodo. Aenean ornare euismod velit a commodo. Ut dapibus scelerisque mi, dignissim volutpat ante semper quis. Quisque ipsum mi, mattis nec dapibus sed, vestibulum sed nisi.</p>
+				<p>Nullam viverra magna elit, sit amet condimentum augue sagittis euismod. Curabitur sed eros velit. Sed aliquam augue id libero commodo, quis rhoncus mi porta. Praesent viverra condimentum est, efficitur malesuada ligula tincidunt sed. Nulla venenatis est eu mi placerat, a posuere ante rutrum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla porttitor rhoncus sem, quis semper felis viverra fermentum. Integer faucibus, odio fringilla iaculis semper, magna leo ornare tellus, nec malesuada lorem massa a justo. Vestibulum vitae ex ipsum. Duis fringilla risus turpis, luctus consectetur dolor mattis nec. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+			</div>
 		</div>
 		<?php
 	}
@@ -274,7 +289,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 		<ul id="meta-component-order-sort" class="component-order ui-sortable">
 			<?php
 				// Get the current order
-				$component_order = self::get_value( 'meta_component_order' ) ?: array( 'cover', 'title', 'byline' );
+				$component_order = self::get_value( 'meta_component_order' );
 				if ( ! empty( $component_order ) && is_array( $component_order ) ) {
 					foreach ( $component_order as $component_name ) {
 						echo sprintf(
