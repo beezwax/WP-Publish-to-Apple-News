@@ -16,7 +16,7 @@
 
 	function appleNewsSelectInit() {
 		// Only show fonts on Macs since they're system fonts
-		if ( 'MacIntel' === navigator.platform ) {
+		if ( appleNewsSupportsMacFeatures() ) {
 			$( '.select2.standard' ).select2();
 			$( '.select2.font' ).select2({
 				templateResult: appleNewsFontSelectTemplate,
@@ -73,6 +73,14 @@
 			$( '.apple-news-color-picker' ).iris( 'hide' );
 			$( this ).iris( 'show' );
 		});
+	}
+
+	function appleNewsSupportsMacFeatures() {
+		if ( 'MacIntel' === navigator.platform ) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }( jQuery ) );
