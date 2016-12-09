@@ -288,9 +288,13 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 						echo wp_kses( $$component, self::$allowed_html );
 					}
 				?>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sagittis, augue vitae iaculis euismod, libero nulla pellentesque quam, non venenatis massa odio id dolor. <a href="#">Vestibulum accumsan metus ut urna aliquet imperdiet.</a> In malesuada lorem sed dapibus porta. Vivamus feugiat pellentesque feugiat. Donec id nunc ut orci tincidunt commodo. Sed turpis nunc, eleifend a odio quis, convallis vulputate leo. Aenean auctor ante lorem, sed consequat neque varius nec. Nullam semper, sapien sit amet cursus tristique, est leo sodales eros, a dignissim nisl augue et ligula. Nam malesuada nunc eros, vitae faucibus nibh tincidunt non.</p>
-				<div class="apple-news-pullquote">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</div>
-				<p>Praesent eget odio vel sapien scelerisque euismod. Phasellus eros sapien, rutrum ac nibh nec, tristique commodo neque. Cras non risus nec justo fringilla sodales. Donec ullamcorper quis nisi id egestas. Mauris ut enim risus. Cras porta, lectus sit amet vehicula auctor, tortor odio placerat sem, in mollis metus est id dolor. Vivamus ultricies justo eu sapien elementum tincidunt.</p>
+				<p><span class="apple-news-dropcap">L</span>orem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sagittis, augue vitae iaculis euismod, libero nulla pellentesque quam, non venenatis massa odio id dolor.</p>
+				<div class="apple-news-pull-quote">Lorem ipsum dolor sit amet.</div>
+				<p>Praesent eget odio vel sapien scelerisque euismod. Phasellus eros sapien, rutrum ac nibh nec, tristique commodo neque.</p>
+				<h2>Quisque efficitur</h2>
+				<p>Quisque efficitur sit amet ex et venenatis. Morbi nisi nisi, ornare id iaculis eget, pulvinar ac dolor.</p>
+				<!--p>In eu lacus porttitor, pellentesque diam et, tristique elit. Mauris justo odio, efficitur sit amet aliquet id, aliquam placerat turpis. Donec sit amet sem dictum, pharetra lectus at, blandit diam. Maecenas posuere, nibh nec iaculis ultrices, leo eros faucibus arcu, vitae ullamcorper dui lacus ut ligula. Donec magna tortor, cursus id felis in, dignissim porta elit. Duis et malesuada nisi, sit amet lobortis est. Suspendisse vitae porta urna. Pellentesque vehicula pulvinar risus non commodo. Aenean ornare euismod velit a commodo. Ut dapibus scelerisque mi, dignissim volutpat ante semper quis. Quisque ipsum mi, mattis nec dapibus sed, vestibulum sed nisi.</p>
+				<p>Nullam viverra magna elit, sit amet condimentum augue sagittis euismod. Curabitur sed eros velit. Sed aliquam augue id libero commodo, quis rhoncus mi porta. Praesent viverra condimentum est, efficitur malesuada ligula tincidunt sed. Nulla venenatis est eu mi placerat, a posuere ante rutrum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla porttitor rhoncus sem, quis semper felis viverra fermentum. Integer faucibus, odio fringilla iaculis semper, magna leo ornare tellus, nec malesuada lorem massa a justo. Vestibulum vitae ex ipsum. Duis fringilla risus turpis, luctus consectetur dolor mattis nec. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p-->
 			</div>
 		</div>
 		<?php

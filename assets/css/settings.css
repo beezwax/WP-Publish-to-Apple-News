@@ -94,7 +94,7 @@ ul#meta-component-order-sort li:hover {
 	line-height: 240px;
 	text-align: center;
 	vertical-align: middle;
-	background-color: #000;
+	background-color: #333;
 	color: #FFF;
 	font-size: 24px;
 }
@@ -103,4 +103,11 @@ ul#meta-component-order-sort li:hover {
 .apple-news-settings-preview div {
 	padding: 0px;
 	margin: 0px;
+}
+
+.apple-news-dropcap-enabled {
+	float: left;
+	padding-top: 7px;
+	padding-right: 10px;
+	padding-left: 5px;
 }

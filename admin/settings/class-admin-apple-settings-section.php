@@ -394,6 +394,12 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		'div' => array(
 			'class' => array(),
 		),
+		'h1' => array(),
+		'h2' => array(),
+		'h3' => array(),
+		'h4' => array(),
+		'h5' => array(),
+		'h6' => array(),
 	);
 
 	/**
