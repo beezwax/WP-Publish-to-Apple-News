@@ -65,6 +65,11 @@ ul#meta-component-order-sort li:hover {
 	width: 320px;
 	float: left;
 	background-color: #FFF;
+	display: none;
+}
+
+.apple-news-settings-preview a {
+	text-decoration: none;
 }
 
 .apple-news-settings h3 {
@@ -81,4 +86,21 @@ ul#meta-component-order-sort li:hover {
 	.apple-news-settings-preview {
 		margin: 10px 0px;
 	}
+}
+
+.apple-news-cover {
+	width: 320px;
+	height: 240px;
+	line-height: 240px;
+	text-align: center;
+	vertical-align: middle;
+	background-color: #000;
+	color: #FFF;
+	font-size: 24px;
+}
+
+.apple-news-settings-preview p,
+.apple-news-settings-preview div {
+	padding: 0px;
+	margin: 0px;
 }

@@ -365,6 +365,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			'class' => array(),
 			'name' => array(),
 			'multiple' => array(),
+			'id' => array(),
 		),
 		'option' => array(
 			'value' => array(),
@@ -379,6 +380,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			'type' => array(),
 			'required' => array(),
 			'size' => array(),
+			'id' => array(),
 		),
 		'br' => array(),
 		'b' => array(),
@@ -388,6 +390,9 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		'a' => array(
 			'href' => array(),
 			'target' => array(),
+		),
+		'div' => array(
+			'class' => array(),
 		),
 	);
 
@@ -494,9 +499,9 @@ class Admin_Apple_Settings_Section extends Apple_News {
 
 			// Use select2 only when there is a considerable ammount of options available
 			if ( count( $type ) > 10 ) {
-				$field = '<select class="select2 standard" name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
+				$field = '<select class="select2 standard" id="%s" name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
 			} else {
-				$field = '<select name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
+				$field = '<select id="%s" name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
 			}
 
 			foreach ( $type as $key => $option ) {
@@ -513,7 +518,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			}
 			$field .= '</select>';
 		} else if ( 'font' == $type ) {
-			$field = '<select class="select2 font" name="%s">';
+			$field = '<select class="select2 font" id="%s" name="%s">';
 			foreach ( self::$fonts as $option ) {
 				$field .= "<option value='" . esc_attr( $option ) . "'";
 				if ( $option == $value ) {
@@ -539,16 +544,16 @@ class Admin_Apple_Settings_Section extends Apple_News {
 
 			$field .= '</select>';
 		} else if ( 'integer' == $type ) {
-			$field = '<input type="number" name="%s" value="%s" size="%s" %s>';
+			$field = '<input type="number" id="%s" name="%s" value="%s" size="%s" %s>';
 		} else if ( 'float' == $type ) {
-			$field = '<input class="input-float" placeholder="' . esc_attr( $default_value ) . '" type="text" step="any" name="%s" value="%s" size="%s">';
+			$field = '<input class="input-float" placeholder="' . esc_attr( $default_value ) . '" type="text" step="any" id="%s" name="%s" value="%s" size="%s">';
 		} else if ( 'color' == $type ) {
-			$field = '<input type="text" name="%s" value="%s" class="apple-news-color-picker" %s>';
+			$field = '<input type="text" id="%s" name="%s" value="%s" class="apple-news-color-picker" %s>';
 		} else if ( 'password' == $type ) {
-			$field = '<input type="password" name="%s" value="%s" size="%s" %s>';
+			$field = '<input type="password" id="%s" name="%s" value="%s" size="%s" %s>';
 		} else {
 			// If nothing else matches, it's a string.
-			$field = '<input type="text" name="%s" value="%s" size="%s" %s>';
+			$field = '<input type="text" id="%s" name="%s" value="%s" size="%s" %s>';
 		}
 
 		// Add a description, if set.
@@ -561,11 +566,13 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		if ( is_array( $type ) || 'font' === $type || 'boolean' === $type ) {
 			return sprintf(
 				$field,
+				esc_attr( $name ),
 				esc_attr( $name )
 			);
 		} else {
 			return sprintf(
 				$field,
+				esc_attr( $name ),
 				esc_attr( $name ),
 				esc_attr( $value ),
 				intval( $size ),
