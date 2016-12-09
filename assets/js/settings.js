@@ -136,7 +136,6 @@
 		appleNewsSetCSS( '.apple-news-settings-preview div.apple-news-byline', 'byline_font', 'font-family', null, null );
 		appleNewsSetCSS( '.apple-news-settings-preview div.apple-news-byline', 'byline_size', 'font-size', 'pt', null );
 		appleNewsSetCSS( '.apple-news-settings-preview div.apple-news-byline', 'byline_color', 'color', null, null );
-		// TODO: function to set byline format, maybe undo changes to class-export.php?
 
 		// Headings
 		appleNewsSetCSS( '.apple-news-settings-preview :header', 'header_font', 'font-family', null, null );
@@ -164,7 +163,14 @@
 		// TODO: probably will skip?
 
 		// Component order
-		// TODO: create a function to move elements
+		var componentOrder = $( '#meta-component-order-sort' ).sortable( 'toArray' );
+		$.each( componentOrder.reverse(), function( index, value ) {
+			// Remove the component
+			var $detached = $( '.apple-news-' + value ).detach();
+
+			// Add back at the beginning
+			$( '.apple-news-settings-preview' ).prepend( $detached );
+		} );
 
 		// Line heights
 		appleNewsSetCSS( '.apple-news-settings-preview p', 'body_line_height', 'line-height', 'pt', null );

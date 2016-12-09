@@ -85,7 +85,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 			'byline_format' => array(
 				'label'				=> __( 'Byline format', 'apple-news' ),
 				'type' 				=> 'text',
-				'description' => __( 'Set the byline format. Two tokens can be present, #author# to denote the location of the author name and a <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string also encapsulated by #. The default format is "by #author# | #M j, Y | g:i A#".', 'apple-news' ),
+				'description' => __( 'Set the byline format. Two tokens can be present, #author# to denote the location of the author name and a <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string also encapsulated by #. The default format is "by #author# | #M j, Y | g:i A#". Note that byline format updates only preview on save.', 'apple-news' ),
 				'size'				=> 40,
 				'required'		=> false,
 			),
@@ -264,7 +264,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 					$settings = new Admin_Apple_Settings();
 
 					$title = sprintf(
-						'<h1>%s</h1>',
+						'<h1 class="apple-news-title">%s</h1>',
 						__( 'Sample Article', 'apple-news' )
 					);
 
