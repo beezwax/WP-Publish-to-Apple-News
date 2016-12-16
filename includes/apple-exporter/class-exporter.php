@@ -191,7 +191,17 @@ class Exporter {
 
 		$json = apply_filters( 'apple_news_generate_json', $json, $this->content_id() );
 
-		return json_encode( $json );
+		$json = json_encode( $json );
+
+		// Check the JSON for unicode errors.
+		// For now, we'll assume that multiple unicode characters in sequence
+		// containing the Â (\u00C2) indicate a problem as that has been the
+		// most common indication of the issue.
+		//preg_match( '/(\\u[0-9a-fA-F]{4}){2,}/', $json, $matches );
+
+		//$this->clean_workspace();
+	//	print_r( $matches );
+//		die();
 	}
 
 	/**

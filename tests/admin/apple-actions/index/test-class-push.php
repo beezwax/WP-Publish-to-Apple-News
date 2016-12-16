@@ -275,5 +275,9 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
 	}
 
+	public function testJSONErrorsWarn() {}
+
+	public function testJSONErrorsFail() {}
+
 }
 
