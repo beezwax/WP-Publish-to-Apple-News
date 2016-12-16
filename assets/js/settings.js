@@ -1,9 +1,36 @@
 (function ($) {
 
 	$(document).ready(function () {
-		$( '.select2' ).select2();
+		appleNewsSelectInit();
 		appleNewsSettingsSortInit( '#meta-component-order-sort', 'meta_component_order' );
+		appleNewsColorPickerInit();
 	});
+
+	function appleNewsFontSelectTemplate( font ) {
+		var $fontOption = $( '<span>' )
+			.attr( 'style', 'font-family: ' + font.text )
+			.text( font.text );
+
+		return $fontOption;
+	}
+
+	function appleNewsSelectInit() {
+		// Only show fonts on Macs since they're system fonts
+		if ( 'MacIntel' === navigator.platform ) {
+			$( '.select2.standard' ).select2();
+			$( '.select2.font' ).select2({
+				templateResult: appleNewsFontSelectTemplate,
+				templateSelection: appleNewsFontSelectTemplate
+			});
+		} else {
+			$( '.select2' ).select2();
+			$( 'span.select2' ).after(
+				$( '<div>' )
+					.addClass( 'font-notice' )
+					.text( appleNewsSettings.fontNotice )
+			)
+		}
+	}
 
 	function appleNewsSettingsSortInit( selector, key ) {
 		$( selector ).sortable( {
@@ -34,6 +61,18 @@
 				$sortableElement.after( $hidden );
 			} );
 		}
+	}
+
+	function appleNewsColorPickerInit() {
+		$( '.apple-news-color-picker' ).iris({
+			palettes: true,
+			width: 320
+		});
+
+		$( '.apple-news-color-picker' ).on( 'click', function() {
+			$( '.apple-news-color-picker' ).iris( 'hide' );
+			$( this ).iris( 'show' );
+		});
 	}
 
 }( jQuery ) );

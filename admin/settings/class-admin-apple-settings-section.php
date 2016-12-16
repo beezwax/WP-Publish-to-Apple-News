@@ -493,7 +493,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 
 			// Use select2 only when there is a considerable ammount of options available
 			if ( count( $type ) > 10 ) {
-				$field = '<select class="select2" name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
+				$field = '<select class="select2 standard" name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
 			} else {
 				$field = '<select name="%s' . $multiple_name . '" ' . $multiple_attr . '>';
 			}
@@ -512,7 +512,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			}
 			$field .= '</select>';
 		} else if ( 'font' == $type ) {
-			$field = '<select class="select2" name="%s">';
+			$field = '<select class="select2 font" name="%s">';
 			foreach ( self::$fonts as $option ) {
 				$field .= "<option value='" . esc_attr( $option ) . "'";
 				if ( $option == $value ) {
@@ -542,7 +542,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		} else if ( 'float' == $type ) {
 			$field = '<input class="input-float" placeholder="' . esc_attr( $default_value ) . '" type="text" step="any" name="%s" value="%s" size="%s">';
 		} else if ( 'color' == $type ) {
-			$field = '<input type="color" name="%s" value="%s" %s>';
+			$field = '<input type="text" name="%s" value="%s" class="apple-news-color-picker" %s>';
 		} else if ( 'password' == $type ) {
 			$field = '<input type="password" name="%s" value="%s" size="%s" %s>';
 		} else {

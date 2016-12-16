@@ -51,3 +51,7 @@ ul#meta-component-order-sort li:hover {
 	color: #777;
 	background-color: #EAF2FA;
 }
+
+.font-notice {
+	font-size: 10px;
+}

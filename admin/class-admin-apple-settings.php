@@ -152,11 +152,16 @@ class Admin_Apple_Settings extends Apple_News {
 		wp_enqueue_style( 'apple-news-settings-css', plugin_dir_url( __FILE__ ) .
 			'../assets/css/settings.css', array() );
 
+		wp_enqueue_script( 'iris' );
 		wp_enqueue_script( 'apple-news-select2-js', plugin_dir_url( __FILE__ ) .
 			'../vendor/select2/select2.full.min.js', array( 'jquery' ) );
 		wp_enqueue_script( 'apple-news-settings-js', plugin_dir_url( __FILE__ ) .
-			'../assets/js/settings.js', array( 'jquery', 'jquery-ui-draggable', 'jquery-ui-sortable', 'apple-news-select2-js' )
+			'../assets/js/settings.js', array( 'jquery', 'jquery-ui-draggable', 'jquery-ui-sortable', 'apple-news-select2-js', 'iris' )
 		);
+
+		wp_localize_script( 'apple-news-settings-js', 'appleNewsSettings', array(
+			'fontNotice' => __( 'Font preview is only available on macOS', 'apple-news' ),
+		) );
 	}
 
 	/**
