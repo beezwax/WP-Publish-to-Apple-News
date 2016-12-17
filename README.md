@@ -15,4 +15,4 @@ Please see the [Apple Developer](https://developer.apple.com/) and [Apple News P
 
 #Wiki
 
-Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for detailed [installation instructions](https://github.com/alleyinteractive/apple-news/wiki/Installation) as well as [configuration](https://github.com/alleyinteractive/apple-news/wiki/Configuration) and [usage instructions](https://github.com/alleyinteractive/apple-news/wiki/Usage) and [troubleshooting information](https://github.com/alleyinteractive/apple-news/wiki/Usage#troubleshooting).
+Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for detailed [installation instructions](https://github.com/alleyinteractive/apple-news/wiki/Installation) as well as [configuration](https://github.com/alleyinteractive/apple-news/wiki/Configuration) and [usage instructions](https://github.com/alleyinteractive/apple-news/wiki/Usage), [troubleshooting information](https://github.com/alleyinteractive/apple-news/wiki/Usage#troubleshooting) and [details about contributing](https://github.com/alleyinteractive/apple-news/wiki/Contributing).
