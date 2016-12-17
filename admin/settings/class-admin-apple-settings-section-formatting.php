@@ -85,7 +85,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 			'byline_format' => array(
 				'label'				=> __( 'Byline format', 'apple-news' ),
 				'type' 				=> 'text',
-				'description' => __( 'Set the byline format. Two tokens can be present, #author# to denote the location of the author name and a <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string also encapsulated by #. The default format is "by #author# | #M j, Y | g:i A#".', 'apple-news' ),
+				'description' => __( 'Set the byline format. Two tokens can be present, #author# to denote the location of the author name and a <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string also encapsulated by #. The default format is "by #author# | #M j, Y | g:i A#". Note that byline format updates only preview on save.', 'apple-news' ),
 				'size'				=> 40,
 				'required'		=> false,
 			),
@@ -237,6 +237,71 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	}
 
 	/**
+	 * HTML to display before the section.
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function before_section() {
+		?>
+		<div id="apple-news-formatting">
+			<div class="apple-news-settings-left">
+		<?php
+	}
+
+	/**
+	 * HTML to display after the section.
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function after_section() {
+		?>
+			</div>
+			<div class="apple-news-settings-preview">
+				<?php
+					// Build sample content
+					$settings = new Admin_Apple_Settings();
+
+					$title = sprintf(
+						'<h1 class="apple-news-title apple-news-component">%s</h1>',
+						__( 'Sample Article', 'apple-news' )
+					);
+
+					$cover = sprintf(
+						'<div class="apple-news-cover">%s</div>',
+						__( 'Cover', 'apple-news' )
+					);
+
+					// Build the byline
+					$author = __( 'John Doe', 'apple-news' );
+					$date = date( 'M j, Y g:i A' );
+					$export = new Apple_Actions\Index\Export( $settings->fetch_settings() );
+					$byline = sprintf(
+						'<div class="apple-news-byline apple-news-component">%s</div>',
+						$export->format_byline( null, $author, $date )
+					);
+
+					// Get the order of the top components
+					$component_order = self::get_value( 'meta_component_order' );
+					foreach ( $component_order as $component ) {
+						echo wp_kses( $$component, self::$allowed_html );
+					}
+				?>
+				<div class="apple-news-component">
+				<p><span class="apple-news-dropcap">L</span>orem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sagittis, <a href="#">augue vitae iaculis euismod</a>, libero nulla pellentesque quam, non venenatis massa odio id dolor.</p>
+				<div class="apple-news-pull-quote">Lorem ipsum dolor sit amet.</div>
+				<p>Praesent eget odio vel sapien scelerisque euismod. Phasellus eros sapien, rutrum ac nibh nec, tristique commodo neque.</p>
+				<h2>Quisque efficitur</h2>
+				<p>Quisque efficitur sit amet ex et venenatis. Morbi nisi nisi, ornare id iaculis eget, pulvinar ac dolor.</p>
+				<p>In eu la	cus porttitor, pellentesque diam et, tristique elit. Mauris justo odio, efficitur sit amet aliquet id, aliquam placerat turpis.</p>
+				</div>
+			</div>
+		</div>
+		<?php
+	}
+
+	/**
 	 * Renders the component order field.
 	 *
 	 * @static
@@ -247,7 +312,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 		<ul id="meta-component-order-sort" class="component-order ui-sortable">
 			<?php
 				// Get the current order
-				$component_order = self::get_value( 'meta_component_order' ) ?: array( 'cover', 'title', 'byline' );
+				$component_order = self::get_value( 'meta_component_order' );
 				if ( ! empty( $component_order ) && is_array( $component_order ) ) {
 					foreach ( $component_order as $component_name ) {
 						echo sprintf(
