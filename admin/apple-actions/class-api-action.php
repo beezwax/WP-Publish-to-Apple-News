@@ -3,6 +3,7 @@
 namespace Apple_Actions;
 
 require_once plugin_dir_path( __FILE__ ) . 'class-action.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-action-exception.php';
 require_once plugin_dir_path( __FILE__ ) . '../../includes/apple-push-api/autoload.php';
 
 use Apple_Actions\Action as Action;

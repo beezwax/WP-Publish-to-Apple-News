@@ -27,5 +27,3 @@ abstract class Action {
 	}
 
 }
-
-class Action_Exception extends \Exception {}

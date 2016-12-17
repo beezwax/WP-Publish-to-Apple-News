@@ -236,6 +236,7 @@ class Push extends API_Action {
 	private function process_errors( $errors ) {
 		// Get the current alert settings
 		$component_alerts = $this->get_setting( 'component_alerts' );
+		$json_alerts = $this->get_setting( 'json_alerts' );
 
 		// Initialize the alert message
 		$alert_message = '';
@@ -266,19 +267,19 @@ class Push extends API_Action {
 		// Check for JSON errors
 		if ( ! empty( $errors[0]['json_errors'] ) ) {
 			if ( ! empty( $alert_message ) ) {
-				$alert_message .= '<br />';
+				$alert_message .= '|';
 			}
 
 			// Merge all errors into a single message
 			$json_errors = implode( ', ', $errors[0]['json_errors'] );
 
 			// Add these to the message
-			if ( 'warn' === $component_alerts ) {
+			if ( 'warn' === $json_alerts ) {
 				$alert_message .= sprintf(
 					__( 'The following JSON errors were detected: %s', 'apple-news' ),
 					$json_errors
 				);
-			} elseif ( 'fail' === $component_alerts ) {
+			} elseif ( 'fail' === $json_alerts ) {
 				$alert_message .= sprintf(
 					__( 'The following JSON errors were detected and prevented publishing: %s', 'apple-news' ),
 					$json_errors
@@ -292,9 +293,8 @@ class Push extends API_Action {
 		}
 
 		// Proceed based on component alert settings
-		if ( 'warn' === $component_alerts ) {
-				\Admin_Apple_Notice::error( $alert_message, $user_id );
-		} elseif ( 'fail' === $component_alerts ) {
+		if ( ( 'fail' === $component_alerts && ! empty( $errors[0]['component_errors'] ) )
+			|| ( 'fail' === $json_alerts && ! empty( $errors[0]['json_errors'] ) ) ) {
 			// Remove the pending designation if it exists
 			delete_post_meta( $this->id, 'apple_news_api_pending' );
 
@@ -306,6 +306,9 @@ class Push extends API_Action {
 
 			// Throw an exception
 			throw new \Apple_Actions\Action_Exception( $alert_message );
+		} else if ( ( 'warn' === $component_alerts && ! empty( $errors[0]['component_errors'] ) )
+			|| ( 'warn' === $json_alerts && ! empty( $errors[0]['json_errors'] ) ) ) {
+				\Admin_Apple_Notice::error( $alert_message, $user_id );
 		}
 	}
 

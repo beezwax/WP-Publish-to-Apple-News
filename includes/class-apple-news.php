@@ -33,6 +33,22 @@ class Apple_News {
 	public static $option_name = 'apple_news_settings';
 
 	/**
+	 * Link to support for the plugin on WordPress.org.
+	 *
+	 * @var string
+	 * @access public
+	 */
+	public static $wordpress_org_support_url = 'https://wordpress.org/support/plugin/publish-to-apple-news';
+
+	/**
+	 * Link to support for the plugin on github.
+	 *
+	 * @var string
+	 * @access public
+	 */
+	public static $github_support_url = 'https://github.com/alleyinteractive/apple-news/issues';
+
+	/**
 	 * Plugin version.
 	 *
 	 * @var string
@@ -85,5 +101,35 @@ class Apple_News {
 		array_map( 'delete_option', array_keys( $migrated_settings ) );
 
 		return $migrated_settings;
+	}
+
+	/**
+	 * Displays support information for the plugin.
+	 *
+	 * @var string $format
+	 * @var boolean $with_padding
+	 * @return string
+	 * @access public
+	 */
+	public static function get_support_info( $format = 'html', $with_padding = true ) {
+		$support_info = sprintf(
+			__( 'If you need assistance with this issue, please reach out for support on <a href="%s">WordPress.org</a> or <a href="%s">github</a>.', 'apple-news' ),
+			esc_attr( self::$wordpress_org_support_url ),
+			esc_attr( self::$github_support_url )
+		);
+
+		if ( 'text' === $format ) {
+			$support_info = strip_tags( $support_info );
+		}
+
+		if ( $with_padding ) {
+			if ( 'text' === $format ) {
+				$support_info = '\n\n' . $support_info;
+			} else {
+				$support_info = '<br /><br />' . $support_info;
+			}
+		}
+
+		return $support_info;
 	}
 }
