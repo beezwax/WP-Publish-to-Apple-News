@@ -264,7 +264,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 					$settings = new Admin_Apple_Settings();
 
 					$title = sprintf(
-						'<h1 class="apple-news-title">%s</h1>',
+						'<h1 class="apple-news-title apple-news-component">%s</h1>',
 						__( 'Sample Article', 'apple-news' )
 					);
 
@@ -278,7 +278,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 					$date = date( 'M j, Y g:i A' );
 					$export = new Apple_Actions\Index\Export( $settings->fetch_settings() );
 					$byline = sprintf(
-						'<div class="apple-news-byline">%s</div>',
+						'<div class="apple-news-byline apple-news-component">%s</div>',
 						$export->format_byline( null, $author, $date )
 					);
 
@@ -288,14 +288,13 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 						echo wp_kses( $$component, self::$allowed_html );
 					}
 				?>
-				<div class="apple-news-components">
+				<div class="apple-news-component">
 				<p><span class="apple-news-dropcap">L</span>orem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sagittis, <a href="#">augue vitae iaculis euismod</a>, libero nulla pellentesque quam, non venenatis massa odio id dolor.</p>
 				<div class="apple-news-pull-quote">Lorem ipsum dolor sit amet.</div>
 				<p>Praesent eget odio vel sapien scelerisque euismod. Phasellus eros sapien, rutrum ac nibh nec, tristique commodo neque.</p>
 				<h2>Quisque efficitur</h2>
 				<p>Quisque efficitur sit amet ex et venenatis. Morbi nisi nisi, ornare id iaculis eget, pulvinar ac dolor.</p>
-				<!--p>In eu lacus porttitor, pellentesque diam et, tristique elit. Mauris justo odio, efficitur sit amet aliquet id, aliquam placerat turpis. Donec sit amet sem dictum, pharetra lectus at, blandit diam. Maecenas posuere, nibh nec iaculis ultrices, leo eros faucibus arcu, vitae ullamcorper dui lacus ut ligula. Donec magna tortor, cursus id felis in, dignissim porta elit. Duis et malesuada nisi, sit amet lobortis est. Suspendisse vitae porta urna. Pellentesque vehicula pulvinar risus non commodo. Aenean ornare euismod velit a commodo. Ut dapibus scelerisque mi, dignissim volutpat ante semper quis. Quisque ipsum mi, mattis nec dapibus sed, vestibulum sed nisi.</p>
-				<p>Nullam viverra magna elit, sit amet condimentum augue sagittis euismod. Curabitur sed eros velit. Sed aliquam augue id libero commodo, quis rhoncus mi porta. Praesent viverra condimentum est, efficitur malesuada ligula tincidunt sed. Nulla venenatis est eu mi placerat, a posuere ante rutrum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla porttitor rhoncus sem, quis semper felis viverra fermentum. Integer faucibus, odio fringilla iaculis semper, magna leo ornare tellus, nec malesuada lorem massa a justo. Vestibulum vitae ex ipsum. Duis fringilla risus turpis, luctus consectetur dolor mattis nec. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p-->
+				<p>In eu la	cus porttitor, pellentesque diam et, tristique elit. Mauris justo odio, efficitur sit amet aliquet id, aliquam placerat turpis.</p>
 				</div>
 			</div>
 		</div>
