@@ -11,8 +11,6 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 
 	private $original_user_id;
 
-	private $component_message = 'The following components are unsupported by Apple News and were removed: iframe';
-
 	public function setup() {
 		parent::setup();
 
@@ -202,6 +200,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 
 	public function testComponentErrorsWarn() {
 		$this->settings->set( 'component_alerts', 'warn' );
+		$this->settings->set( 'json_alerts', 'none' );
 
 		$response = $this->dummy_response();
 		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
@@ -226,7 +225,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 		$this->assertNotEmpty( $notices );
 
 		$component_notice = end( $notices );
-		$this->assertEquals( $this->component_message, $component_notice['message'] );
+		$this->assertEquals( 'The following components are unsupported by Apple News and were removed: iframe', $component_notice['message'] );
 
 		// The post was still sent to Apple News
 		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
@@ -236,11 +235,9 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
 	}
 
-	/**
-	 * @expectedException \Apple_Actions\Action_Exception
-	 */
 	public function testComponentErrorsFail() {
 		$this->settings->set( 'component_alerts', 'fail' );
+		$this->settings->set( 'json_alerts', 'none' );
 
 		$response = $this->dummy_response();
 		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
@@ -258,6 +255,47 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 
 		$action = new Push( $this->settings, $post_id );
 		$action->set_api( $api->reveal() );
+
+		try {
+			$action->perform();
+		} catch ( Action_Exception $e ) {
+
+			// An admin error notice was created
+			$notices = get_user_meta( $user_id, 'apple_news_notice', true );
+			$this->assertNotEmpty( $notices );
+
+			$component_notice = end( $notices );
+			$this->assertEquals( 'The following components are unsupported by Apple News and prevented publishing: iframe', $e->getMessage() );
+
+			// The post was not sent to Apple News
+			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_id', true ) );
+			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
+			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
+			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
+			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
+		}
+	}
+
+	public function testJSONErrorsWarn() {
+		$this->settings->set( 'component_alerts', 'none' );
+		$this->settings->set( 'json_alerts', 'warn' );
+
+		$response = $this->dummy_response();
+		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
+		$api->post_article_to_channel( Argument::cetera() )
+			->willReturn( $response )
+			->shouldBeCalled();
+
+		// We need to create an iframe, so run as administrator
+		$user_id = $this->set_admin();
+
+		// Create post
+		$post_id = $this->factory->post->create( array(
+			'post_content' => 'ÂÂîî',
+		) );
+
+		$action = new Push( $this->settings, $post_id );
+		$action->set_api( $api->reveal() );
 		$action->perform();
 
 		// An admin error notice was created
@@ -265,14 +303,54 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 		$this->assertNotEmpty( $notices );
 
 		$component_notice = end( $notices );
-		$this->assertEquals( $this->component_message, $component_notice['message'] );
+		$this->assertEquals( 'The following JSON errors were detected: Invalid unicode character sequences were found that could cause display issues on Apple News: ÂÂîî', $component_notice['message'] );
 
-		// The post was not sent to Apple News
-		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_id', true ) );
-		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
-		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
-		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
+		// The post was still sent to Apple News
+		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
+		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
+		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
+		$this->assertEquals( $response->data->shareUrl, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
 		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
+	}
+
+	public function testJSONErrorsFail() {
+		$this->settings->set( 'component_alerts', 'none' );
+		$this->settings->set( 'json_alerts', 'fail' );
+
+		$response = $this->dummy_response();
+		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
+		$api->post_article_to_channel( Argument::cetera() )
+			->willReturn( $response )
+			->shouldNotBeCalled();
+
+		// We need to create an iframe, so run as administrator
+		$user_id = $this->set_admin();
+
+		// Create post
+		$post_id = $this->factory->post->create( array(
+			'post_content' => 'ÂÂîî',
+		) );
+
+		$action = new Push( $this->settings, $post_id );
+		$action->set_api( $api->reveal() );
+
+		try {
+			$action->perform();
+		} catch ( Action_Exception $e ) {
+			// An admin error notice was created
+			$notices = get_user_meta( $user_id, 'apple_news_notice', true );
+			$this->assertNotEmpty( $notices );
+
+			$component_notice = end( $notices );
+			$this->assertEquals( 'The following JSON errors were detected and prevented publishing: Invalid unicode character sequences were found that could cause display issues on Apple News: ÂÂîî', $e->getMessage() );
+
+			// The post was not sent to Apple News
+			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_id', true ) );
+			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
+			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
+			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
+			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
+		}
 	}
 
 }

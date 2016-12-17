@@ -1,4 +1,7 @@
 <?php
+
+use \Apple_News as Apple_News;
+
 /**
  * This class manages admin notices.
  *
@@ -135,6 +138,7 @@ class Admin_Apple_Notice {
 	 */
 	private static function show_notice( $message, $type ) {
 		// Format messages a little nicer
+		$message = str_replace( '|', '<br />', $message );
 		$message_array = explode( ':', $message );
 		if ( 2 === count( $message_array ) ) {
 			// If it's not 2, it's too unclear how to proceed.
@@ -149,6 +153,11 @@ class Admin_Apple_Notice {
 					$errors_formatted
 				);
 			}
+		}
+
+		// Add the support tagline to errors
+		if ( 'error' === $type ) {
+			$message .= Apple_News::get_support_info();
 		}
 		?>
 		<div class="notice <?php echo esc_attr( $type ) ?> is-dismissible">

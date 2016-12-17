@@ -136,42 +136,8 @@ class Push extends API_Action {
 		$this->clean_workspace();
 		list( $json, $bundles, $errors ) = $this->generate_article();
 
-		// If there were errors, decide how to proceed based on the component alert settings
-		if ( ! empty( $errors[0]['component_errors'] ) ) {
-			// Build an list of the components that caused errors
-			$component_names = implode( ', ', $errors[0]['component_errors'] );
-
-			// Decide if we need to handle this
-			$component_alerts = $this->get_setting( 'component_alerts' );
-
-			if ( 'warn' === $component_alerts ) {
-				$alert_message = sprintf(
-					__( 'The following components are unsupported by Apple News and were removed: %s', 'apple-news' ),
-					$component_names
-				);
-
-				if ( empty( $user_id ) ) {
-					$user_id = get_current_user_id();
-				}
-
-				\Admin_Apple_Notice::error( $alert_message, $user_id );
-			} elseif ( 'fail' === $component_alerts ) {
-				$alert_message = sprintf(
-					__( 'The following components are unsupported by Apple News and prevented publishing: %s', 'apple-news' ),
-					$component_names
-				);
-
-				// Remove the pending designation if it exists
-				delete_post_meta( $this->id, 'apple_news_api_pending' );
-
-				// Remove the async in progress flag
-				delete_post_meta( $this->id, 'apple_news_api_async_in_progress' );
-
-				$this->clean_workspace();
-
-				throw new \Apple_Actions\Action_Exception( $alert_message );
-			}
-		}
+		// Process errors
+		$this->process_errors( $errors );
 
 		// Validate the data before using since it's filterable.
 		// JSON should just be a string.
@@ -259,6 +225,91 @@ class Push extends API_Action {
 		}
 
 		$this->clean_workspace();
+	}
+
+	/**
+	 * Processes errors, halts publishing if needed.
+	 *
+	 * @param array $errors
+	 * @access private
+	 */
+	private function process_errors( $errors ) {
+		// Get the current alert settings
+		$component_alerts = $this->get_setting( 'component_alerts' );
+		$json_alerts = $this->get_setting( 'json_alerts' );
+
+		// Initialize the alert message
+		$alert_message = '';
+
+		// Get the current user id
+		if ( empty( $user_id ) ) {
+			$user_id = get_current_user_id();
+		}
+
+		// Build the component alert error message, if required
+		if ( ! empty( $errors[0]['component_errors'] ) ) {
+			// Build an list of the components that caused errors
+			$component_names = implode( ', ', $errors[0]['component_errors'] );
+
+			if ( 'warn' === $component_alerts ) {
+				$alert_message .= sprintf(
+					__( 'The following components are unsupported by Apple News and were removed: %s', 'apple-news' ),
+					$component_names
+				);
+			} elseif ( 'fail' === $component_alerts ) {
+				$alert_message .= sprintf(
+					__( 'The following components are unsupported by Apple News and prevented publishing: %s', 'apple-news' ),
+					$component_names
+				);
+			}
+		}
+
+		// Check for JSON errors
+		if ( ! empty( $errors[0]['json_errors'] ) ) {
+			if ( ! empty( $alert_message ) ) {
+				$alert_message .= '|';
+			}
+
+			// Merge all errors into a single message
+			$json_errors = implode( ', ', $errors[0]['json_errors'] );
+
+			// Add these to the message
+			if ( 'warn' === $json_alerts ) {
+				$alert_message .= sprintf(
+					__( 'The following JSON errors were detected: %s', 'apple-news' ),
+					$json_errors
+				);
+			} elseif ( 'fail' === $json_alerts ) {
+				$alert_message .= sprintf(
+					__( 'The following JSON errors were detected and prevented publishing: %s', 'apple-news' ),
+					$json_errors
+				);
+			}
+		}
+
+		// See if we found any errors
+		if ( empty( $alert_message ) ) {
+			return;
+		}
+
+		// Proceed based on component alert settings
+		if ( ( 'fail' === $component_alerts && ! empty( $errors[0]['component_errors'] ) )
+			|| ( 'fail' === $json_alerts && ! empty( $errors[0]['json_errors'] ) ) ) {
+			// Remove the pending designation if it exists
+			delete_post_meta( $this->id, 'apple_news_api_pending' );
+
+			// Remove the async in progress flag
+			delete_post_meta( $this->id, 'apple_news_api_async_in_progress' );
+
+			// Clean the workspace
+			$this->clean_workspace();
+
+			// Throw an exception
+			throw new \Apple_Actions\Action_Exception( $alert_message );
+		} else if ( ( 'warn' === $component_alerts && ! empty( $errors[0]['component_errors'] ) )
+			|| ( 'warn' === $json_alerts && ! empty( $errors[0]['json_errors'] ) ) ) {
+				\Admin_Apple_Notice::error( $alert_message, $user_id );
+		}
 	}
 
 	/**

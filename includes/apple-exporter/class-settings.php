@@ -65,6 +65,7 @@ class Settings {
 		'pullquote_line_height' 	=> 48,
 
 		'component_alerts' 				=> 'none',
+		'json_alerts'							=> 'warn',
 
 		'use_remote_images' 			=> 'no',
 
