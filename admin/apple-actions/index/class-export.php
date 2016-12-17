@@ -131,7 +131,7 @@ class Export extends Action {
 			// Attempt to parse the date format from the remaining string
 			$matches = array();
 			preg_match( '/#(.*?)#/', $byline, $matches );
-			if ( ! empty( $matches[1] ) ) {
+			if ( ! empty( $matches[1] ) && ! empty( $date ) ) {
 				// Set the date using the custom format
 				$byline = str_replace( $matches[0], date( $matches[1], strtotime( $date ) ), $byline );
 			}
