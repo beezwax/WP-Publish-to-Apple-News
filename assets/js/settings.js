@@ -92,6 +92,15 @@
 		// Do an initial update
 		appleNewsUpdatePreview();
 
+		// Check that we are fully compatible
+		if ( ! appleNewsSupportsMacFeatures() ) {
+			$( '.apple-news-settings-preview' ).prepend(
+				$( '<div>' )
+					.addClass( 'font-notice' )
+					.text( appleNewsSettings.fontNotice )
+			)
+		}
+
 		// Ensure all further updates also affect the preview
 		$( '#apple-news-settings-form :input' ).on( 'change', appleNewsUpdatePreview );
 
