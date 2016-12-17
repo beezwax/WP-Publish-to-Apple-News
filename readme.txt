@@ -4,7 +4,7 @@ Donate link: http://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 4.7
-Stable tag: 1.1.9
+Stable tag: 1.2.0
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl.html
 
@@ -163,6 +163,17 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 1.
 
 == Changelog ==
+
+= 1.2.0 =
+* Added a live preview of the font being selected (macOS only).
+* Added a live preview of formatting settings (font preview in macOS only).
+* Switched to the native WordPress color picker for greater browser compatibility.
+* Added a framework for JSON validation and validation for unicode character sequences that are symptomatic of display issues that have been witnessed, though not reproduced, in Apple News.
+* Broke out Action_Exception into its own class file for cleanliness.
+* Added direct support links to every error message.
+* Added better formatting of multiple error messages.
+* Added unit tests for the Apple_News and Admin_Apple_Notice classes.
+* Added new unit tests for Push.
 
 = 1.1.9 =
 * Updated the logic for bundling images for the Apple News API's new, stricter MIME parsing logic.
