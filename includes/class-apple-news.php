@@ -52,9 +52,9 @@ class Apple_News {
 	 * Plugin version.
 	 *
 	 * @var string
-	 * @access protected
+	 * @access public
 	 */
-	protected $version = '1.1.9';
+	public static $version = '1.1.9';
 
 	/**
 	 * Extracts the filename for bundling an asset.
@@ -124,7 +124,7 @@ class Apple_News {
 
 		if ( $with_padding ) {
 			if ( 'text' === $format ) {
-				$support_info = '\n\n' . $support_info;
+				$support_info = "\n\n" . $support_info;
 			} else {
 				$support_info = '<br /><br />' . $support_info;
 			}
