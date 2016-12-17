@@ -114,8 +114,8 @@ class Apple_News {
 	public static function get_support_info( $format = 'html', $with_padding = true ) {
 		$support_info = sprintf(
 			__( 'If you need assistance with this issue, please reach out for support on <a href="%s">WordPress.org</a> or <a href="%s">github</a>.', 'apple-news' ),
-			esc_attr( self::$wordpress_org_support_url ),
-			esc_attr( self::$github_support_url )
+			esc_url( self::$wordpress_org_support_url ),
+			esc_url( self::$github_support_url )
 		);
 
 		if ( 'text' === $format ) {
