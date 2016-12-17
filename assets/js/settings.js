@@ -117,6 +117,7 @@
 
 		// Dropcap
 		appleNewsSetCSS( '.apple-news-settings-preview .apple-news-dropcap', 'dropcap_color', 'color', null, null );
+		appleNewsSetCSS( '.apple-news-settings-preview .apple-news-dropcap', 'dropcap_font', 'font-family', null, null );
 		var bodySize = $( '#body_size' ).val();
 		var bodyLineHeight = $( '#body_line_height' ).val();
 		var dropcapSize = bodySize;
