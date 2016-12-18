@@ -190,7 +190,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 			),
 			'byline' => array(
 				'label'       => __( 'Byline', 'apple-news' ),
-				'description' => __( "The byline displays the article's author and date", 'apple-news' ),
+				'description' => __( "The byline displays the article's author and publish date", 'apple-news' ),
 				'settings'    => array( 'byline_font', 'byline_size', 'byline_color', 'byline_format' ),
 			),
 			'headings' => array(
