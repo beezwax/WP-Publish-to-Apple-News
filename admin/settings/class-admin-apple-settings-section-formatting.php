@@ -59,7 +59,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 				'type'    => array( 'left', 'center', 'right' ),
 			),
 			'initial_dropcap' => array(
-				'label'   => __( 'Use initial dropcap', 'apple-news' ),
+				'label'   => __( 'Use initial drop cap', 'apple-news' ),
 				'type'    => array( 'yes', 'no' ),
 			),
 			'dropcap_font' => array(
@@ -67,7 +67,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 				'type'    => 'font',
 			),
 			'dropcap_color' => array(
-				'label'   => __( 'Dropcap font color', 'apple-news' ),
+				'label'   => __( 'Drop cap font color', 'apple-news' ),
 				'type'    => 'color',
 			),
 			'byline_font' => array(
@@ -185,7 +185,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 				'settings'    => array( 'body_font', 'body_size', 'body_color', 'body_link_color', 'body_background_color', 'body_orientation' ),
 			),
 			'dropcap' => array(
-				'label'       => __( 'Dropcap', 'apple-news' ),
+				'label'       => __( 'Drop Cap', 'apple-news' ),
 				'settings'    => array( 'dropcap_font', 'initial_dropcap', 'dropcap_color' ),
 			),
 			'byline' => array(
