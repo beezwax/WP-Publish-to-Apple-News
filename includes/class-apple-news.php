@@ -54,7 +54,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $version = '1.1.9';
+	public static $version = '1.2.0';
 
 	/**
 	 * Extracts the filename for bundling an asset.
