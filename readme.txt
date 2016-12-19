@@ -17,6 +17,7 @@ The Publish to Apple News plugin enables your WordPress blog content to be publi
 **Features include:**
 
 * Convert your WordPress content into Apple News format automatically.
+* Create a custom design for your Apple News content with no programming knowledge required.
 * Automatically or manually publish posts from WordPress to Apple News.
 * Control individual posts with options to publish, update, or delete.
 * Publish individual posts or in bulk.
@@ -29,17 +30,28 @@ Please see the [Apple Developer](https://developer.apple.com/) and [Apple News P
 
 == Installation ==
 
-Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for detailed [installation instructions](https://github.com/alleyinteractive/apple-news/wiki/Installation) as well as [configuration](https://github.com/alleyinteractive/apple-news/wiki/Configuration) and [usage instructions](https://github.com/alleyinteractive/apple-news/wiki/Usage) and [troubleshooting information](https://github.com/alleyinteractive/apple-news/wiki/Usage#troubleshooting).
+Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for detailed [installation instructions](https://github.com/alleyinteractive/apple-news/wiki/Installation) as well as [configuration](https://github.com/alleyinteractive/apple-news/wiki/Configuration) and [usage instructions](https://github.com/alleyinteractive/apple-news/wiki/Usage), [troubleshooting information](https://github.com/alleyinteractive/apple-news/wiki/Usage#troubleshooting) and a full list of [action and filter hooks](https://github.com/alleyinteractive/apple-news/wiki/action-and-filter-hooks).
 
 == Frequently Asked Questions ==
 
-Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for detailed [installation instructions](https://github.com/alleyinteractive/apple-news/wiki/Installation) as well as [configuration](https://github.com/alleyinteractive/apple-news/wiki/Configuration) and [usage instructions](https://github.com/alleyinteractive/apple-news/wiki/Usage) and [troubleshooting information](https://github.com/alleyinteractive/apple-news/wiki/Usage#troubleshooting).
+Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for detailed [installation instructions](https://github.com/alleyinteractive/apple-news/wiki/Installation) as well as [configuration](https://github.com/alleyinteractive/apple-news/wiki/Configuration) and [usage instructions](https://github.com/alleyinteractive/apple-news/wiki/Usage), [troubleshooting information](https://github.com/alleyinteractive/apple-news/wiki/Usage#troubleshooting) and a full list of [action and filter hooks](https://github.com/alleyinteractive/apple-news/wiki/action-and-filter-hooks).
 
 == Screenshots ==
 
 1.
 
 == Changelog ==
+
+= 1.2.0 =
+* Added a live preview of the font being selected (macOS only).
+* Added a live preview of formatting settings (font preview in macOS only).
+* Switched to the native WordPress color picker for greater browser compatibility.
+* Added a framework for JSON validation and validation for unicode character sequences that are symptomatic of display issues that have been witnessed, though not reproduced, in Apple News.
+* Broke out Action_Exception into its own class file for cleanliness.
+* Added direct support links to every error message.
+* Added better formatting of multiple error messages.
+* Added unit tests for the Apple_News and Admin_Apple_Notice classes.
+* Added new unit tests for Push.
 
 = 1.1.9 =
 * Updated the logic for bundling images for the Apple News API's new, stricter MIME parsing logic.
