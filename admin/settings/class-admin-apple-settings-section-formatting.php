@@ -264,12 +264,12 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 					$settings = new Admin_Apple_Settings();
 
 					$title = sprintf(
-						'<h1 class="apple-news-title apple-news-component">%s</h1>',
+						'<h1 class="apple-news-title apple-news-component apple-news-meta-component">%s</h1>',
 						__( 'Sample Article', 'apple-news' )
 					);
 
 					$cover = sprintf(
-						'<div class="apple-news-cover">%s</div>',
+						'<div class="apple-news-cover apple-news-meta-component">%s</div>',
 						__( 'Cover', 'apple-news' )
 					);
 
@@ -278,7 +278,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 					$date = date( 'M j, Y g:i A' );
 					$export = new Apple_Actions\Index\Export( $settings->fetch_settings() );
 					$byline = sprintf(
-						'<div class="apple-news-byline apple-news-component">%s</div>',
+						'<div class="apple-news-byline apple-news-component apple-news-meta-component">%s</div>',
 						$export->format_byline( null, $author, $date )
 					);
 

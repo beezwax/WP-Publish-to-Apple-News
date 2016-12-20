@@ -1,5 +1,7 @@
 (function ($) {
 
+	var componentKey = '';
+
 	$(document).ready(function () {
 		appleNewsSelectInit();
 		appleNewsSettingsSortInit( '#meta-component-order-sort', 'meta_component_order' );
@@ -109,8 +111,6 @@
 	}
 
 	function appleNewsUpdatePreview() {
-		console.log( 'updating preview' );
-
 		// Create a map of the form values to the preview elements
 		// Layout spacing
 		appleNewsSetCSS( '.apple-news-component', 'layout_margin', 'padding-left', 'px', .3 );
@@ -169,21 +169,29 @@
 		appleNewsSetCSS( '.apple-news-settings-preview div.apple-news-pull-quote', 'pullquote_border_style', 'border-bottom-style', null, null );
 		appleNewsSetCSS( '.apple-news-settings-preview div.apple-news-pull-quote', 'pullquote_border_width', 'border-bottom-width', 'px', null );
 
-		// Gallery
-		// TODO: probably will skip?
-
-		// Advertisement
-		// TODO: probably will skip?
-
 		// Component order
 		var componentOrder = $( '#meta-component-order-sort' ).sortable( 'toArray' );
+		if ( '' !== componentKey ) {
+			$( '.apple-news-meta-component' ).removeClass( componentKey );
+			componentKey = '';
+		}
+
 		$.each( componentOrder.reverse(), function( index, value ) {
 			// Remove the component
 			var $detached = $( '.apple-news-' + value ).detach();
 
+			// Build the component key.
+			// Used for targeting certain styles in the preview that differ on component order.
+			componentKey = value + '-' + componentKey;
+
 			// Add back at the beginning
 			$( '.apple-news-settings-preview' ).prepend( $detached );
 		} );
+
+		if ( '' !== componentKey ) {
+			componentKey = componentKey.substring( 0, componentKey.length - 1 );
+			$( '.apple-news-meta-component' ).addClass( componentKey );
+		}
 
 		// Line heights
 		appleNewsSetCSS( '.apple-news-settings-preview p', 'body_line_height', 'line-height', 'px', null );
