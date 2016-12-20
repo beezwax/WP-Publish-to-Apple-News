@@ -290,11 +290,18 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 				?>
 				<div class="apple-news-component">
 				<p><span class="apple-news-dropcap">L</span>orem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sagittis, <a href="#">augue vitae iaculis euismod</a>, libero nulla pellentesque quam, non venenatis massa odio id dolor.</p>
-				<div class="apple-news-pull-quote">Lorem ipsum dolor sit amet.</div>
 				<p>Praesent eget odio vel sapien scelerisque euismod. Phasellus eros sapien, rutrum ac nibh nec, tristique commodo neque.</p>
+				<?php printf(
+						'<div class="apple-news-image">%s</div>',
+						esc_html__( 'Image', 'apple-news' )
+					);
+				?>
+				<p>Maecenas tortor dui, pellentesque ac ullamcorper quis, malesuada sit amet turpis. Nunc in tellus et justo dapibus sollicitudin.</p>
 				<h2>Quisque efficitur</h2>
 				<p>Quisque efficitur sit amet ex et venenatis. Morbi nisi nisi, ornare id iaculis eget, pulvinar ac dolor.</p>
 				<p>In eu la	cus porttitor, pellentesque diam et, tristique elit. Mauris justo odio, efficitur sit amet aliquet id, aliquam placerat turpis.</p>
+				<div class="apple-news-pull-quote">Lorem ipsum dolor sit amet.</div>
+				<p>Sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Pellentesque ipsum mi, sagittis eget sodales et, volutpat at felis.</p>
 				</div>
 			</div>
 		</div>
