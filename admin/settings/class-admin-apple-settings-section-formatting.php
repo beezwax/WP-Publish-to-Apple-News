@@ -233,7 +233,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	 * @access public
 	 */
 	public function get_section_info() {
-		return __( 'Configuration for the visual appearance of the generated articles. Please note that changes only take effect going forward. The new settings will not change the appearance of any articles previously published to your channel in Apple News unless you manually update them.', 'apple-news' );
+		return __( 'Configuration for the visual appearance of the generated articles. Updates to these settings will not change the appearance of any articles previously published to your channel in Apple News unless you republish them.', 'apple-news' );
 	}
 
 	/**
