@@ -46,25 +46,17 @@ class Image extends Component {
 			'URL'  => $this->maybe_bundle_source( $url, $filename ),
 		);
 
-		// IMAGE ALIGNMENT is defined as follows:
-		// 1. If there is a left or right alignment specified, respect it.
-		// 2. If there is a center alignment specified:
-		//	2.a If the image is big enough, use a full-width image
-		//	2.b Otherwise auto-align
-		// 3. Otherwise, if there is no alignment specified or set to "none", auto-align.
-		if ( preg_match( '#align="left"#', $text ) || preg_match( '#class=".*?(?:alignleft).*?"#', $text ) ) {
+		// Determine image alignment.
+		if ( false !== stripos( $text, 'align="left"' )
+		     || preg_match( '/class="[^"]*alignleft[^"]*"/i', $text )
+		) {
 			$this->set_anchor_position( Component::ANCHOR_LEFT );
-		} else if ( preg_match( '#align="right"#', $text ) || preg_match( '#class=".*?(?:alignright).*?"#', $text ) ) {
+		} elseif ( false !== stripos( $text, 'align="right"' )
+		            || preg_match( '/class="[^"]*alignright[^"]*"/i', $text )
+		) {
 			$this->set_anchor_position( Component::ANCHOR_RIGHT );
-		} else if ( preg_match( '#align="center"#', $text ) || preg_match( '#class=".*?(?:aligncenter).*?"#', $text ) ) {
-			list( $width, $height ) = getimagesize( $url );
-			if ( $width < $this->get_setting( 'layout_width' ) ) {
-				$this->set_anchor_position( Component::ANCHOR_AUTO );
-			} else {
-				$this->set_anchor_position( Component::ANCHOR_NONE );
-			}
 		} else {
-			$this->set_anchor_position( Component::ANCHOR_AUTO );
+			$this->set_anchor_position( Component::ANCHOR_NONE );
 		}
 
 		// Full width images have top margin
@@ -100,10 +92,23 @@ class Image extends Component {
 	 * @access private
 	 */
 	private function register_non_anchor_layout() {
+
+		// Set base layout settings.
+		$layout = array(
+			'margin' => array(
+				'bottom' => 25,
+				'top' => 25,
+			),
+		);
+
+		// Add full bleed image option.
+		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
+			$layout['ignoreDocumentMargin'] = true;
+		}
+
+		// Register the layout.
 		$this->json['layout'] = 'full-width-image';
-		$this->register_full_width_layout( 'full-width-image', array(
-			'margin' => array( 'top' => 25, 'bottom' => 25 ),
-		) );
+		$this->register_full_width_layout( 'full-width-image', $layout );
 	}
 
 	/**
@@ -138,6 +143,8 @@ class Image extends Component {
 	 * @access private
 	 */
 	private function group_component( $caption ) {
+
+		// Roll up the image component into a container.
 		$image_component = $this->json;
 		$this->json = array(
 			'role' => 'container',
@@ -157,6 +164,10 @@ class Image extends Component {
 				),
 			),
 		);
-	}
 
+		// Add full bleed image option.
+		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
+			$this->json['layout']['ignoreDocumentMargin'] = true;
+		}
+	}
 }

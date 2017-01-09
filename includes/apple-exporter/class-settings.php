@@ -110,6 +110,7 @@ class Settings {
 		'json_alerts' => 'warn',
 
 		'use_remote_images' => 'no',
+		'full_bleed_images' => 'no',
 
 		// This can either be gallery or mosaic.
 		'gallery_type' => 'gallery',
