@@ -82,7 +82,10 @@ class Image extends Component {
 	private function register_anchor_layout() {
 		$this->json['layout'] = 'anchored-image';
 		$this->register_layout( 'anchored-image', array(
-			'margin' => array( 'top' => 25, 'bottom' => 25 ),
+			'margin' => array(
+				'bottom' => 25,
+				'top' => 25,
+			),
 		) );
 	}
 
@@ -104,6 +107,9 @@ class Image extends Component {
 		// Add full bleed image option.
 		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
 			$layout['ignoreDocumentMargin'] = true;
+		} else {
+			$layout['columnSpan'] = $this->get_setting( 'layout_columns' ) - 4;
+			$layout['columnStart'] = 2;
 		}
 
 		// Register the layout.
