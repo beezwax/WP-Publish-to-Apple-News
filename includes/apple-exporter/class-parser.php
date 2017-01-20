@@ -58,6 +58,11 @@ class Parser {
 			return '';
 		}
 
+		// Clean up any issues prior to formatting.
+		// This needs to be done here to avoid duplicating efforts
+		// in the HTML and Markdown classes.
+		$html = $this->_clean_html( $html );
+
 		// Fork for format.
 		if ( 'html' === $this->format ) {
 			return $this->_parse_html( $html );
@@ -128,5 +133,17 @@ class Parser {
 		 * @param DOMNodeList $nodes The list of DOMElement nodes used initially.
 		 */
 		return apply_filters( 'apple_news_parse_markdown', $content, $nodes );
+	}
+
+	/**
+	 * Handles cleaning up any HTML issues prior to parsing that could affect
+	 * both HTML and Markdown format.
+	 *
+	 * @access private
+	 * @param string $html
+	 * @return string The clean HTML
+	 */
+	private function _clean_html( $html ) {
+		return $html;
 	}
 }
