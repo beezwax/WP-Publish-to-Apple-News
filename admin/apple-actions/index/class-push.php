@@ -182,9 +182,9 @@ class Push extends API_Action {
 
 				// Get the current revision
 				$revision = get_post_meta( $this->id, 'apple_news_api_revision', true );
-				$result   = $this->get_api()->update_article( $remote_id, $revision, $json, $bundles, $meta );
+				$result   = $this->get_api()->update_article( $remote_id, $revision, $json, $bundles, $meta, $this->id );
 			} else {
-				$result = $this->get_api()->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles, $meta );
+				$result = $this->get_api()->post_article_to_channel( $json, $this->get_setting( 'api_channel' ), $bundles, $meta, $this->id );
 			}
 
 			// Save the ID that was assigned to this post in by the API.

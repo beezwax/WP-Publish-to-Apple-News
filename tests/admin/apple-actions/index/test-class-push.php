@@ -70,6 +70,11 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 	}
 
 	public function testCreateWithSections() {
+		// Create post
+		$post_id = $this->factory->post->create();
+		update_post_meta( $post_id, 'apple_news_sections', array( 'http://news-api.apple.com/sections/123' ) );
+
+		// Prophesize the action
 		$response = $this->dummy_response();
 		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
 		$api->post_article_to_channel(
@@ -84,19 +89,18 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 						),
 					),
 				)
-			)
+			),
+			$post_id
 		)
 			->willReturn( $response )
 			->shouldBeCalled();
 
-		// Create post
-		$post_id = $this->factory->post->create();
-		update_post_meta( $post_id, 'apple_news_sections', array( 'http://news-api.apple.com/sections/123' ) );
-
+		// Perform the action
 		$action = new Push( $this->settings, $post_id );
 		$action->set_api( $api->reveal() );
 		$action->perform();
 
+		// Check the response
 		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
 		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
 		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
@@ -105,6 +109,11 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 	}
 
 	public function testCreateIsPreview() {
+		// Create post
+		$post_id = $this->factory->post->create();
+		update_post_meta( $post_id, 'apple_news_is_preview', true );
+
+		// Prophesize the action
 		$response = $this->dummy_response();
 		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
 		$api->post_article_to_channel(
@@ -115,19 +124,18 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 				'data' => array(
 					'isPreview' => true
 				)
-			)
+			),
+			$post_id
 		)
 			->willReturn( $response )
 			->shouldBeCalled();
 
-		// Create post
-		$post_id = $this->factory->post->create();
-		update_post_meta( $post_id, 'apple_news_is_preview', true );
-
+		// Perform the action
 		$action = new Push( $this->settings, $post_id );
 		$action->set_api( $api->reveal() );
 		$action->perform();
 
+		// Check the response
 		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
 		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
 		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
@@ -136,6 +144,11 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 	}
 
 	public function testUpdate() {
+		// Create post, simulate that the post has been synced
+		$post_id = $this->factory->post->create();
+		update_post_meta( $post_id, 'apple_news_api_id', 123 );
+
+		// Prophesize the action
 		$response = $this->dummy_response();
 		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
 		$api->update_article(
@@ -145,23 +158,22 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			array(),
 			array(
 				'data' => array(),
-			)
+			),
+			$post_id
 		)
 			->willReturn( $response )
 			->shouldBeCalled();
 
+		// Perform the action
 		$api->get_article( "123" )
 			->willReturn( $response )
 			->shouldBeCalled();
-
-		// Create post, simulate that the post has been synced
-		$post_id = $this->factory->post->create();
-		update_post_meta( $post_id, 'apple_news_api_id', 123 );
 
 		$action = new Push( $this->settings, $post_id );
 		$action->set_api( $api->reveal() );
 		$action->perform();
 
+		// Check the response
 		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
 		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
 		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );

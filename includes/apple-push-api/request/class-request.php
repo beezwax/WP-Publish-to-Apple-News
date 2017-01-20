@@ -74,12 +74,13 @@ class Request {
 	 * @param string $article
 	 * @param array $bundles
 	 * @param array $meta
+	 * @param int $post_id
 	 * @return mixed
 	 * @since 0.2.0
 	 */
-	public function post( $url, $article, $bundles = array(), $meta = null ) {
+	public function post( $url, $article, $bundles = array(), $meta = null, $post_id = null ) {
 		// Assemble the content to send
-		$content = $this->build_content( $article, $bundles, $meta );
+		$content = $this->build_content( $article, $bundles, $meta, $post_id );
 
 		// Build the post request args
 		$args = array(
@@ -92,7 +93,7 @@ class Request {
 		);
 
 		// Allow filtering and merge with the default args
-		$args = apply_filters( 'apple_news_post_args', wp_parse_args( $args, $this->default_args ) );
+		$args = apply_filters( 'apple_news_post_args', wp_parse_args( $args, $this->default_args ), $post_id );
 
 		// Perform the request
 		$response = wp_safe_remote_post( esc_url_raw( $url ), $args );
@@ -290,15 +291,16 @@ class Request {
 	 * @param string $article
 	 * @param array $bundles
 	 * @param array $meta
+	 * @param int $post_id
 	 * @return string
 	 * @since 0.2.0
 	 */
-	private function build_content( $article, $bundles = array(), $meta = array() ) {
+	private function build_content( $article, $bundles = array(), $meta = array(), $post_id = null ) {
 		$bundles = array_unique( $bundles );
 		$content = '';
 
 		// Add custom meta for request.
-		$meta = apply_filters( 'apple_news_api_post_meta', $meta );
+		$meta = apply_filters( 'apple_news_api_post_meta', $meta, $post_id );
 
 		if ( ! empty( $meta['data'] ) && is_array( $meta['data'] ) ) {
 			$content .= $this->mime_builder->add_metadata( $meta );
