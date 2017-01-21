@@ -4,10 +4,6 @@ use Apple_Exporter\Parser as Parser;
 
 class Parser_Test extends WP_UnitTestCase {
 
-	public function testCleanInvalidLinks() {
-
-	}
-
 	public function testParseMarkdown() {
 		// Create a basic HTML post
 		$post = '<html><body><h2>A heading</h2><p><strong>This is strong.</strong><br><a href="http://apple.com">This is a link</a></p></body></html>';
