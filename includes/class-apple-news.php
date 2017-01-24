@@ -92,7 +92,7 @@ class Apple_News {
 		// options. To be safe, attempt to migrate values. This will happen only
 		// once.
 		if ( false === $wp_settings ) {
-			$wp_settings = $this->migrate_settings( $settings );
+			$wp_settings = $this->migrate_settings( $wp_settings );
 		}
 
 		// Check for presence of legacy header settings and migrate to new.
@@ -193,16 +193,21 @@ class Apple_News {
 		// For each potential value, see if the WordPress option exists.
 		// If so, migrate its value into the new array format.
 		// If it doesn't exist, just use the default value.
-		foreach ( $settings->all() as $key => $default ) {
-			$value = get_option( $key, $default );
-			$migrated_settings[ $key ] = $value;
+		if ( is_object( $settings ) ) {
+			$all_settings = $settings->all();
+			if ( ! empty( $all_settings ) && is_array( $all_settings ) ) {
+				foreach ( $all_settings as $key => $default ) {
+					$value = get_option( $key, $default );
+					$migrated_settings[ $key ] = $value;
+				}
+
+				// Store these settings
+				update_option( self::$option_name, $migrated_settings, 'no' );
+
+				// Delete the options to clean up
+				array_map( 'delete_option', array_keys( $migrated_settings ) );
+			}
 		}
-
-		// Store these settings
-		update_option( self::$option_name, $migrated_settings, 'no' );
-
-		// Delete the options to clean up
-		array_map( 'delete_option', array_keys( $migrated_settings ) );
 
 		return $migrated_settings;
 	}
