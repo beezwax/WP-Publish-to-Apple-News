@@ -179,18 +179,7 @@ class Admin_Apple_Settings extends Apple_News {
 
 			// Initialize.
 			$settings = new Settings();
-			$wp_settings = get_option( self::$option_name );
-
-			// If this option doesn't exist, either the site has never installed
-			// this plugin or they may be using an old version with individual
-			// options. To be safe, attempt to migrate values. This will happen only
-			// once.
-			if ( false === $wp_settings ) {
-				$wp_settings = $this->migrate_settings( $settings );
-			}
-
-			// Check for presence of legacy header settings and migrate to new.
-			$wp_settings = $this->migrate_header_settings( $wp_settings );
+			$wp_settings = $this->validate_settings( get_option( self::$option_name ) );
 
 			// Merge settings in the option with defaults.
 			foreach ( $settings->all() as $key => $value ) {
