@@ -144,7 +144,7 @@ class Admin_Apple_Settings extends Apple_News {
 	 * @access public
 	 */
 	public function register_assets( $hook ) {
-		if ( 'settings_page_apple-news-options' != $hook ) {
+		if ( 'apple-news_page_apple-news-options' != $hook ) {
 			return;
 		}
 
