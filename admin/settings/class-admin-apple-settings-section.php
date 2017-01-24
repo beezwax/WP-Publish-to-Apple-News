@@ -728,7 +728,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * since only it knows the nature of the fields and sanitization methods.
 	 */
 	public function save_settings() {
-		// Check if we're saving options and that there are settings to svae
+		// Check if we're saving options and that there are settings to save
 		if ( empty( $_POST['action'] )
 			|| 'apple_news_options' !== $_POST['action']
 			|| empty( $this->settings ) ) {
