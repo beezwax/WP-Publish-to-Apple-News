@@ -69,7 +69,7 @@ class Admin_Apple_Settings extends Apple_News {
 		$this->page_name = $this->plugin_domain . '-options';
 
 		add_action( 'admin_init', array( $this, 'register_sections' ), 5 );
-		add_action( 'admin_menu', array( $this, 'setup_options_page' ) );
+		add_action( 'admin_menu', array( $this, 'setup_options_page' ), 99 );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
 	}
 
@@ -113,9 +113,10 @@ class Admin_Apple_Settings extends Apple_News {
 	 * @access public
 	 */
 	public function setup_options_page() {
-		add_options_page(
+		add_submenu_page(
+			'apple_news_index',
 			__( 'Apple News Options', 'apple-news' ),
-			__( 'Apple News', 'apple-news' ),
+			__( 'Settings', 'apple-news' ),
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->page_name,
 			array( $this, 'page_options_render' )
