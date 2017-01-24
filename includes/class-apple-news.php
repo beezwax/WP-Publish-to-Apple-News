@@ -79,6 +79,32 @@ class Apple_News {
 	}
 
 	/**
+	 * Validate settings and see if any updates need to be performed.
+	 *
+	 * @param array $wp_settings An array of settings loaded from WP options.
+	 *
+	 * @access public
+	 * @return array The modified settings array.
+	 */
+	public function validate_settings( $wp_settings ) {
+		// If this option doesn't exist, either the site has never installed
+		// this plugin or they may be using an old version with individual
+		// options. To be safe, attempt to migrate values. This will happen only
+		// once.
+		if ( false === $wp_settings ) {
+			$wp_settings = $this->migrate_settings( $settings );
+		}
+
+		// Check for presence of legacy header settings and migrate to new.
+		$wp_settings = $this->migrate_header_settings( $wp_settings );
+
+		// Check for presence of legacy API settings and migrate to new.
+		$wp_settings = $this->migrate_api_settings( $wp_settings );
+
+		return $wp_settings;
+	}
+
+	/**
 	 * Migrate legacy header settings to new format.
 	 *
 	 * @param array $wp_settings An array of settings loaded from WP options.
@@ -131,6 +157,27 @@ class Apple_News {
 
 		// Store the updated option to remove the legacy setting names.
 		update_option( self::$option_name, $wp_settings, 'no' );
+
+		return $wp_settings;
+	}
+
+	/**
+	 * Initialize the value of api_autosync_delete if not set.
+	 *
+	 * @param array $wp_settings An array of settings loaded from WP options.
+	 *
+	 * @access public
+	 * @return array The modified settings array.
+	 */
+	public function migrate_api_settings( $wp_settings ) {
+		// Use the value of api_autosync_update for api_autosync_delete if not set
+		// since that was the previous value used to determine this behavior.
+		if ( empty( $wp_settings['api_autosync_delete'] )
+			&& ! empty( $wp_settings['api_autosync_update'] ) ) {
+
+			$wp_settings['api_autosync_delete'] = $wp_settings['api_autosync_update'];
+			update_option( self::$option_name, $wp_settings, 'no' );
+		}
 
 		return $wp_settings;
 	}
