@@ -104,6 +104,26 @@ class Admin_Apple_Themes extends Apple_News {
 	}
 
 	/**
+	 * List all available themes
+	 *
+	 * @access public
+	 * @static
+	 */
+	public static function list_themes() {
+		return get_option( $this->theme_index_key, array() );
+	}
+
+	/**
+	 * Get a specific theme
+	 *
+	 * @access public
+	 * @static
+	 */
+	public static function get_theme( $key ) {
+		return get_option( $key, array() );
+	}
+
+	/**
 	 * Saves the theme JSON for the key provided.
 	 *
 	 * @param string $key
@@ -112,7 +132,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 */
 	private function save_theme( $key, $json ) {
 		// Get the index
-		$index = get_option( $this->theme_index_key, array() );
+		$index = self::list_themes();
 		if ( ! is_array( $index ) ) {
 			$index = array();
 		}
