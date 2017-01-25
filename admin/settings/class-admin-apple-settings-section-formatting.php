@@ -251,6 +251,28 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 				'label' => __( 'Header 6 font size', 'apple-news' ),
 				'type' => 'integer',
 			),
+			'caption_font' => array(
+				'label' => __( 'Caption font face', 'apple-news' ),
+				'type' => 'font',
+			),
+			'caption_size' => array(
+				'label' => __( 'Caption font size', 'apple-news' ),
+				'type' => 'integer',
+			),
+			'caption_color' => array(
+				'label' => __( 'Caption font color', 'apple-news' ),
+				'type' => 'color',
+			),
+			'caption_line_height' => array(
+				'label' => __( 'Caption line height', 'apple-news' ),
+				'type' => 'float',
+				'sanitize' => 'floatval',
+			),
+			'caption_tracking' => array(
+				'label' => __( 'Caption tracking', 'apple-news' ),
+				'type' => 'integer',
+				'description' => __( '(Percentage of font size)', 'apple-news' ),
+			),
 			'pullquote_font' => array(
 				'label' => __( 'Pullquote font face', 'apple-news' ),
 				'type' => 'font',
@@ -438,6 +460,16 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 					'header6_tracking',
 				),
 			),
+			'caption' => array(
+				'label' => __( 'Image caption', 'apple-news' ),
+				'settings' => array(
+					'caption_font',
+					'caption_size',
+					'caption_line_height',
+					'caption_tracking',
+					'caption_color',
+				),
+			),
 			'pullquote' => array(
 				'label' => __( 'Pull quote', 'apple-news' ),
 				'description' => sprintf(
@@ -559,6 +591,11 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 						esc_html__( 'Image', 'apple-news' )
 					);
 				?>
+                <?php printf(
+                        '<div class="apple-news-image-caption">%s</div>',
+                        esc_html__( 'Image caption', 'apple-news' )
+                    );
+                ?>
 				<p>Maecenas tortor dui, pellentesque ac ullamcorper quis, malesuada sit amet turpis. Nunc in tellus et justo dapibus sollicitudin.</p>
 				<h2>Quisque efficitur</h2>
 				<p>Quisque efficitur sit amet ex et venenatis. Morbi nisi nisi, ornare id iaculis eget, pulvinar ac dolor.</p>
