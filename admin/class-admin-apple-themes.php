@@ -227,7 +227,7 @@ class Admin_Apple_Themes extends Apple_News {
 	private function create_theme( $name ) {
 		// Get all the current settings for the site and save them as a new theme
 		$settings = new Admin_Apple_Settings();
-		$this->save_theme( $name, true, $settings );
+		$this->save_theme( $name, $settings->fetch_settings()->all() );
 	}
 
 	/**
