@@ -337,15 +337,16 @@ class Admin_Apple_Themes extends Apple_News {
 		}
 
 		$file_contents = file_get_contents( $file['file'] );
-		$this->import_data = json_decode( $file_contents, true );
+		$import_data = json_decode( $file_contents, true );
 
 		wp_import_cleanup( $this->file_id );
 
-		$result = $this->validate_data( $this->import_data );
-		if ( false === $result ) {
-			\Admin_Apple_Notice::error(
-				__( 'The theme file was invalid and cannot be imported', 'apple-news' )
-			);
+		$result = $this->validate_data( $import_data );
+		if ( ! is_array( $result ) ) {
+			\Admin_Apple_Notice::error( sprintf(
+				__( 'The theme file was invalid and cannot be imported: %s', 'apple-news' ),
+				$result
+			 ) );
 			return;
 		} else {
 			// Get the name from the data and unset it since it doesn't need to be stored
@@ -403,7 +404,34 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @access private
 	 */
 	private function validate_data( $data ) {
-		// TODO VALIDATE
+		$settings = new \Apple_Exporter\Settings();
+		$valid_settings = array_keys( $settings->all() );
+		$clean_settings = array();
+
+		// Check for the theme name
+		if ( ! isset( $data[ 'theme_name' ] ) ) {
+			return __( 'The theme file did not include a name', 'apple-news' );
+		}
+		$clean_settings['theme_name'] = $data['theme_name'];
+		unset( $data['theme_name'] );
+
+		foreach ( $valid_settings as $setting ) {
+			if ( ! isset( $data[ $setting ] ) ) {
+				return sprintf(
+					__( 'The theme was missing the required setting %s', 'apple-news' ),
+					$setting
+			}
+
+			$clean_settings[ $setting ] = sanitize_text_field( $data[ $setting ] );
+			unset( $data[ $setting ] );
+		}
+
+		// Check if invalid data was present
+		if ( ! empty( $data ) ) {
+			return __( 'The theme file contained invalid options', 'apple-news' );
+		}
+
+		return $clean_settings;
 	}
 
 	/**
