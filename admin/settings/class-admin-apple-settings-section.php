@@ -699,6 +699,16 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	}
 
 	/**
+	 * Get settings.
+	 *
+	 * @return array
+	 * @access public
+	 */
+	public function get_settings() {
+		return $this->settings;
+	}
+
+	/**
 	 * Sanitizes a single dimension array with text values.
 	 *
 	 * @param array $value
@@ -766,4 +776,14 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		update_option( self::$option_name, $settings, 'no' );
 	}
 
+	/**
+	 * Get all available fonts.
+	 *
+	 * @return array
+	 * @access public
+	 * @static
+	 */
+	public static function list_fonts() {
+		return self::$fonts;
+	}
 }

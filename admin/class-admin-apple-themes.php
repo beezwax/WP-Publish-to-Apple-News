@@ -156,10 +156,10 @@ class Admin_Apple_Themes extends Apple_News {
 	 * Saves the theme JSON for the key provided.
 	 *
 	 * @param string $name
-	 * @param string $json
+	 * @param array $settings
 	 * @access private
 	 */
-	private function save_theme( $name, $json ) {
+	private function save_theme( $name, $settings ) {
 		// Get the index
 		$index = self::list_themes();
 		if ( ! is_array( $index ) ) {
@@ -168,8 +168,8 @@ class Admin_Apple_Themes extends Apple_News {
 
 		$key = $this->theme_key_from_name( $name );
 
-		// Attempt to save the JSON first just in case there is an issue
-		$result = update_option( $key, $json );
+		// Attempt to save the settings first just in case there is an issue
+		$result = update_option( $key, $settings, false );
 		if ( false === $result ) {
 			\Admin_Apple_Notice::error( sprintf(
 				__( 'There was an error saving the theme %s', 'apple-news' ),
@@ -181,7 +181,7 @@ class Admin_Apple_Themes extends Apple_News {
 		// Add the key to the index
 		$index[] = $name;
 
-		$result = update_option( self::theme_index_key, $index );
+		$result = update_option( self::theme_index_key, $index, false );
 		if ( false === $result ) {
 			\Admin_Apple_Notice::error( sprintf(
 				__( 'There was an error saving the theme index for %s', 'apple-news' ),
@@ -207,7 +207,7 @@ class Admin_Apple_Themes extends Apple_News {
 	public function action_router() {
 		// Check for a valid action
 		$action	= isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
-		if ( ( empty( $action ) && ! array_key_exists( $action, $this->valid_actions ) ) ) {
+		if ( ( empty( $action ) || ! array_key_exists( $action, $this->valid_actions ) ) ) {
 			return;
 		}
 
@@ -219,15 +219,14 @@ class Admin_Apple_Themes extends Apple_News {
 	}
 
 	/**
-	 * Handles creating a new theme from current settings.
+	 * Handles creating a new theme from current formatting settings.
 	 *
 	 * @param string $name
 	 * @access private
 	 */
 	private function create_theme( $name ) {
-		// Get all the current settings for the site and save them as a new theme
-		$settings = new Admin_Apple_Settings();
-		$this->save_theme( $name, $settings->fetch_settings()->all() );
+		// Get all the current formatting settings for the site and save them as a new theme
+		$this->save_theme( $name, $this->get_formatting_settings() );
 	}
 
 	/**
@@ -248,12 +247,15 @@ class Admin_Apple_Themes extends Apple_News {
 			return;
 		}
 
-		// Load the settings from the theme
+		// Preserve API settings since these are not part of the theme
 		$settings = new \Admin_Apple_Settings();
+		$current_settings = $settings->fetch_settings();
+
+		// Load the settings from the theme
 		$settings->save_settings( $new_settings );
 
 		// Set the theme active
-		update_option( self::theme_active_key, $name );
+		update_option( self::theme_active_key, $name, false );
 
 		// Indicate success
 		\Admin_Apple_Notice::success( sprintf(
@@ -285,7 +287,7 @@ class Admin_Apple_Themes extends Apple_News {
 
 		// Remove from the index and delete settings
 		unset( $themes[ $index ] );
-		update_option( self::theme_index_key, $themes );
+		update_option( self::theme_index_key, $themes, false );
 		delete_option( $key );
 
 		// Indicate success
@@ -394,6 +396,38 @@ class Admin_Apple_Themes extends Apple_News {
 		echo json_encode( $theme, $JSON_PRETTY_PRINT );
 
 		exit;
+	}
+
+	/**
+	 * Filter the current settings down to only formatting settings.
+	 *
+	 * @return array
+	 * @access private
+	 */
+	private function get_formatting_settings() {
+		$theme_settings = array();
+
+		// Get the keys of all formatting settings
+		$formatting = new Admin_Apple_Settings_Section_Formatting();
+		$formatting_settings = $formatting->get_settings();
+		if ( empty( $formatting_settings ) ) {
+			return $theme_settings;
+		}
+
+		$formatting_settings_keys = array_keys( $formatting_settings );
+
+		// Get all current settings
+		$settings = new Admin_Apple_Settings();
+		$all_settings = $settings->fetch_settings()->all();
+
+		// Retrieve values only for formatting settings
+		foreach ( $formatting_settings_keys as $key ) {
+			if ( isset( $all_settings[ $key ] ) ) {
+				$theme_settings[ $key ] = $all_settings[ $key ];
+			}
+		}
+
+		return $theme_settings;
 	}
 
 	/**

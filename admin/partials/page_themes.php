@@ -31,6 +31,7 @@
 				'apple_news_cancel_create_theme',
 				false
 			); ?>
+			<p><?php esc_html_e( 'This will copy your current Apple News formatting settings to a new theme.', 'apple-news' ) ?></p>
 		</div>
 
 		<div class="apple-news-theme-form" id="apple_news_import_theme">
@@ -38,6 +39,7 @@
 				<b><?php esc_html_e( 'Choose a file to upload', 'apple-news' ) ?>:</b> <input type="file" id="apple_news_import_file" name="import" size="25" />
 				<br /><?php esc_html_e( '(max size 1MB)', 'apple-news' ) ?>
 			</p>
+			<p><?php esc_html_e( 'This will upload a new theme with Apple News formatting settings.', 'apple-news' ) ?></p>
 			<?php submit_button(
 				__( 'Upload', 'apple-news' ),
 				'primary',

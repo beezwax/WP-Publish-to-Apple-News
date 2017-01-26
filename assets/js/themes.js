@@ -3,13 +3,14 @@
 	$(document).ready(function () {
 		$( '#apple_news_start_create' ).on( 'click', function( e ) {
 			e.preventDefault();
-			$( '#apple_news_new_theme_options' ).toggle();
+			$( '.apple-news-theme-form' ).hide();
+			$( '#apple_news_new_theme_options' ).show();
 		});
 
 		$( '#apple_news_cancel_create_theme' ).on( 'click', function( e ) {
 			e.preventDefault();
 			$( '#apple_news_theme_name' ).val( '' );
-			$( '#apple_news_new_theme_options' ).toggle();
+			$( '#apple_news_new_theme_options' ).hide();
 			$( '#apple_news_theme_error' ).remove();
 		});
 
@@ -27,12 +28,13 @@
 
 		$( '#apple_news_start_import' ).on( 'click', function( e ) {
 			e.preventDefault();
-			$( '#apple_news_import_theme' ).toggle();
+			$( '.apple-news-theme-form' ).hide();
+			$( '#apple_news_import_theme' ).show();
 		});
 
 		$( '#apple_news_cancel_upload_theme' ).on( 'click', function( e ) {
 			e.preventDefault();
-			$( '#apple_news_import_theme' ).toggle();
+			$( '#apple_news_import_theme' ).hide();
 		});
 
 		// TODO
