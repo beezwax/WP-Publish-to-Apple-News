@@ -16,25 +16,25 @@ class Admin_Apple_Themes extends Apple_News {
 	 * Key for the theme index.
 	 *
 	 * @var string
-	 * @access private
+	 * @const
 	 */
-	private $theme_index_key = 'apple_news_installed_themes';
+	const theme_index_key = 'apple_news_installed_themes';
 
 	/**
 	 * Key for the active theme.
 	 *
 	 * @var string
-	 * @access private
+	 * @const
 	 */
-	private $theme_active_key = 'apple_news_active_theme';
+	const theme_active_key = 'apple_news_active_theme';
 
 	/**
 	 * Prefix for individual theme keys.
 	 *
 	 * @var string
-	 * @access private
+	 * @const
 	 */
-	private $theme_key_prefix = 'apple_news_theme_';
+	const theme_key_prefix = 'apple_news_theme_';
 
 	/**
 	 * Valid actions handled by this class and their callback functions.
@@ -71,7 +71,7 @@ class Admin_Apple_Themes extends Apple_News {
 	private function validate_themes() {
 		$themes = self::list_themes();
 		if ( empty( $themes ) ) {
-			$this->create_themes( __( 'Default', 'apple-news' ) );
+			$this->create_theme( __( 'Default', 'apple-news' ) );
 		}
 	}
 
@@ -139,7 +139,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @static
 	 */
 	public static function list_themes() {
-		return get_option( $this->theme_index_key, array() );
+		return get_option( self::theme_index_key, array() );
 	}
 
 	/**
@@ -181,7 +181,7 @@ class Admin_Apple_Themes extends Apple_News {
 		// Add the key to the index
 		$index[] = $name;
 
-		$result = update_option( $this->theme_index_key, $index );
+		$result = update_option( self::theme_index_key, $index );
 		if ( false === $result ) {
 			\Admin_Apple_Notice::error( sprintf(
 				__( 'There was an error saving the theme index for %s', 'apple-news' ),
@@ -253,7 +253,7 @@ class Admin_Apple_Themes extends Apple_News {
 		$settings->save_settings( $new_settings );
 
 		// Set the theme active
-		update_option( $this->theme_active_key, $name );
+		update_option( self::theme_active_key, $name );
 
 		// Indicate success
 		\Admin_Apple_Notice::success( sprintf(
@@ -285,7 +285,7 @@ class Admin_Apple_Themes extends Apple_News {
 
 		// Remove from the index and delete settings
 		unset( $themes[ $index ] );
-		update_option( $this->theme_index_key, $themes );
+		update_option( self::theme_index_key, $themes );
 		delete_option( $key );
 
 		// Indicate success
@@ -305,14 +305,14 @@ class Admin_Apple_Themes extends Apple_News {
 
 		if ( isset( $file['error'] ) ) {
 			\Admin_Apple_Notice::error(
-				__( 'There was an error uploading the theme file', 'apple-news' ),
+				__( 'There was an error uploading the theme file', 'apple-news' )
 			);
 			return;
 		}
 
 		if ( ! isset( $file['file'], $file['id'] ) ) {
 			\Admin_Apple_Notice::error(
-				__( 'The file did not upload properly. Please try again.', 'apple-news' ),
+				__( 'The file did not upload properly. Please try again.', 'apple-news' )
 			);
 			return;
 		}
@@ -383,7 +383,7 @@ class Admin_Apple_Themes extends Apple_News {
 		$theme['theme_name'] = $name;
 
 		// Generate the filename
-		$filename = $key . '.json'
+		$filename = $key . '.json';
 
 		// Start the download
 		header( 'Content-Description: File Transfer' );
@@ -420,6 +420,7 @@ class Admin_Apple_Themes extends Apple_News {
 				return sprintf(
 					__( 'The theme was missing the required setting %s', 'apple-news' ),
 					$setting
+				);
 			}
 
 			$clean_settings[ $setting ] = sanitize_text_field( $data[ $setting ] );
@@ -441,6 +442,6 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @access private
 	 */
 	private function theme_key_from_name( $name ) {
-		return $theme_key_prefix . sanitize_key( $name );
+		return self::theme_key_prefix . sanitize_key( $name );
 	}
 }
