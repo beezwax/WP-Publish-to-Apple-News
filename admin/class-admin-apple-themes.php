@@ -34,18 +34,20 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @var array
 	 * @access private
 	 */
-	private $actions = array(
-		'apple_news_create_theme' => array( $this, 'create_theme' ),
-		'apple_news_upload_theme' => array( $this, 'upload_theme' ),
-		'apple_news_delete_theme' => array( $this, 'delete_theme' ),
-		'apple_news_set_theme' => array( $this, 'set_theme' ),
-	);
+	private $valid_actions;
 
 	/**
 	 * Constructor.
 	 */
 	function __construct() {
 		$this->page_name = $this->plugin_domain . '-themes';
+
+		$this->valid_actions = array(
+			'apple_news_create_theme' => array( $this, 'create_theme' ),
+			'apple_news_upload_theme' => array( $this, 'upload_theme' ),
+			'apple_news_delete_theme' => array( $this, 'delete_theme' ),
+			'apple_news_set_theme' => array( $this, 'set_theme' ),
+		);
 
 		add_action( 'admin_menu', array( $this, 'setup_theme_page' ), 99 );
 		add_action( 'admin_init', array( $this, 'action_router' ) );
@@ -100,6 +102,9 @@ class Admin_Apple_Themes extends Apple_News {
 
 		wp_localize_script( 'apple-news-themes-js', 'appleNewsThemes', array(
 			'deleteWarning' => __( 'Are you sure you want to delete this theme?', 'apple-news' ),
+			'themeExistsWarning' => __( 'A theme by this name already exists. Are you sure you want to overwrite it?', 'apple-news' ),
+			'noNameError' => __( 'Please enter a name for the new theme.', 'apple-news' ),
+			'tooLongError' => __( 'Theme names must be 45 characters or less.', 'apple-news' ),
 		) );
 	}
 
@@ -175,7 +180,7 @@ class Admin_Apple_Themes extends Apple_News {
 	public function action_router() {
 		// Check for a valid action
 		$action	= isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
-		if ( ( empty( $action ) && ! array_key_exists( $action, $this->actions ) ) {
+		if ( ( empty( $action ) && ! array_key_exists( $action, $this->valid_actions ) ) ) {
 			return;
 		}
 

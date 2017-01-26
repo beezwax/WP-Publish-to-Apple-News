@@ -1,1 +1,8 @@
+#apple_news_new_theme_options,
+#apple_news_import_theme {
+	display: none;
+}
 
+.apple-news-theme-form {
+	margin-top: 10px;
+}
