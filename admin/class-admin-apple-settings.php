@@ -203,4 +203,15 @@ class Admin_Apple_Settings extends Apple_News {
 		 */
 		return apply_filters( 'apple_news_loaded_settings', $this->loaded_settings );
 	}
+
+	/**
+	 * Replaces the current settings.
+	 *
+	 * @access public
+	 * @param array $settings
+	 */
+	public function save_settings( $settings ) {
+		update_option( self::$option_name, $settings );
+		$this->loaded_settings = $settings;
+	}
 }

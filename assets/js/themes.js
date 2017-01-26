@@ -34,6 +34,10 @@
 			e.preventDefault();
 			$( '#apple_news_import_theme' ).toggle();
 		});
+
+		// TODO
+		// Don't allow deleting the active theme
+		// Need actions for delete and export
 	});
 
 	function appleNewsThemesShowError( selector, message ) {

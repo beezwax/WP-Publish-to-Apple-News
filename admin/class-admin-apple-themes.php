@@ -21,6 +21,14 @@ class Admin_Apple_Themes extends Apple_News {
 	private $theme_index_key = 'apple_news_installed_themes';
 
 	/**
+	 * Key for the active theme.
+	 *
+	 * @var string
+	 * @access private
+	 */
+	private $theme_active_key = 'apple_news_active_theme';
+
+	/**
 	 * Prefix for individual theme keys.
 	 *
 	 * @var string
@@ -45,6 +53,7 @@ class Admin_Apple_Themes extends Apple_News {
 		$this->valid_actions = array(
 			'apple_news_create_theme' => array( $this, 'create_theme' ),
 			'apple_news_upload_theme' => array( $this, 'upload_theme' ),
+			'apple_news_export_theme' => array( $this, 'export_theme' ),
 			'apple_news_delete_theme' => array( $this, 'delete_theme' ),
 			'apple_news_set_theme' => array( $this, 'set_theme' ),
 		);
@@ -53,12 +62,27 @@ class Admin_Apple_Themes extends Apple_News {
 		add_action( 'admin_init', array( $this, 'action_router' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
 	}
+
+	/**
+	 * Check for a valid theme setup on the site.
+	 *
+	 * @access private
+	 */
+	private function validate_themes() {
+		$themes = self::list_themes();
+		if ( empty( $themes ) ) {
+			$this->create_themes( __( 'Default', 'apple-news' ) );
+		}
+	}
+
 	/**
 	 * Options page setup.
 	 *
 	 * @access public
 	 */
 	public function setup_theme_page() {
+		$this->validate_themes();
+
 		add_submenu_page(
 			'apple_news_index',
 			__( 'Apple News Themes', 'apple-news' ),
@@ -131,43 +155,46 @@ class Admin_Apple_Themes extends Apple_News {
 	/**
 	 * Saves the theme JSON for the key provided.
 	 *
-	 * @param string $key
+	 * @param string $name
 	 * @param string $json
 	 * @access private
 	 */
-	private function save_theme( $key, $json ) {
+	private function save_theme( $name, $json ) {
 		// Get the index
 		$index = self::list_themes();
 		if ( ! is_array( $index ) ) {
 			$index = array();
 		}
 
+		$key = $this->theme_key_from_name( $name );
+
 		// Attempt to save the JSON first just in case there is an issue
-		$result = update_option( $this->theme_key_prefix . $key, $json );
+		$result = update_option( $key, $json );
 		if ( false === $result ) {
 			\Admin_Apple_Notice::error( sprintf(
 				__( 'There was an error saving the theme %s', 'apple-news' ),
-				$key
+				$name
 			) );
 			return;
 		}
 
 		// Add the key to the index
-		$index[] = $key;
+		$index[] = $name;
+
 		$result = update_option( $this->theme_index_key, $index );
 		if ( false === $result ) {
 			\Admin_Apple_Notice::error( sprintf(
 				__( 'There was an error saving the theme index for %s', 'apple-news' ),
-				$key
+				$name
 			) );
 
 			// Avoid any unpleasant data reference issues
-			delete_option( $this->theme_key_prefix );
+			delete_option( $key );
 		}
 
 		\Admin_Apple_Notice::success( sprintf(
 			__( 'The theme %s was saved successfully', 'apple-news' ),
-			$key
+			$name
 		) );
 	}
 
@@ -194,28 +221,78 @@ class Admin_Apple_Themes extends Apple_News {
 	/**
 	 * Handles creating a new theme from current settings.
 	 *
+	 * @param string $name
 	 * @access private
 	 */
-	private function create_theme() {
-
+	private function create_theme( $name ) {
+		// Get all the current settings for the site and save them as a new theme
+		$settings = new Admin_Apple_Settings();
+		$this->save_theme( $name, true, $settings );
 	}
 
 	/**
 	 * Handles setting the active theme.
 	 *
+	 * @param string $name
 	 * @access private
 	 */
-	private function set_theme() {
+	private function set_theme( $name ) {
+		// Attempt to load the theme settings
+		$key = $this->theme_key_from_name( $name );
+		$new_settings = get_option( $key );
+		if ( empty( $settings ) ) {
+			\Admin_Apple_Notice::error( sprintf(
+				__( 'There was an error loading settings for the theme %s', 'apple-news' ),
+				$name
+			) );
+			return;
+		}
 
+		// Load the settings from the theme
+		$settings = new \Admin_Apple_Settings();
+		$settings->save_settings( $new_settings );
+
+		// Set the theme active
+		update_option( $this->theme_active_key, $name );
+
+		// Indicate success
+		\Admin_Apple_Notice::success( sprintf(
+			__( 'Successfully switched to theme %s', 'apple-news' ),
+			$name
+		) );
 	}
 
 	/**
 	 * Handles deleting a theme.
 	 *
+	 * @param string $name
 	 * @access private
 	 */
-	private function delete_theme() {
+	private function delete_theme( $name ) {
+		// Get the key
+		$key = $this->theme_key_from_name( $name );
 
+		// Make sure it exists
+		$themes = self::list_themes();
+		$index = array_search( $name, $themes );
+		if ( false === $index ) {
+			\Admin_Apple_Notice::error( sprintf(
+				__( 'The theme %s to be deleted does not exist', 'apple-news' ),
+				$name
+			) );
+			return;
+		}
+
+		// Remove from the index and delete settings
+		unset( $themes[ $index ] );
+		update_option( $this->theme_index_key, $themes );
+		delete_option( $key );
+
+		// Indicate success
+		\Admin_Apple_Notice::success( sprintf(
+			__( 'Successfully deleted theme %s', 'apple-news' ),
+			$name
+		) );
 	}
 
 	/**
@@ -224,6 +301,118 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @access private
 	 */
 	private function upload_theme() {
+		$file = wp_import_handle_upload();
 
+		if ( isset( $file['error'] ) ) {
+			\Admin_Apple_Notice::error(
+				__( 'There was an error uploading the theme file', 'apple-news' ),
+			);
+			return;
+		}
+
+		if ( ! isset( $file['file'], $file['id'] ) ) {
+			\Admin_Apple_Notice::error(
+				__( 'The file did not upload properly. Please try again.', 'apple-news' ),
+			);
+			return;
+		}
+
+		$this->file_id = intval( $file['id'] );
+
+		if ( ! file_exists( $file['file'] ) ) {
+			wp_import_cleanup( $this->file_id );
+			\Admin_Apple_Notice::error( sprintf(
+				__( 'The export file could not be found at <code>%s</code>. It is likely that this was caused by a permissions problem.', 'wp-options-importer' ),
+				esc_html( $file['file'] )
+			) );
+			return;
+		}
+
+		if ( ! is_file( $file['file'] ) ) {
+			wp_import_cleanup( $this->file_id );
+			\Admin_Apple_Notice::error(
+				__( 'The path is not a file, please try again.', 'apple-news' )
+			);
+			return;
+		}
+
+		$file_contents = file_get_contents( $file['file'] );
+		$this->import_data = json_decode( $file_contents, true );
+
+		wp_import_cleanup( $this->file_id );
+
+		$result = $this->validate_data( $this->import_data );
+		if ( false === $result ) {
+			\Admin_Apple_Notice::error(
+				__( 'The theme file was invalid and cannot be imported', 'apple-news' )
+			);
+			return;
+		} else {
+			// Get the name from the data and unset it since it doesn't need to be stored
+			$name = $result['theme_name'];
+			unset( $result['theme_name'] );
+			$this->save_theme( $name, $result );
+		}
+
+		// Indicate success
+		\Admin_Apple_Notice::success( sprintf(
+			__( 'Successfully uploaded theme %s', 'apple-news' ),
+			$name
+		) );
+	}
+
+	/**
+	 * Handles exporting a new theme to a JSON file.
+	 *
+	 * @param string $name
+	 * @access private
+	 */
+	private function export_theme( $name ) {
+		$key = $this->theme_key_from_name( $name );
+		$theme = get_option( $key );
+		if ( empty( $theme ) ) {
+			\Admin_Apple_Notice::error( sprintf(
+				__( 'The theme $s could not be found', 'apple-news' ),
+				$name
+			) );
+			return;
+		}
+
+		// Add the theme name
+		$theme['theme_name'] = $name;
+
+		// Generate the filename
+		$filename = $key . '.json'
+
+		// Start the download
+		header( 'Content-Description: File Transfer' );
+		header( 'Content-Disposition: attachment; filename=' . $filename );
+		header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ), true );
+
+		$JSON_PRETTY_PRINT = defined( 'JSON_PRETTY_PRINT' ) ? JSON_PRETTY_PRINT : null;
+		echo json_encode( $theme, $JSON_PRETTY_PRINT );
+
+		exit;
+	}
+
+	/**
+	 * Validate data for an import file upload.
+	 *
+	 * @param array $data
+	 * @return array|boolean
+	 * @access private
+	 */
+	private function validate_data( $data ) {
+		// TODO VALIDATE
+	}
+
+	/**
+	 * Generates a key for the theme from the provided name
+	 *
+	 * @param string $name
+	 * @access private
+	 */
+	private function theme_key_from_name( $name ) {
+		return $theme_key_prefix . sanitize_key( $name );
 	}
 }
