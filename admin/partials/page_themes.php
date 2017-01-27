@@ -94,7 +94,7 @@
 						</td>
 					</tr>
 					<?php
-				 endforeach;
+					endforeach;
 				endif;
 			?>
 			</tbody>
