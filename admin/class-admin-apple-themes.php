@@ -125,8 +125,7 @@ class Admin_Apple_Themes extends Apple_News {
 		);
 
 		wp_localize_script( 'apple-news-themes-js', 'appleNewsThemes', array(
-			'deleteWarning' => __( 'Are you sure you want to delete this theme?', 'apple-news' ),
-			'themeExistsWarning' => __( 'A theme by this name already exists. Are you sure you want to overwrite it?', 'apple-news' ),
+			'deleteWarning' => __( 'Are you sure you want to delete the theme', 'apple-news' ),
 			'noNameError' => __( 'Please enter a name for the new theme.', 'apple-news' ),
 			'tooLongError' => __( 'Theme names must be 45 characters or less.', 'apple-news' ),
 		) );
@@ -140,6 +139,16 @@ class Admin_Apple_Themes extends Apple_News {
 	 */
 	public static function list_themes() {
 		return get_option( self::theme_index_key, array() );
+	}
+
+	/**
+	 * List all available themes
+	 *
+	 * @access public
+	 * @static
+	 */
+	public static function get_active_theme() {
+		return get_option( self::theme_active_key );
 	}
 
 	/**
@@ -168,30 +177,20 @@ class Admin_Apple_Themes extends Apple_News {
 
 		$key = $this->theme_key_from_name( $name );
 
-		// Attempt to save the settings first just in case there is an issue
-		$result = update_option( $key, $settings, false );
-		if ( false === $result ) {
-			\Admin_Apple_Notice::error( sprintf(
-				__( 'There was an error saving the theme %s', 'apple-news' ),
-				$name
-			) );
-			return;
-		}
+		// Save the theme settings
+		update_option( $key, $settings, false );
 
 		// Add the key to the index
 		$index[] = $name;
 
-		$result = update_option( self::theme_index_key, $index, false );
-		if ( false === $result ) {
-			\Admin_Apple_Notice::error( sprintf(
-				__( 'There was an error saving the theme index for %s', 'apple-news' ),
-				$name
-			) );
+		// If a duplicate was added, it's just going to overwrite.
+		// The user has been warned by this point.
+		$index = array_unique( $index );
 
-			// Avoid any unpleasant data reference issues
-			delete_option( $key );
-		}
+		// Save the theme index
+		update_option( self::theme_index_key, $index, false );
 
+		// Indicate success
 		\Admin_Apple_Notice::success( sprintf(
 			__( 'The theme %s was saved successfully', 'apple-news' ),
 			$name
@@ -206,7 +205,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 */
 	public function action_router() {
 		// Check for a valid action
-		$action	= isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
+		$action	= isset( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : null;
 		if ( ( empty( $action ) || ! array_key_exists( $action, $this->valid_actions ) ) ) {
 			return;
 		}
@@ -215,7 +214,7 @@ class Admin_Apple_Themes extends Apple_News {
 		check_admin_referer( 'apple_news_themes', 'apple_news_themes' );
 
 		// Call the callback for the action for further processing
-		call_user_func( $this->actions[ $action ] );
+		call_user_func( $this->valid_actions[ $action ] );
 	}
 
 	/**
@@ -224,9 +223,24 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @param string $name
 	 * @access private
 	 */
-	private function create_theme( $name ) {
+	private function create_theme( $name = null ) {
+		// If no name was provided, attempt to get it from POST data
+		if ( empty( $name ) && ! empty( $_POST['apple_news_theme_name'] ) ) {
+			$name = sanitize_text_field( $_POST['apple_news_theme_name'] );
+		}
+
+		if ( empty( $name ) ) {
+			\Admin_Apple_Notice::error(
+				__( 'Unable to create the theme because no name was provided', 'apple-news' )
+			);
+			return;
+		}
+
 		// Get all the current formatting settings for the site and save them as a new theme
 		$this->save_theme( $name, $this->get_formatting_settings() );
+
+		// If you're creating a theme from the current settings, it's technically already active.
+		$this->set_theme( $name );
 	}
 
 	/**
@@ -235,21 +249,34 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @param string $name
 	 * @access private
 	 */
-	private function set_theme( $name ) {
+	private function set_theme( $name = null ) {
+		// If no name was provided, attempt to get it from POST data
+		if ( empty( $name ) && ! empty( $_POST['apple_news_active_theme'] ) ) {
+			$name = sanitize_text_field( $_POST['apple_news_active_theme'] );
+		}
+
+		if ( empty( $name ) ) {
+			\Admin_Apple_Notice::error(
+				__( 'Unable to set the theme because no name was provided', 'apple-news' )
+			);
+			return;
+		}
+
 		// Attempt to load the theme settings
 		$key = $this->theme_key_from_name( $name );
 		$new_settings = get_option( $key );
-		if ( empty( $settings ) ) {
+		if ( empty( $new_settings ) ) {
 			\Admin_Apple_Notice::error( sprintf(
 				__( 'There was an error loading settings for the theme %s', 'apple-news' ),
-				$name
+				$key
 			) );
 			return;
 		}
 
 		// Preserve API settings since these are not part of the theme
 		$settings = new \Admin_Apple_Settings();
-		$current_settings = $settings->fetch_settings();
+		$current_settings = $settings->fetch_settings()->all();
+		$new_settings = wp_parse_args( $new_settings, $current_settings );
 
 		// Load the settings from the theme
 		$settings->save_settings( $new_settings );
@@ -270,7 +297,19 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @param string $name
 	 * @access private
 	 */
-	private function delete_theme( $name ) {
+	private function delete_theme( $name = null ) {
+		// If no name was provided, attempt to get it from POST data
+		if ( empty( $name ) && ! empty( $_POST['apple_news_theme'] ) ) {
+			$name = sanitize_text_field( $_POST['apple_news_theme'] );
+		}
+
+		if ( empty( $name ) ) {
+			\Admin_Apple_Notice::error(
+				__( 'Unable to delete the theme because no name was provided', 'apple-news' )
+			);
+			return;
+		}
+
 		// Get the key
 		$key = $this->theme_key_from_name( $name );
 
@@ -370,7 +409,19 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @param string $name
 	 * @access private
 	 */
-	private function export_theme( $name ) {
+	private function export_theme( $name = null ) {
+		// If no name was provided, attempt to get it from POST data
+		if ( empty( $name ) && ! empty( $_POST['apple_news_theme'] ) ) {
+			$name = sanitize_text_field( $_POST['apple_news_theme'] );
+		}
+
+		if ( empty( $name ) ) {
+			\Admin_Apple_Notice::error(
+				__( 'Unable to export the theme because no name was provided', 'apple-news' )
+			);
+			return;
+		}
+
 		$key = $this->theme_key_from_name( $name );
 		$theme = get_option( $key );
 		if ( empty( $theme ) ) {
