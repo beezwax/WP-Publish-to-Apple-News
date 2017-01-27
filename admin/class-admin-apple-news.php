@@ -58,6 +58,7 @@ class Admin_Apple_News extends Apple_News {
 		// Set up asynchronous publishing features
 		new Admin_Apple_Async( self::$settings );
 
+		// Add theme support
 		new Admin_Apple_Themes( self::$settings );
 	}
 

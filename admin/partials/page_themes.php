@@ -71,30 +71,34 @@
 				$themes = \Admin_Apple_Themes::list_themes();
 				$active_theme = \Admin_Apple_Themes::get_active_theme();
 				if ( empty( $themes ) ) :
-			?>
-			<h3><?php esc_html_e( 'No themes were found', 'apple-news' ) ?>
-			<?php else :
-				foreach ( $themes as $theme ) :
 				?>
-				<tr id="theme-<?php echo sanitize_html_class( $theme ) ?>" class="iedit level-0 format-standard hentry">
-					<th class="active column-apple-news-active" data-colname="Active">
-						<input type="radio" id="apple_news_active_theme" name="apple_news_active_theme" value="<?php echo esc_attr( $theme ) ?>" <?php checked( $theme, $active_theme ) ?> />
-					</th>
-					<td class="name column-apple-news-theme-name column-primary" data-colname="Name">
-						<?php echo esc_html( $theme ) ?>
-						<button type="button" class="toggle-row"><span class="screen-reader-text"><?php esc_html_e( 'Show more details', 'apple-news' ) ?></span></button>
-					</td>
-					<td class="column-apple-news-theme-actions" data-colname="Actions">
-						<a href="#" class="apple-news-row-action apple-news-export-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Export', 'apple-news' ) ?></a>
-						<?php if ( $theme !== $active_theme ) : ?>
-						<a href="#" class="apple-news-row-action apple-news-delete-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Delete', 'apple-news' ) ?></a>
-						<?php endif; ?>
-					</td>
+				<tr>
+					<td colspan="3"><?php esc_html_e( 'No themes were found', 'apple-news' ) ?></td>
 				</tr>
-				<?php endforeach;
+				<?php else :
+					foreach ( $themes as $theme ) :
+					?>
+					<tr id="theme-<?php echo sanitize_html_class( $theme ) ?>" class="iedit level-0 format-standard hentry">
+						<th class="active column-apple-news-active" data-colname="Active">
+							<input type="radio" id="apple_news_active_theme" name="apple_news_active_theme" value="<?php echo esc_attr( $theme ) ?>" <?php checked( $theme, $active_theme ) ?> />
+						</th>
+						<td class="name column-apple-news-theme-name column-primary" data-colname="Name">
+							<?php echo esc_html( $theme ) ?>
+							<button type="button" class="toggle-row"><span class="screen-reader-text"><?php esc_html_e( 'Show more details', 'apple-news' ) ?></span></button>
+						</td>
+						<td class="column-apple-news-theme-actions" data-colname="Actions">
+							<a href="#" class="apple-news-row-action apple-news-export-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Export', 'apple-news' ) ?></a>
+							<?php if ( $theme !== $active_theme ) : ?>
+							<a href="#" class="apple-news-row-action apple-news-delete-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Delete', 'apple-news' ) ?></a>
+							<?php endif; ?>
+						</td>
+					</tr>
+					<?php
+				 endforeach;
 				endif;
 			?>
-			</table>
+			</tbody>
+		</table>
 
 		<?php submit_button(
 			__( 'Set Theme', 'apple-news' ),

@@ -358,7 +358,7 @@ class Admin_Apple_Themes extends Apple_News {
 			return;
 		}
 
-		$this->file_id = intval( $file['id'] );
+		$this->file_id = absint( $file['id'] );
 
 		if ( ! file_exists( $file['file'] ) ) {
 			wp_import_cleanup( $this->file_id );
@@ -494,7 +494,7 @@ class Admin_Apple_Themes extends Apple_News {
 		$clean_settings = array();
 
 		// Check for the theme name
-		if ( ! isset( $data[ 'theme_name' ] ) ) {
+		if ( ! isset( $data['theme_name'] ) ) {
 			return __( 'The theme file did not include a name', 'apple-news' );
 		}
 		$clean_settings['theme_name'] = $data['theme_name'];
@@ -503,7 +503,7 @@ class Admin_Apple_Themes extends Apple_News {
 		// Get the formatting settings that are allowed to be included in a theme
 		$formatting = new Admin_Apple_Settings_Section_Formatting( '' );
 		$formatting_settings = $formatting->get_settings();
-		if ( empty( $formatting_settings ) ) {
+		if ( empty( $formatting_settings ) || ! is_array( $formatting_settings ) ) {
 			return __( 'There was an error retrieving formatting settings', 'apple-news' );
 		}
 		$valid_settings = array_keys( $formatting_settings );
@@ -527,7 +527,7 @@ class Admin_Apple_Themes extends Apple_News {
 				// Figure out the proper sanitization function
 				if ( 'integer' === $formatting_settings[ $setting ]['type'] ) {
 					// Simply sanitize
-					$clean_settings[ $setting ] = intval( $data[ $setting ] );
+					$clean_settings[ $setting ] = absint( $data[ $setting ] );
 				} else if ( 'float' === $formatting_settings[ $setting ]['type'] ) {
 					// Simply sanitize
 					$clean_settings[ $setting ] = floatval( $data[ $setting ] );
@@ -536,15 +536,15 @@ class Admin_Apple_Themes extends Apple_News {
 					$color = sanitize_text_field( $data[ $setting ] );
 
 					// Validate
-					if ( false === preg_match( '/#([a-f0-9]{3}){1,2}\b/i', $data[ $setting ] ) ) {
+					if ( false === preg_match( '/#([a-f0-9]{3}){1,2}\b/i', $color ) ) {
 						return sprintf(
 							__( 'Invalid color value %s specified for setting %s', 'apple-news' ),
-							$data[ $setting ],
+							$color,
 							$setting
 						);
 					}
 
-					$clean_settings[ $setting ] = $data[ $setting ];
+					$clean_settings[ $setting ] = $color;
 				} else if ( 'font' === $formatting_settings[ $setting ]['type'] ) {
 					// Sanitize
 					$color = sanitize_text_field( $data[ $setting ] );
@@ -580,9 +580,13 @@ class Admin_Apple_Themes extends Apple_News {
 			} else if ( 'meta_component_order' === $setting ) {
 				// This needs to be handled specially
 				if ( ! is_array( $data[ $setting ] )
-					|| 3 !== count( $data[ $setting ] )
-					|| ! empty( array_diff( $data[ $setting ], array( 'cover', 'title', 'byline' ) ) ) ) {
+					|| 3 !== count( $data[ $setting ] ) ) {
+					return __( 'Invalid value for meta component order', 'apple-news' );
+				}
 
+				// This has to be done separately for PHP 5.3 compatibility
+				$array_diff = array_diff( $data[ $setting ], array( 'cover', 'title', 'byline' ) );
+				if ( ! empty( $array_diff ) ) {
 					return __( 'Invalid value for meta component order', 'apple-news' );
 				}
 
