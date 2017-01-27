@@ -408,7 +408,7 @@ class Admin_Apple_Themes extends Apple_News {
 		$theme_settings = array();
 
 		// Get the keys of all formatting settings
-		$formatting = new Admin_Apple_Settings_Section_Formatting();
+		$formatting = new Admin_Apple_Settings_Section_Formatting( '' );
 		$formatting_settings = $formatting->get_settings();
 		if ( empty( $formatting_settings ) ) {
 			return $theme_settings;
@@ -449,6 +449,20 @@ class Admin_Apple_Themes extends Apple_News {
 		$clean_settings['theme_name'] = $data['theme_name'];
 		unset( $data['theme_name'] );
 
+		// Get the formatting settings that are allowed to be included in a theme
+		$formatting = new Admin_Apple_Settings_Section_Formatting( '' );
+		$formatting_settings = $formatting->get_settings();
+		if ( empty( $formatting_settings ) ) {
+			return __( 'There was an error retrieving formatting settings', 'apple-news' );
+		}
+		$valid_settings = array_keys( $formatting_settings );
+
+		// Get all available fonts in the system
+		$section = new Admin_Apple_Settings_Section( '' );
+		$fonts = $section->list_fonts();
+
+		// Iterate through the valid settings and handle
+		// the appropriate validation and sanitization for each
 		foreach ( $valid_settings as $setting ) {
 			if ( ! isset( $data[ $setting ] ) ) {
 				return sprintf(
@@ -457,13 +471,87 @@ class Admin_Apple_Themes extends Apple_News {
 				);
 			}
 
-			$clean_settings[ $setting ] = sanitize_text_field( $data[ $setting ] );
+			// Find the appropriate sanitization method for each setting
+			if ( ! empty( $formatting_settings[ $setting ]['type'] ) ) {
+				// Figure out the proper sanitization function
+				if ( 'integer' === $formatting_settings[ $setting ]['type'] ) {
+					// Simply sanitize
+					$clean_settings[ $setting ] = intval( $data[ $setting ] );
+				} else if ( 'float' === $formatting_settings[ $setting ]['type'] ) {
+					// Simply sanitize
+					$clean_settings[ $setting ] = floatval( $data[ $setting ] );
+				} else if ( 'color' === $formatting_settings[ $setting ]['type'] ) {
+					// Sanitize
+					$color = sanitize_text_field( $data[ $setting ] );
+
+					// Validate
+					if ( false === preg_match( '/#([a-f0-9]{3}){1,2}\b/i', $data[ $setting ] ) ) {
+						return sprintf(
+							__( 'Invalid color value %s specified for setting %s', 'apple-news' ),
+							$data[ $setting ],
+							$setting
+						);
+					}
+
+					$clean_settings[ $setting ] = $data[ $setting ];
+				} else if ( 'font' === $formatting_settings[ $setting ]['type'] ) {
+					// Sanitize
+					$color = sanitize_text_field( $data[ $setting ] );
+
+					// Validate
+					if ( ! in_array( $data[ $setting ], $fonts ) ) {
+						return sprintf(
+							__( 'Invalid font value %s specified for setting %s', 'apple-news' ),
+							$data[ $setting ],
+							$setting
+						);
+					}
+
+					$clean_settings[ $setting ] = $data[ $setting ];
+				} else if ( 'text' === $formatting_settings[ $setting ]['type'] ) {
+					// Simply sanitize
+					$clean_settings[ $setting ] = sanitize_text_field( $data[ $setting ] );
+				} else if ( is_array( $formatting_settings[ $setting ]['type'] ) ) {
+					// Sanitize
+					$color = sanitize_text_field( $data[ $setting ] );
+
+					// Validate
+					if ( ! in_array( $data[ $setting ], $formatting_settings[ $setting ]['type'] ) ) {
+						return sprintf(
+							__( 'Invalid value %s specified for setting %s', 'apple-news' ),
+							$data[ $setting ],
+							$setting
+						);
+					}
+
+					$clean_settings[ $setting ] = $data[ $setting ];
+				}
+			} else if ( 'meta_component_order' === $setting ) {
+				// This needs to be handled specially
+				if ( ! is_array( $data[ $setting ] )
+					|| 3 !== count( $data[ $setting ] )
+					|| ! empty( array_diff( $data[ $setting ], array( 'cover', 'title', 'byline' ) ) ) ) {
+
+					return __( 'Invalid value for meta component order', 'apple-news' );
+				}
+
+				// Sanitize
+				$clean_settings[ $setting ] = array_map( 'sanitize_text_field', $data[ $setting ] );
+			} else {
+				return sprintf(
+					__( 'An invalid setting was encountered: %s', 'apple-news' ),
+					$setting
+				);
+			}
+
+			// Remove this from the settings being processed so we know later
+			// if extra, invalid data was included.
 			unset( $data[ $setting ] );
 		}
 
 		// Check if invalid data was present
 		if ( ! empty( $data ) ) {
-			return __( 'The theme file contained invalid options', 'apple-news' );
+			return __( 'The theme file contained unsupported settings', 'apple-news' );
 		}
 
 		return $clean_settings;
