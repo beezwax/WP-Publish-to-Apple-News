@@ -64,7 +64,6 @@ class Admin_Apple_Themes extends Apple_News {
 			'apple_news_upload_theme' => array( $this, 'upload_theme' ),
 			'apple_news_export_theme' => array( $this, 'export_theme' ),
 			'apple_news_delete_theme' => array( $this, 'delete_theme' ),
-			'apple_news_preview_theme' => array( $this, 'preview_theme' ),
 			'apple_news_set_theme' => array( $this, 'set_theme' ),
 		);
 
@@ -151,6 +150,9 @@ class Admin_Apple_Themes extends Apple_News {
 				);
 			}
 		}
+
+		// Set the URL for the back button
+		$theme_admin_url = $this->theme_admin_url();
 
 		// Load the preview page
 		include plugin_dir_path( __FILE__ ) . 'partials/page_theme_preview.php';
@@ -501,42 +503,6 @@ class Admin_Apple_Themes extends Apple_News {
 	}
 
 	/**
-	 * Handles exporting a new theme to a JSON file.
-	 *
-	 * @param string $name
-	 * @access private
-	 */
-	private function preview_theme( $name = null ) {
-		// If no name was provided, attempt to get it from POST data
-		if ( empty( $name ) && ! empty( $_POST['apple_news_theme'] ) ) {
-			$name = sanitize_text_field( $_POST['apple_news_theme'] );
-		}
-
-		if ( empty( $name ) ) {
-			\Admin_Apple_Notice::error(
-				__( 'Unable to preview the theme because no name was provided', 'apple-news' )
-			);
-			return;
-		}
-
-		$key = $this->theme_key_from_name( $name );
-		$theme = get_option( $key );
-		if ( empty( $theme ) ) {
-			\Admin_Apple_Notice::error( sprintf(
-				__( 'The theme $s could not be found', 'apple-news' ),
-				$name
-			) );
-			return;
-		}
-
-		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
-			wp_die( __( 'You do not have permissions to access this page.', 'apple-news' ) );
-		}
-
-		include plugin_dir_path( __FILE__ ) . 'partials/page_themes.php';
-	}
-
-	/**
 	 * Filter the current settings down to only formatting settings.
 	 *
 	 * @return array
@@ -703,9 +669,38 @@ class Admin_Apple_Themes extends Apple_News {
 	 * Generates a key for the theme from the provided name
 	 *
 	 * @param string $name
-	 * @access private
+	 * @return string
+	 * @access public
 	 */
-	private function theme_key_from_name( $name ) {
+	public function theme_key_from_name( $name ) {
 		return self::theme_key_prefix . sanitize_key( $name );
+	}
+
+	/**
+	 * Generates the preview URL for a theme
+	 *
+	 * @param string $name
+	 * @return string
+	 * @access public
+	 */
+	public function theme_preview_url( $name ) {
+		return add_query_arg(
+			array(
+				'page' => $this->theme_preview_page_name,
+				'theme' => $name
+			),
+			admin_url( 'admin.php' )
+		);
+	}
+
+	/**
+	 * Returns the URL of the themes admin page
+	 *
+	 * @param string $name
+	 * @return string
+	 * @access public
+	 */
+	public function theme_admin_url() {
+		return add_query_arg( 'page', $this->theme_page_name, admin_url( 'admin.php' ) );
 	}
 }

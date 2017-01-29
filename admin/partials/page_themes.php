@@ -78,14 +78,6 @@
 				</tr>
 				<?php else :
 					foreach ( $all_themes as $theme ) :
-						// Build the preview URL
-						$preview_url = add_query_arg(
-							array(
-								'page' => $themes->theme_preview_page_name,
-								'theme' => $theme
-							),
-							admin_url()
-						);
 						?>
 						<tr id="theme-<?php echo sanitize_html_class( $theme ) ?>" class="iedit level-0 format-standard hentry">
 							<th class="active column-apple-news-active" data-colname="Active">
@@ -97,7 +89,7 @@
 							</td>
 							<td class="column-apple-news-theme-actions" data-colname="Actions">
 								<a href="#" class="apple-news-row-action apple-news-export-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Export', 'apple-news' ) ?></a>
-								<a href="<?php echo esc_url( $preview_url ) ?>" class="apple-news-row-action apple-news-preview-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Preview', 'apple-news' ) ?></a>
+								<a href="<?php echo esc_url( $themes->theme_preview_url( $theme ) ) ?>" class="apple-news-row-action apple-news-preview-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Preview', 'apple-news' ) ?></a>
 								<?php if ( $theme !== $active_theme ) : ?>
 								<a href="#" class="apple-news-row-action apple-news-delete-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Delete', 'apple-news' ) ?></a>
 								<?php endif; ?>

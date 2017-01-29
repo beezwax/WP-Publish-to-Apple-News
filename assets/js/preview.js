@@ -149,10 +149,18 @@
 		appleNewsSetCSS( '.apple-news-settings-preview pre', 'monospaced_line_height', 'margin-bottom', 'px', null );
 
 		// Component order
-		var componentOrder = $( '#meta-component-order-sort' ).sortable( 'toArray' );
-		if ( '' !== componentKey ) {
-			$( '.apple-news-meta-component' ).removeClass( componentKey );
-			componentKey = '';
+		// This can either be defined as a sortable form element or a simple hidden element
+		var componentOrder;
+		if ( 0 === $( '#meta-component-order-sort' ).length && $( '#meta_component_order' ).length > 0 ) {
+			componentOrder = $( '#meta_component_order' ).val().split( ',' );
+		} else if ( $( '#meta-component-order-sort' ).length ) {
+			componentOrder = $( '#meta-component-order-sort' ).sortable( 'toArray' );
+			if ( '' !== componentKey ) {
+				$( '.apple-news-meta-component' ).removeClass( componentKey );
+				componentKey = '';
+			}
+		} else {
+			return;
 		}
 
 		$.each( componentOrder.reverse(), function( index, value ) {

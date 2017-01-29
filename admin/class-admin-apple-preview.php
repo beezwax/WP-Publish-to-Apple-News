@@ -19,7 +19,7 @@ class Admin_Apple_Preview extends Apple_News {
 	public function register_assets( $hook ) {
 		if ( ! in_array( $hook, array(
 			'apple-news_page_apple-news-options',
-			'apple-news_page_apple-news-theme-preview'
+			'admin_page_apple-news-theme-preview'
 		) ) ) {
 			return;
 		}
@@ -30,6 +30,15 @@ class Admin_Apple_Preview extends Apple_News {
 		wp_enqueue_script( 'apple-news-preview-js', plugin_dir_url( __FILE__ ) .
 			'../assets/js/preview.js', array( 'jquery' )
 		);
+
+		if ( 'admin_page_apple-news-theme-preview' === $hook ) {
+			wp_enqueue_style( 'apple-news-theme-preview-css', plugin_dir_url( __FILE__ ) .
+			'../assets/css/theme-preview.css', array() );
+
+			wp_enqueue_script( 'apple-news-theme-preview-js', plugin_dir_url( __FILE__ ) .
+				'../assets/js/theme-preview.js', array( 'jquery' )
+			);
+		}
 	}
 
 	/**
@@ -37,9 +46,10 @@ class Admin_Apple_Preview extends Apple_News {
 	 * Uses either current settings or a theme name, if provided.
 	 *
 	 * @param string $theme
+	 * @param boolean $add_settings
 	 * @access public
 	 */
-	public function get_preview_html( $theme = null ) {
+	public function get_preview_html( $theme = null, $add_settings = false ) {
 		// Load current settings
 		$admin_settings = new Admin_Apple_Settings();
 		$settings = $admin_settings->fetch_settings();
@@ -58,10 +68,39 @@ class Admin_Apple_Preview extends Apple_News {
 				return;
 			}
 
+			// If true, add hidden form fields for the settings.
+			// This is used for theme preview.
+			if ( $add_settings ) :
+			?>
+				<form id="apple-news-settings-form">
+			<?php
+			endif;
+
 			// Replace all the formatting settings
 			foreach ( $theme_settings as $key => $value ) {
 				$settings->set( $key, $value );
+
+				// If desired, also add these as hidden form elements
+				if ( $add_settings && 'meta_component_order' !== $key ) {
+					echo sprintf(
+						'<input type="hidden" id="%s" name="%s" value="%s" />',
+						esc_attr( $key ),
+						esc_attr( $key ),
+						esc_attr( $value )
+					);
+				} else if ( $add_settings && 'meta_component_order' === $key && is_array( $value ) ) {
+					echo sprintf(
+						'<input type="hidden" id="meta_component_order" name="meta_component_order" value="%s" />',
+						esc_attr( implode( ',', $value ) )
+					);
+				}
 			}
+
+			if ( $add_settings ) :
+				?>
+				</form>
+				<?php
+			endif;
 		}
 
 		?>
