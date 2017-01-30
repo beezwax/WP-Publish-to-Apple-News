@@ -264,7 +264,7 @@ class Admin_Apple_Themes extends Apple_News {
 		}
 
 		// Check the nonce
-		check_admin_referer( 'apple_news_themes', 'apple_news_themes' );
+		check_admin_referer( 'apple_news_themes' );
 
 		// Call the callback for the action for further processing
 		call_user_func( $this->valid_actions[ $action ] );
