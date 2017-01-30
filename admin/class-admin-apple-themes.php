@@ -211,7 +211,7 @@ class Admin_Apple_Themes extends Apple_News {
 		}
 
 		// Check the nonce
-		check_admin_referer( 'apple_news_themes', 'apple_news_themes' );
+		check_admin_referer( 'apple_news_themes' );
 
 		// Call the callback for the action for further processing
 		call_user_func( $this->valid_actions[ $action ] );
@@ -616,9 +616,9 @@ class Admin_Apple_Themes extends Apple_News {
 	 * Generates a key for the theme from the provided name
 	 *
 	 * @param string $name
-	 * @access private
+	 * @access public
 	 */
-	private function theme_key_from_name( $name ) {
+	public function theme_key_from_name( $name ) {
 		return self::theme_key_prefix . sanitize_key( $name );
 	}
 }

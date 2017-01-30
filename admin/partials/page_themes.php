@@ -2,7 +2,7 @@
 	<h1 id="apple_news_themes_title"><?php esc_html_e( 'Manage Themes', 'apple-news' ) ?></h1>
 
 	<form method="post" action="" id="apple-news-themes-form" enctype="multipart/form-data">
-		<?php wp_nonce_field( 'apple_news_themes', 'apple_news_themes' ); ?>
+		<?php wp_nonce_field( 'apple_news_themes' ); ?>
 		<input type="hidden" id="apple_news_action" name="action" value="apple_news_set_theme" />
 		<input type="hidden" id="apple_news_theme" name="apple_news_theme" value="" />
 
