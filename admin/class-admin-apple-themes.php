@@ -190,6 +190,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 * List all available themes
 	 *
 	 * @access public
+	 * @return array
 	 */
 	public function list_themes() {
 		return get_option( self::theme_index_key, array() );
