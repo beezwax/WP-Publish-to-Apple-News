@@ -167,8 +167,8 @@ class Admin_Apple_Themes extends Apple_News {
 	public function register_assets( $hook ) {
 		if ( ! in_array( $hook, array(
 			'apple-news_page_apple-news-themes',
-			'apple-news_page_apple-news-theme-preview'
-		) ) ) {
+			'apple-news_page_apple-news-theme-preview',
+		), true ) ) {
 			return;
 		}
 
@@ -196,9 +196,10 @@ class Admin_Apple_Themes extends Apple_News {
 	}
 
 	/**
-	 * List all available themes
+	 * Get the active theme
 	 *
 	 * @access public
+	 * @return string
 	 */
 	public function get_active_theme() {
 		return get_option( self::theme_active_key );
@@ -209,6 +210,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 *
 	 * @param string $name
 	 * @access public
+	 * @return array
 	 */
 	public function get_theme( $name ) {
 		return get_option( $this->theme_key_from_name( $name ), array() );
@@ -687,7 +689,7 @@ class Admin_Apple_Themes extends Apple_News {
 		return add_query_arg(
 			array(
 				'page' => $this->theme_preview_page_name,
-				'theme' => $name
+				'theme' => $name,
 			),
 			admin_url( 'admin.php' )
 		);

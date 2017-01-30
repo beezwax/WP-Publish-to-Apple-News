@@ -73,9 +73,9 @@
 				$active_theme = $themes->get_active_theme();
 				if ( empty( $all_themes ) ) :
 				?>
-				<tr>
-					<td colspan="3"><?php esc_html_e( 'No themes were found', 'apple-news' ) ?></td>
-				</tr>
+					<tr>
+						<td colspan="3"><?php esc_html_e( 'No themes were found', 'apple-news' ) ?></td>
+					</tr>
 				<?php else :
 					foreach ( $all_themes as $theme ) :
 						?>
@@ -91,7 +91,7 @@
 								<a href="#" class="apple-news-row-action apple-news-export-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Export', 'apple-news' ) ?></a>
 								<a href="<?php echo esc_url( $themes->theme_preview_url( $theme ) ) ?>" class="apple-news-row-action apple-news-preview-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Preview', 'apple-news' ) ?></a>
 								<?php if ( $theme !== $active_theme ) : ?>
-								<a href="#" class="apple-news-row-action apple-news-delete-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Delete', 'apple-news' ) ?></a>
+									<a href="#" class="apple-news-row-action apple-news-delete-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Delete', 'apple-news' ) ?></a>
 								<?php endif; ?>
 							</td>
 						</tr>

@@ -22,7 +22,7 @@
 				$( '<div>' )
 					.addClass( 'font-notice' )
 					.text( appleNewsSettings.fontNotice )
-			)
+			);
 		}
 
 		// Ensure all further updates also affect the preview

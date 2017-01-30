@@ -19,8 +19,8 @@ class Admin_Apple_Preview extends Apple_News {
 	public function register_assets( $hook ) {
 		if ( ! in_array( $hook, array(
 			'apple-news_page_apple-news-options',
-			'admin_page_apple-news-theme-preview'
-		) ) ) {
+			'admin_page_apple-news-theme-preview',
+		), true ) ) {
 			return;
 		}
 
@@ -88,7 +88,7 @@ class Admin_Apple_Preview extends Apple_News {
 						esc_attr( $key ),
 						esc_attr( $value )
 					);
-				} else if ( $add_settings && 'meta_component_order' === $key && is_array( $value ) ) {
+				} elseif ( $add_settings && 'meta_component_order' === $key && is_array( $value ) ) {
 					echo sprintf(
 						'<input type="hidden" id="meta_component_order" name="meta_component_order" value="%s" />',
 						esc_attr( implode( ',', $value ) )
