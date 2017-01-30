@@ -14,6 +14,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-notice.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-meta-boxes.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-async.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-themes.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
 
 /**
  * Entry-point class for the plugin.
@@ -59,7 +60,10 @@ class Admin_Apple_News extends Apple_News {
 		new Admin_Apple_Async( self::$settings );
 
 		// Add theme support
-		new Admin_Apple_Themes( self::$settings );
+		new Admin_Apple_Themes();
+
+		// Add preview support
+		new Admin_Apple_Preview();
 	}
 
 	/**
