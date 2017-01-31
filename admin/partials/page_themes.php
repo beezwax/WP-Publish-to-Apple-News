@@ -89,7 +89,7 @@
 							</td>
 							<td class="column-apple-news-theme-actions" data-colname="Actions">
 								<a href="#" class="apple-news-row-action apple-news-export-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Export', 'apple-news' ) ?></a>
-								<a href="<?php echo esc_url( $themes->theme_preview_url( $theme ) ) ?>" class="apple-news-row-action apple-news-preview-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Preview', 'apple-news' ) ?></a>
+								<a href="<?php echo esc_url( $themes->theme_edit_url( $theme ) ) ?>" class="apple-news-row-action apple-news-edit-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Edit', 'apple-news' ) ?></a>
 								<?php if ( $theme !== $active_theme ) : ?>
 									<a href="#" class="apple-news-row-action apple-news-delete-theme" data-theme="<?php echo esc_attr( $theme ) ?>"><?php esc_html_e( 'Delete', 'apple-news' ) ?></a>
 								<?php endif; ?>

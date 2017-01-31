@@ -13,12 +13,12 @@ class Admin_Apple_Themes extends Apple_News {
 	public $theme_page_name;
 
 	/**
-	 * Theme preview page name.
+	 * Theme edit page name.
 	 *
 	 * @var string
 	 * @access public
 	 */
-	public $theme_preview_page_name;
+	public $theme_edit_page_name;
 
 	/**
 	 * Key for the theme index.
@@ -57,13 +57,14 @@ class Admin_Apple_Themes extends Apple_News {
 	 */
 	function __construct() {
 		$this->theme_page_name = $this->plugin_domain . '-themes';
-		$this->theme_preview_page_name = $this->plugin_domain . '-theme-preview';
+		$this->theme_edit_page_name = $this->plugin_domain . '-theme-edit';
 
 		$this->valid_actions = array(
 			'apple_news_create_theme' => array( $this, 'create_theme' ),
 			'apple_news_upload_theme' => array( $this, 'upload_theme' ),
 			'apple_news_export_theme' => array( $this, 'export_theme' ),
 			'apple_news_delete_theme' => array( $this, 'delete_theme' ),
+			'apple_news_save_theme' => array( $this, 'save_theme' ),
 			'apple_news_set_theme' => array( $this, 'set_theme' ),
 		);
 
@@ -103,11 +104,11 @@ class Admin_Apple_Themes extends Apple_News {
 
 		add_submenu_page(
 			null,
-			__( 'Apple News Theme Preview', 'apple-news' ),
-			__( 'Theme Preview', 'apple-news' ),
+			__( 'Apple News Edit Theme', 'apple-news' ),
+			__( 'Edit Theme', 'apple-news' ),
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
-			$this->theme_preview_page_name,
-			array( $this, 'page_theme_preview_render' )
+			$this->theme_edit_page_name,
+			array( $this, 'page_theme_edit_render' )
 		);
 	}
 
@@ -125,11 +126,11 @@ class Admin_Apple_Themes extends Apple_News {
 	}
 
 	/**
-	 * Theme preview page render.
+	 * Theme edit page render.
 	 *
 	 * @access public
 	 */
-	public function page_theme_preview_render() {
+	public function page_theme_edit_render() {
 		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
 			wp_die( __( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}
@@ -137,7 +138,7 @@ class Admin_Apple_Themes extends Apple_News {
 		$error = '';
 		// Check for a valid theme
 		if ( ! isset( $_GET['theme'] ) ) {
-			$error = __( 'No theme was specified to preview', 'apple-news' );
+			$error = __( 'No theme was specified to edit', 'apple-news' );
 		} else {
 			$theme_name = sanitize_text_field( $_GET['theme'] );
 
@@ -154,8 +155,8 @@ class Admin_Apple_Themes extends Apple_News {
 		// Set the URL for the back button
 		$theme_admin_url = $this->theme_admin_url();
 
-		// Load the preview page
-		include plugin_dir_path( __FILE__ ) . 'partials/page_theme_preview.php';
+		// Load the edit page
+		include plugin_dir_path( __FILE__ ) . 'partials/page_theme_edit.php';
 	}
 
 	/**
@@ -167,7 +168,7 @@ class Admin_Apple_Themes extends Apple_News {
 	public function register_assets( $hook ) {
 		if ( ! in_array( $hook, array(
 			'apple-news_page_apple-news-themes',
-			'apple-news_page_apple-news-theme-preview',
+			'admin_page_apple-news-theme-edit',
 		), true ) ) {
 			return;
 		}
@@ -184,6 +185,31 @@ class Admin_Apple_Themes extends Apple_News {
 			'noNameError' => __( 'Please enter a name for the new theme.', 'apple-news' ),
 			'tooLongError' => __( 'Theme names must be 45 characters or less.', 'apple-news' ),
 		) );
+
+		if ( 'admin_page_apple-news-theme-edit' === $hook ) {
+			wp_enqueue_style( 'apple-news-select2-css', plugin_dir_url( __FILE__ ) .
+				'../vendor/select2/select2.min.css', array() );
+			wp_enqueue_style( 'apple-news-theme-edit-css', plugin_dir_url( __FILE__ ) .
+				'../assets/css/theme-edit.css', array() );
+
+			wp_enqueue_script( 'iris' );
+			wp_enqueue_script( 'apple-news-select2-js', plugin_dir_url( __FILE__ ) .
+				'../vendor/select2/select2.full.min.js', array( 'jquery' ) );
+			wp_enqueue_script( 'apple-news-theme-edit-js', plugin_dir_url( __FILE__ ) .
+				'../assets/js/theme-edit.js', array(
+					'jquery',
+					'jquery-ui-draggable',
+					'jquery-ui-sortable',
+					'apple-news-select2-js',
+					'iris',
+					'apple-news-preview-js'
+				)
+			);
+
+			wp_localize_script( 'apple-news-theme-edit-js', 'appleNewsThemeEdit', array(
+				'fontNotice' => __( 'Font preview is only available on macOS', 'apple-news' ),
+			) );
+		}
 	}
 
 	/**
@@ -680,16 +706,16 @@ class Admin_Apple_Themes extends Apple_News {
 	}
 
 	/**
-	 * Generates the preview URL for a theme
+	 * Generates the edit URL for a theme
 	 *
 	 * @param string $name
 	 * @return string
 	 * @access public
 	 */
-	public function theme_preview_url( $name ) {
+	public function theme_edit_url( $name ) {
 		return add_query_arg(
 			array(
-				'page' => $this->theme_preview_page_name,
+				'page' => $this->theme_edit_page_name,
 				'theme' => $name,
 			),
 			admin_url( 'admin.php' )
