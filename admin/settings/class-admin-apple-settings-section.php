@@ -330,6 +330,14 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	protected $page;
 
 	/**
+	 * Allow for a settings section to be hidden.
+	 *
+	 * @var boolean
+	 * @access protected
+	 */
+	protected $hidden =  false;
+
+	/**
 	 * Base settings.
 	 *
 	 * @var Settings
@@ -418,14 +426,16 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * Constructor.
 	 *
 	 * @param string $page
+	 * @param boolean $hidden
 	 */
-	function __construct( $page ) {
+	function __construct( $page, $hidden = false ) {
 		$this->page             = $page;
 		$base_settings          = new \Apple_Exporter\Settings;
 		self::$base_settings    = $base_settings->all();
 		$this->settings         = apply_filters( 'apple_news_section_settings', $this->settings, $page );
 		$this->groups           = apply_filters( 'apple_news_section_groups', $this->groups, $page );
 		self::$fonts            = apply_filters( 'apple_news_fonts_list', self::$fonts );
+		$this->hidden						= $hidden;
 
 		// Save settings if necessary
 		$this->save_settings();
@@ -487,13 +497,14 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	public function render_field( $args ) {
 		list( $name, $default_value, $callback ) = $args;
 
+		$type  = $this->get_type_for( $name );
+
 		// If the field has it's own render callback, use that here.
 		// This is because the options page doesn't actually use do_settings_section.
 		if ( ! empty( $callback ) ) {
-			return call_user_func( $callback );
+			return call_user_func( $callback, $type );
 		}
 
-		$type  = $this->get_type_for( $name );
 		$settings = get_option( self::$option_name );
 		$value = self::get_value( $name, $settings );
 		$field = null;
@@ -569,14 +580,16 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			$field = '<input type="text" id="%s" name="%s" value="%s" class="apple-news-color-picker" %s>';
 		} else if ( 'password' == $type ) {
 			$field = '<input type="password" id="%s" name="%s" value="%s" size="%s" %s>';
-		} else {
+		} else if ( 'hidden' == $type ) {
+			$field = '<input type="hidden" id="%s" name="%s" value="%s">';
+		}  else {
 			// If nothing else matches, it's a string.
 			$field = '<input type="text" id="%s" name="%s" value="%s" size="%s" %s>';
 		}
 
 		// Add a description, if set.
 		$description = $this->get_description_for( $name );
-		if ( ! empty( $description ) ) {
+		if ( ! empty( $description ) && 'hidden' !== $type ) {
 			$field .= apply_filters( 'apple_news_field_description_output_html', '<br/><i>' . $description . '</i>', $name );
 		}
 
@@ -586,6 +599,13 @@ class Admin_Apple_Settings_Section extends Apple_News {
 				$field,
 				esc_attr( $name ),
 				esc_attr( $name )
+			);
+		} elseif ( 'hidden' === $type ) {
+			return sprintf(
+				$field,
+				esc_attr( $name ),
+				esc_attr( $name ),
+				esc_attr( $value )
 			);
 		} else {
 			return sprintf(
@@ -608,7 +628,11 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @access protected
 	 */
 	protected function get_type_for( $name ) {
-		return empty( $this->settings[ $name ]['type'] ) ? 'string' : $this->settings[ $name ]['type'];
+		if ( $this->hidden ) {
+			return 'hidden';
+		} else {
+			return empty( $this->settings[ $name ]['type'] ) ? 'string' : $this->settings[ $name ]['type'];
+		}
 	}
 
 	/**
@@ -706,6 +730,16 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 */
 	public function get_settings() {
 		return $this->settings;
+	}
+
+	/**
+	 * Check if the section is hidden on the settings page.
+	 *
+	 * @return boolean
+	 * @access public
+	 */
+	public function is_hidden() {
+		return $this->hidden;
 	}
 
 	/**
