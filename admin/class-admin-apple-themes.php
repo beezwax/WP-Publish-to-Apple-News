@@ -169,7 +169,7 @@ class Admin_Apple_Themes extends Apple_News {
 			}
 		}
 
-		// Set the URL for the back button
+		// Set the URL for the back button and form action
 		$theme_admin_url = $this->theme_admin_url();
 
 		// Load the edit page
@@ -327,6 +327,9 @@ class Admin_Apple_Themes extends Apple_News {
 		// Remove from the index and delete settings
 		unset( $themes[ $index ] );
 		update_option( self::THEME_INDEX_KEY, $themes, false );
+		delete_option( $this->theme_key_from_name( $name ) );
+		//print_r( $this->theme_key_from_name( $name ) );
+		//die();
 	}
 
 	/**
@@ -562,23 +565,28 @@ class Admin_Apple_Themes extends Apple_News {
 		$formatting = $this->get_formatting_object( $name );
 
 		// Index the theme and check if it changed names
+		$this->index_theme( $name );
 		$previous_name = ( isset( $_POST['apple_news_theme_name_previous'] ) ) ? sanitize_text_field( $_POST['apple_news_theme_name_previous'] ) : '';
 		if ( $name != $previous_name && ! empty( $previous_name ) ) {
 			$this->unindex_theme( $previous_name );
 		}
-		$this->index_theme( $name );
+
+		// If this is the active theme, update global settings
+		if ( $name === $this->get_active_theme() ) {
+			$result = $this->update_global_settings( $name );
+			if ( false === $result ) {
+				\Admin_Apple_Notice::error( sprintf(
+					__( 'There was an error updating global settings with the theme %s', 'apple-news' ),
+					$name
+				) );
+			}
+		}
 
 		// Indicate success
 		\Admin_Apple_Notice::success( sprintf(
 			__( 'The theme %s was saved successfully', 'apple-news' ),
 			$name
 		) );
-
-		// Redirect back to the themes page
-		$redirect = isset( $_POST['redirect'] ) ? sanitize_text_field( $_POST['redirect'] ) : true;
-		if ( true === $redirect ) {
-			wp_safe_redirect( $this->theme_admin_url() );
-		}
 	}
 
 	/**
