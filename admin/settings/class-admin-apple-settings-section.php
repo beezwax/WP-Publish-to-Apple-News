@@ -457,15 +457,15 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @param string $section_option_name
 	 */
 	function __construct( $page, $hidden = false, $save_action = 'apple_news_options', $section_option_name = null ) {
-		$this->page             		= $page;
+		$this->page									= $page;
 		self::$section_option_name	= ( ! empty( $section_option_name ) ) ? $section_option_name : self::$option_name;
 		$this->save_action					= $save_action;
-		$base_settings          		= new \Apple_Exporter\Settings;
-		self::$base_settings    		= $base_settings->all();
+		$base_settings							= new \Apple_Exporter\Settings;
+		self::$base_settings				= $base_settings->all();
 		self::$loaded_settings			= get_option( self::$section_option_name );
-		$this->settings         		= apply_filters( 'apple_news_section_settings', $this->settings, $page );
-		$this->groups           		= apply_filters( 'apple_news_section_groups', $this->groups, $page );
-		self::$fonts            		= apply_filters( 'apple_news_fonts_list', self::$fonts );
+		$this->settings							= apply_filters( 'apple_news_section_settings', $this->settings, $page );
+		$this->groups								= apply_filters( 'apple_news_section_groups', $this->groups, $page );
+		self::$fonts								= apply_filters( 'apple_news_fonts_list', self::$fonts );
 		$this->hidden								= $hidden;
 
 		// Save settings if necessary

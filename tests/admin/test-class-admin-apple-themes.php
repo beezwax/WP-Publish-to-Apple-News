@@ -69,8 +69,6 @@ class Admin_Apple_Themes_Test extends WP_UnitTestCase {
 		$themes = new \Admin_Apple_Themes();
 		$current_settings = $this->settings->all();
 
-//		print_r( $themes->get_theme( $name ) );
-
 		// Array diff against the option value
 		$diff_settings = $this->getFormattingSettings( $current_settings );
 		$new_theme_settings = get_option( $themes->theme_key_from_name( $name ) );

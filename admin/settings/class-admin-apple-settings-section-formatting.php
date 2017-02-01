@@ -627,8 +627,9 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	/**
 	 * Renders the component order field.
 	 *
-	 * @static
+	 * @param boolean $hidden
 	 * @access public
+	 * @static
 	 */
 	public static function render_meta_component_order( $hidden ) {
 		// Get the current order
