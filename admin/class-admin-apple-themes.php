@@ -115,7 +115,7 @@ class Admin_Apple_Themes extends Apple_News {
 		if ( empty( $themes ) ) {
 			$name = __( 'Default', 'apple-news' );
 			$this->save_theme( $name, $this->get_formatting_settings() );
-			$this->set_theme( $name );
+			$this->set_theme( $name, true );
 		}
 	}
 
@@ -283,9 +283,10 @@ class Admin_Apple_Themes extends Apple_News {
 	 *
 	 * @param string $name
 	 * @param array $settings
+	 * @param boolean $silent We don't always want this to display a message if it's behind the scenes
 	 * @access private
 	 */
-	private function save_theme( $name, $settings ) {
+	private function save_theme( $name, $settings, $silent = false ) {
 		// Save the theme settings
 		update_option( $this->theme_key_from_name( $name ), $settings, false );
 
@@ -293,10 +294,12 @@ class Admin_Apple_Themes extends Apple_News {
 		$this->index_theme( $name );
 
 		// Indicate success
-		\Admin_Apple_Notice::success( sprintf(
-			__( 'The theme %s was saved successfully', 'apple-news' ),
-			$name
-		) );
+		if ( true !== $silent ) {
+			\Admin_Apple_Notice::success( sprintf(
+				__( 'The theme %s was saved successfully', 'apple-news' ),
+				$name
+			) );
+		}
 	}
 
 	/**
@@ -374,9 +377,10 @@ class Admin_Apple_Themes extends Apple_News {
 	 * Handles setting the active theme.
 	 *
 	 * @param string $name
+	 * @param boolean $silent We don't always want this to display a message if it's behind the scenes
 	 * @access private
 	 */
-	private function set_theme( $name = null ) {
+	private function set_theme( $name = null, $silent = false ) {
 		// If no name was provided, attempt to get it from POST data
 		if ( empty( $name ) && ! empty( $_POST['apple_news_active_theme'] ) ) {
 			$name = sanitize_text_field( $_POST['apple_news_active_theme'] );
@@ -403,10 +407,12 @@ class Admin_Apple_Themes extends Apple_News {
 		update_option( self::THEME_ACTIVE_KEY, $name, false );
 
 		// Indicate success
-		\Admin_Apple_Notice::success( sprintf(
-			__( 'Successfully switched to theme %s', 'apple-news' ),
-			$name
-		) );
+		if ( true !== $silent ) {
+			\Admin_Apple_Notice::success( sprintf(
+				__( 'Successfully switched to theme %s', 'apple-news' ),
+				$name
+			) );
+		}
 	}
 
 	/**
@@ -501,7 +507,7 @@ class Admin_Apple_Themes extends Apple_News {
 			// Get the name from the data and unset it since it doesn't need to be stored
 			$name = $result['theme_name'];
 			unset( $result['theme_name'] );
-			$this->save_theme( $name, $result );
+			$this->save_theme( $name, $result, true );
 		}
 
 		// Indicate success
@@ -592,7 +598,7 @@ class Admin_Apple_Themes extends Apple_News {
 		// If this is the active theme, update global settings
 		if ( $name === $this->get_active_theme()
 			|| $previous_name === $this->get_active_theme() ) {
-			$this->set_theme( $name );
+			$this->set_theme( $name, true );
 		}
 
 		// Indicate success
@@ -826,7 +832,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @access public
 	 */
 	public function theme_key_from_name( $name ) {
-		return self::THEME_KEY_PREFIX . sanitize_key( $name );
+		return self::THEME_KEY_PREFIX . md5( $name );
 	}
 
 	/**

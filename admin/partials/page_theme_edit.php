@@ -5,7 +5,7 @@
 		<p>
 			<label id="apple_news_theme_name_label" for="apple_news_theme_name"><?php esc_html_e( 'Theme Name', 'apple-news' ) ?></label>
 			<br />
-			<input type="text" id="apple_news_theme_name" name="apple_news_theme_name" value="<?php echo esc_attr( $theme_name ) ?>" maxlength="45" />
+			<input type="text" id="apple_news_theme_name" name="apple_news_theme_name" value="<?php echo esc_attr( $theme_name ) ?>" />
 			<input type="hidden" id="apple_news_theme_name_previous" name="apple_news_theme_name_previous" value="<?php echo esc_attr( $theme_name ) ?>" />
 		</p>
 		<?php
