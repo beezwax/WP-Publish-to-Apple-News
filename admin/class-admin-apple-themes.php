@@ -155,13 +155,13 @@ class Admin_Apple_Themes extends Apple_News {
 		// Check for a valid theme
 		if ( ! isset( $_GET['theme'] ) ) {
 			// Load current live settings as a basis for the new theme
-			$theme = $this->get_formatting_settings();
+			$section = $this->get_formatting_object();
 		} else {
 			$theme_name = sanitize_text_field( $_GET['theme'] );
 
 			// Load the theme
-			$theme = $this->get_formatting_settings( $theme_name );
-			if ( empty( $theme ) || ! is_array( $theme ) ) {
+			$section = $this->get_formatting_object( $theme_name );
+			if ( empty( $section ) || ! is_object( $section ) ) {
 				$error = sprintf(
 					__( 'The theme %s does not exist', 'apple-news' ),
 					$theme_name
