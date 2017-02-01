@@ -92,7 +92,7 @@ class Admin_Apple_Preview extends Apple_News {
 		}
 
 		?>
-		<div class="apple-news-settings-preview">
+		<div class="apple-news-preview">
 			<?php
 				// Build sample content
 				$title = sprintf(

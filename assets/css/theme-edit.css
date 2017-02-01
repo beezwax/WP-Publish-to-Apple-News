@@ -27,13 +27,13 @@ ul#meta-component-order-sort li:hover {
 }
 
 @media only screen and (min-width: 1172px) {
-	.apple-news-settings-preview {
+	.apple-news-preview {
 		margin: 50px 0px 0px 50px;
 	}
 }
 
 @media only screen and (max-width: 1172px) {
-	.apple-news-settings-preview {
+	.apple-news-preview {
 		margin: 10px 0px;
 	}
 }
