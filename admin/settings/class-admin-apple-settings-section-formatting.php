@@ -627,11 +627,11 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	/**
 	 * Renders the component order field.
 	 *
-	 * @param boolean $hidden
+	 * @param string $type
 	 * @access public
 	 * @static
 	 */
-	public static function render_meta_component_order( $hidden ) {
+	public static function render_meta_component_order( $type ) {
 		// Get the current order
 		$component_order = self::get_value( 'meta_component_order' );
 		if ( empty( $component_order ) || ! is_array( $component_order ) ) {
@@ -639,7 +639,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 		}
 
 		// Use the correct output format
-		if ( false === $hidden ) :
+		if ( 'hidden' === $type ) :
 			foreach ( $component_order as $component_name ) {
 				echo sprintf(
 					'<input type="hidden" name="meta_component_order[]" value="%s">',
