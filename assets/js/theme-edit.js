@@ -2,7 +2,7 @@
 
 	$(document).ready(function () {
 		appleNewsSelectInit();
-		appleNewsSettingsSortInit( '#meta-component-order-sort', 'meta_component_order' );
+		appleNewsThemeEditSortInit( '#meta-component-order-sort', 'meta_component_order' );
 		appleNewsColorPickerInit();
 		$( 'body' ).trigger( 'apple-news-settings-loaded' );
 	});
@@ -28,22 +28,22 @@
 			$( 'span.select2' ).after(
 				$( '<div>' )
 					.addClass( 'font-notice' )
-					.text( appleNewsSettings.fontNotice )
+					.text( appleNewsThemeEdit.fontNotice )
 			)
 		}
 	}
 
-	function appleNewsSettingsSortInit( selector, key ) {
+	function appleNewsThemeEditSortInit( selector, key ) {
 		$( selector ).sortable( {
 			'stop' : function( event, ui ) {
-				appleNewsSettingsSortUpdate( $( this ), key );
+				appleNewsThemeEditSortUpdate( $( this ), key );
 			},
 		} );
    	$( selector ).disableSelection();
-   	appleNewsSettingsSortUpdate( $( selector ), key );
+   	appleNewsThemeEditSortUpdate( $( selector ), key );
 	}
 
-	function appleNewsSettingsSortUpdate( $sortableElement, keyPrefix ) {
+	function appleNewsThemeEditSortUpdate( $sortableElement, keyPrefix ) {
 		// Build the key for field
 		var key = keyPrefix + '[]';
 
@@ -64,10 +64,10 @@
 		}
 
 		// Update the preview
-		appleNewsSettingsUpdated();
+		appleNewsThemeEditUpdated();
 	}
 
-	function appleNewsSettingsUpdated() {
+	function appleNewsThemeEditUpdated() {
 		$( 'body' ).trigger( 'apple-news-settings-updated' );
 	}
 
@@ -75,7 +75,7 @@
 		$( '.apple-news-color-picker' ).iris({
 			palettes: true,
 			width: 320,
-			change: appleNewsSettingsUpdated
+			change: appleNewsThemeEditUpdated
 		});
 
 		$( '.apple-news-color-picker' ).on( 'click', function() {
