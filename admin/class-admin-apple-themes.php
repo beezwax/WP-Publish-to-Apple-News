@@ -572,14 +572,9 @@ class Admin_Apple_Themes extends Apple_News {
 		}
 
 		// If this is the active theme, update global settings
-		if ( $name === $this->get_active_theme() ) {
-			$result = $this->update_global_settings( $name );
-			if ( false === $result ) {
-				\Admin_Apple_Notice::error( sprintf(
-					__( 'There was an error updating global settings with the theme %s', 'apple-news' ),
-					$name
-				) );
-			}
+		if ( $name === $this->get_active_theme()
+			|| $previous_name === $this->get_active_theme() ) {
+			$this->set_theme( $name );
 		}
 
 		// Indicate success
