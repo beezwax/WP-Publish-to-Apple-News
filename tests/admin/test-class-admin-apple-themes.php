@@ -20,13 +20,24 @@ class Admin_Apple_Themes_Test extends WP_UnitTestCase {
 		$themes->setup_theme_pages();
 	}
 
-	public function createNewTheme( $name ) {
-		$nonce = wp_create_nonce( 'apple_news_themes' );
+	public function createNewTheme( $name, $settings = array() ) {
+		$nonce = wp_create_nonce( 'apple_news_save_edit_theme' );
 		$_POST['apple_news_theme_name'] = $name;
-		$_POST['action'] = 'apple_news_create_theme';
+		$_POST['action'] = 'apple_news_save_edit_theme';
 		$_POST['page'] = 'apple-news-themes';
-		$_REQUEST['_wp_http_referer'] = '/wp-admin/admin.php?page=apple-news-themes';
+		$_POST['redirect'] = false;
+		$_REQUEST['_wp_http_referer'] = '/wp-admin/admin.php?page=apple-news-theme-edit';
 		$_REQUEST['_wpnonce'] = $nonce;
+
+		// Merge any provided settings with default settings
+		$current_settings = $this->settings->all();
+		$defaults = $this->getFormattingSettings( $current_settings );
+		$settings = wp_parse_args( $settings, $defaults );
+
+		// Add all of these to the $_POST object
+		foreach ( $settings as $key => $value ) {
+			$_POST[ $key ] = $value;
+		}
 
 		$themes = new \Admin_Apple_Themes();
 		$themes->action_router();
@@ -57,6 +68,8 @@ class Admin_Apple_Themes_Test extends WP_UnitTestCase {
 		// Check that the data was saved properly
 		$themes = new \Admin_Apple_Themes();
 		$current_settings = $this->settings->all();
+
+//		print_r( $themes->get_theme( $name ) );
 
 		// Array diff against the option value
 		$diff_settings = $this->getFormattingSettings( $current_settings );
@@ -100,7 +113,6 @@ class Admin_Apple_Themes_Test extends WP_UnitTestCase {
 
 		// Simulate the form submission to set the theme
 		$nonce = wp_create_nonce( 'apple_news_themes' );
-		$_POST['apple_news_theme_name'] = $name;
 		$_POST['action'] = 'apple_news_set_theme';
 		$_POST['apple_news_active_theme'] = $name;
 		$_POST['page'] = 'apple-news-themes';

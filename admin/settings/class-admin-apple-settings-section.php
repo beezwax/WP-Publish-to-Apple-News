@@ -458,7 +458,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 */
 	function __construct( $page, $hidden = false, $save_action = 'apple_news_options', $section_option_name = null ) {
 		$this->page             		= $page;
-		self::$section_option_name	= self::$option_name;
+		self::$section_option_name	= ( ! empty( $section_option_name ) ) ? $section_option_name : self::$option_name;
 		$this->save_action					= $save_action;
 		$base_settings          		= new \Apple_Exporter\Settings;
 		self::$base_settings    		= $base_settings->all();

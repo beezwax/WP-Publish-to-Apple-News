@@ -575,7 +575,10 @@ class Admin_Apple_Themes extends Apple_News {
 		) );
 
 		// Redirect back to the themes page
-		wp_safe_redirect( $this->theme_admin_url() );
+		$redirect = isset( $_POST['redirect'] ) ? sanitize_text_field( $_POST['redirect'] ) : true;
+		if ( true === $redirect ) {
+			wp_safe_redirect( $this->theme_admin_url() );
+		}
 	}
 
 	/**
