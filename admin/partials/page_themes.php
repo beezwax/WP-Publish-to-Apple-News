@@ -6,36 +6,13 @@
 		<input type="hidden" id="apple_news_action" name="action" value="apple_news_set_theme" />
 		<input type="hidden" id="apple_news_theme" name="apple_news_theme" value="" />
 
-		<?php submit_button(
-			__( 'Create New Theme', 'apple-news' ),
-			'secondary',
-			'apple_news_start_create',
-			false
-		); ?>
+		<a class="button" href="<?php echo esc_url( $themes->theme_edit_url() ) ?>"><?php esc_html_e( 'Create New Theme', 'apple-news' ) ?></a>
 		<?php submit_button(
 			__( 'Import Theme', 'apple-news' ),
 			'secondary',
 			'apple_news_start_import',
 			false
 		); ?>
-
-		<div class="apple-news-theme-form" id="apple_news_new_theme_options">
-			<b><?php esc_html_e( 'Theme name', 'apple-news' ) ?>:</b>
-			<input type="text" id="apple_news_theme_name" name="apple_news_theme_name" value="" maxlength="45" />
-			<?php submit_button(
-				__( 'Save', 'apple-news' ),
-				'primary',
-				'apple_news_create_theme',
-				false
-			); ?>
-			<?php submit_button(
-				__( 'Cancel', 'apple-news' ),
-				'secondary',
-				'apple_news_cancel_create_theme',
-				false
-			); ?>
-			<p><?php esc_html_e( 'This will copy your current Apple News formatting settings to a new theme. If a theme by the same name exists, it will be overwritten.', 'apple-news' ) ?></p>
-		</div>
 
 		<div class="apple-news-theme-form" id="apple_news_import_theme">
 			<p>

@@ -1,6 +1,6 @@
 <div class="wrap apple-news-settings">
 	<form method="post" action="" id="apple-news-settings-form">
-		<?php wp_nonce_field( 'apple_news_options', 'apple_news_options' ); ?>
+		<?php wp_nonce_field( 'apple_news_options' ); ?>
 		<input type="hidden" name="action" value="apple_news_options" />
 		<?php foreach ( $sections as $section ): ?>
 			<?php $section->before_section() ?>

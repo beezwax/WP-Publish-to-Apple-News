@@ -37,3 +37,12 @@ ul#meta-component-order-sort li:hover {
 		margin: 10px 0px;
 	}
 }
+
+.submit {
+	clear: both;
+}
+
+#apple_news_theme_name_label {
+	font-size: 1.3em;
+	font-weight: 600;
+}
