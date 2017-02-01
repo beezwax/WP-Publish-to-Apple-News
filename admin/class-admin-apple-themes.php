@@ -85,6 +85,24 @@ class Admin_Apple_Themes extends Apple_News {
 		add_action( 'admin_menu', array( $this, 'setup_theme_pages' ), 99 );
 		add_action( 'admin_init', array( $this, 'action_router' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
+		add_filter( 'admin_title', array( $this, 'set_title' ), 10, 2 );
+	}
+
+	/**
+	 * Fix the title since WordPress doesn't set one.
+	 *
+	 * @param string $admin_title
+	 * @param string $title
+	 * @return strign
+	 * @access public
+	 */
+	public function set_title( $admin_title, $title ) {
+		$screen = get_current_screen();
+		if ( 'admin_page_' . $this->theme_edit_page_name === $screen->base ) {
+			$admin_title = __( 'Edit Theme' ) . $admin_title;
+		}
+
+		return $admin_title;
 	}
 
 	/**
