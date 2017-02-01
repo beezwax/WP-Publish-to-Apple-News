@@ -305,6 +305,7 @@ class Admin_Apple_Themes extends Apple_News {
 
 		// Save the theme index
 		update_option( self::THEME_INDEX_KEY, $index, false );
+	}
 
 	/**
 	 * Saves the theme to the theme index.
@@ -325,7 +326,7 @@ class Admin_Apple_Themes extends Apple_News {
 
 		// Remove from the index and delete settings
 		unset( $themes[ $index ] );
-		update_option( self::theme_index_key, $themes, false );
+		update_option( self::THEME_INDEX_KEY, $themes, false );
 	}
 
 	/**
