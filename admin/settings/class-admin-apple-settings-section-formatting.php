@@ -27,25 +27,16 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	protected $slug = 'formatting-options';
 
 	/**
-	 * Loads formatting options for a specific theme
-	 *
-	 * @var string
-	 * @access protected
-	 */
-	protected $theme;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param string $page
 	 * @param boolean $hidden
+	 * @param string $save_action
+	 * @param string $section_option_name
 	 */
-	function __construct( $page, $hidden = false, $theme = null ) {
+	function __construct( $page, $hidden = false, $save_action = 'apple_news_options', $section_option_name = null ) {
 		// Set the name
 		$this->name =  __( 'Theme Settings', 'apple-news' );
-
-		// Set the theme
-		$this->theme = $theme;
 
 		// Add the settings
 		$this->settings = array(
@@ -584,7 +575,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 			),
 		);
 
-		parent::__construct( $page, $hidden );
+		parent::__construct( $page, $hidden, $save_action, $section_option_name );
 	}
 
 	/**
@@ -647,7 +638,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 		}
 
 		// Use the correct output format
-		if ( $hidden ) :
+		if ( false === $hidden ) :
 			foreach ( $component_order as $component_name ) {
 				echo sprintf(
 					'<input type="hidden" name="meta_component_order[]" value="%s">',

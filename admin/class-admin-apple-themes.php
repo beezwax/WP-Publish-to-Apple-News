@@ -60,11 +60,26 @@ class Admin_Apple_Themes extends Apple_News {
 		$this->theme_edit_page_name = $this->plugin_domain . '-theme-edit';
 
 		$this->valid_actions = array(
-			'apple_news_upload_theme' => array( $this, 'upload_theme' ),
-			'apple_news_export_theme' => array( $this, 'export_theme' ),
-			'apple_news_delete_theme' => array( $this, 'delete_theme' ),
-			'apple_news_save_edit_theme' => array( $this, 'save_edit_theme' ),
-			'apple_news_set_theme' => array( $this, 'set_theme' ),
+			'apple_news_upload_theme' => array(
+				'callback' => array( $this, 'upload_theme' ),
+				'nonce' => 'apple_news_themes',
+			),
+			'apple_news_export_theme' => array(
+				'callback' =>  array( $this, 'export_theme' ),
+				'nonce' => 'apple_news_themes',
+			),
+			'apple_news_delete_theme' => array(
+				'callback' =>  array( $this, 'delete_theme' ),
+				'nonce' => 'apple_news_themes',
+			),
+			'apple_news_save_edit_theme' => array(
+				'callback' =>  array( $this, 'save_edit_theme' ),
+				'nonce' => 'apple_news_save_edit_theme',
+			),
+			'apple_news_set_theme' => array(
+				'callback' =>  array( $this, 'set_theme' ),
+				'nonce' => 'apple_news_themes',
+			),
 		);
 
 		add_action( 'admin_menu', array( $this, 'setup_theme_pages' ), 99 );
@@ -251,6 +266,26 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @access private
 	 */
 	private function save_theme( $name, $settings ) {
+		// Save the theme settings
+		update_option( $key, $settings, false );
+
+		// Update the index
+		$this->index_theme( $name );
+
+		// Indicate success
+		\Admin_Apple_Notice::success( sprintf(
+			__( 'The theme %s was saved successfully', 'apple-news' ),
+			$name
+		) );
+	}
+
+	/**
+	 * Saves the theme to the theme index.
+	 *
+	 * @param string $name
+	 * @access private
+	 */
+	private function index_theme( $name ) {
 		// Get the index
 		$index = self::list_themes();
 		if ( ! is_array( $index ) ) {
@@ -258,9 +293,6 @@ class Admin_Apple_Themes extends Apple_News {
 		}
 
 		$key = $this->theme_key_from_name( $name );
-
-		// Save the theme settings
-		update_option( $key, $settings, false );
 
 		// Add the key to the index
 		$index[] = $name;
@@ -271,12 +303,28 @@ class Admin_Apple_Themes extends Apple_News {
 
 		// Save the theme index
 		update_option( self::theme_index_key, $index, false );
+	}
 
-		// Indicate success
-		\Admin_Apple_Notice::success( sprintf(
-			__( 'The theme %s was saved successfully', 'apple-news' ),
-			$name
-		) );
+	/**
+	 * Saves the theme to the theme index.
+	 *
+	 * @param string $name
+	 * @access private
+	 */
+	private function unindex_theme( $name ) {
+		$themes = $this->list_themes();
+		$index = array_search( $name, $themes );
+		if ( false === $index ) {
+			\Admin_Apple_Notice::error( sprintf(
+				__( 'The theme %s to be deleted does not exist', 'apple-news' ),
+				$name
+			) );
+			return;
+		}
+
+		// Remove from the index and delete settings
+		unset( $themes[ $index ] );
+		update_option( self::theme_index_key, $themes, false );
 	}
 
 	/**
@@ -293,10 +341,10 @@ class Admin_Apple_Themes extends Apple_News {
 		}
 
 		// Check the nonce
-		check_admin_referer( 'apple_news_themes' );
+		check_admin_referer( $this->valid_actions[ $action ]['nonce'] );
 
 		// Call the callback for the action for further processing
-		call_user_func( $this->valid_actions[ $action ] );
+		call_user_func( $this->valid_actions[ $action ]['callback'] );
 	}
 
 	/**
@@ -360,20 +408,10 @@ class Admin_Apple_Themes extends Apple_News {
 		// Get the key
 		$key = $this->theme_key_from_name( $name );
 
-		// Make sure it exists
-		$themes = $this->list_themes();
-		$index = array_search( $name, $themes );
-		if ( false === $index ) {
-			\Admin_Apple_Notice::error( sprintf(
-				__( 'The theme %s to be deleted does not exist', 'apple-news' ),
-				$name
-			) );
-			return;
-		}
+		// Unindex the theme
+		$this->unindex_theme( $name );
 
-		// Remove from the index and delete settings
-		unset( $themes[ $index ] );
-		update_option( self::theme_index_key, $themes, false );
+		// Delete the theme
 		delete_option( $key );
 
 		// Indicate success
@@ -494,6 +532,48 @@ class Admin_Apple_Themes extends Apple_News {
 		echo json_encode( $theme, $JSON_PRETTY_PRINT );
 
 		exit;
+	}
+
+	/**
+	 * Handle saving theme settings from the edit form.
+	 *
+	 * @param string $name
+	 * @access private
+	 */
+	private function save_edit_theme() {
+		// Get the theme name
+		if ( ! isset( $_POST['apple_news_theme_name'] ) ) {
+			\Admin_Apple_Notice::error(
+				__( 'No theme name was set', 'apple-news' )
+			);
+		}
+
+		$name = sanitize_text_field( $_POST['apple_news_theme_name'] );
+		if ( empty( $name ) ) {
+			\Admin_Apple_Notice::error(
+				__( 'The theme name was empty', 'apple-news' )
+			);
+		}
+
+		// Create a formatting object from the name.
+		// It will automatically save settings.
+		$formatting = $this->get_formatting_object( $name );
+
+		// Index the theme and check if it changed names
+		$previous_name = ( isset( $_POST['apple_news_theme_name_previous'] ) ) ? sanitize_text_field( $_POST['apple_news_theme_name_previous'] ) : '';
+		if ( $name != $previous_name && ! empty( $previous_name ) ) {
+			$this->unindex_theme( $previous_name );
+		}
+		$this->index_theme( $name );
+
+		// Indicate success
+		\Admin_Apple_Notice::success( sprintf(
+			__( 'The theme %s was saved successfully', 'apple-news' ),
+			$name
+		) );
+
+		// Redirect back to the themes page
+		wp_safe_redirect( $this->theme_admin_url() );
 	}
 
 	/**
@@ -735,7 +815,7 @@ class Admin_Apple_Themes extends Apple_News {
 		$url = add_query_arg( 'page', $this->theme_edit_page_name, admin_url( 'admin.php' ) );
 
 		if ( ! empty( $name ) ) {
-			$url = add_query_arg( 'theme', $theme, $url );
+			$url = add_query_arg( 'theme', $name, $url );
 		}
 
 		return $url;

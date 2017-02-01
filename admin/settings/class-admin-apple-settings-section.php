@@ -453,6 +453,8 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @param string $page
 	 * @param boolean $hidden
+	 * @param string $save_action
+	 * @param string $section_option_name
 	 */
 	function __construct( $page, $hidden = false, $save_action = 'apple_news_options', $section_option_name = null ) {
 		$this->page             		= $page;

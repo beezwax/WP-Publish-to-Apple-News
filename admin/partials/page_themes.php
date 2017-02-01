@@ -1,3 +1,4 @@
+<?php $themes = new \Admin_Apple_Themes(); ?>
 <div class="wrap apple-news-themes">
 	<h1 id="apple_news_themes_title"><?php esc_html_e( 'Manage Themes', 'apple-news' ) ?></h1>
 
@@ -45,7 +46,6 @@
 			</thead>
 			<tbody id="theme-list">
 			<?php
-				$themes = new \Admin_Apple_Themes();
 				$all_themes = $themes->list_themes();
 				$active_theme = $themes->get_active_theme();
 				if ( empty( $all_themes ) ) :
