@@ -95,7 +95,9 @@ class Admin_Apple_Themes extends Apple_News {
 	private function validate_themes() {
 		$themes = $this->list_themes();
 		if ( empty( $themes ) ) {
-			$this->save_theme( __( 'Default', 'apple-news' ), $this->get_formatting_settings() );
+			$name = __( 'Default', 'apple-news' );
+			$this->save_theme( $name, $this->get_formatting_settings() );
+			$this->set_theme( $name );
 		}
 	}
 
@@ -267,7 +269,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 */
 	private function save_theme( $name, $settings ) {
 		// Save the theme settings
-		update_option( $key, $settings, false );
+		update_option( $this->theme_key_from_name( $name ), $settings, false );
 
 		// Update the index
 		$this->index_theme( $name );
@@ -583,8 +585,6 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @access private
 	 */
 	private function get_formatting_settings( $name = null ) {
-		$theme_settings = array();
-
 		// Determine what to do based on if the name is set
 		if ( ! empty( $name ) ) {
 			return $this->get_formatting_object( $name )->get_loaded_settings();
@@ -603,6 +603,7 @@ class Admin_Apple_Themes extends Apple_News {
 			$all_settings = $settings->fetch_settings()->all();
 
 			// Retrieve values only for formatting settings
+			$theme_settings = array();
 			foreach ( $formatting_settings_keys as $key ) {
 				if ( isset( $all_settings[ $key ] ) ) {
 					$theme_settings[ $key ] = $all_settings[ $key ];
