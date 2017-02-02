@@ -57,7 +57,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Added a delete confirmation dialog
 * Added a separate setting for automatically deleting from Apple News when deleted in WordPress
 * Fixed captions so that they're always aligned properly with the corresponding photo
-* Allowed for removing the borders on blockquotes and pull quotes
+* Added separate settings for image caption style
 
 = 1.2.1 =
 * Added an experimental setting to enable HTML format on body elements.
