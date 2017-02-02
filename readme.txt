@@ -39,7 +39,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 == Screenshots ==
 
 1. Manage all of your posts in Apple News from your WordPress dashboard
-2. Create a custom design for your Apple News posts with no programming knowledge required.
+2. Create a custom theme for your Apple News posts with no programming knowledge required
 3. Publish posts in bulk
 4. Manage posts in Apple News right from the post edit screen
 
