@@ -4,7 +4,7 @@ Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 4.7
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -39,11 +39,25 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 == Screenshots ==
 
 1. Manage all of your posts in Apple News from your WordPress dashboard
-2. Create a custom design for your Apple News posts with no programming knowledge required.
+2. Create a custom theme for your Apple News posts with no programming knowledge required
 3. Publish posts in bulk
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 1.2.2 =
+* Created Apple News themes and moved all formatting settings to themes
+* Added support for sponsored content (isSponsored)
+* Added ability to map categories to Apple News sections
+* Split block and pull quote styling
+* Allowed for removing the borders on blockquotes and pull quotes
+* Added post ID to the apple_news_api_post_meta and apple_news_post_args filters
+* Fixed handling of relative URLs and anchors in the post body
+* Provided a method to reset posts stuck in pending status
+* Added a delete confirmation dialog
+* Added a separate setting for automatically deleting from Apple News when deleted in WordPress
+* Fixed captions so that they're always aligned properly with the corresponding photo
+* Added separate settings for image caption style
 
 = 1.2.1 =
 * Added an experimental setting to enable HTML format on body elements.
