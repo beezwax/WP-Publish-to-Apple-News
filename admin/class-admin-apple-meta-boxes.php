@@ -138,6 +138,16 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		}
 		update_post_meta( $post_id, 'apple_news_is_sponsored', $is_sponsored );
 
+		if ( ! empty( $_POST['apple_news_maturity_rating'] ) ) {
+			$maturity_rating = sanitize_text_field( $_POST['apple_news_maturity_rating'] );
+			if ( ! in_array( $maturity_rating, self::$maturity_ratings ) ) {
+				$maturity_rating = '';
+			}
+		}
+		if ( ! empty( $maturity_rating ) ) {
+			update_post_meta( $post_id, 'apple_news_maturity_rating', $maturity_rating );
+		}
+
 		if ( ! empty( $_POST['apple_news_pullquote'] ) ) {
 			$pullquote = sanitize_text_field( $_POST['apple_news_pullquote'] );
 		} else {
@@ -186,6 +196,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		$deleted = get_post_meta( $post->ID, 'apple_news_api_deleted', true );
 		$pending = get_post_meta( $post->ID, 'apple_news_api_pending', true );
 		$is_preview = get_post_meta( $post->ID, 'apple_news_is_preview', true );
+		$maturity_rating = get_post_meta( $post->ID, 'apple_news_maturity_rating', true );
 		$is_sponsored = get_post_meta( $post->ID, 'apple_news_is_sponsored', true );
 		$pullquote = get_post_meta( $post->ID, 'apple_news_pullquote', true );
 		$pullquote_position = get_post_meta( $post->ID, 'apple_news_pullquote_position', true );
@@ -222,6 +233,14 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		<h3><?php esc_html_e( 'Sponsored?', 'apple-news' ) ?></h3>
 		<input id="apple-news-is-sponsored" name="apple_news_is_sponsored" type="checkbox" value="1" <?php checked( $is_sponsored ) ?>>
 		<p class="description"><?php esc_html_e( 'Check this to indicate this article is sponsored content.' , 'apple-news' ) ?></p>
+		<h3><?php esc_html_e( 'Maturity Rating', 'apple-news' ) ?></h3>
+		<select id="apple-news-maturity-rating" name="apple_news_maturity_rating">
+			<option value=""></option>
+			<?php foreach ( self::$maturity_ratings as $rating ) : ?>
+				<option value="<?php echo esc_attr( $rating ) ?>" <?php selected( $maturity_rating, $rating ) ?>><?php echo esc_html( ucwords( strtolower( $rating ) ) ) ?></option>
+			<?php endforeach; ?>
+		</select>
+		<p class="description"><?php esc_html_e( 'Select the optional maturity rating for this post.' , 'apple-news' ) ?></p>
 		<h3><?php esc_html_e( 'Pull quote', 'apple-news' ) ?></h3>
 		<textarea name="apple_news_pullquote" placeholder="<?php esc_attr_e( 'A pull quote is a key phrase, quotation, or excerpt that has been pulled from an article and used as a graphic element, serving to entice readers into the article or to highlight a key topic.', 'apple-news' ) ?>" rows="6" class="large-text"><?php echo esc_textarea( $pullquote ) ?></textarea>
 		<p class="description"><?php esc_html_e( 'This is optional and can be left blank.', 'apple-news' ) ?></p>
