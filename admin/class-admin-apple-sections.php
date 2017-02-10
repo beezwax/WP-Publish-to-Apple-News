@@ -362,33 +362,38 @@ class Admin_Apple_Sections extends Apple_News {
 		}
 
 		// Loop through sections and look for mappings in POST data.
-		$mappings = array();
+		$taxonomy_mappings = $theme_mappings = array();
 		$taxonomy = self::get_mapping_taxonomy();
 		$section_ids = wp_list_pluck( $sections_raw, 'id' );
 		foreach ( $section_ids as $section_id ) {
 
-			// Determine if there is data for this section.
-			$key = 'taxonomy-mapping-' . $section_id;
-			if ( empty( $_POST[ $key ] ) || ! is_array( $_POST[ $key ] ) ) {
-				continue;
+			// Determine if there is taxonomy data for this section.
+			$taxonomy_key = 'taxonomy-mapping-' . $section_id;
+			if ( ! empty( $_POST[ $taxonomy_key ] ) && is_array( $_POST[ $taxonomy_key ] ) ) {
+				// Loop over terms and convert to term IDs for save.
+				$values = array_map( 'sanitize_text_field', $_POST[ $taxonomy_key ] );
+				foreach ( $values as $value ) {
+					if ( function_exists( 'wpcom_vip_get_term_by' ) ) {
+						$term = wpcom_vip_get_term_by( 'name', $value, $taxonomy->name );
+					} else {
+						$term = get_term_by( 'name', $value, $taxonomy->name );
+					}
+					if ( ! empty( $term ) && ! is_wp_error( $term ) ) {
+						$taxonomy_mappings[ $section_id ][] = $term->term_id;
+						$taxonomy_mappings[ $section_id ] = array_unique( $taxonomy_mappings[ $section_id ] );
+					}
+				}
 			}
 
-			// Loop over terms and convert to term IDs for save.
-			$values = array_map( 'sanitize_text_field', $_POST[ $key ] );
-			foreach ( $values as $value ) {
-				if ( function_exists( 'wpcom_vip_get_term_by' ) ) {
-					$term = wpcom_vip_get_term_by( 'name', $value, $taxonomy->name );
-				} else {
-					$term = get_term_by( 'name', $value, $taxonomy->name );
-				}
-				if ( ! empty( $term ) && ! is_wp_error( $term ) ) {
-					$mappings[ $section_id ][] = $term->term_id;
-					$mappings[ $section_id ] = array_unique( $mappings[ $section_id ] );
-				}
+			// Determine if there is theme data for this section
+			$theme_key = 'theme-mapping-' . $section_id;
+			if ( ! empty( $_POST[ $theme_key ] ) ) {
+				$theme_mappings[ $section_id ] = sanitize_text_field( $_POST[ $theme_key ] );
 			}
 		}
 
 		// Save the new mappings.
-		update_option( self::TAXONOMY_MAPPING_KEY, $mappings, false );
+		update_option( self::TAXONOMY_MAPPING_KEY, $taxonomy_mappings, false );
+		update_option( self::THEME_MAPPING_KEY, $theme_mappings, false );
 	}
 }

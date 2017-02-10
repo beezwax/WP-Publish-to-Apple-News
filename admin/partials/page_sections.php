@@ -48,12 +48,20 @@
 						<button type="button" class="apple-news-add-section-taxonomy-mapping" data-section-id="<?php echo esc_attr( $section_id ); ?>"><?php esc_html_e( 'Add', 'apple-news' ); ?> <?php echo esc_html( $taxonomy->labels->singular_name ); ?></button>
 					</td>
 					<td>
-						<?php $theme_id = 'apple-news-theme-mapping-' . ++ $count; ?>
+						<?php
+							$theme_id = 'apple-news-theme-mapping-' . ++ $count;
+							$selected_theme = ( isset( $theme_mappings[ $section_id ] ) ) ? $theme_mappings[ $section_id ] : '';
+						?>
 						<select name="theme-mapping-<?php echo esc_attr( $section_id ); ?>" id="<?php echo esc_attr( $theme_id ); ?>">
 							<option value=""></option>
-							<?php foreach ( $themes as $theme ) : ?>
-								<option value="<?php echo esc_attr( $theme_obj->theme_key_from_name( $theme ) ) ?>"><?php echo esc_html( $theme ) ?></option>
-							<?php endforeach; ?>
+							<?php
+								foreach ( $themes as $theme ) :
+									$theme_key = $theme_obj->theme_key_from_name( $theme );
+									?>
+									<option value="<?php echo esc_attr( $theme_key ) ?>" <?php selected( $theme_key, $selected_theme ) ?>><?php echo esc_html( $theme ) ?></option>
+									<?php
+								endforeach;
+							?>
 						</select>
 					</td>
 				</tr>
