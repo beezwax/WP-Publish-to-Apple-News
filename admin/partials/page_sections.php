@@ -7,7 +7,7 @@
 		) ); ?>
 	</p>
 	<p><?php echo esc_html( sprintf(
-			__( 'You can also assign a theme to automatically be assigned to a given section if you want to use something other than the currently active theme.', 'apple-news' ),
+			__( 'You can also assign a theme to automatically be assigned to a given section if you want to use something other than the currently active theme. Note this will only work for posts that published to precisely one section to avoid conflicts.', 'apple-news' ),
 			strtolower( $taxonomy->label )
 		) ); ?>
 	</p>
