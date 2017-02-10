@@ -163,8 +163,8 @@ class Admin_Apple_Sections extends Apple_News {
 		}
 
 		$theme = $theme_mappings[ $section_id ];
-		$theme_obj = new Apple_News_Themes();
-		return $theme_obj->get_formatting_settings( $theme_mappings[ $section_id ] );
+		$theme_obj = new Admin_Apple_Themes();
+		return $theme_obj->get_theme( $theme_mappings[ $section_id ] );
 	}
 
 	/**

@@ -188,7 +188,7 @@ class Export extends Action {
 		}
 
 		// Check if there is a custom theme mapping
-		$theme_settings = Admin_Apple_Sections::get_theme_for_section( $sections[0] );
+		$theme_settings = Admin_Apple_Sections::get_theme_for_section( basename( $sections[0] ) );
 		if ( empty( $theme_settings ) || ! is_array( $theme_settings ) ) {
 			return $settings;
 		}

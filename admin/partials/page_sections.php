@@ -56,9 +56,8 @@
 							<option value=""></option>
 							<?php
 								foreach ( $themes as $theme ) :
-									$theme_key = $theme_obj->theme_key_from_name( $theme );
 									?>
-									<option value="<?php echo esc_attr( $theme_key ) ?>" <?php selected( $theme_key, $selected_theme ) ?>><?php echo esc_html( $theme ) ?></option>
+									<option value="<?php echo esc_attr( $theme ) ?>" <?php selected( $theme, $selected_theme ) ?>><?php echo esc_html( $theme ) ?></option>
 									<?php
 								endforeach;
 							?>

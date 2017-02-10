@@ -148,6 +148,7 @@ class Push extends API_Action {
 		// Get sections
 		$this->sections = Admin_Apple_Sections::get_sections_for_post( $this->id );
 
+		// Generate the JSON for the article
 		list( $json, $bundles, $errors ) = $this->generate_article();
 
 		// Process errors
