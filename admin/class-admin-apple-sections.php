@@ -149,6 +149,25 @@ class Admin_Apple_Sections extends Apple_News {
 	}
 
 	/**
+	 * Given a section ID, check for a custom theme mapping.
+	 *
+	 * @param string $section_id The Apple News section ID
+	 *
+	 * @access public
+	 * @return array The theme settings, if set
+	 */
+	public static function get_theme_for_section( $section_id ) {
+		$theme_mappings = get_option( self::THEME_MAPPING_KEY );
+		if ( ! isset( $theme_mappings[ $section_id ] ) ) {
+			return null;
+		}
+
+		$theme = $theme_mappings[ $section_id ];
+		$theme_obj = new Apple_News_Themes();
+		return $theme_obj->get_formatting_settings( $theme_mappings[ $section_id ] );
+	}
+
+	/**
 	 * Constructor.
 	 */
 	function __construct() {

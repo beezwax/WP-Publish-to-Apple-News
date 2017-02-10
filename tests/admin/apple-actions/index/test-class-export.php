@@ -91,5 +91,7 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 		$this->assertEquals( 'by #Testuser | Aug 26, 2016 | 12:00 PM', $exporter_content->byline() );
 	}
 
+	// TODO: add tests for mappings
+
 }
 

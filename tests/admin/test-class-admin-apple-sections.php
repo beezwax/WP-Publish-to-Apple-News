@@ -185,4 +185,6 @@ class Admin_Apple_Sections_Test extends WP_UnitTestCase {
 			get_option( Admin_Apple_Sections::TAXONOMY_MAPPING_KEY )
 		);
 	}
+
+	// TODO: add tests for theme mappings
 }
