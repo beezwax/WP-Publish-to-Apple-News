@@ -67,7 +67,7 @@ class Admin_Apple_Sections_Test extends WP_UnitTestCase {
 
 		// Set up post data for creating taxonomy mappings.
 		$_POST = array(
-			'action' => 'apple_news_set_section_taxonomy_mappings',
+			'action' => 'apple_news_set_section_mappings',
 			'page' => 'apple_news_sections',
 			'taxonomy-mapping-abcdef01-2345-6789-abcd-ef012356789a' => array(
 				'Category 1',

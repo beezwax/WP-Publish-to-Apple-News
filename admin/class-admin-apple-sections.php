@@ -24,6 +24,11 @@ class Admin_Apple_Sections extends Apple_News {
 	const TAXONOMY_MAPPING_KEY = 'apple_news_section_taxonomy_mappings';
 
 	/**
+	 * The option name for section/theme mappings.
+	 */
+	const THEME_MAPPING_KEY = 'apple_news_section_theme_mappings';
+
+	/**
 	 * Section management page name.
 	 *
 	 * @var string
@@ -155,7 +160,7 @@ class Admin_Apple_Sections extends Apple_News {
 
 		// Set up admin action callbacks for form submissions.
 		$this->valid_actions = array(
-			'apple_news_set_section_taxonomy_mappings' => array( $this, 'set_section_taxonomy_mappings' ),
+			'apple_news_set_section_mappings' => array( $this, 'set_section_mappings' ),
 		);
 
 		// Set up action hooks.
@@ -281,18 +286,22 @@ class Admin_Apple_Sections extends Apple_News {
 		}
 
 		// Get mappings from settings.
-		$mappings = array();
-		$settings = get_option( self::TAXONOMY_MAPPING_KEY );
-		if ( ! empty( $settings ) && is_array( $settings ) ) {
-			foreach ( $settings as $section_id => $term_ids ) {
+		$taxonomy_mappings = array();
+		$taxonomy_settings = get_option( self::TAXONOMY_MAPPING_KEY );
+		if ( ! empty( $taxonomy_settings ) && is_array( $taxonomy_settings ) ) {
+			foreach ( $taxonomy_settings as $section_id => $term_ids ) {
 				foreach ( $term_ids as $term_id ) {
 					$term = get_term( $term_id, $taxonomy->name );
 					if ( ! empty( $term->name ) ) {
-						$mappings[ $section_id ][] = $term->name;
+						$taxonomy_mappings[ $section_id ][] = $term->name;
 					}
 				}
 			}
 		}
+
+		$theme_mappings = get_option( self::THEME_MAPPING_KEY );
+		$theme_obj = new Admin_Apple_Themes();
+		$themes = $theme_obj->list_themes();
 
 		// Load the partial with the form.
 		include plugin_dir_path( __FILE__ ) . 'partials/page_sections.php';
@@ -337,7 +346,7 @@ class Admin_Apple_Sections extends Apple_News {
 	 *
 	 * @access private
 	 */
-	private function set_section_taxonomy_mappings() {
+	private function set_section_mappings() {
 
 		// Ensure we got POST data.
 		if ( empty( $_POST ) || ! is_array( $_POST ) ) {
