@@ -308,7 +308,12 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @access public
 	 */
 	public function export_action( $id ) {
-		$export = new Apple_Actions\Index\Export( $this->settings, $id );
+		$export = new Apple_Actions\Index\Export(
+			$this->settings,
+			$id,
+			\Admin_Apple_Sections::get_sections_for_post( $id )
+		);
+
 		try {
 			$json = $export->perform();
 			$this->download_json( $json, $id );
