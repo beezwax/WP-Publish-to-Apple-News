@@ -38,6 +38,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * Constructor.
 	 */
 	function __construct( $settings ) {
+		parent::__construct();
 		$this->settings = $settings;
 
 		// Handle routing to various admin pages
