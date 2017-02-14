@@ -8,7 +8,7 @@ $orientations = array(
 <p class="description">
 	<?php printf(
 		wp_kses(
-			__( 'You can set one or more <a href="%s">cover art</a> images below.', 'apple-news' ),
+			__( 'You can set one or more <a href="%s">cover art</a> images below. Only one image is required in order to enable cover art functionality. The image you provide will be cropped and/or resized to the minimum dimensions listed, and smaller versions will be created by Apple News as necessary.', 'apple-news' ),
 			array( 'a' => array( 'href' => array() ) )
 		),
 		'https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/CoverArt.html'
@@ -21,8 +21,8 @@ $orientations = array(
         <p class="description">
 			<?php printf(
 				esc_html__( 'Minimum dimensions: %1$dx%2$d', 'apple-news' ),
-				absint( Admin_Apple_News::$image_sizes[ 'apple_news_ca_' . $key . '_ipad_pro' ]['width'] ),
-				absint( Admin_Apple_News::$image_sizes[ 'apple_news_ca_' . $key . '_ipad_pro' ]['height'] )
+				absint( Admin_Apple_News::$image_sizes[ 'apple_news_ca_' . $key ]['width'] ),
+				absint( Admin_Apple_News::$image_sizes[ 'apple_news_ca_' . $key ]['height'] )
 			); ?>
         </p>
         <div class="apple-news-coverart-image">
