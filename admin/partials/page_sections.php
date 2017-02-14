@@ -6,10 +6,10 @@
 			strtolower( $taxonomy->label )
 		) ); ?>
 	</p>
-	<p><?php echo esc_html( sprintf(
-			__( 'You can also assign a theme to automatically be assigned to a given section if you want to use something other than the currently active theme. Note this will only work for posts that published to precisely one section to avoid conflicts.', 'apple-news' ),
-			strtolower( $taxonomy->label )
-		) ); ?>
+	<p><?php echo sprintf(
+			__( 'You can also map a theme to automatically be used for posts with a specific Apple News section, if you want to use something other than the <a href="%s">active theme</a>. This will only work for posts with precisely one Apple News section to avoid conflicts.', 'apple-news' ),
+			esc_url( $theme_admin_url )
+		); ?>
 	</p>
 	<form method="post" action="" id="apple-news-section-form" enctype="multipart/form-data">
 		<?php wp_nonce_field( 'apple_news_sections' ); ?>
