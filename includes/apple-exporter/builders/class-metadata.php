@@ -67,6 +67,22 @@ class Metadata extends Builder {
 		$this->_add_cover_art( $meta, 'apple_news_coverart_portrait' );
 		$this->_add_cover_art( $meta, 'apple_news_coverart_square' );
 
+		// Extract all video elements that include a poster element.
+		if ( preg_match_all( '/<video[^>]+poster="([^"]+)".*?>(.+?)<\/video>/s', $this->content_text(), $matches ) ) {
+
+			// Loop through matched video elements looking for MP4 files.
+			for ( $i = 0; $i < count( $matches[2] ); $i ++ ) {
+
+				// Try to match an MP4 source URL.
+				if ( preg_match( '/src="([^\?"]+\.mp4)/', $matches[2][ $i ], $src ) ) {
+					$meta['thumbnailURL'] = $matches[1][ $i ];
+					$meta['videoURL'] = $src[1];
+
+					break;
+				}
+			}
+		}
+
 		return apply_filters( 'apple_news_metadata', $meta, $this->content_id() );
 	}
 
