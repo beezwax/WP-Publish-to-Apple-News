@@ -4,7 +4,7 @@ Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 4.7
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -44,6 +44,14 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 1.2.3 =
+* Allowed mapping themes to Apple News sections
+* Added support for videos in feed
+* Added support for maturity rating
+* Added support for cover art
+* Added support for the Facebook component
+* Added support for captions in galleries
 
 = 1.2.2 =
 * Created Apple News themes and moved all formatting settings to themes
