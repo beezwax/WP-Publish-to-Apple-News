@@ -52,6 +52,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Added support for cover art
 * Added support for the Facebook component
 * Added support for captions in galleries
+* Bugfix for invalid JSON errors caused by non-breaking spaces and other Unicode separators
 
 = 1.2.2 =
 * Created Apple News themes and moved all formatting settings to themes
