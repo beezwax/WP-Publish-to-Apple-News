@@ -133,6 +133,15 @@ abstract class Component {
 	private $uid;
 
 	/**
+	 * Specs for this component.
+	 *
+	 * @since 1.2.4
+	 * @var array
+	 * @access private
+	 */
+	private $specs;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $text
@@ -224,6 +233,7 @@ abstract class Component {
 	 * @access public
 	 */
 	public function set_json( $name, $value ) {
+		// TODO - how is this used?
 		$this->json[ $name ] = $value;
 	}
 
@@ -235,6 +245,7 @@ abstract class Component {
 	 * @access public
 	 */
 	public function get_json( $name ) {
+		// TODO - how is this used?
 		return ( isset( $this->json[ $name ] ) ) ? $this->json[ $name ] : null;
 	}
 
@@ -354,6 +365,7 @@ abstract class Component {
 	 * @access protected
 	 */
 	protected function get_setting( $name ) {
+		// TODO - how is this used?
 		return $this->settings->get( $name );
 	}
 
@@ -379,7 +391,61 @@ abstract class Component {
 	 * @access protected
 	 */
 	protected function set_setting( $name, $value ) {
+		// TODO - how is this used?
 		return $this->settings->set( $name, $value );
+	}
+
+	/**
+	 * Store specs that can be used for managing component JSON using an admin screen.
+	 *
+	 * @since 1.2.4
+	 * @param string $type
+	 * @param array $spec
+	 * @param string $name
+	 * @access protected
+	 */
+	protected function set_spec( $type, $spec, $name = null ) {
+		// If the name is set, store as an array beneath the type.
+		// Otherwise, simply store for that type.
+		if ( ! empty( $name ) ) {
+			if ( empty( $this->specs[ $type ] ) ) {
+				$this->specs[ $type ] = array();
+			}
+
+			$this->specs[ $type ][ $name ] = $spec;
+		} else {
+			$this->specs[ $type ] = $spec;
+		}
+	}
+
+	/**
+	 * Using the provided spec and array of values,
+	 * build the component's JSON.
+	 *
+	 * @since 1.2.4
+	 * @param array $spec
+	 * @param array $values
+	 * @access protected
+	 */
+	protected function substitute_values( $spec, $values ) {
+		// TODO - implement
+	}
+
+	// TODO - need a function for pulling in spec overrides from the database?
+	// TODO - how will validation work for overrides on save?
+	// http://stackoverflow.com/questions/6054033/pretty-printing-json-with-php
+
+	/**
+	 * Set the JSON for the component.
+	 *
+	 * @since 1.2.4
+	 * @param array $spec
+	 * @param array $values
+	 * @access protected
+	 */
+	protected function register_json( $spec, $values ) {
+		$this->set_spec( 'json', $spec );
+		$this->json = $this->substitute_values( $spec, $values );
 	}
 
 	/**
@@ -388,10 +454,13 @@ abstract class Component {
 	 * @since 0.4.0
 	 * @param string $name
 	 * @param array $spec
+	 * @param array $values
 	 * @access protected
 	 */
-	protected function register_style( $name, $spec ) {
-		$this->styles->register_style( $name, $spec );
+	protected function register_style( $name, $spec, $values ) {
+		$this->set_spec( 'style', $spec, $name );
+		$json = $this->substitute_values( $spec, $values );
+		$this->styles->register_style( $name, $json );
 	}
 
 	/**
@@ -400,10 +469,13 @@ abstract class Component {
 	 * @since 0.4.0
 	 * @param string $name
 	 * @param array $spec
+	 * @param array $values
 	 * @access protected
 	 */
-	protected function register_layout( $name, $spec ) {
-		$this->layouts->register_layout( $name, $spec );
+	protected function register_layout( $name, $spec, $values ) {
+		$this->set_spec( 'layout', $spec, $name );
+		$json = $this->substitute_values( $spec, $values );
+		$this->layouts->register_layout( $name, $json );
 	}
 
 	/**
@@ -416,7 +488,9 @@ abstract class Component {
 	 * @param array $spec
 	 * @access protected
 	 */
-	protected function register_full_width_layout( $name, $spec ) {
+	protected function register_full_width_layout( $name, $spec, $values ) {
+		// TODO - figure out how to refactor the below logic for the new spec/value dynamic
+
 		// Initial colStart and colSpan
 		$col_start = 0;
 		$col_span  = $this->get_setting( 'layout_columns' );

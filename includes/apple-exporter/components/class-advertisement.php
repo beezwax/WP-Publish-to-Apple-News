@@ -16,10 +16,13 @@ class Advertisement extends Component {
 	 * @access protected
 	 */
 	protected function build( $text ) {
-		$this->json = array(
-			'role'       => 'banner_advertisement',
-			'bannerType' => 'standard',
-		);
+		$this->register_json(
+			array(
+				'role'       => 'banner_advertisement',
+				'bannerType' => 'standard',
+			),
+			array()
+	 );
 
 		$this->set_layout();
 	}
