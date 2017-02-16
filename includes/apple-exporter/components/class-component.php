@@ -429,6 +429,7 @@ abstract class Component {
 	 */
 	protected function substitute_values( $spec, $values ) {
 		// TODO - implement
+		// http://php.net/manual/en/class.recursivearrayiterator.php
 	}
 
 	// TODO - need a function for pulling in spec overrides from the database?
