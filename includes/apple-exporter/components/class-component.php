@@ -233,8 +233,9 @@ abstract class Component {
 	 * @access public
 	 */
 	public function set_json( $name, $value ) {
-		// TODO - how is this used?
-		$this->json[ $name ] = $value;
+		if ( ! empty( $name ) ) {
+			$this->json[ $name ] = $value;
+		}
 	}
 
 	/**
@@ -436,6 +437,8 @@ abstract class Component {
 	// TODO - how will validation work for overrides on save?
 	// http://stackoverflow.com/questions/6054033/pretty-printing-json-with-php
 
+	// TODO should remove items from spec that don't have values set
+
 	/**
 	 * Set the JSON for the component.
 	 *
@@ -456,12 +459,14 @@ abstract class Component {
 	 * @param string $name
 	 * @param array $spec
 	 * @param array $values
+	 * @param array $property
 	 * @access protected
 	 */
-	protected function register_style( $name, $spec, $values ) {
+	protected function register_style( $name, $spec, $values, $property = null ) {
 		$this->set_spec( 'style', $spec, $name );
 		$json = $this->substitute_values( $spec, $values );
 		$this->styles->register_style( $name, $json );
+		$this->set_json( $property, $name );
 	}
 
 	/**
@@ -471,12 +476,14 @@ abstract class Component {
 	 * @param string $name
 	 * @param array $spec
 	 * @param array $values
+	 * @param string $property
 	 * @access protected
 	 */
-	protected function register_layout( $name, $spec, $values ) {
+	protected function register_layout( $name, $spec, $values, $property = null ) {
 		$this->set_spec( 'layout', $spec, $name );
 		$json = $this->substitute_values( $spec, $values );
 		$this->layouts->register_layout( $name, $json );
+		$this->set_json( $property, $name );
 	}
 
 	/**
@@ -487,9 +494,11 @@ abstract class Component {
 	 *
 	 * @param string $name
 	 * @param array $spec
+	 * @param array $values
+	 * @param string $property
 	 * @access protected
 	 */
-	protected function register_full_width_layout( $name, $spec, $values ) {
+	protected function register_full_width_layout( $name, $spec, $values, $property = null ) {
 		// TODO - figure out how to refactor the below logic for the new spec/value dynamic
 
 		// Initial colStart and colSpan
@@ -508,7 +517,8 @@ abstract class Component {
 				'columnStart' => $col_start,
 				'columnSpan'  => $col_span,
 			),
-			$spec
+			$spec,
+			$property
 		) );
 	}
 

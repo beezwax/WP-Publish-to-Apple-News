@@ -58,9 +58,23 @@ class Video extends Component {
 			'URL' => $matches[1],
 		);
 
+		// Set values
+		$values = array(
+			'URL' => $matches[1],
+		);
+
 		// Add poster frame, if defined.
 		if ( preg_match( '/poster="([^"]+)"/', $html, $poster ) ) {
-			$this->json['stillURL'] = $this->maybe_bundle_source( $poster[1] );
+			$values['stillURL'] = $this->maybe_bundle_source( $poster[1] );
 		}
+
+		$this->register_json(
+			array(
+				'role' => 'video',
+				'URL' => '%%URL%%',
+				'stillURL' => '%%stillURL%%',
+			),
+			$values
+	 );
 	}
 }

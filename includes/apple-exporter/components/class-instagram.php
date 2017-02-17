@@ -41,11 +41,16 @@ class Instagram extends Component {
 
 		$url = $matches[0];
 
-		$this->json = array(
-			'role' => 'instagram',
-			// Remove `www.` from URL as AN parser doesn't allow for it.
-			'URL'  => str_replace( 'www.', '', $url ),
-		);
+		$this->register_json(
+			array(
+				'role' => 'instagram',
+				'URL'  => '%%URL%%',
+			),
+			array(
+				// Remove `www.` from URL as AN parser doesn't allow for it.
+				'URL'  => str_replace( 'www.', '', $url ),
+			)
+	 );
 	}
 
 }

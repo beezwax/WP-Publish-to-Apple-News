@@ -15,6 +15,16 @@ class Title extends Component {
 			'text' => $text,
 		);
 
+		$this->register_json(
+			array(
+				'role' => 'title',
+				'text' => '%%text%%',
+			),
+			array(
+				'text' => $text,
+			)
+	 );
+
 		$this->set_style();
 		$this->set_layout();
 	}
@@ -25,15 +35,26 @@ class Title extends Component {
 	 * @access private
 	 */
 	private function set_style() {
-		$this->json[ 'textStyle' ] = 'default-title';
-		$this->register_style( 'default-title', array(
-			'fontName' => $this->get_setting( 'header1_font' ),
-			'fontSize' => intval( $this->get_setting( 'header1_size' ) ),
-			'lineHeight' => intval( $this->get_setting( 'header1_line_height' ) ),
-			'tracking' => intval( $this->get_setting( 'header1_tracking' ) ) / 100,
-			'textColor' => $this->get_setting( 'header1_color' ),
-			'textAlignment' => $this->find_text_alignment(),
-		) );
+		$this->register_style(
+			'default-title',
+			array(
+				'fontName' => '%%header1_font%%',
+				'fontSize' => '%%header1_size%%',
+				'lineHeight' => '%%header1_line_height%%',
+				'tracking' => '%%header1_tracking%%',
+				'textColor' => '%%header1_color%%',
+				'textAlignment' => '%%text_alignment%%',
+			),
+			array(
+				'fontName' => $this->get_setting( 'header1_font' ),
+				'fontSize' => intval( $this->get_setting( 'header1_size' ) ),
+				'lineHeight' => intval( $this->get_setting( 'header1_line_height' ) ),
+				'tracking' => intval( $this->get_setting( 'header1_tracking' ) ) / 100,
+				'textColor' => $this->get_setting( 'header1_color' ),
+				'textAlignment' => $this->find_text_alignment(),
+			),
+			'textStyle'
+		 );
 	}
 
 	/**
@@ -42,13 +63,17 @@ class Title extends Component {
 	 * @access private
 	 */
 	private function set_layout() {
-		$this->json[ 'layout' ] = 'title-layout';
-		$this->register_layout( 'title-layout', array(
-      'margin' => array(
-        'top' => 30,
-        'bottom' => 0,
-      ),
-		) );
+		$this->register_layout(
+			'title-layout',
+			array(
+				'margin' => array(
+					'top' => 30,
+					'bottom' => 0,
+				),
+			),
+			array(),
+			'layout'
+		);
 	}
 
 }

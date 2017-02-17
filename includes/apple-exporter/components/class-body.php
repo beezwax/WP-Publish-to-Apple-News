@@ -104,11 +104,17 @@ class Body extends Component {
 	 * @access protected
 	 */
 	protected function build( $text ) {
-		$this->json = array(
-			'role'   => 'body',
-			'text'   => $this->parser->parse( $text ),
-			'format' => $this->parser->format,
-		);
+		$this->register_json(
+			array(
+				'role'   => 'body',
+				'text'   => '%%text%%',
+				'format' => '%%format%%',
+			),
+			array(
+				'text'   => $this->parser->parse( $text ),
+				'format' => $this->parser->format,
+			)
+	 	);
 
 		if ( 'yes' == $this->get_setting( 'initial_dropcap' ) ) {
 			// Toggle setting. This should only happen in the initial paragraph.
@@ -137,36 +143,71 @@ class Body extends Component {
 	 * @access private
 	 */
 	private function set_default_layout() {
-		$this->json[ 'layout' ] = 'body-layout';
-		$this->register_layout( 'body-layout', array(
-			'columnStart' => $this->get_setting( 'body_offset' ),
-			'columnSpan'  => $this->get_setting( 'body_column_span' ),
-			'margin'      => array(
-				'top' => 12,
-				'bottom' => 12
+		$this->register_layout(
+			'body-layout',
+			array(
+				'columnStart' => '%%body_offset%%',
+				'columnSpan'  => '%%body_column_span%%',
+				'margin'      => array(
+					'top' => 12,
+					'bottom' => 12
+				),
 			),
-		) );
+			array(
+				'columnStart' => $this->get_setting( 'body_offset' ),
+				'columnSpan'  => $this->get_setting( 'body_column_span' ),
+			),
+			'layout'
+		);
 
 		// Also pre-register the layout that will be used later for the last body component
-		$this->register_layout( 'body-layout-last', array(
-			'columnStart' => $this->get_setting( 'body_offset' ),
-			'columnSpan'  => $this->get_setting( 'body_column_span' ),
-			'margin'      => array(
-				'top' => 12,
-				'bottom' => 30
+		$this->register_layout(
+			'body-layout-last',
+			array(
+				'columnStart' => '%%body_offset%%',
+				'columnSpan'  => '%%body_column_span%%',
+				'margin'      => array(
+					'top' => 12,
+					'bottom' => 30
+				),
 			),
-		) );
+			array(
+				'columnStart' => $this->get_setting( 'body_offset' ),
+				'columnSpan'  => $this->get_setting( 'body_column_span' ),
+			)
+		);
 	}
 
 	/**
-	 * Get the default style for the component.
+	 * Get the default style spec for the component.
 	 *
 	 * @return array
 	 * @access private
 	 */
-	private function get_default_style() {
+	private function get_default_style_spec() {
 		return array(
 			'textAlignment' => 'left',
+			'fontName' => '%%body_font%%',
+			'fontSize' => '%%body_size%%',
+			'tracking' => '%%body_tracking%%',
+			'lineHeight' => '%%body_line_height%%',
+			'textColor' => '%%body_color%%',
+			'linkStyle' => array(
+				'textColor' => '%%body_link_color%%',
+			),
+			'paragraphSpacingBefore' => 18,
+			'paragraphSpacingAfter' => 18,
+		);
+	}
+
+	/**
+	 * Get the default style values for the component.
+	 *
+	 * @return array
+	 * @access private
+	 */
+	private function get_default_style_values() {
+		return array(
 			'fontName' => $this->get_setting( 'body_font' ),
 			'fontSize' => intval( $this->get_setting( 'body_size' ) ),
 			'tracking' => intval( $this->get_setting( 'body_tracking' ) ) / 100,
@@ -175,8 +216,6 @@ class Body extends Component {
 			'linkStyle' => array(
 				'textColor' => $this->get_setting( 'body_link_color' )
 			),
-			'paragraphSpacingBefore' => 18,
-			'paragraphSpacingAfter' => 18,
 		);
 	}
 
@@ -186,8 +225,12 @@ class Body extends Component {
 	 * @access public
 	 */
 	public function set_default_style() {
-		$this->json[ 'textStyle' ] = 'default-body';
-		$this->register_style( 'default-body', $this->get_default_style() );
+		$this->register_style(
+			'default-body',
+			$this->get_default_style_spec(),
+			$this->get_default_style_values(),
+			'textStyle'
+		 );
 	}
 
 	/**
@@ -196,19 +239,31 @@ class Body extends Component {
 	 * @access private
 	 */
 	private function set_initial_dropcap_style() {
-		$this->json[ 'textStyle' ] = 'dropcapBodyStyle';
-		$this->register_style( 'dropcapBodyStyle', array_merge(
-			$this->get_default_style(),
-		 	array(
-				'dropCapStyle' => array (
-					'numberOfLines' 		=> 4,
-					'numberOfCharacters' 	=> 1,
-					'padding' 				=> 5,
-					'fontName' 				=> $this->get_setting( 'dropcap_font' ),
-					'textColor'				=> $this->get_setting( 'dropcap_color' ),
-				),
-			)
-	 	) );
+		$this->register_style(
+			'dropcapBodyStyle',
+			array_merge(
+				$this->get_default_style_spec(),
+				array(
+					'dropCapStyle' => array (
+						'numberOfLines' 			=> 4,
+						'numberOfCharacters' 	=> 1,
+						'padding' 						=> 5,
+						'fontName' 						=> '%%dropcap_font%%',
+						'textColor'						=> '%%dropcap_color%%',
+					),
+				)
+			),
+			array_merge(
+				$this->get_default_style_values(),
+				array(
+					'dropCapStyle' => array (
+						'fontName' 				=> $this->get_setting( 'dropcap_font' ),
+						'textColor'				=> $this->get_setting( 'dropcap_color' ),
+					),
+				)
+			),
+			'textStyle'
+	 	);
 	}
 
 	/**

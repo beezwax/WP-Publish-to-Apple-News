@@ -33,10 +33,17 @@ class Advertisement extends Component {
 	 * @access private
 	 */
 	private function set_layout() {
-		$this->json['layout'] = 'advertisement-layout';
-		$this->register_full_width_layout( 'advertisement-layout', array(
-			'margin' => array( 'top' => 25, 'bottom' => 25 ),
-		) );
+		$this->register_full_width_layout(
+			'advertisement-layout',
+			array(
+				'margin' => array(
+					'top' => 25,
+					'bottom' => 25
+				),
+			)
+			array(),
+			'layout'
+		);
 	}
 
 }

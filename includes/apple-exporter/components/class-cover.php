@@ -22,19 +22,26 @@ class Cover extends Component {
 	 * @access protected
 	 */
 	protected function build( $url ) {
-		$this->json = array(
-			'role' 			=> 'header',
-			'layout' 		=> 'headerPhotoLayout',
-			'components' 	=> array( array(
-				'role' 			=> 'photo',
+		$this->register_json(
+			array(
+				'role' 			=> 'header',
 				'layout' 		=> 'headerPhotoLayout',
-				'URL' 			=> $this->maybe_bundle_source( $url ),
-			) ),
-			'behavior' 		=> array(
-				'type' 			=> 'parallax',
-				'factor' 		=> 0.8,
+				'components' 	=> array( array(
+					'role' 			=> 'photo',
+					'layout' 		=> 'headerPhotoLayout',
+					'URL' 			=> '%%URL%%',
+				) ),
+				'behavior' 		=> array(
+					'type' 			=> 'parallax',
+					'factor' 		=> 0.8,
+				),
 			),
-		);
+			array(
+				'components' 	=> array( array(
+					'URL' 			=> $this->maybe_bundle_source( $url ),
+				) ),
+			)
+	 	);
 
 		$this->set_default_layout();
 	}
@@ -45,21 +52,33 @@ class Cover extends Component {
 	 * @access private
 	 */
 	private function set_default_layout() {
-		$this->register_full_width_layout( 'headerPhotoLayout', array(
-			'ignoreDocumentMargin' => true,
-			'columnStart' => 0,
-			'columnSpan' => $this->get_setting( 'layout_columns' ),
-		) );
-
-		$this->register_full_width_layout( 'headerBelowTextPhotoLayout', array(
-			'ignoreDocumentMargin' => true,
-			'columnStart' => 0,
-			'columnSpan' => $this->get_setting( 'layout_columns' ),
-			'margin' => array(
-				'top' => 30,
-				'bottom' => 0,
+		$this->register_full_width_layout(
+			'headerPhotoLayout',
+			array(
+				'ignoreDocumentMargin' => true,
+				'columnStart' => 0,
+				'columnSpan' => '%%layout_columns%%',
 			),
-		) );
+			array(
+				'columnSpan' => $this->get_setting( 'layout_columns' ),
+			)
+		);
+
+		$this->register_full_width_layout(
+			'headerBelowTextPhotoLayout',
+			array(
+				'ignoreDocumentMargin' => true,
+				'columnStart' => 0,
+				'columnSpan' => '%%layout_columns%%',
+				'margin' => array(
+					'top' => 30,
+					'bottom' => 0,
+				),
+			),
+			array(
+				'columnSpan' => $this->get_setting( 'layout_columns' ),
+			)
+		);
 	}
 
 }

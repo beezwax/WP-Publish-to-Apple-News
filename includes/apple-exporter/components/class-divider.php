@@ -31,15 +31,28 @@ class Divider extends Component {
 	 * @access protected
 	 */
 	protected function build( $text ) {
-		$this->json = array(
-			'role'   => 'divider',
-			'layout' => 'divider-layout',
-			'stroke' => array( 'color' => '#E6E6E6', 'width' => 1 ),
+		$this->register_json(
+			array(
+				'role'   => 'divider',
+				'layout' => 'divider-layout',
+				'stroke' => array(
+					'color' => '#E6E6E6',
+					'width' => 1
+				),
+			),
+			array()
 		);
 
-		$this->register_full_width_layout( 'divider-layout', array(
-			'margin' => array( 'top' => 25, 'bottom' => 25 )
-		) );
+		$this->register_full_width_layout(
+			'divider-layout',
+			array(
+				'margin' => array(
+					'top' => 25,
+					'bottom' => 25
+				)
+			),
+			array()
+		);
 	}
 
 }

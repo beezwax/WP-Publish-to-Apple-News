@@ -16,10 +16,15 @@ class Intro extends Component {
 	 * @access protected
 	 */
 	protected function build( $text ) {
-		$this->json = array(
-			'role' => 'intro',
-			'text' => $text . "\n",
-		);
+		$this->register_json(
+			array(
+				'role' => 'intro',
+				'text' => '%%text%%',
+			),
+			array(
+				'text' => $text . "\n",
+			)
+	 );
 
 		$this->set_style();
 	}
@@ -31,12 +36,22 @@ class Intro extends Component {
 	 */
 	private function set_style() {
 		$this->json[ 'textStyle' ] = 'default-intro';
-		$this->register_style( 'default-intro', array(
-			'fontName'   => $this->get_setting( 'body_font' ),
-			'fontSize'   => intval( $this->get_setting( 'body_size' ) ),
-			'lineHeight' => intval( $this->get_setting( 'body_line_height' ) ),
-			'textColor'  => $this->get_setting( 'body_color' ),
-		) );
+		$this->register_style(
+			'default-intro',
+			array(
+				'fontName'   => '%%body_font%%',
+				'fontSize'   => '%%body_size%%',
+				'lineHeight' => '%%body_line_height%%',
+				'textColor'  => '%%body_color%%',
+			),
+			array(
+				'fontName'   => $this->get_setting( 'body_font' ),
+				'fontSize'   => intval( $this->get_setting( 'body_size' ) ),
+				'lineHeight' => intval( $this->get_setting( 'body_line_height' ) ),
+				'textColor'  => $this->get_setting( 'body_color' ),
+			),
+			'textStyle'
+		);
 	}
 
 }

@@ -45,10 +45,16 @@ class Tweet extends Component {
 		$matches = array_pop( $matches );
 
 		$url = 'https://twitter.com/' . $matches[1] . '/status/' . $matches[2];
-		$this->json = array(
-			'role' => 'tweet',
-			'URL'  => $url,
-		);
+
+		$this->register_json(
+			array(
+				'role' => 'tweet',
+				'URL'  => '%%URL%%',
+			),
+			array(
+				'URL'  => $url,
+			)
+	 );
 
 		$this->set_layout();
 	}
@@ -59,10 +65,17 @@ class Tweet extends Component {
 	 * @access private
 	 */
 	private function set_layout() {
-		$this->json['layout'] = 'tweet-layout';
-		$this->register_full_width_layout( 'tweet-layout', array(
-			'margin' => array( 'top' => 30, 'bottom' => 30 )
-		) );
+		$this->register_full_width_layout(
+			'tweet-layout',
+			array(
+				'margin' => array(
+					'top' => 30,
+					'bottom' => 30
+				)
+			),
+			array(),
+			'layout'
+		);
 	}
 
 }

@@ -103,6 +103,17 @@ class Gallery extends Component {
 			'items' => $items,
 		);
 
+		$this->register_json(
+			array(
+				'role' 	=> '%%gallery_type%%',
+				'items' => '%%items%%',
+			),
+			array(
+				'role' 	=> $this->get_setting( 'gallery_type' ),
+				'items' => $items,
+			)
+	 );
+
 		// Set the layout.
 		$this->_set_layout();
 	}
@@ -113,7 +124,6 @@ class Gallery extends Component {
 	 * @access private
 	 */
 	private function _set_layout() {
-		$this->json['layout'] = 'gallery-layout';
 		$this->register_full_width_layout(
 			'gallery-layout',
 			array(
@@ -121,7 +131,9 @@ class Gallery extends Component {
 					'bottom' => 25,
 					'top' => 25,
 				),
-			)
+			),
+			array(),
+			'layout'
 		);
 	}
 }
