@@ -4,6 +4,7 @@ namespace Apple_Exporter\Components;
 require_once __DIR__ . '/../class-markdown.php';
 
 use Apple_Exporter\Parser;
+use Apple_Exporter\Component_Spec;
 
 /**
  * Base component class. All components must inherit from this class and
@@ -400,90 +401,83 @@ abstract class Component {
 	 * Store specs that can be used for managing component JSON using an admin screen.
 	 *
 	 * @since 1.2.4
-	 * @param string $type
-	 * @param array $spec
 	 * @param string $name
+	 * @param string $label
+	 * @param array $spec
 	 * @access protected
 	 */
-	protected function set_spec( $type, $spec, $name = null ) {
-		// If the name is set, store as an array beneath the type.
-		// Otherwise, simply store for that type.
-		if ( ! empty( $name ) ) {
-			if ( empty( $this->specs[ $type ] ) ) {
-				$this->specs[ $type ] = array();
-			}
-
-			$this->specs[ $type ][ $name ] = $spec;
-		} else {
-			$this->specs[ $type ] = $spec;
-		}
+	protected function register_spec( $name, $label, $spec ) {
+		// Store as a multidimensional array with the label and spec, indexed by name
+		$this->specs[ $name ] = new Component_Spec( get_class( $this ), $name, $label, $spec );
 	}
 
 	/**
-	 * Using the provided spec and array of values,
-	 * build the component's JSON.
+	 * Get a spec to use for creating component JSON.
 	 *
 	 * @since 1.2.4
-	 * @param array $spec
-	 * @param array $values
+	 * @param string $spec_name
+	 * @return array
 	 * @access protected
 	 */
-	protected function substitute_values( $spec, $values ) {
-		// TODO - implement
-		// http://php.net/manual/en/class.recursivearrayiterator.php
+	protected function get_spec( $spec_name ) {
+		if ( ! isset( $this->specs[ $spec_name ] ) ) {
+			return null;
+		}
+
+		return $this->specs[ $spec_name ];
 	}
-
-	// TODO - need a function for pulling in spec overrides from the database?
-	// TODO - how will validation work for overrides on save?
-	// http://stackoverflow.com/questions/6054033/pretty-printing-json-with-php
-
-	// TODO should remove items from spec that don't have values set
 
 	/**
 	 * Set the JSON for the component.
 	 *
 	 * @since 1.2.4
-	 * @param array $spec
-	 * @param array $values
+	 * @param string $spec_name The spec to use for defining the JSON
+	 * @param array $values Values to substitute for placeholders in the spec
 	 * @access protected
 	 */
-	protected function register_json( $spec, $values ) {
-		$this->set_spec( 'json', $spec );
-		$this->json = $this->substitute_values( $spec, $values );
+	protected function register_json( $spec_name, $values ) {
+		$component_spec = $this->get_spec( $spec_name );
+		if ( ! empty( $component_spec ) ) {
+			$this->json = $component_spec->substitute_values( $values );
+		}
 	}
 
 	/**
 	 * Using the style service, register a new style.
 	 *
 	 * @since 0.4.0
-	 * @param string $name
-	 * @param array $spec
-	 * @param array $values
-	 * @param array $property
+	 * @param string $name The name of the style
+	 * @param string $spec_name The spec to use for defining the JSON
+	 * @param array $values Values to substitute for placeholders in the spec
+	 * @param array $property The JSON property to set with the style
 	 * @access protected
 	 */
-	protected function register_style( $name, $spec, $values, $property = null ) {
-		$this->set_spec( 'style', $spec, $name );
-		$json = $this->substitute_values( $spec, $values );
-		$this->styles->register_style( $name, $json );
-		$this->set_json( $property, $name );
+	protected function register_style( $name, $spec_name, $values, $property = null ) {
+		$component_spec = $this->get_spec( $spec_name );
+		if ( ! empty( $spcomponent_specec ) ) {
+			$json = $component_spec->substitute_values( $values );
+			$this->styles->register_style( $name, $json );
+			$this->set_json( $property, $name );
+		}
 	}
 
 	/**
 	 * Using the layouts service, register a new layout.
 	 *
 	 * @since 0.4.0
-	 * @param string $name
-	 * @param array $spec
-	 * @param array $values
-	 * @param string $property
+	 * @param string $name The name of the layout
+	 * @param string $spec_name The spec to use for defining the JSON
+	 * @param array $values Values to substitute for placeholders in the spec
+	 * @param array $property The JSON property to set with the layout
 	 * @access protected
 	 */
-	protected function register_layout( $name, $spec, $values, $property = null ) {
-		$this->set_spec( 'layout', $spec, $name );
-		$json = $this->substitute_values( $spec, $values );
-		$this->layouts->register_layout( $name, $json );
-		$this->set_json( $property, $name );
+	protected function register_layout( $name, $spec_name, $values, $property = null ) {
+		$component_spec = $this->get_spec( $spec_name );
+		if ( ! empty( $component_spec ) ) {
+			$json = $component_spec->substitute_values( $values );
+			$this->layouts->register_layout( $name, $json );
+			$this->set_json( $property, $name );
+		}
 	}
 
 	/**
@@ -492,34 +486,39 @@ abstract class Component {
 	 * because when the body is centered, the full-width layout spans the same
 	 * columns as the body.
 	 *
-	 * @param string $name
-	 * @param array $spec
-	 * @param array $values
-	 * @param string $property
+	 * @param string $name The name of the layout
+	 * @param string $spec_name The spec to use for defining the JSON
+	 * @param array $values Values to substitute for placeholders in the spec
+	 * @param array $property The JSON property to set with the layout
 	 * @access protected
 	 */
-	protected function register_full_width_layout( $name, $spec, $values, $property = null ) {
-		// TODO - figure out how to refactor the below logic for the new spec/value dynamic
-
+	protected function register_full_width_layout( $name, $spec_name, $values, $property = null ) {
 		// Initial colStart and colSpan
 		$col_start = 0;
 		$col_span  = $this->get_setting( 'layout_columns' );
 
-		// If the body is centered, don't span the full width, but the same with of
-		// the body.
+		// If the body is centered, don't span the full width, but the same width of the body.
 		if ( 'center' == $this->get_setting( 'body_orientation' ) ) {
 			$col_start = floor( ( $this->get_setting( 'layout_columns' ) - $this->get_setting( 'body_column_span' ) ) / 2 );
 			$col_span  = $this->get_setting( 'body_column_span' );
 		}
 
-		$this->register_layout( $name, array_merge(
-			array(
-				'columnStart' => $col_start,
-				'columnSpan'  => $col_span,
-			),
-			$spec,
-			$property
-		) );
+		// Merge this into the existing spec.
+		// These values just get hardcoded in the spec since the above logic
+		// would make them impossible to override manually.
+		// Changes to this should really be handled by the above plugin settings.
+		if ( isset( $this->specs[ $spec_name ] ) ) {
+			$this->specs[ $spec_name ]->spec = array_merge(
+				$this->specs[ $spec_name ]->spec,
+				array(
+					'columnStart' => $col_start,
+					'columnSpan'  => $col_span,
+				),
+			);
+		}
+
+		// Register the layout as normal
+		$this->register_layout( $name, $spec_name, $values, $property );
 	}
 
 	/**

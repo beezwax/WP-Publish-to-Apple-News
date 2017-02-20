@@ -17,11 +17,17 @@ class Byline extends Component {
 	 * @access protected
 	 */
 	protected function build( $text ) {
-		$this->register_json(
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'byline',
 				'text' => '%%text%%',
-			),
+			)
+		);
+
+		$this->register_json(
+			'json',
 			array(
 				'text' => $text,
 			)
@@ -37,8 +43,9 @@ class Byline extends Component {
 	 * @access private
 	 */
 	private function set_default_style() {
-		$this->register_style(
+		$this->register_spec(
 			'default-byline',
+			__( 'Byline Style', 'apple-news' ),
 			array(
 				'textAlignment' => '%%text_alignment%%',
 				'fontName' => '%%byline_font%%',
@@ -46,7 +53,12 @@ class Byline extends Component {
 				'lineHeight' => '%%byline_line_height%%',
 				'tracking' => '%%byline_tracking%%',
 				'textColor' => '%%byline_color%%',
-			),
+			)
+		);
+
+		$this->register_style(
+			'default-byline',
+			'default-byline',
 			array(
 				'textAlignment' => $this->find_text_alignment(),
 				'fontName' => $this->get_setting( 'byline_font' ),
@@ -65,14 +77,20 @@ class Byline extends Component {
 	 * @access private
 	 */
 	private function set_default_layout() {
-		$this->register_full_width_layout(
+		$this->register_spec(
 			'byline-layout',
+			__( 'Byline Layout', 'apple-news' ),
 			array(
 				'margin' => array(
 					'top' => 10,
 					'bottom' => 10,
 				),
-			),
+			)
+		);
+
+		$this->register_full_width_layout(
+			'byline-layout',
+			'byline-layout',
 			array(),
 			'layout'
 		);

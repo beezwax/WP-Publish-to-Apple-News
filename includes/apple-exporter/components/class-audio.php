@@ -39,11 +39,17 @@ class Audio extends Component {
 
 		$url = $match[1];
 
-		$this->register_json(
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'audio',
 				'URL'  => '%%URL%%',
-			),
+			)
+		);
+
+		$this->register_json(
+			'json',
 			array(
 				'URL' => $url,
 			)

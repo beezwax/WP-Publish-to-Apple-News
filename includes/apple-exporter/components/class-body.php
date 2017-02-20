@@ -104,12 +104,18 @@ class Body extends Component {
 	 * @access protected
 	 */
 	protected function build( $text ) {
-		$this->register_json(
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
 			array(
 				'role'   => 'body',
 				'text'   => '%%text%%',
 				'format' => '%%format%%',
-			),
+			)
+		);
+
+		$this->register_json(
+			'json',
 			array(
 				'text'   => $this->parser->parse( $text ),
 				'format' => $this->parser->format,
@@ -143,8 +149,9 @@ class Body extends Component {
 	 * @access private
 	 */
 	private function set_default_layout() {
-		$this->register_layout(
+		$this->register_spec(
 			'body-layout',
+			__( 'Body Layout', 'apple-news' ),
 			array(
 				'columnStart' => '%%body_offset%%',
 				'columnSpan'  => '%%body_column_span%%',
@@ -152,7 +159,12 @@ class Body extends Component {
 					'top' => 12,
 					'bottom' => 12
 				),
-			),
+			)
+		);
+
+		$this->register_layout(
+			'body-layout',
+			'body-layout',
 			array(
 				'columnStart' => $this->get_setting( 'body_offset' ),
 				'columnSpan'  => $this->get_setting( 'body_column_span' ),
@@ -161,8 +173,10 @@ class Body extends Component {
 		);
 
 		// Also pre-register the layout that will be used later for the last body component
-		$this->register_layout(
+
+		$this->register_spec(
 			'body-layout-last',
+			__( 'Body Layout for Last Component', 'apple-news' ),
 			array(
 				'columnStart' => '%%body_offset%%',
 				'columnSpan'  => '%%body_column_span%%',
@@ -170,7 +184,12 @@ class Body extends Component {
 					'top' => 12,
 					'bottom' => 30
 				),
-			),
+			)
+		);
+
+		$this->register_layout(
+			'body-layout-last',
+			'body-layout-last',
 			array(
 				'columnStart' => $this->get_setting( 'body_offset' ),
 				'columnSpan'  => $this->get_setting( 'body_column_span' ),
@@ -225,9 +244,15 @@ class Body extends Component {
 	 * @access public
 	 */
 	public function set_default_style() {
+		$this->register_spec(
+			'default-body',
+			__( 'Default Body Style', 'apple-news' ),
+			$this->get_default_style_spec()
+		);
+
 		$this->register_style(
 			'default-body',
-			$this->get_default_style_spec(),
+			'default-body',
 			$this->get_default_style_values(),
 			'textStyle'
 		 );
@@ -239,8 +264,9 @@ class Body extends Component {
 	 * @access private
 	 */
 	private function set_initial_dropcap_style() {
-		$this->register_style(
+		$this->register_spec(
 			'dropcapBodyStyle',
+			__( 'Dropcap Body Style', 'apple-news' ),
 			array_merge(
 				$this->get_default_style_spec(),
 				array(
@@ -252,7 +278,12 @@ class Body extends Component {
 						'textColor'						=> '%%dropcap_color%%',
 					),
 				)
-			),
+			)
+		);
+
+		$this->register_style(
+			'dropcapBodyStyle',
+			'dropcapBodyStyle',
 			array_merge(
 				$this->get_default_style_values(),
 				array(

@@ -16,11 +16,18 @@ class Advertisement extends Component {
 	 * @access protected
 	 */
 	protected function build( $text ) {
-		$this->register_json(
+
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
 			array(
 				'role'       => 'banner_advertisement',
 				'bannerType' => 'standard',
-			),
+			)
+		);
+
+		$this->register_json(
+			'json',
 			array()
 	 );
 
@@ -33,14 +40,20 @@ class Advertisement extends Component {
 	 * @access private
 	 */
 	private function set_layout() {
-		$this->register_full_width_layout(
-			'advertisement-layout',
+		$this->register_spec(
+			'layout',
+			__( 'Layout', 'apple-news' ),
 			array(
 				'margin' => array(
 					'top' => 25,
-					'bottom' => 25
+					'bottom' => 25,
 				),
 			)
+		);
+
+		$this->register_full_width_layout(
+			'advertisement-layout',
+			'layout',
 			array(),
 			'layout'
 		);
