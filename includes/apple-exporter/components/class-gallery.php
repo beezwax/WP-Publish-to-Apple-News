@@ -38,6 +38,34 @@ class Gallery extends Component {
 	}
 
 	/**
+	 * Register all specs for the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
+	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role' 	=> '%%gallery_type%%',
+				'items' => '%%items%%',
+			)
+		);
+
+		$this->register_spec(
+			'gallery-layout',
+			__( 'Layout', 'apple-news' ),
+			array(
+				'margin' => array(
+					'bottom' => 25,
+					'top' => 25,
+				),
+			)
+		);
+	}
+
+	/**
 	 * Build the component.
 	 *
 	 * @param string $text The HTML to parse.
@@ -97,17 +125,9 @@ class Gallery extends Component {
 			$items[] = $content;
 		}
 
-		// Build the JSON.
-		$this->json = array(
-			'role' => $this->get_setting( 'gallery_type' ),
-			'items' => $items,
-		);
-
+		// Build the JSON
 		$this->register_json(
-			array(
-				'role' 	=> '%%gallery_type%%',
-				'items' => '%%items%%',
-			),
+			'json',
 			array(
 				'role' 	=> $this->get_setting( 'gallery_type' ),
 				'items' => $items,
@@ -115,7 +135,7 @@ class Gallery extends Component {
 	 );
 
 		// Set the layout.
-		$this->_set_layout();
+		$this->set_layout();
 	}
 
 	/**
@@ -123,15 +143,10 @@ class Gallery extends Component {
 	 *
 	 * @access private
 	 */
-	private function _set_layout() {
+	private function set_layout() {
 		$this->register_full_width_layout(
 			'gallery-layout',
-			array(
-				'margin' => array(
-					'bottom' => 25,
-					'top' => 25,
-				),
-			),
+			'gallery-layout',
 			array(),
 			'layout'
 		);

@@ -16,13 +16,15 @@ use \Apple_Exporter\Exporter as Exporter;
 class Cover extends Component {
 
 	/**
-	 * Build the component.
+	 * Register all specs for the component.
 	 *
 	 * @param string $text
 	 * @access protected
 	 */
-	protected function build( $url ) {
-		$this->register_json(
+	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
 			array(
 				'role' 			=> 'header',
 				'layout' 		=> 'headerPhotoLayout',
@@ -35,7 +37,43 @@ class Cover extends Component {
 					'type' 			=> 'parallax',
 					'factor' 		=> 0.8,
 				),
-			),
+			)
+		);
+
+		$this->register_spec(
+			'headerPhotoLayout',
+			__( 'Layout', 'apple-news' ),
+			array(
+				'ignoreDocumentMargin' => true,
+				'columnStart' => 0,
+				'columnSpan' => '%%layout_columns%%',
+			)
+		);
+
+		$this->register_spec(
+			'headerBelowTextPhotoLayout',
+			__( 'Below Text Layout', 'apple-news' ),
+			array(
+				'ignoreDocumentMargin' => true,
+				'columnStart' => 0,
+				'columnSpan' => '%%layout_columns%%',
+				'margin' => array(
+					'top' => 30,
+					'bottom' => 0,
+				),
+			)
+		);
+	}
+
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
+	protected function build( $url ) {
+		$this->register_json(
+			'json',
 			array(
 				'components' 	=> array( array(
 					'URL' 			=> $this->maybe_bundle_source( $url ),
@@ -54,11 +92,7 @@ class Cover extends Component {
 	private function set_default_layout() {
 		$this->register_full_width_layout(
 			'headerPhotoLayout',
-			array(
-				'ignoreDocumentMargin' => true,
-				'columnStart' => 0,
-				'columnSpan' => '%%layout_columns%%',
-			),
+			'headerPhotoLayout',
 			array(
 				'columnSpan' => $this->get_setting( 'layout_columns' ),
 			)
@@ -66,15 +100,7 @@ class Cover extends Component {
 
 		$this->register_full_width_layout(
 			'headerBelowTextPhotoLayout',
-			array(
-				'ignoreDocumentMargin' => true,
-				'columnStart' => 0,
-				'columnSpan' => '%%layout_columns%%',
-				'margin' => array(
-					'top' => 30,
-					'bottom' => 0,
-				),
-			),
+			'headerBelowTextPhotoLayout',
 			array(
 				'columnSpan' => $this->get_setting( 'layout_columns' ),
 			)

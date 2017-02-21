@@ -152,7 +152,16 @@ abstract class Component {
 	 * @param Component_Layouts $layouts
 	 * @param Parser $parser
 	 */
-	function __construct( $text, $workspace, $settings, $styles, $layouts, $parser = null ) {
+	function __construct( $text = null, $workspace = null, $settings = null, $styles = null, $layouts = null, $parser = null ) {
+		// Register specs for this component
+		$this->register_specs();
+
+		// If all params are null, then this was just used to get spec data.
+		// Exit.
+		if ( 0 === func_num_args() ) {
+			return;
+		}
+
 		$this->workspace = $workspace;
 		$this->settings  = $settings;
 		$this->styles    = $styles;
@@ -565,8 +574,27 @@ abstract class Component {
 	 *
 	 * @param string $text
 	 * @abstract
+	 * @access protected
 	 */
 	abstract protected function build( $text );
+
+	/**
+	 * Register all specs used by this component.
+	 *
+	 * @abstract
+	 * @access public
+	 */
+	abstract public function register_specs();
+
+	/**
+	 * Get all specs used by this component.
+	 *
+	 * @return array
+	 * @access public
+	 */
+	public function get_specs() {
+		return $this->specs;
+	}
 
 	/**
 	 * Gets the name of this component from the class name.

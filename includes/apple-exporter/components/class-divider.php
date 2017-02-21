@@ -25,13 +25,15 @@ class Divider extends Component {
 	}
 
 	/**
-	 * Build the component.
+	 * Register all specs for the component.
 	 *
 	 * @param string $text
 	 * @access protected
 	 */
-	protected function build( $text ) {
-		$this->register_json(
+	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
 			array(
 				'role'   => 'divider',
 				'layout' => 'divider-layout',
@@ -39,18 +41,36 @@ class Divider extends Component {
 					'color' => '#E6E6E6',
 					'width' => 1
 				),
-			),
-			array()
+			)
 		);
 
-		$this->register_full_width_layout(
+		$this->register_spec(
 			'divider-layout',
+			__( 'Layout', 'apple-news' ),
 			array(
 				'margin' => array(
 					'top' => 25,
 					'bottom' => 25
 				)
-			),
+			)
+		);
+	}
+
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
+	protected function build( $text ) {
+		$this->register_json(
+			'json',
+			array()
+		);
+
+		$this->register_full_width_layout(
+			'divider-layout',
+			'divider-layout',
 			array()
 		);
 	}

@@ -34,6 +34,24 @@ class Embed_Web_Video extends Component {
 	}
 
 	/**
+	 * Register all specs for the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
+	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role'        => 'embedwebvideo',
+				'aspectRatio' => '%%aspectRatio%%',
+				'URL'         => '%%URL%%',
+			)
+		);
+	}
+
+	/**
 	 * Test if this node is a match based on the node type and URL format.
 	 *
 	 * @param DomNode $node
@@ -79,11 +97,7 @@ class Embed_Web_Video extends Component {
 		}
 
 		$this->register_json(
-			array(
-				'role'        => 'embedwebvideo',
-				'aspectRatio' => '%%aspectRatio%%',
-				'URL'         => '%%URL%%',
-			),
+			'json',
 			array(
 				'aspectRatio' => round( floatval( $aspect_ratio ), 3 ),
 				'URL'         => $src,

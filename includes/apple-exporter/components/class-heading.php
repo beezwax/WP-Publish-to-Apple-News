@@ -9,6 +9,14 @@ namespace Apple_Exporter\Components;
 class Heading extends Component {
 
 	/**
+	 * Supported heading levels
+	 *
+	 * @var array
+	 * @access public
+	 */
+	public $levels = array( 1, 2, 3, 4, 5, 6 );
+
+	/**
 	 * Look for node matches for this component.
 	 *
 	 * @param DomNode $node
@@ -17,7 +25,14 @@ class Heading extends Component {
 	 * @access public
 	 */
 	public static function node_matches( $node ) {
-		if ( ! preg_match( '#h[1-6]#', $node->nodeName ) ) {
+		$regex = sprintf(
+			'#h[%s-%s]#',
+			current( $this->levels ),
+			end( $this->levels )
+		);
+		reset( $this->levels );
+
+		if ( ! preg_match( $regex, $node->nodeName ) ) {
 			return null;
 		}
 
@@ -27,6 +42,44 @@ class Heading extends Component {
 		}
 
 		return $node;
+	}
+
+	/**
+	 * Register all specs for the component.
+	 *
+	 * @access public
+	 */
+	public function register_specs() {
+		$this->register_spec(
+			'heading-layout',
+			__( 'Layout', 'apple-news' ),
+			array(
+				'columnStart' => '%%body_offset%%',
+				'columnSpan' => '%%body_column_span%%',
+				'margin' => array(
+					'bottom' => 15,
+					'top' => 15,
+				),
+			)
+		);
+
+		foreach ( $this->levels as $level ) {
+			$this->register_spec(
+				'default-heading-' . $level,
+				sprintf(
+					__( 'Level %s Style', 'apple-news' ),
+					$level
+				),
+				array(
+				'fontName' => '%%header' . $level . '_font%%',
+				'fontSize' => '%%header' . $level . '_size%%',
+				'lineHeight' => '%%header' . $level . '_line_height%%',
+				'textColor' => '%%header' . $level . '_color%%',
+				'textAlignment' => '%%textAlignment%%',
+				'tracking' => '%%header' . $level . '_tracking%%',
+			)
+			);
+		}
 	}
 
 	/**
@@ -91,15 +144,15 @@ class Heading extends Component {
 	 * @access private
 	 */
 	private function set_layout() {
-		$this->json['layout'] = 'heading-layout';
-		$this->register_layout( 'heading-layout', array(
-			'columnStart' => $this->get_setting( 'body_offset' ),
-			'columnSpan' => $this->get_setting( 'body_column_span' ),
-			'margin' => array(
-				'bottom' => 15,
-				'top' => 15,
+		$this->register_layout(
+			'heading-layout',
+			'heading-layout',
+			 array(
+				'columnStart' => $this->get_setting( 'body_offset' ),
+				'columnSpan' => $this->get_setting( 'body_column_span' ),
 			),
-		) );
+			'layout'
+		);
 	}
 
 	/**
@@ -108,15 +161,19 @@ class Heading extends Component {
 	 * @access private
 	 */
 	private function set_style( $level ) {
-		$this->json[ 'textStyle' ] = 'default-heading-' . $level;
-		$this->register_style( 'default-heading-' . $level, array(
-			'fontName' => $this->get_setting( 'header' . $level . '_font' ),
-			'fontSize' => intval( $this->get_setting( 'header' . $level . '_size' ) ),
-			'lineHeight' => intval( $this->get_setting( 'header' . $level . '_line_height' ) ),
-			'textColor' => $this->get_setting( 'header' . $level . '_color' ),
-			'textAlignment' => $this->find_text_alignment(),
-			'tracking' => intval( $this->get_setting( 'header' . $level . '_tracking' ) ) / 100,
-		) );
+		$this->register_style(
+			'default-heading-' . $level,
+			'default-heading-' . $level,
+			array(
+				'fontName' => $this->get_setting( 'header' . $level . '_font' ),
+				'fontSize' => intval( $this->get_setting( 'header' . $level . '_size' ) ),
+				'lineHeight' => intval( $this->get_setting( 'header' . $level . '_line_height' ) ),
+				'textColor' => $this->get_setting( 'header' . $level . '_color' ),
+				'textAlignment' => $this->find_text_alignment(),
+				'tracking' => intval( $this->get_setting( 'header' . $level . '_tracking' ) ) / 100,
+			),
+			'textStyle'
+		);
 	}
 
 }

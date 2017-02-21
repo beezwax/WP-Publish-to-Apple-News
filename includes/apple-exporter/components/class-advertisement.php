@@ -10,13 +10,12 @@ namespace Apple_Exporter\Components;
 class Advertisement extends Component {
 
 	/**
-	 * Build the component.
+	 * Register all specs for the component.
 	 *
 	 * @param string $text
 	 * @access protected
 	 */
-	protected function build( $text ) {
-
+	public function register_specs() {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
@@ -26,6 +25,25 @@ class Advertisement extends Component {
 			)
 		);
 
+		$this->register_spec(
+			'layout',
+			__( 'Layout', 'apple-news' ),
+			array(
+				'margin' => array(
+					'top' => 25,
+					'bottom' => 25,
+				),
+			)
+		);
+	}
+
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
+	protected function build( $text ) {
 		$this->register_json(
 			'json',
 			array()
@@ -40,17 +58,6 @@ class Advertisement extends Component {
 	 * @access private
 	 */
 	private function set_layout() {
-		$this->register_spec(
-			'layout',
-			__( 'Layout', 'apple-news' ),
-			array(
-				'margin' => array(
-					'top' => 25,
-					'bottom' => 25,
-				),
-			)
-		);
-
 		$this->register_full_width_layout(
 			'advertisement-layout',
 			'layout',

@@ -58,6 +58,73 @@ class Body extends Component {
 	}
 
 	/**
+	 * Register all specs for the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
+	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role'   => 'body',
+				'text'   => '%%text%%',
+				'format' => '%%format%%',
+			)
+		);
+
+		$this->register_spec(
+			'body-layout',
+			__( 'Layout', 'apple-news' ),
+			array(
+				'columnStart' => '%%body_offset%%',
+				'columnSpan'  => '%%body_column_span%%',
+				'margin'      => array(
+					'top' => 12,
+					'bottom' => 12
+				),
+			)
+		);
+
+		$this->register_spec(
+			'body-layout-last',
+			__( 'Layout for Last Component', 'apple-news' ),
+			array(
+				'columnStart' => '%%body_offset%%',
+				'columnSpan'  => '%%body_column_span%%',
+				'margin'      => array(
+					'top' => 12,
+					'bottom' => 30
+				),
+			)
+		);
+
+		$this->register_spec(
+			'default-body',
+			__( 'Default Style', 'apple-news' ),
+			$this->get_default_style_spec()
+		);
+
+		$this->register_spec(
+			'dropcapBodyStyle',
+			__( 'Dropcap Style', 'apple-news' ),
+			array_merge(
+				$this->get_default_style_spec(),
+				array(
+					'dropCapStyle' => array (
+						'numberOfLines' 			=> 4,
+						'numberOfCharacters' 	=> 1,
+						'padding' 						=> 5,
+						'fontName' 						=> '%%dropcap_font%%',
+						'textColor'						=> '%%dropcap_color%%',
+					),
+				)
+			)
+		);
+	}
+
+	/**
 	 * Split the non markdownable content for processing.
 	 *
 	 * @param string $html
@@ -104,16 +171,6 @@ class Body extends Component {
 	 * @access protected
 	 */
 	protected function build( $text ) {
-		$this->register_spec(
-			'json',
-			__( 'JSON', 'apple-news' ),
-			array(
-				'role'   => 'body',
-				'text'   => '%%text%%',
-				'format' => '%%format%%',
-			)
-		);
-
 		$this->register_json(
 			'json',
 			array(
@@ -149,19 +206,6 @@ class Body extends Component {
 	 * @access private
 	 */
 	private function set_default_layout() {
-		$this->register_spec(
-			'body-layout',
-			__( 'Body Layout', 'apple-news' ),
-			array(
-				'columnStart' => '%%body_offset%%',
-				'columnSpan'  => '%%body_column_span%%',
-				'margin'      => array(
-					'top' => 12,
-					'bottom' => 12
-				),
-			)
-		);
-
 		$this->register_layout(
 			'body-layout',
 			'body-layout',
@@ -173,20 +217,6 @@ class Body extends Component {
 		);
 
 		// Also pre-register the layout that will be used later for the last body component
-
-		$this->register_spec(
-			'body-layout-last',
-			__( 'Body Layout for Last Component', 'apple-news' ),
-			array(
-				'columnStart' => '%%body_offset%%',
-				'columnSpan'  => '%%body_column_span%%',
-				'margin'      => array(
-					'top' => 12,
-					'bottom' => 30
-				),
-			)
-		);
-
 		$this->register_layout(
 			'body-layout-last',
 			'body-layout-last',
@@ -244,12 +274,6 @@ class Body extends Component {
 	 * @access public
 	 */
 	public function set_default_style() {
-		$this->register_spec(
-			'default-body',
-			__( 'Default Body Style', 'apple-news' ),
-			$this->get_default_style_spec()
-		);
-
 		$this->register_style(
 			'default-body',
 			'default-body',
@@ -264,23 +288,6 @@ class Body extends Component {
 	 * @access private
 	 */
 	private function set_initial_dropcap_style() {
-		$this->register_spec(
-			'dropcapBodyStyle',
-			__( 'Dropcap Body Style', 'apple-news' ),
-			array_merge(
-				$this->get_default_style_spec(),
-				array(
-					'dropCapStyle' => array (
-						'numberOfLines' 			=> 4,
-						'numberOfCharacters' 	=> 1,
-						'padding' 						=> 5,
-						'fontName' 						=> '%%dropcap_font%%',
-						'textColor'						=> '%%dropcap_color%%',
-					),
-				)
-			)
-		);
-
 		$this->register_style(
 			'dropcapBodyStyle',
 			'dropcapBodyStyle',

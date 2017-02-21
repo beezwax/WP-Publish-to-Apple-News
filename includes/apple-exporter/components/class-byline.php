@@ -11,12 +11,12 @@ use \Apple_Exporter\Exporter as Exporter;
 class Byline extends Component {
 
 	/**
-	 * Build the component.
+	 * Register all specs for the component.
 	 *
 	 * @param string $text
 	 * @access protected
 	 */
-	protected function build( $text ) {
+	public function register_specs() {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
@@ -26,6 +26,38 @@ class Byline extends Component {
 			)
 		);
 
+		$this->register_spec(
+			'default-byline',
+			__( 'Style', 'apple-news' ),
+			array(
+				'textAlignment' => '%%text_alignment%%',
+				'fontName' => '%%byline_font%%',
+				'fontSize' => '%%byline_size%%',
+				'lineHeight' => '%%byline_line_height%%',
+				'tracking' => '%%byline_tracking%%',
+				'textColor' => '%%byline_color%%',
+			)
+		);
+
+		$this->register_spec(
+			'byline-layout',
+			__( 'Layout', 'apple-news' ),
+			array(
+				'margin' => array(
+					'top' => 10,
+					'bottom' => 10,
+				),
+			)
+		);
+	}
+
+	/**
+	 * Build the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
+	protected function build( $text ) {
 		$this->register_json(
 			'json',
 			array(
@@ -43,19 +75,6 @@ class Byline extends Component {
 	 * @access private
 	 */
 	private function set_default_style() {
-		$this->register_spec(
-			'default-byline',
-			__( 'Byline Style', 'apple-news' ),
-			array(
-				'textAlignment' => '%%text_alignment%%',
-				'fontName' => '%%byline_font%%',
-				'fontSize' => '%%byline_size%%',
-				'lineHeight' => '%%byline_line_height%%',
-				'tracking' => '%%byline_tracking%%',
-				'textColor' => '%%byline_color%%',
-			)
-		);
-
 		$this->register_style(
 			'default-byline',
 			'default-byline',
@@ -77,17 +96,6 @@ class Byline extends Component {
 	 * @access private
 	 */
 	private function set_default_layout() {
-		$this->register_spec(
-			'byline-layout',
-			__( 'Byline Layout', 'apple-news' ),
-			array(
-				'margin' => array(
-					'top' => 10,
-					'bottom' => 10,
-				),
-			)
-		);
-
 		$this->register_full_width_layout(
 			'byline-layout',
 			'byline-layout',

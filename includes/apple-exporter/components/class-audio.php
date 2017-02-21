@@ -26,6 +26,23 @@ class Audio extends Component {
 	}
 
 	/**
+	 * Register all specs for the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
+	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role' => 'audio',
+				'URL'  => '%%URL%%',
+			)
+		);
+	}
+
+	/**
 	 * Build the component.
 	 *
 	 * @param string $text
@@ -38,15 +55,6 @@ class Audio extends Component {
 		}
 
 		$url = $match[1];
-
-		$this->register_spec(
-			'json',
-			__( 'JSON', 'apple-news' ),
-			array(
-				'role' => 'audio',
-				'URL'  => '%%URL%%',
-			)
-		);
 
 		$this->register_json(
 			'json',

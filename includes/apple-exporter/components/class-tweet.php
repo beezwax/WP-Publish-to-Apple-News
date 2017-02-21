@@ -31,6 +31,16 @@ class Tweet extends Component {
 	}
 
 	/**
+	 * Register all specs for the component.
+	 *
+	 * @param string $text
+	 * @access protected
+	 */
+	public function register_specs() {
+
+	}
+
+	/**
 	 * Build the component.
 	 *
 	 * @param string $text
