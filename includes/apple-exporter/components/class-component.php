@@ -444,7 +444,7 @@ abstract class Component {
 	 * @param array $values Values to substitute for placeholders in the spec
 	 * @access protected
 	 */
-	protected function register_json( $spec_name, $values ) {
+	protected function register_json( $spec_name, $values = array() ) {
 		$component_spec = $this->get_spec( $spec_name );
 		if ( ! empty( $component_spec ) ) {
 			$this->json = $component_spec->substitute_values( $values );
@@ -461,7 +461,7 @@ abstract class Component {
 	 * @param array $property The JSON property to set with the style
 	 * @access protected
 	 */
-	protected function register_style( $name, $spec_name, $values, $property = null ) {
+	protected function register_style( $name, $spec_name, $values = array(), $property = null ) {
 		$component_spec = $this->get_spec( $spec_name );
 		if ( ! empty( $spcomponent_specec ) ) {
 			$json = $component_spec->substitute_values( $values );
@@ -480,7 +480,7 @@ abstract class Component {
 	 * @param array $property The JSON property to set with the layout
 	 * @access protected
 	 */
-	protected function register_layout( $name, $spec_name, $values, $property = null ) {
+	protected function register_layout( $name, $spec_name, $values = array(), $property = null ) {
 		$component_spec = $this->get_spec( $spec_name );
 		if ( ! empty( $component_spec ) ) {
 			$json = $component_spec->substitute_values( $values );
@@ -501,7 +501,7 @@ abstract class Component {
 	 * @param array $property The JSON property to set with the layout
 	 * @access protected
 	 */
-	protected function register_full_width_layout( $name, $spec_name, $values, $property = null ) {
+	protected function register_full_width_layout( $name, $spec_name, $values = array(), $property = null ) {
 		// Initial colStart and colSpan
 		$col_start = 0;
 		$col_span  = $this->get_setting( 'layout_columns' );
