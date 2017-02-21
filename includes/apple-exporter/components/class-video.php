@@ -45,7 +45,15 @@ class Video extends Component {
 	 * @access protected
 	 */
 	public function register_specs() {
-
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role' => 'video',
+				'URL' => '%%URL%%',
+				'stillURL' => '%%stillURL%%',
+			)
+		);
 	}
 
 	/**
@@ -62,12 +70,6 @@ class Video extends Component {
 			return;
 		}
 
-		// Build initial JSON.
-		$this->json = array(
-			'role' => 'video',
-			'URL' => $matches[1],
-		);
-
 		// Set values
 		$values = array(
 			'URL' => $matches[1],
@@ -79,11 +81,7 @@ class Video extends Component {
 		}
 
 		$this->register_json(
-			array(
-				'role' => 'video',
-				'URL' => '%%URL%%',
-				'stillURL' => '%%stillURL%%',
-			),
+			'json',
 			$values
 	 );
 	}

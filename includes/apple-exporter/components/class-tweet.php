@@ -37,7 +37,25 @@ class Tweet extends Component {
 	 * @access protected
 	 */
 	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role' => 'tweet',
+				'URL'  => '%%URL%%',
+			)
+		);
 
+		$this->register_spec(
+			'tweet-layout',
+			__( 'Layout', 'apple-news' ),
+			array(
+				'margin' => array(
+					'top' => 30,
+					'bottom' => 30
+				)
+			)
+		);
 	}
 
 	/**
@@ -57,10 +75,7 @@ class Tweet extends Component {
 		$url = 'https://twitter.com/' . $matches[1] . '/status/' . $matches[2];
 
 		$this->register_json(
-			array(
-				'role' => 'tweet',
-				'URL'  => '%%URL%%',
-			),
+			'json',
 			array(
 				'URL'  => $url,
 			)
@@ -77,12 +92,7 @@ class Tweet extends Component {
 	private function set_layout() {
 		$this->register_full_width_layout(
 			'tweet-layout',
-			array(
-				'margin' => array(
-					'top' => 30,
-					'bottom' => 30
-				)
-			),
+			'tweet-layout',
 			array(),
 			'layout'
 		);

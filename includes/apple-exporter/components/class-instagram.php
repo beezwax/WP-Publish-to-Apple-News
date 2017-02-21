@@ -33,7 +33,14 @@ class Instagram extends Component {
 	 * @access protected
 	 */
 	public function register_specs() {
-
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role' => 'instagram',
+				'URL'  => '%%URL%%',
+			)
+		);
 	}
 
 	/**
@@ -52,10 +59,7 @@ class Instagram extends Component {
 		$url = $matches[0];
 
 		$this->register_json(
-			array(
-				'role' => 'instagram',
-				'URL'  => '%%URL%%',
-			),
+			'json',
 			array(
 				// Remove `www.` from URL as AN parser doesn't allow for it.
 				'URL'  => str_replace( 'www.', '', $url ),

@@ -16,7 +16,25 @@ class Intro extends Component {
 	 * @access protected
 	 */
 	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role' => 'intro',
+				'text' => '%%text%%',
+			)
+		);
 
+		$this->register_spec(
+			'default-intro',
+			__( 'Style', 'apple-news' ),
+			array(
+				'fontName'   => '%%body_font%%',
+				'fontSize'   => '%%body_size%%',
+				'lineHeight' => '%%body_line_height%%',
+				'textColor'  => '%%body_color%%',
+			)
+		);
 	}
 
 	/**
@@ -27,10 +45,7 @@ class Intro extends Component {
 	 */
 	protected function build( $text ) {
 		$this->register_json(
-			array(
-				'role' => 'intro',
-				'text' => '%%text%%',
-			),
+			'json',
 			array(
 				'text' => $text . "\n",
 			)
@@ -45,15 +60,9 @@ class Intro extends Component {
 	 * @access private
 	 */
 	private function set_style() {
-		$this->json[ 'textStyle' ] = 'default-intro';
 		$this->register_style(
 			'default-intro',
-			array(
-				'fontName'   => '%%body_font%%',
-				'fontSize'   => '%%body_size%%',
-				'lineHeight' => '%%body_line_height%%',
-				'textColor'  => '%%body_color%%',
-			),
+			'default-intro',
 			array(
 				'fontName'   => $this->get_setting( 'body_font' ),
 				'fontSize'   => intval( $this->get_setting( 'body_size' ) ),
