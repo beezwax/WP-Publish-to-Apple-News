@@ -37,7 +37,83 @@ class Image extends Component {
 	 * @access protected
 	 */
 	public function register_specs() {
+		$this->register_spec(
+			'json-without-caption',
+			__( 'JSON without caption', 'apple-news' ),
+			array(
+				'role' => 'photo',
+				'URL'  => '%%URL%%',
+			)
+		);
 
+		$this->register_spec(
+			'json-with-caption',
+			__( 'JSON with caption', 'apple-news' ),
+			array(
+				'role' => 'container',
+				'components' => array(
+					array(
+						'role' => 'photo',
+						'URL'  => '%%URL%%',
+						'caption' => '%%caption%%',
+					),
+					array(
+						'role' => 'caption',
+						'text' => '%%caption%%',
+						'textStyle' => array(
+							'textAlignment' => '%%textAlignment%%',
+							'fontName' => '%%caption_font%%',
+							'fontSize' => '%%caption_size%%',
+							'tracking' => '%%caption_tracking%%',
+							'lineHeight' => '%%caption_line_height%%',
+							'textColor' => '%%caption_color%%',
+						),
+						'layout' => array(
+							'margin' => array(
+								'top' => 20
+							),
+							'ignoreDocumentMargin' => '%%full_bleed_images%%',
+						),
+					),
+				),
+			)
+		);
+
+		$this->register_spec(
+			'anchored-image',
+			__( 'Anchored Layout', 'apple-news' ),
+			array(
+				'margin' => array(
+					'bottom' => 25,
+					'top' => 25,
+				)
+			)
+		);
+
+		$this->register_spec(
+			'non-anchored-image',
+			__( 'Non Anchored Layout', 'apple-news' ),
+			array(
+				'margin' => array(
+					'bottom' => 25,
+					'top' => 25,
+				),
+				'columnSpan' = '%%layout_columns_minus_4%%',
+				'columnStart' => 2,
+			)
+		);
+
+		$this->register_spec(
+			'non-anchored-full-bleed-image',
+			__( 'Non Anchored with Full Bleed Images Layout', 'apple-news' ),
+			array(
+				'margin' => array(
+					'bottom' => 25,
+					'top' => 25,
+				),
+				'ignoreDocumentMargin' => true,
+			),
+		);
 	}
 
 	/**
@@ -51,7 +127,7 @@ class Image extends Component {
 		$url      = esc_url_raw( apply_filters( 'apple_news_build_image_src', $matches[1], $text ) );
 		$filename = preg_replace( '/\\?.*/', '', \Apple_News::get_filename( $url ) );
 
-		$this->json = array(
+		$values = array(
 			'role' => 'photo',
 			'URL'  => $this->maybe_bundle_source( $url, $filename ),
 		);
@@ -79,9 +155,15 @@ class Image extends Component {
 		// Check for caption
 		if ( preg_match( '#<figcaption.*?>(.*?)</figcaption>#m', $text, $matches ) ) {
 			$caption = trim( $matches[1] );
-			$this->json['caption'] = $caption;
-			$this->group_component( $caption );
+			$values['caption'] = $caption;
+			$values = $this->group_component( $caption, $values );
+			$spec_name = 'json-with-caption';
+		} else {
+			$spec_name = 'json-without-caption';
 		}
+
+		// Register the JSON
+		$this->register_json( $spec_name, $values );
 	}
 
 	/**
@@ -90,13 +172,12 @@ class Image extends Component {
 	 * @access private
 	 */
 	private function register_anchor_layout() {
-		$this->json['layout'] = 'anchored-image';
-		$this->register_layout( 'anchored-image', array(
-			'margin' => array(
-				'bottom' => 25,
-				'top' => 25,
-			),
-		) );
+		$this->register_layout(
+			'anchored-image',
+			'anchored-image',
+			array(),
+			'layout'
+		);
 	}
 
 	/**
@@ -105,26 +186,24 @@ class Image extends Component {
 	 * @access private
 	 */
 	private function register_non_anchor_layout() {
-
-		// Set base layout settings.
-		$layout = array(
-			'margin' => array(
-				'bottom' => 25,
-				'top' => 25,
-			),
-		);
-
-		// Add full bleed image option.
+		// Set values to merge into the spec
+		$values = array();
 		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
-			$layout['ignoreDocumentMargin'] = true;
+			$values['ignoreDocumentMargin'] = true;
+			$spec_name = 'non-anchored-full-bleed-image';
 		} else {
-			$layout['columnSpan'] = $this->get_setting( 'layout_columns' ) - 4;
-			$layout['columnStart'] = 2;
+			$values['columnSpan'] = $this->get_setting( 'layout_columns' ) - 4;
+			$values['columnStart'] = 2;
+			$spec_name = 'non-anchored-image';
 		}
 
 		// Register the layout.
-		$this->json['layout'] = 'full-width-image';
-		$this->register_full_width_layout( 'full-width-image', $layout );
+		$this->register_full_width_layout(
+			'full-width-image',
+			$spec_name,
+			$values,
+			'layout'
+		);
 	}
 
 	/**
@@ -153,21 +232,19 @@ class Image extends Component {
 
 	/**
 	 * If the image has a caption, we have to also show a caption component.
-	 * Let's instead, return the JSON as a Container instead of an Image.
+	 * Let's instead, return the values as a Container instead of an Image.
 	 *
 	 * @param string $caption
+	 * @param array $values
 	 * @access private
 	 */
-	private function group_component( $caption ) {
+	private function group_component( $caption, $values ) {
 
 		// Roll up the image component into a container.
-		$image_component = $this->json;
-		$this->json = array(
-			'role' => 'container',
+		$values = array(
 			'components' => array(
-				$image_component,
+				$values,
 				array(
-					'role' => 'caption',
 					'text' => $caption,
 					'textStyle' => array(
 						'textAlignment' => $this->find_caption_alignment(),
@@ -177,16 +254,17 @@ class Image extends Component {
 						'lineHeight' => intval( $this->get_setting( 'caption_line_height' ) ),
 						'textColor' => $this->get_setting( 'caption_color' ),
 					),
-					'layout' => array(
-						'margin' => array( 'top' => 20 ),
-					),
 				),
 			),
 		);
 
 		// Add full bleed image option.
 		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
-			$this->json['layout']['ignoreDocumentMargin'] = true;
+			$values['layout'] = array(
+				'ignoreDocumentMargin' => true,
+			);
 		}
+
+		return $values;
 	}
 }
