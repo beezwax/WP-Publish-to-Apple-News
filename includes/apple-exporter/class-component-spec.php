@@ -75,6 +75,44 @@ class Component_Spec {
 		// http://php.net/manual/en/class.recursivearrayiterator.php
 	}
 
+	/**
+	 * Validate the provided spec against the built-in spec.
+	 *
+	 * @param array $spec
+	 * @return boolean
+	 * @access public
+	 */
+	public function validate( $spec ) {
+		// Iterate recursively over the built-in spec and get all the tokens
+		// Do the same for the provided spec and ensure the tokens are the same
+		// Provide an error for unexpected tokens or missing tokens
+	}
+
+	/**
+	 * Save the provided spec override.
+	 *
+	 * @param array $spec
+	 * @return boolean
+	 * @access public
+	 */
+	public function save( $spec ) {
+		// Save as part of a single option value array
+		// TODO - should components handle this maybe since they have multiple specs?
+		// Picturing a dropdown or nav that changes between components with form fields
+		// with JSON pretty print for each spec for that component.
+	}
+
+	/**
+	 * Determines whether or not the spec value is a token.
+	 *
+	 * @param string $value
+	 * @return boolean
+	 * @access public
+	 */
+	public function is_token( $value ) {
+		// preg_match for %%token%%
+	}
+
 	// TODO - need a function for pulling in spec overrides from the database?
 	// TODO - how will validation work for overrides on save?
 	// http://stackoverflow.com/questions/6054033/pretty-printing-json-with-php
