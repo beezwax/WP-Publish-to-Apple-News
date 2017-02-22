@@ -318,6 +318,11 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 				'label' => __( 'Pull quote transformation', 'apple-news' ),
 				'type' => array( 'none', 'uppercase' ),
 			),
+			'pullquote_hanging_punctuation' => array(
+				'label' => __( 'Pullquote hanging punctuation', 'apple-news' ),
+				'type' => array( 'no', 'yes' ),
+				'description' => __( 'If set to "yes," adds smart quotes (if not already present) and sets the hanging punctuation option to true.', 'apple-news' ),
+			),
 			'blockquote_font' => array(
 				'label' => __( 'Blockquote font face', 'apple-news' ),
 				'type' => 'font',
@@ -528,6 +533,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 					'pullquote_line_height',
 					'pullquote_tracking',
 					'pullquote_color',
+					'pullquote_hanging_punctuation',
 					'pullquote_border_style',
 					'pullquote_border_color',
 					'pullquote_border_width',
