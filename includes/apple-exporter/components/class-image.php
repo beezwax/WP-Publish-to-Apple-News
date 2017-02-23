@@ -43,6 +43,7 @@ class Image extends Component {
 			array(
 				'role' => 'photo',
 				'URL'  => '%%URL%%',
+				'layout' => '%%layout%%',
 			)
 		);
 
@@ -55,6 +56,7 @@ class Image extends Component {
 					array(
 						'role' => 'photo',
 						'URL'  => '%%URL%%',
+						'layout' => '%%layout%%',
 						'caption' => '%%caption%%',
 					),
 					array(
@@ -75,6 +77,9 @@ class Image extends Component {
 							'ignoreDocumentMargin' => '%%full_bleed_images%%',
 						),
 					),
+				),
+				'layout' => array(
+					'ignoreDocumentMargin' => '%%full_bleed_images%%',
 				),
 			)
 		);
@@ -154,43 +159,50 @@ class Image extends Component {
 			$spec_name = 'json-without-caption';
 		}
 
+		// Full width images have top margin
+		// We can't use the standard layout registration due to grouping components
+		// with images so instead, send it through as a value.
+		if ( Component::ANCHOR_NONE == $this->get_anchor_position() ) {
+			$values = $this->register_non_anchor_layout( $values );
+		} else {
+			$values = $this->register_anchor_layout( $values );
+		}
+
 		// Register the JSON
 		$this->register_json( $spec_name, $values );
-
-		// Full width images have top margin
-		if ( Component::ANCHOR_NONE == $this->get_anchor_position() ) {
-			$this->register_non_anchor_layout();
-		} else {
-			$this->register_anchor_layout();
-		}
 	}
 
 	/**
 	 * Register the anchor layout.
 	 *
+	 * @param array $values
+	 * @return array
 	 * @access private
 	 */
-	private function register_anchor_layout() {
+	private function register_anchor_layout( $values ) {
 		$this->register_layout(
 			'anchored-image',
 			'anchored-image',
-			array(),
-			'layout'
+			array()
 		);
+
+		return $this->add_layout( 'anchored-image', $values );
 	}
 
 	/**
 	 * Register the non-anchor layout.
 	 *
+	 * @param array $values
+	 * @return array
 	 * @access private
 	 */
-	private function register_non_anchor_layout() {
+	private function register_non_anchor_layout( $values ) {
 		// Set values to merge into the spec
-		$values = array();
+		$layout_values = array();
 		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
 			$spec_name = 'non-anchored-full-bleed-image';
 		} else {
-			$values['columnSpan'] = $this->get_setting( 'layout_columns' ) - 4;
+			$layout_values['columnSpan'] = $this->get_setting( 'layout_columns' ) - 4;
 			$spec_name = 'non-anchored-image';
 		}
 
@@ -198,10 +210,27 @@ class Image extends Component {
 		$this->register_full_width_layout(
 			'full-width-image',
 			$spec_name,
-			$values,
-			'layout',
-			true
+			$layout_values
 		);
+
+		return $this->add_layout( 'full-width-image', $values );
+	}
+
+	/**
+	 * Handles adding a layout to the appropriate location in values.
+	 *
+	 * @param array $values
+	 * @return array
+	 * @access private
+	 */
+	private function add_layout( $layout, $values ) {
+		if ( isset( $values['components'] ) && is_array( $values['components'] ) ) {
+			$values['components'][0]['layout'] = $layout;
+		} else {
+			$values['layout'] = $layout;
+		}
+
+		return $values;
 	}
 
 	/**

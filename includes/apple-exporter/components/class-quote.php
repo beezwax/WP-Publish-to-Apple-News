@@ -215,6 +215,7 @@ class Quote extends Component {
 			array(
 				'fontName' => '%%pullquote_font%%',
 				'fontSize' => '%%pullquote_size%%',
+				'hangingPunctuation' => '%%pullquote_hanging_punctuation%%',
 				'textColor' => '%%pullquote_color%%',
 				'textTransform' => '%%pullquote_transform%%',
 				'lineHeight' => '%%pullquote_line_height%%',
