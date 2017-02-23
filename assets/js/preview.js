@@ -132,6 +132,11 @@
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-pull-quote', 'pullquote_border_style', 'border-bottom-style', null, null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-pull-quote', 'pullquote_border_width', 'border-bottom-width', 'px', null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-pull-quote', 'pullquote_line_height', 'line-height', 'px', .75 );
+		if ( 'yes' === $( '#pullquote_hanging_punctuation' ).val() ) {
+			$( '.apple-news-preview div.apple-news-pull-quote' ).addClass( 'hanging-punctuation' );
+		} else {
+			$( '.apple-news-preview div.apple-news-pull-quote' ).removeClass( 'hanging-punctuation' );
+		}
 
 		// Blockquote
 		appleNewsSetCSS( '.apple-news-preview blockquote', 'blockquote_font', 'font-family', null, null );
@@ -163,25 +168,43 @@
 				$( '.apple-news-meta-component' ).removeClass( componentKey );
 				componentKey = '';
 			}
-		} else {
-			return;
 		}
 
-		$.each( componentOrder.reverse(), function( index, value ) {
-			// Remove the component
-			var $detached = $( '.apple-news-' + value ).detach();
+		if ( componentOrder.length ) {
+			$.each( componentOrder.reverse(), function( index, value ) {
+				// Remove the component
+				var $detached = $( '.apple-news-' + value ).detach();
 
-			// Build the component key.
-			// Used for targeting certain styles in the preview that differ on component order.
-			componentKey = value + '-' + componentKey;
+				// Build the component key.
+				// Used for targeting certain styles in the preview that differ on component order.
+				componentKey = value + '-' + componentKey;
 
-			// Add back at the beginning
-			$( '.apple-news-preview' ).prepend( $detached );
-		} );
+				// Add back at the beginning
+				$( '.apple-news-preview' ).prepend( $detached );
 
-		if ( '' !== componentKey ) {
-			componentKey = componentKey.substring( 0, componentKey.length - 1 );
-			$( '.apple-news-meta-component' ).addClass( componentKey );
+				// Ensure element is visible.
+				$detached.show();
+			} );
+
+			if ( '' !== componentKey ) {
+				componentKey = componentKey.substring( 0, componentKey.length - 1 );
+				$( '.apple-news-meta-component' ).addClass( componentKey );
+			}
+		}
+
+		// Get the inactive components and ensure they are hidden.
+		var removedElements;
+		if ( 0 === $( '#meta-component-inactive' ).length && $( '#meta_component_inactive' ).length > 0 ) {
+			removedElements = $( '#meta_component_inactive' ).val().split( ',' );
+		} else if ( $( '#meta-component-inactive' ).length ) {
+			removedElements = $( '#meta-component-inactive' ).sortable( 'toArray' );
+		}
+
+		// Loop over removed elements and hide them.
+		if ( removedElements.length ) {
+			$.each( removedElements, function( index, value ) {
+				$( '.apple-news-' + value ).hide();
+			} );
 		}
 	}
 

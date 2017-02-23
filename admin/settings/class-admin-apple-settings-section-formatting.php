@@ -11,6 +11,8 @@
  * @since 0.6.0
  */
 
+use \Apple_Exporter\Settings;
+
 /**
  * Describes a WordPress setting section
  *
@@ -316,6 +318,11 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 				'label' => __( 'Pull quote transformation', 'apple-news' ),
 				'type' => array( 'none', 'uppercase' ),
 			),
+			'pullquote_hanging_punctuation' => array(
+				'label' => __( 'Pullquote hanging punctuation', 'apple-news' ),
+				'type' => array( 'no', 'yes' ),
+				'description' => __( 'If set to "yes," adds smart quotes (if not already present) and sets the hanging punctuation option to true.', 'apple-news' ),
+			),
 			'blockquote_font' => array(
 				'label' => __( 'Blockquote font face', 'apple-news' ),
 				'type' => 'font',
@@ -526,6 +533,7 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 					'pullquote_line_height',
 					'pullquote_tracking',
 					'pullquote_color',
+					'pullquote_hanging_punctuation',
 					'pullquote_border_style',
 					'pullquote_border_color',
 					'pullquote_border_width',
@@ -628,40 +636,67 @@ class Admin_Apple_Settings_Section_Formatting extends Admin_Apple_Settings_Secti
 	 * Renders the component order field.
 	 *
 	 * @param string $type
+	 *
 	 * @access public
-	 * @static
 	 */
 	public static function render_meta_component_order( $type ) {
-		// Get the current order
+
+		// Get the current order.
 		$component_order = self::get_value( 'meta_component_order' );
 		if ( empty( $component_order ) || ! is_array( $component_order ) ) {
-			return;
+			$component_order = array();
 		}
 
-		// Use the correct output format
-		if ( 'hidden' === $type ) :
+		// Get inactive components.
+		$default_settings = new Settings;
+		$inactive_components = array_diff(
+			$default_settings->meta_component_order,
+			$component_order
+		);
+
+		// Use the correct output format.
+		if ( 'hidden' === $type ) {
 			foreach ( $component_order as $component_name ) {
 				echo sprintf(
 					'<input type="hidden" name="meta_component_order[]" value="%s">',
 					esc_attr( $component_name )
 				);
 			}
-		else :
+			foreach ( $inactive_components as $component_name ) {
+				echo sprintf(
+					'<input type="hidden" name="meta_component_inactive[]" value="%s">',
+					esc_attr( $component_name )
+				);
+			}
+		} else {
 			?>
-			<ul id="meta-component-order-sort" class="component-order ui-sortable">
-				<?php
-					foreach ( $component_order as $component_name ) {
-						echo sprintf(
+			<div class="apple-news-sortable-list">
+				<h4><?php esc_html_e( 'Active', 'apple-news' ); ?></h4>
+				<ul id="meta-component-order-sort"
+				    class="component-order ui-sortable">
+					<?php foreach ( $component_order as $component_name ) : ?>
+						<?php echo sprintf(
 							'<li id="%s" class="ui-sortable-handle">%s</li>',
 							esc_attr( $component_name ),
 							esc_html( ucwords( $component_name ) )
-						);
-					}
-				?>
-			</ul>
-			<p class="description"><?php esc_html_e( 'Drag to set the order of the meta components at the top of the article. These include the title, the cover (i.e. featured image) and byline which also includes the date.', 'apple-news' ) ?></p>
+						); ?>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+			<div class="apple-news-sortable-list">
+				<h4><?php esc_html_e( 'Inactive', 'apple-news' ); ?></h4>
+				<ul id="meta-component-inactive" class="component-order ui-sortable">
+					<?php foreach ( $inactive_components as $component_name ) : ?>
+						<?php echo sprintf(
+							'<li id="%s" class="ui-sortable-handle">%s</li>',
+							esc_attr( $component_name ),
+							esc_html( ucwords( $component_name ) )
+						); ?>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+			<p class="description"><?php esc_html_e( 'Drag to set the order of the meta components at the top of the article. These include the title, the cover (i.e. featured image) and byline which also includes the date. Drag elements into the "Inactive" column to prevent them from being included in your articles.', 'apple-news' ) ?></p>
 			<?php
-		endif;
+		}
 	}
-
 }

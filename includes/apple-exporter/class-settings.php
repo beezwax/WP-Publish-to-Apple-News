@@ -107,6 +107,7 @@ class Settings {
 		'pullquote_font' => 'AvenirNext-Bold',
 		'pullquote_size' => 48,
 		'pullquote_color' => '#53585f',
+		'pullquote_hanging_punctuation' => 'no',
 		'pullquote_border_color' => '#53585f',
 		'pullquote_border_style' => 'solid',
 		'pullquote_border_width' => '3',
