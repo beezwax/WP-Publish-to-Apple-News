@@ -13,8 +13,9 @@ class Heading extends Component {
 	 *
 	 * @var array
 	 * @access public
+	 * @static
 	 */
-	public $levels = array( 1, 2, 3, 4, 5, 6 );
+	public static $levels = array( 1, 2, 3, 4, 5, 6 );
 
 	/**
 	 * Look for node matches for this component.
@@ -27,10 +28,10 @@ class Heading extends Component {
 	public static function node_matches( $node ) {
 		$regex = sprintf(
 			'#h[%s-%s]#',
-			current( $this->levels ),
-			end( $this->levels )
+			current( self::$levels ),
+			end( self::$levels )
 		);
-		reset( $this->levels );
+		reset( self::$levels );
 
 		if ( ! preg_match( $regex, $node->nodeName ) ) {
 			return null;
@@ -63,7 +64,7 @@ class Heading extends Component {
 			)
 		);
 
-		foreach ( $this->levels as $level ) {
+		foreach ( self::$levels as $level ) {
 			$this->register_spec(
 				'default-heading-' . $level,
 				sprintf(

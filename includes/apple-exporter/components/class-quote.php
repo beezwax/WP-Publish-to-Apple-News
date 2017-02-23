@@ -84,7 +84,7 @@ class Quote extends Component {
 					'backgroundColor' => '%%blockquote_background_color%%',
 					'border' => array(
 						'all' => array(
-							'width' => '%%blockquote_border_width%%' ),
+							'width' => '%%blockquote_border_width%%',
 							'style' => '%%blockquote_border_style%%',
 							'color' => '%%blockquote_border_color%%',
 						),
@@ -345,19 +345,11 @@ class Quote extends Component {
 		}
 
 		// Set JSON for this element.
-		$this->json = array(
-			'role' => 'container',
-			'layout' => array(
-				'columnStart' => 3,
-				'columnSpan' => 4
-			),
+		$values = array(
 			'components' => array(
 				array(
-					'role' => 'quote',
 					'text' => $text,
 					'format' => $this->parser->format,
-					'layout' => 'pullquote-layout',
-					'textStyle' => 'default-pullquote',
 				)
 			),
 		);

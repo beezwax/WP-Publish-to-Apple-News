@@ -98,7 +98,7 @@ class Image extends Component {
 					'bottom' => 25,
 					'top' => 25,
 				),
-				'columnSpan' = '%%layout_columns_minus_4%%',
+				'columnSpan' => '%%layout_columns_minus_4%%',
 				'columnStart' => 2,
 			)
 		);
@@ -112,7 +112,7 @@ class Image extends Component {
 					'top' => 25,
 				),
 				'ignoreDocumentMargin' => true,
-			),
+			)
 		);
 	}
 
@@ -128,7 +128,6 @@ class Image extends Component {
 		$filename = preg_replace( '/\\?.*/', '', \Apple_News::get_filename( $url ) );
 
 		$values = array(
-			'role' => 'photo',
 			'URL'  => $this->maybe_bundle_source( $url, $filename ),
 		);
 
@@ -145,13 +144,6 @@ class Image extends Component {
 			$this->set_anchor_position( Component::ANCHOR_NONE );
 		}
 
-		// Full width images have top margin
-		if ( Component::ANCHOR_NONE == $this->get_anchor_position() ) {
-			$this->register_non_anchor_layout();
-		} else {
-			$this->register_anchor_layout();
-		}
-
 		// Check for caption
 		if ( preg_match( '#<figcaption.*?>(.*?)</figcaption>#m', $text, $matches ) ) {
 			$caption = trim( $matches[1] );
@@ -164,6 +156,13 @@ class Image extends Component {
 
 		// Register the JSON
 		$this->register_json( $spec_name, $values );
+
+		// Full width images have top margin
+		if ( Component::ANCHOR_NONE == $this->get_anchor_position() ) {
+			$this->register_non_anchor_layout();
+		} else {
+			$this->register_anchor_layout();
+		}
 	}
 
 	/**
@@ -189,11 +188,9 @@ class Image extends Component {
 		// Set values to merge into the spec
 		$values = array();
 		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
-			$values['ignoreDocumentMargin'] = true;
 			$spec_name = 'non-anchored-full-bleed-image';
 		} else {
 			$values['columnSpan'] = $this->get_setting( 'layout_columns' ) - 4;
-			$values['columnStart'] = 2;
 			$spec_name = 'non-anchored-image';
 		}
 
@@ -202,7 +199,8 @@ class Image extends Component {
 			'full-width-image',
 			$spec_name,
 			$values,
-			'layout'
+			'layout',
+			true
 		);
 	}
 

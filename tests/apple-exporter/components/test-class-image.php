@@ -157,6 +157,7 @@ HTML;
 			$this->layouts
 		);
 		$result = $component->to_array();
+		print_r( $result );
 
 		// Test.
 		$this->assertEquals( true, $result['layout']['ignoreDocumentMargin'] );

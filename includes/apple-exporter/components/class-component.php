@@ -140,7 +140,7 @@ abstract class Component {
 	 * @var array
 	 * @access private
 	 */
-	private $specs;
+	public $specs;
 
 	/**
 	 * Constructor.
@@ -463,7 +463,7 @@ abstract class Component {
 	 */
 	protected function register_style( $name, $spec_name, $values = array(), $property = null ) {
 		$component_spec = $this->get_spec( $spec_name );
-		if ( ! empty( $spcomponent_specec ) ) {
+		if ( ! empty( $component_spec ) ) {
 			$json = $component_spec->substitute_values( $values );
 			$this->styles->register_style( $name, $json );
 			$this->set_json( $property, $name );
@@ -501,7 +501,7 @@ abstract class Component {
 	 * @param array $property The JSON property to set with the layout
 	 * @access protected
 	 */
-	protected function register_full_width_layout( $name, $spec_name, $values = array(), $property = null ) {
+	protected function register_full_width_layout( $name, $spec_name, $values = array(), $property = null, $echo = false ) {
 		// Initial colStart and colSpan
 		$col_start = 0;
 		$col_span  = $this->get_setting( 'layout_columns' );
@@ -516,14 +516,24 @@ abstract class Component {
 		// These values just get hardcoded in the spec since the above logic
 		// would make them impossible to override manually.
 		// Changes to this should really be handled by the above plugin settings.
+		if ( $echo ) {
+			echo 'before:';
+			print_r( $this->specs[ $spec_name ]->spec );
+		}
+
 		if ( isset( $this->specs[ $spec_name ] ) ) {
 			$this->specs[ $spec_name ]->spec = array_merge(
 				$this->specs[ $spec_name ]->spec,
 				array(
 					'columnStart' => $col_start,
 					'columnSpan'  => $col_span,
-				),
+				)
 			);
+		}
+
+		if ( $echo ) {
+			echo 'after:';
+			print_r( $this->specs[ $spec_name ]->spec );
 		}
 
 		// Register the layout as normal
