@@ -110,7 +110,7 @@ class Component_Spec {
 	 * @access public
 	 */
 	public function is_token( $value ) {
-		// preg_match for %%token%%
+		return ( 1 === preg_match( '/%%(.*?)%%/', $value ) );
 	}
 
 	// TODO - need a function for pulling in spec overrides from the database?
