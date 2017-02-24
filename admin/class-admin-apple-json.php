@@ -66,7 +66,7 @@ class Admin_Apple_JSON extends Apple_News {
 		check_admin_referer( 'apple_news_json' );
 
 		// Call the callback for the action for further processing
-		// TODO
+		call_user_func( $this->valid_actions[ $action ]['callback'] );
 	}
 
 	/**
@@ -183,9 +183,8 @@ class Admin_Apple_JSON extends Apple_News {
 		$components_sanitized = array();
 		foreach ( $components as $component ) {
 			$value = str_replace( '\\Apple_Exporter\\Components\\', '', $component );
-			$key = $value;
 			$value = str_replace( '_', ' ', $value );
-			$components_sanitized[ $key ] = $value;
+			$components_sanitized[ $component ] = $value;
 		}
 		ksort( $components_sanitized );
 		return $components_sanitized;
