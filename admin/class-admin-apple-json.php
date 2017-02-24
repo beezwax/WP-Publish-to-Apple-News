@@ -218,9 +218,10 @@ class Admin_Apple_JSON extends Apple_News {
 		// Make this alphabetized and pretty
 		$components_sanitized = array();
 		foreach ( $components as $component ) {
-			$component = $component->get_component_name();
-			$component = str_replace( '_', ' ', $component );
-			$components_sanitized[] = $component;
+			$component_class = new $component;
+			$component_name = $component_class->get_component_name();
+			$component_name = str_replace( '_', ' ', $component_name );
+			$components_sanitized[] = $component_name;
 		}
 		sort( $components_sanitized );
 		return $components_sanitized;
