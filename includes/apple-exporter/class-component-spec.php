@@ -140,22 +140,23 @@ class Component_Spec {
 	public function save( $spec ) {
 		// Validate the JSON
 		$json = json_decode( $spec );
-		if ( empty( $spec ) ) {
+		if ( empty( $json ) ) {
 			\Admin_Apple_Notice::error( sprintf(
-				__( 'The JSON for %s was invalid and cannot be saved', 'apple-news' ),
-				$name
+				__( 'The spec for %s was invalid and cannot be saved', 'apple-news' ),
+				$this->label
 			) );
+			return false;
 		}
 
 		// Compare this JSON to the built-in JSON.
 		// If they are the same, there is no reason to save this.
-		$custom_json = $this->get_json( $json );
-		$default_json = $this->get_json();
+		$custom_json = $this->format_json( $json );
+		$default_json = $this->format_json( $this->spec );
 		if ( $custom_json === $default_json ) {
 			// Delete the spec in case we've reverted back to default.
 			// No need to keep it in storage.
-			$this->delete();
-			return;
+			$result = $this->delete();
+			return $result;
 		}
 
 		// If we've gotten to this point, save the JSON.
@@ -166,12 +167,7 @@ class Component_Spec {
 		update_option( $option_name, $overrides );
 
 		// Indicate success
-		$component = new $this->component;
-		\Admin_Apple_Notice::error( sprintf(
-			__( 'Saved custom %s for the %s component', 'apple-news' ),
-			$this->name,
-			ucwords( $component->get_component_name() )
-		) );
+		return true;
 	}
 
 	/**
@@ -185,6 +181,9 @@ class Component_Spec {
 		$overrides = get_option( $option_name, array() );
 		if ( isset( $overrides[ $spec_key ] ) ) {
 			unset( $overrides[ $spec_key ] );
+			$result = true;
+		} else {
+			$result = false;
 		}
 
 		if ( empty( $overrides ) ) {
@@ -192,6 +191,8 @@ class Component_Spec {
 		} else {
 			update_option( $option_name, $overrides );
 		}
+
+		return $result;
 	}
 
 	/**
@@ -216,11 +217,7 @@ class Component_Spec {
 	 * @return string
 	 * @access public
 	 */
-	public function get_json( $spec = null ) {
-		if ( empty( $spec ) ) {
-			$spec = $this->get_spec();
-		}
-
+	public function format_json( $spec ) {
 		return json_encode( $spec, JSON_PRETTY_PRINT );
 	}
 

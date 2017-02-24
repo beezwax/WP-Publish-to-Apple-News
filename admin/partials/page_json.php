@@ -3,6 +3,7 @@
 	<h1 id="apple_news_json_title"><?php esc_html_e( 'Customize Component JSON', 'apple-news' ) ?></h1>
 
 	<form method="post" action="" id="apple-news-json-form">
+		<input type="hidden" id="apple_news_action" name="apple_news_action" value="apple_news_save_json" />
 		<?php wp_nonce_field( 'apple_news_json' ); ?>
 
 		<?php if ( empty( $components ) ) : ?>
@@ -41,7 +42,7 @@
 			<?php if ( ! empty( $specs ) ) : ?>
 				<?php foreach ( $specs as $spec ) :
 					$field_name = $spec->key_from_name( $spec->name );
-					$json_display = $spec->get_json();
+					$json_display = $spec->format_json( $spec->get_spec() );
 					$rows = substr_count( $json_display, "\n" ) + 1;
 					?>
 					<p>

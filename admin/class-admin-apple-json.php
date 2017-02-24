@@ -54,8 +54,9 @@ class Admin_Apple_JSON extends Apple_News {
 	 */
 	public function action_router() {
 		// Check for a valid action
-		$action	= isset( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : null;
+		$action	= isset( $_POST['apple_news_action'] ) ? sanitize_text_field( $_POST['apple_news_action'] ) : null;
 		if ( ( empty( $action ) || ! array_key_exists( $action, $this->valid_actions ) ) ) {
+			echo "invalid";
 			return;
 		}
 
@@ -175,14 +176,32 @@ class Admin_Apple_JSON extends Apple_News {
 			) );
 		}
 
-		// Iterate over the specs and save each one
+		// Iterate over the specs and save each one.
+		// Keep track of which ones were updated.
+		$updates = array();
 		foreach ( $specs as $spec ) {
 			// Ensure the value exists
 			$key = $spec->key_from_name( $spec->name );
 			if ( isset( $_POST[ $key ] ) ) {
-				$custom_spec = sanitize_text_field( $_POST[ $key ] );
-				$spec->save( $custom_spec );
+				$custom_spec = stripslashes( sanitize_text_field( $_POST[ $key ] ) );
+				$result = $spec->save( $custom_spec );
+				if ( true === $result ) {
+					$updates[] = $spec->label;
+				}
 			}
+		}
+
+		if ( empty( $updates ) ) {
+			\Admin_Apple_Notice::info( sprintf(
+				__( 'No spec updates were found for %s', 'apple-news' ),
+				$component
+			) );
+		} else {
+			\Admin_Apple_Notice::success( sprintf(
+				__( 'Saved the following custom specs for %s: %s', 'apple-news' ),
+				$component,
+				implode( ', ', $updates )
+			) );
 		}
 	}
 
