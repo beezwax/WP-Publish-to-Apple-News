@@ -46,11 +46,10 @@
 	margin: 0px;
 }
 
-.apple-news-dropcap-enabled {
+.apple-news-dropcap {
 	float: left;
-	padding-top: 7px;
-	padding-right: 10px;
-	padding-left: 5px;
+	margin-right: 5px;
+	position: relative;
 }
 
 .wrap .apple-news-title {

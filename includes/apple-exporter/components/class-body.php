@@ -113,11 +113,13 @@ class Body extends Component {
 				$this->get_default_style_spec(),
 				array(
 					'dropCapStyle' => array (
-						'numberOfLines' 			=> 4,
-						'numberOfCharacters' 	=> 1,
-						'padding' 						=> 5,
+						'numberOfLines' 			=> '%%numberOfLines%%',
+						'numberOfCharacters' 	=> '%%dropcap_number_of_characters%%',
+						'padding'							=> '%%dropcap_padding%%',
 						'fontName' 						=> '%%dropcap_font%%',
 						'textColor'						=> '%%dropcap_color%%',
+						'numberOfRaisedLines' => '%%dropcap_number_of_raised_lines%%',
+						'backgroundColor'			=> '%%dropcap_background_color%%',
 					),
 				)
 			)
@@ -288,16 +290,37 @@ class Body extends Component {
 	 * @access private
 	 */
 	private function set_initial_dropcap_style() {
+		// Negotiate the number of lines.
+		$number_of_lines = absint( $this->get_setting( 'dropcap_number_of_lines' ) );
+		if ( $number_of_lines < 2 ) {
+			$number_of_lines = 2;
+		} elseif ( $number_of_lines > 10 ) {
+			$number_of_lines = 10;
+		}
+
+		// Start building the custom dropcap body style.
+		$dropcap_style = array(
+			'fontName' => $this->get_setting( 'dropcap_font' ),
+			'numberOfCharacters' => absint( $this->get_setting( 'dropcap_number_of_characters' ) ),
+			'numberOfLines' => $number_of_lines,
+			'numberOfRaisedLines' => absint( $this->get_setting( 'dropcap_number_of_raised_lines' ) ),
+			'padding' => absint( $this->get_setting( 'dropcap_padding' ) ),
+			'textColor' => $this->get_setting( 'dropcap_color' ),
+		);
+
+		// Add the background color, if defined.
+		$background_color = $this->get_setting( 'dropcap_background_color' );
+		if ( ! empty( $background_color ) ) {
+			$dropcap_style['backgroundColor'] = $background_color;
+		}
+
 		$this->register_style(
 			'dropcapBodyStyle',
 			'dropcapBodyStyle',
 			array_merge(
 				$this->get_default_style_values(),
 				array(
-					'dropCapStyle' => array (
-						'fontName' 				=> $this->get_setting( 'dropcap_font' ),
-						'textColor'				=> $this->get_setting( 'dropcap_color' ),
-					),
+					'dropCapStyle' => $dropcap_style,
 				)
 			),
 			'textStyle'
