@@ -105,7 +105,7 @@ class Admin_Apple_JSON extends Apple_News {
 	}
 
 	/**
-	 * Saves the JSON for the component
+	 * Saves the JSON snippets for the component
 	 *
 	 * @param string $component
 	 * @param string $json
@@ -116,13 +116,23 @@ class Admin_Apple_JSON extends Apple_News {
 	}
 
 	/**
-	 * Loads the JSON for the component
+	 * Loads the JSON snippets that can be customized for the component
 	 *
 	 * @param string $component
 	 * @return array
 	 * @access private
 	 */
 	private function get_json( $component ) {
+
+	}
+
+	/**
+	 * Lists all components that can be customized
+	 *
+	 * @return array
+	 * @access private
+	 */
+	private function list_components( $component ) {
 
 	}
 
