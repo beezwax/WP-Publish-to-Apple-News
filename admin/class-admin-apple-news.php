@@ -16,6 +16,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-async.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-sections.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-themes.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
 
 /**
  * Entry-point class for the plugin.
