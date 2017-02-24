@@ -33,6 +33,26 @@ class Admin_Apple_JSON extends Apple_News {
 	}
 
 	/**
+	 * Route all possible theme actions to the right place.
+	 *
+	 * @param string $hook
+	 * @access public
+	 */
+	public function action_router() {
+		// Check for a valid action
+		$action	= isset( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : null;
+		if ( empty( $action ) || 'apple_news_set_json' !== $action ) {
+			return;
+		}
+
+		// Check the nonce
+		check_admin_referer( 'apple_news_json' );
+
+		// Call the callback for the action for further processing
+		// TODO
+	}
+
+	/**
 	 * Fix the title since WordPress doesn't set one.
 	 *
 	 * @param string $admin_title
@@ -70,10 +90,15 @@ class Admin_Apple_JSON extends Apple_News {
 	 *
 	 * @access public
 	 */
-	public function page_themes_render() {
+	public function page_json_render() {
 		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
 			wp_die( __( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}
+
+		$components = $this->list_components();
+
+		$themes = new Admin_Apple_Themes();
+		$theme_admin_url = $themes->theme_admin_url();
 
 		include plugin_dir_path( __FILE__ ) . 'partials/page_json.php';
 	}
@@ -132,8 +157,17 @@ class Admin_Apple_JSON extends Apple_News {
 	 * @return array
 	 * @access private
 	 */
-	private function list_components( $component ) {
+	private function list_components() {
+		$component_factory = new \Apple_Exporter\Component_Factory();
+		$component_factory->initialize();
+		$components = $component_factory::get_components();
 
+		// Make this alphabetized and pretty
+		foreach ( $components as &$component ) {
+			$component = str_replace( '\\Apple_Exporter\\Components\\', '', $component );
+		}
+		ksort( $components );
+		return $components;
 	}
 
 	/**

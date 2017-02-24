@@ -64,7 +64,7 @@ class Component_Factory {
 	 * @static
 	 * @access public
 	 */
-	public static function initialize( $workspace, $settings, $styles, $layouts ) {
+	public static function initialize( $workspace = null, $settings = null, $styles = null, $layouts = null ) {
 		self::$workspace = $workspace;
 		self::$settings  = $settings;
 		self::$styles    = $styles;
@@ -92,6 +92,17 @@ class Component_Factory {
 
 		// Allow built-in components and order to be overridden
 		self::$components = apply_filters( 'apple_news_initialize_components', self::$components );
+	}
+
+	/**
+	 * Get all components
+	 *
+	 * @return array
+	 * @static
+	 * @access public
+	 */
+	public static function get_components() {
+		return self::$components;
 	}
 
 	/**

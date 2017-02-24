@@ -91,6 +91,9 @@ class Admin_Apple_News extends Apple_News {
 
 		// Add preview support
 		new Admin_Apple_Preview();
+
+		// Add JSON customization support
+		new Admin_Apple_JSON();
 	}
 
 	/**

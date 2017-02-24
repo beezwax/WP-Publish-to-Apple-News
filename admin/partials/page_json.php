@@ -6,6 +6,39 @@
 		<?php wp_nonce_field( 'apple_news_json' ); ?>
 		<input type="hidden" id="apple_news_action" name="action" value="apple_news_set_json" />
 
+		<?php if ( empty( $components ) ) : ?>
+		<h2><?php esc_html_e( 'No components are available for customizing JSON', 'apple-news' ) ?></h2>
+		<?php else : ?>
+			<p><?php echo wp_kses(
+				sprintf(
+					__( 'Select a component to customize any of the specs for its JSON snippets. This will enable to you create advanced templates beyond what is supported by <a href="%s">themes</a>.', 'apple-news' ),
+					esc_url( $theme_admin_url )
+				),
+				array(
+					'a' => array(
+						'href' => array()
+					)
+				)
+			) ?></p>
+			<p><?php esc_html_e( 'Tokens that will be replaced by dynamic values based on theme or post settings are denoted as %%token%%. You may remove tokens to suit your custom JSON but you cannot add new ones.', 'apple-news' ) ?></p>
+			<p><?php echo wp_kses(
+				sprintf(
+					__( 'For more information on the Apple News format options for each component, please read the <a href="%s">Apple News Format Reference</a>.', 'apple-news' ),
+					'https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/Component.html#//apple_ref/doc/uid/TP40015408-CH5-SW1'
+				),
+				array(
+					'a' => array(
+						'href' => array()
+					)
+				)
+			) ?></p>
+			<label for="apple_news_component"><?php esc_html_e( 'Components', 'apple-news' ) ?></label>
+			<select id="apple_news_component" name="apple_news_component">
+			<?php foreach ( $components as $shortname => $name ) : ?>
+				<option name="<?php echo esc_attr( $shortname ) ?>"><?php echo esc_html( $name ) ?></option>
+			<?php endforeach; ?>
+			</select>
+		<?php endif; ?>
 		<?php submit_button(
 			__( 'Save JSON', 'apple-news' ),
 			'primary',
