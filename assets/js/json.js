@@ -3,7 +3,7 @@
 	$(document).ready(function () {
 		$( '#apple_news_component' ).on( 'change', function( e ) {
 			e.preventDefault();
-			appleNewsThemesSubmit( $( this ), 'apple_news_get_json' );
+			appleNewsJSONSubmit( $( this ), 'apple_news_get_json' );
 		});
 	});
 

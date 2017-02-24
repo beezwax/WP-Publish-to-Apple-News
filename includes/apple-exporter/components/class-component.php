@@ -501,7 +501,7 @@ abstract class Component {
 	 * @param array $property The JSON property to set with the layout
 	 * @access protected
 	 */
-	protected function register_full_width_layout( $name, $spec_name, $values = array(), $property = null, $echo = false ) {
+	protected function register_full_width_layout( $name, $spec_name, $values = array(), $property = null ) {
 		// Initial colStart and colSpan
 		$col_start = 0;
 		$col_span  = $this->get_setting( 'layout_columns' );
@@ -516,11 +516,6 @@ abstract class Component {
 		// These values just get hardcoded in the spec since the above logic
 		// would make them impossible to override manually.
 		// Changes to this should really be handled by the above plugin settings.
-		if ( $echo ) {
-			echo 'before:';
-			print_r( $this->specs[ $spec_name ]->spec );
-		}
-
 		if ( isset( $this->specs[ $spec_name ] ) ) {
 			$this->specs[ $spec_name ]->spec = array_merge(
 				$this->specs[ $spec_name ]->spec,
@@ -529,11 +524,6 @@ abstract class Component {
 					'columnSpan'  => $col_span,
 				)
 			);
-		}
-
-		if ( $echo ) {
-			echo 'after:';
-			print_r( $this->specs[ $spec_name ]->spec );
 		}
 
 		// Register the layout as normal

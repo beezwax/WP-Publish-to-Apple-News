@@ -13,6 +13,14 @@ class Admin_Apple_JSON extends Apple_News {
 	public $json_page_name;
 
 	/**
+	 * Namespace for component classes.
+	 *
+	 * @var string
+	 * @access public
+	 */
+	private $namespace = '\\Apple_Exporter\\Components\\';
+
+	/**
 	 * Prefix for the key for storing custom JSON.
 	 *
 	 * @var string
@@ -37,9 +45,6 @@ class Admin_Apple_JSON extends Apple_News {
 		$this->valid_actions = array(
 			'apple_news_save_json' => array(
 				'callback' => array( $this, 'save_json' ),
-			),
-			'apple_news_get_json' => array(
-				'callback' =>  array( $this, 'get_json' ),
 			),
 		);
 
@@ -112,11 +117,20 @@ class Admin_Apple_JSON extends Apple_News {
 			wp_die( __( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}
 
+		// Get components for the dropdown
 		$components = $this->list_components();
 
+		// Get theme info for reference purposes
 		$themes = new Admin_Apple_Themes();
 		$theme_admin_url = $themes->theme_admin_url();
 
+		// Check if there is a valid selected component
+		$selected_component = $this->get_selected_component();
+
+		// If we have a class, get its specs
+		$specs = $this->get_json( $selected_component );
+
+		// Load the template
 		include plugin_dir_path( __FILE__ ) . 'partials/page_json.php';
 	}
 
@@ -149,11 +163,9 @@ class Admin_Apple_JSON extends Apple_News {
 	/**
 	 * Saves the JSON snippets for the component
 	 *
-	 * @param string $component
-	 * @param string $json
 	 * @access private
 	 */
-	private function save_json( $component, $json ) {
+	private function save_json() {
 
 	}
 
@@ -165,7 +177,14 @@ class Admin_Apple_JSON extends Apple_News {
 	 * @access private
 	 */
 	private function get_json( $component ) {
+		$specs = array();
+		if ( ! empty( $component ) ) {
+			$classname = $this->namespace . $component;
+			$component_class = new $classname();
+			$specs = $component_class->get_specs();
+		}
 
+		return $specs;
 	}
 
 	/**
@@ -182,12 +201,31 @@ class Admin_Apple_JSON extends Apple_News {
 		// Make this alphabetized and pretty
 		$components_sanitized = array();
 		foreach ( $components as $component ) {
-			$value = str_replace( '\\Apple_Exporter\\Components\\', '', $component );
-			$value = str_replace( '_', ' ', $value );
-			$components_sanitized[ $component ] = $value;
+			$component = str_replace( $this->namespace, '', $component );
+			$component = str_replace( '_', ' ', $component );
+			$components_sanitized[] = $component;
 		}
-		ksort( $components_sanitized );
+		sort( $components_sanitized );
 		return $components_sanitized;
+	}
+
+	/**
+	 * Checks for a valid selected component
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function get_selected_component() {
+		$selected_component = '';
+
+		if ( isset( $_POST['apple_news_component'] ) ) {
+			$selected_component = sanitize_text_field( $_POST['apple_news_component'] );
+			if ( ! in_array( $selected_component, $this->list_components() ) ) {
+				$selected_component = '';
+			}
+		}
+
+		return $selected_component;
 	}
 
 	/**
