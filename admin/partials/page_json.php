@@ -33,8 +33,8 @@
 			) ?></p>
 			<select id="apple_news_component" name="apple_news_component">
 				<option name=""><?php esc_html_e( 'Select a component', 'apple-news' ) ?></option>
-				<?php foreach ( $components as $component ) : ?>
-					<option name="<?php echo esc_attr( $component ) ?>" <?php selected( $component, $selected_component ) ?>><?php echo esc_html( $component ) ?></option>
+				<?php foreach ( $components as $component_key => $component_name ) : ?>
+					<option value="<?php echo esc_attr( $component_key ) ?>" <?php selected( $component_key, $selected_component ) ?>><?php echo esc_html( $component_name ) ?></option>
 				<?php endforeach; ?>
 			</select>
 

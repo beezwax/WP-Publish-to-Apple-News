@@ -218,12 +218,11 @@ class Admin_Apple_JSON extends Apple_News {
 		// Make this alphabetized and pretty
 		$components_sanitized = array();
 		foreach ( $components as $component ) {
-			$component_class = new $component;
-			$component_name = $component_class->get_component_name();
-			$component_name = str_replace( '_', ' ', $component_name );
-			$components_sanitized[] = $component_name;
+			$component_key = str_replace( $this->namespace, '', $component );
+			$component_name = str_replace( '_', ' ', $component_key );
+			$components_sanitized[ $component_key ] = $component_name;
 		}
-		sort( $components_sanitized );
+		ksort( $components_sanitized );
 		return $components_sanitized;
 	}
 
@@ -238,7 +237,7 @@ class Admin_Apple_JSON extends Apple_News {
 
 		if ( isset( $_POST['apple_news_component'] ) ) {
 			$selected_component = sanitize_text_field( $_POST['apple_news_component'] );
-			if ( ! in_array( $selected_component, $this->list_components() ) ) {
+			if ( ! array_key_exists( $selected_component, $this->list_components() ) ) {
 				$selected_component = '';
 			}
 		}
