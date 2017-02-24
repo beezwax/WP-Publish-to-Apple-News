@@ -45,7 +45,7 @@
 					$rows = substr_count( $json_display, "\n" ) + 1;
 					?>
 					<p>
-						<label for="<?php echo esc_attr( $field_name ) ?>"><?php echo esc_html( $spec->label ) ?></label><br />
+						<label for="<?php echo esc_attr( $field_name ) ?>"><?php echo esc_html( $spec->label ) ?></label>
 						<textarea cols="80" rows="<?php echo absint( $rows ) ?>" id="<?php echo esc_attr( $field_name ) ?>" name="<?php echo esc_attr( $field_name ) ?>"><?php echo esc_textarea( $json_display ) ?></textarea>
 					</p>
 				<?php endforeach; ?>
