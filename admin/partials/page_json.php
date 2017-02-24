@@ -40,8 +40,8 @@
 
 			<?php if ( ! empty( $specs ) ) : ?>
 				<?php foreach ( $specs as $spec ) :
-					$field_name = 'apple_news_json_' . $spec->name;
-					$json_display = json_encode( $spec->spec, JSON_PRETTY_PRINT );
+					$field_name = $spec->key_from_name( $spec->name );
+					$json_display = $spec->get_json();
 					$rows = substr_count( $json_display, "\n" ) + 1;
 					?>
 					<p>
@@ -52,10 +52,15 @@
 			<?php endif; ?>
 
 		<?php endif; ?>
-		<?php submit_button(
-			__( 'Save JSON', 'apple-news' ),
-			'primary',
-			'apple_news_save_json'
-		); ?>
+
+		<?php
+			if ( ! empty( $selected_component ) ) {
+				submit_button(
+					__( 'Save JSON', 'apple-news' ),
+					'primary',
+					'apple_news_save_json'
+				);
+			}
+		?>
 	</form>
 </div>

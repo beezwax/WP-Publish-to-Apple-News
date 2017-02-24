@@ -21,14 +21,6 @@ class Admin_Apple_JSON extends Apple_News {
 	private $namespace = '\\Apple_Exporter\\Components\\';
 
 	/**
-	 * Prefix for the key for storing custom JSON.
-	 *
-	 * @var string
-	 * @const
-	 */
-	const JSON_KEY_PREFIX = 'apple_news_json_';
-
-	/**
 	 * Valid actions handled by this class and their callback functions.
 	 *
 	 * @var array
@@ -128,7 +120,7 @@ class Admin_Apple_JSON extends Apple_News {
 		$selected_component = $this->get_selected_component();
 
 		// If we have a class, get its specs
-		$specs = $this->get_json( $selected_component );
+		$specs = $this->get_specs( $selected_component );
 
 		// Load the template
 		include plugin_dir_path( __FILE__ ) . 'partials/page_json.php';
@@ -166,17 +158,42 @@ class Admin_Apple_JSON extends Apple_News {
 	 * @access private
 	 */
 	private function save_json() {
+		// Get the selected component
+		$component = $this->get_selected_component();
+		if ( empty( $component ) ) {
+			\Admin_Apple_Notice::error(
+				__( 'Unable to save JSON since no component was provided', 'apple-news' )
+			);
+		}
 
+		// Get the specs for the component
+		$specs = $this->get_specs( $component );
+		if ( empty( $specs ) ) {
+			\Admin_Apple_Notice::error( sprintf(
+				__( 'The component %s has no specs and cannot be saved', 'apple-news' ),
+				$component
+			) );
+		}
+
+		// Iterate over the specs and save each one
+		foreach ( $specs as $spec ) {
+			// Ensure the value exists
+			$key = $spec->key_from_name( $spec->name );
+			if ( isset( $_POST[ $key ] ) ) {
+				$custom_spec = sanitize_text_field( $_POST[ $key ] );
+				$spec->save( $custom_spec );
+			}
+		}
 	}
 
 	/**
-	 * Loads the JSON snippets that can be customized for the component
+	 * Loads the JSON specs that can be customized for the component
 	 *
 	 * @param string $component
 	 * @return array
 	 * @access private
 	 */
-	private function get_json( $component ) {
+	private function get_specs( $component ) {
 		$specs = array();
 		if ( ! empty( $component ) ) {
 			$classname = $this->namespace . $component;
@@ -201,7 +218,7 @@ class Admin_Apple_JSON extends Apple_News {
 		// Make this alphabetized and pretty
 		$components_sanitized = array();
 		foreach ( $components as $component ) {
-			$component = str_replace( $this->namespace, '', $component );
+			$component = $component->get_component_name();
 			$component = str_replace( '_', ' ', $component );
 			$components_sanitized[] = $component;
 		}
@@ -226,17 +243,6 @@ class Admin_Apple_JSON extends Apple_News {
 		}
 
 		return $selected_component;
-	}
-
-	/**
-	 * Generates a key for the JSON from the provided component
-	 *
-	 * @param string $component
-	 * @return string
-	 * @access public
-	 */
-	public function json_key_from_name( $component ) {
-		return self::JSON_KEY_PREFIX . sanitize_key( $component );
 	}
 
 	/**

@@ -52,6 +52,14 @@ class Component_Spec {
 	public $spec;
 
 	/**
+	 * Prefix for the key for storing custom JSON.
+	 *
+	 * @var string
+	 * @const
+	 */
+	const JSON_KEY_PREFIX = 'apple_news_json_';
+
+	/**
 	 * Initializes the object with the name, label and the spec.
 	 *
 	 * @access public
@@ -71,6 +79,7 @@ class Component_Spec {
 	 * @access public
 	 */
 	public function substitute_values( $values ) {
+		// TODO - need a function for pulling in spec overrides from the database
 		// Call a recursive function to substitute the values
 		return $this->value_iterator( $this->spec, $values );
 	}
@@ -117,8 +126,8 @@ class Component_Spec {
 	 */
 	public function validate( $spec ) {
 		// Iterate recursively over the built-in spec and get all the tokens
-		// Do the same for the provided spec and ensure the tokens are the same
-		// Provide an error for unexpected tokens or missing tokens
+		// Do the same for the provided spec.
+		// Removing tokens is fine, but new tokens cannot be added.
 	}
 
 	/**
@@ -129,10 +138,99 @@ class Component_Spec {
 	 * @access public
 	 */
 	public function save( $spec ) {
-		// Save as part of a single option value array
-		// TODO - should components handle this maybe since they have multiple specs?
-		// Picturing a dropdown or nav that changes between components with form fields
-		// with JSON pretty print for each spec for that component.
+		// Validate the JSON
+		$json = json_decode( $spec );
+		if ( empty( $spec ) ) {
+			\Admin_Apple_Notice::error( sprintf(
+				__( 'The JSON for %s was invalid and cannot be saved', 'apple-news' ),
+				$name
+			) );
+		}
+
+		// Compare this JSON to the built-in JSON.
+		// If they are the same, there is no reason to save this.
+		$custom_json = $this->get_json( $json );
+		$default_json = $this->get_json();
+		if ( $custom_json === $default_json ) {
+			// Delete the spec in case we've reverted back to default.
+			// No need to keep it in storage.
+			$this->delete();
+			return;
+		}
+
+		// If we've gotten to this point, save the JSON.
+		$option_name = $this->key_from_name( $this->component );
+		$spec_key = $this->key_from_name( $this->name );
+		$overrides = get_option( $option_name, array() );
+		$overrides[ $spec_key ] = $json;
+		update_option( $option_name, $overrides );
+	}
+
+	/**
+	 * Delete the current spec override.
+	 *
+	 * @access private
+	 */
+	private function delete() {
+		$option_name = $this->key_from_name( $this->component );
+		$spec_key = $this->key_from_name( $this->name );
+		$overrides = get_option( $option_name, array() );
+		if ( isset( $overrides[ $spec_key ] ) ) {
+			unset( $overrides[ $spec_key ] );
+		}
+
+		if ( empty( $overrides ) ) {
+			delete_option( $option_name );
+		} else {
+			update_option( $option_name, $overrides );
+		}
+	}
+
+	/**
+	 * Get the spec for this component as JSON.
+	 *
+	 * @return string
+	 * @access public
+	 */
+	public function get_spec() {
+		$override = $this->get_override();
+		if ( ! empty( $override ) ) {
+			return $override;
+		} else {
+			return $this->spec;
+		}
+	}
+
+	/**
+	 * Get the spec for this component as JSON.
+	 *
+	 * @param string $spec
+	 * @return string
+	 * @access public
+	 */
+	public function get_json( $spec = null ) {
+		if ( empty( $spec ) ) {
+			$spec = $this->get_spec();
+		}
+
+		return json_encode( $spec, JSON_PRETTY_PRINT );
+	}
+
+	/**
+	 * Get the override for this component spec.
+	 *
+	 * @return array
+	 * @access public
+	 */
+	public function get_override() {
+		$option_name = $this->key_from_name( $this->component );
+		$spec_key = $this->key_from_name( $this->name );
+		$overrides = get_option( $option_name, array() );
+		if ( isset( $overrides[ $spec_key ] ) ) {
+			return $overrides[ $spec_key ];
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -146,9 +244,14 @@ class Component_Spec {
 		return ( 1 === preg_match( '/%%(.*?)%%/', $value ) );
 	}
 
-	// TODO - need a function for pulling in spec overrides from the database?
-	// TODO - how will validation work for overrides on save?
-	// http://stackoverflow.com/questions/6054033/pretty-printing-json-with-php
-
-	// TODO should remove items from spec that don't have values set
+	/**
+	 * Generates a key for the JSON from the provided component or spec
+	 *
+	 * @param string $component
+	 * @return string
+	 * @access public
+	 */
+	public function key_from_name( $name ) {
+		return self::JSON_KEY_PREFIX . sanitize_key( $name );
+	}
 }

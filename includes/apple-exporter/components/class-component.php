@@ -417,7 +417,7 @@ abstract class Component {
 	 */
 	protected function register_spec( $name, $label, $spec ) {
 		// Store as a multidimensional array with the label and spec, indexed by name
-		$this->specs[ $name ] = new Component_Spec( get_class( $this ), $name, $label, $spec );
+		$this->specs[ $name ] = new Component_Spec( $this->get_component_name(), $name, $label, $spec );
 	}
 
 	/**
