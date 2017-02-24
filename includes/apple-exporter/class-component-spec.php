@@ -79,9 +79,8 @@ class Component_Spec {
 	 * @access public
 	 */
 	public function substitute_values( $values ) {
-		// TODO - need a function for pulling in spec overrides from the database
 		// Call a recursive function to substitute the values
-		return $this->value_iterator( $this->spec, $values );
+		return $this->value_iterator( $this->get_spec(), $values );
 	}
 
 	/**
@@ -128,6 +127,39 @@ class Component_Spec {
 		// Iterate recursively over the built-in spec and get all the tokens
 		// Do the same for the provided spec.
 		// Removing tokens is fine, but new tokens cannot be added.
+		$new_tokens = $default_tokens = array();
+		$this->find_tokens( $spec, $new_tokens );
+		$this->find_tokens( $this->spec, $default_tokens );
+
+		foreach ( $new_tokens as $token ) {
+			if ( ! in_array( $token, $default_tokens ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * Validate the provided spec against the built-in spec.
+	 *
+	 * @param array $spec
+	 * @return boolean
+	 * @access public
+	 */
+	public function find_tokens( $spec, &$tokens ) {
+		// Iterate recursively over the built-in spec and get all the tokens
+		// Do the same for the provided spec.
+		// Removing tokens is fine, but new tokens cannot be added.
+		foreach ( $spec as $key => $value ) {
+			// If the current element has children, call this recursively
+			if ( is_array( $value ) ) {
+				$this->find_tokens( $spec[ $key ], $tokens );
+			} else if ( ! is_array( $value ) && $this->is_token( $value ) ) {
+				// This element is a token.
+				$tokens[] = $value;
+			}
+		}
 	}
 
 	/**
@@ -156,6 +188,16 @@ class Component_Spec {
 			// Delete the spec in case we've reverted back to default.
 			// No need to keep it in storage.
 			$result = $this->delete();
+			return $result;
+		}
+
+		// Validate the JSON
+		$result = $this->validate( $json );
+		if ( false === $result ) {
+			\Admin_Apple_Notice::error( sprintf(
+				__( 'The spec for %s had invalid tokens and cannot be saved', 'apple-news' ),
+				$this->label
+			) );
 			return $result;
 		}
 
