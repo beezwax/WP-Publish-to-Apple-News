@@ -4,7 +4,7 @@
 
 	<form method="post" action="" id="apple-news-json-form">
 		<?php wp_nonce_field( 'apple_news_json' ); ?>
-		<input type="hidden" id="apple_news_action" name="action" value="apple_news_set_json" />
+		<input type="hidden" id="apple_news_action" name="action" value="apple_news_save_json" />
 
 		<?php if ( empty( $components ) ) : ?>
 		<h2><?php esc_html_e( 'No components are available for customizing JSON', 'apple-news' ) ?></h2>
@@ -32,12 +32,13 @@
 					)
 				)
 			) ?></p>
-			<label for="apple_news_component"><?php esc_html_e( 'Components', 'apple-news' ) ?></label>
 			<select id="apple_news_component" name="apple_news_component">
-			<?php foreach ( $components as $shortname => $name ) : ?>
-				<option name="<?php echo esc_attr( $shortname ) ?>"><?php echo esc_html( $name ) ?></option>
-			<?php endforeach; ?>
+				<option name=""><?php esc_html_e( 'Select a component', 'apple-news' ) ?></option>
+				<?php foreach ( $components as $shortname => $name ) : ?>
+					<option name="<?php echo esc_attr( $shortname ) ?>"><?php echo esc_html( $name ) ?></option>
+				<?php endforeach; ?>
 			</select>
+
 		<?php endif; ?>
 		<?php submit_button(
 			__( 'Save JSON', 'apple-news' ),

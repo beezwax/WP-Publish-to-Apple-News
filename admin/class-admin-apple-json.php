@@ -21,10 +21,27 @@ class Admin_Apple_JSON extends Apple_News {
 	const JSON_KEY_PREFIX = 'apple_news_json_';
 
 	/**
+	 * Valid actions handled by this class and their callback functions.
+	 *
+	 * @var array
+	 * @access private
+	 */
+	private $valid_actions;
+
+	/**
 	 * Constructor.
 	 */
 	function __construct() {
 		$this->json_page_name = $this->plugin_domain . '-json';
+
+		$this->valid_actions = array(
+			'apple_news_save_json' => array(
+				'callback' => array( $this, 'save_json' ),
+			),
+			'apple_news_get_json' => array(
+				'callback' =>  array( $this, 'get_json' ),
+			),
+		);
 
 		add_action( 'admin_menu', array( $this, 'setup_json_page' ), 99 );
 		add_action( 'admin_init', array( $this, 'action_router' ) );
@@ -41,7 +58,7 @@ class Admin_Apple_JSON extends Apple_News {
 	public function action_router() {
 		// Check for a valid action
 		$action	= isset( $_POST['action'] ) ? sanitize_text_field( $_POST['action'] ) : null;
-		if ( empty( $action ) || 'apple_news_set_json' !== $action ) {
+		if ( ( empty( $action ) || ! array_key_exists( $action, $this->valid_actions ) ) ) {
 			return;
 		}
 
