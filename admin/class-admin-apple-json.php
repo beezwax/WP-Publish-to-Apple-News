@@ -163,11 +163,15 @@ class Admin_Apple_JSON extends Apple_News {
 		$components = $component_factory::get_components();
 
 		// Make this alphabetized and pretty
-		foreach ( $components as &$component ) {
-			$component = str_replace( '\\Apple_Exporter\\Components\\', '', $component );
+		$components_sanitized = array();
+		foreach ( $components as $component ) {
+			$value = str_replace( '\\Apple_Exporter\\Components\\', '', $component );
+			$key = $value;
+			$value = str_replace( '_', ' ', $value );
+			$components_sanitized[ $key ] = $value;
 		}
-		ksort( $components );
-		return $components;
+		ksort( $components_sanitized );
+		return $components_sanitized;
 	}
 
 	/**
