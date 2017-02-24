@@ -164,6 +164,14 @@ class Component_Spec {
 		$overrides = get_option( $option_name, array() );
 		$overrides[ $spec_key ] = $json;
 		update_option( $option_name, $overrides );
+
+		// Indicate success
+		$component = new $this->component;
+		\Admin_Apple_Notice::error( sprintf(
+			__( 'Saved custom %s for the %s component', 'apple-news' ),
+			$this->name,
+			ucwords( $component->get_component_name() )
+		) );
 	}
 
 	/**
