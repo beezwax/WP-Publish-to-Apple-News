@@ -58,7 +58,7 @@
 							var <?php echo esc_js( $editor_name ) ?> = ace.edit( '<?php echo esc_js( $editor_name ) ?>' );
 							jQuery( function() {
 								jQuery( '#<?php echo esc_js( $field_name ) ?>' ).hide();
-								<?php echo esc_js( $editor_name ) ?>.setTheme( 'ace/theme/twilight' );
+								<?php echo esc_js( $editor_name ) ?>.setTheme( 'ace/theme/textmate' );
 								<?php echo esc_js( $editor_name ) ?>.getSession().setMode( 'ace/mode/json' );
 								<?php echo esc_js( $editor_name ) ?>.getSession().setTabSize( 2 );
 								<?php echo esc_js( $editor_name ) ?>.getSession().setUseSoftTabs( false );
