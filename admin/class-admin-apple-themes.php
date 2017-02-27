@@ -97,7 +97,7 @@ class Admin_Apple_Themes extends Apple_News {
 		$screen = get_current_screen();
 		if ( 'admin_page_' . $this->theme_edit_page_name === $screen->base ) {
 			$admin_title = sprintf(
-				__( 'Edit Theme %s' ),
+				__( 'Edit Theme %s', 'apple-news' ),
 				trim( $admin_title )
 			);
 		}
