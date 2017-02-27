@@ -43,10 +43,33 @@
 					$field_name = $spec->key_from_name( $spec->name );
 					$json_display = $spec->format_json( $spec->get_spec() );
 					$rows = substr_count( $json_display, "\n" ) + 1;
+					$editor_name = 'editor_' . $field_name;
+					$editor_style = sprintf(
+						'width: %spx; height: %spx',
+						500,
+						absint( 17 * $rows )
+					);
 					?>
 					<p>
 						<label for="<?php echo esc_attr( $field_name ) ?>"><?php echo esc_html( $spec->label ) ?></label>
-						<textarea cols="80" rows="<?php echo absint( $rows ) ?>" id="<?php echo esc_attr( $field_name ) ?>" name="<?php echo esc_attr( $field_name ) ?>"><?php echo esc_textarea( $json_display ) ?></textarea>
+						<div id="<?php echo esc_attr( $editor_name ) ?>" style="<?php echo esc_attr( $editor_style ) ?>"></div>
+						<textarea id="<?php echo esc_attr( $field_name ) ?>" name="<?php echo esc_attr( $field_name ) ?>"><?php echo esc_textarea( $json_display ) ?></textarea>
+						<script type="text/javascript">
+							var <?php echo esc_js( $editor_name ) ?> = ace.edit( '<?php echo esc_js( $editor_name ) ?>' );
+							jQuery( function() {
+								jQuery( '#<?php echo esc_js( $field_name ) ?>' ).hide();
+								<?php echo esc_js( $editor_name ) ?>.setTheme( 'ace/theme/twilight' );
+								<?php echo esc_js( $editor_name ) ?>.getSession().setMode( 'ace/mode/json' );
+								<?php echo esc_js( $editor_name ) ?>.getSession().setTabSize( 2 );
+								<?php echo esc_js( $editor_name ) ?>.getSession().setUseSoftTabs( false );
+								<?php echo esc_js( $editor_name ) ?>.setReadOnly( false );
+								<?php echo esc_js( $editor_name ) ?>.getSession().setUseWrapMode( true );
+								<?php echo esc_js( $editor_name ) ?>.getSession().setValue( jQuery( '#<?php echo esc_js( $field_name ) ?>' ).val() );
+								<?php echo esc_js( $editor_name ) ?>.getSession().on( 'change', function() {
+									jQuery( '#<?php echo esc_js( $field_name ) ?>' ).val( <?php echo esc_js( $editor_name ) ?>.getSession().getValue() );
+								} );
+							} );
+						</script>
 					</p>
 				<?php endforeach; ?>
 			<?php endif; ?>

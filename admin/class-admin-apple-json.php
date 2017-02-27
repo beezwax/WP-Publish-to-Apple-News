@@ -152,6 +152,13 @@ class Admin_Apple_JSON extends Apple_News {
 			array( 'jquery' ),
 			self::$version
 		);
+
+		wp_enqueue_script(
+			'ace-js',
+			'https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.6/ace.js',
+			array( 'jquery' ),
+			'1.2.6'
+		);
 	}
 
 	/**
