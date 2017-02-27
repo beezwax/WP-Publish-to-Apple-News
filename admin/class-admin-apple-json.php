@@ -77,7 +77,7 @@ class Admin_Apple_JSON extends Apple_News {
 		$screen = get_current_screen();
 		if ( 'admin_page_' . $this->json_page_name === $screen->base ) {
 			$admin_title = sprintf(
-				__( 'Customize JSON %s' ),
+				__( 'Customize JSON %s', 'apple-news' ),
 				trim( $admin_title )
 			);
 		}
