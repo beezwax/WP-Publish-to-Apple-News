@@ -105,7 +105,6 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 *
 	 * @param int $post_id
 	 * @access public
-	 * @static
 	 */
 	public static function save_post_meta( $post_id ) {
 
@@ -291,7 +290,6 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 * @param int $section_id
 	 * @param int $is_default
 	 * @access public
-	 * @static
 	 */
 	public static function section_is_checked( $sections, $section_id, $is_default ) {
 		// If no sections exist, return true if this is the default.

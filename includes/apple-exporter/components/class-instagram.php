@@ -15,7 +15,6 @@ class Instagram extends Component {
 	 *
 	 * @param DomNode $node
 	 * @return mixed
-	 * @static
 	 * @access public
 	 */
 	public static function node_matches( $node ) {
@@ -29,8 +28,7 @@ class Instagram extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @param string $text
-	 * @access protected
+	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
@@ -64,7 +62,7 @@ class Instagram extends Component {
 				// Remove `www.` from URL as AN parser doesn't allow for it.
 				'URL'  => str_replace( 'www.', '', $url ),
 			)
-	 );
+	 	);
 	}
 
 }

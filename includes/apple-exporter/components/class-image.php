@@ -15,7 +15,6 @@ class Image extends Component {
 	 *
 	 * @param DomNode $node
 	 * @return mixed
-	 * @static
 	 * @access public
 	 */
 	public static function node_matches( $node ) {
@@ -33,8 +32,7 @@ class Image extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @param string $text
-	 * @access protected
+	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
@@ -72,7 +70,7 @@ class Image extends Component {
 						),
 						'layout' => array(
 							'margin' => array(
-								'top' => 20
+								'top' => 20,
 							),
 							'ignoreDocumentMargin' => '%%full_bleed_images%%',
 						),
@@ -219,6 +217,7 @@ class Image extends Component {
 	/**
 	 * Handles adding a layout to the appropriate location in values.
 	 *
+	 * @param array $layout
 	 * @param array $values
 	 * @return array
 	 * @access private
@@ -263,6 +262,7 @@ class Image extends Component {
 	 *
 	 * @param string $caption
 	 * @param array $values
+	 * @return array
 	 * @access private
 	 */
 	private function group_component( $caption, $values ) {

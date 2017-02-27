@@ -35,8 +35,7 @@ class Quote extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @param string $text
-	 * @access protected
+	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
@@ -62,7 +61,7 @@ class Quote extends Component {
 						'format' => '%%format%%',
 						'layout' => 'blockquote-layout',
 						'textStyle' => 'default-blockquote',
-					)
+					),
 				),
 			)
 		);
@@ -91,7 +90,7 @@ class Quote extends Component {
 						'bottom' => false,
 						'right' => false,
 						'top' => false,
-					)
+					),
 				),
 				'components' => array(
 					array(
@@ -138,7 +137,7 @@ class Quote extends Component {
 				'role' => 'container',
 				'layout' => array(
 					'columnStart' => 3,
-					'columnSpan' => 4
+					'columnSpan' => 4,
 				),
 				'components' => array(
 					array(
@@ -147,7 +146,7 @@ class Quote extends Component {
 						'format' => '%%format%%',
 						'layout' => 'pullquote-layout',
 						'textStyle' => 'default-pullquote',
-					)
+					),
 				),
 				'anchor' => array(
 					'targetComponentIdentifier' => 'pullquoteAnchor',
@@ -186,7 +185,7 @@ class Quote extends Component {
 						),
 						'left' => false,
 						'right' => false,
-					)
+					),
 				),
 				'anchor' => array(
 					'targetComponentIdentifier' => 'pullquoteAnchor',
@@ -356,7 +355,7 @@ class Quote extends Component {
 		);
 
 		// Determine if there is a border specified.
-		if ( 'none' === $this->get_setting( 'pullquote_border_style' ) ) {
+		if ( 'none' !== $this->get_setting( 'pullquote_border_style' ) ) {
 			$values = $this->_set_pullquote_border( $values );
 			$spec_name = 'pullquote-with-border-json';
 		} else {
@@ -376,7 +375,7 @@ class Quote extends Component {
 	 * Set the border for a blockquote.
 	 *
 	 * @param array $values
-	 * @return array $values
+	 * @return array
 	 * @access private
 	 */
 	private function _set_blockquote_border( $values ) {
@@ -458,6 +457,8 @@ class Quote extends Component {
 				),
 			),
 		);
+
+		return $values;
 	}
 
 	/**

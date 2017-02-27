@@ -11,11 +11,10 @@
 
 namespace Apple_Exporter;
 
-
 /**
- * A class that parses raw HTML into either Apple News HTML or Markdown format.
+ * A class that defines a JSON spec for a component.
  *
- * @since 1.2.1
+ * @since 1.2.4
  */
 class Component_Spec {
 
@@ -55,7 +54,6 @@ class Component_Spec {
 	 * Prefix for the key for storing custom JSON.
 	 *
 	 * @var string
-	 * @const
 	 */
 	const JSON_KEY_PREFIX = 'apple_news_json_';
 
@@ -102,7 +100,7 @@ class Component_Spec {
 
 				// Call this function recursively to handle the substitution on this child array
 				$spec[ $key ] = $this->value_iterator( $spec[ $key ], $child_values );
-			} else if ( ! is_array( $value ) && $this->is_token( $value ) ) {
+			} elseif ( ! is_array( $value ) && $this->is_token( $value ) ) {
 				// This element is a token, so substitute its value
 				// If no value exists, it should be removed to not produce invalid JSON
 				if ( isset( $values[ $key ] ) ) {
@@ -141,21 +139,19 @@ class Component_Spec {
 	}
 
 	/**
-	 * Validate the provided spec against the built-in spec.
+	 * Recursively find tokens in the spec.
 	 *
 	 * @param array $spec
-	 * @return boolean
+	 * @param array &$tokens
 	 * @access public
 	 */
 	public function find_tokens( $spec, &$tokens ) {
-		// Iterate recursively over the built-in spec and get all the tokens
-		// Do the same for the provided spec.
-		// Removing tokens is fine, but new tokens cannot be added.
+		// Find all tokens in the spec
 		foreach ( $spec as $key => $value ) {
 			// If the current element has children, call this recursively
 			if ( is_array( $value ) ) {
 				$this->find_tokens( $spec[ $key ], $tokens );
-			} else if ( ! is_array( $value ) && $this->is_token( $value ) ) {
+			} elseif ( ! is_array( $value ) && $this->is_token( $value ) ) {
 				// This element is a token.
 				$tokens[] = $value;
 			}
@@ -187,8 +183,7 @@ class Component_Spec {
 		if ( $custom_json === $default_json ) {
 			// Delete the spec in case we've reverted back to default.
 			// No need to keep it in storage.
-			$result = $this->delete();
-			return $result;
+			return $this->delete();
 		}
 
 		// Validate the JSON
@@ -266,7 +261,7 @@ class Component_Spec {
 	/**
 	 * Get the override for this component spec.
 	 *
-	 * @return array
+	 * @return array|null
 	 * @access public
 	 */
 	public function get_override() {
@@ -288,13 +283,13 @@ class Component_Spec {
 	 * @access public
 	 */
 	public function is_token( $value ) {
-		return ( 1 === preg_match( '/%%(.*?)%%/', $value ) );
+		return ( 1 === preg_match( '/%%[^%]+%%/', $value ) );
 	}
 
 	/**
 	 * Generates a key for the JSON from the provided component or spec
 	 *
-	 * @param string $component
+	 * @param string $name
 	 * @return string
 	 * @access public
 	 */

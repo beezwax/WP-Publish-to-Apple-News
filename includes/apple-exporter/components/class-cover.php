@@ -18,24 +18,25 @@ class Cover extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @param string $text
-	 * @access protected
+	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role' 			=> 'header',
-				'layout' 		=> 'headerPhotoLayout',
-				'components' 	=> array( array(
-					'role' 			=> 'photo',
-					'layout' 		=> 'headerPhotoLayout',
-					'URL' 			=> '%%URL%%',
-				) ),
-				'behavior' 		=> array(
-					'type' 			=> 'parallax',
-					'factor' 		=> 0.8,
+				'role' => 'header',
+				'layout' => 'headerPhotoLayout',
+				'components' => array(
+					array(
+						'role' => 'photo',
+						'layout' => 'headerPhotoLayout',
+						'URL' => '%%URL%%',
+					)
+				),
+				'behavior' => array(
+					'type' => 'parallax',
+					'factor' => 0.8,
 				),
 			)
 		);
@@ -68,16 +69,18 @@ class Cover extends Component {
 	/**
 	 * Build the component.
 	 *
-	 * @param string $text
+	 * @param string $url
 	 * @access protected
 	 */
 	protected function build( $url ) {
 		$this->register_json(
 			'json',
 			array(
-				'components' 	=> array( array(
-					'URL' 			=> $this->maybe_bundle_source( $url ),
-				) ),
+				'components' => array(
+					array(
+						'URL' => $this->maybe_bundle_source( $url ),
+					)
+				),
 			)
 	 	);
 

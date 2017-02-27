@@ -138,7 +138,7 @@ abstract class Component {
 	 *
 	 * @since 1.2.4
 	 * @var array
-	 * @access private
+	 * @access public
 	 */
 	public $specs;
 
@@ -551,7 +551,6 @@ abstract class Component {
 	 * @param DomNode $node
 	 * @param string $classname
 	 * @return boolean
-	 * @static
 	 * @access protected
 	 */
 	protected static function node_has_class( $node, $classname ) {
@@ -573,7 +572,6 @@ abstract class Component {
 	 * valid array.
 	 *
 	 * @param string $text
-	 * @abstract
 	 * @access protected
 	 */
 	abstract protected function build( $text );
@@ -613,7 +611,6 @@ abstract class Component {
 	 *
 	 * @param DomNode $node
 	 * @return boolean
-	 * @static
 	 * @access protected
 	 */
 	protected static function remote_file_exists( $node ) {

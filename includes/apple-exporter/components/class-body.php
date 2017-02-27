@@ -32,7 +32,6 @@ class Body extends Component {
 	 *
 	 * @param DomNode $node
 	 * @return mixed
-	 * @static
 	 * @access public
 	 */
 	public static function node_matches( $node ) {
@@ -60,16 +59,15 @@ class Body extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @param string $text
-	 * @access protected
+	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role'   => 'body',
-				'text'   => '%%text%%',
+				'role' => 'body',
+				'text' => '%%text%%',
 				'format' => '%%format%%',
 			)
 		);
@@ -79,10 +77,10 @@ class Body extends Component {
 			__( 'Layout', 'apple-news' ),
 			array(
 				'columnStart' => '%%body_offset%%',
-				'columnSpan'  => '%%body_column_span%%',
-				'margin'      => array(
+				'columnSpan' => '%%body_column_span%%',
+				'margin' => array(
 					'top' => 12,
-					'bottom' => 12
+					'bottom' => 12,
 				),
 			)
 		);
@@ -92,10 +90,10 @@ class Body extends Component {
 			__( 'Layout for Last Component', 'apple-news' ),
 			array(
 				'columnStart' => '%%body_offset%%',
-				'columnSpan'  => '%%body_column_span%%',
-				'margin'      => array(
+				'columnSpan' => '%%body_column_span%%',
+				'margin' => array(
 					'top' => 12,
-					'bottom' => 30
+					'bottom' => 30,
 				),
 			)
 		);
@@ -113,13 +111,13 @@ class Body extends Component {
 				$this->get_default_style_spec(),
 				array(
 					'dropCapStyle' => array (
-						'numberOfLines' 			=> '%%numberOfLines%%',
-						'numberOfCharacters' 	=> '%%dropcap_number_of_characters%%',
-						'padding'							=> '%%dropcap_padding%%',
-						'fontName' 						=> '%%dropcap_font%%',
-						'textColor'						=> '%%dropcap_color%%',
+						'numberOfLines' => '%%dropcap_number_of_lines%%',
+						'numberOfCharacters' => '%%dropcap_number_of_characters%%',
+						'padding' => '%%dropcap_padding%%',
+						'fontName' => '%%dropcap_font%%',
+						'textColor' => '%%dropcap_color%%',
 						'numberOfRaisedLines' => '%%dropcap_number_of_raised_lines%%',
-						'backgroundColor'			=> '%%dropcap_background_color%%',
+						'backgroundColor' => '%%dropcap_background_color%%',
 					),
 				)
 			)
@@ -131,7 +129,6 @@ class Body extends Component {
 	 *
 	 * @param string $html
 	 * @return array
-	 * @static
 	 * @access private
 	 */
 	private static function split_non_markdownable( $html ) {
@@ -176,7 +173,7 @@ class Body extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'text'   => $this->parser->parse( $text ),
+				'text' => $this->parser->parse( $text ),
 				'format' => $this->parser->format,
 			)
 	 	);
@@ -213,7 +210,7 @@ class Body extends Component {
 			'body-layout',
 			array(
 				'columnStart' => $this->get_setting( 'body_offset' ),
-				'columnSpan'  => $this->get_setting( 'body_column_span' ),
+				'columnSpan' => $this->get_setting( 'body_column_span' ),
 			),
 			'layout'
 		);
@@ -224,7 +221,7 @@ class Body extends Component {
 			'body-layout-last',
 			array(
 				'columnStart' => $this->get_setting( 'body_offset' ),
-				'columnSpan'  => $this->get_setting( 'body_column_span' ),
+				'columnSpan' => $this->get_setting( 'body_column_span' ),
 			)
 		);
 	}

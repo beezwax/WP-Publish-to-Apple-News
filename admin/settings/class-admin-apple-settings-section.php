@@ -342,7 +342,6 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @var string
 	 * @access protected
-	 * @static
 	 */
 	protected static $section_option_name;
 
@@ -359,7 +358,6 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @var Settings
 	 * @access protected
-	 * @static
 	 */
 	protected static $base_settings;
 
@@ -368,7 +366,6 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @var Settings
 	 * @access protected
-	 * @static
 	 */
 	protected static $loaded_settings;
 
@@ -716,7 +713,6 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @param string $name
 	 * @return string
 	 * @access protected
-	 * @static
 	 */
 	protected static function get_default_for( $name ) {
 		return isset( self::$base_settings[ $name ] ) ? self::$base_settings[ $name ] : '';
@@ -798,7 +794,6 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @param string $key
 	 * @param array $saved_settings
 	 * @return mixed
-	 * @static
 	 */
 	public static function get_value( $key, $saved_settings = null ) {
 		if ( empty( $saved_settings ) ) {
@@ -859,7 +854,6 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 *
 	 * @return array
 	 * @access public
-	 * @static
 	 */
 	public static function list_fonts() {
 		return self::$fonts;

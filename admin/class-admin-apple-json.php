@@ -49,14 +49,12 @@ class Admin_Apple_JSON extends Apple_News {
 	/**
 	 * Route all possible theme actions to the right place.
 	 *
-	 * @param string $hook
 	 * @access public
 	 */
 	public function action_router() {
 		// Check for a valid action
 		$action	= isset( $_POST['apple_news_action'] ) ? sanitize_text_field( $_POST['apple_news_action'] ) : null;
 		if ( ( empty( $action ) || ! array_key_exists( $action, $this->valid_actions ) ) ) {
-			echo "invalid";
 			return;
 		}
 
@@ -72,13 +70,16 @@ class Admin_Apple_JSON extends Apple_News {
 	 *
 	 * @param string $admin_title
 	 * @param string $title
-	 * @return strign
+	 * @return string
 	 * @access public
 	 */
 	public function set_title( $admin_title, $title ) {
 		$screen = get_current_screen();
 		if ( 'admin_page_' . $this->json_page_name === $screen->base ) {
-			$admin_title = __( 'Customize JSON' ) . $admin_title;
+			$admin_title = sprintf(
+				__( 'Customize JSON %s' ),
+				trim( $admin_title )
+			);
 		}
 
 		return $admin_title;
@@ -198,7 +199,7 @@ class Admin_Apple_JSON extends Apple_News {
 			) );
 		} else {
 			\Admin_Apple_Notice::success( sprintf(
-				__( 'Saved the following custom specs for %s: %s', 'apple-news' ),
+				__( 'Saved the following custom specs for %1$s: %2$s', 'apple-news' ),
 				$component,
 				implode( ', ', $updates )
 			) );
@@ -213,14 +214,13 @@ class Admin_Apple_JSON extends Apple_News {
 	 * @access private
 	 */
 	private function get_specs( $component ) {
-		$specs = array();
-		if ( ! empty( $component ) ) {
-			$classname = $this->namespace . $component;
-			$component_class = new $classname();
-			$specs = $component_class->get_specs();
+		if ( empty( $component ) ) {
+			return array();
 		}
 
-		return $specs;
+		$classname = $this->namespace . $component;
+		$component_class = new $classname();
+		return $component_class->get_specs();
 	}
 
 	/**
@@ -267,7 +267,6 @@ class Admin_Apple_JSON extends Apple_News {
 	/**
 	 * Returns the URL of the JSON admin page
 	 *
-	 * @param string $name
 	 * @return string
 	 * @access public
 	 */

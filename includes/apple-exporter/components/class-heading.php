@@ -13,7 +13,6 @@ class Heading extends Component {
 	 *
 	 * @var array
 	 * @access public
-	 * @static
 	 */
 	public static $levels = array( 1, 2, 3, 4, 5, 6 );
 
@@ -22,7 +21,6 @@ class Heading extends Component {
 	 *
 	 * @param DomNode $node
 	 * @return mixed
-	 * @static
 	 * @access public
 	 */
 	public static function node_matches( $node ) {
@@ -52,6 +50,16 @@ class Heading extends Component {
 	 */
 	public function register_specs() {
 		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role' => '%%headingLevel%%',
+				'text' => '%%text%%',
+				'format' => '%%format%%',
+			)
+		);
+
+		$this->register_spec(
 			'heading-layout',
 			__( 'Layout', 'apple-news' ),
 			array(
@@ -72,13 +80,13 @@ class Heading extends Component {
 					$level
 				),
 				array(
-				'fontName' => '%%header' . $level . '_font%%',
-				'fontSize' => '%%header' . $level . '_size%%',
-				'lineHeight' => '%%header' . $level . '_line_height%%',
-				'textColor' => '%%header' . $level . '_color%%',
-				'textAlignment' => '%%textAlignment%%',
-				'tracking' => '%%header' . $level . '_tracking%%',
-			)
+					'fontName' => '%%header' . $level . '_font%%',
+					'fontSize' => '%%header' . $level . '_size%%',
+					'lineHeight' => '%%header' . $level . '_line_height%%',
+					'textColor' => '%%header' . $level . '_color%%',
+					'textAlignment' => '%%textAlignment%%',
+					'tracking' => '%%header' . $level . '_tracking%%',
+				)
 			);
 		}
 	}
@@ -129,11 +137,14 @@ class Heading extends Component {
 		// textStyle in headings.
 		$text = wp_strip_all_tags( $matches[2] );
 
-		$this->json = array(
-			'role'   => 'heading' . $level,
-			'text'   => trim( $this->parser->parse( $text ) ),
-			'format' => $this->parser->format,
-		);
+		$this->register_json(
+			'json',
+			array(
+				'role' => 'heading' . $level,
+				'text' => trim( $this->parser->parse( $text ) ),
+				'format' => $this->parser->format,
+			)
+	 	);
 
 		$this->set_style( $level );
 		$this->set_layout();

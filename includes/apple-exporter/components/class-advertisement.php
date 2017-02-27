@@ -12,15 +12,14 @@ class Advertisement extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @param string $text
-	 * @access protected
+	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role'       => 'banner_advertisement',
+				'role' => 'banner_advertisement',
 				'bannerType' => 'standard',
 			)
 		);
@@ -47,7 +46,7 @@ class Advertisement extends Component {
 		$this->register_json(
 			'json',
 			array()
-	 );
+	 	);
 
 		$this->set_layout();
 	}

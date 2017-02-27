@@ -14,7 +14,6 @@ class Tweet extends Component {
 	 *
 	 * @param DomNode $node
 	 * @return mixed
-	 * @static
 	 * @access public
 	 */
 	public static function node_matches( $node ) {
@@ -33,8 +32,7 @@ class Tweet extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @param string $text
-	 * @access protected
+	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
@@ -42,7 +40,7 @@ class Tweet extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'tweet',
-				'URL'  => '%%URL%%',
+				'URL' => '%%URL%%',
 			)
 		);
 
@@ -52,7 +50,7 @@ class Tweet extends Component {
 			array(
 				'margin' => array(
 					'top' => 30,
-					'bottom' => 30
+					'bottom' => 30,
 				)
 			)
 		);
@@ -79,7 +77,7 @@ class Tweet extends Component {
 			array(
 				'URL'  => $url,
 			)
-	 );
+		);
 
 		$this->set_layout();
 	}

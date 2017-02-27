@@ -6,8 +6,7 @@ class Title extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @param string $text
-	 * @access protected
+	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
@@ -56,7 +55,7 @@ class Title extends Component {
 			array(
 				'text' => $text,
 			)
-	 );
+		 );
 
 		$this->set_style();
 		$this->set_layout();

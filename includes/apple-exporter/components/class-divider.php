@@ -13,7 +13,6 @@ class Divider extends Component {
 	 *
 	 * @param DomNode $node
 	 * @return mixed
-	 * @static
 	 * @access public
 	 */
 	public static function node_matches( $node ) {
@@ -27,19 +26,18 @@ class Divider extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @param string $text
-	 * @access protected
+	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role'   => 'divider',
+				'role' => 'divider',
 				'layout' => 'divider-layout',
 				'stroke' => array(
 					'color' => '#E6E6E6',
-					'width' => 1
+					'width' => 1,
 				),
 			)
 		);
@@ -50,7 +48,7 @@ class Divider extends Component {
 			array(
 				'margin' => array(
 					'top' => 25,
-					'bottom' => 25
+					'bottom' => 25,
 				)
 			)
 		);

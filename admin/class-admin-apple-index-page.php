@@ -193,7 +193,6 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @param string $action
 	 * @return string
 	 * @access public
-	 * @static
 	 */
 	public static function namespace_action( $action ) {
 		return 'apple_news_' . $action;
@@ -206,7 +205,6 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @param string $url
 	 * @return string
 	 * @access public
-	 * @static
 	 */
 	public static function action_query_params( $action, $url ) {
 		// Set the keys we need to pay attention to

@@ -40,15 +40,14 @@ class Gallery extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @param string $text
-	 * @access protected
+	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role' 	=> '%%gallery_type%%',
+				'role' => '%%gallery_type%%',
 				'items' => '%%items%%',
 			)
 		);
@@ -129,10 +128,10 @@ class Gallery extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'role' 	=> $this->get_setting( 'gallery_type' ),
+				'role' => $this->get_setting( 'gallery_type' ),
 				'items' => $items,
 			)
-	 );
+	 	);
 
 		// Set the layout.
 		$this->set_layout();

@@ -82,7 +82,6 @@ class Apple_News {
 	 *
 	 * @var string
 	 * @access public
-	 * @static
 	 */
 	public static $maturity_ratings = array( 'KIDS', 'MATURE', 'GENERAL' );
 

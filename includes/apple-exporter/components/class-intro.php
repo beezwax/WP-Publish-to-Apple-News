@@ -12,8 +12,7 @@ class Intro extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @param string $text
-	 * @access protected
+	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
@@ -29,10 +28,10 @@ class Intro extends Component {
 			'default-intro',
 			__( 'Style', 'apple-news' ),
 			array(
-				'fontName'   => '%%body_font%%',
-				'fontSize'   => '%%body_size%%',
+				'fontName' => '%%body_font%%',
+				'fontSize' => '%%body_size%%',
 				'lineHeight' => '%%body_line_height%%',
-				'textColor'  => '%%body_color%%',
+				'textColor' => '%%body_color%%',
 			)
 		);
 	}
@@ -49,7 +48,7 @@ class Intro extends Component {
 			array(
 				'text' => $text . "\n",
 			)
-	 );
+	 	);
 
 		$this->set_style();
 	}
@@ -64,10 +63,10 @@ class Intro extends Component {
 			'default-intro',
 			'default-intro',
 			array(
-				'fontName'   => $this->get_setting( 'body_font' ),
-				'fontSize'   => intval( $this->get_setting( 'body_size' ) ),
+				'fontName' => $this->get_setting( 'body_font' ),
+				'fontSize' => intval( $this->get_setting( 'body_size' ) ),
 				'lineHeight' => intval( $this->get_setting( 'body_line_height' ) ),
-				'textColor'  => $this->get_setting( 'body_color' ),
+				'textColor' => $this->get_setting( 'body_color' ),
 			),
 			'textStyle'
 		);
