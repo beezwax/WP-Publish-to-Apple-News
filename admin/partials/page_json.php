@@ -43,7 +43,7 @@
 					$field_name = $spec->key_from_name( $spec->name );
 					$json_display = $spec->format_json( $spec->get_spec() );
 					$rows = substr_count( $json_display, "\n" ) + 1;
-					$editor_name = 'editor_' . $field_name;
+					$editor_name = 'editor_' . str_replace( '-', '_', $field_name );
 					$editor_style = sprintf(
 						'width: %spx; height: %spx',
 						500,
