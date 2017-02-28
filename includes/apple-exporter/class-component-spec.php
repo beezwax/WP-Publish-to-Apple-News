@@ -167,7 +167,7 @@ class Component_Spec {
 	 */
 	public function save( $spec ) {
 		// Validate the JSON
-		$json = json_decode( $spec );
+		$json = json_decode( $spec, true );
 		if ( empty( $json ) ) {
 			\Admin_Apple_Notice::error( sprintf(
 				__( 'The spec for %s was invalid and cannot be saved', 'apple-news' ),
