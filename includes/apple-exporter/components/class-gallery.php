@@ -47,8 +47,8 @@ class Gallery extends Component {
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role' => '%%gallery_type%%',
-				'items' => '%%items%%',
+				'role' => '#gallery_type#',
+				'items' => '#items#',
 			)
 		);
 

@@ -40,8 +40,8 @@ class Image extends Component {
 			__( 'JSON without caption', 'apple-news' ),
 			array(
 				'role' => 'photo',
-				'URL'  => '%%URL%%',
-				'layout' => '%%layout%%',
+				'URL'  => '#URL#',
+				'layout' => '#layout#',
 			)
 		);
 
@@ -53,31 +53,31 @@ class Image extends Component {
 				'components' => array(
 					array(
 						'role' => 'photo',
-						'URL'  => '%%URL%%',
-						'layout' => '%%layout%%',
-						'caption' => '%%caption%%',
+						'URL'  => '#URL#',
+						'layout' => '#layout#',
+						'caption' => '#caption#',
 					),
 					array(
 						'role' => 'caption',
-						'text' => '%%caption%%',
+						'text' => '#caption#',
 						'textStyle' => array(
-							'textAlignment' => '%%textAlignment%%',
-							'fontName' => '%%caption_font%%',
-							'fontSize' => '%%caption_size%%',
-							'tracking' => '%%caption_tracking%%',
-							'lineHeight' => '%%caption_line_height%%',
-							'textColor' => '%%caption_color%%',
+							'textAlignment' => '#textAlignment#',
+							'fontName' => '#caption_font#',
+							'fontSize' => '#caption_size#',
+							'tracking' => '#caption_tracking#',
+							'lineHeight' => '#caption_line_height#',
+							'textColor' => '#caption_color#',
 						),
 						'layout' => array(
 							'margin' => array(
 								'top' => 20,
 							),
-							'ignoreDocumentMargin' => '%%full_bleed_images%%',
+							'ignoreDocumentMargin' => '#full_bleed_images#',
 						),
 					),
 				),
 				'layout' => array(
-					'ignoreDocumentMargin' => '%%full_bleed_images%%',
+					'ignoreDocumentMargin' => '#full_bleed_images#',
 				),
 			)
 		);
@@ -101,7 +101,7 @@ class Image extends Component {
 					'bottom' => 25,
 					'top' => 25,
 				),
-				'columnSpan' => '%%layout_columns_minus_4%%',
+				'columnSpan' => '#layout_columns_minus_4#',
 				'columnStart' => 2,
 			)
 		);

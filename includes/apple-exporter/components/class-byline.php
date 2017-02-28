@@ -21,7 +21,7 @@ class Byline extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'byline',
-				'text' => '%%text%%',
+				'text' => '#text#',
 			)
 		);
 
@@ -29,12 +29,12 @@ class Byline extends Component {
 			'default-byline',
 			__( 'Style', 'apple-news' ),
 			array(
-				'textAlignment' => '%%text_alignment%%',
-				'fontName' => '%%byline_font%%',
-				'fontSize' => '%%byline_size%%',
-				'lineHeight' => '%%byline_line_height%%',
-				'tracking' => '%%byline_tracking%%',
-				'textColor' => '%%byline_color%%',
+				'textAlignment' => '#text_alignment#',
+				'fontName' => '#byline_font#',
+				'fontSize' => '#byline_size#',
+				'lineHeight' => '#byline_line_height#',
+				'tracking' => '#byline_tracking#',
+				'textColor' => '#byline_color#',
 			)
 		);
 

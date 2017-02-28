@@ -31,7 +31,7 @@ class Cover extends Component {
 					array(
 						'role' => 'photo',
 						'layout' => 'headerPhotoLayout',
-						'URL' => '%%URL%%',
+						'URL' => '#URL#',
 					)
 				),
 				'behavior' => array(
@@ -47,7 +47,7 @@ class Cover extends Component {
 			array(
 				'ignoreDocumentMargin' => true,
 				'columnStart' => 0,
-				'columnSpan' => '%%layout_columns%%',
+				'columnSpan' => '#layout_columns#',
 			)
 		);
 
@@ -57,7 +57,7 @@ class Cover extends Component {
 			array(
 				'ignoreDocumentMargin' => true,
 				'columnStart' => 0,
-				'columnSpan' => '%%layout_columns%%',
+				'columnSpan' => '#layout_columns#',
 				'margin' => array(
 					'top' => 30,
 					'bottom' => 0,

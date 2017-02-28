@@ -53,9 +53,9 @@ class Heading extends Component {
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role' => '%%headingLevel%%',
-				'text' => '%%text%%',
-				'format' => '%%format%%',
+				'role' => '#headingLevel#',
+				'text' => '#text#',
+				'format' => '#format#',
 			)
 		);
 
@@ -63,8 +63,8 @@ class Heading extends Component {
 			'heading-layout',
 			__( 'Layout', 'apple-news' ),
 			array(
-				'columnStart' => '%%body_offset%%',
-				'columnSpan' => '%%body_column_span%%',
+				'columnStart' => '#body_offset#',
+				'columnSpan' => '#body_column_span#',
 				'margin' => array(
 					'bottom' => 15,
 					'top' => 15,
@@ -80,12 +80,12 @@ class Heading extends Component {
 					$level
 				),
 				array(
-					'fontName' => '%%header' . $level . '_font%%',
-					'fontSize' => '%%header' . $level . '_size%%',
-					'lineHeight' => '%%header' . $level . '_line_height%%',
-					'textColor' => '%%header' . $level . '_color%%',
-					'textAlignment' => '%%textAlignment%%',
-					'tracking' => '%%header' . $level . '_tracking%%',
+					'fontName' => '#header' . $level . '_font#',
+					'fontSize' => '#header' . $level . '_size#',
+					'lineHeight' => '#header' . $level . '_line_height#',
+					'textColor' => '#header' . $level . '_color#',
+					'textAlignment' => '#textAlignment#',
+					'tracking' => '#header' . $level . '_tracking#',
 				)
 			);
 		}

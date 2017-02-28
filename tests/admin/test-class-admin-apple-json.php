@@ -86,7 +86,7 @@ JSON;
 		$invalid_json = <<<JSON
 {
     "role": "audio",
-    "URL": "%%invalid%%"
+    "URL": "#invalid#"
 }
 JSON;
 		$nonce = wp_create_nonce( 'apple_news_json' );

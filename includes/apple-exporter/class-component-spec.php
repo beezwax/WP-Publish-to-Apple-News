@@ -283,7 +283,7 @@ class Component_Spec {
 	 * @access public
 	 */
 	public function is_token( $value ) {
-		return ( 1 === preg_match( '/%%[^%]+%%/', $value ) );
+		return ( 1 === preg_match( '/#[^%]+#/', $value ) );
 	}
 
 	/**

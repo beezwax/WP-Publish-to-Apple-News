@@ -72,8 +72,8 @@ class Body extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'body',
-				'text' => '%%text%%',
-				'format' => '%%format%%',
+				'text' => '#text#',
+				'format' => '#format#',
 			)
 		);
 
@@ -81,8 +81,8 @@ class Body extends Component {
 			'body-layout',
 			__( 'Layout', 'apple-news' ),
 			array(
-				'columnStart' => '%%body_offset%%',
-				'columnSpan' => '%%body_column_span%%',
+				'columnStart' => '#body_offset#',
+				'columnSpan' => '#body_column_span#',
 				'margin' => array(
 					'top' => 12,
 					'bottom' => 12,
@@ -94,8 +94,8 @@ class Body extends Component {
 			'body-layout-last',
 			__( 'Layout for Last Component', 'apple-news' ),
 			array(
-				'columnStart' => '%%body_offset%%',
-				'columnSpan' => '%%body_column_span%%',
+				'columnStart' => '#body_offset#',
+				'columnSpan' => '#body_column_span#',
 				'margin' => array(
 					'top' => 12,
 					'bottom' => 30,
@@ -111,18 +111,18 @@ class Body extends Component {
 
 		$this->register_spec(
 			'dropcapBodyStyle',
-			__( 'Dropcap Style', 'apple-news' ),
+			__( 'Drop Cap Style', 'apple-news' ),
 			array_merge(
 				$this->get_default_style_spec(),
 				array(
 					'dropCapStyle' => array (
-						'numberOfLines' => '%%dropcap_number_of_lines%%',
-						'numberOfCharacters' => '%%dropcap_number_of_characters%%',
-						'padding' => '%%dropcap_padding%%',
-						'fontName' => '%%dropcap_font%%',
-						'textColor' => '%%dropcap_color%%',
-						'numberOfRaisedLines' => '%%dropcap_number_of_raised_lines%%',
-						'backgroundColor' => '%%dropcap_background_color%%',
+						'numberOfLines' => '#dropcap_number_of_lines#',
+						'numberOfCharacters' => '#dropcap_number_of_characters#',
+						'padding' => '#dropcap_padding#',
+						'fontName' => '#dropcap_font#',
+						'textColor' => '#dropcap_color#',
+						'numberOfRaisedLines' => '#dropcap_number_of_raised_lines#',
+						'backgroundColor' => '#dropcap_background_color#',
 					),
 				)
 			)
@@ -278,13 +278,13 @@ class Body extends Component {
 	private function get_default_style_spec() {
 		return array(
 			'textAlignment' => 'left',
-			'fontName' => '%%body_font%%',
-			'fontSize' => '%%body_size%%',
-			'tracking' => '%%body_tracking%%',
-			'lineHeight' => '%%body_line_height%%',
-			'textColor' => '%%body_color%%',
+			'fontName' => '#body_font#',
+			'fontSize' => '#body_size#',
+			'tracking' => '#body_tracking#',
+			'lineHeight' => '#body_line_height#',
+			'textColor' => '#body_color#',
 			'linkStyle' => array(
-				'textColor' => '%%body_link_color%%',
+				'textColor' => '#body_link_color#',
 			),
 			'paragraphSpacingBefore' => 18,
 			'paragraphSpacingAfter' => 18,

@@ -44,21 +44,21 @@ class Quote extends Component {
 			array(
 				'role' => 'container',
 				'layout' => array(
-					'columnStart' => '%%body_offset%%',
-					'columnSpan' => '%%body_column_span%%',
+					'columnStart' => '#body_offset#',
+					'columnSpan' => '#body_column_span#',
 					'margin' => array(
-						'bottom' => '%%layout_gutter%%',
-						'top' => '%%layout_gutter%%',
+						'bottom' => '#layout_gutter#',
+						'top' => '#layout_gutter#',
 					),
 				),
 				'style' => array(
-					'backgroundColor' => '%%blockquote_background_color%%',
+					'backgroundColor' => '#blockquote_background_color#',
 				),
 				'components' => array(
 					array(
 						'role' => 'quote',
-						'text' => '%%text%%',
-						'format' => '%%format%%',
+						'text' => '#text#',
+						'format' => '#format#',
 						'layout' => 'blockquote-layout',
 						'textStyle' => 'default-blockquote',
 					),
@@ -72,20 +72,20 @@ class Quote extends Component {
 			array(
 				'role' => 'container',
 				'layout' => array(
-					'columnStart' => '%%body_offset%%',
-					'columnSpan' => '%%body_column_span%%',
+					'columnStart' => '#body_offset#',
+					'columnSpan' => '#body_column_span#',
 					'margin' => array(
-						'bottom' => '%%layout_gutter%%',
-						'top' => '%%layout_gutter%%',
+						'bottom' => '#layout_gutter#',
+						'top' => '#layout_gutter#',
 					),
 				),
 				'style' => array(
-					'backgroundColor' => '%%blockquote_background_color%%',
+					'backgroundColor' => '#blockquote_background_color#',
 					'border' => array(
 						'all' => array(
-							'width' => '%%blockquote_border_width%%',
-							'style' => '%%blockquote_border_style%%',
-							'color' => '%%blockquote_border_color%%',
+							'width' => '#blockquote_border_width#',
+							'style' => '#blockquote_border_style#',
+							'color' => '#blockquote_border_color#',
 						),
 						'bottom' => false,
 						'right' => false,
@@ -95,8 +95,8 @@ class Quote extends Component {
 				'components' => array(
 					array(
 						'role' => 'quote',
-						'text' => '%%text%%',
-						'format' => '%%format%%',
+						'text' => '#text#',
+						'format' => '#format#',
 						'layout' => 'blockquote-layout',
 						'textStyle' => 'default-blockquote',
 					)
@@ -121,12 +121,12 @@ class Quote extends Component {
 			'default-blockquote',
 			__( 'Blockquote Style', 'apple-news' ),
 			array(
-				'fontName' => '%%blockquote_font%%',
-				'fontSize' => '%%blockquote_size%%',
-				'textColor' => '%%blockquote_color%%',
-				'lineHeight' => '%%blockquote_line_height%%',
-				'textAlignment' => '%%textAlignment%%',
-				'tracking' => '%%blockquote_tracking%%',
+				'fontName' => '#blockquote_font#',
+				'fontSize' => '#blockquote_size#',
+				'textColor' => '#blockquote_color#',
+				'lineHeight' => '#blockquote_line_height#',
+				'textAlignment' => '#textAlignment#',
+				'tracking' => '#blockquote_tracking#',
 			)
 		);
 
@@ -142,8 +142,8 @@ class Quote extends Component {
 				'components' => array(
 					array(
 						'role' => 'quote',
-						'text' => '%%text%%',
-						'format' => '%%format%%',
+						'text' => '#text#',
+						'format' => '#format#',
 						'layout' => 'pullquote-layout',
 						'textStyle' => 'default-pullquote',
 					),
@@ -170,8 +170,8 @@ class Quote extends Component {
 				'components' => array(
 					array(
 						'role' => 'quote',
-						'text' => '%%text%%',
-						'format' => '%%format%%',
+						'text' => '#text#',
+						'format' => '#format#',
 						'layout' => 'pullquote-layout',
 						'textStyle' => 'default-pullquote',
 					)
@@ -179,9 +179,9 @@ class Quote extends Component {
 				'style' => array(
 					'border' => array(
 						'all' => array (
-							'width' => '%%pullquote_border_width%%',
-							'style' => '%%pullquote_border_style%%',
-							'color' => '%%pullquote_border_color%%',
+							'width' => '#pullquote_border_width#',
+							'style' => '#pullquote_border_style#',
+							'color' => '#pullquote_border_color#',
 						),
 						'left' => false,
 						'right' => false,
@@ -212,14 +212,14 @@ class Quote extends Component {
 			'default-pullquote',
 			__( 'Pull quote Style', 'apple-news' ),
 			array(
-				'fontName' => '%%pullquote_font%%',
-				'fontSize' => '%%pullquote_size%%',
-				'hangingPunctuation' => '%%pullquote_hanging_punctuation%%',
-				'textColor' => '%%pullquote_color%%',
-				'textTransform' => '%%pullquote_transform%%',
-				'lineHeight' => '%%pullquote_line_height%%',
-				'textAlignment' => '%%textAlignment%%',
-				'tracking' => '%%pullquote_tracking%%',
+				'fontName' => '#pullquote_font#',
+				'fontSize' => '#pullquote_size#',
+				'hangingPunctuation' => '#pullquote_hanging_punctuation#',
+				'textColor' => '#pullquote_color#',
+				'textTransform' => '#pullquote_transform#',
+				'lineHeight' => '#pullquote_line_height#',
+				'textAlignment' => '#textAlignment#',
+				'tracking' => '#pullquote_tracking#',
 			)
 		);
 	}

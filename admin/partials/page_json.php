@@ -19,7 +19,7 @@
 					)
 				)
 			) ?></p>
-			<p><?php esc_html_e( 'Tokens that will be replaced by dynamic values based on theme or post settings are denoted as %%token%%. You may remove tokens to suit your custom JSON but you cannot add new ones.', 'apple-news' ) ?></p>
+			<p><?php esc_html_e( 'Tokens that will be replaced by dynamic values based on theme or post settings are denoted as #token#. You may remove tokens to suit your custom JSON but you cannot add new ones.', 'apple-news' ) ?></p>
 			<p><?php echo wp_kses(
 				sprintf(
 					__( 'For more information on the Apple News format options for each component, please read the <a href="%s">Apple News Format Reference</a>.', 'apple-news' ),

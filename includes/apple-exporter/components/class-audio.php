@@ -35,7 +35,7 @@ class Audio extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'audio',
-				'URL' => '%%URL%%',
+				'URL' => '#URL#',
 			)
 		);
 	}

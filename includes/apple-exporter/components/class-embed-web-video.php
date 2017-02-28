@@ -43,8 +43,8 @@ class Embed_Web_Video extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'embedwebvideo',
-				'aspectRatio' => '%%aspectRatio%%',
-				'URL' => '%%URL%%',
+				'aspectRatio' => '#aspectRatio#',
+				'URL' => '#URL#',
 			)
 		);
 	}

@@ -47,7 +47,7 @@ class Facebook extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'facebook_post',
-				'URL' => '%%URL%%',
+				'URL' => '#URL#',
 			)
 		);
 	}

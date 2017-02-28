@@ -14,7 +14,7 @@ class Title extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'title',
-				'text' => '%%text%%',
+				'text' => '#text#',
 			)
 		);
 
@@ -22,12 +22,12 @@ class Title extends Component {
 			'default-title',
 			__( 'Style', 'apple-news' ),
 			array(
-				'fontName' => '%%header1_font%%',
-				'fontSize' => '%%header1_size%%',
-				'lineHeight' => '%%header1_line_height%%',
-				'tracking' => '%%header1_tracking%%',
-				'textColor' => '%%header1_color%%',
-				'textAlignment' => '%%text_alignment%%',
+				'fontName' => '#header1_font#',
+				'fontSize' => '#header1_size#',
+				'lineHeight' => '#header1_line_height#',
+				'tracking' => '#header1_tracking#',
+				'textColor' => '#header1_color#',
+				'textAlignment' => '#text_alignment#',
 			)
 		);
 

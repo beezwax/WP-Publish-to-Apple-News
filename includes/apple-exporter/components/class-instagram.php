@@ -53,7 +53,7 @@ class Instagram extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'instagram',
-				'URL'  => '%%URL%%',
+				'URL'  => '#URL#',
 			)
 		);
 	}

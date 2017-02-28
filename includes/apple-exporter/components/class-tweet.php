@@ -40,7 +40,7 @@ class Tweet extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'tweet',
-				'URL' => '%%URL%%',
+				'URL' => '#URL#',
 			)
 		);
 

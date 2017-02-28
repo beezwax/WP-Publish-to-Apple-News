@@ -20,7 +20,7 @@ class Intro extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'intro',
-				'text' => '%%text%%',
+				'text' => '#text#',
 			)
 		);
 
@@ -28,10 +28,10 @@ class Intro extends Component {
 			'default-intro',
 			__( 'Style', 'apple-news' ),
 			array(
-				'fontName' => '%%body_font%%',
-				'fontSize' => '%%body_size%%',
-				'lineHeight' => '%%body_line_height%%',
-				'textColor' => '%%body_color%%',
+				'fontName' => '#body_font#',
+				'fontSize' => '#body_size#',
+				'lineHeight' => '#body_line_height#',
+				'textColor' => '#body_color#',
 			)
 		);
 	}
