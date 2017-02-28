@@ -35,6 +35,9 @@ class Admin_Apple_JSON extends Apple_News {
 		$this->json_page_name = $this->plugin_domain . '-json';
 
 		$this->valid_actions = array(
+			'apple_news_reset_json' => array(
+				'callback' => array( $this, 'reset_json' ),
+			),
 			'apple_news_save_json' => array(
 				'callback' => array( $this, 'save_json' ),
 			),
@@ -159,6 +162,40 @@ class Admin_Apple_JSON extends Apple_News {
 			array( 'jquery' ),
 			'1.2.6'
 		);
+	}
+
+	/**
+	 * Resets the JSON snippets for the component.
+	 *
+	 * @access private
+	 */
+	private function reset_json() {
+		// Get the selected component
+		$component = $this->get_selected_component();
+		if ( empty( $component ) ) {
+			\Admin_Apple_Notice::error(
+				__( 'Unable to save JSON since no component was provided', 'apple-news' )
+			);
+		}
+
+		// Get the specs for the component
+		$specs = $this->get_specs( $component );
+		if ( empty( $specs ) ) {
+			\Admin_Apple_Notice::error( sprintf(
+				__( 'The component %s has no specs and cannot be saved', 'apple-news' ),
+				$component
+			) );
+		}
+
+		// Iterate over the specs and reset each one
+		foreach ( $specs as $spec ) {
+			$spec->delete();
+		}
+
+		\Admin_Apple_Notice::success( sprintf(
+			__( 'Reset the custom specs for %s.', 'apple-news' ),
+			$component
+		) );
 	}
 
 	/**

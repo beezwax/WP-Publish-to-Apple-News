@@ -210,9 +210,9 @@ class Component_Spec {
 	/**
 	 * Delete the current spec override.
 	 *
-	 * @access private
+	 * @access public
 	 */
-	private function delete() {
+	public function delete() {
 		$option_name = $this->key_from_name( $this->component );
 		$spec_key = $this->key_from_name( $this->name );
 		$overrides = get_option( $option_name, array() );

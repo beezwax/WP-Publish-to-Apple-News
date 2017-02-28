@@ -81,7 +81,14 @@
 				submit_button(
 					__( 'Save JSON', 'apple-news' ),
 					'primary',
-					'apple_news_save_json'
+					'apple_news_save_json',
+					false
+				);
+				submit_button(
+					__( 'Reset JSON', 'apple-news' ),
+					'delete',
+					'apple_news_reset_json',
+					false
 				);
 			}
 		?>

@@ -3,3 +3,7 @@
 	font-weight: bold;
 	display: block;
 }
+
+.apple-news-json input[type="submit"] {
+	margin-right: 1em;
+}
