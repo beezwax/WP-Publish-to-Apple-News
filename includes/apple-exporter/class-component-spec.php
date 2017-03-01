@@ -95,16 +95,13 @@ class Component_Spec {
 
 			// If the current element has children, call this recursively
 			if ( is_array( $value ) ) {
-				// Pass through only the values for this child array
-				$child_values = ( isset( $values[ $key ] ) ) ? $values[ $key ] : array();
-
 				// Call this function recursively to handle the substitution on this child array
-				$spec[ $key ] = $this->value_iterator( $spec[ $key ], $child_values );
+				$spec[ $key ] = $this->value_iterator( $spec[ $key ], $values );
 			} elseif ( ! is_array( $value ) && $this->is_token( $value ) ) {
 				// This element is a token, so substitute its value
 				// If no value exists, it should be removed to not produce invalid JSON
-				if ( isset( $values[ $key ] ) ) {
-					$spec[ $key ] = $values[ $key ];
+				if ( isset( $values[ $value ] ) ) {
+					$spec[ $key ] = $values[ $value ];
 				} else {
 					unset( $spec[ $key ] );
 				}
