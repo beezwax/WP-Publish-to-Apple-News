@@ -125,7 +125,7 @@ class Quote extends Component {
 				'fontSize' => '#blockquote_size#',
 				'textColor' => '#blockquote_color#',
 				'lineHeight' => '#blockquote_line_height#',
-				'textAlignment' => '#textAlignment#',
+				'textAlignment' => '#text_alignment#',
 				'tracking' => '#blockquote_tracking#',
 			)
 		);
@@ -218,7 +218,7 @@ class Quote extends Component {
 				'textColor' => '#pullquote_color#',
 				'textTransform' => '#pullquote_transform#',
 				'lineHeight' => '#pullquote_line_height#',
-				'textAlignment' => '#textAlignment#',
+				'textAlignment' => '#text_alignment#',
 				'tracking' => '#pullquote_tracking#',
 			)
 		);
@@ -295,23 +295,12 @@ class Quote extends Component {
 
 		// Set JSON for this element.
 		$values = array(
-			'layout' => array(
-				'columnStart' => $this->get_setting( 'body_offset' ),
-				'columnSpan' => $this->get_setting( 'body_column_span' ),
-				'margin' => array(
-					'bottom' => $this->get_setting( 'layout_gutter' ),
-					'top' => $this->get_setting( 'layout_gutter' ),
-				),
-			),
-			'style' => array(
-				'backgroundColor' => $this->get_setting( 'blockquote_background_color' ),
-			),
-			'components' => array(
-				array(
-					'text' => $this->parser->parse( $text ),
-					'format' => $this->parser->format,
-				)
-			),
+			'#body_offset#' => $this->get_setting( 'body_offset' ),
+			'#body_column_span#' => $this->get_setting( 'body_column_span' ),
+			'#layout_gutter#' => $this->get_setting( 'layout_gutter' ),
+			'#blockquote_background_color#' => $this->get_setting( 'blockquote_background_color' ),
+			'#text#' => $this->parser->parse( $text ),
+			'#format#' => $this->parser->format,
 		);
 
 		// Set component attributes.
@@ -346,12 +335,8 @@ class Quote extends Component {
 
 		// Set JSON for this element.
 		$values = array(
-			'components' => array(
-				array(
-					'text' => $text,
-					'format' => $this->parser->format,
-				)
-			),
+			'#text#' => $text,
+			'#format#' => $this->parser->format,
 		);
 
 		// Determine if there is a border specified.
@@ -386,15 +371,14 @@ class Quote extends Component {
 		}
 
 		// Set the border.
-		$values['style']['border'] = array(
-			'all' => array(
-				'width' => $this->get_setting( 'blockquote_border_width' ),
-				'style' => $this->get_setting( 'blockquote_border_style' ),
-				'color' => $this->get_setting( 'blockquote_border_color' ),
-			),
+		return array_merge(
+			$values,
+			array(
+				'#blockquote_border_width#' => $this->get_setting( 'blockquote_border_width' ),
+				'#blockquote_border_style#' => $this->get_setting( 'blockquote_border_style' ),
+				'#blockquote_border_color#' => $this->get_setting( 'blockquote_border_color' ),
+			)
 		);
-
-		return $values;
 	}
 
 	/**
@@ -419,12 +403,12 @@ class Quote extends Component {
 			'default-blockquote',
 			'default-blockquote',
 			array(
-				'fontName' => $this->get_setting( 'blockquote_font' ),
-				'fontSize' => intval( $this->get_setting( 'blockquote_size' ) ),
-				'textColor' => $this->get_setting( 'blockquote_color' ),
-				'lineHeight' => intval( $this->get_setting( 'blockquote_line_height' ) ),
-				'textAlignment' => $this->find_text_alignment(),
-				'tracking' => intval( $this->get_setting( 'blockquote_tracking' ) ) / 100,
+				'#blockquote_font#' => $this->get_setting( 'blockquote_font' ),
+				'#blockquote_size#' => intval( $this->get_setting( 'blockquote_size' ) ),
+				'#blockquote_color#' => $this->get_setting( 'blockquote_color' ),
+				'#blockquote_line_height#' => intval( $this->get_setting( 'blockquote_line_height' ) ),
+				'#text_alignment#' => $this->find_text_alignment(),
+				'#blockquote_tracking#' => intval( $this->get_setting( 'blockquote_tracking' ) ) / 100,
 			),
 			'textStyle'
 		);
@@ -448,17 +432,14 @@ class Quote extends Component {
 	 */
 	private function _set_pullquote_border( $values ) {
 		// Set the border.
-		$values['style'] = array(
-			'border' => array(
-				'all' => array (
-					'width' => $this->get_setting( 'pullquote_border_width' ),
-					'style' => $this->get_setting( 'pullquote_border_style' ),
-					'color' => $this->get_setting( 'pullquote_border_color' ),
-				),
-			),
+		return array_merge(
+			$values,
+			array(
+				'#pullquote_border_width#' => $this->get_setting( 'pullquote_border_width' ),
+				'#pullquote_border_style#' => $this->get_setting( 'pullquote_border_style' ),
+				'#pullquote_border_color#' => $this->get_setting( 'pullquote_border_color' ),
+			)
 		);
-
-		return $values;
 	}
 
 	/**
@@ -483,14 +464,14 @@ class Quote extends Component {
 			'default-pullquote',
 			'default-pullquote',
 			array(
-				'fontName' => $this->get_setting( 'pullquote_font' ),
-				'fontSize' => intval( $this->get_setting( 'pullquote_size' ) ),
-				'hangingPunctuation' => ( 'yes' === $this->get_setting( 'pullquote_hanging_punctuation' ) ),
-				'textColor' => $this->get_setting( 'pullquote_color' ),
-				'textTransform' => $this->get_setting( 'pullquote_transform' ),
-				'lineHeight' => intval( $this->get_setting( 'pullquote_line_height' ) ),
-				'textAlignment' => $this->find_text_alignment(),
-				'tracking' => intval( $this->get_setting( 'pullquote_tracking' ) ) / 100,
+				'#pullquote_font#' => $this->get_setting( 'pullquote_font' ),
+				'#pullquote_size#' => intval( $this->get_setting( 'pullquote_size' ) ),
+				'#pullquote_hanging_punctuation#' => ( 'yes' === $this->get_setting( 'pullquote_hanging_punctuation' ) ),
+				'#pullquote_color#' => $this->get_setting( 'pullquote_color' ),
+				'#pullquote_transform#' => $this->get_setting( 'pullquote_transform' ),
+				'#pullquote_line_height#' => intval( $this->get_setting( 'pullquote_line_height' ) ),
+				'#text_alignment#' => $this->find_text_alignment(),
+				'#pullquote_tracking#' => intval( $this->get_setting( 'pullquote_tracking' ) ) / 100,
 			),
 			'textStyle'
 		);
