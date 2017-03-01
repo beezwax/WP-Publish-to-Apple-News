@@ -61,7 +61,7 @@ class Image extends Component {
 						'role' => 'caption',
 						'text' => '#caption#',
 						'textStyle' => array(
-							'textAlignment' => '#textAlignment#',
+							'textAlignment' => '#text_alignment#',
 							'fontName' => '#caption_font#',
 							'fontSize' => '#caption_size#',
 							'tracking' => '#caption_tracking#',
@@ -131,7 +131,7 @@ class Image extends Component {
 		$filename = preg_replace( '/\\?.*/', '', \Apple_News::get_filename( $url ) );
 
 		$values = array(
-			'URL'  => $this->maybe_bundle_source( $url, $filename ),
+			'#url#'  => $this->maybe_bundle_source( $url, $filename ),
 		);
 
 		// Determine image alignment.
@@ -150,7 +150,7 @@ class Image extends Component {
 		// Check for caption
 		if ( preg_match( '#<figcaption.*?>(.*?)</figcaption>#m', $text, $matches ) ) {
 			$caption = trim( $matches[1] );
-			$values['caption'] = $caption;
+			$values['#caption#'] = $caption;
 			$values = $this->group_component( $caption, $values );
 			$spec_name = 'json-with-caption';
 		} else {
@@ -181,10 +181,10 @@ class Image extends Component {
 		$this->register_layout(
 			'anchored-image',
 			'anchored-image',
-			array()
+			array(
+				'#layout#' => 'anchored-image',
+			)
 		);
-
-		return $this->add_layout( 'anchored-image', $values );
 	}
 
 	/**
@@ -196,11 +196,14 @@ class Image extends Component {
 	 */
 	private function register_non_anchor_layout( $values ) {
 		// Set values to merge into the spec
-		$layout_values = array();
+		$layout_values = array(
+			'#layout#' => 'full-width-image',
+		);
+
 		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
 			$spec_name = 'non-anchored-full-bleed-image';
 		} else {
-			$layout_values['columnSpan'] = $this->get_setting( 'layout_columns' ) - 4;
+			$layout_values['#layout_columns_minus_4#'] = $this->get_setting( 'layout_columns' ) - 4;
 			$spec_name = 'non-anchored-image';
 		}
 
@@ -210,26 +213,6 @@ class Image extends Component {
 			$spec_name,
 			$layout_values
 		);
-
-		return $this->add_layout( 'full-width-image', $values );
-	}
-
-	/**
-	 * Handles adding a layout to the appropriate location in values.
-	 *
-	 * @param array $layout
-	 * @param array $values
-	 * @return array
-	 * @access private
-	 */
-	private function add_layout( $layout, $values ) {
-		if ( isset( $values['components'] ) && is_array( $values['components'] ) ) {
-			$values['components'][0]['layout'] = $layout;
-		} else {
-			$values['layout'] = $layout;
-		}
-
-		return $values;
 	}
 
 	/**
@@ -268,28 +251,22 @@ class Image extends Component {
 	private function group_component( $caption, $values ) {
 
 		// Roll up the image component into a container.
-		$values = array(
-			'components' => array(
-				$values,
-				array(
-					'text' => $caption,
-					'textStyle' => array(
-						'textAlignment' => $this->find_caption_alignment(),
-						'fontName' => $this->get_setting( 'caption_font' ),
-						'fontSize' => intval( $this->get_setting( 'caption_size' ) ),
-						'tracking' => intval( $this->get_setting( 'caption_tracking' ) ) / 100,
-						'lineHeight' => intval( $this->get_setting( 'caption_line_height' ) ),
-						'textColor' => $this->get_setting( 'caption_color' ),
-					),
-				),
-			),
+		$values = array_merge(
+			$values,
+			array(
+				'#caption#' => $caption,
+				'#text_alignment#' => $this->find_caption_alignment(),
+				'#caption_font#' => $this->get_setting( 'caption_font' ),
+				'#caption_size#' => intval( $this->get_setting( 'caption_size' ) ),
+				'#caption_tracking#' => intval( $this->get_setting( 'caption_tracking' ) ) / 100,
+				'#caption_line_height#' => intval( $this->get_setting( 'caption_line_height' ) ),
+				'#caption_color#' => $this->get_setting( 'caption_color' ),
+			)
 		);
 
 		// Add full bleed image option.
 		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
-			$values['layout'] = array(
-				'ignoreDocumentMargin' => true,
-			);
+			$values['#full_bleed_images#'] = true;
 		}
 
 		return $values;
