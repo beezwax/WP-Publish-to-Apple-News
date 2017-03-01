@@ -216,8 +216,8 @@ class Body extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'text' => $this->parser->parse( $text ),
-				'format' => $this->parser->format,
+				'#text#' => $this->parser->parse( $text ),
+				'#format#' => $this->parser->format,
 			)
 	 	);
 
@@ -252,8 +252,8 @@ class Body extends Component {
 			'body-layout',
 			'body-layout',
 			array(
-				'columnStart' => $this->get_setting( 'body_offset' ),
-				'columnSpan' => $this->get_setting( 'body_column_span' ),
+				'#body_offset#' => $this->get_setting( 'body_offset' ),
+				'#body_column_span#' => $this->get_setting( 'body_column_span' ),
 			),
 			'layout'
 		);
@@ -357,7 +357,7 @@ class Body extends Component {
 			'dropcapBodyStyle',
 			array_merge(
 				$this->get_default_style_values(),
-				$dropcap_style,
+				$dropcap_style
 			),
 			'textStyle'
 	 	);

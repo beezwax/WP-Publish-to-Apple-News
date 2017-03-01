@@ -180,11 +180,11 @@ class Image extends Component {
 	private function register_anchor_layout( $values ) {
 		$this->register_layout(
 			'anchored-image',
-			'anchored-image',
-			array(
-				'#layout#' => 'anchored-image',
-			)
+			'anchored-image'
 		);
+
+		$values['#layout#'] = 'anchored-image';
+		return $values;
 	}
 
 	/**
@@ -196,9 +196,7 @@ class Image extends Component {
 	 */
 	private function register_non_anchor_layout( $values ) {
 		// Set values to merge into the spec
-		$layout_values = array(
-			'#layout#' => 'full-width-image',
-		);
+		$layout_values = array();
 
 		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
 			$spec_name = 'non-anchored-full-bleed-image';
@@ -213,6 +211,9 @@ class Image extends Component {
 			$spec_name,
 			$layout_values
 		);
+
+		$values['#layout#'] = 'full-width-image';
+		return $values;
 	}
 
 	/**
