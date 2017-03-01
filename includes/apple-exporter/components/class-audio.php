@@ -35,7 +35,7 @@ class Audio extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'audio',
-				'URL' => '#URL#',
+				'URL' => '#url#',
 			)
 		);
 	}
@@ -57,7 +57,7 @@ class Audio extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'URL' => $url,
+				'#url#' => $url,
 			)
 	 	);
 	}

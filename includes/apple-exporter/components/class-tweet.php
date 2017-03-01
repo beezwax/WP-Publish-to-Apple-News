@@ -40,7 +40,7 @@ class Tweet extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'tweet',
-				'URL' => '#URL#',
+				'URL' => '#url#',
 			)
 		);
 
@@ -75,7 +75,7 @@ class Tweet extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'URL'  => $url,
+				'#url#' => $url,
 			)
 		);
 

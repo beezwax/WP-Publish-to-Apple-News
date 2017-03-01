@@ -40,7 +40,7 @@ class Image extends Component {
 			__( 'JSON without caption', 'apple-news' ),
 			array(
 				'role' => 'photo',
-				'URL'  => '#URL#',
+				'URL'  => '#url#',
 				'layout' => '#layout#',
 			)
 		);
@@ -53,7 +53,7 @@ class Image extends Component {
 				'components' => array(
 					array(
 						'role' => 'photo',
-						'URL'  => '#URL#',
+						'URL'  => '#url#',
 						'layout' => '#layout#',
 						'caption' => '#caption#',
 					),

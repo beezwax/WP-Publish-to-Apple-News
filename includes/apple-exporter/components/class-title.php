@@ -53,7 +53,7 @@ class Title extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'text' => $text,
+				'#text#' => $text,
 			)
 		 );
 
@@ -71,12 +71,12 @@ class Title extends Component {
 			'default-title',
 			'default-title',
 			array(
-				'fontName' => $this->get_setting( 'header1_font' ),
-				'fontSize' => intval( $this->get_setting( 'header1_size' ) ),
-				'lineHeight' => intval( $this->get_setting( 'header1_line_height' ) ),
-				'tracking' => intval( $this->get_setting( 'header1_tracking' ) ) / 100,
-				'textColor' => $this->get_setting( 'header1_color' ),
-				'textAlignment' => $this->find_text_alignment(),
+				'#header1_font#' => $this->get_setting( 'header1_font' ),
+				'#header1_size#' => intval( $this->get_setting( 'header1_size' ) ),
+				'#header1_line_height#' => intval( $this->get_setting( 'header1_line_height' ) ),
+				'#header1_tracking#' => intval( $this->get_setting( 'header1_tracking' ) ) / 100,
+				'#header1_color#' => $this->get_setting( 'header1_color' ),
+				'#text_alignment#' => $this->find_text_alignment(),
 			),
 			'textStyle'
 		 );

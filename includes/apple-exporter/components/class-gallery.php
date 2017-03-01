@@ -128,8 +128,8 @@ class Gallery extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'role' => $this->get_setting( 'gallery_type' ),
-				'items' => $items,
+				'#gallery_type#' => $this->get_setting( 'gallery_type' ),
+				'#items#' => $items,
 			)
 	 	);
 

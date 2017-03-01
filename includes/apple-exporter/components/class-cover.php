@@ -31,7 +31,7 @@ class Cover extends Component {
 					array(
 						'role' => 'photo',
 						'layout' => 'headerPhotoLayout',
-						'URL' => '#URL#',
+						'URL' => '#url#',
 					)
 				),
 				'behavior' => array(
@@ -76,11 +76,7 @@ class Cover extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'components' => array(
-					array(
-						'URL' => $this->maybe_bundle_source( $url ),
-					)
-				),
+				'#url#' => $this->maybe_bundle_source( $url ),
 			)
 	 	);
 
@@ -97,7 +93,7 @@ class Cover extends Component {
 			'headerPhotoLayout',
 			'headerPhotoLayout',
 			array(
-				'columnSpan' => $this->get_setting( 'layout_columns' ),
+				'#layout_columns#' => $this->get_setting( 'layout_columns' ),
 			)
 		);
 
@@ -105,7 +101,7 @@ class Cover extends Component {
 			'headerBelowTextPhotoLayout',
 			'headerBelowTextPhotoLayout',
 			array(
-				'columnSpan' => $this->get_setting( 'layout_columns' ),
+				'#layout_columns#' => $this->get_setting( 'layout_columns' ),
 			)
 		);
 	}

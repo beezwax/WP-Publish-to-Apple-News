@@ -53,7 +53,7 @@ class Instagram extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'instagram',
-				'URL'  => '#URL#',
+				'URL'  => '#url#',
 			)
 		);
 	}
@@ -86,7 +86,7 @@ class Instagram extends Component {
 			'json',
 			array(
 				// Remove `www.` from URL as AN parser doesn't allow for it.
-				'URL' => esc_url_raw( $url ),
+				'#url#' => esc_url_raw( $url ),
 			)
 	 	);
 	}
