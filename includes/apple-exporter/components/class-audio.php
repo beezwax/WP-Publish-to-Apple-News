@@ -13,7 +13,6 @@ class Audio extends Component {
 	 *
 	 * @param DomNode $node
 	 * @return mixed
-	 * @static
 	 * @access public
 	 */
 	public static function node_matches( $node ) {
@@ -23,6 +22,22 @@ class Audio extends Component {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Register all specs for the component.
+	 *
+	 * @access public
+	 */
+	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role' => 'audio',
+				'URL' => '#url#',
+			)
+		);
 	}
 
 	/**
@@ -39,10 +54,12 @@ class Audio extends Component {
 
 		$url = $match[1];
 
-		$this->json = array(
-			'role' => 'audio',
-			'URL'  => $url,
-		);
+		$this->register_json(
+			'json',
+			array(
+				'#url#' => $url,
+			)
+	 	);
 	}
 
 }

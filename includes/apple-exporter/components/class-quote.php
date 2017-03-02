@@ -33,6 +33,198 @@ class Quote extends Component {
 	}
 
 	/**
+	 * Register all specs for the component.
+	 *
+	 * @access public
+	 */
+	public function register_specs() {
+		$this->register_spec(
+			'blockquote-without-border-json',
+			__( 'Blockquote Without Border JSON', 'apple-news' ),
+			array(
+				'role' => 'container',
+				'layout' => array(
+					'columnStart' => '#body_offset#',
+					'columnSpan' => '#body_column_span#',
+					'margin' => array(
+						'bottom' => '#layout_gutter#',
+						'top' => '#layout_gutter#',
+					),
+				),
+				'style' => array(
+					'backgroundColor' => '#blockquote_background_color#',
+				),
+				'components' => array(
+					array(
+						'role' => 'quote',
+						'text' => '#text#',
+						'format' => '#format#',
+						'layout' => 'blockquote-layout',
+						'textStyle' => 'default-blockquote',
+					),
+				),
+			)
+		);
+
+		$this->register_spec(
+			'blockquote-with-border-json',
+			__( 'Blockquote With Border JSON', 'apple-news' ),
+			array(
+				'role' => 'container',
+				'layout' => array(
+					'columnStart' => '#body_offset#',
+					'columnSpan' => '#body_column_span#',
+					'margin' => array(
+						'bottom' => '#layout_gutter#',
+						'top' => '#layout_gutter#',
+					),
+				),
+				'style' => array(
+					'backgroundColor' => '#blockquote_background_color#',
+					'border' => array(
+						'all' => array(
+							'width' => '#blockquote_border_width#',
+							'style' => '#blockquote_border_style#',
+							'color' => '#blockquote_border_color#',
+						),
+						'bottom' => false,
+						'right' => false,
+						'top' => false,
+					),
+				),
+				'components' => array(
+					array(
+						'role' => 'quote',
+						'text' => '#text#',
+						'format' => '#format#',
+						'layout' => 'blockquote-layout',
+						'textStyle' => 'default-blockquote',
+					)
+				),
+			)
+		);
+
+		$this->register_spec(
+			'blockquote-layout',
+			__( 'Blockquote Layout', 'apple-news' ),
+			array(
+				'contentInset' => array(
+					'bottom' => true,
+					'left' => true,
+					'right' => true,
+					'top' => true,
+				),
+			)
+		);
+
+		$this->register_spec(
+			'default-blockquote',
+			__( 'Blockquote Style', 'apple-news' ),
+			array(
+				'fontName' => '#blockquote_font#',
+				'fontSize' => '#blockquote_size#',
+				'textColor' => '#blockquote_color#',
+				'lineHeight' => '#blockquote_line_height#',
+				'textAlignment' => '#text_alignment#',
+				'tracking' => '#blockquote_tracking#',
+			)
+		);
+
+		$this->register_spec(
+			'pullquote-without-border-json',
+			__( 'Pull quote Without Border JSON', 'apple-news' ),
+			array(
+				'role' => 'container',
+				'layout' => array(
+					'columnStart' => 3,
+					'columnSpan' => 4,
+				),
+				'components' => array(
+					array(
+						'role' => 'quote',
+						'text' => '#text#',
+						'format' => '#format#',
+						'layout' => 'pullquote-layout',
+						'textStyle' => 'default-pullquote',
+					),
+				),
+				'anchor' => array(
+					'targetComponentIdentifier' => 'pullquoteAnchor',
+					'originAnchorPosition' => 'top',
+					'targetAnchorPosition' => 'top',
+					'rangeStart' => 0,
+					'rangeLength' => 10,
+				),
+			)
+		);
+
+		$this->register_spec(
+			'pullquote-with-border-json',
+			__( 'Pull quote With Border JSON', 'apple-news' ),
+			array(
+				'role' => 'container',
+				'layout' => array(
+					'columnStart' => 3,
+					'columnSpan' => 4
+				),
+				'components' => array(
+					array(
+						'role' => 'quote',
+						'text' => '#text#',
+						'format' => '#format#',
+						'layout' => 'pullquote-layout',
+						'textStyle' => 'default-pullquote',
+					)
+				),
+				'style' => array(
+					'border' => array(
+						'all' => array (
+							'width' => '#pullquote_border_width#',
+							'style' => '#pullquote_border_style#',
+							'color' => '#pullquote_border_color#',
+						),
+						'left' => false,
+						'right' => false,
+					),
+				),
+				'anchor' => array(
+					'targetComponentIdentifier' => 'pullquoteAnchor',
+					'originAnchorPosition' => 'top',
+					'targetAnchorPosition' => 'top',
+					'rangeStart' => 0,
+					'rangeLength' => 10,
+				),
+			)
+		);
+
+		$this->register_spec(
+			'pullquote-layout',
+			__( 'Pull quote Layout', 'apple-news' ),
+			array(
+				'margin' => array(
+					'top' => 12,
+					'bottom' => 12,
+				),
+			)
+		);
+
+		$this->register_spec(
+			'default-pullquote',
+			__( 'Pull quote Style', 'apple-news' ),
+			array(
+				'fontName' => '#pullquote_font#',
+				'fontSize' => '#pullquote_size#',
+				'hangingPunctuation' => '#pullquote_hanging_punctuation#',
+				'textColor' => '#pullquote_color#',
+				'textTransform' => '#pullquote_transform#',
+				'lineHeight' => '#pullquote_line_height#',
+				'textAlignment' => '#text_alignment#',
+				'tracking' => '#pullquote_tracking#',
+			)
+		);
+	}
+
+	/**
 	 * Build the component.
 	 *
 	 * @param string $html The HTML to parse into text for processing.
@@ -102,32 +294,26 @@ class Quote extends Component {
 	private function _build_blockquote( $text ) {
 
 		// Set JSON for this element.
-		$this->json = array(
-			'role' => 'container',
-			'layout' => array(
-				'columnStart' => $this->get_setting( 'body_offset' ),
-				'columnSpan' => $this->get_setting( 'body_column_span' ),
-				'margin' => array(
-					'bottom' => $this->get_setting( 'layout_gutter' ),
-					'top' => $this->get_setting( 'layout_gutter' ),
-				),
-			),
-			'style' => array(
-				'backgroundColor' => $this->get_setting( 'blockquote_background_color' ),
-			),
-			'components' => array(
-				array(
-					'role' => 'quote',
-					'text' => $this->parser->parse( $text ),
-					'format' => $this->parser->format,
-					'layout' => 'blockquote-layout',
-					'textStyle' => 'default-blockquote',
-				)
-			),
+		$values = array(
+			'#body_offset#' => $this->get_setting( 'body_offset' ),
+			'#body_column_span#' => $this->get_setting( 'body_column_span' ),
+			'#layout_gutter#' => $this->get_setting( 'layout_gutter' ),
+			'#blockquote_background_color#' => $this->get_setting( 'blockquote_background_color' ),
+			'#text#' => $this->parser->parse( $text ),
+			'#format#' => $this->parser->format,
 		);
 
 		// Set component attributes.
-		$this->_set_blockquote_border();
+		// Determine if there is a border specified.
+		if ( 'none' !== $this->get_setting( 'blockquote_border_style' ) ) {
+			$values = $this->_set_blockquote_border( $values );
+			$spec_name = 'blockquote-with-border-json';
+		} else {
+			$spec_name = 'blockquote-without-border-json';
+		}
+
+		$this->register_json( $spec_name, $values );
+
 		$this->_set_blockquote_layout();
 		$this->_set_blockquote_style();
 	}
@@ -148,26 +334,24 @@ class Quote extends Component {
 		}
 
 		// Set JSON for this element.
-		$this->json = array(
-			'role' => 'container',
-			'layout' => array(
-				'columnStart' => 3,
-				'columnSpan' => 4
-			),
-			'components' => array(
-				array(
-					'role' => 'quote',
-					'text' => $text,
-					'format' => $this->parser->format,
-					'layout' => 'pullquote-layout',
-					'textStyle' => 'default-pullquote',
-				)
-			),
+		$values = array(
+			'#text#' => $text,
+			'#format#' => $this->parser->format,
 		);
+
+		// Determine if there is a border specified.
+		if ( 'none' !== $this->get_setting( 'pullquote_border_style' ) ) {
+			$values = $this->_set_pullquote_border( $values );
+			$spec_name = 'pullquote-with-border-json';
+		} else {
+			$spec_name = 'pullquote-without-border-json';
+		}
+
+		// Register the JSON
+		$this->register_json( $spec_name, $values );
 
 		// Set component attributes.
 		$this->_set_pullquote_anchor();
-		$this->_set_pullquote_border();
 		$this->_set_pullquote_layout();
 		$this->_set_pullquote_style();
 	}
@@ -175,25 +359,25 @@ class Quote extends Component {
 	/**
 	 * Set the border for a blockquote.
 	 *
+	 * @param array $values
+	 * @return array
 	 * @access private
 	 */
-	private function _set_blockquote_border() {
+	private function _set_blockquote_border( $values ) {
 
 		// Determine if there is a border specified.
 		if ( 'none' === $this->get_setting( 'blockquote_border_style' ) ) {
-			return;
+			return $values;
 		}
 
 		// Set the border.
-		$this->json['style']['border'] = array (
-			'all' => array (
-				'width' => $this->get_setting( 'blockquote_border_width' ),
-				'style' => $this->get_setting( 'blockquote_border_style' ),
-				'color' => $this->get_setting( 'blockquote_border_color' ),
-			),
-			'bottom' => false,
-			'right' => false,
-			'top' => false,
+		return array_merge(
+			$values,
+			array(
+				'#blockquote_border_width#' => $this->get_setting( 'blockquote_border_width' ),
+				'#blockquote_border_style#' => $this->get_setting( 'blockquote_border_style' ),
+				'#blockquote_border_color#' => $this->get_setting( 'blockquote_border_color' ),
+			)
 		);
 	}
 
@@ -205,14 +389,7 @@ class Quote extends Component {
 	private function _set_blockquote_layout() {
 		$this->register_layout(
 			'blockquote-layout',
-			array(
-				'contentInset' => array(
-					'bottom' => true,
-					'left' => true,
-					'right' => true,
-					'top' => true,
-				),
-			)
+			'blockquote-layout'
 		);
 	}
 
@@ -222,17 +399,18 @@ class Quote extends Component {
 	 * @access private
 	 */
 	private function _set_blockquote_style() {
-		$this->json['textStyle'] = 'default-blockquote';
 		$this->register_style(
 			'default-blockquote',
+			'default-blockquote',
 			array(
-				'fontName' => $this->get_setting( 'blockquote_font' ),
-				'fontSize' => intval( $this->get_setting( 'blockquote_size' ) ),
-				'textColor' => $this->get_setting( 'blockquote_color' ),
-				'lineHeight' => intval( $this->get_setting( 'blockquote_line_height' ) ),
-				'textAlignment' => $this->find_text_alignment(),
-				'tracking' => intval( $this->get_setting( 'blockquote_tracking' ) ) / 100,
-			)
+				'#blockquote_font#' => $this->get_setting( 'blockquote_font' ),
+				'#blockquote_size#' => intval( $this->get_setting( 'blockquote_size' ) ),
+				'#blockquote_color#' => $this->get_setting( 'blockquote_color' ),
+				'#blockquote_line_height#' => intval( $this->get_setting( 'blockquote_line_height' ) ),
+				'#text_alignment#' => $this->find_text_alignment(),
+				'#blockquote_tracking#' => intval( $this->get_setting( 'blockquote_tracking' ) ) / 100,
+			),
+			'textStyle'
 		);
 	}
 
@@ -243,36 +421,24 @@ class Quote extends Component {
 	 */
 	private function _set_pullquote_anchor() {
 		$this->set_anchor_position( Component::ANCHOR_AUTO );
-		$this->json['anchor'] = array(
-			'targetComponentIdentifier' => 'pullquoteAnchor',
-			'originAnchorPosition' => 'top',
-			'targetAnchorPosition' => 'top',
-			'rangeStart' => 0,
-			'rangeLength' => 10,
-		);
 	}
 
 	/**
 	 * Set the border for a pullquote.
 	 *
+	 * @param array $values
+	 * @return array
 	 * @access private
 	 */
-	private function _set_pullquote_border() {
-
-		// Determine if there is a border specified.
-		if ( 'none' === $this->get_setting( 'pullquote_border_style' ) ) {
-			return;
-		}
-
+	private function _set_pullquote_border( $values ) {
 		// Set the border.
-		$this->json['style']['border'] = array (
-			'all' => array (
-				'width' => $this->get_setting( 'pullquote_border_width' ),
-				'style' => $this->get_setting( 'pullquote_border_style' ),
-				'color' => $this->get_setting( 'pullquote_border_color' ),
-			),
-			'left' => false,
-			'right' => false,
+		return array_merge(
+			$values,
+			array(
+				'#pullquote_border_width#' => $this->get_setting( 'pullquote_border_width' ),
+				'#pullquote_border_style#' => $this->get_setting( 'pullquote_border_style' ),
+				'#pullquote_border_color#' => $this->get_setting( 'pullquote_border_color' ),
+			)
 		);
 	}
 
@@ -284,12 +450,7 @@ class Quote extends Component {
 	private function _set_pullquote_layout() {
 		$this->register_layout(
 			'pullquote-layout',
-			array(
-				'margin' => array(
-					'top' => 12,
-					'bottom' => 12,
-				),
-			)
+			'pullquote-layout'
 		);
 	}
 
@@ -299,19 +460,20 @@ class Quote extends Component {
 	 * @access private
 	 */
 	private function _set_pullquote_style() {
-		$this->json['textStyle'] = 'default-pullquote';
 		$this->register_style(
 			'default-pullquote',
+			'default-pullquote',
 			array(
-				'fontName' => $this->get_setting( 'pullquote_font' ),
-				'fontSize' => intval( $this->get_setting( 'pullquote_size' ) ),
-				'hangingPunctuation' => ( 'yes' === $this->get_setting( 'pullquote_hanging_punctuation' ) ),
-				'textColor' => $this->get_setting( 'pullquote_color' ),
-				'textTransform' => $this->get_setting( 'pullquote_transform' ),
-				'lineHeight' => intval( $this->get_setting( 'pullquote_line_height' ) ),
-				'textAlignment' => $this->find_text_alignment(),
-				'tracking' => intval( $this->get_setting( 'pullquote_tracking' ) ) / 100,
-			)
+				'#pullquote_font#' => $this->get_setting( 'pullquote_font' ),
+				'#pullquote_size#' => intval( $this->get_setting( 'pullquote_size' ) ),
+				'#pullquote_hanging_punctuation#' => ( 'yes' === $this->get_setting( 'pullquote_hanging_punctuation' ) ),
+				'#pullquote_color#' => $this->get_setting( 'pullquote_color' ),
+				'#pullquote_transform#' => $this->get_setting( 'pullquote_transform' ),
+				'#pullquote_line_height#' => intval( $this->get_setting( 'pullquote_line_height' ) ),
+				'#text_alignment#' => $this->find_text_alignment(),
+				'#pullquote_tracking#' => intval( $this->get_setting( 'pullquote_tracking' ) ) / 100,
+			),
+			'textStyle'
 		);
 	}
 }

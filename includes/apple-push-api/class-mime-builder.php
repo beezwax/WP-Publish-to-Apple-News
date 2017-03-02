@@ -33,7 +33,6 @@ class MIME_Builder {
 	 * Valid MIME types for Apple News bundles.
 	 *
 	 * @var array
-	 * @static
 	 * @access private
 	 */
 	private static $valid_mime_types = array (

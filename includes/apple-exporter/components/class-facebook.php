@@ -37,6 +37,22 @@ class Facebook extends Component {
 	);
 
 	/**
+	 * Register all specs for the component.
+	 *
+	 * @access public
+	 */
+	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role' => 'facebook_post',
+				'URL' => '#url#',
+			)
+		);
+	}
+
+	/**
 	 * Look for node matches for this component.
 	 *
 	 * @param DOMElement $node The node to examine.
@@ -58,10 +74,12 @@ class Facebook extends Component {
 	 * @access protected
 	 */
 	protected function build( $html ) {
-		$this->json = array(
-			'role' => 'facebook_post',
-			'URL' => self::_get_facebook_url( strip_tags( $html ) ),
-		);
+		$this->register_json(
+			'json',
+			array(
+				'#url#' => self::_get_facebook_url( strip_tags( $html ) ),
+			)
+	 );
 	}
 
 	/**

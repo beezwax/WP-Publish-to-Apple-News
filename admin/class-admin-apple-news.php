@@ -16,6 +16,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-async.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-sections.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-themes.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
 
 /**
  * Entry-point class for the plugin.
@@ -69,6 +70,9 @@ class Admin_Apple_News extends Apple_News {
 
 		// Add preview support
 		new Admin_Apple_Preview();
+
+		// Add JSON customization support
+		new Admin_Apple_JSON();
 	}
 
 	/**

@@ -39,6 +39,23 @@ class Video extends Component {
 	}
 
 	/**
+	 * Register all specs for the component.
+	 *
+	 * @access public
+	 */
+	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role' => 'video',
+				'URL' => '#url#',
+				'stillURL' => '#still_url#',
+			)
+		);
+	}
+
+	/**
 	 * Build the component.
 	 *
 	 * @param string $html The HTML to parse into text for processing.
@@ -52,15 +69,19 @@ class Video extends Component {
 			return;
 		}
 
-		// Build initial JSON.
-		$this->json = array(
-			'role' => 'video',
-			'URL' => $matches[1],
+		// Set values
+		$values = array(
+			'#url#' => $matches[1],
 		);
 
 		// Add poster frame, if defined.
 		if ( preg_match( '/poster="([^"]+)"/', $html, $poster ) ) {
-			$this->json['stillURL'] = $this->maybe_bundle_source( $poster[1] );
+			$values['#still_url#'] = $this->maybe_bundle_source( $poster[1] );
 		}
+
+		$this->register_json(
+			'json',
+			$values
+		);
 	}
 }

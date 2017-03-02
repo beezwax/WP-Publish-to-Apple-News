@@ -24,7 +24,6 @@ class Admin_Apple_Themes extends Apple_News {
 	 * Key for the theme index.
 	 *
 	 * @var string
-	 * @const
 	 */
 	const THEME_INDEX_KEY = 'apple_news_installed_themes';
 
@@ -32,7 +31,6 @@ class Admin_Apple_Themes extends Apple_News {
 	 * Key for the active theme.
 	 *
 	 * @var string
-	 * @const
 	 */
 	const THEME_ACTIVE_KEY = 'apple_news_active_theme';
 
@@ -40,7 +38,6 @@ class Admin_Apple_Themes extends Apple_News {
 	 * Prefix for individual theme keys.
 	 *
 	 * @var string
-	 * @const
 	 */
 	const THEME_KEY_PREFIX = 'apple_news_theme_';
 
@@ -99,7 +96,10 @@ class Admin_Apple_Themes extends Apple_News {
 	public function set_title( $admin_title, $title ) {
 		$screen = get_current_screen();
 		if ( 'admin_page_' . $this->theme_edit_page_name === $screen->base ) {
-			$admin_title = __( 'Edit Theme' ) . $admin_title;
+			$admin_title = sprintf(
+				__( 'Edit Theme %s', 'apple-news' ),
+				trim( $admin_title )
+			);
 		}
 
 		return $admin_title;

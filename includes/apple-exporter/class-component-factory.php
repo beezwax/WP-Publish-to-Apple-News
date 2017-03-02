@@ -13,7 +13,6 @@ class Component_Factory {
 	 * Available components.
 	 *
 	 * @var array
-	 * @static
 	 * @access private
 	 */
 	private static $components = array();
@@ -22,7 +21,6 @@ class Component_Factory {
 	 * Current workspace.
 	 *
 	 * @var Workspace
-	 * @static
 	 * @access private
 	 */
 	private static $workspace = null;
@@ -31,7 +29,6 @@ class Component_Factory {
 	 * Current settings.
 	 *
 	 * @var Settings
-	 * @static
 	 * @access private
 	 */
 	private static $settings = null;
@@ -40,7 +37,6 @@ class Component_Factory {
 	 * Current styles.
 	 *
 	 * @var Component_Text_Styles
-	 * @static
 	 * @access private
 	 */
 	private static $styles = null;
@@ -49,7 +45,6 @@ class Component_Factory {
 	 * Current layouts.
 	 *
 	 * @var Component_Layouts
-	 * @static
 	 * @access private
 	 */
 	private static $layouts = null;
@@ -61,10 +56,9 @@ class Component_Factory {
 	 * @param Settings $settings
 	 * @param Component_Text_Styles $styles
 	 * @param Component_Layouts $layouts
-	 * @static
 	 * @access public
 	 */
-	public static function initialize( $workspace, $settings, $styles, $layouts ) {
+	public static function initialize( $workspace = null, $settings = null, $styles = null, $layouts = null ) {
 		self::$workspace = $workspace;
 		self::$settings  = $settings;
 		self::$styles    = $styles;
@@ -98,11 +92,20 @@ class Component_Factory {
 	}
 
 	/**
+	 * Get all components
+	 *
+	 * @return array
+	 * @access public
+	 */
+	public static function get_components() {
+		return self::$components;
+	}
+
+	/**
 	 * Register a component.
 	 *
 	 * @param string $shortname
 	 * @param string $classname
-	 * @static
 	 * @access private
 	 */
 	private static function register_component( $shortname, $classname ) {
@@ -115,7 +118,6 @@ class Component_Factory {
 	 * @param string $shortname
 	 * @param string $html
 	 * @return Component
-	 * @static
 	 * @access public
 	 */
 	public static function get_component( $shortname, $html ) {
@@ -134,7 +136,6 @@ class Component_Factory {
 	 *
 	 * @param DomNode $node
 	 * @return array
-	 * @static
 	 * @access public
 	 */
 	public static function get_components_from_node( $node ) {

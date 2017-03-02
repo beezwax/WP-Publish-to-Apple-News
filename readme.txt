@@ -45,6 +45,14 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 
 == Changelog ==
 
+= 1.2.4 =
+* Added an interface for customizing of component JSON
+* Added support for making certain components inactive
+* Added hanging punctuation option for pull quotes
+* Added additional styling options for drop caps
+* Added support for nested images in lists
+* Added support for Instagram oEmbeds
+
 = 1.2.3 =
 * Allowed mapping themes to Apple News sections
 * Added support for videos in feed

@@ -24,7 +24,6 @@ class Instagram extends Component {
 	 * Look for node matches for this component.
 	 *
 	 * @param DOMElement $node The node to examine.
-	 *
 	 * @access public
 	 * @return DOMElement|null The DOMElement on match, false on no match.
 	 */
@@ -41,6 +40,22 @@ class Instagram extends Component {
 		}
 
 		return null;
+	}
+
+	/**
+	 * Register all specs for the component.
+	 *
+	 * @access public
+	 */
+	public function register_specs() {
+		$this->register_spec(
+			'json',
+			__( 'JSON', 'apple-news' ),
+			array(
+				'role' => 'instagram',
+				'URL'  => '#url#',
+			)
+		);
 	}
 
 	/**
@@ -67,11 +82,13 @@ class Instagram extends Component {
 			return;
 		}
 
-		// Build the component.
-		$this->json = array(
-			'role' => 'instagram',
-			'URL' => esc_url_raw( $url ),
-		);
+		$this->register_json(
+			'json',
+			array(
+				// Remove `www.` from URL as AN parser doesn't allow for it.
+				'#url#' => esc_url_raw( $url ),
+			)
+	 	);
 	}
 
 	/**
