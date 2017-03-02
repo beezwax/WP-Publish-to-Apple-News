@@ -52,6 +52,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Added additional styling options for drop caps
 * Added support for nested images in lists
 * Added support for Instagram oEmbeds
+* Updated the interface and workflow for customizing cover art
 
 = 1.2.3 =
 * Allowed mapping themes to Apple News sections
