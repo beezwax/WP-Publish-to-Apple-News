@@ -46,7 +46,7 @@ class Intro extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'text' => $text . "\n",
+				'#text#' => $text . "\n",
 			)
 	 	);
 
@@ -63,10 +63,10 @@ class Intro extends Component {
 			'default-intro',
 			'default-intro',
 			array(
-				'fontName' => $this->get_setting( 'body_font' ),
-				'fontSize' => intval( $this->get_setting( 'body_size' ) ),
-				'lineHeight' => intval( $this->get_setting( 'body_line_height' ) ),
-				'textColor' => $this->get_setting( 'body_color' ),
+				'#body_font#' => $this->get_setting( 'body_font' ),
+				'#body_size#' => intval( $this->get_setting( 'body_size' ) ),
+				'#body_line_height#' => intval( $this->get_setting( 'body_line_height' ) ),
+				'#body_color#' => $this->get_setting( 'body_color' ),
 			),
 			'textStyle'
 		);

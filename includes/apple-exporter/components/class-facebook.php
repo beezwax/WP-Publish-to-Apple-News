@@ -47,7 +47,7 @@ class Facebook extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'facebook_post',
-				'URL' => '#URL#',
+				'URL' => '#url#',
 			)
 		);
 	}
@@ -77,7 +77,7 @@ class Facebook extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'URL' => self::_get_facebook_url( strip_tags( $html ) ),
+				'#url#' => self::_get_facebook_url( strip_tags( $html ) ),
 			)
 	 );
 	}

@@ -216,8 +216,8 @@ class Body extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'text' => $this->parser->parse( $text ),
-				'format' => $this->parser->format,
+				'#text#' => $this->parser->parse( $text ),
+				'#format#' => $this->parser->format,
 			)
 	 	);
 
@@ -252,8 +252,8 @@ class Body extends Component {
 			'body-layout',
 			'body-layout',
 			array(
-				'columnStart' => $this->get_setting( 'body_offset' ),
-				'columnSpan' => $this->get_setting( 'body_column_span' ),
+				'#body_offset#' => $this->get_setting( 'body_offset' ),
+				'#body_column_span#' => $this->get_setting( 'body_column_span' ),
 			),
 			'layout'
 		);
@@ -263,8 +263,8 @@ class Body extends Component {
 			'body-layout-last',
 			'body-layout-last',
 			array(
-				'columnStart' => $this->get_setting( 'body_offset' ),
-				'columnSpan' => $this->get_setting( 'body_column_span' ),
+				'#body_offset#' => $this->get_setting( 'body_offset' ),
+				'#body_column_span#' => $this->get_setting( 'body_column_span' ),
 			)
 		);
 	}
@@ -299,14 +299,12 @@ class Body extends Component {
 	 */
 	private function get_default_style_values() {
 		return array(
-			'fontName' => $this->get_setting( 'body_font' ),
-			'fontSize' => intval( $this->get_setting( 'body_size' ) ),
-			'tracking' => intval( $this->get_setting( 'body_tracking' ) ) / 100,
-			'lineHeight' => intval( $this->get_setting( 'body_line_height' ) ),
-			'textColor' => $this->get_setting( 'body_color' ),
-			'linkStyle' => array(
-				'textColor' => $this->get_setting( 'body_link_color' )
-			),
+			'#body_font#' => $this->get_setting( 'body_font' ),
+			'#body_size#' => intval( $this->get_setting( 'body_size' ) ),
+			'#body_tracking#' => intval( $this->get_setting( 'body_tracking' ) ) / 100,
+			'#body_line_height#' => intval( $this->get_setting( 'body_line_height' ) ),
+			'#body_color#' => $this->get_setting( 'body_color' ),
+			'#body_link_color#' => $this->get_setting( 'body_link_color' ),
 		);
 	}
 
@@ -340,18 +338,18 @@ class Body extends Component {
 
 		// Start building the custom dropcap body style.
 		$dropcap_style = array(
-			'fontName' => $this->get_setting( 'dropcap_font' ),
-			'numberOfCharacters' => absint( $this->get_setting( 'dropcap_number_of_characters' ) ),
-			'numberOfLines' => $number_of_lines,
-			'numberOfRaisedLines' => absint( $this->get_setting( 'dropcap_number_of_raised_lines' ) ),
-			'padding' => absint( $this->get_setting( 'dropcap_padding' ) ),
-			'textColor' => $this->get_setting( 'dropcap_color' ),
+			'#dropcap_font#' => $this->get_setting( 'dropcap_font' ),
+			'#dropcap_number_of_characters#' => absint( $this->get_setting( 'dropcap_number_of_characters' ) ),
+			'#dropcap_number_of_lines#' => $number_of_lines,
+			'#dropcap_number_of_raised_lines#' => absint( $this->get_setting( 'dropcap_number_of_raised_lines' ) ),
+			'#dropcap_padding#' => absint( $this->get_setting( 'dropcap_padding' ) ),
+			'#dropcap_color#' => $this->get_setting( 'dropcap_color' ),
 		);
 
 		// Add the background color, if defined.
 		$background_color = $this->get_setting( 'dropcap_background_color' );
 		if ( ! empty( $background_color ) ) {
-			$dropcap_style['backgroundColor'] = $background_color;
+			$dropcap_style['#dropcap_background_color#'] = $background_color;
 		}
 
 		$this->register_style(
@@ -359,9 +357,7 @@ class Body extends Component {
 			'dropcapBodyStyle',
 			array_merge(
 				$this->get_default_style_values(),
-				array(
-					'dropCapStyle' => $dropcap_style,
-				)
+				$dropcap_style
 			),
 			'textStyle'
 	 	);

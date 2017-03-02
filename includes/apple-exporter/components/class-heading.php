@@ -53,7 +53,7 @@ class Heading extends Component {
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role' => '#headingLevel#',
+				'role' => '#heading_level#',
 				'text' => '#text#',
 				'format' => '#format#',
 			)
@@ -84,7 +84,7 @@ class Heading extends Component {
 					'fontSize' => '#header' . $level . '_size#',
 					'lineHeight' => '#header' . $level . '_line_height#',
 					'textColor' => '#header' . $level . '_color#',
-					'textAlignment' => '#textAlignment#',
+					'textAlignment' => '#text_alignment#',
 					'tracking' => '#header' . $level . '_tracking#',
 				)
 			);
@@ -140,9 +140,9 @@ class Heading extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'role' => 'heading' . $level,
-				'text' => trim( $this->parser->parse( $text ) ),
-				'format' => $this->parser->format,
+				'#heading_level#' => 'heading' . $level,
+				'#text#' => trim( $this->parser->parse( $text ) ),
+				'#format#' => $this->parser->format,
 			)
 	 	);
 
@@ -160,8 +160,8 @@ class Heading extends Component {
 			'heading-layout',
 			'heading-layout',
 			 array(
-				'columnStart' => $this->get_setting( 'body_offset' ),
-				'columnSpan' => $this->get_setting( 'body_column_span' ),
+				'#body_offset#' => $this->get_setting( 'body_offset' ),
+				'#body_column_span#' => $this->get_setting( 'body_column_span' ),
 			),
 			'layout'
 		);
@@ -177,12 +177,12 @@ class Heading extends Component {
 			'default-heading-' . $level,
 			'default-heading-' . $level,
 			array(
-				'fontName' => $this->get_setting( 'header' . $level . '_font' ),
-				'fontSize' => intval( $this->get_setting( 'header' . $level . '_size' ) ),
-				'lineHeight' => intval( $this->get_setting( 'header' . $level . '_line_height' ) ),
-				'textColor' => $this->get_setting( 'header' . $level . '_color' ),
-				'textAlignment' => $this->find_text_alignment(),
-				'tracking' => intval( $this->get_setting( 'header' . $level . '_tracking' ) ) / 100,
+				'#header' . $level . '_font#' => $this->get_setting( 'header' . $level . '_font' ),
+				'#header' . $level . '_size#'  => intval( $this->get_setting( 'header' . $level . '_size' ) ),
+				'#header' . $level . '_line_height#' => intval( $this->get_setting( 'header' . $level . '_line_height' ) ),
+				'#header' . $level . '_color#' => $this->get_setting( 'header' . $level . '_color' ),
+				'#text_alignment#' => $this->find_text_alignment(),
+				'#header' . $level . '_tracking#' => intval( $this->get_setting( 'header' . $level . '_tracking' ) ) / 100,
 			),
 			'textStyle'
 		);

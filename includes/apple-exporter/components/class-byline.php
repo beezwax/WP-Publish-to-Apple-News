@@ -60,7 +60,7 @@ class Byline extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'text' => $text,
+				'#text#' => $text,
 			)
 	 	);
 
@@ -78,12 +78,12 @@ class Byline extends Component {
 			'default-byline',
 			'default-byline',
 			array(
-				'textAlignment' => $this->find_text_alignment(),
-				'fontName' => $this->get_setting( 'byline_font' ),
-				'fontSize' => intval( $this->get_setting( 'byline_size' ) ),
-				'lineHeight' => intval( $this->get_setting( 'byline_line_height' ) ),
-				'tracking' => intval( $this->get_setting( 'byline_tracking' ) ) / 100,
-				'textColor' => $this->get_setting( 'byline_color' ),
+				'#text_alignment#' => $this->find_text_alignment(),
+				'#byline_font#' => $this->get_setting( 'byline_font' ),
+				'#byline_size#' => intval( $this->get_setting( 'byline_size' ) ),
+				'#byline_line_height#' => intval( $this->get_setting( 'byline_line_height' ) ),
+				'#byline_tracking#' => intval( $this->get_setting( 'byline_tracking' ) ) / 100,
+				'#byline_color#' => $this->get_setting( 'byline_color' ),
 			),
 			'textStyle'
 		);

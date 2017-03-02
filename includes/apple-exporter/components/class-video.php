@@ -49,8 +49,8 @@ class Video extends Component {
 			__( 'JSON', 'apple-news' ),
 			array(
 				'role' => 'video',
-				'URL' => '#URL#',
-				'stillURL' => '#stillURL#',
+				'URL' => '#url#',
+				'stillURL' => '#still_url#',
 			)
 		);
 	}
@@ -71,12 +71,12 @@ class Video extends Component {
 
 		// Set values
 		$values = array(
-			'URL' => $matches[1],
+			'#url#' => $matches[1],
 		);
 
 		// Add poster frame, if defined.
 		if ( preg_match( '/poster="([^"]+)"/', $html, $poster ) ) {
-			$values['stillURL'] = $this->maybe_bundle_source( $poster[1] );
+			$values['#still_url#'] = $this->maybe_bundle_source( $poster[1] );
 		}
 
 		$this->register_json(
