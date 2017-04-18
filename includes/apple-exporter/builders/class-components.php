@@ -81,7 +81,7 @@ class Components extends Builder {
 		$pullquote_position = $this->content_setting( 'pullquote_position' );
 		$valid_positions = array( 'top', 'middle', 'bottom' );
 		if ( empty( $pullquote )
-		     || ! in_array( $pullquote_position, $valid_positions )
+		     || ! in_array( $pullquote_position, $valid_positions, true )
 		) {
 			return;
 		}
@@ -89,9 +89,9 @@ class Components extends Builder {
 		// If the position is not top, make some math for middle and bottom.
 		$start = 0;
 		$total = count( $components );
-		if ( 'middle' == $pullquote_position ) {
+		if ( 'middle' === $pullquote_position ) {
 			$start = floor( $total / 2 );
-		} elseif ( 'bottom' == $pullquote_position ) {
+		} elseif ( 'bottom' === $pullquote_position ) {
 			$start = floor( ( $total / 4 ) * 3 );
 		}
 
@@ -173,7 +173,7 @@ class Components extends Builder {
 			// Try to get the original URL for the image.
 			$original_url = '';
 			foreach ( $bundles as $bundle_url ) {
-				if ( $bundle_basename == Apple_News::get_filename( $bundle_url ) ) {
+				if ( $bundle_basename === Apple_News::get_filename( $bundle_url ) ) {
 					$original_url = $bundle_url;
 					break;
 				}
@@ -189,7 +189,7 @@ class Components extends Builder {
 
 			// If the cover is set to be displayed, remove it from the flow.
 			$order = $this->get_setting( 'meta_component_order' );
-			if ( is_array( $order ) && in_array( 'cover', $order ) ) {
+			if ( is_array( $order ) && in_array( 'cover', $order, true ) ) {
 				unset( $components[ $i ] );
 				$components = array_values( $components );
 			}
@@ -308,7 +308,7 @@ class Components extends Builder {
 		$other_position = Component::ANCHOR_LEFT;
 		if ( ( Component::ANCHOR_AUTO === $component->get_anchor_position()
 		       && 'left' !== $this->get_setting( 'body_orientation' ) )
-		     || Component::ANCHOR_LEFT == $component->get_anchor_position()
+		     || Component::ANCHOR_LEFT === $component->get_anchor_position()
 		) {
 			$other_position = Component::ANCHOR_RIGHT;
 		}

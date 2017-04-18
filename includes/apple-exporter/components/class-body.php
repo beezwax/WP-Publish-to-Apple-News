@@ -36,7 +36,7 @@ class Body extends Component {
 	 */
 	public static function node_matches( $node ) {
 		// We are only interested in p, pre, ul and ol
-		if ( ! in_array( $node->nodeName, array( 'p', 'pre', 'ul', 'ol' ) ) ) {
+		if ( ! in_array( $node->nodeName, array( 'p', 'pre', 'ul', 'ol' ), true ) ) {
 			return null;
 		}
 
@@ -221,7 +221,7 @@ class Body extends Component {
 			)
 	 	);
 
-		if ( 'yes' == $this->get_setting( 'initial_dropcap' ) ) {
+		if ( 'yes' === $this->get_setting( 'initial_dropcap' ) ) {
 			// Toggle setting. This should only happen in the initial paragraph.
 			$this->set_setting( 'initial_dropcap', 'no' );
 			$this->set_initial_dropcap_style();

@@ -153,7 +153,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 */
 	public function page_themes_render() {
 		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
-			wp_die( __( 'You do not have permissions to access this page.', 'apple-news' ) );
+			wp_die( esc_html__( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}
 
 		include plugin_dir_path( __FILE__ ) . 'partials/page_themes.php';
@@ -166,7 +166,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 */
 	public function page_theme_edit_render() {
 		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
-			wp_die( __( 'You do not have permissions to access this page.', 'apple-news' ) );
+			wp_die( esc_html__( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}
 
 		$error = $theme_name = '';
@@ -578,7 +578,7 @@ class Admin_Apple_Themes extends Apple_News {
 		header( 'Content-Type: application/json; charset=' . get_option( 'blog_charset' ), true );
 
 		$JSON_PRETTY_PRINT = defined( 'JSON_PRETTY_PRINT' ) ? JSON_PRETTY_PRINT : null;
-		echo json_encode( $theme, $JSON_PRETTY_PRINT );
+		echo wp_json_encode( $theme, $JSON_PRETTY_PRINT );
 
 		exit;
 	}
@@ -611,7 +611,7 @@ class Admin_Apple_Themes extends Apple_News {
 		// Index the theme and check if it changed names
 		$this->index_theme( $name );
 		$previous_name = ( isset( $_POST['apple_news_theme_name_previous'] ) ) ? sanitize_text_field( $_POST['apple_news_theme_name_previous'] ) : '';
-		if ( $name != $previous_name && ! empty( $previous_name ) ) {
+		if ( $name !== $previous_name && ! empty( $previous_name ) ) {
 			$this->unindex_theme( $previous_name );
 		}
 
@@ -752,7 +752,7 @@ class Admin_Apple_Themes extends Apple_News {
 					$color = sanitize_text_field( $data[ $setting ] );
 
 					// Validate
-					if ( ! in_array( $data[ $setting ], $fonts ) ) {
+					if ( ! in_array( $data[ $setting ], $fonts, true ) ) {
 						return sprintf(
 							__( 'Invalid font value %s specified for setting %s', 'apple-news' ),
 							$data[ $setting ],
@@ -769,7 +769,7 @@ class Admin_Apple_Themes extends Apple_News {
 					$color = sanitize_text_field( $data[ $setting ] );
 
 					// Validate
-					if ( ! in_array( $data[ $setting ], $formatting_settings[ $setting ]['type'] ) ) {
+					if ( ! in_array( $data[ $setting ], $formatting_settings[ $setting ]['type'], true ) ) {
 						return sprintf(
 							__( 'Invalid value %s specified for setting %s', 'apple-news' ),
 							$data[ $setting ],
