@@ -3,8 +3,9 @@ namespace Apple_Exporter\Components;
 
 require_once __DIR__ . '/../class-markdown.php';
 
-use Apple_Exporter\Parser;
-use Apple_Exporter\Component_Spec;
+use \Apple_Exporter\Component_Spec;
+use \Apple_Exporter\Exporter_Content;
+use \Apple_Exporter\Parser;
 
 /**
  * Base component class. All components must inherit from this class and
@@ -614,33 +615,55 @@ abstract class Component {
 	 * @access protected
 	 */
 	protected static function remote_file_exists( $node ) {
+
+		// Try to get a URL from the src attribute of the HTML.
 		$html = $node->ownerDocument->saveXML( $node );
-		preg_match( '/src="([^"]*?)"/im', $html, $matches );
-		$path = $matches[1];
-
-		// Is it a URL? Check the headers in case of 404
-		if ( false !== filter_var( $path, FILTER_VALIDATE_URL ) ) {
-			if ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) {
-				$result = vip_safe_wp_remote_get( $path );
-			} else {
-				$result = wp_safe_remote_get( $path );
-			}
-
-			if ( is_wp_error( $result ) || empty( $result['response']['code'] ) || 404 === $result['response']['code'] ) {
-				return false;
-			} else {
-				return true;
-			}
+		$path = self::url_from_src( $html );
+		if ( empty( $path ) ) {
+			return false;
 		}
 
-		// This could be a local file path.
-		// Check that, except on WordPress VIP where this is not possible.
-		if ( ! defined( 'WPCOM_IS_VIP_ENV' ) || ! WPCOM_IS_VIP_ENV ) {
-			return file_exists( $path );
+		// Fork for method of retrieval if running on VIP.
+		if ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) {
+			$result = vip_safe_wp_remote_get( $path );
+		} else {
+			$result = wp_safe_remote_get( $path );
 		}
 
-		// Nothing was found or no further validation is possible.
-		return false;
+		// Check the headers in case of an error.
+		return ( ! is_wp_error( $result )
+			&& ! empty( $result['response']['code'] )
+			&& $result['response']['code'] < 400
+		);
 	}
 
+	/**
+	 * Returns a full URL from the first `src` parameter in the provided HTML that
+	 * has content.
+	 *
+	 * @param string $html The HTML to examine for `src` parameters.
+	 *
+	 * @return string A URL on success, or a blank string on failure.
+	 */
+	protected static function url_from_src( $html ) {
+
+		// Try to find src values in the provided HTML.
+		if ( ! preg_match_all( '/src=[\'"]([^\'"]+)[\'"]/im', $html, $matches ) ) {
+			return '';
+		}
+
+		// Loop through matches, returning the first valid URL found.
+		foreach ( $matches[1] as $url ) {
+
+			// Run the URL through the formatter.
+			$url = Exporter_Content::format_src_url( $url );
+
+			// If the URL passes validation, return it.
+			if ( ! empty( $url ) ) {
+				return $url;
+			}
+		}
+
+		return '';
+	}
 }

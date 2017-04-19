@@ -11,6 +11,7 @@
 
 namespace Apple_Exporter\Components;
 
+use \Apple_Exporter\Exporter_Content;
 use \DOMDocument;
 use \DOMElement;
 
@@ -98,9 +99,15 @@ class Gallery extends Component {
 				continue;
 			}
 
+			// Ensure the URL is valid.
+			$url = Exporter_Content::format_src_url( $matches[1] );
+			if ( empty( $url ) ) {
+				continue;
+			}
+
 			// Start building the item.
 			$content = array(
-				'URL' => $this->maybe_bundle_source( $matches[1] ),
+				'URL' => $this->maybe_bundle_source( esc_url_raw( $url ) ),
 			);
 
 			// Try to add the caption.

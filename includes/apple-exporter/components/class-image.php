@@ -89,7 +89,7 @@ class Image extends Component {
 				'margin' => array(
 					'bottom' => 25,
 					'top' => 25,
-				)
+				),
 			)
 		);
 
@@ -122,14 +122,30 @@ class Image extends Component {
 	/**
 	 * Build the component.
 	 *
-	 * @param string $text
+	 * @param string $text The text to convert into a component.
+	 *
 	 * @access protected
 	 */
 	protected function build( $text ) {
-		preg_match( '/src="([^"]*?)"/im', $text, $matches );
-		$url      = esc_url_raw( apply_filters( 'apple_news_build_image_src', $matches[1], $text ) );
-		$filename = preg_replace( '/\\?.*/', '', \Apple_News::get_filename( $url ) );
 
+		// Extract the URL from the text.
+		$url = self::url_from_src( $text );
+
+		/**
+		 * Allows for an image src value to be filtered before being applied.
+		 *
+		 * @param string $url The URL to be filtered.
+		 * @param string $text The raw text that was parsed for the URL.
+		 */
+		$url = esc_url_raw( apply_filters( 'apple_news_build_image_src', $url, $text ) );
+
+		// If we don't have a valid URL at this point, bail.
+		if ( empty( $url ) ) {
+			return;
+		}
+
+		// Add the URL as a parameter for replacement.
+		$filename = preg_replace( '/\\?.*/', '', \Apple_News::get_filename( $url ) );
 		$values = array(
 			'#url#'  => $this->maybe_bundle_source( $url, $filename ),
 		);
@@ -262,13 +278,9 @@ class Image extends Component {
 				'#caption_tracking#' => intval( $this->get_setting( 'caption_tracking' ) ) / 100,
 				'#caption_line_height#' => intval( $this->get_setting( 'caption_line_height' ) ),
 				'#caption_color#' => $this->get_setting( 'caption_color' ),
+				'#full_bleed_images#' => ( 'yes' === $this->get_setting( 'full_bleed_images' ) ),
 			)
 		);
-
-		// Add full bleed image option.
-		if ( 'yes' === $this->get_setting( 'full_bleed_images' ) ) {
-			$values['#full_bleed_images#'] = true;
-		}
 
 		return $values;
 	}
