@@ -144,6 +144,38 @@ abstract class Component {
 	public $specs;
 
 	/**
+	 * Allowed HTML tags for components that support it.
+	 *
+	 * @since 1.2.7
+	 * @var array
+	 * @access public
+	 */
+	public $allowed_html = array(
+		'p' => array(),
+		'strong' => array(),
+		'b' => array(),
+		'em' => array(),
+		'i' => array(),
+		'a' => array(
+			'href' => array(),
+		),
+		'ul' => array(),
+		'ol' => array(),
+		'li' => array(),
+		'br' => array(),
+		'sub' => array(),
+		'sup' => array(),
+		'del' => array(),
+		's' => array(),
+		'pre' => array(),
+		'code' => array(),
+		'samp' => array(),
+		'footer' => array(),
+		'aside' => array(),
+		'blockquote' => array(),
+	);
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string $text
@@ -233,6 +265,11 @@ abstract class Component {
 	 * @access public
 	 */
 	public function to_array() {
+		// If HTML support is enabled, provide an extra level of validation for supported tags.
+		if ( ! empty( $this->json['text'] ) && $this->html_enabled() ) {
+			$this->json['text'] = wp_kses( $this->json['text'], $this->allowed_html );
+		}
+
 		return apply_filters( 'apple_news_' . $this->get_component_name() . '_json', $this->json );
 	}
 
