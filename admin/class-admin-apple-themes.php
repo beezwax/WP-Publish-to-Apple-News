@@ -693,7 +693,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 */
 	private function validate_data( $data ) {
 		$settings = new \Apple_Exporter\Settings();
-		$valid_settings = array_keys( $settings->all() );
+		$default_settings = $settings->all();
 		$clean_settings = array();
 
 		// Check for the theme name
@@ -718,10 +718,17 @@ class Admin_Apple_Themes extends Apple_News {
 		// the appropriate validation and sanitization for each
 		foreach ( $valid_settings as $setting ) {
 			if ( ! isset( $data[ $setting ] ) ) {
-				return sprintf(
-					__( 'The theme was missing the required setting %s', 'apple-news' ),
-					$setting
-				);
+				// Get the default value instead.
+				// This ensures backwards compatiblity with theme files
+				// when new settings are added in future plugin versions.
+				if ( isset( $default_settings[ $setting ] ) ) {
+					$data[ $setting ] = $default_settings[ $setting ];
+				} else {
+					return sprintf(
+						__( 'The theme was missing the required setting %s and no default was found', 'apple-news' ),
+						$setting
+					);
+				}
 			}
 
 			// Find the appropriate sanitization method for each setting
