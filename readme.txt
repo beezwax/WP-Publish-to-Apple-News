@@ -3,8 +3,8 @@ Contributors: potatomaster, kevinfodness, alleyinteractive, beezwaxbuzz, gosukiw
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 4.7.3
-Stable tag: 1.2.6
+Tested up to: 4.7.4
+Stable tag: 1.2.7
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -44,6 +44,10 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 1.2.7 =
+* Fixed a bug where HTML tags were being stripped before being sent to the API.
+* Fixed a bug where older theme files couldn't be imported if new formatting settings were added.
 
 = 1.2.6 =
 * WP Standards: Ensured all instances of in_array use the strict parameter
