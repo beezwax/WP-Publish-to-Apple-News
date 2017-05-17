@@ -158,6 +158,10 @@ class Apple_News {
 			'admin_enqueue_scripts',
 			array( $this, 'action_admin_enqueue_scripts' )
 		);
+		add_action(
+			'plugins_loaded',
+			array( $this, 'action_plugins_loaded' )
+		);
 	}
 
 	/**
@@ -204,38 +208,54 @@ class Apple_News {
 	}
 
 	/**
+	 * Action hook callback for plugins_loaded.
+	 *
+	 * @since 1.3.0
+	 */
+	public function action_plugins_loaded() {
+
+		// Determine if the database version and code version are the same.
+		$current_version = get_option( 'apple_news_version' );
+		if ( version_compare( $current_version, self::$version, '>=' ) ) {
+			return;
+		}
+
+		// Handle upgrade to version 1.3.0.
+		if ( version_compare( $current_version, '1.3.0', '<' ) ) {
+			$this->upgrade_to_1_3_0();
+		}
+
+		// Set the database version to the current version in code.
+		update_option( 'apple_news_version', self::$version );
+	}
+
+	/**
 	 * Initialize the value of api_autosync_delete if not set.
 	 *
-	 * @param array $wp_settings An array of settings loaded from WP options.
-	 *
 	 * @access public
-	 * @return array The modified settings array.
 	 */
-	public function migrate_api_settings( $wp_settings ) {
+	public function migrate_api_settings() {
 
 		// Use the value of api_autosync_update for api_autosync_delete if not set
 		// since that was the previous value used to determine this behavior.
+		$wp_settings = get_option( self::$option_name );
 		if ( empty( $wp_settings['api_autosync_delete'] )
 		     && ! empty( $wp_settings['api_autosync_update'] )
 		) {
 			$wp_settings['api_autosync_delete'] = $wp_settings['api_autosync_update'];
 			update_option( self::$option_name, $wp_settings, 'no' );
 		}
-
-		return $wp_settings;
 	}
 
 	/**
 	 * Migrate legacy blockquote settings to new format.
 	 *
-	 * @param array $wp_settings An array of settings loaded from WP options.
-	 *
 	 * @access public
-	 * @return array The modified settings array.
 	 */
-	public function migrate_blockquote_settings( $wp_settings ) {
+	public function migrate_blockquote_settings() {
 
 		// Check for the presence of blockquote-specific settings.
+		$wp_settings = get_option( self::$option_name );
 		if ( $this->_all_keys_exist( $wp_settings, array(
 			'blockquote_background_color',
 			'blockquote_border_color',
@@ -247,7 +267,7 @@ class Apple_News {
 			'blockquote_size',
 			'blockquote_tracking',
 		) ) ) {
-			return $wp_settings;
+			return;
 		}
 
 		// Set the background color to 90% of the body background.
@@ -299,21 +319,17 @@ class Apple_News {
 
 		// Store the updated option to save the new setting names.
 		update_option( self::$option_name, $wp_settings, 'no' );
-
-		return $wp_settings;
 	}
 
 	/**
 	 * Migrate legacy caption settings to new format.
 	 *
-	 * @param array $wp_settings An array of settings loaded from WP options.
-	 *
 	 * @access public
-	 * @return array The modified settings array.
 	 */
-	public function migrate_caption_settings( $wp_settings ) {
+	public function migrate_caption_settings() {
 
 		// Check for the presence of caption-specific settings.
+		$wp_settings = get_option( self::$option_name );
 		if ( $this->_all_keys_exist( $wp_settings, array(
 			'caption_color',
 			'caption_font',
@@ -321,7 +337,7 @@ class Apple_News {
 			'caption_size',
 			'caption_tracking',
 		) ) ) {
-			return $wp_settings;
+			return;
 		}
 
 		// Clone and modify font size, if necessary.
@@ -345,26 +361,78 @@ class Apple_News {
 
 		// Store the updated option to save the new setting names.
 		update_option( self::$option_name, $wp_settings, 'no' );
+	}
 
-		return $wp_settings;
+	/**
+	 * Migrates standalone customized JSON to each installed theme.
+	 *
+	 * @access public
+	 */
+	public function migrate_custom_json_to_themes() {
+
+		// Get a list of all themes that need to be updated.
+		$themes = new Admin_Apple_Themes();
+		$all_themes = $themes->list_themes();
+
+		// Get a list of components that may have customized JSON.
+		$component_factory = new \Apple_Exporter\Component_Factory();
+		$component_factory->initialize();
+		$components = $component_factory::get_components();
+
+		// Iterate over components and look for customized JSON for each.
+		$json_templates = array();
+		foreach ( $components as $component_class ) {
+
+			// Negotiate the component key.
+			$component = new $component_class;
+			$component_key = $component->get_component_name();
+
+			// Try to get the custom JSON for this component.
+			$custom_json = get_option( 'apple_news_json_' . $component_key );
+			if ( empty( $custom_json ) || ! is_array( $custom_json ) ) {
+				continue;
+			}
+
+			// Loop over custom JSON and add each.
+			foreach ( $custom_json as $legacy_key => $values ) {
+				$new_key = str_replace( 'apple_news_json_', '', $legacy_key );
+				$json_templates[ $component_key ][ $new_key ] = $values;
+			}
+		}
+
+		// Ensure there is custom JSON to save.
+		if ( empty( $json_templates ) ) {
+			return;
+		}
+
+		// Loop over themes and apply to each.
+		foreach ( $all_themes as $theme ) {
+			$theme_settings = $themes->get_theme( $theme );
+			$theme_settings['json_templates'] = $json_templates;
+			$themes->save_theme( $theme, $theme_settings, true );
+		}
+
+		// Remove custom JSON standalone options.
+		$component_keys = array_keys( $json_templates );
+		foreach ( $component_keys as $component_key ) {
+			delete_option( 'apple_news_json_' . $component_key );
+		}
 	}
 
 	/**
 	 * Migrate legacy header settings to new format.
 	 *
-	 * @param array $wp_settings An array of settings loaded from WP options.
-	 *
 	 * @access public
-	 * @return array The modified settings array.
 	 */
-	public function migrate_header_settings( $wp_settings ) {
+	public function migrate_header_settings() {
 
 		// Check for presence of any legacy header setting.
+		$wp_settings = get_option( self::$option_name );
 		if ( empty( $wp_settings['header_font'] )
 		     && empty( $wp_settings['header_color'] )
 		     && empty( $wp_settings['header_line_height'] )
 		) {
-			return $wp_settings;
+			return;
 		}
 
 		// Clone settings, as necessary.
@@ -396,77 +464,51 @@ class Apple_News {
 
 		// Store the updated option to remove the legacy setting names.
 		update_option( self::$option_name, $wp_settings, 'no' );
-
-		return $wp_settings;
 	}
 
 	/**
 	 * Attempt to migrate settings from an older version of this plugin.
 	 *
-	 * @param array|object $wp_settings Settings loaded from WP options.
-	 *
 	 * @access public
-	 * @return array The modified settings array.
 	 */
-	public function migrate_settings( $wp_settings ) {
+	public function migrate_settings() {
 
-		// If we are not given an object to update to an array, bail.
-		if ( ! is_object( $wp_settings ) ) {
-			return $wp_settings;
-		}
-
-		// Try to get all settings as an array to be merged.
-		$all_settings = $wp_settings->all();
-		if ( empty( $all_settings ) || ! is_array( $all_settings ) ) {
-			return $wp_settings;
+		// Attempt to load settings from the option.
+		$wp_settings = get_option( self::$option_name );
+		if ( false !== $wp_settings ) {
+			return;
 		}
 
 		// For each potential value, see if the WordPress option exists.
 		// If so, migrate its value into the new array format.
 		// If it doesn't exist, just use the default value.
+		$settings = new \Apple_Exporter\Settings();
+		$all_settings = $settings->all();
 		$migrated_settings = array();
 		foreach ( $all_settings as $key => $default ) {
 			$value = get_option( $key, $default );
 			$migrated_settings[ $key ] = $value;
 		}
 
-		// Store these settings
+		// Store these settings.
 		update_option( self::$option_name, $migrated_settings, 'no' );
 
-		// Delete the options to clean up
+		// Delete the options to clean up.
 		array_map( 'delete_option', array_keys( $migrated_settings ) );
-
-		return $migrated_settings;
 	}
 
 	/**
-	 * Validate settings and see if any updates need to be performed.
-	 *
-	 * @param array|object $wp_settings Settings loaded from WP options.
+	 * Upgrades settings and data formats to be compatible with version 1.3.0.
 	 *
 	 * @access public
-	 * @return array The modified settings array.
 	 */
-	public function validate_settings( $wp_settings ) {
-
-		// If this option doesn't exist, either the site has never installed
-		// this plugin or they may be using an old version with individual
-		// options. To be safe, attempt to migrate values. This will happen only
-		// once.
-		if ( false === $wp_settings ) {
-			$wp_settings = $this->migrate_settings( $wp_settings );
-		}
-
-		// Check for presence of legacy header settings and migrate to new.
-		$wp_settings = $this->migrate_header_settings( $wp_settings );
-
-		// Check for presence of legacy API settings and migrate to new.
-		$wp_settings = $this->migrate_api_settings( $wp_settings );
-
-		// Ensure caption settings are set properly.
-		$wp_settings = $this->migrate_caption_settings( $wp_settings );
-
-		return $wp_settings;
+	public function upgrade_to_1_3_0() {
+		$this->migrate_settings();
+		$this->migrate_header_settings();
+		$this->migrate_api_settings();
+		$this->migrate_caption_settings();
+		$this->migrate_blockquote_settings();
+		$this->migrate_custom_json_to_themes();
 	}
 
 	/**

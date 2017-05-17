@@ -301,6 +301,38 @@ class Admin_Apple_Themes extends Apple_News {
 	}
 
 	/**
+	 * Attempts to import a theme, given an associative array of theme properties.
+	 *
+	 * @param array $theme An associative array of theme properties to import.
+	 *
+	 * @access public
+	 * @return bool|string True on success, or an error message on failure.
+	 */
+	public function import_theme( $theme ) {
+
+		// Validate the theme before proceeding.
+		$result = $this->validate_data( $theme );
+		if ( ! is_array( $result ) ) {
+			return sprintf(
+				__(
+					'The theme file was invalid and cannot be imported: %s',
+					'apple-news'
+				),
+				$result
+			);
+		}
+
+		// Extract and remove the name since it doesn't need to be stored.
+		$name = $result['theme_name'];
+		unset( $result['theme_name'] );
+
+		// Process the save operation.
+		$this->save_theme( $name, $result, true );
+
+		return true;
+	}
+
+	/**
 	 * Saves the theme JSON for the key provided.
 	 *
 	 * @param string $name
@@ -308,7 +340,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @param boolean $silent We don't always want this to display a message if it's behind the scenes
 	 * @access private
 	 */
-	private function save_theme( $name, $settings, $silent = false ) {
+	public function save_theme( $name, $settings, $silent = false ) {
 		// Save the theme settings
 		update_option( $this->theme_key_from_name( $name ), $settings, false );
 
@@ -516,18 +548,17 @@ class Admin_Apple_Themes extends Apple_News {
 
 		wp_import_cleanup( $this->file_id );
 
-		$result = $this->validate_data( $import_data );
-		if ( ! is_array( $result ) ) {
-			\Admin_Apple_Notice::error( sprintf(
-				__( 'The theme file was invalid and cannot be imported: %s', 'apple-news' ),
-				$result
-			 ) );
+		// Try to get the theme name prior to import.
+		$name = ( ! empty( $import_data['theme_name'] ) )
+			? $import_data['theme_name']
+			: '';
+
+		// Try to import the theme.
+		$result = $this->import_theme( $import_data );
+		if ( true !== $result ) {
+			\Admin_Apple_Notice::error( $result );
+
 			return;
-		} else {
-			// Get the name from the data and unset it since it doesn't need to be stored
-			$name = $result['theme_name'];
-			unset( $result['theme_name'] );
-			$this->save_theme( $name, $result, true );
 		}
 
 		// Indicate success
@@ -643,7 +674,7 @@ class Admin_Apple_Themes extends Apple_News {
 			$formatting = $this->get_formatting_object();
 			$formatting_settings = $formatting->get_settings();
 			if ( empty( $formatting_settings ) ) {
-				return $theme_settings;
+				return array();
 			}
 
 			$formatting_settings_keys = array_keys( $formatting_settings );
@@ -812,12 +843,93 @@ class Admin_Apple_Themes extends Apple_News {
 			unset( $data[ $setting ] );
 		}
 
+		// Handle JSON templates.
+		$this->validate_json_templates( $data, $clean_settings );
+
 		// Check if invalid data was present
 		if ( ! empty( $data ) ) {
 			return __( 'The theme file contained unsupported settings', 'apple-news' );
 		}
 
 		return $clean_settings;
+	}
+
+	/**
+	 * Ensures that JSON templates defined in a theme spec are valid.
+	 *
+	 * @param array &$data The data array containing import data for the theme.
+	 * @param array &$clean_settings The cleaned array containing the final settings.
+	 *
+	 * @access private
+	 */
+	private function validate_json_templates( &$data, &$clean_settings ) {
+
+		// If no JSON templates are defined in the theme, bail.
+		if ( empty( $data['json_templates'] )
+			|| ! is_array( $data['json_templates'] )
+		) {
+			return;
+		}
+
+		// Get a list of components that may have customized JSON.
+		$component_factory = new \Apple_Exporter\Component_Factory();
+		$component_factory->initialize();
+		$components = $component_factory::get_components();
+
+		// Iterate over components and look for customized JSON for each.
+		foreach ( $components as $component_class ) {
+
+			// Negotiate the component key.
+			$component = new $component_class;
+			$component_key = $component->get_component_name();
+
+			// Determine if this component key is defined in the import data.
+			if ( empty( $data['json_templates'][ $component_key ] )
+				|| ! is_array( $data['json_templates'][ $component_key ] )
+			) {
+				continue;
+			}
+
+			// Loop through component key and validate.
+			$current_component = &$data['json_templates'][ $component_key ];
+			$specs = $component->get_specs();
+			foreach ( $specs as $spec_key => $spec ) {
+
+				// Determine if the spec is defined as a JSON template in the theme.
+				if ( empty( $current_component[ $spec_key ] )
+					|| ! is_array( $current_component[ $spec_key ] )
+				) {
+					continue;
+				}
+
+				// Validate this spec.
+				if ( ! $spec->validate( $current_component[ $spec_key ] ) ) {
+					\Admin_Apple_Notice::error( sprintf(
+						__(
+							'The spec for %s had invalid tokens and cannot be saved',
+							'apple-news'
+						),
+						$component_key . '/' . $spec_key
+					) );
+
+					return;
+				}
+
+				// Clone this spec over to the clean settings array.
+				$clean_settings['json_templates'][ $component_key ][ $spec_key ] = $current_component[ $spec_key ];
+				unset( $data['json_templates'][ $component_key ][ $spec_key ] );
+			}
+
+			// Clean up.
+			if ( empty( $data['json_templates'][ $component_key] ) ) {
+				unset( $data['json_templates'][ $component_key ] );
+			}
+		}
+
+		// Clean up.
+		if ( empty( $data['json_templates'] ) ) {
+			unset( $data['json_templates'] );
+		}
 	}
 
 	/**

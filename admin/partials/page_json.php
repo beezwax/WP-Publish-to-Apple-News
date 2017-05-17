@@ -31,17 +31,41 @@
 					)
 				)
 			) ?></p>
-			<select id="apple_news_component" name="apple_news_component">
-				<option name=""><?php esc_html_e( 'Select a component', 'apple-news' ) ?></option>
-				<?php foreach ( $components as $component_key => $component_name ) : ?>
-					<option value="<?php echo esc_attr( $component_key ) ?>" <?php selected( $component_key, $selected_component ) ?>><?php echo esc_html( $component_name ) ?></option>
-				<?php endforeach; ?>
-			</select>
+			<div>
+				<label for="apple_news_theme">
+					<?php esc_html_e( 'Theme', 'apple-news' ); ?>:
+					<select id="apple_news_theme" name="apple_news_theme">
+						<option value="""><?php esc_html_e( 'Select a theme', 'apple-news' ); ?></option>
+						<?php foreach ( $all_themes as $theme_name ) : ?>
+							<option value="<?php echo esc_attr( $theme_name ) ?>"
+								<?php selected( $theme_name, $selected_theme ) ?>>
+									<?php echo esc_html( $theme_name ) ?>
+							</option>
+						<?php endforeach; ?>
+					</select>
+				</label>
+			</div>
+			<?php if ( ! empty( $selected_theme ) ) : ?>
+				<div>
+					<label for="apple_news_theme">
+						<?php esc_html_e( 'Component', 'apple-news' ); ?>:
+						<select id="apple_news_component" name="apple_news_component">
+							<option value=""><?php esc_html_e( 'Select a component', 'apple-news' ); ?></option>
+							<?php foreach ( $components as $component_key => $component_name ) : ?>
+								<option value="<?php echo esc_attr( $component_key ) ?>"
+									<?php selected( $component_key, $selected_component ) ?>>
+										<?php echo esc_html( $component_name ) ?>
+								</option>
+							<?php endforeach; ?>
+						</select>
+					</label>
+				</div>
+			<?php endif; ?>
 
 			<?php if ( ! empty( $specs ) ) : ?>
 				<?php foreach ( $specs as $spec ) :
-					$field_name = $spec->key_from_name( $spec->name );
-					$json_display = $spec->format_json( $spec->get_spec() );
+					$field_name = 'apple_news_json_' . $spec->key_from_name( $spec->name );
+					$json_display = $spec->format_json( $spec->get_spec( $selected_theme ) );
 					$rows = substr_count( $json_display, "\n" ) + 1;
 					$editor_name = 'editor_' . str_replace( '-', '_', $field_name );
 					$editor_style = sprintf(
