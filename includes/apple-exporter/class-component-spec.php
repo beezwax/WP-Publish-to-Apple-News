@@ -71,12 +71,13 @@ class Component_Spec {
 	 * Using the provided spec and array of values, build the component's JSON.
 	 *
 	 * @param array $values Values to substitute into the spec.
+	 * @param int $post_id Optional. The post ID to pull postmeta for.
 	 *
 	 * @access public
 	 * @return array The component JSON with placeholders in the spec replaced.
 	 */
-	public function substitute_values( $values ) {
-		return $this->value_iterator( $this->get_spec(), $values );
+	public function substitute_values( $values, $post_id = 0 ) {
+		return $this->value_iterator( $this->get_spec(), $values, $post_id );
 	}
 
 	/**
@@ -84,11 +85,12 @@ class Component_Spec {
 	 *
 	 * @param array $spec The spec to use as a template.
 	 * @param array $values Values to substitute in the spec.
+	 * @param int $post_id Optional. Post ID to pull postmeta for.
 	 *
 	 * @access public
 	 * @return array The spec with placeholders replaced by values.
 	 */
-	public function value_iterator( $spec, $values ) {
+	public function value_iterator( $spec, $values, $post_id = 0 ) {
 
 		// Go through this level of the iterator.
 		foreach ( $spec as $key => $value ) {
@@ -97,13 +99,39 @@ class Component_Spec {
 			if ( is_array( $value ) ) {
 
 				// Call this function recursively to handle the substitution on this child array.
-				$spec[ $key ] = $this->value_iterator( $spec[ $key ], $values );
+				$spec[ $key ] = $this->value_iterator( $spec[ $key ], $values, $post_id );
 			} elseif ( ! is_array( $value ) && $this->is_token( $value ) ) {
 
-				// This element is a token, so substitute its value.
-				// If no value exists, it should be removed to not produce invalid JSON.
-				if ( isset( $values[ $value ] ) ) {
-					$spec[ $key ] = $values[ $value ];
+				// Fork for postmeta vs. standard tokens.
+				if ( 0 === strpos( $value, '#postmeta.' ) ) {
+
+					// Try to get the value from postmeta.
+					$meta_key = substr( $value, strlen( '#postmeta.' ), -1 );
+					$meta_value = (string) get_post_meta( $post_id, $meta_key, true );
+					$value = ( ! empty( $meta_value ) ) ? $meta_value : '';
+
+					/**
+					 * Allows for filtering a postmeta value used in Apple News JSON.
+					 *
+					 * @since 1.3.0
+					 *
+					 * @param string $value The postmeta value to be filtered.
+					 * @param int $post_id The post ID for the post being rendered.
+					 * @param string $meta_key The meta key being rendered.
+					 */
+					$value = apply_filters(
+						'apple_news_postmeta_json_token',
+						$value,
+						$post_id,
+						$meta_key
+					);
+				} elseif ( ! empty( $values[ $value ] ) ) {
+					$value = $values[ $value ];
+				}
+
+				// Fork for setting the spec or unsetting based on valid values.
+				if ( ! empty( $value ) ) {
+					$spec[ $key ] = $value;
 				} else {
 					unset( $spec[ $key ] );
 				}
@@ -129,8 +157,15 @@ class Component_Spec {
 		$this->find_tokens( $spec, $new_tokens );
 		$this->find_tokens( $this->spec, $default_tokens );
 
-		// Removing tokens is fine, but new tokens cannot be added.
+		// Removing tokens is fine, but new tokens cannot be added, except for postmeta.
 		foreach ( $new_tokens as $token ) {
+
+			// If the new token references postmeta, allow it.
+			if ( 0 === strpos( $token, '#postmeta.' ) ) {
+				continue;
+			}
+
+			// Check for standard tokens.
 			if ( ! in_array( $token, $default_tokens, true ) ) {
 				return false;
 			}
@@ -374,7 +409,7 @@ class Component_Spec {
 	 * @return boolean True if the value is a token, false otherwise.
 	 */
 	public function is_token( $value ) {
-		return ( 1 === preg_match( '/#[^%]+#/', $value ) );
+		return ( 1 === preg_match( '/#[^#]+#/', $value ) );
 	}
 
 	/**
