@@ -125,12 +125,14 @@ class Component_Spec {
 						$post_id,
 						$meta_key
 					);
-				} elseif ( ! empty( $values[ $value ] ) ) {
+				} elseif ( isset( $values[ $value ] ) ) {
 					$value = $values[ $value ];
+				} else {
+					$value = null;
 				}
 
 				// Fork for setting the spec or unsetting based on valid values.
-				if ( ! empty( $value ) ) {
+				if ( ! empty( $value ) || 0 === $value ) {
 					$spec[ $key ] = $value;
 				} else {
 					unset( $spec[ $key ] );
