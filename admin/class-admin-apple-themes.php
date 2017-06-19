@@ -186,6 +186,7 @@ class Admin_Apple_Themes extends Apple_News {
 		add_action( 'admin_menu', array( $this, 'setup_theme_pages' ), 99 );
 		add_action( 'admin_init', array( $this, 'action_router' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
+		add_action( 'admin_notices', array( $this, 'theme_nag' ), 1 );
 		add_filter( 'admin_title', array( $this, 'set_title' ), 10, 1 );
 	}
 
@@ -402,6 +403,11 @@ class Admin_Apple_Themes extends Apple_News {
 	 */
 	public function setup_theme_pages() {
 
+		// Don't add the submenu pages if the settings aren't initialized.
+		if ( ! self::is_initialized() ) {
+			return;
+		}
+
 		// Ensure there is at least one theme created.
 		$registry = \Apple_Exporter\Theme::get_registry();
 		if ( empty( $registry ) ) {
@@ -468,6 +474,54 @@ class Admin_Apple_Themes extends Apple_News {
 		}
 
 		return $url;
+	}
+
+	/**
+	 * Nags the user about using an uncustomized default theme.
+	 *
+	 * @access public
+	 */
+	public function theme_nag() {
+
+		// If the plugin isn't initialized yet, don't nag the user.
+		if ( true !== \Apple_News::is_initialized() ) {
+			return;
+		}
+
+		// If we aren't on one of the Apple News admin pages, don't nag the user.
+		$screen = get_current_screen();
+		if ( false === strpos( $screen->base, 'apple_news' )
+			&& false === strpos( $screen->base, 'apple-news' )
+		) {
+			return;
+		}
+
+		// If the active theme isn't named "Default", don't nag the user.
+		if ( __( 'Default', 'apple-news' ) !== \Apple_Exporter\Theme::get_active_theme_name() ) {
+			return;
+		}
+
+		// Determine if the theme is using the default settings.
+		$default = new \Apple_Exporter\Theme;
+		$theme = new \Apple_Exporter\Theme;
+		$theme->set_name( \Apple_Exporter\Theme::get_active_theme_name() );
+		$theme->load();
+		$diff = array_diff_assoc( $default->all_settings(), $theme->all_settings() );
+
+		// If the theme has been customized, don't nag the user.
+		if ( ! empty( $diff ) ) {
+			return;
+		}
+
+		// Nag the user.
+		\Admin_Apple_Notice::info(
+			sprintf(
+			/* translators: First parameter is opening a tag, second is closing a tag */
+				__( 'It looks like you are using the default theme. You can choose a new theme or customize your theme on the %1$sthemes page%2$s.', 'apple-news' ),
+				'<a href="' . esc_url( admin_url( 'admin.php?page=apple-news-themes' ) ) . '">',
+				'</a>'
+			)
+		);
 	}
 
 	/**

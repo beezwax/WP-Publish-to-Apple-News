@@ -128,7 +128,16 @@ class Component_Spec {
 				} elseif ( isset( $values[ $value ] ) ) {
 					$value = $values[ $value ];
 				} else {
-					$value = null;
+
+					// Finally, check theme settings for the token.
+					$setting_name = trim( $value, '#' );
+					$theme = \Apple_Exporter\Theme::get_used();
+					$settings = $theme->all_settings();
+					if ( isset( $settings[ $setting_name ] ) ) {
+						$value = $settings[ $setting_name ];
+					} else {
+						$value = null;
+					}
 				}
 
 				// Fork for setting the spec or unsetting based on valid values.
@@ -159,18 +168,28 @@ class Component_Spec {
 		$this->find_tokens( $spec, $new_tokens );
 		$this->find_tokens( $this->spec, $default_tokens );
 
-		// Removing tokens is fine, but new tokens cannot be added, except for postmeta.
+		// Tokens can be removed, or added if they are general settings or postmeta.
 		foreach ( $new_tokens as $token ) {
+
+			// Check for standard tokens.
+			if ( in_array( $token, $default_tokens, true ) ) {
+				continue;
+			}
 
 			// If the new token references postmeta, allow it.
 			if ( 0 === strpos( $token, '#postmeta.' ) ) {
 				continue;
 			}
 
-			// Check for standard tokens.
-			if ( ! in_array( $token, $default_tokens, true ) ) {
-				return false;
+			// If the new token references a setting by name, allow it.
+			$setting_name = trim( $token, '#' );
+			$theme = \Apple_Exporter\Theme::get_used();
+			$settings = $theme->all_settings();
+			if ( isset( $settings[ $setting_name ] ) ) {
+				continue;
 			}
+
+			return false;
 		}
 
 		return true;
@@ -271,8 +290,7 @@ class Component_Spec {
 
 		// Try to load the custom JSON into the theme.
 		$component_key = $this->key_from_name( $this->component );
-		$spec_key = $this->key_from_name( $this->name );
-		$theme_settings['json_templates'][ $component_key ][ $spec_key ] = $json;
+		$theme_settings['json_templates'][ $component_key ][ $this->name ] = $json;
 		if ( ! $theme->load( $theme_settings ) ) {
 			\Admin_Apple_Notice::error( sprintf(
 				__( 'The spec for %s could not be loaded into the theme', 'apple-news' ),
@@ -311,10 +329,6 @@ class Component_Spec {
 			$theme_name = \Apple_Exporter\Theme::get_active_theme_name();
 		}
 
-		// Compute component and spec keys.
-		$component_key = $this->key_from_name( $this->component );
-		$spec_key = $this->key_from_name( $this->name );
-
 		// Try to load theme settings.
 		$theme = new \Apple_Exporter\Theme;
 		$theme->set_name( $theme_name );
@@ -323,13 +337,14 @@ class Component_Spec {
 		}
 
 		// Determine if this spec override is defined in the theme.
+		$component_key = $this->key_from_name( $this->component );
 		$theme_settings = $theme->all_settings();
-		if ( ! isset( $theme_settings['json_templates'][ $component_key ][ $spec_key ] ) ) {
+		if ( ! isset( $theme_settings['json_templates'][ $component_key ][ $this->name ] ) ) {
 			return false;
 		}
 
 		// Remove this spec from the theme.
-		unset( $theme_settings['json_templates'][ $component_key ][ $spec_key ] );
+		unset( $theme_settings['json_templates'][ $component_key ][ $this->name ] );
 
 		// If there are no more overrides for this component, remove it.
 		if ( empty( $theme_settings['json_templates'][ $component_key ] ) ) {
@@ -352,13 +367,15 @@ class Component_Spec {
 	/**
 	 * Get the spec for this component as JSON.
 	 *
+	 * @param string $theme_name Optional. The theme for which to fetch a spec.
+	 *
 	 * @access public
 	 * @return array The configuration for the spec.
 	 */
-	public function get_spec() {
+	public function get_spec( $theme_name = '' ) {
 
 		// Determine if there is an override for this spec.
-		$override = $this->get_override();
+		$override = $this->get_override( $theme_name );
 		if ( ! empty( $override ) ) {
 			return $override;
 		}
@@ -380,13 +397,23 @@ class Component_Spec {
 	/**
 	 * Get the override for this component spec.
 	 *
+	 * @param string $theme_name Optional. The theme to look in for an override.
+	 *
 	 * @access public
 	 * @return array|null An array of values if an override is present, else null.
 	 */
-	public function get_override() {
+	public function get_override( $theme_name = '' ) {
+
+		// Negotiate theme.
+		if ( ! empty( $theme_name ) ) {
+			$theme = new \Apple_Exporter\Theme;
+			$theme->set_name( $theme_name );
+			$theme->load();
+		} else {
+			$theme = \Apple_Exporter\Theme::get_used();
+		}
 
 		// Try to get JSON templates.
-		$theme = \Apple_Exporter\Theme::get_used();
 		$json_templates = $theme->get_value( 'json_templates' );
 		if ( empty( $json_templates ) || ! is_array( $json_templates ) ) {
 			return null;
@@ -394,9 +421,8 @@ class Component_Spec {
 
 		// Determine if there is an override in the theme.
 		$component = $this->key_from_name( $this->component );
-		$spec = $this->key_from_name( $this->name );
-		if ( ! empty( $json_templates[ $component ][ $spec ] ) ) {
-			return $json_templates[ $component ][ $spec ];
+		if ( ! empty( $json_templates[ $component ][ $this->name ] ) ) {
+			return $json_templates[ $component ][ $this->name ];
 		}
 
 		return null;

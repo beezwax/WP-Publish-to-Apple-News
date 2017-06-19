@@ -567,10 +567,10 @@ class Theme {
 	public function get_body_offset() {
 		switch ( $this->get_value( 'body_orientation' ) ) {
 			case 'right':
-				return $this->get_layout_columns() - $this->get_value( 'body_column_span' );
+				return $this->get_layout_columns() - $this->get_body_column_span();
 			case 'center':
 				return floor(
-					( $this->get_layout_columns() - $this->get_value( 'body_column_span' ) ) / 2
+					( $this->get_layout_columns() - $this->get_body_column_span() ) / 2
 				);
 				break;
 			default:
@@ -743,7 +743,10 @@ class Theme {
 					if ( is_array( $_POST[ $option_key ] ) ) {
 						$this->_values[ $option_key ] = array_map(
 							'sanitize_text_field',
-							$_POST[ $option_key ]
+							array_map(
+								'wp_unslash',
+								$_POST[ $option_key ]
+							)
 						);
 					}
 
@@ -755,13 +758,15 @@ class Theme {
 					break;
 
 				case 'integer':
-					$this->_values[ $option_key ] = absint( $_POST[ $option_key ] );
+					$this->_values[ $option_key ] = intval( $_POST[ $option_key ] );
 
 					break;
 
 				default:
 					$this->_values[ $option_key ] = sanitize_text_field(
-						$_POST[ $option_key ]
+						wp_unslash(
+							$_POST[ $option_key ]
+						)
 					);
 
 					break;
@@ -986,7 +991,7 @@ class Theme {
 					break;
 
 				case 'integer':
-					$value = absint( $value );
+					$value = intval( $value );
 
 					break;
 
@@ -1239,6 +1244,10 @@ class Theme {
 			'component_order' => array(
 				'label' => __( 'Component Order', 'apple-news' ),
 				'settings' => array( 'meta_component_order' ),
+			),
+			'screenshot' => array(
+				'label' => __( 'Screenshots', 'apple-news' ),
+				'settings' => array( 'screenshot_url' ),
 			),
 		);
 	}
@@ -1725,6 +1734,12 @@ class Theme {
 				'label' => __( 'Pull quote transformation', 'apple-news' ),
 				'options' => array( 'none', 'uppercase' ),
 				'type' => 'select',
+			),
+			'screenshot_url' => array(
+				'default' => '',
+				'description' => __( 'An optional URL to a screenshot of this theme. Should be a 1200x900 PNG.', 'apple-news' ),
+				'label' => __( 'Screenshot URL', 'apple-news' ),
+				'type' => 'text',
 			),
 		);
 	}
