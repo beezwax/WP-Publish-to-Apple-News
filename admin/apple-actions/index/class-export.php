@@ -177,7 +177,21 @@ class Export extends Action {
 		// HTML. We use 'the_content' filter for that.
 		$content = apply_filters( 'apple_news_exporter_content_pre', $post->post_content, $post->ID );
 		$content = apply_filters( 'the_content', $content );
+		$content = $this->remove_tags( $content );
 		return $content;
+	}
+
+	/**
+	 * Remove tags incompatible with Apple News format.
+	 *
+	 * @since 1.4.0
+	 * @param string $html
+	 * @return string
+	 * @access private
+	 */
+	private function remove_tags( $html ) {
+		$html = preg_replace( '/<style[^>]*>.*?<\/style>/i', '', $html );
+		return $html;
 	}
 
 	/**
