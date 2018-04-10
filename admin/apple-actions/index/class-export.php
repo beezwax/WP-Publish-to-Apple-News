@@ -63,7 +63,7 @@ class Export extends Action {
 
 		// Build the excerpt if required
 		if ( empty( $post->post_excerpt ) ) {
-			$excerpt = wp_trim_words( strip_tags( strip_shortcodes( $post->post_content ) ), 55, '...' );
+			$excerpt = wp_trim_words( wp_strip_all_tags( $this->remove_tags( strip_shortcodes( $post->post_content ) ) ), 55, '...' );
 		} else {
 			$excerpt = strip_tags( $post->post_excerpt );
 		}
