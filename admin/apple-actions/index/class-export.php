@@ -63,9 +63,9 @@ class Export extends Action {
 
 		// Build the excerpt if required
 		if ( empty( $post->post_excerpt ) ) {
-			$excerpt = wp_trim_words( strip_tags( strip_shortcodes( $post->post_content ) ), 55, '...' );
+			$excerpt = wp_trim_words( wp_strip_all_tags( $this->remove_tags( strip_shortcodes( $post->post_content ) ) ), 55, '...' );
 		} else {
-			$excerpt = strip_tags( $post->post_excerpt );
+			$excerpt = wp_strip_all_tags( $post->post_excerpt );
 		}
 
 		// Get the post thumbnail
@@ -74,17 +74,14 @@ class Export extends Action {
 		// Build the byline
 		$byline = $this->format_byline( $post );
 
+		// Get the content
+		$content = $this->get_content( $post );
+
 		// Filter each of our items before passing into the exporter class.
 		$title      = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
 		$excerpt    = apply_filters( 'apple_news_exporter_excerpt', $excerpt, $post->ID );
 		$post_thumb = apply_filters( 'apple_news_exporter_post_thumb', $post_thumb, $post->ID );
 		$byline     = apply_filters( 'apple_news_exporter_byline', $byline, $post->ID );
-
-		// The post_content is not raw HTML, as WordPress editor cleans up
-		// paragraphs and new lines, so we need to transform the content to
-		// HTML. We use 'the_content' filter for that.
-		$content    = apply_filters( 'apple_news_exporter_content_pre', $post->post_content, $post->ID );
-		$content    = apply_filters( 'the_content', $content );
 		$content    = apply_filters( 'apple_news_exporter_content', $content, $post->ID );
 
 		// Now pass all the variables into the Exporter_Content array.
@@ -164,6 +161,37 @@ class Export extends Action {
 		}
 
 		return $byline;
+	}
+
+	/**
+	 * Gets the content
+	 *
+	 * @since 1.4.0
+	 * @param WP_Post $post
+	 * @return string
+	 * @access private
+	 */
+	private function get_content( $post ) {
+		// The post_content is not raw HTML, as WordPress editor cleans up
+		// paragraphs and new lines, so we need to transform the content to
+		// HTML. We use 'the_content' filter for that.
+		$content = apply_filters( 'apple_news_exporter_content_pre', $post->post_content, $post->ID );
+		$content = apply_filters( 'the_content', $content );
+		$content = $this->remove_tags( $content );
+		return $content;
+	}
+
+	/**
+	 * Remove tags incompatible with Apple News format.
+	 *
+	 * @since 1.4.0
+	 * @param string $html
+	 * @return string
+	 * @access private
+	 */
+	private function remove_tags( $html ) {
+		$html = preg_replace( '/<style[^>]*>.*?<\/style>/i', '', $html );
+		return $html;
 	}
 
 	/**
