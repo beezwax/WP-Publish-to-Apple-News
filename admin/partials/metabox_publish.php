@@ -26,6 +26,13 @@
 			<?php esc_html_e( 'Check this to publish the article as a draft.', 'apple-news' ); ?>
 		</label>
 	</div>
+	<div id="apple-news-metabox-is-hidden" class="apple-news-metabox-section">
+		<h3><?php esc_html_e( 'Hidden?', 'apple-news' ); ?></h3>
+		<label for="apple-news-is-hidden">
+			<input id="apple-news-is-hidden" name="apple_news_is_hidden" type="checkbox" value="1" <?php checked( $is_hidden ) ?>>
+			<?php esc_html_e( 'Hidden articles are visible to users who have a link to the article, but do not appear in feeds.', 'apple-news' ); ?>
+		</label>
+	</div>
 	<div id="apple-news-metabox-is-sponsored" class="apple-news-metabox-section">
 		<h3><?php esc_html_e( 'Sponsored?', 'apple-news' ) ?></h3>
 		<label for="apple-news-is-sponsored">
