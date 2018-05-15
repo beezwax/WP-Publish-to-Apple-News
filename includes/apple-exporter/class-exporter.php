@@ -204,7 +204,7 @@ class Exporter {
 		$json = array(
 			'version'    => '1.7',
 			'identifier' => 'post-' . $this->content_id(),
-			'language'   => 'en',
+			'language'   => apply_filters( 'apple_news_exporter_language', get_bloginfo( 'language' ), $this->content_id() ),
 			'title'      => wp_strip_all_tags( $this->content_title() ),
 		);
 
