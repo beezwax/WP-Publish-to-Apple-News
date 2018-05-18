@@ -37,6 +37,17 @@ class Facebook extends Component {
 	);
 
 	/**
+	 * Regular expressions for extracting post URLs from HTML markup.
+	 *
+	 * @access private
+	 * @var array
+	 */
+	private static $_url_signatures = array(
+		'/data-href="([^"]+)"/i',
+		'/<(?:fb:)?post\s.*?href="([^"]+)"/i',
+	);
+
+	/**
 	 * Register all specs for the component.
 	 *
 	 * @access public
@@ -85,6 +96,21 @@ class Facebook extends Component {
 			}
 		}
 
+		// Handling for a rendered WordPress.com Facebook embed.
+		$fb_post = $node->getElementsByTagName( 'post' );
+		if ( ! empty( $fb_post->length ) && 1 === $fb_post->length ) {
+
+			// Extract Facebook URL from element's href property.
+			$fb_url = $fb_post[0]->getAttribute( 'href' );
+
+			// Ensure we have a valid Facebook embed url.
+			if ( ! empty( $fb_url )
+				&& false !== self::_get_facebook_url( $fb_url )
+			) {
+				return $node;
+			}
+		}
+
 		// facebook not found.
 		return null;
 	}
@@ -98,9 +124,12 @@ class Facebook extends Component {
 	 */
 	protected function build( $html ) {
 
-		// Check for data-href property on rendered <div>.
-		if ( preg_match( '/data-href="([^"]+)"/i', $html, $data_href ) ) {
-			$html = $data_href[1];
+		// Check for href properties on rendered embeds.
+		foreach ( self::$_url_signatures as $signature ) {
+			if ( preg_match( $signature, $html, $matches ) ) {
+				$html = $matches[1];
+				break;
+			}
 		}
 
 		// Try to get Facebook URL.
