@@ -252,6 +252,18 @@ class Quote extends Component {
 	}
 
 	/**
+	 * Whether HTML format is enabled for this component type.
+	 *
+	 * @param bool $enabled Optional. Whether to enable HTML support for this component. Defaults to true.
+	 *
+	 * @access protected
+	 * @return bool Whether HTML format is enabled for this component type.
+	 */
+	protected function html_enabled( $enabled = true ) {
+		return parent::html_enabled( $enabled );
+	}
+
+	/**
 	 * Processes given text to apply smart quotes on either end of provided text.
 	 *
 	 * @param string $text The text to process.
@@ -263,6 +275,10 @@ class Quote extends Component {
 
 		// Trim the fat before beginning.
 		$text = trim( $text );
+
+		// If using HTML format, also strip the beginning and ending paragraph tags.
+		$text = preg_replace( '/^<p>/i', '', $text );
+		$text = preg_replace( '/<\/p>$/i', '', $text );
 
 		// Strip any double quotes already present.
 		$modified_text = trim( $text, '"“”' );
@@ -284,8 +300,12 @@ class Quote extends Component {
 			$text
 		);
 
-		// Re-add the line breaks.
-		$modified_text .= "\n\n";
+		// Re-add removed elements depending on format.
+		if ( 'yes' === $this->settings->html_support ) {
+			$modified_text = '<p>' . $modified_text . '</p>';
+		} else {
+			$modified_text .= "\n\n";
+		}
 
 		return $modified_text;
 	}
