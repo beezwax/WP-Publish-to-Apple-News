@@ -26,10 +26,9 @@ class Heading extends Component {
 	public static function node_matches( $node ) {
 		$regex = sprintf(
 			'#h[%s-%s]#',
-			current( self::$levels ),
-			end( self::$levels )
+			self::$levels[0],
+			self::$levels[ count( self::$levels ) - 1 ]
 		);
-		reset( self::$levels );
 
 		if ( ! preg_match( $regex, $node->nodeName ) ) {
 			return null;
