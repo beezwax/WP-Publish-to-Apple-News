@@ -1,9 +1,16 @@
 <?php
+/**
+ * Publish to Apple News: \Apple_Exporter\Third_Party\Jetpack_Tiled_Gallery class
+ *
+ * @package Apple_News
+ * @subpackage Apple_Exporter\Third_Party
+ */
+
 namespace Apple_Exporter\Third_Party;
 
 /**
  * Custom Jetpack tiled gallery handling.
- * This will remove permissable gallery
+ * This will remove permissible gallery
  * types to force standard WP Gallery output.
  *
  * @since 1.4.0

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Publish to Apple News partials: Options Section Hidden page template
+ *
+ * @package Apple_News
+ */
+
 foreach ( $section->groups() as $group ) {
 	do_action( 'apple_news_before_setting_group', $group, true );
 	foreach ( $group['settings'] as $setting_name => $setting_meta ) {
@@ -17,4 +23,3 @@ foreach ( $section->groups() as $group ) {
 	}
 	do_action( 'apple_news_after_setting_group', $group, true );
 }
-
