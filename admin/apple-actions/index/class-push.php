@@ -261,7 +261,7 @@ class Push extends API_Action {
 			if ( preg_match( '#WRONG_REVISION#', $e->getMessage() ) ) {
 				throw new \Apple_Actions\Action_Exception( __( 'It seems like the article was updated by another call. If the problem persists, try removing and pushing again.', 'apple-news' ) );
 			} else {
-				throw new \Apple_Actions\Action_Exception( __( 'There has been an error with the API: ', 'apple-news' ) .  $e->getMessage() );
+				throw new \Apple_Actions\Action_Exception( __( 'There has been an error with the API: ', 'apple-news' ) . $e->getMessage() );
 			}
 		}
 

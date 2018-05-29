@@ -70,7 +70,7 @@ class Exporter {
 	public function __construct( $content, $workspace = null, $settings = null ) {
 		$this->content   = $content;
 		$this->workspace = $workspace ?: new Workspace( $this->content_id() );
-		$this->settings  = $settings  ?: new Settings();
+		$this->settings  = $settings ?: new Settings();
 		$this->builders  = array();
 		$this->separators = array(
 			json_decode( '"\u0020"' ),

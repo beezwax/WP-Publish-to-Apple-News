@@ -41,11 +41,13 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		$this->settings = $settings;
 
 		// Initialize the table.
-		parent::__construct( array(
-			'singular' => __( 'article', 'apple-news' ),
-			'plural'   => __( 'articles', 'apple-news' ),
-			'ajax'     => false,
-		) );
+		parent::__construct(
+			array(
+				'singular' => __( 'article', 'apple-news' ),
+				'plural'   => __( 'articles', 'apple-news' ),
+				'ajax'     => false,
+			)
+		);
 	}
 
 	/**
@@ -220,11 +222,14 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		}
 
 		// Return the row action HTML.
-		return apply_filters( 'apple_news_column_title', sprintf( '%1$s <span>(id:%2$s)</span> %3$s',
-			esc_html( $item->post_title ),
-			absint( $item->ID ),
-			$this->row_actions( $actions ) // Can't be escaped but all elements are fully escaped above.
-		), $item, $actions );
+		return apply_filters(
+			'apple_news_column_title', sprintf(
+				'%1$s <span>(id:%2$s)</span> %3$s',
+				esc_html( $item->post_title ),
+				absint( $item->ID ),
+				$this->row_actions( $actions ) // Can't be escaped but all elements are fully escaped above.
+			), $item, $actions
+		);
 	}
 
 	/**
@@ -235,13 +240,15 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @return array An array where the key is the column slug and the value is the title text.
 	 */
 	public function get_columns() {
-		return apply_filters( 'apple_news_export_list_columns', array(
-			'cb'					=> '<input type="checkbox">',
-			'title'				=> __( 'Title', 'apple-news' ),
-			'updated_at'	=> __( 'Last updated at', 'apple-news' ),
-			'status'			=> __( 'Apple News Status', 'apple-news' ),
-			'sync'				=> __( 'Sync Status', 'apple-news' ),
-		) );
+		return apply_filters(
+			'apple_news_export_list_columns', array(
+				'cb'                    => '<input type="checkbox">',
+				'title'             => __( 'Title', 'apple-news' ),
+				'updated_at'    => __( 'Last updated at', 'apple-news' ),
+				'status'            => __( 'Apple News Status', 'apple-news' ),
+				'sync'              => __( 'Sync Status', 'apple-news' ),
+			)
+		);
 	}
 
 	/**
@@ -260,7 +267,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 			return '';
 		}
 
-		return sprintf( '<input type="checkbox" name="%1$s[]" value="%2$s">',
+		return sprintf(
+			'<input type="checkbox" name="%1$s[]" value="%2$s">',
 			esc_attr( $this->_args['singular'] ),
 			absint( $item->ID )
 		);
@@ -273,9 +281,11 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_bulk_actions() {
-		return apply_filters( 'apple_news_bulk_actions', array(
-			Admin_Apple_Index_Page::namespace_action( 'push' ) => __( 'Publish', 'apple-news' ),
-		) );
+		return apply_filters(
+			'apple_news_bulk_actions', array(
+				Admin_Apple_Index_Page::namespace_action( 'push' ) => __( 'Publish', 'apple-news' ),
+			)
+		);
 	}
 
 	/**
@@ -295,7 +305,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		$current_page = $this->get_pagenum();
 		$args = array(
 			'post_type'     => $this->settings->get( 'post_types' ),
-			'post_status'	=> 'publish',
+			'post_status'   => 'publish',
 			'posts_per_page' => $this->per_page,
 			'offset'         => ( $current_page - 1 ) * $this->per_page,
 			'orderby'        => 'ID',
@@ -333,7 +343,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 						array(
 							'key' => 'apple_news_api_deleted',
 							'compare' => 'NOT EXISTS',
-						)
+						),
 					);
 					break;
 				case 'deleted':
@@ -341,7 +351,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 						array(
 							'key' => 'apple_news_api_deleted',
 							'compare' => 'EXISTS',
-						)
+						),
 					);
 					break;
 				case 'pending':
@@ -349,7 +359,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 						array(
 							'key' => 'apple_news_api_pending',
 							'compare' => 'EXISTS',
-						)
+						),
 					);
 					break;
 			}
@@ -362,7 +372,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 			$args['date_query'] = array(
 				array(
 					'inclusive' => true,
-				)
+				),
 			);
 
 			if ( ! empty( $date_from ) ) {
@@ -386,11 +396,15 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		// Set data.
 		$this->items = $query->posts;
 		$total_items = $query->found_posts;
-		$this->set_pagination_args( apply_filters( 'apple_news_export_table_pagination_args', array(
-			'total_items' => $total_items,
-			'per_page'    => $this->per_page,
-			'total_pages' => ceil( $total_items / $this->per_page ),
-		) ) );
+		$this->set_pagination_args(
+			apply_filters(
+				'apple_news_export_table_pagination_args', array(
+					'total_items' => $total_items,
+					'per_page'    => $this->per_page,
+					'total_pages' => ceil( $total_items / $this->per_page ),
+				)
+			)
+		);
 	}
 
 	/**
@@ -469,13 +483,15 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 */
 	protected function publish_status_filter_field() {
 		// Add available statuses.
-		$publish_statuses = apply_filters( 'apple_news_publish_statuses', array(
-			'' => __( 'Show All Statuses', 'apple-news' ),
-			'published' => __( 'Published', 'apple-news' ),
-			'not_published' => __( 'Not Published', 'apple-news' ),
-			'pending' => __( 'Pending', 'apple-news' ),
-			'deleted' => __( 'Deleted', 'apple-news' ),
-		) );
+		$publish_statuses = apply_filters(
+			'apple_news_publish_statuses', array(
+				'' => __( 'Show All Statuses', 'apple-news' ),
+				'published' => __( 'Published', 'apple-news' ),
+				'not_published' => __( 'Not Published', 'apple-news' ),
+				'pending' => __( 'Pending', 'apple-news' ),
+				'deleted' => __( 'Deleted', 'apple-news' ),
+			)
+		);
 
 		// Build the dropdown.
 		?>
@@ -501,8 +517,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 */
 	protected function date_range_filter_field() {
 		?>
-		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts From', 'apple-news' ) ?>" name="apple_news_date_from" id="apple_news_date_from" value="<?php echo esc_attr( $this->get_date_from_filter() ) ?>" />
-		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts To', 'apple-news' ) ?>" name="apple_news_date_to" id="apple_news_date_to" value="<?php echo esc_attr( $this->get_date_to_filter() ) ?>" />
+		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts From', 'apple-news' ); ?>" name="apple_news_date_from" id="apple_news_date_from" value="<?php echo esc_attr( $this->get_date_from_filter() ); ?>" />
+		<input type="text" placeholder="<?php esc_attr_e( 'Show Posts To', 'apple-news' ); ?>" name="apple_news_date_to" id="apple_news_date_to" value="<?php echo esc_attr( $this->get_date_to_filter() ); ?>" />
 		<?php
 	}
 }

@@ -20,7 +20,7 @@ class Image extends Component {
 	public static function node_matches( $node ) {
 		// Is this an image node?
 		if (
-		 	( 'img' === $node->nodeName || 'figure' === $node->nodeName )
+			( 'img' === $node->nodeName || 'figure' === $node->nodeName )
 			&& self::remote_file_exists( $node )
 		) {
 			return $node;
@@ -151,11 +151,11 @@ class Image extends Component {
 
 		// Determine image alignment.
 		if ( false !== stripos( $html, 'align="left"' )
-		     || preg_match( '/class="[^"]*alignleft[^"]*"/i', $html )
+			|| preg_match( '/class="[^"]*alignleft[^"]*"/i', $html )
 		) {
 			$this->set_anchor_position( Component::ANCHOR_LEFT );
 		} elseif ( false !== stripos( $html, 'align="right"' )
-		            || preg_match( '/class="[^"]*alignright[^"]*"/i', $html )
+			|| preg_match( '/class="[^"]*alignright[^"]*"/i', $html )
 		) {
 			$this->set_anchor_position( Component::ANCHOR_RIGHT );
 		} else {

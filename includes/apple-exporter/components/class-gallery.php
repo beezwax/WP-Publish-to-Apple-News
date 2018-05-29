@@ -113,7 +113,7 @@ class Gallery extends Component {
 			if ( $caption && $caption->length ) {
 				$content['caption'] = array(
 					'text' => sanitize_text_field(
-						trim( $caption->item(0)->nodeValue )
+						trim( $caption->item( 0 )->nodeValue )
 					),
 				);
 			}

@@ -33,7 +33,7 @@ class Admin_Apple_Post_Sync {
 		if ( ! empty( $settings ) ) {
 			$this->settings = $settings;
 		} else {
-			$admin_settings = new Admin_Apple_Settings;
+			$admin_settings = new Admin_Apple_Settings();
 			$this->settings = $admin_settings->fetch_settings();
 		}
 
@@ -69,7 +69,7 @@ class Admin_Apple_Post_Sync {
 
 		// If the post has been marked as deleted from the API, ignore this update.
 		$deleted = get_post_meta( $id, 'apple_news_api_deleted', true );
-		if ( $deleted	) {
+		if ( $deleted ) {
 			return;
 		}
 

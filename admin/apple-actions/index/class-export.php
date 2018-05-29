@@ -290,7 +290,7 @@ class Export extends Action {
 		}
 
 		// Try to get theme settings.
-		$theme = new \Apple_Exporter\Theme;
+		$theme = new \Apple_Exporter\Theme();
 		$theme->set_name( $theme_name );
 		if ( ! $theme->load() ) {
 

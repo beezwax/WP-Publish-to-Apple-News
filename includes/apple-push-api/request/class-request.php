@@ -62,10 +62,12 @@ class Request {
 		$this->mime_builder = $mime_builder ?: new MIME_Builder();
 
 		// Set the default WordPress HTTP API args.
-		$this->default_args = apply_filters( 'apple_news_request_args', array(
-			'reject_unsafe_urls' => true,
-			'timeout' => 5,
-		) );
+		$this->default_args = apply_filters(
+			'apple_news_request_args', array(
+				'reject_unsafe_urls' => true,
+				'timeout' => 5,
+			)
+		);
 	}
 
 	/**
@@ -214,12 +216,12 @@ class Request {
 			}
 
 			// Note image settings.
-			$body .= "\n\n"  . esc_html__( 'Image Settings', 'apple-news' ) . ":\n";
+			$body .= "\n\n" . esc_html__( 'Image Settings', 'apple-news' ) . ":\n";
 			if ( 'yes' === $settings['use_remote_images'] ) {
 				$body .= esc_html__( 'Use Remote images enabled ', 'apple-news' );
 			} else {
 				if ( ! empty( $bundles ) ) {
-					$body .= "\n"  . esc_html__( 'Bundled images', 'apple-news' ) . ":\n";
+					$body .= "\n" . esc_html__( 'Bundled images', 'apple-news' ) . ":\n";
 					$body .= implode( "\n", $bundles );
 				} else {
 					$body .= esc_html__( 'No bundled images found.', 'apple-news' );

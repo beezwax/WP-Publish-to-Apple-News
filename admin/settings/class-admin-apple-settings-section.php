@@ -162,7 +162,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		$this->page = $page;
 		self::$section_option_name = ( ! empty( $section_option_name ) ) ? $section_option_name : self::$option_name;
 		$this->save_action = $save_action;
-		$base_settings = new \Apple_Exporter\Settings;
+		$base_settings = new \Apple_Exporter\Settings();
 		self::$base_settings = $base_settings->all();
 		self::$loaded_settings = get_option( self::$section_option_name );
 		$this->settings = apply_filters( 'apple_news_section_settings', $this->settings, $page );
@@ -277,14 +277,14 @@ class Admin_Apple_Settings_Section extends Apple_News {
 				} else {
 					$field .= selected( $value, $store_value, false );
 				}
-				$field .= ">" . esc_html( $option ) . "</option>";
+				$field .= '>' . esc_html( $option ) . '</option>';
 			}
 			$field .= '</select>';
 		} elseif ( 'password' === $type ) {
 			$field = '<input type="password" id="%s" name="%s" value="%s" size="%s" %s>';
 		} elseif ( 'hidden' === $type ) {
 			$field = '<input type="hidden" id="%s" name="%s" value="%s">';
-		}  else {
+		} else {
 			// If nothing else matches, it's a string.
 			$field = '<input type="text" id="%s" name="%s" value="%s" size="%s" %s>';
 		}

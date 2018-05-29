@@ -379,7 +379,7 @@ abstract class Component {
 	 * @param string $source    The path or URL of the resource which is going to
 	 *                          be bundled
 	 * @param string $filename  The name of the file to be created
-	 * @return string 					The URL to use for this asset in the JSON
+	 * @return string                   The URL to use for this asset in the JSON
 	 */
 	protected function maybe_bundle_source( $source, $filename = null ) {
 		if ( 'yes' === $this->get_setting( 'use_remote_images' ) ) {
@@ -496,7 +496,7 @@ abstract class Component {
 	 *
 	 * @since 1.2.4
 	 * @param string $spec_name The spec to use for defining the JSON
-	 * @param array $values Values to substitute for placeholders in the spec
+	 * @param array  $values Values to substitute for placeholders in the spec
 	 * @access protected
 	 */
 	protected function register_json( $spec_name, $values = array() ) {
@@ -515,8 +515,8 @@ abstract class Component {
 	 * @since 0.4.0
 	 * @param string $name The name of the style
 	 * @param string $spec_name The spec to use for defining the JSON
-	 * @param array $values Values to substitute for placeholders in the spec
-	 * @param array $property The JSON property to set with the style
+	 * @param array  $values Values to substitute for placeholders in the spec
+	 * @param array  $property The JSON property to set with the style
 	 * @access protected
 	 */
 	protected function register_style( $name, $spec_name, $values = array(), $property = null ) {
@@ -537,8 +537,8 @@ abstract class Component {
 	 * @since 0.4.0
 	 * @param string $name The name of the layout
 	 * @param string $spec_name The spec to use for defining the JSON
-	 * @param array $values Values to substitute for placeholders in the spec
-	 * @param array $property The JSON property to set with the layout
+	 * @param array  $values Values to substitute for placeholders in the spec
+	 * @param array  $property The JSON property to set with the layout
 	 * @access protected
 	 */
 	protected function register_layout( $name, $spec_name, $values = array(), $property = null ) {
@@ -561,8 +561,8 @@ abstract class Component {
 	 *
 	 * @param string $name The name of the layout
 	 * @param string $spec_name The spec to use for defining the JSON
-	 * @param array $values Values to substitute for placeholders in the spec
-	 * @param array $property The JSON property to set with the layout
+	 * @param array  $values Values to substitute for placeholders in the spec
+	 * @param array  $property The JSON property to set with the layout
 	 * @access protected
 	 */
 	protected function register_full_width_layout( $name, $spec_name, $values = array(), $property = null ) {
@@ -611,7 +611,6 @@ abstract class Component {
 	protected function find_text_alignment() {
 
 		// TODO: In a future release, update this logic to respect "align" values.
-
 		return 'left';
 	}
 
