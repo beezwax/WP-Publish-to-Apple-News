@@ -178,12 +178,8 @@ class Admin_Apple_Notice {
 	 */
 	public static function wp_ajax_dismiss_notice() {
 
-		// Verify nonce.
-		if ( ! isset( $_POST['nonce'] )
-			|| ! wp_verify_nonce( $_POST['nonce'], 'apple_news_dismiss_notice' )
-		) {
-			return;
-		}
+		// Check the nonce.
+		check_admin_referer( 'apple_news_dismiss_notice', 'nonce' );
 
 		// Safely extract message and type for comparison.
 		$message = isset( $_POST['message'] )
@@ -237,7 +233,7 @@ class Admin_Apple_Notice {
 		if ( defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ) {
 			return update_user_attribute( $user_id, self::KEY, $values );
 		} else {
-			return update_user_meta( $user_id, self::KEY, $values );
+			return update_user_meta( $user_id, self::KEY, $values ); // phpcs:ignore WordPress.VIP.RestrictedFunctions.user_meta_update_user_meta
 		}
 	}
 
@@ -252,7 +248,7 @@ class Admin_Apple_Notice {
 		if ( defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ) {
 			return delete_user_attribute( $user_id, self::KEY );
 		} else {
-			return delete_user_meta( $user_id, self::KEY );
+			return delete_user_meta( $user_id, self::KEY ); // phpcs:ignore WordPress.VIP.RestrictedFunctions.user_meta_delete_user_meta
 		}
 	}
 
@@ -269,7 +265,7 @@ class Admin_Apple_Notice {
 		if ( defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ) {
 			$meta_value = get_user_attribute( $user_id, self::KEY );
 		} else {
-			$meta_value = get_user_meta( $user_id, self::KEY, true );
+			$meta_value = get_user_meta( $user_id, self::KEY, true ); // phpcs:ignore WordPress.VIP.RestrictedFunctions.user_meta_get_user_meta
 		}
 
 		return ( ! empty( $meta_value ) ) ? $meta_value : array();
@@ -340,7 +336,7 @@ class Admin_Apple_Notice {
 			if ( defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ) {
 				return update_user_attribute( $user_id, self::KEY, $values );
 			} else {
-				return update_user_meta( $user_id, self::KEY, $values );
+				return update_user_meta( $user_id, self::KEY, $values ); // phpcs:ignore WordPress.VIP.RestrictedFunctions.user_meta_update_user_meta
 			}
 		}
 

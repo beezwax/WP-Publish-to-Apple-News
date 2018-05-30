@@ -93,7 +93,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 */
 	public function admin_page() {
 		$id     = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : null;
-		$action = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
+		$action = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : null;
 
 		switch ( $action ) {
 			case self::namespace_action( 'push' ):
@@ -127,9 +127,9 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 * @return mixed The result of the requested action.
 	 */
 	public function page_router() {
-		$id             = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : null;
-		$action     = isset( $_GET['action'] ) ? sanitize_text_field( $_GET['action'] ) : null;
-		$action2    = isset( $_GET['action2'] ) ? sanitize_text_field( $_GET['action2'] ) : null;
+		$id      = isset( $_GET['post_id'] ) ? absint( $_GET['post_id'] ) : null;
+		$action  = isset( $_GET['action'] ) ? sanitize_text_field( wp_unslash( $_GET['action'] ) ) : null;
+		$action2 = isset( $_GET['action2'] ) ? sanitize_text_field( wp_unslash( $_GET['action2'] ) ) : null;
 
 		// Allow for bulk actions from top or bottom.
 		if ( ( empty( $action ) || '-1' === $action ) && ! empty( $action2 ) ) {
@@ -234,7 +234,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 		// Add the other params.
 		foreach ( $keys as $key ) {
 			if ( ! empty( $_GET[ $key ] ) ) {
-				$params[ $key ] = urlencode( sanitize_text_field( $_GET[ $key ] ) );
+				$params[ $key ] = urlencode( sanitize_text_field( wp_unslash( $_GET[ $key ] ) ) );
 			}
 		}
 
@@ -265,7 +265,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 		header( 'Content-Description: File Transfer' );
 		header( 'Content-Type: application/json' );
 		header( 'Content-Disposition: attachment; filename="article-' . absint( $id ) . '.json"' );
-		echo $json;
+		echo wp_json_encode( json_decode( $json ) );
 		die();
 	}
 
@@ -363,17 +363,6 @@ class Admin_Apple_Index_Page extends Apple_News {
 				)
 			);
 			return;
-		}
-
-		// Check the nonce.
-		// If it isn't set, this isn't a form submission so we need to just display the form.
-		if ( ! isset( $_POST['apple_news_nonce'] ) ) {
-			return;
-		}
-
-		// If invalid, we need to display an error.
-		if ( ! wp_verify_nonce( $_POST['apple_news_nonce'], 'publish' ) ) {
-			$this->notice_error( __( 'Invalid nonce.', 'apple-news' ) );
 		}
 
 		// Save fields.
