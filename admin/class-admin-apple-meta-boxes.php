@@ -77,6 +77,12 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			return;
 		}
 
+		// Verify the post types.
+		$post_types = $this->settings->get( 'post_types' );
+		if ( ! empty( $post_types ) && ! in_array( get_post_type( $post ), $post_types, true ) ) {
+			return;
+		}
+
 		// Check the nonce.
 		check_admin_referer( self::PUBLISH_ACTION, 'apple_news_nonce' );
 
