@@ -75,6 +75,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			return;
 		}
 
+		// Avoid problems when the metabox doesn't load, e.g., quick edit.
 		if ( empty( $_REQUEST['apple_news_nonce'] ) ) {
 			return;
 		}
