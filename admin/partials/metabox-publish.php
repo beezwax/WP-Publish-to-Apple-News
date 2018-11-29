@@ -25,7 +25,7 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 		<?php Admin_Apple_Meta_Boxes::build_sections_override( $post->ID ); ?>
 		<div class="apple-news-sections">
 			<?php Admin_Apple_Meta_Boxes::build_sections_field( $post->ID ); ?>
-			<p class="description"><?php esc_html_e( 'Select the sections in which to publish this article. Uncheck them all for a standalone article.', 'apple-news' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Select the sections in which to publish this article. If none are selected, it will be published to the default section.', 'apple-news' ); ?></p>
 		</div>
 	</div>
 	<div id="apple-news-metabox-is-preview" class="apple-news-metabox-section">
