@@ -25,6 +25,14 @@ class Exporter_Content {
 	private $id;
 
 	/**
+	 * Slug of the content being exported.
+	 *
+	 * @var string
+	 * @access private
+	 */
+	private $slug;
+
+	/**
 	 * Title of the content being exported.
 	 *
 	 * @var string
@@ -115,6 +123,7 @@ class Exporter_Content {
 	 * Constructor.
 	 *
 	 * @param int                      $id       The ID of the post to be exported.
+	 * @param string                   $slug     The slug of the post to be exported.
 	 * @param string                   $title    The title of the post to be exported.
 	 * @param string                   $content  The content of the post to be exported.
 	 * @param string                   $intro    Optional. The intro of the post to be exported.
@@ -123,8 +132,9 @@ class Exporter_Content {
 	 * @param \Apple_Exporter\Settings $settings Optional. Settings for the exporter.
 	 * @access public
 	 */
-	public function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $settings = null ) {
+	public function __construct( $id, $slug, $title, $content, $intro = null, $cover = null, $byline = null, $settings = null ) {
 		$this->id       = $id;
+		$this->slug     = $slug;
 		$this->title    = $title;
 		$this->content  = $content;
 		$this->intro    = $intro;
@@ -141,6 +151,16 @@ class Exporter_Content {
 	 */
 	public function id() {
 		return $this->id;
+	}
+
+	/**
+	 * Get the content slug.
+	 *
+	 * @access public
+	 * @return string The slug.
+	 */
+	public function slug() {
+		return $this->slug;
 	}
 
 	/**

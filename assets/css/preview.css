@@ -82,8 +82,8 @@
 	position: relative;
 }
 
-.wrap .apple-news-title {
-	margin-top: 20px;
+.wrap .apple-news-slug {
+	margin-top: 10px;
 }
 
 .apple-news-preview div.apple-news-byline {

@@ -146,6 +146,18 @@ abstract class Builder {
 	}
 
 	/**
+	 * Gets the content slug.
+	 *
+	 * @access protected
+	 * @return string The slug from the content object, or a fallback slug.
+	 */
+	protected function content_slug() {
+		return $this->content->slug()
+			? $this->content->slug()
+			: __( '', 'apple-news' );
+	}
+
+	/**
 	 * Gets the content title.
 	 *
 	 * @access protected
