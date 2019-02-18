@@ -120,7 +120,7 @@ class Export extends Action {
 		$content = $this->get_content( $post );
 
 		// Filter each of our items before passing into the exporter class.
-		$slug       = apply_filters( 'apple_news_exporter_slug', $post->post_name, $post->ID );
+		$slug       = apply_filters( 'apple_news_exporter_slug', '', $post->ID );
 		$title      = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
 		$excerpt    = apply_filters( 'apple_news_exporter_excerpt', $excerpt, $post->ID );
 		$post_thumb = apply_filters( 'apple_news_exporter_post_thumb', $post_thumb, $post->ID );
