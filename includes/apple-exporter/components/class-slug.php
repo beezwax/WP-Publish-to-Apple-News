@@ -74,8 +74,8 @@ class Slug extends Component {
 			__( 'Layout', 'apple-news' ),
 			array(
 				'margin' => array(
-					'top' => 10,
-					'bottom' => 10,
+					'top' => 30,
+					'bottom' => 0,
 				),
 			)
 		);

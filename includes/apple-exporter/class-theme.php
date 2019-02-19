@@ -1047,12 +1047,12 @@ class Theme {
 				'type'    => 'font',
 			),
 			'slug_line_height'             => array(
-				'default' => 32,
+				'default' => 26,
 				'label'   => __( 'Slug line height', 'apple-news' ),
 				'type'    => 'float',
 			),
 			'slug_size'                    => array(
-				'default' => 36,
+				'default' => 20,
 				'label'   => __( 'Slug font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
