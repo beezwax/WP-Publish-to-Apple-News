@@ -88,7 +88,6 @@ class Slug extends Component {
 	 * @access protected
 	 */
 	protected function build( $html ) {
-error_log("Slug: " . $html);
 		// If there is no text for this element, bail.
 		$check = trim( $html );
 		if ( empty( $check ) ) {
