@@ -74,6 +74,7 @@ class HTML {
 		$html = wp_kses( $html, $this->_allowed_html );
 
 		// Replace non-breaking spaces with regular spaces.
+		// Handles chr(160) and &nbsp; characters among many others.
 		$html = mb_ereg_replace( '/\h+/', ' ', $html );
 
 		// // Replace the "null" character with a blank string.
