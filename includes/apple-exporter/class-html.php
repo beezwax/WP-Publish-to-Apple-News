@@ -74,11 +74,9 @@ class HTML {
 		$html = wp_kses( $html, $this->_allowed_html );
 
 		// Replace non-breaking spaces with regular spaces.
-		$html = str_ireplace( '&nbsp;', ' ', $html );
-		$html = str_replace( '&#160;', ' ', $html );
-		$html = str_replace( chr( 160 ), ' ', $html );
+		$html = mb_ereg_replace( '/\h+/', ' ', $html );
 
-		// Replace the "null" character with a blank string.
+		// // Replace the "null" character with a blank string.
 		$html = str_replace( chr( 194 ), '', $html );
 
 		// Remove any empty tags.
