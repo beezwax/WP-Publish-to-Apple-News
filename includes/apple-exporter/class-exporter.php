@@ -342,7 +342,7 @@ class Exporter {
 		// If the value is a string, clean it up.
 		if ( is_string( $data ) ) {
 			// Strip hidden white space.
-			$data = mb_ereg_replace( '/\h+(\/d+)/', ' ', $data );
+			$data = mb_ereg_replace( '/(\h+)<([a-z0-9]+)[^>]*>\s*<\/\1>(\d+)/', ' ', $data );
 
 			return;
 		}
