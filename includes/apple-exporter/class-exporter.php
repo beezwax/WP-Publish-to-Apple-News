@@ -368,7 +368,7 @@ class Exporter {
 
 		// If the value is a string, clean it up.
 		if ( is_string( $data ) ) {
-			// Strip separaters/white space.
+			// Strip separators/white space.
 			$data = str_replace( $this->separators, ' ', $data );
 
 			// Convert all characters into HTML readable entities.
