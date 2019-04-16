@@ -59,14 +59,6 @@ class Exporter {
 	private $builders;
 
 	/**
-	 * A list of Unicode separator characters for use in filtering.
-	 *
-	 * @access private
-	 * @var array
-	 */
-	private $separators;
-
-	/**
 	 * Constructor.
 	 *
 	 * @param Exporter_Content $content   The content to export.
@@ -79,25 +71,6 @@ class Exporter {
 		$this->workspace  = $workspace ?: new Workspace( $this->content_id() );
 		$this->settings   = $settings ?: new Settings();
 		$this->builders   = array();
-		$this->separators = array(
-			json_decode( '"\u0020"' ),
-			json_decode( '"\u00a0"' ),
-			json_decode( '"\u1680"' ),
-			json_decode( '"\u2000"' ),
-			json_decode( '"\u2001"' ),
-			json_decode( '"\u2002"' ),
-			json_decode( '"\u2003"' ),
-			json_decode( '"\u2004"' ),
-			json_decode( '"\u2005"' ),
-			json_decode( '"\u2006"' ),
-			json_decode( '"\u2007"' ),
-			json_decode( '"\u2008"' ),
-			json_decode( '"\u2009"' ),
-			json_decode( '"\u200a"' ),
-			json_decode( '"\u202f"' ),
-			json_decode( '"\u205f"' ),
-			json_decode( '"\u3000"' ),
-		);
 	}
 
 	/**
@@ -368,9 +341,6 @@ class Exporter {
 
 		// If the value is a string, clean it up.
 		if ( is_string( $data ) ) {
-			// Strip separators/white space.
-			$data = str_replace( $this->separators, ' ', $data );
-
 			// Convert all characters into HTML readable entities.
 			$data = mb_convert_encoding( $data, 'HTML-ENTITIES', "UTF-8");
 
