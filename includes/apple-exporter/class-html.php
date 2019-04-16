@@ -73,9 +73,6 @@ class HTML {
 		// Strip out all tags and attributes other than what is allowed.
 		$html = wp_kses( $html, $this->_allowed_html );
 
-		// // Replace the "null" character with a blank string.
-		$html = str_replace( chr( 194 ), '', $html );
-
 		return $html;
 	}
 }
