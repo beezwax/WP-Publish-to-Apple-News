@@ -222,7 +222,7 @@ class Exporter {
 		$json = apply_filters( 'apple_news_generate_json', $json, $this->content_id() );
 
 		// Clean up the data array and convert to JSON format.
-		$this->prepare_for_encoding( $json );
+		self::prepare_for_encoding( $json );
 		$json = wp_json_encode( $json );
 
 		return $json;
@@ -330,12 +330,12 @@ class Exporter {
 	 *
 	 * @access private
 	 */
-	public function prepare_for_encoding( &$data ) {
+	public static function prepare_for_encoding( &$data ) {
 
 		// If the value is an array, loop through it and process each element.
 		if ( is_array( $data ) ) {
 			foreach ( $data as &$datum ) {
-				$this->prepare_for_encoding( $datum );
+				self::prepare_for_encoding( $datum );
 			}
 		}
 
