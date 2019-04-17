@@ -32,8 +32,9 @@ class Exporter_Test extends WP_UnitTestCase {
 			->get_json()
 			->shouldBeCalled();
 
-		$content  = new Apple_Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>' );
+		$content  = new Apple_Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p><p>Pondant à Noël — aÀâÂèÈéÉêÊëËîÎïÏôÔùÙûÛüÜÿŸçÇœŒ€æÆ</p>' );
 		$exporter = new Exporter( $content, $workspace->reveal() );
+		$exporter->prepare_for_encoding( $exporter );
 		$exporter->export();
 	}
 
@@ -80,6 +81,5 @@ class Exporter_Test extends WP_UnitTestCase {
 		) );
 		$exporter->export();
 	}
-
 }
 
