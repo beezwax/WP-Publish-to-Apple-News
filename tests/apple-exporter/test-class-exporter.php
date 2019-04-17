@@ -32,9 +32,8 @@ class Exporter_Test extends WP_UnitTestCase {
 			->get_json()
 			->shouldBeCalled();
 
-		$content  = new Apple_Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p><p>Pondant à Noël — aÀâÂèÈéÉêÊëËîÎïÏôÔùÙûÛüÜÿŸçÇœŒ€æÆ</p>' );
+		$content  = new Apple_Exporter\Exporter_Content( 3, 'Title', '<p>Example content</p>' );
 		$exporter = new Exporter( $content, $workspace->reveal() );
-		$exporter->prepare_for_encoding( $exporter );
 		$exporter->export();
 	}
 
@@ -80,6 +79,40 @@ class Exporter_Test extends WP_UnitTestCase {
 			'componentStyles'     => $builder3->reveal(),
 		) );
 		$exporter->export();
+	}
+
+	/**
+	 * Tests the functionality of the prepare_for_encoding function to ensure
+	 * that unwanted characters are stripped.
+	 */
+	public function testPrepareForEncoding() {
+		// Test UTF-8 characters with accents common in French.
+		$test_content = 'Pondant à Noël — aÀâÂèÈéÉêÊëËîÎïÏôÔùÙûÛüÜÿŸçÇœŒ€æÆ';
+		Exporter::prepare_for_encoding( $test_content );
+		$this->assertEquals( 'Pondant à Noël — aÀâÂèÈéÉêÊëËîÎïÏôÔùÙûÛüÜÿŸçÇœŒ€æÆ', $test_content );
+
+		// Test Unicode whitespace character removal.
+		$test_content = json_decode( '"\u0020"' )
+			. json_decode( '"\u00a0"' )
+			. json_decode( '"\u2000"' )
+			. json_decode( '"\u2001"' )
+			. json_decode( '"\u2002"' )
+			. json_decode( '"\u2003"' )
+			. json_decode( '"\u2004"' )
+			. json_decode( '"\u2005"' )
+			. json_decode( '"\u2006"' )
+			. json_decode( '"\u2007"' )
+			. json_decode( '"\u2008"' )
+			. json_decode( '"\u2009"' )
+			. json_decode( '"\u200a"' )
+			. json_decode( '"\u202f"' )
+			. json_decode( '"\u205f"' )
+			. json_decode( '"\u3000"' );
+		Exporter::prepare_for_encoding( $test_content );
+		$this->assertEquals(
+			str_repeat( ' ', strlen( $test_content ) ),
+			$test_content
+		);
 	}
 }
 
