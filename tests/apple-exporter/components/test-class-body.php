@@ -94,7 +94,7 @@ class Body_Test extends Component_TestCase {
 		$this->assertEquals(
 			array(
 				'role'      => 'body',
-				'text'      => '<p>a</p><p> </p><p>b</p>',
+				'text'      => '<p>a</p><p>b</p>',
 				'format'    => 'html',
 				'textStyle' => 'dropcapBodyStyle',
 				'layout'    => 'body-layout',
