@@ -330,7 +330,7 @@ class Exporter {
 	 *
 	 * @access private
 	 */
-	private function prepare_for_encoding( &$data ) {
+	public function prepare_for_encoding( &$data ) {
 
 		// If the value is an array, loop through it and process each element.
 		if ( is_array( $data ) ) {
