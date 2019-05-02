@@ -1,6 +1,6 @@
-/* global wp */
+/* global React, wp */
 
-import Icon from 'components/icon';
+import Icon from './components/icon';
 import Sidebar from './components/sidebar';
 
 const {
@@ -10,6 +10,6 @@ const {
 } = wp;
 
 registerPlugin('publish-to-apple-news', {
-  icon: Icon,
+  icon: <Icon />,
   render: Sidebar,
 });

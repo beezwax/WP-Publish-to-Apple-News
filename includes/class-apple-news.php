@@ -218,6 +218,18 @@ class Apple_News {
 	 */
 	public function action_admin_enqueue_scripts( $hook ) {
 
+		// If the block editor is active, add PluginSidebar.
+		if ( get_the_ID() && use_block_editor_for_post( get_the_ID() ) ) {
+			wp_enqueue_script(
+				'publish-to-apple-news-plugin-sidebar',
+				plugins_url( 'build/pluginSidebar.js', __DIR__ ),
+				[ 'wp-i18n', 'wp-edit-post' ],
+				self::$version,
+				true
+			);
+			$this->inline_locale_data( 'wp-starter-plugin-plugin-sidebar' );
+		}
+
 		// Ensure we are in an appropriate context.
 		if ( ! in_array( $hook, $this->_contexts, true ) ) {
 			return;
@@ -326,6 +338,27 @@ class Apple_News {
 
 		// Load the example themes, if they do not exist.
 		$this->load_example_themes();
+	}
+
+	/**
+	 * Creates a new Jed instance with specified locale data configuration.
+	 *
+	 * @param string $to_handle The script handle to attach the inline script to.
+	 */
+	public function inline_locale_data( $to_handle ) {
+		// Define locale data for Jed.
+		$locale_data = [
+			'' => [
+				'domain' => 'publish-to-apple-news',
+				'lang'   => get_user_locale(),
+			],
+		];
+
+		// Pass the Jed configuration to the admin to properly register i18n.
+		wp_add_inline_script(
+			$to_handle,
+			'wp.i18n.setLocaleData( ' . wp_json_encode( $locale_data ) . ", 'publish-to-apple-news' );"
+		);
 	}
 
 	/**

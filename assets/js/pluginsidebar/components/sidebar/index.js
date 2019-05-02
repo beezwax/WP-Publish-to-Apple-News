@@ -34,6 +34,7 @@ class Sidebar extends React.PureComponent {
    * @returns {object} JSX component markup.
    */
   render() {
+    console.log('version 4');
     const {
       onUpdate, // eslint-disable-line no-unused-vars
       post: {
