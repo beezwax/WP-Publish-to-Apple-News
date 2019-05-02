@@ -212,6 +212,12 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 * @access public
 	 */
 	public function add_meta_boxes( $post ) {
+
+		// If the block editor is active, do not add meta boxes.
+		if ( use_block_editor_for_post( $post->ID ) ) {
+			return;
+		}
+
 		// Add the publish meta box.
 		add_meta_box(
 			'apple_news_publish',
