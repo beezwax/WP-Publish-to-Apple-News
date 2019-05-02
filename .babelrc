@@ -1,0 +1,26 @@
+{
+  "plugins": [
+    "transform-class-properties",
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "components": "./components",
+          "services": "./services"
+        },
+        "root": ["./"]
+      }
+    ]
+  ],
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "targets": {
+          "browsers": ["last 2 versions", "ie >= 11"]
+        }
+      }
+    ],
+    "@babel/preset-react"
+  ]
+}
