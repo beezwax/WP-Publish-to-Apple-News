@@ -783,4 +783,41 @@ abstract class Component {
 
 		return '';
 	}
+
+	/**
+	 * Get iframe/embed node
+	 *
+	 * @param [mixed] $node $node object
+	 * @return boolean $has_figure_iframe
+	 */
+	public static function is_gutenberg_embed_figure( $node ) {
+
+		// Set default.
+		$has_figure_iframe = false;
+
+		// Return false if we don't have any child nodes.
+		if ( ! $node->hasChildNodes() ) {
+			return $has_figure_iframe;
+		}
+
+		// Loop those child nodes.
+		foreach ( $node->childNodes as $child ) {
+
+			// Return false if we don't have children, or if is an image.
+			if ( ! $child->hasChildNodes() || 'img' === $child->nodeName ) {
+				return $has_figure_iframe;
+			}
+
+			// Loop subchildren.
+			foreach ( $child->childNodes as $c ) {
+
+				// Return true if we're seeing an iframe.
+				if ( 'iframe' === $c->nodeName ) {
+					return true;
+				}
+			}
+		}
+
+		return $has_figure_iframe;
+	}
 }
