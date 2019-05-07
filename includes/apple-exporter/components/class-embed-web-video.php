@@ -41,7 +41,7 @@ class Embed_Web_Video extends Component {
 		return (
 			( 'p' === $node->nodeName && preg_match( $pattern, trim( $node->nodeValue ) ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 			|| ( 'iframe' === $node->nodeName && preg_match( $pattern, trim( $node->getAttribute( 'src' ) ) ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
-			|| ( 'figure' === $node->nodeName && Component::is_gutenberg_embed_figure( $node ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+			|| ( 'figure' === $node->nodeName && Component::is_embed_figure( $node ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 		);
 	}
 

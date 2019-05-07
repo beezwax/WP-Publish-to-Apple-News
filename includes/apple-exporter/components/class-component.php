@@ -790,7 +790,7 @@ abstract class Component {
 	 * @param [mixed] $node $node object
 	 * @return boolean $has_figure_iframe
 	 */
-	public static function is_gutenberg_embed_figure( $node ) {
+	public static function is_embed_figure( $node ) {
 
 		// Set default.
 		$has_figure_iframe = false;

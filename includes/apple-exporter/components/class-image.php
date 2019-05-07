@@ -27,7 +27,7 @@ class Image extends Component {
 	public static function node_matches( $node ) {
 		// Is this an image node?
 		if (
-			( 'img' === $node->nodeName || ( 'figure' === $node->nodeName && Component::is_gutenberg_embed_figure( $node ) ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+			( 'img' === $node->nodeName || ( 'figure' === $node->nodeName && Component::is_embed_figure( $node ) ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 			&& self::remote_file_exists( $node )
 		) {
 			return $node;
