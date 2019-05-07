@@ -93,8 +93,8 @@ class Component_Factory {
 		self::register_component( 'facebook', '\\Apple_Exporter\\Components\\Facebook' );
 		self::register_component( 'instagram', '\\Apple_Exporter\\Components\\Instagram' );
 		self::register_component( 'table', '\\Apple_Exporter\\Components\\Table' );
-		self::register_component( 'img', '\\Apple_Exporter\\Components\\Image' );
 		self::register_component( 'iframe', '\\Apple_Exporter\\Components\\Embed_Web_Video' );
+		self::register_component( 'img', '\\Apple_Exporter\\Components\\Image' );
 		self::register_component( 'video', '\\Apple_Exporter\\Components\\Video' );
 		self::register_component( 'audio', '\\Apple_Exporter\\Components\\Audio' );
 		self::register_component( 'heading', '\\Apple_Exporter\\Components\\Heading' );
@@ -145,6 +145,7 @@ class Component_Factory {
 	 * @return \Apple_Exporter\Components\Component A component class matching the shortname.
 	 */
 	public static function get_component( $shortname, $html ) {
+
 		$class = self::$components[ $shortname ];
 
 		if ( is_null( $class ) || ! class_exists( $class ) ) {
@@ -174,6 +175,7 @@ class Component_Factory {
 		$result = array();
 
 		foreach ( self::$components as $shortname => $class ) {
+
 			$matched_node = $class::node_matches( $node );
 
 			// Nothing matched? Skip to next match.
@@ -190,7 +192,6 @@ class Component_Factory {
 				foreach ( $matched_node as $base_component ) {
 					$result[] = self::get_component( $base_component['name'], $base_component['value'] );
 				}
-
 				return $result;
 			}
 
@@ -199,7 +200,6 @@ class Component_Factory {
 			$result[] = self::get_component( $shortname, $html );
 			return $result;
 		}
-
 		// Nothing found. Maybe it's a container element?
 		if ( $node->hasChildNodes() ) {
 			foreach ( $node->childNodes as $child ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
@@ -221,5 +221,4 @@ class Component_Factory {
 
 		return $result;
 	}
-
 }
