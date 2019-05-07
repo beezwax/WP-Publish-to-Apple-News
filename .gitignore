@@ -4,4 +4,7 @@ tags
 composer.lock
 vendor
 npm-debug.log
+
+## IDE
 .idea
+.vscode
