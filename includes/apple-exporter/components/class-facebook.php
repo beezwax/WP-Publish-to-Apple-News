@@ -22,17 +22,9 @@ class Facebook extends Component {
 	 * A list of regular expression patterns for whitelisted Facebook oEmbed formats.
 	 *
 	 * @see https://developer.apple.com/library/prerelease/content/documentation/General/Conceptual/Apple_News_Format_Ref/FacebookPost.html#//apple_ref/doc/uid/TP40015408-CH106-SW1
-	 *
-	 * @access private
-	 * @var array
+	 * @see https://developers.facebook.com/docs/plugins/oembed-endpoints/
 	 */
-	private static $_formats = array(
-		'/^https:\/\/www\.facebook\.com\/[^\/]+\/posts\/[^\/]+\/?$/',
-		'/^https:\/\/www\.facebook\.com\/[^\/]+\/activity\/[^\/]+\/?$/',
-		'/^https:\/\/www\.facebook\.com\/photo.php\?fbid=.+$/',
-		'/^https:\/\/www\.facebook\.com\/photos\/[^\/]+\/?$/',
-		'/^https:\/\/www\.facebook\.com\/permalink\.php\?story_fbid=.+$/',
-	);
+	const FACEBOOK_MATCH = '/(?:https?:\/\/)?(?:www\.)?(?:facebook|fb|m\.facebook)\.(?:com|me)\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-\.]+)(?:\/)?/i';
 
 	/**
 	 * Regular expressions for extracting post URLs from HTML markup.
@@ -150,11 +142,8 @@ class Facebook extends Component {
 	 */
 	private static function get_facebook_url( $text ) {
 
-		// Loop through whitelisted formats looking for matches.
-		foreach ( self::$_formats as $format ) {
-			if ( preg_match( $format, $text ) ) {
-				return untrailingslashit( $text );
-			}
+		if ( preg_match( self::FACEBOOK_MATCH, $text ) ) {
+			return untrailingslashit( $text );
 		}
 
 		return false;

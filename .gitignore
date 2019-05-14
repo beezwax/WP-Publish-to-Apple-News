@@ -5,5 +5,8 @@ composer.lock
 vendor
 node_modules
 npm-debug.log
-.idea
 build
+
+## IDE
+.idea
+.vscode

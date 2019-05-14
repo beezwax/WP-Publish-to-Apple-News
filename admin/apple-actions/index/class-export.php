@@ -103,12 +103,8 @@ class Export extends Action {
 		 */
 		$post = get_post( $this->id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
 
-		// Build the excerpt if required.
-		if ( empty( $post->post_excerpt ) ) {
-			$excerpt = wp_trim_words( wp_strip_all_tags( $this->remove_tags( strip_shortcodes( $post->post_content ) ) ), 55, '...' );
-		} else {
-			$excerpt = wp_strip_all_tags( $post->post_excerpt );
-		}
+		// Only include excerpt if exists.
+		$excerpt = has_excerpt( $post ) ? wp_strip_all_tags( $post->post_excerpt ) : '';
 
 		// Get the post thumbnail.
 		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $this->id ) ) ?: null;
