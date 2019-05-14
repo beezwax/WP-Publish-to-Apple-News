@@ -6,6 +6,11 @@ const {
   compose: {
     compose,
   },
+  components: {
+    PanelBody,
+    TextareaControl,
+    TextControl,
+  },
   data: {
     withDispatch,
     withSelect,
@@ -53,7 +58,27 @@ class Sidebar extends React.PureComponent {
         name="publish-to-apple-news"
         title={__('Publish to Apple News Options', 'publish-to-apple-news')}
       >
-        <p>Content here!</p>
+        <PanelBody
+          initialOpen={false}
+          title={__('Open Graph', 'kauffman')}
+        >
+          <TextControl
+            label={__('Title', 'kauffman')}
+            onChange={(value) => onUpdate(
+              'kauffman_open_graph_title',
+              value
+            )}
+            value="Title"
+          />
+          <TextareaControl
+            label={__('Description', 'kauffman')}
+            onChange={(value) => onUpdate(
+              'kauffman_open_graph_description',
+              value
+            )}
+            value="Sup"
+          />
+        </PanelBody>
       </PluginSidebar>
     );
   }
