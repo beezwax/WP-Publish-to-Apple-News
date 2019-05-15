@@ -1,6 +1,7 @@
 /* global React, wp */
 
 import PropTypes from 'prop-types';
+import ImagePicker from '../imagePicker';
 
 const {
   compose: {
@@ -143,7 +144,62 @@ class Sidebar extends React.PureComponent {
           initialOpen={false}
           title={__('Cover Art', 'kauffman')}
         >
-          Hi
+          <p>
+            <em>
+              <a href="https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/CoverArt.html">
+                Cover Art
+              </a>
+              {/* eslint-disable-next-line max-len */}
+              &nbsp;will represent your article if editorially chosen for Featured Stories. Cover Art must include your channel logo with text at 24 pt minimum that is related to the headline. The image provided must match the dimensions listed. Limit submissions to 1-3 articles per day.
+            </em>
+          </p>
+          <SelectControl
+            label="Orientation"
+            value="landscape"
+            options={[
+              { label: 'Landscape (4:3)', value: 'landscape' },
+              { label: 'Portrait (3:4)', value: 'portrait' },
+              { label: 'Square (1:1)', value: 'square' },
+            ]}
+          />
+          <p>
+            <em>
+              {/* eslint-disable-next-line max-len */}
+              Note: You must provide the largest size (iPad Pro 12.9 in) in order for your submission to be considered.
+            </em>
+          </p>
+          <div>
+            <h4>
+              iPad Pro (12.9 in): 1832 x 1374 px
+            </h4>
+            <ImagePicker
+              metaKey="kauffman_open_graph_image"
+            />
+            <h4>
+              iPad (7.9/9.7 in): 1376 x 1032 px
+            </h4>
+            <ImagePicker
+              metaKey="kauffman_open_graph_image"
+            />
+            <h4>
+              iPhone (5.5 in): 1044 x 783 px
+            </h4>
+            <ImagePicker
+              metaKey="kauffman_open_graph_image"
+            />
+            <h4>
+              iPhone (4.7 in): 632 x 474 px
+            </h4>
+            <ImagePicker
+              metaKey="kauffman_open_graph_image"
+            />
+            <h4>
+              iPhone (4 in): 536 x 402 px
+            </h4>
+            <ImagePicker
+              metaKey="kauffman_open_graph_image"
+            />
+          </div>
         </PanelBody>
       </PluginSidebar>
     );
