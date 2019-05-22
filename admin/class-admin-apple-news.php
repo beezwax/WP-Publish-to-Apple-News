@@ -19,6 +19,10 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-sections.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-themes.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/meta.php';
+// REST Includes
+require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-sections.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-settings.php';
 
 /**
  * Entry-point class for the plugin.
@@ -79,6 +83,24 @@ class Admin_Apple_News extends Apple_News {
 
 		// Add JSON customization support.
 		new Admin_Apple_JSON();
+
+		// if ( use_block_editor_for_post( get_the_ID() ) ) {
+			$post_types = self::$settings->post_types;
+	
+			register_meta_helper( 'post', $post_types, 'apple_news_is_preview', [ 'type' => 'boolean' ] );
+			register_meta_helper( 'post', $post_types, 'apple_news_is_hidden', [ 'type' => 'boolean' ] );
+			register_meta_helper( 'post', $post_types, 'apple_news_is_sponsored', [ 'type' => 'boolean' ] );
+			register_meta_helper( 'post', $post_types, 'apple_news_maturity_rating' );
+			register_meta_helper( 'post', $post_types, 'apple_news_pullquote' );
+			register_meta_helper( 'post', $post_types, 'apple_news_pullquote_position' );
+			register_meta_helper( 'post', $post_types, 'apple_news_selected_sections', [ 'sanitize_callback' => __NAMESPACE__ . '\sanitize_selected_sections' ] );
+			register_meta_helper( 'post', $post_types, 'apple_news_cover_art_orientation' );
+			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_12_9', [ 'type' => 'integer' ] );
+			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_9_7', [ 'type' => 'integer' ] );
+			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_5_5', [ 'type' => 'integer' ] );
+			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_4_7', [ 'type' => 'integer' ] );
+			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_4_0', [ 'type' => 'integer' ] );
+		// }
 	}
 
 	/**

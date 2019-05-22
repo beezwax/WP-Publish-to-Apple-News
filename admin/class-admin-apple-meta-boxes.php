@@ -49,7 +49,8 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 			foreach ( $post_types as $post_type ) {
 				add_action( 'add_meta_boxes_' . $post_type, array( $this, 'add_meta_boxes' ) );
-				add_action( 'save_post_' . $post_type, array( $this, 'do_publish' ), 10, 2 );
+				// add_action( 'save_post_' . $post_type, array( $this, 'do_publish' ), 10, 2 );
+				add_action( 'rest_insert_' . $post_type, array( $this, 'do_publish' ), 10, 2 );
 			}
 
 			// Register assets used by the meta box.

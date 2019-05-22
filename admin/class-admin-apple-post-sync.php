@@ -48,7 +48,7 @@ class Admin_Apple_Post_Sync {
 			|| 'yes' === $this->settings->get( 'api_autosync_update' )
 		) {
 			// This needs to happen after meta boxes save.
-			add_action( 'save_post', array( $this, 'do_publish' ), 99, 2 );
+			// add_action( 'save_post', array( $this, 'do_publish' ), 99, 2 );
 		}
 
 		// Register delete hook if needed.
