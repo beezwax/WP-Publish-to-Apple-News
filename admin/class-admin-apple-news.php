@@ -84,7 +84,7 @@ class Admin_Apple_News extends Apple_News {
 		// Add JSON customization support.
 		new Admin_Apple_JSON();
 
-		// if ( use_block_editor_for_post( get_the_ID() ) ) {
+		if( function_exists( 'is_gutenberg_page' ) ) { // check if GB is active
 			$post_types = self::$settings->post_types;
 	
 			register_meta_helper( 'post', $post_types, 'apple_news_is_preview', [ 'type' => 'boolean' ] );
@@ -100,7 +100,7 @@ class Admin_Apple_News extends Apple_News {
 			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_5_5', [ 'type' => 'integer' ] );
 			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_4_7', [ 'type' => 'integer' ] );
 			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_4_0', [ 'type' => 'integer' ] );
-		// }
+		}
 	}
 
 	/**

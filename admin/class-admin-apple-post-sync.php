@@ -48,13 +48,21 @@ class Admin_Apple_Post_Sync {
 			|| 'yes' === $this->settings->get( 'api_autosync_update' )
 		) {
 			// This needs to happen after meta boxes save.
-			// add_action( 'save_post', array( $this, 'do_publish' ), 99, 2 );
+			if( function_exists( 'is_gutenberg_page' ) ) {
+				add_action( 'rest_after_insert_post', array( $this, 'do_publish_from_rest' ), 10, 2 );
+			} else {
+				add_action( 'save_post', array( $this, 'do_publish' ), 99, 2 );
+			}
 		}
 
 		// Register delete hook if needed.
 		if ( 'yes' === $this->settings->get( 'api_autosync_delete' ) ) {
 			add_action( 'before_delete_post', array( $this, 'do_delete' ) );
 		}
+	}
+
+	public function do_publish_from_rest( $post, $request ) {
+		$this->do_publish( $post->ID, $post );
 	}
 
 	/**
