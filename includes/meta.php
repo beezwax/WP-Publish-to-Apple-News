@@ -73,7 +73,7 @@ function register_meta_helper(
 		throw new \InvalidArgumentException(
 			__(
 				'Object type must be one of "post", "term".',
-				'wp-starter-plugin'
+				'apple-news'
 			)
 		);
 	}

@@ -227,7 +227,7 @@ class Apple_News {
 				self::$version,
 				true
 			);
-			$this->inline_locale_data( 'wp-starter-plugin-plugin-sidebar' );
+			$this->inline_locale_data( 'apple-news-plugin-sidebar' );
 		}
 
 		// Ensure we are in an appropriate context.

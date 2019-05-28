@@ -19,6 +19,8 @@
  * Domain Path: lang/
  */
 
+require_once plugin_dir_path( __FILE__ ) . './includes/meta.php';
+
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
@@ -91,4 +93,17 @@ new Admin_Apple_News();
  */
 function apple_news_is_exporting() {
 	return Apple_Actions\Index\Export::is_exporting();
+}
+
+/**
+ * Reports whether Gutenberg block editor is enabled for a post
+ * @param $post_id The Id for the post
+ * @return bool True if Gutenberg block editor is enabled
+ * @since 1.4.0
+ */
+function apple_news_block_editor_is_active( $post_id = 0 ) {
+	if ( empty( $post_id ) ) {
+			$post_id = get_the_ID();
+	}
+	return $post_id && use_block_editor_for_post( $post_id );
 }

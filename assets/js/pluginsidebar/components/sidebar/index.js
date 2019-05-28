@@ -56,7 +56,10 @@ class Sidebar extends React.PureComponent {
 
     this.state = {
       sections: [],
-      enableCoverArt: false,
+      settings: {
+        enableCoverArt: false,
+        adminUrl: '',
+      },
     };
 
     this.updateSelectedSections = this.updateSelectedSections.bind(this);
@@ -74,7 +77,7 @@ class Sidebar extends React.PureComponent {
     const path = '/apple-news/v1/get-settings';
 
     apiFetch({ path })
-      .then((settings) => (this.setState({ ...settings })))
+      .then((settings) => (this.setState({ settings })))
       .catch((error) => console.error(error)); /* eslint-disable-line no-console */
   }
 
@@ -90,7 +93,12 @@ class Sidebar extends React.PureComponent {
   }
 
   updateSelectedSections(checked, name) {
-    const { onUpdate, meta: { selectedSections } } = this.props;
+    const {
+      onUpdate,
+      meta: {
+        selectedSections,
+      },
+    } = this.props;
     // Need to default to [], else JSON parse fails
     const selectedSectionsArray = JSON.parse(selectedSections || '[]');
 
@@ -137,7 +145,13 @@ class Sidebar extends React.PureComponent {
       },
     } = this.props;
 
-    const { sections, enableCoverArt, adminUrl } = this.state;
+    const {
+      sections,
+      settings: {
+        enableCoverArt,
+        adminUrl,
+      },
+    } = this.state;
     const selectedSectionsArray = JSON.parse(selectedSections || '[]');
 
     return (

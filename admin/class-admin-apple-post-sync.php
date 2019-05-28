@@ -48,10 +48,10 @@ class Admin_Apple_Post_Sync {
 			|| 'yes' === $this->settings->get( 'api_autosync_update' )
 		) {
 			// This needs to happen after meta boxes save.
-			if( function_exists( 'is_gutenberg_page' ) ) {
-				add_action( 'rest_after_insert_post', array( $this, 'do_publish_from_rest' ), 10, 2 );
+			if ( apple_news_block_editor_is_active() ) { // check if GB is active
+				add_action( 'rest_after_insert_post', [ $this, 'do_publish_from_rest' ]);
 			} else {
-				add_action( 'save_post', array( $this, 'do_publish' ), 99, 2 );
+				add_action( 'save_post', [ $this, 'do_publish' ], 99, 2 );
 			}
 		}
 

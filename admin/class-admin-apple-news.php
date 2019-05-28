@@ -19,7 +19,6 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-sections.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-themes.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
-require_once plugin_dir_path( __FILE__ ) . '../includes/meta.php';
 // REST Includes
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-sections.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-settings.php';
@@ -84,7 +83,7 @@ class Admin_Apple_News extends Apple_News {
 		// Add JSON customization support.
 		new Admin_Apple_JSON();
 
-		if( function_exists( 'is_gutenberg_page' ) ) { // check if GB is active
+		if ( apple_news_block_editor_is_active() ) { // check if GB is active
 			$post_types = self::$settings->post_types;
 	
 			register_meta_helper( 'post', $post_types, 'apple_news_is_preview', [ 'type' => 'boolean' ] );
