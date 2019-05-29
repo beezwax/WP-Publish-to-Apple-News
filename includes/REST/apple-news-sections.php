@@ -18,7 +18,7 @@ function get_sections_response() {
   if ( ! empty( $sections ) && ! empty( get_current_user_id() ) ) {
     foreach ( $sections as $section ) {
       $response[] = [
-        'id'      => intval( $section->id ),
+        'id'      => esc_html( 'https://news-api.apple.com/sections/' . $section->id ),
         'name'    => esc_html( $section->name ),
       ];
     }

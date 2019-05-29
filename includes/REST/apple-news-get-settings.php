@@ -20,6 +20,7 @@ function get_settings_response( $data ) {
 		$settings = $admin_settings->fetch_settings();
 		$response['enableCoverArt'] = 'no' !== $settings->enable_cover_art;
 		$response['adminUrl'] = esc_url( admin_url( 'admin.php?page=apple-news-options' ) );
+		$response['endpointUrl'] = esc_url('https://news-api.apple.com/sections/');
 	}
 
 

@@ -83,7 +83,7 @@ class Admin_Apple_News extends Apple_News {
 		// Add JSON customization support.
 		new Admin_Apple_JSON();
 
-		if ( apple_news_block_editor_is_active() ) { // check if GB is active
+		// if ( apple_news_block_editor_is_active() ) { // check if GB is active
 			$post_types = self::$settings->post_types;
 	
 			register_meta_helper( 'post', $post_types, 'apple_news_is_preview', [ 'type' => 'boolean' ] );
@@ -92,14 +92,19 @@ class Admin_Apple_News extends Apple_News {
 			register_meta_helper( 'post', $post_types, 'apple_news_maturity_rating' );
 			register_meta_helper( 'post', $post_types, 'apple_news_pullquote' );
 			register_meta_helper( 'post', $post_types, 'apple_news_pullquote_position' );
-			register_meta_helper( 'post', $post_types, 'apple_news_selected_sections', [ 'sanitize_callback' => __NAMESPACE__ . '\sanitize_selected_sections' ] );
-			register_meta_helper( 'post', $post_types, 'apple_news_cover_art_orientation' );
-			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_12_9', [ 'type' => 'integer' ] );
-			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_9_7', [ 'type' => 'integer' ] );
-			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_5_5', [ 'type' => 'integer' ] );
-			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_4_7', [ 'type' => 'integer' ] );
-			register_meta_helper( 'post', $post_types, 'apple_news_ca_orientation_4_0', [ 'type' => 'integer' ] );
-		}
+			register_meta_helper( 'post', $post_types, 'apple_news_sections', [
+				'sanitize_callback' => __NAMESPACE__ . '\sanitize_selected_sections',
+				'show_in_rest' => [
+						'prepare_callback' => __NAMESPACE__ . '\prepare_sections_data',
+				]
+			] );
+			register_meta_helper( 'post', $post_types, 'apple_news_coverart', [
+				'sanitize_callback' => __NAMESPACE__ . '\sanitize_coverart_data',
+				'show_in_rest' => [
+						'prepare_callback' => __NAMESPACE__ . '\prepare_coverart_data',
+				]
+			] );
+		// }
 	}
 
 	/**

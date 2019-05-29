@@ -156,21 +156,39 @@ function sanitize_meta_by_type(
 }
 
 /**
- * A 'sanitize_callback' for the apple_news_selected_sections meta field.
+ * A 'sanitize_callback' for the apple_news_sections meta field.
  *
  * @param mixed $meta_value Meta value to sanitize.
- * @return string Sanitized meta value.
+ * @return array Sanitized meta value.
  */
-function sanitize_selected_sections( $meta_value ) : string {
+function sanitize_selected_sections( $meta_value ) : array {
 	// The meta value should be a stringified JSON array. Ensure that it is.
 	$raw_meta_value = json_decode( $meta_value, true );
 	if ( ! is_array( $raw_meta_value ) ) {
 		return [];
 	}
 	// Rebuild the data, sanitizing values, and validating keys.
-	return wp_json_encode(
-		array_values(
-			$raw_meta_value
-		)
+	return array_values(
+		$raw_meta_value
 	);
+}
+
+// TODO - doc block
+function prepare_sections_data( $value, $request, $args ) {
+	return wp_json_encode( $value );
+}
+
+/**
+ * A 'sanitize_callback' for the apple_news_coverart meta field.
+ *
+ * @param mixed $meta_value Meta value to sanitize.
+ * @return array Sanitized meta value.
+ */
+function sanitize_coverart_data( $meta_value ) : array {
+	return json_decode( $meta_value, true );
+}
+
+// TODO - doc block
+function prepare_coverart_data( $value, $request, $args ) {
+	return wp_json_encode( $value );
 }
