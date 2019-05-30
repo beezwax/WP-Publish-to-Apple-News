@@ -14,16 +14,9 @@ namespace Apple_News\REST;
 function get_published_state_response( $data ) {
   $response = [];
 
-	// if ( ! empty( get_current_user_id() ) ) {
-    // Get admin settings
-    
-
-		// $admin_settings = new \Admin_Apple_Settings();
-		// $settings = $admin_settings->fetch_settings();
+	if ( ! empty( get_current_user_id() ) ) {
 		$response['publishState'] = \Admin_Apple_News::get_post_status( $data['id'] );
-		
-	// }
-
+	}
 
   return $response;
 }
