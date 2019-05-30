@@ -61,7 +61,7 @@ class Admin_Apple_Post_Sync {
 		}
 	}
 
-	public function do_publish_from_rest( $post, $request ) {
+	public function do_publish_from_rest( $post ) {
 		$this->do_publish( $post->ID, $post );
 	}
 

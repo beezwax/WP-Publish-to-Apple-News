@@ -162,8 +162,11 @@ function sanitize_meta_by_type(
  * @return array Sanitized meta value.
  */
 function sanitize_selected_sections( $meta_value ) : array {
+	if ( ! is_string( $meta_value ) ) {
+		return $meta_value;
+	}
 	// The meta value should be a stringified JSON array. Ensure that it is.
-	$raw_meta_value = is_string( $meta_value ) ? json_decode( $meta_value, true ) : $meta_value;
+	$raw_meta_value = json_decode( $meta_value, true );
 	if ( ! is_array( $raw_meta_value ) ) {
 		return [];
 	}
@@ -185,7 +188,11 @@ function prepare_sections_data( $value, $request, $args ) {
  * @return array Sanitized meta value.
  */
 function sanitize_coverart_data( $meta_value ) : array {
-	return is_string( $meta_value ) ? json_decode( $meta_value, true ) : $meta_value;
+	if ( ! is_string( $meta_value ) ) {
+		return $meta_value;
+	}
+
+	return json_decode( $meta_value, true );
 }
 
 // TODO - doc block
