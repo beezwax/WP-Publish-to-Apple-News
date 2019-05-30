@@ -11,16 +11,19 @@ namespace Apple_News\REST;
  * @param array $data data from query args.
  * @return array updated response.
  */
-function get_settings_response( $data ) {
+function get_published_state_response( $data ) {
   $response = [];
 
-	if ( ! empty( get_current_user_id() ) ) {
-		// Get admin settings
-		$admin_settings = new \Admin_Apple_Settings();
-		$settings = $admin_settings->fetch_settings();
-		$response['enableCoverArt'] = 'no' !== $settings->enable_cover_art;
-		$response['adminUrl'] = esc_url( admin_url( 'admin.php?page=apple-news-options' ) );
-	}
+	// if ( ! empty( get_current_user_id() ) ) {
+    // Get admin settings
+    
+
+		// $admin_settings = new \Admin_Apple_Settings();
+		// $settings = $admin_settings->fetch_settings();
+		$response['publishState'] = \Admin_Apple_News::get_post_status( $data['id'] );
+		
+	// }
+
 
   return $response;
 }
@@ -34,10 +37,10 @@ add_action(
 		// Register route count argument.
 		register_rest_route(
 			'apple-news/v1',
-			'/get-settings',
+			'/get-published-state/(?P<id>\d+)',
 			[
 				'methods'  => 'GET',
-				'callback' => __NAMESPACE__ . '\get_settings_response',
+				'callback' => __NAMESPACE__ . '\get_published_state_response',
 			]
 		);
 	}

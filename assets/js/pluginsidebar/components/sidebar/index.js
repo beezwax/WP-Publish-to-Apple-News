@@ -42,8 +42,14 @@ class Sidebar extends React.PureComponent {
       selectedSections: PropTypes.string,
       coverArt: PropTypes.shape({
         orientation: PropTypes.string,
-        // TODO: other keys
+        // Other keys are determined in part by orientation
+        // see `coverArtSizes` variable below
       }),
+      apiId: PropTypes.string,
+      dateCreated: PropTypes.string,
+      dateModified: PropTypes.string,
+      shareUrl: PropTypes.string,
+      revision: PropTypes.string,
     }).isRequired,
     onUpdate: PropTypes.func.isRequired,
     post: PropTypes.shape({}).isRequired,
@@ -57,8 +63,8 @@ class Sidebar extends React.PureComponent {
       settings: {
         enableCoverArt: false,
         adminUrl: '',
-        endpointUrl: '',
       },
+      publishState: '',
     };
 
     this.updateSelectedSections = this.updateSelectedSections.bind(this);
@@ -67,6 +73,7 @@ class Sidebar extends React.PureComponent {
   componentDidMount() {
     this.fetchSections();
     this.fetchSettings();
+    this.fetchPublishState();
   }
 
   /**
@@ -88,6 +95,17 @@ class Sidebar extends React.PureComponent {
 
     apiFetch({ path })
       .then((sections) => (this.setState({ sections })))
+      .catch((error) => console.error(error)); /* eslint-disable-line no-console */
+  }
+
+  fetchPublishState() {
+    const {
+      post,
+    } = this.props;
+    const path = `/apple-news/v1/get-published-state/${post.id}`;
+
+    apiFetch({ path })
+      .then(({ publishState }) => (this.setState({ publishState })))
       .catch((error) => console.error(error)); /* eslint-disable-line no-console */
   }
 
@@ -151,6 +169,11 @@ class Sidebar extends React.PureComponent {
         pullquotePosition = '',
         selectedSections = '',
         coverArt = '',
+        apiId = '',
+        dateCreated = '',
+        dateModified = '',
+        shareUrl = '',
+        revision = '',
       },
       onUpdate,
     } = this.props;
@@ -161,6 +184,7 @@ class Sidebar extends React.PureComponent {
         enableCoverArt,
         adminUrl,
       },
+      publishState,
     } = this.state;
     const selectedSectionsArray = JSON.parse(selectedSections || '[]');
     const parsedCoverArt = JSON.parse(coverArt || '{}');
@@ -367,6 +391,7 @@ class Sidebar extends React.PureComponent {
                       __('Note: You must provide the largest size (iPad Pro 12.9 in) in order for your submission to be considered.', 'apple-news')
                     }
                   </em>
+
                 </p>
                 <div>
                   {
@@ -400,6 +425,23 @@ class Sidebar extends React.PureComponent {
             )
           }
         </PanelBody>
+        <PanelBody
+          initialOpen={false}
+          title={__('Apple News Publish Information', 'apple-news')}
+        >
+          <h4>{__('API Id', 'apple-news')}</h4>
+          <p>{apiId}</p>
+          <h4>{__('Created On', 'apple-news')}</h4>
+          <p>{dateCreated}</p>
+          <h4>{__('Last Updated On', 'apple-news')}</h4>
+          <p>{dateModified}</p>
+          <h4>{__('Share URL', 'apple-news')}</h4>
+          <p>{shareUrl}</p>
+          <h4>{__('Revision', 'apple-news')}</h4>
+          <p>{revision}</p>
+          <h4>{__('Publish State', 'apple-news')}</h4>
+          <p>{publishState}</p>
+        </PanelBody>
       </PluginSidebar>
     );
   }
@@ -417,7 +459,14 @@ export default compose([
       apple_news_pullquote_position: pullquotePosition,
       apple_news_sections: selectedSections,
       apple_news_coverart: coverArt,
+      apple_news_api_id: apiId,
+      apple_news_api_created_at: dateCreated,
+      apple_news_api_modified_at: dateModified,
+      apple_news_api_share_url: shareUrl,
+      apple_news_api_revision: revision,
     } = editor.getEditedPostAttribute('meta');
+
+    const postId = editor.getCurrentPostId();
 
     return {
       meta: {
@@ -429,6 +478,12 @@ export default compose([
         pullquotePosition,
         selectedSections,
         coverArt,
+        apiId,
+        dateCreated,
+        dateModified,
+        shareUrl,
+        revision,
+        postId,
       },
       post: editor.getCurrentPost(),
     };

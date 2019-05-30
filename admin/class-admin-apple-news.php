@@ -7,6 +7,7 @@
  * @package Apple_News
  */
 
+global $post;
 // Include dependencies.
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-post-sync.php';
@@ -22,6 +23,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
 // REST Includes
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-sections.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-settings.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-published-state.php';
 
 /**
  * Entry-point class for the plugin.
@@ -83,7 +85,7 @@ class Admin_Apple_News extends Apple_News {
 		// Add JSON customization support.
 		new Admin_Apple_JSON();
 
-		// if ( apple_news_block_editor_is_active() ) { // check if GB is active
+		if ( apple_news_block_editor_is_active() ) { // check if GB is active
 			$post_types = self::$settings->post_types;
 	
 			register_meta_helper( 'post', $post_types, 'apple_news_is_preview', [ 'type' => 'boolean' ] );
@@ -104,7 +106,13 @@ class Admin_Apple_News extends Apple_News {
 						'prepare_callback' => __NAMESPACE__ . '\prepare_coverart_data',
 				]
 			] );
-		// }
+			register_meta_helper( 'post', $post_types, 'apple_news_api_id' );
+			register_meta_helper( 'post', $post_types, 'apple_news_api_created_at' );
+			register_meta_helper( 'post', $post_types, 'apple_news_api_modified_at' );
+			register_meta_helper( 'post', $post_types, 'apple_news_api_share_url' );
+			register_meta_helper( 'post', $post_types, 'apple_news_api_revision' );
+			// TODO: article State
+		}
 	}
 
 	/**
