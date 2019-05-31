@@ -18,4 +18,7 @@ function _manually_load_plugin() {
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
+// Turn off Gutenberg for tests, at least for now.
+tests_add_filter( 'apple_news_block_editor_is_active', '__return_false' );
+
 require $_tests_dir . '/includes/bootstrap.php';
