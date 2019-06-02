@@ -161,7 +161,7 @@ function sanitize_meta_by_type(
  * @param mixed $meta_value Meta value to sanitize.
  * @return array Sanitized meta value.
  */
-function sanitize_selected_sections( $meta_value ) : array {
+function sanitize_selected_sections( $meta_value ) {
 	if ( ! is_string( $meta_value ) ) {
 		return $meta_value;
 	}
@@ -187,7 +187,7 @@ function prepare_sections_data( $value, $request, $args ) {
  * @param mixed $meta_value Meta value to sanitize.
  * @return array Sanitized meta value.
  */
-function sanitize_coverart_data( $meta_value ) : array {
+function sanitize_coverart_data( $meta_value ) {
 	if ( ! is_string( $meta_value ) ) {
 		return $meta_value;
 	}
