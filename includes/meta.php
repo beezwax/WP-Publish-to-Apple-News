@@ -125,7 +125,7 @@ function sanitize_meta_by_type(
 	$meta_value,
 	string $meta_key,
 	string $object_type,
-	string $object_subtype = ''
+	string $object_subtype
 ) {
 
 	// Ensure the meta key is registered.
