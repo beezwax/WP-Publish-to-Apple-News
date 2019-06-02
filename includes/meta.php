@@ -66,7 +66,7 @@ function register_meta_helper(
 	array $object_slugs,
 	string $meta_key,
 	array $args = []
-) : bool {
+) {
 
 	// Object type must be either post or term.
 	if ( ! in_array( $object_type, [ 'post', 'term' ], true ) ) {
