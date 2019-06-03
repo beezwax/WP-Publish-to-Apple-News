@@ -48,13 +48,21 @@ class Admin_Apple_Post_Sync {
 			|| 'yes' === $this->settings->get( 'api_autosync_update' )
 		) {
 			// This needs to happen after meta boxes save.
-			add_action( 'save_post', array( $this, 'do_publish' ), 99, 2 );
+			if ( apple_news_block_editor_is_active() ) { // check if GB is active
+				add_action( 'rest_after_insert_post', [ $this, 'do_publish_from_rest' ]);
+			} else {
+				add_action( 'save_post', [ $this, 'do_publish' ], 99, 2 );
+			}
 		}
 
 		// Register delete hook if needed.
 		if ( 'yes' === $this->settings->get( 'api_autosync_delete' ) ) {
 			add_action( 'before_delete_post', array( $this, 'do_delete' ) );
 		}
+	}
+
+	public function do_publish_from_rest( $post ) {
+		$this->do_publish( $post->ID, $post );
 	}
 
 	/**

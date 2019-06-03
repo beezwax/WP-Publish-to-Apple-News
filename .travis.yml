@@ -31,15 +31,17 @@ git:
 matrix:
   fast_finish: true
   include:
+    - php: 7.3
+      env: WP_VERSION=latest PHP_LINT=1 WP_PHPCS=1 WP_JS=1
     - php: 7.2
-      env: WP_VERSION=latest PHP_LINT=1 WP_PHPCS=1
+      env: WP_VERSION=latest PHP_LINT=1
     - php: 7.1
       env: WP_VERSION=latest PHP_LINT=1
     - php: 7.0
       env: WP_VERSION=latest PHP_LINT=1
     - php: 5.6
       env: WP_VERSION=latest PHP_LINT=1
-    - php: 7.2
+    - php: 7.3
       env: WP_VERSION=nightly
 
 # Use this to prepare your build for testing.
@@ -77,6 +79,14 @@ before_script:
       phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/automattic/vipwpcs
     fi
 
+  # Set up jest.
+  - |
+    if [[ "$WP_JS" == "1" ]] ; then
+      nvm install 8
+      npm i -g npm@6
+      npm install
+    fi
+
 # Run test script commands.
 # Default is specific to project language.
 # All commands must exit with code 0 on success. Anything else is considered failure.
@@ -88,6 +98,7 @@ script:
     if [[ "$PHP_LINT" == "1" ]] ; then
       find . -type "f" -iname "*.php" -not -path "./vendor/*" | xargs -L "1" php -l
     fi
+
   # WordPress Coding Standards.
   #
   # These are the same across PHP and WordPress, so we need to run them only once.
@@ -98,11 +109,29 @@ script:
     if [[ "$WP_PHPCS" == "1" ]] ; then
       phpcs
     fi
-  # Run the plugin's unit tests, both in single and multisite.
+
+  # Run the plugin's unit tests in standalone mode.
   - |
     if [[ ! -z "$WP_VERSION" ]] ; then
       phpunit
+    fi
+
+  # Run the plugin's unit tests in multisite mode.
+  - |
+    if [[ ! -z "$WP_VERSION" ]] ; then
       WP_MULTISITE=1 phpunit
+    fi
+
+  # Run Jest tests.
+  - |
+    if [[ "$WP_JS" == "1" ]] ; then
+      npm run test
+    fi
+
+  # Test the build.
+  - |
+    if [[ "$WP_JS" == "1" ]] ; then
+      npm run build
     fi
 
 # Receive notifications for build results.

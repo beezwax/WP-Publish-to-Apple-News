@@ -1,4 +1,5 @@
 <?php
+global $post;
 /**
  * Entry point for the plugin.
  *
@@ -18,6 +19,8 @@
  * Text Domain: apple-news
  * Domain Path: lang/
  */
+
+require_once plugin_dir_path( __FILE__ ) . './includes/meta.php';
 
 if ( ! defined( 'WPINC' ) ) {
 	die;
@@ -91,4 +94,57 @@ new Admin_Apple_News();
  */
 function apple_news_is_exporting() {
 	return Apple_Actions\Index\Export::is_exporting();
+}
+
+/**
+ * Check if Block Editor is active.
+ * Must only be used after plugins_loaded action is fired.
+ *
+ * @return bool
+ */
+function apple_news_block_editor_is_active() {
+	$active = true;
+
+    // Gutenberg plugin is installed and activated.
+    $gutenberg = ! ( false === has_filter( 'replace_editor', 'gutenberg_init' ) );
+
+    // Block editor since 5.0.
+    $block_editor = version_compare( $GLOBALS['wp_version'], '5.0-beta', '>' );
+
+    if ( ! $gutenberg && ! $block_editor ) {
+        $active = false;
+    }
+
+    if ( $active && apple_news_is_classic_editor_plugin_active() ) {
+        $editor_option       = get_option( 'classic-editor-replace' );
+        $block_editor_active = array( 'no-replace', 'block' );
+
+        $active = in_array( $editor_option, $block_editor_active, true );
+    }
+
+	/**
+	 * Overrides whether Apple News thinks the block editor is active or not.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param bool $active Whether Apple News thinks the block editor is active or not.
+	 */
+	return apply_filters( 'apple_news_block_editor_is_active', $active );
+}
+
+/**
+ * Check if Classic Editor plugin is active.
+ *
+ * @return bool
+ */
+function apple_news_is_classic_editor_plugin_active() {
+    if ( ! function_exists( 'is_plugin_active' ) ) {
+        include_once ABSPATH . 'wp-admin/includes/plugin.php';
+    }
+
+    if ( is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
+        return true;
+    }
+
+    return false;
 }
