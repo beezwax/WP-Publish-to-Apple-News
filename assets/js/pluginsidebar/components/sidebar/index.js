@@ -2,6 +2,7 @@
 
 import PropTypes from 'prop-types';
 import ImagePicker from '../imagePicker';
+import Notifications from '../notifications';
 
 const {
   apiFetch,
@@ -186,7 +187,10 @@ class Sidebar extends React.PureComponent {
       },
       publishState,
     } = this.state;
-    const selectedSectionsArray = JSON.parse(selectedSections || '[]');
+    const selectedSectionsRaw = JSON.parse(selectedSections);
+    const selectedSectionsArray = Array.isArray(selectedSectionsRaw)
+      ? selectedSectionsRaw
+      : [];
     const parsedCoverArt = JSON.parse(coverArt || '{}');
     const coverArtOrientation = parsedCoverArt.orientation || 'landscape';
     const coverArtSizes = [
@@ -216,20 +220,27 @@ class Sidebar extends React.PureComponent {
         name="publish-to-apple-news"
         title={__('Publish to Apple News Options', 'apple-news')}
       >
-        <div className="components-panel__body is-opened">
+        <div
+          className="components-panel__body is-opened"
+          id="apple-news-publish"
+        >
+          <Notifications />
           <h3>Sections</h3>
-          {
-            sections.map(({ id, name }) => (
-              <CheckboxControl
-                key={id}
-                label={name}
-                checked={- 1 !== selectedSectionsArray.indexOf(id)}
-                onChange={
-                  (checked) => this.updateSelectedSections(checked, id)
-                }
-              />
-            ))
-          }
+          {Array.isArray(sections) && (
+            <ul className="apple-news-sections">
+              {sections.map(({ id, name }) => (
+                <li key={id}>
+                  <CheckboxControl
+                    label={name}
+                    checked={- 1 !== selectedSectionsArray.indexOf(id)}
+                    onChange={
+                      (checked) => this.updateSelectedSections(checked, id)
+                    }
+                  />
+                </li>
+              ))}
+            </ul>
+          )}
           <p>
             <em>
               {

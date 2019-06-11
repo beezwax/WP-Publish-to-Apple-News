@@ -22,8 +22,10 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
 // REST Includes
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-sections.php';
-require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-settings.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-clear-notifications.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-notifications.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-published-state.php';
+require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-settings.php';
 
 /**
  * Entry-point class for the plugin.
@@ -85,33 +87,47 @@ class Admin_Apple_News extends Apple_News {
 		// Add JSON customization support.
 		new Admin_Apple_JSON();
 
-		if ( apple_news_block_editor_is_active() ) { // check if GB is active
+		// Enhancements if the block editor is available.
+		if ( apple_news_block_editor_is_active() ) {
 			$post_types = self::$settings->post_types;
-	
-			register_meta_helper( 'post', $post_types, 'apple_news_is_preview', [ 'type' => 'boolean' ] );
-			register_meta_helper( 'post', $post_types, 'apple_news_is_hidden', [ 'type' => 'boolean' ] );
-			register_meta_helper( 'post', $post_types, 'apple_news_is_sponsored', [ 'type' => 'boolean' ] );
-			register_meta_helper( 'post', $post_types, 'apple_news_maturity_rating' );
-			register_meta_helper( 'post', $post_types, 'apple_news_pullquote' );
-			register_meta_helper( 'post', $post_types, 'apple_news_pullquote_position' );
-			register_meta_helper( 'post', $post_types, 'apple_news_sections', [
-				'sanitize_callback' => __NAMESPACE__ . '\sanitize_selected_sections',
-				'show_in_rest' => [
-						'prepare_callback' => __NAMESPACE__ . '\prepare_sections_data',
-				]
-			] );
-			register_meta_helper( 'post', $post_types, 'apple_news_coverart', [
-				'sanitize_callback' => __NAMESPACE__ . '\sanitize_coverart_data',
-				'show_in_rest' => [
-						'prepare_callback' => __NAMESPACE__ . '\prepare_coverart_data',
-				]
-			] );
-			register_meta_helper( 'post', $post_types, 'apple_news_api_id' );
-			register_meta_helper( 'post', $post_types, 'apple_news_api_created_at' );
-			register_meta_helper( 'post', $post_types, 'apple_news_api_modified_at' );
-			register_meta_helper( 'post', $post_types, 'apple_news_api_share_url' );
-			register_meta_helper( 'post', $post_types, 'apple_news_api_revision' );
-			// TODO: article State
+
+			// Define custom postmeta fields to register.
+			$postmeta = [
+				'apple_news_api_created_at'     => [],
+				'apple_news_api_id'             => [],
+				'apple_news_api_modified_at'    => [],
+				'apple_news_api_revision'       => [],
+				'apple_news_api_share_url'      => [],
+				'apple_news_coverart'           => [
+					'sanitize_callback' => 'apple_news_sanitize_coverart_data',
+					'show_in_rest'      => [
+						'prepare_callback' => 'apple_news_json_encode',
+					],
+				],
+				'apple_news_is_hidden'          => [
+					'type' => 'boolean',
+				],
+				'apple_news_is_preview'         => [
+					'type' => 'boolean',
+				],
+				'apple_news_is_sponsored'       => [
+					'type' => 'boolean',
+				],
+				'apple_news_maturity_rating'    => [],
+				'apple_news_pullquote'          => [],
+				'apple_news_pullquote_position' => [],
+				'apple_news_sections'           => [
+					'sanitize_callback' => 'apple_news_sanitize_selected_sections',
+					'show_in_rest'      => [
+						'prepare_callback' => 'apple_news_json_encode',
+					],
+				],
+			];
+
+			// Loop over postmeta fields and register each.
+			foreach ( $postmeta as $meta_key => $options ) {
+				apple_news_register_meta_helper( 'post', $post_types, $meta_key, $options );
+			}
 		}
 	}
 
@@ -240,9 +256,13 @@ class Admin_Apple_News extends Apple_News {
 	 * @access public
 	 */
 	public static function show_error( $message ) {
-		echo '<div class="apple-news-notice apple-news-notice-error"><p>'
-			. esc_html( $message )
-			. '</p></div>';
+		if ( apple_news_block_editor_is_active_for_post() ) {
+			Admin_Apple_Notice::error( $message );
+		} else {
+			echo '<div class="apple-news-notice apple-news-notice-error" role="alert"><p>'
+				. esc_html( $message )
+				. '</p></div>';
+		}
 	}
 
 	/**
