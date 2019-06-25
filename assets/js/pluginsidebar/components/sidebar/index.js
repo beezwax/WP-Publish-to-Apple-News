@@ -191,7 +191,7 @@ class Sidebar extends React.PureComponent {
     const selectedSectionsArray = Array.isArray(selectedSectionsRaw)
       ? selectedSectionsRaw
       : [];
-    const parsedCoverArt = JSON.parse(coverArt || '{}');
+    const parsedCoverArt = JSON.parse(coverArt) || '{}';
     const coverArtOrientation = parsedCoverArt.orientation || 'landscape';
     const coverArtSizes = [
       {
