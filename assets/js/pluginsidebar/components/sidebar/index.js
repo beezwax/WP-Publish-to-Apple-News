@@ -143,7 +143,7 @@ class Sidebar extends React.PureComponent {
       },
     } = this.props;
     // Need to default to [], else JSON parse fails
-    const selectedSectionsArray = JSON.parse(selectedSections || '[]');
+    const selectedSectionsArray = JSON.parse(selectedSections) || '[]';
 
     onUpdate(
       'apple_news_sections',
