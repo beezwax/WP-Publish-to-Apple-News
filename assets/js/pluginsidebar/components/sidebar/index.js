@@ -121,6 +121,9 @@ class Sidebar extends React.PureComponent {
       .catch((error) => console.error(error)); /* eslint-disable-line no-console */
   }
 
+  /**
+   * Fetch published state.
+   */
   fetchPublishState() {
     const {
       post,
@@ -132,6 +135,12 @@ class Sidebar extends React.PureComponent {
       .catch((error) => console.error(error)); /* eslint-disable-line no-console */
   }
 
+  /**
+   * Select Cover Art Image
+   *
+   * @param   {string}  metaKey  metakey name
+   * @param   {string}  value    meta key value
+   */
   updateSelectCoverArtImage(metaKey, value) {
     const {
       onUpdate,
@@ -157,6 +166,14 @@ class Sidebar extends React.PureComponent {
     );
   }
 
+  /**
+   * Update which sections are selected.
+   *
+   * @param   {boolean} checked  is selected
+   * @param   {string}  name     name of item selected
+   *
+   * @return void.
+   */
   updateSelectedSections(checked, name) {
     const {
       onUpdate,
@@ -165,14 +182,19 @@ class Sidebar extends React.PureComponent {
       },
     } = this.props;
     // Need to default to [], else JSON parse fails
-    const selectedSectionsArray = JSON.parse(selectedSections) || '[]';
+    const selectedSectionsArray = JSON.parse(selectedSections) || null;
+
+    const arrayFilter = selectedSectionsArray.filter(
+      (section) => section !== name
+    );
+    const selectedArrayFilter = 0 < arrayFilter.length ? arrayFilter : null;
 
     onUpdate(
       'apple_news_sections',
       JSON.stringify(
         checked
           ? [...selectedSectionsArray, name]
-          : selectedSectionsArray.filter((section) => section !== name)
+          : selectedArrayFilter
       )
     );
   }
