@@ -192,7 +192,7 @@ class Sidebar extends React.PureComponent {
     const selectedSectionsArray = Array.isArray(selectedSectionsRaw)
       ? selectedSectionsRaw
       : [];
-    const parsedCoverArt = JSON.parse(coverArt) || '{}';
+    const parsedCoverArt = '' !== coverArt ? JSON.parse(coverArt) : {};
     const coverArtOrientation = parsedCoverArt.orientation || 'landscape';
     const coverArtSizes = [
       {
@@ -229,7 +229,7 @@ class Sidebar extends React.PureComponent {
           <h3>Sections</h3>
           <CheckboxControl
             label={__('Assign sections by category', 'apple-news')}
-            checked
+            checked={'' === sections || ! sections.length}
           />
           <hr />
           {! someKey && [
