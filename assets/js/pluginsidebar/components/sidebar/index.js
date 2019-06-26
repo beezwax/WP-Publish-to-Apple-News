@@ -1,5 +1,7 @@
 /* global React, wp */
 
+/* eslint-disable react/no-unused-state */
+
 import PropTypes from 'prop-types';
 import ImagePicker from '../imagePicker';
 import Notifications from '../notifications';
@@ -62,6 +64,7 @@ class Sidebar extends React.PureComponent {
     this.state = {
       autoAssignCategories: false,
       sections: [],
+      selectedSectionsPrev: [],
       settings: {
         enableCoverArt: false,
         adminUrl: '',
@@ -187,6 +190,7 @@ class Sidebar extends React.PureComponent {
         enableCoverArt,
         adminUrl,
       },
+      selectedSectionsPrev,
       publishState,
     } = this.state;
     const selectedSectionsRaw = '' !== selectedSections
@@ -238,12 +242,23 @@ class Sidebar extends React.PureComponent {
                 this.setState({
                   autoAssignCategories: checked,
                 });
-                onUpdate(
-                  'apple_news_sections',
-                  JSON.stringify(
-                    [],
-                  )
-                );
+                if (checked) {
+                  this.setState({
+                    selectedSectionsPrev: selectedSections,
+                  });
+                  onUpdate(
+                    'apple_news_sections',
+                    null
+                  );
+                } else {
+                  onUpdate(
+                    'apple_news_sections',
+                    selectedSectionsPrev
+                  );
+                  this.setState({
+                    selectedSectionsPrev: [],
+                  });
+                }
               }
             }
           />
