@@ -189,7 +189,9 @@ class Sidebar extends React.PureComponent {
       },
       publishState,
     } = this.state;
-    const selectedSectionsRaw = JSON.parse(selectedSections);
+    const selectedSectionsRaw = '' !== selectedSections
+      ? JSON.parse(selectedSections)
+      : '';
     const selectedSectionsArray = Array.isArray(selectedSectionsRaw)
       ? selectedSectionsRaw
       : [];
