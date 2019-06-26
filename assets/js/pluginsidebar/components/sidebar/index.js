@@ -64,7 +64,7 @@ class Sidebar extends React.PureComponent {
     this.state = {
       autoAssignCategories: false,
       sections: [],
-      selectedSectionsPrev: [],
+      selectedSectionsPrev: JSON.stringify('[]'),
       settings: {
         enableCoverArt: false,
         adminUrl: '',
@@ -79,6 +79,24 @@ class Sidebar extends React.PureComponent {
     this.fetchSections();
     this.fetchSettings();
     this.fetchPublishState();
+    this.setAutoCategoryState();
+  }
+
+  /**
+   * Set initial checkbox state for category auto.
+   *
+   * @return  {boolean}  state for autoAssignCategories
+   */
+  setAutoCategoryState() {
+    const {
+      meta: {
+        selectedSections,
+      },
+    } = this.props;
+
+    this.setState({
+      autoAssignCategories: 'null' === selectedSections,
+    });
   }
 
   /**
@@ -193,7 +211,7 @@ class Sidebar extends React.PureComponent {
       selectedSectionsPrev,
       publishState,
     } = this.state;
-    const selectedSectionsRaw = '' !== selectedSections
+    const selectedSectionsRaw = 'null' !== selectedSections
       ? JSON.parse(selectedSections)
       : '';
     const selectedSectionsArray = Array.isArray(selectedSectionsRaw)
@@ -256,7 +274,7 @@ class Sidebar extends React.PureComponent {
                     selectedSectionsPrev
                   );
                   this.setState({
-                    selectedSectionsPrev: [],
+                    selectedSectionsPrev: '',
                   });
                 }
               }
