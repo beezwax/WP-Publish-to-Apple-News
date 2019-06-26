@@ -60,6 +60,7 @@ class Sidebar extends React.PureComponent {
     super(props);
 
     this.state = {
+      autoAssignCategories: false,
       sections: [],
       settings: {
         enableCoverArt: false,
@@ -174,13 +175,13 @@ class Sidebar extends React.PureComponent {
         dateCreated = '',
         dateModified = '',
         shareUrl = '',
-        someKey = false,
         revision = '',
       },
       onUpdate,
     } = this.props;
 
     const {
+      autoAssignCategories,
       sections,
       settings: {
         enableCoverArt,
@@ -229,10 +230,23 @@ class Sidebar extends React.PureComponent {
           <h3>Sections</h3>
           <CheckboxControl
             label={__('Assign sections by category', 'apple-news')}
-            checked={'' === sections || ! sections.length}
+            checked={autoAssignCategories}
+            onChange={
+              (checked) => {
+                this.setState({
+                  autoAssignCategories: checked,
+                });
+                onUpdate(
+                  'apple_news_sections',
+                  JSON.stringify(
+                    [],
+                  )
+                );
+              }
+            }
           />
           <hr />
-          {! someKey && [
+          {! autoAssignCategories && [
             <h4>Manual Section Selection</h4>,
             Array.isArray(sections) && (
               <ul className="apple-news-sections">
