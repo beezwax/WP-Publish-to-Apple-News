@@ -64,7 +64,7 @@ class Sidebar extends React.PureComponent {
     this.state = {
       autoAssignCategories: false,
       sections: [],
-      selectedSectionsPrev: JSON.stringify('[]'),
+      selectedSectionsPrev: null,
       settings: {
         enableCoverArt: false,
         adminUrl: '',
@@ -182,20 +182,23 @@ class Sidebar extends React.PureComponent {
       },
     } = this.props;
     // Need to default to [], else JSON parse fails
-    const selectedSectionsArray = JSON.parse(selectedSections) || null;
+    const selectedSectionsArray = JSON.parse(selectedSections) || [];
+
+    const selectedArrayDefault = Array.isArray(selectedSectionsArray)
+      ? JSON.stringify([...selectedSectionsArray, name]) : null;
 
     const arrayFilter = selectedSectionsArray.filter(
       (section) => section !== name
     );
-    const selectedArrayFilter = 0 < arrayFilter.length ? arrayFilter : null;
+
+    const selectedArrayFilter = 0 < arrayFilter.length
+      ? JSON.stringify(arrayFilter) : null;
 
     onUpdate(
       'apple_news_sections',
-      JSON.stringify(
-        checked
-          ? [...selectedSectionsArray, name]
-          : selectedArrayFilter
-      )
+      checked
+        ? selectedArrayDefault
+        : selectedArrayFilter
     );
   }
 
@@ -284,7 +287,7 @@ class Sidebar extends React.PureComponent {
                 });
                 if (checked) {
                   this.setState({
-                    selectedSectionsPrev: selectedSections,
+                    selectedSectionsPrev: selectedSections || null,
                   });
                   onUpdate(
                     'apple_news_sections',
@@ -296,7 +299,7 @@ class Sidebar extends React.PureComponent {
                     selectedSectionsPrev
                   );
                   this.setState({
-                    selectedSectionsPrev: '',
+                    selectedSectionsPrev: null,
                   });
                 }
               }
