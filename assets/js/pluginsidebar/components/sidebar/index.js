@@ -230,6 +230,7 @@ class Sidebar extends React.PureComponent {
       autoAssignCategories,
       sections,
       settings: {
+        automaticAssignment,
         enableCoverArt,
         adminUrl,
       },
@@ -277,34 +278,36 @@ class Sidebar extends React.PureComponent {
         >
           <Notifications />
           <h3>Sections</h3>
-          <CheckboxControl
-            label={__('Assign sections by category', 'apple-news')}
-            checked={autoAssignCategories}
-            onChange={
-              (checked) => {
-                this.setState({
-                  autoAssignCategories: checked,
-                });
-                if (checked) {
+          {automaticAssignment && (
+            <CheckboxControl
+              label={__('Assign sections by category', 'apple-news')}
+              checked={autoAssignCategories}
+              onChange={
+                (checked) => {
                   this.setState({
-                    selectedSectionsPrev: selectedSections || null,
+                    autoAssignCategories: checked,
                   });
-                  onUpdate(
-                    'apple_news_sections',
-                    null
-                  );
-                } else {
-                  onUpdate(
-                    'apple_news_sections',
-                    selectedSectionsPrev
-                  );
-                  this.setState({
-                    selectedSectionsPrev: null,
-                  });
+                  if (checked) {
+                    this.setState({
+                      selectedSectionsPrev: selectedSections || null,
+                    });
+                    onUpdate(
+                      'apple_news_sections',
+                      null
+                    );
+                  } else {
+                    onUpdate(
+                      'apple_news_sections',
+                      selectedSectionsPrev
+                    );
+                    this.setState({
+                      selectedSectionsPrev: null,
+                    });
+                  }
                 }
               }
-            }
-          />
+            />
+          )}
           <hr />
           {! autoAssignCategories && [
             <h4>Manual Section Selection</h4>,
