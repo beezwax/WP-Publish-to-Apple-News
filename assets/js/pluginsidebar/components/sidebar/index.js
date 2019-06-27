@@ -278,7 +278,7 @@ class Sidebar extends React.PureComponent {
         >
           <Notifications />
           <h3>Sections</h3>
-          {automaticAssignment && (
+          {automaticAssignment && [
             <CheckboxControl
               label={__('Assign sections by category', 'apple-news')}
               checked={autoAssignCategories}
@@ -306,10 +306,10 @@ class Sidebar extends React.PureComponent {
                   }
                 }
               }
-            />
-          )}
-          <hr />
-          {! autoAssignCategories && [
+            />,
+            <hr />,
+          ]}
+          {(! autoAssignCategories || ! automaticAssignment) && [
             <h4>Manual Section Selection</h4>,
             Array.isArray(sections) && (
               <ul className="apple-news-sections">
