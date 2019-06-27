@@ -18,6 +18,7 @@ function get_settings_response( $data ) {
 		// Get admin settings
 		$admin_settings = new \Admin_Apple_Settings();
 		$settings = $admin_settings->fetch_settings();
+		$response['automaticAssignment'] = ! empty( get_option( 'apple_news_section_taxonomy_mappings' ) );
 		$response['enableCoverArt'] = 'no' !== $settings->enable_cover_art;
 		$response['adminUrl'] = esc_url( admin_url( 'admin.php?page=apple-news-options' ) );
 	}

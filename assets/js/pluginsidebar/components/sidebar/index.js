@@ -1,5 +1,7 @@
 /* global React, wp */
 
+/* eslint-disable react/no-unused-state */
+
 import PropTypes from 'prop-types';
 import ImagePicker from '../imagePicker';
 import Notifications from '../notifications';
@@ -60,7 +62,9 @@ class Sidebar extends React.PureComponent {
     super(props);
 
     this.state = {
+      autoAssignCategories: false,
       sections: [],
+      selectedSectionsPrev: null,
       settings: {
         enableCoverArt: false,
         adminUrl: '',
@@ -75,6 +79,24 @@ class Sidebar extends React.PureComponent {
     this.fetchSections();
     this.fetchSettings();
     this.fetchPublishState();
+    this.setAutoCategoryState();
+  }
+
+  /**
+   * Set initial checkbox state for category auto.
+   *
+   * @return  {boolean}  state for autoAssignCategories
+   */
+  setAutoCategoryState() {
+    const {
+      meta: {
+        selectedSections,
+      },
+    } = this.props;
+
+    this.setState({
+      autoAssignCategories: 'null' === selectedSections,
+    });
   }
 
   /**
@@ -99,6 +121,9 @@ class Sidebar extends React.PureComponent {
       .catch((error) => console.error(error)); /* eslint-disable-line no-console */
   }
 
+  /**
+   * Fetch published state.
+   */
   fetchPublishState() {
     const {
       post,
@@ -110,6 +135,12 @@ class Sidebar extends React.PureComponent {
       .catch((error) => console.error(error)); /* eslint-disable-line no-console */
   }
 
+  /**
+   * Select Cover Art Image
+   *
+   * @param   {string}  metaKey  metakey name
+   * @param   {string}  value    meta key value
+   */
   updateSelectCoverArtImage(metaKey, value) {
     const {
       onUpdate,
@@ -135,6 +166,14 @@ class Sidebar extends React.PureComponent {
     );
   }
 
+  /**
+   * Update which sections are selected.
+   *
+   * @param   {boolean} checked  is selected
+   * @param   {string}  name     name of item selected
+   *
+   * @return void.
+   */
   updateSelectedSections(checked, name) {
     const {
       onUpdate,
@@ -143,15 +182,23 @@ class Sidebar extends React.PureComponent {
       },
     } = this.props;
     // Need to default to [], else JSON parse fails
-    const selectedSectionsArray = JSON.parse(selectedSections || '[]');
+    const selectedSectionsArray = JSON.parse(selectedSections) || [];
+
+    const selectedArrayDefault = Array.isArray(selectedSectionsArray)
+      ? JSON.stringify([...selectedSectionsArray, name]) : null;
+
+    const arrayFilter = selectedSectionsArray.filter(
+      (section) => section !== name
+    );
+
+    const selectedArrayFilter = 0 < arrayFilter.length
+      ? JSON.stringify(arrayFilter) : null;
 
     onUpdate(
       'apple_news_sections',
-      JSON.stringify(
-        checked
-          ? [...selectedSectionsArray, name]
-          : selectedSectionsArray.filter((section) => section !== name)
-      )
+      checked
+        ? selectedArrayDefault
+        : selectedArrayFilter
     );
   }
 
@@ -180,18 +227,24 @@ class Sidebar extends React.PureComponent {
     } = this.props;
 
     const {
+      autoAssignCategories,
       sections,
       settings: {
+        automaticAssignment,
         enableCoverArt,
         adminUrl,
       },
+      selectedSectionsPrev,
       publishState,
     } = this.state;
-    const selectedSectionsRaw = JSON.parse(selectedSections);
+    const selectedSectionsRaw = 'null' !== selectedSections
+      ? JSON.parse(selectedSections)
+      : '';
     const selectedSectionsArray = Array.isArray(selectedSectionsRaw)
       ? selectedSectionsRaw
       : [];
-    const parsedCoverArt = JSON.parse(coverArt || '{}');
+    const parsedCoverArt = '' !== coverArt && 'null' !== coverArt
+      ? JSON.parse(coverArt) : {};
     const coverArtOrientation = parsedCoverArt.orientation || 'landscape';
     const coverArtSizes = [
       {
@@ -226,21 +279,55 @@ class Sidebar extends React.PureComponent {
         >
           <Notifications />
           <h3>Sections</h3>
-          {Array.isArray(sections) && (
-            <ul className="apple-news-sections">
-              {sections.map(({ id, name }) => (
-                <li key={id}>
-                  <CheckboxControl
-                    label={name}
-                    checked={- 1 !== selectedSectionsArray.indexOf(id)}
-                    onChange={
-                      (checked) => this.updateSelectedSections(checked, id)
-                    }
-                  />
-                </li>
-              ))}
-            </ul>
-          )}
+          {automaticAssignment && [
+            <CheckboxControl
+              label={__('Assign sections by category', 'apple-news')}
+              checked={autoAssignCategories}
+              onChange={
+                (checked) => {
+                  this.setState({
+                    autoAssignCategories: checked,
+                  });
+                  if (checked) {
+                    this.setState({
+                      selectedSectionsPrev: selectedSections || null,
+                    });
+                    onUpdate(
+                      'apple_news_sections',
+                      null
+                    );
+                  } else {
+                    onUpdate(
+                      'apple_news_sections',
+                      selectedSectionsPrev
+                    );
+                    this.setState({
+                      selectedSectionsPrev: null,
+                    });
+                  }
+                }
+              }
+            />,
+            <hr />,
+          ]}
+          {(! autoAssignCategories || ! automaticAssignment) && [
+            <h4>Manual Section Selection</h4>,
+            Array.isArray(sections) && (
+              <ul className="apple-news-sections">
+                {sections.map(({ id, name }) => (
+                  <li key={id}>
+                    <CheckboxControl
+                      label={name}
+                      checked={- 1 !== selectedSectionsArray.indexOf(id)}
+                      onChange={
+                        (checked) => this.updateSelectedSections(checked, id)
+                      }
+                    />
+                  </li>
+                ))}
+              </ul>
+            ),
+          ]}
           <p>
             <em>
               {
