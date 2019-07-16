@@ -22,13 +22,14 @@ class Flickr extends Component {
 	 * Look for node matches for this component.
 	 *
 	 * @param \DOMElement $node The node to examine for matches.
+	 *
 	 * @access public
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
 
-    // Match the src attribute against a flickr regex
-    if ( 1 === $node->nodeType && preg_match( '#https?:\/\/.*?flickr.*?jpg#', $node->getAttribute( 'src' ) ) ) {
+		// Match the src attribute against a flickr regex
+		if ( 1 === $node->nodeType && false !== strpos( $node->getAttribute('class'), 'is-provider-flickr' ) ) {
 			return $node;
 		}
 
@@ -45,8 +46,8 @@ class Flickr extends Component {
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role' => 'photo',
-				'URL'  => '#url#',
+				'role'    => 'photo',
+				'URL'     => '#url#',
 				'caption' => '#caption#'
 			)
 		);
@@ -56,13 +57,14 @@ class Flickr extends Component {
 	 * Build the component.
 	 *
 	 * @param string $html The HTML to parse into text for processing.
+	 *
 	 * @access protected
 	 */
 	protected function build( $html ) {
 
-    if ( preg_match( '#https?:\/\/.*?flickr.*?jpg#', $html, $matches ) ) {
-      $url = $matches[0];
-    }
+		if ( preg_match( '#https?://live.staticflickr.com/[^"]+#', $html, $matches ) ) {
+			$url = $matches[0];
+		}
 
 		// Ensure we got a URL.
 		if ( empty( $url ) ) {
