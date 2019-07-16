@@ -42,13 +42,21 @@ class Flickr extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
+		// $this->register_spec(
+		// 	'flickr-json',
+		// 	__( 'Flickr JSON', 'apple-news' ),
+		// 	array(
+		// 		'role'    => 'photo',
+		// 		'URL'     => '#url#',
+		// 		'caption' => '#caption#',
+		// 	)
+		// );
 		$this->register_spec(
-			'json',
-			__( 'JSON', 'apple-news' ),
+			'flickr-json',
+			__( 'Flickr JSON', 'apple-news' ),
 			array(
-				'role'    => 'photo',
-				'URL'     => '#url#',
-				'caption' => '#caption#'
+				'role' => 'container',
+				'components' => '#components#',
 			)
 		);
 	}
@@ -71,10 +79,52 @@ class Flickr extends Component {
 			return;
 		}
 
+		// Build the caption
+		$caption = '';
+		$hide_article_caption = false;
+		if ( preg_match( '#figcaption>(.*?)</fig#', $html, $matches ) ) {
+			$caption = $matches[1];
+		} else if ( preg_match( '#img.*?alt="(.*?)"#', $html, $matches ) ) {
+			$caption = $matches[1];
+			$hide_article_caption = true;
+		}
+
+		// Check if embed is for an album
+		$is_album_embed = false;
+		if ( preg_match( '#(flickr-embed).*?href="(.*?)".*?title="(.*?)"#', $html, $matches ) ) {
+			$is_album_embed = ! empty( $matches[1] );
+			$album_url = $matches[2];
+			$album_title = $matches[3];
+		}
+
+		if ( $is_album_embed ) {
+			if ( empty( $caption ) || $hide_article_caption ) {
+					$caption = '';
+			} else {
+					$caption .= '<br>';
+			}
+			$caption .= '<a href="' . $album_url . '">' . $album_title . '</a>';
+		}
+
 		$this->register_json(
-			'json',
+			'flickr-json',
 			array(
-				'#url#' => esc_url_raw( $url ),
+				'#components#' => array(
+					[
+						'role' => 'photo',
+						'URL' => $url,
+						'caption' => [
+							'text' => $caption,
+							'format' => 'html'
+						]
+					],
+					[
+						'role' => 'caption',
+						'text' => $caption,
+						'format' => 'html',
+						'hidden' => ! $is_album_embed && ( $hide_article_caption || empty( $caption ) )
+					]
+				)
 			)
 		);
 	}
