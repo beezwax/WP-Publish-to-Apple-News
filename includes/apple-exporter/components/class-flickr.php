@@ -42,15 +42,6 @@ class Flickr extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
-		// $this->register_spec(
-		// 	'flickr-json',
-		// 	__( 'Flickr JSON', 'apple-news' ),
-		// 	array(
-		// 		'role'    => 'photo',
-		// 		'URL'     => '#url#',
-		// 		'caption' => '#caption#',
-		// 	)
-		// );
 		$this->register_spec(
 			'flickr-json',
 			__( 'Flickr JSON', 'apple-news' ),
