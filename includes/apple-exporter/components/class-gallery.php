@@ -33,7 +33,7 @@ class Gallery extends Component {
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
-		return ( self::node_has_class( $node, 'gallery' ) ) ? $node : null;
+		return ( self::node_has_class( $node, 'gallery' ) || self::node_has_class( $node, 'wp-block-gallery' ) ) ? $node : null;
 	}
 
 	/**

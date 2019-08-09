@@ -173,23 +173,23 @@ class Quote_Test extends Component_TestCase {
 		// Validate body settings in generated JSON.
 		$this->assertEquals(
 			'AmericanTypewriter',
-			$json['componentTextStyles']['default-blockquote']['fontName']
+			$json['componentTextStyles']['default-blockquote-left']['fontName']
 		);
 		$this->assertEquals(
 			20,
-			$json['componentTextStyles']['default-blockquote']['fontSize']
+			$json['componentTextStyles']['default-blockquote-left']['fontSize']
 		);
 		$this->assertEquals(
 			'#abcdef',
-			$json['componentTextStyles']['default-blockquote']['textColor']
+			$json['componentTextStyles']['default-blockquote-left']['textColor']
 		);
 		$this->assertEquals(
 			28,
-			$json['componentTextStyles']['default-blockquote']['lineHeight']
+			$json['componentTextStyles']['default-blockquote-left']['lineHeight']
 		);
 		$this->assertEquals(
 			0.5,
-			$json['componentTextStyles']['default-blockquote']['tracking']
+			$json['componentTextStyles']['default-blockquote-left']['tracking']
 		);
 		$this->assertEquals(
 			'#fedcba',
@@ -295,7 +295,139 @@ class Quote_Test extends Component_TestCase {
 		$this->assertEquals( 'quote', $result['role'] );
 		$this->assertEquals( '<p>my quote</p>', $result['text'] );
 		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-blockquote', $result['textStyle'] );
+		$this->assertEquals( 'default-blockquote-left', $result['textStyle'] );
+		$this->assertEquals( 'blockquote-layout', $result['layout'] );
+	}
+
+	/**
+	 * Tests the transformation process with text alignment checking.
+	 *
+	 * @access public
+	 */
+	public function testTransformBlockquoteAlignment() {
+
+		// Setup.
+		$componentLeft = new Quote(
+			'<blockquote style="text-align:left" class="wp-block-quote"><p>Quote Text</p></blockquote>',
+			null,
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
+
+		$componentCenter = new Quote(
+			'<blockquote style="text-align:center" class="wp-block-quote"><p>Quote Text</p></blockquote>',
+			null,
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
+
+		$componentRight = new Quote(
+			'<blockquote style="text-align:right" class="wp-block-quote"><p>Quote Text</p></blockquote>',
+			null,
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
+
+		$result_wrapper = $componentLeft->to_array();
+		$result = $result_wrapper['components'][0];
+
+		// Test.
+		$this->assertEquals( 'container', $result_wrapper['role'] );
+		$this->assertEquals( 'quote', $result['role'] );
+		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
+		$this->assertEquals( 'html', $result['format'] );
+		$this->assertEquals( 'default-blockquote-left', $result['textStyle'] );
+		$this->assertEquals( 'blockquote-layout', $result['layout'] );
+
+		$result_wrapper = $componentCenter->to_array();
+		$result = $result_wrapper['components'][0];
+
+		// Test.
+		$this->assertEquals( 'container', $result_wrapper['role'] );
+		$this->assertEquals( 'quote', $result['role'] );
+		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
+		$this->assertEquals( 'html', $result['format'] );
+		$this->assertEquals( 'default-blockquote-center', $result['textStyle'] );
+		$this->assertEquals( 'blockquote-layout', $result['layout'] );
+
+		$result_wrapper = $componentRight->to_array();
+		$result = $result_wrapper['components'][0];
+
+		// Test.
+		$this->assertEquals( 'container', $result_wrapper['role'] );
+		$this->assertEquals( 'quote', $result['role'] );
+		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
+		$this->assertEquals( 'html', $result['format'] );
+		$this->assertEquals( 'default-blockquote-right', $result['textStyle'] );
+		$this->assertEquals( 'blockquote-layout', $result['layout'] );
+	}
+
+	/**
+	 * Tests the transformation process when using a gutenberg pullquote with text alignment checking.
+	 *
+	 * @access public
+	 */
+	public function testTransformGutenbergBlockquoteAlignment() {
+
+		// Setup.
+		$componentLeft = new Quote(
+			'<figure class="wp-block-pullquote alignleft"><blockquote><p>Quote Text</p></blockquote></figure>',
+			null,
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
+
+		$componentCenter = new Quote(
+			'<figure class="wp-block-pullquote alignwide"><blockquote><p>Quote Text</p></blockquote></figure>',
+			null,
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
+
+		$componentRight = new Quote(
+			'<figure class="wp-block-pullquote alignright"><blockquote><p>Quote Text</p></blockquote></figure>',
+			null,
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
+
+		$result_wrapper = $componentLeft->to_array();
+		$result = $result_wrapper['components'][0];
+
+		// Test.
+		$this->assertEquals( 'container', $result_wrapper['role'] );
+		$this->assertEquals( 'quote', $result['role'] );
+		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
+		$this->assertEquals( 'html', $result['format'] );
+		$this->assertEquals( 'default-blockquote-left', $result['textStyle'] );
+		$this->assertEquals( 'blockquote-layout', $result['layout'] );
+
+		$result_wrapper = $componentCenter->to_array();
+		$result = $result_wrapper['components'][0];
+
+		// Test.
+		$this->assertEquals( 'container', $result_wrapper['role'] );
+		$this->assertEquals( 'quote', $result['role'] );
+		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
+		$this->assertEquals( 'html', $result['format'] );
+		$this->assertEquals( 'default-blockquote-center', $result['textStyle'] );
+		$this->assertEquals( 'blockquote-layout', $result['layout'] );
+
+		$result_wrapper = $componentRight->to_array();
+		$result = $result_wrapper['components'][0];
+
+		// Test.
+		$this->assertEquals( 'container', $result_wrapper['role'] );
+		$this->assertEquals( 'quote', $result['role'] );
+		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
+		$this->assertEquals( 'html', $result['format'] );
+		$this->assertEquals( 'default-blockquote-right', $result['textStyle'] );
 		$this->assertEquals( 'blockquote-layout', $result['layout'] );
 	}
 

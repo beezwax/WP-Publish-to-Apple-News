@@ -160,6 +160,13 @@ abstract class Component {
 	public $specs;
 
 	/**
+	 * Variable to store the parsed text alignment
+	 *
+	 * @var string
+	 */
+	protected $text_alignment;
+
+	/**
 	 * Allowed HTML tags for components that support it.
 	 *
 	 * @since 1.2.7
@@ -657,10 +664,11 @@ abstract class Component {
 	 * @access protected
 	 * @return string The value for textAlignment.
 	 */
-	protected function find_text_alignment() {
+	protected function find_text_alignment( $text = '' ) {
+		preg_match( '#text-align.*?(left|center|right)#si', $text, $matches );
 
 		// TODO: In a future release, update this logic to respect "align" values.
-		return 'left';
+		return $matches[1] ?? 'left';
 	}
 
 	/**
@@ -765,12 +773,25 @@ abstract class Component {
 	protected static function url_from_src( $html ) {
 
 		// Try to find src values in the provided HTML.
-		if ( ! preg_match_all( '/src=[\'"]([^\'"]+)[\'"]/im', $html, $matches ) ) {
+		if ( ! preg_match_all( '/src=[\'"]([^\'"]+)[\'"]|background-image:url\((.*?)\)/im', $html, $matches ) ) {
 			return '';
 		}
 
 		// Loop through matches, returning the first valid URL found.
+		// Matching on src=
 		foreach ( $matches[1] as $url ) {
+
+			// Run the URL through the formatter.
+			$url = Exporter_Content::format_src_url( $url );
+
+			// If the URL passes validation, return it.
+			if ( ! empty( $url ) ) {
+				return $url;
+			}
+		}
+
+		// Matching on background-image:url
+		foreach ( $matches[2] as $url ) {
 
 			// Run the URL through the formatter.
 			$url = Exporter_Content::format_src_url( $url );
