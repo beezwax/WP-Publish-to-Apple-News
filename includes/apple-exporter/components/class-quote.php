@@ -236,7 +236,7 @@ class Quote extends Component {
 		preg_match( $string_match, $html, $matches );
 		$this->text_alignment = 3 === count( $matches ) && $matches[1] ? $matches[1] : 'left';
 		$this->text_alignment = 'wide' === $this->text_alignment ? 'center' : $this->text_alignment;
-		$text = $matches[2] ?? $matches[1];
+		$text = isset( $matches[2] ) ? $matches[2] : $matches[1];
 
 		// If there is no text for this element, bail.
 		$check = trim( $text );

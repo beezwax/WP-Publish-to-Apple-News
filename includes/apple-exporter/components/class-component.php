@@ -664,11 +664,9 @@ abstract class Component {
 	 * @access protected
 	 * @return string The value for textAlignment.
 	 */
-	protected function find_text_alignment( $text = '' ) {
-		preg_match( '#text-align.*?(left|center|right)#si', $text, $matches );
-
+	protected function find_text_alignment() {
 		// TODO: In a future release, update this logic to respect "align" values.
-		return $matches[1] ?? 'left';
+		return 'left';
 	}
 
 	/**
