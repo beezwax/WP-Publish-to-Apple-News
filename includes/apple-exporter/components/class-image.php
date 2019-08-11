@@ -25,9 +25,10 @@ class Image extends Component {
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
+
 		// Is this an image node?
 		if (
-			( 'img' === $node->nodeName || ( 'figure' === $node->nodeName && Component::is_embed_figure( $node ) ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+			( self::node_has_class( $node, 'wp-block-cover' ) || 'img' === $node->nodeName || ( 'figure' === $node->nodeName && Component::is_embed_figure( $node ) ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 			&& self::remote_file_exists( $node )
 		) {
 			return $node;
@@ -66,7 +67,8 @@ class Image extends Component {
 					),
 					array(
 						'role'      => 'caption',
-						'text'      => '#caption#',
+						'text'      => '#caption_text#',
+						'format'    => 'html',
 						'textStyle' => array(
 							'textAlignment' => '#text_alignment#',
 							'fontName'      => '#caption_font#',
@@ -133,6 +135,8 @@ class Image extends Component {
 	 * @access protected
 	 */
 	protected function build( $html ) {
+		// Is this is Gutenberg Cover Bloock?
+		$is_cover_block = preg_match( '#class="wp-block-cover#', $html );
 
 		// Extract the URL from the text.
 		$url = self::url_from_src( $html );
@@ -170,10 +174,15 @@ class Image extends Component {
 		}
 
 		// Check for caption.
-		if ( preg_match( '#<figcaption.*?>(.*?)</figcaption>#m', $html, $matches ) ) {
+		$caption_regex = $is_cover_block ? '#<div.*?>?\n(.*)#m' : '#<figcaption.*?>(.*?)</figcaption>#m';
+		if ( preg_match( $caption_regex, $html, $matches ) ) {
 			$caption             = trim( $matches[1] );
-			$values['#caption#'] = $caption;
-			$values              = $this->group_component( $caption, $values );
+			$values['#caption#'] = ! $is_cover_block ? $caption : array(
+				'text'      => $caption,
+				'format'    => 'html',
+			);
+			$values['#caption_text#'] = $caption;
+			$values              = $this->group_component( $values['#caption#'], $values );
 			$spec_name           = 'json-with-caption';
 		} else {
 			$spec_name = 'json-without-caption';
