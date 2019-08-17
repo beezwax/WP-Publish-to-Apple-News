@@ -62,9 +62,26 @@ class Facebook extends Component {
 	 */
 	public static function node_matches( $node ) {
 
+		// Allow analysis of the full HTML.
+		$html = $node->ownerDocument->saveXML( $node ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+
 		// Check for element with just facebook url.
 		if ( false !== self::get_facebook_url( $node->nodeValue ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 			return $node;
+		}
+
+		// Handling for a Gutenberg Facebook embed.
+		if (
+			'figure' === $node->nodeName // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+			&& self::node_has_class( $node, 'wp-block-embed-facebook' )
+		) {
+
+			// Extract facebook url from child element's data-href property.
+			if ( preg_match( '/data-href=[\'"]([^\'"]+)/', $html, $matches ) ) {
+				if ( ! empty( $matches[1] ) && false !== self::get_facebook_url( $matches[1] ) ) {
+					return $node;
+				}
+			}
 		}
 
 		// Handling for a rendered facebook embed.
@@ -86,7 +103,6 @@ class Facebook extends Component {
 		}
 
 		// Handling for a rendered WordPress.com Facebook embed.
-		$html = $node->ownerDocument->saveXML( $node ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 		if ( preg_match( '/<(?:fb:)?post\s.*?href="([^"]+)"/i', $html, $matches ) ) {
 
 			// Ensure we have a valid Facebook embed URL.
