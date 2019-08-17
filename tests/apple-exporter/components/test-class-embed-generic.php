@@ -375,7 +375,184 @@ HTML
 				'WordPress.tv',
 			],
 
-			// Classic: WordPress.tv embed.
+			// Classic: Amazon Kindle embed.
+			[
+				<<<HTML
+<p><iframe title="The Design of Everyday Things: Revised and Expanded Edition" type="text/html" width="640" height="550" frameborder="0" allowfullscreen style="max-width:100%" src="https://read.amazon.com/kp/card?preview=inline&#038;linkCode=kpd&#038;ref_=k4w_oembed_fQJVU4T7hZhNqQ&#038;asin=B00E257T6C&#038;tag=kpembed-20"></iframe></p>
+HTML
+				,
+				'https://read.amazon.com/kp/card?preview=inline&#038;linkCode=kpd&#038;ref_=k4w_oembed_fQJVU4T7hZhNqQ&#038;asin=B00E257T6C&#038;tag=kpembed-20',
+				'Amazon',
+				'The Design of Everyday Things: Revised and Expanded Edition',
+			],
+
+			// Classic: Animoto embed.
+			[
+				<<<HTML
+<p><iframe title="Video Player" id="vp1WmGs0" width="640" height="360" frameborder="0" src="https://s3.amazonaws.com/embed.animoto.com/play.html?w=swf/production/vp1&#038;e=1565903296&#038;f=WmGs0SgMeHvBMur0fL68rw&#038;d=0&#038;m=b&#038;r=360p+480p+720p&#038;i=m&#038;asset_domain=s3-p.animoto.com&#038;animoto_domain=animoto.com&#038;options=" allowfullscreen></iframe></p>
+HTML
+				,
+				'https://s3.amazonaws.com/embed.animoto.com/play.html?w=swf/production/vp1&#038;e=1565903296&#038;f=WmGs0SgMeHvBMur0fL68rw&#038;d=0&#038;m=b&#038;r=360p+480p+720p&#038;i=m&#038;asset_domain=s3-p.animoto.com&#038;animoto_domain=animoto.com&#038;options=',
+				'Animoto',
+				'Video Player',
+			],
+
+			// Classic: Cloudup embed.
+			[
+				<<<HTML
+<p><iframe title="Video Stream - share clips and home movies" src="https://cloudup.com/cjZ6QGIsErH?chromeless" data-uid="cjZ6QGIsErH" data-aspect-ratio='1.3704496788008564' width="640" height="467" scrolling="no" frameborder="0" mozallowfullscreen="true" webkitallowfullscreen="true" allowfullscreen="true" class="cloudup_iframe_embed"></iframe></p>
+HTML
+				,
+				'https://cloudup.com/cjZ6QGIsErH?chromeless',
+				'Cloudup',
+				'Video Stream - share clips and home movies',
+			],
+
+			// Classic: CollegeHumor embed.
+			[
+				<<<HTML
+<p><iframe title="Prank War 7: The Half Million Dollar Shot" src="https://www.collegehumor.com/e/3922232" width="640" height="360" frameborder="0" webkitAllowFullScreen allowFullScreen></iframe></p>
+HTML
+				,
+				'https://www.collegehumor.com/e/3922232',
+				'CollegeHumor',
+				'Prank War 7: The Half Million Dollar Shot',
+			],
+
+			// Classic: Dailymotion embed.
+			[
+				<<<HTML
+<p><iframe title="Babysitter!" frameborder="0" width="640" height="480" src="https://www.dailymotion.com/embed/video/xoxulz" allowfullscreen allow="autoplay"></iframe></p>
+HTML
+				,
+				'https://www.dailymotion.com/embed/video/xoxulz',
+				'Dailymotion',
+				'Babysitter!',
+			],
+
+			// Classic: Hulu embed.
+			[
+				<<<HTML
+<p><iframe title="Wed, May 21, 2008 (Late Night With Conan O&#039;Brien)" width="640" height="370" src="//www.hulu.com/embed.html?eid=0-njKp22bl4GivFXH0lh5w" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowfullscreen> </iframe></p>
+HTML
+				,
+				'https://www.hulu.com/embed.html?eid=0-njKp22bl4GivFXH0lh5w',
+				'Hulu',
+				'Wed, May 21, 2008 (Late Night With Conan O&#039;Brien)',
+			],
+
+			// Classic: Kickstarter embed.
+			[
+				<<<HTML
+<p><iframe title="Help Support The Kiggins Theatre to go Digital!" src="https://www.kickstarter.com/projects/1115015686/help-support-the-kiggins-theatre-to-go-digital/widget/video.html" height="360.0" width="640" frameborder="0" scrolling="no"></iframe></p>
+HTML
+				,
+				'https://www.kickstarter.com/projects/1115015686/help-support-the-kiggins-theatre-to-go-digital/widget/video.html',
+				'Kickstarter',
+				'Help Support The Kiggins Theatre to go Digital!',
+			],
+
+			// Classic: Mixcloud embed.
+			[
+				<<<HTML
+<p><iframe title="Moving Sounds With James Heather (11/08/2019)" width="100%" height="120" src="https://www.mixcloud.com/widget/iframe/?feed=https%3A%2F%2Fwww.mixcloud.com%2Fsohoradio%2Fmoving-sounds-with-james-heather-11082019%2F&amp;hide_cover=1" frameborder="0"></iframe></p>
+HTML
+				,
+				'https://www.mixcloud.com/widget/iframe/?feed=https%3A%2F%2Fwww.mixcloud.com%2Fsohoradio%2Fmoving-sounds-with-james-heather-11082019%2F&#038;hide_cover=1',
+				'Mixcloud',
+				'Moving Sounds With James Heather (11/08/2019)',
+			],
+
+			// Classic: ReverbNation embed.
+			[
+				<<<HTML
+<p><iframe title="Easy by Dyaphonic" width="640" height="960" scrolling="no" frameborder="no" src="https://www.reverbnation.com/widget_code/html_widget/artist_3796072?widget_id=55&#038;pwc[song_ids]=30572216"></iframe></p>
+HTML
+				,
+				'https://www.reverbnation.com/widget_code/html_widget/artist_3796072?widget_id=55&#038;pwc%5Bsong_ids%5D=30572216',
+				'ReverbNation',
+				'Easy by Dyaphonic',
+			],
+
+			// Classic: Scribd embed.
+			[
+				<<<HTML
+<p><iframe title="Synthesis of Knowledge: Effects of Fire and Thinning Treatments on Understory Vegetation in Dry U.S. Forests" class="scribd_iframe_embed" src="https://www.scribd.com/embeds/110799637/content" scrolling="no" id="110799637" width="640" height="960" frameborder="0"></iframe><script type="text/javascript">          (function() { var scribd = document.createElement("script"); scribd.type = "text/javascript"; scribd.async = true; scribd.src = "https://www.scribd.com/javascripts/embed_code/inject.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(scribd, s); })()        </script></p>
+HTML
+				,
+				'https://www.scribd.com/embeds/110799637/content',
+				'Scribd',
+				'Synthesis of Knowledge: Effects of Fire and Thinning Treatments on Understory Vegetation in Dry U.S. Forests',
+			],
+
+			// Classic: Slideshare embed.
+			[
+				<<<HTML
+<p><iframe title="Business Quotes for 2011" src="https://www.slideshare.net/slideshow/embed_code/key/6PCWPGFw9SwsAY" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> </p>
+<div style="margin-bottom:5px"> <strong> <a href="https://www.slideshare.net/haraldf/business-quotes-for-2011" title="Business Quotes for 2011" target="_blank">Business Quotes for 2011</a> </strong> from <strong><a href="https://www.slideshare.net/haraldf" target="_blank">Harald Felgner, PhD</a></strong> </div>
+HTML
+				,
+				'https://www.slideshare.net/slideshow/embed_code/key/6PCWPGFw9SwsAY',
+				'Slideshare',
+				'Business Quotes for 2011',
+			],
+
+			// Classic: SoundCloud embed.
+			[
+				<<<HTML
+<p><iframe title="Flickermood by Forss" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&#038;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F293&#038;show_artwork=true&#038;maxwidth=640&#038;maxheight=960&#038;dnt=1"></iframe></p>
+HTML
+				,
+				'https://w.soundcloud.com/player/?visual=true&#038;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F293&#038;show_artwork=true&#038;maxwidth=640&#038;maxheight=960&#038;dnt=1',
+				'SoundCloud',
+				'Flickermood by Forss',
+			],
+
+			// Classic: Speaker Deck embed.
+			[
+				<<<HTML
+<p><iframe title="Why Backbone" id="talk_frame_48643" src="//speakerdeck.com/player/4648d440a3230130452522b217532879" width="640" height="480" style="border:0; padding:0; margin:0; background:transparent;" frameborder="0" allowtransparency="true" allowfullscreen="allowfullscreen" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe></p>
+HTML
+				,
+				'https://speakerdeck.com/player/4648d440a3230130452522b217532879',
+				'Speaker Deck',
+				'Why Backbone',
+			],
+
+			// Classic: Spotify embed.
+			[
+				<<<HTML
+<p><iframe title="Spotify Embed: M1 A1" width="300" height="380" allowtransparency="true" frameborder="0" allow="encrypted-media" src="https://open.spotify.com/embed/track/2qToAcex0ruZfbEbAy9OhW"></iframe></p>
+HTML
+				,
+				'https://open.spotify.com/embed/track/2qToAcex0ruZfbEbAy9OhW',
+				'Spotify',
+				'Spotify Embed: M1 A1',
+			],
+
+			// Classic: TED embed.
+			[
+				<<<HTML
+<p><iframe title="Jill Bolte Taylor: My stroke of insight" src="https://embed.ted.com/talks/jill_bolte_taylor_s_powerful_stroke_of_insight" width="640" height="361" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe></p>
+HTML
+				,
+				'https://embed.ted.com/talks/jill_bolte_taylor_s_powerful_stroke_of_insight',
+				'TED',
+				'Jill Bolte Taylor: My stroke of insight',
+			],
+
+			// Classic: VideoPress embed.
+			[
+				<<<HTML
+<p><iframe title="Matt Mullenweg: Matt on WordPress" width='640' height='360' src='https://videopress.com/embed/bd2G0c0g?hd=0' frameborder='0' allowfullscreen></iframe><script src='https://v0.wordpress.com/js/next/videopress-iframe.js?m=1435166243'></script></p>
+HTML
+				,
+				'https://videopress.com/embed/bd2G0c0g?hd=0',
+				'VideoPress',
+				'Matt Mullenweg: Matt on WordPress',
+			],
+
+			// Classic: WordPress.tv embed. WordPress.tv will present as VideoPress when embedded this way.
 			[
 				<<<HTML
 <p><iframe width='640' height='360' src='https://videopress.com/embed/DK5mLrbr?hd=0' frameborder='0' allowfullscreen></iframe><script src='https://v0.wordpress.com/js/next/videopress-iframe.js?m=1435166243'></script></p>
