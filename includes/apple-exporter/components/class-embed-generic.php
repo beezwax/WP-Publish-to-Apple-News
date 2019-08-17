@@ -28,20 +28,32 @@ class Embed_Generic extends Component {
 	 */
 	public static function node_matches( $node ) {
 
-		// TODO: Wire this up.
-		/*
-		if ( 1 === $node->nodeType && false !== strpos( $node->getAttribute('class'), 'is-provider-flickr' ) ) {
-			return $node;
+		// If we aren't on an element node, bail out.
+		if ( 1 !== $node->nodeType ) {
+			return null;
 		}
 
-		if (
-			'figure' === $node->nodeName && self::node_has_class( $node, 'is-provider-spotify' )
-			|| $node->hasChildNodes() && 'iframe' === $node->childNodes[0]->nodeName && self::validateUrl( $node->childNodes[0]->getAttribute( 'src' ) )
+		// Check for Gutenberg-style embeds, which have a helpful signature.
+		if ( 'figure' === $node->nodeName
+			&& false !== strpos( $node->getAttribute('class'), 'wp-block-embed-' )
 		) {
 			return $node;
 		}
-		*/
 
+		// Check for root-level iframes.
+		if ( 'iframe' === $node->nodeName ) {
+			return $node;
+		}
+
+		// Check for paragraphs containing iframes.
+		if ( 'p' === $node->nodeName
+			&& $node->hasChildNodes()
+			&& 'iframe' === $node->childNodes->item(0)->nodeName
+		) {
+			return $node;
+		}
+
+		// Anything else isn't supported out of the box.
 		return null;
 	}
 
@@ -81,24 +93,161 @@ class Embed_Generic extends Component {
 	 * @access protected
 	 */
 	protected function build( $html ) {
+		$components = [];
+		$provider   = '';
+		$title      = '';
+		$url        = '';
+
+		// Negotiate embed source lookup.
+		if ( preg_match( '/wp-block-embed-([0-9a-zA-Z-]+)/', $html, $matches ) ) {
+			$provider = $matches[1];
+		} else {
+			/* Define a map of domain names to provider slugs to check for as a best guess.
+			 * This list is intentionally organized from most specific to least specific, so do not
+			 * alphabetize it! The logic here is that a block may contain references to amazon.com either
+			 * in-text or via links to Amazon services (AWS, S3, etc) but actually be an embed for a
+			 * different provider. Therefore, we will only consider an embed to be from "generic" providers
+			 * like Amazon or Imgur if no other, more specifc, providers were matched first.
+			 */
+			$provider_map = [
+				'animoto.com'      => 'animoto',
+				'cloudup.com'      => 'cloudup',
+				'collegehumor.com' => 'collegehumor',
+				'polldaddy.com'    => 'crowdsignal',
+				'poll.fm'          => 'crowdsignal',
+				'survey.fm'        => 'crowdsignal',
+				'dailymotion.com'  => 'dailymotion',
+				'flickr.com'       => 'flickr',
+				'hulu.com'         => 'hulu',
+				'issuu.com'        => 'issuu',
+				'kickstarter.com'  => 'kickstarter',
+				'meetup.com'       => 'meetup-com',
+				'mixcloud.com'     => 'mixcloud',
+				'reverbnation.com' => 'reverbnation',
+				'screencast.com'   => 'screencast',
+				'scribd.com'       => 'scribd',
+				'slideshare.net'   => 'slideshare',
+				'smugmug.com'      => 'smugmug',
+				'soundcloud.com'   => 'soundcloud',
+				'speakerdeck.com'  => 'speaker-deck',
+				'spotify.com'      => 'spotify',
+				'ted.com'          => 'ted',
+				'tumblr.com'       => 'tumblr',
+				'videopress.com'   => 'videopress',
+				'wordpress.tv'     => 'wordpress-tv',
+				'reddit.com'       => 'reddit',
+				'imgur.com'        => 'imgur',
+				'amazon.com'       => 'amazon-kindle',
+			];
+
+			// Loop through the provider map, trying to guess the provider based on included domain name.
+			foreach ( $provider_map as $domain => $provider_slug ) {
+				if ( false !== strpos( $html, $domain ) ) {
+					$provider = $provider_slug;
+					break;
+				}
+			}
+		}
+
+		// Fork for iframe handling vs. not.
+		if ( false !== strpos( $html, '<iframe' ) ) {
+			// Try to get the source URL.
+			if ( preg_match( '/<iframe[^>]+?src=[\'"]([^\'"]+)/', $html, $matches ) ) {
+				$url = $matches[1];
+			}
+
+			// Try to get the title.
+			if ( preg_match( '/<iframe[^>]+?title=[\'"]([^\'"]+)/', $html, $matches ) ) {
+				$title = $matches[1];
+			}
+		} else {
+
+		}
+
+		// If no URL was found, bail out.
+		if ( empty( $url ) ) {
+			return;
+		}
+
+		// Map provider strings to the correct human-readable form, with a fallback.
+		switch ( $provider ) {
+			case 'animoto':
+			case 'cloudup':
+			case 'crowdsignal':
+			case 'dailymotion':
+			case 'flickr':
+			case 'hulu':
+			case 'imgur':
+			case 'issuu':
+			case 'kickstarter':
+			case 'mixcloud':
+			case 'reddit':
+			case 'screencast':
+			case 'scribd':
+			case 'slideshare':
+			case 'spotify':
+			case 'tumblr':
+				$provider = ucfirst( $provider );
+				break;
+			case 'amazon-kindle':
+				$provider = 'Amazon';
+				break;
+			case 'collegehumor':
+				$provider = 'CollegeHumor';
+				break;
+			case 'meetup-com':
+				$provider = 'Meetup.com';
+				break;
+			case 'reverbnation':
+				$provider = 'ReverbNation';
+				break;
+			case 'smugmug':
+				$provider = 'SmugMug';
+				break;
+			case 'soundcloud':
+				$provider = 'SoundCloud';
+				break;
+			case 'speaker-deck':
+				$provider = 'Speaker Deck';
+				break;
+			case 'ted':
+				$provider = 'TED';
+				break;
+			case 'videopress':
+				$provider = 'VideoPress';
+				break;
+			case 'wordpress-tv':
+				$provider = 'WordPress.tv';
+				break;
+			default:
+				$provider = __( 'the original site', 'apple-news' );
+				break;
+		}
+
+		// Add the title, if it is present.
+		if ( ! empty( $title ) ) {
+			$components[] = [
+				'role'   => 'heading2',
+				'text'   => $title,
+				'format' => 'html',
+			];
+		}
+
+		// Add the base component.
+		$components[] = [
+			'role'      => 'body',
+			// translators: name of provider.
+			'text'      => '<a href="' . esc_url( $url ) . '">' . esc_html( sprintf( __( 'View on %s.', 'apple-news' ), $provider ) ) . '</a>',
+			'format'    => 'html',
+			'textStyle' => [
+				'fontSize' => 14,
+			],
+		];
+
 		$this->register_json(
 			'embed-generic-json',
 			[
-				'#components#' => [
-					[
-						'role'   => 'heading2',
-						'text'   => 'TITLE GOES HERE',
-						'format' => 'html',
-					],
-					[
-						'role'      => 'body',
-						'text'      => '<a href="' . esc_url( 'https://example.com' ) . '">' . esc_html__( 'View on PROVIDER.', 'apple-news' ) . '</a>',
-						'format'    => 'html',
-						'textStyle' => [
-							'fontSize' => 14,
-						],
-					],
-				],
+				'#components#' => $components,
 			]
 		);
 		$this->register_layout( 'embed-generic-layout', 'embed-generic-layout' );
