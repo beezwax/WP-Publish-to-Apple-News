@@ -12,8 +12,7 @@ namespace Apple_Exporter\Components;
 use Apple_Exporter\Components\Component;
 
 /**
- * An embedded video from Youtube or Vimeo, for example. For now, assume
- * any iframe is an embedded video.
+ * An embedded video from Youtube or Vimeo, which are the only two providers that Apple supports.
  *
  * @since 0.2.0
  */
@@ -41,7 +40,7 @@ class Embed_Web_Video extends Component {
 		return (
 			( 'p' === $node->nodeName && preg_match( $pattern, trim( $node->nodeValue ) ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 			|| ( 'iframe' === $node->nodeName && preg_match( $pattern, trim( $node->getAttribute( 'src' ) ) ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
-			|| ( 'figure' === $node->nodeName && Component::is_embed_figure( $node ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+			|| ( 'figure' === $node->nodeName && Component::is_embed_figure( $node ) && preg_match( $pattern, trim( $node->nodeValue ) ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 		);
 	}
 
