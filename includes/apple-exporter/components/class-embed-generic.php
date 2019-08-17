@@ -149,7 +149,7 @@ class Embed_Generic extends Component {
 			}
 		}
 
-		// Fork for iframe handling vs. not.
+		// Fork for iframe handling vs. not. Non-iframe detection is less straightforward, so it is best-effort.
 		if ( false !== strpos( $html, '<iframe' ) ) {
 			// Try to get the source URL.
 			if ( preg_match( '/<iframe[^>]+?src=[\'"]([^\'"]+)/', $html, $matches ) ) {
@@ -160,8 +160,15 @@ class Embed_Generic extends Component {
 			if ( preg_match( '/<iframe[^>]+?title=[\'"]([^\'"]+)/', $html, $matches ) ) {
 				$title = $matches[1];
 			}
-		} else {
+		} elseif ( preg_match( '/data-(?:url|href)=[\'"]([^\'"]+)/', $html, $matches ) ) {
+			$url = $matches[1];
+		} elseif ( preg_match( '/<a[^>]+?href=[\'"]([^\'"]+)/', $html, $matches ) ) {
+			$url = $matches[1];
+		}
 
+		// If the URL is protocol-less, default it to https.
+		if ( 0 === strpos( $url, '//' ) ) {
+			$url = 'https:' . $url;
 		}
 
 		// If no URL was found, bail out.

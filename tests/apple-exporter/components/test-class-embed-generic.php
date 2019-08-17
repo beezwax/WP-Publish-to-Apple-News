@@ -73,6 +73,308 @@ HTML
 				'Video Stream - share clips and home movies',
 			],
 
+			// Gutenberg: CollegeHumor embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-collegehumor wp-block-embed is-type-video is-provider-collegehumor wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Prank War 7: The Half Million Dollar Shot" src="https://www.collegehumor.com/e/3922232" width="640" height="360" frameborder="0" webkitAllowFullScreen allowFullScreen></iframe>
+</div></figure>
+HTML
+				,
+				'https://www.collegehumor.com/e/3922232',
+				'CollegeHumor',
+				'Prank War 7: The Half Million Dollar Shot',
+			],
+
+			// Gutenberg: Crowdsignal embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-crowdsignal wp-block-embed is-type-rich is-provider-crowdsignal"><div class="wp-block-embed__wrapper">
+<script type="text/javascript" charset="utf-8" src="https://secure.polldaddy.com/p/10029863.js"></script><noscript><a href="https://poll.fm/10029863">What&#039;s Your Favourite Ice Cream?</a></noscript>
+</div></figure>
+HTML
+				,
+				'https://poll.fm/10029863',
+				'Crowdsignal',
+			],
+
+			// Gutenberg: Dailymotion embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-dailymotion wp-block-embed is-type-video is-provider-dailymotion wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Babysitter!" frameborder="0" width="640" height="480" src="https://www.dailymotion.com/embed/video/xoxulz" allowfullscreen allow="autoplay"></iframe>
+</div></figure>
+HTML
+				,
+				'https://www.dailymotion.com/embed/video/xoxulz',
+				'Dailymotion',
+				'Babysitter!',
+			],
+
+			// Gutenberg: Flickr embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-flickr wp-block-embed is-type-photo is-provider-flickr"><div class="wp-block-embed__wrapper">
+<a href="https://flickr.com/photos/bees/2362225867/"><img src="https://live.staticflickr.com/3040/2362225867_4a87ab8baf_z.jpg" alt="Bacon Lollys" width="640" height="480" /></a>
+</div></figure>
+HTML
+				,
+				'https://flickr.com/photos/bees/2362225867/',
+				'Flickr',
+			],
+
+			// Gutenberg: Hulu embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-hulu wp-block-embed is-type-video is-provider-hulu wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Wed, May 21, 2008 (Late Night With Conan O&#039;Brien)" width="640" height="370" src="//www.hulu.com/embed.html?eid=0-njKp22bl4GivFXH0lh5w" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowfullscreen> </iframe>
+</div></figure>
+HTML
+				,
+				'https://www.hulu.com/embed.html?eid=0-njKp22bl4GivFXH0lh5w',
+				'Hulu',
+				'Wed, May 21, 2008 (Late Night With Conan O&#039;Brien)',
+			],
+
+			// Gutenberg: Imgur embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-imgur wp-block-embed is-type-rich is-provider-imgur"><div class="wp-block-embed__wrapper">
+<blockquote class="imgur-embed-pub" lang="en" data-id="a/CxNMoZy"><a href="https://imgur.com/a/CxNMoZy">Additional Pylons have been constructed.</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+</div></figure>
+HTML
+				,
+				'https://imgur.com/a/CxNMoZy',
+				'Imgur',
+			],
+
+			// Gutenberg: Issuu embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-issuu wp-block-embed is-type-rich is-provider-issuu"><div class="wp-block-embed__wrapper">
+<div data-url="https://issuu.com/iscience/docs/issue23" style="width: 640px; height: 395px;" class="issuuembed"></div><script type="text/javascript" src="//e.issuu.com/embed.js" async="true"></script>
+</div></figure>
+HTML
+				,
+				'https://issuu.com/iscience/docs/issue23',
+				'Issuu',
+			],
+
+			// Gutenberg: Kickstarter embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-kickstarter wp-block-embed is-type-rich is-provider-kickstarter wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Help Support The Kiggins Theatre to go Digital!" src="https://www.kickstarter.com/projects/1115015686/help-support-the-kiggins-theatre-to-go-digital/widget/video.html" height="360.0" width="640" frameborder="0" scrolling="no"></iframe>
+</div></figure>
+HTML
+				,
+				'https://www.kickstarter.com/projects/1115015686/help-support-the-kiggins-theatre-to-go-digital/widget/video.html',
+				'Kickstarter',
+				'Help Support The Kiggins Theatre to go Digital!',
+			],
+
+			// Gutenberg: Meetup.com embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-meetup-com wp-block-embed is-type-rich is-provider-meetup"><div class="wp-block-embed__wrapper">
+<style type="text/css">#meetup_oembed .mu_clearfix:after { visibility: hidden; display: block; font-size: 0; content: " "; clear: both; height: 0; }* html #meetup_oembed .mu_clearfix, *:first-child+html #meetup_oembed .mu_clearfix { zoom: 1; }#meetup_oembed { background:#eee;border:1px solid #ccc;padding:10px;-moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px;margin:0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; }#meetup_oembed h3 { font-weight:normal; margin:0 0 10px; padding:0; line-height:26px; font-family:Georgia,Palatino,serif; font-size:24px }#meetup_oembed p { margin: 0 0 10px; padding:0; line-height:16px; }#meetup_oembed img { border:none; margin:0; padding:0; }#meetup_oembed a, #meetup_oembed a:visited, #meetup_oembed a:link { color: #1B76B3; text-decoration: none; cursor: hand; cursor: pointer; }#meetup_oembed a:hover { color: #1B76B3; text-decoration: underline; }#meetup_oembed a.mu_button { font-size:14px; -moz-border-radius:3px;-webkit-border-radius:3px;border-radius:3px;border:2px solid #A7241D;color:white!important;text-decoration:none;background-color: #CA3E47; background-image: -moz-linear-gradient(top, #ca3e47, #a8252e); background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, #a8252e), color-stop(1, #ca3e47));disvplay:inline-block;padding:5px 10px; }#meetup_oembed a.mu_button:hover { color: #fff!important; text-decoration: none; }#meetup_oembed .photo { width:50px; height:50px; overflow:hidden;background:#ccc;float:left;margin:0 5px 0 0;text-align:center;padding:1px; }#meetup_oembed .photo img { height:50px }#meetup_oembed .number { font-size:18px; }#meetup_oembed .thing { text-transform: uppercase; color: #555; }</style><div id="meetup_oembed" style="height:309px">     <div style="overflow:hidden;max-height:269px">          <h3>PHP Colombia</h3>          <p style="margin:0 0 10px;font-size:12px;line-height:16px;">Bogotá, CO <br />          <span style="font-size:14px;font-weight:bold;">1,539</span> <em>phperos</em></p>          <a href="https://www.meetup.com/PHPColMeetup/" target="_blank"><img src="https://secure.meetupstatic.com/photos/event/d/6/d/0/600_392754992.jpeg" style="float:right;max-width:150px;margin-right:0;" /></a>                          <div style="margin-right:170px;line-height:16px;">Este grupo es de desarrolladores para desarrolladores queremos crear reuniones físicas con todos los que amamos este incomprendido lenguaje de programación y apasionar a los d&#8230;</div>                                 </div>     <p style="margin:10px 0 5px;"><a href="https://www.meetup.com/PHPColMeetup/" target="_blank" class="mu_button">Check out this Meetup Group &rarr;</a></p></div>
+</div></figure>
+HTML
+				,
+				'https://www.meetup.com/PHPColMeetup/',
+				'Meetup.com',
+			],
+
+			// Gutenberg: Mixcloud embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-mixcloud wp-block-embed is-type-rich is-provider-mixcloud wp-embed-aspect-21-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Moving Sounds With James Heather (11/08/2019)" width="100%" height="120" src="https://www.mixcloud.com/widget/iframe/?feed=https%3A%2F%2Fwww.mixcloud.com%2Fsohoradio%2Fmoving-sounds-with-james-heather-11082019%2F&amp;hide_cover=1" frameborder="0"></iframe>
+</div></figure>
+HTML
+				,
+				'https://www.mixcloud.com/widget/iframe/?feed=https%3A%2F%2Fwww.mixcloud.com%2Fsohoradio%2Fmoving-sounds-with-james-heather-11082019%2F&#038;hide_cover=1',
+				'Mixcloud',
+				'Moving Sounds With James Heather (11/08/2019)',
+			],
+
+			// Gutenberg: Reddit embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-reddit wp-block-embed is-type-rich is-provider-reddit"><div class="wp-block-embed__wrapper">
+<div class="reddit-embed" data-embed-media="www.redditmedia.com" data-embed-parent="false" data-embed-live="false" data-embed-uuid="16b7b7a4-bd32-11e9-90b9-0e5bd4bf4a44" data-embed-created="2019-08-12T18:50:43.847033+00:00"><a href="https://www.reddit.com/r/aww/comments/4lwccv/someone_came_to_visit_woodchips_for_scale/d3qol9a/">Comment</a> from discussion <a href="https://www.reddit.com/r/aww/comments/4lwccv/someone_came_to_visit_woodchips_for_scale/">hobnobbinbobthegob&#8217;s comment from discussion &quot;Someone came to visit. (Woodchips for scale.)&quot;</a>.</div><script async src="https://www.redditstatic.com/comment-embed.js"></script>
+</div></figure>
+HTML
+				,
+				'https://www.reddit.com/r/aww/comments/4lwccv/someone_came_to_visit_woodchips_for_scale/d3qol9a/',
+				'Reddit',
+			],
+
+			// Gutenberg: ReverbNation embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-reverbnation wp-block-embed is-type-rich wp-embed-aspect-9-16 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Easy by Dyaphonic" width="640" height="960" scrolling="no" frameborder="no" src="https://www.reverbnation.com/widget_code/html_widget/artist_3796072?widget_id=55&#038;pwc[song_ids]=30572216"></iframe>
+</div></figure>
+HTML
+				,
+				'https://www.reverbnation.com/widget_code/html_widget/artist_3796072?widget_id=55&#038;pwc%5Bsong_ids%5D=30572216',
+				'ReverbNation',
+				'Easy by Dyaphonic',
+			],
+
+			// Gutenberg: Screencast embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-screencast wp-block-embed is-type-video is-provider-screencast-com wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<!-- copy and paste. Modify height and width if desired. --><iframe title="B-roll Blog Post - BB-8 - David Patton" class="embeddedObject shadow resizable" name="embedded_content" scrolling="no" frameborder="0" type="text/html"         style="overflow:hidden;" src="https://www.screencast.com/users/TechSmith_Media/folders/Camtasia/media/d89af74a-3a32-4c9f-8a85-ef83fdb5c39c/embed" height="720" width="1280" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+</div></figure>
+HTML
+				,
+				'https://www.screencast.com/users/TechSmith_Media/folders/Camtasia/media/d89af74a-3a32-4c9f-8a85-ef83fdb5c39c/embed',
+				'Screencast',
+				'B-roll Blog Post - BB-8 - David Patton',
+			],
+
+			// Gutenberg: Scribd embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-scribd wp-block-embed is-type-rich is-provider-scribd wp-embed-aspect-9-16 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Synthesis of Knowledge: Effects of Fire and Thinning Treatments on Understory Vegetation in Dry U.S. Forests" class="scribd_iframe_embed" src="https://www.scribd.com/embeds/110799637/content" scrolling="no" id="110799637" width="640" height="960" frameborder="0"></iframe><script type="text/javascript">          (function() { var scribd = document.createElement("script"); scribd.type = "text/javascript"; scribd.async = true; scribd.src = "https://www.scribd.com/javascripts/embed_code/inject.js"; var s = document.getElementsByTagName("script")[0]; s.parentNode.insertBefore(scribd, s); })()        </script>
+</div></figure>
+HTML
+				,
+				'https://www.scribd.com/embeds/110799637/content',
+				'Scribd',
+				'Synthesis of Knowledge: Effects of Fire and Thinning Treatments on Understory Vegetation in Dry U.S. Forests',
+			],
+
+			// Gutenberg: Slideshare embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-slideshare wp-block-embed is-type-rich is-provider-slideshare wp-embed-aspect-1-1 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Business Quotes for 2011" src="https://www.slideshare.net/slideshow/embed_code/key/6PCWPGFw9SwsAY" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe> <div style="margin-bottom:5px"> <strong> <a href="https://www.slideshare.net/haraldf/business-quotes-for-2011" title="Business Quotes for 2011" target="_blank">Business Quotes for 2011</a> </strong> from <strong><a href="https://www.slideshare.net/haraldf" target="_blank">Harald Felgner, PhD</a></strong> </div>
+</div></figure>
+HTML
+				,
+				'https://www.slideshare.net/slideshow/embed_code/key/6PCWPGFw9SwsAY',
+				'Slideshare',
+				'Business Quotes for 2011',
+			],
+
+			// Gutenberg: SmugMug embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-smugmug wp-block-embed is-type-photo is-provider-smugmug"><div class="wp-block-embed__wrapper">
+<a href="https://stuckincustoms.smugmug.com/Portfolio/i-R8SMwnh"><img src="https://stuckincustoms.smugmug.com/Portfolio/i-R8SMwnh/2/29508a44/640x442/3985718888_d4435fb72d_o-640x442.jpg" alt="The Treetop Temple Protects Kyoto" width="640" height="442" /></a>
+</div></figure>
+HTML
+				,
+				'https://stuckincustoms.smugmug.com/Portfolio/i-R8SMwnh',
+				'SmugMug',
+			],
+
+			// Gutenberg: SoundCloud embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-soundcloud wp-block-embed is-type-rich is-provider-soundcloud wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Flickermood by Forss" width="640" height="400" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?visual=true&#038;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F293&#038;show_artwork=true&#038;maxwidth=640&#038;maxheight=960&#038;dnt=1"></iframe>
+</div></figure>
+HTML
+				,
+				'https://w.soundcloud.com/player/?visual=true&#038;url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F293&#038;show_artwork=true&#038;maxwidth=640&#038;maxheight=960&#038;dnt=1',
+				'SoundCloud',
+				'Flickermood by Forss',
+			],
+
+			// Gutenberg: Speaker Deck embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-speaker-deck wp-block-embed is-type-rich is-provider-speaker-deck wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Why Backbone" id="talk_frame_48643" src="//speakerdeck.com/player/4648d440a3230130452522b217532879" width="640" height="480" style="border:0; padding:0; margin:0; background:transparent;" frameborder="0" allowtransparency="true" allowfullscreen="allowfullscreen" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+</div></figure>
+HTML
+				,
+				'https://speakerdeck.com/player/4648d440a3230130452522b217532879',
+				'Speaker Deck',
+				'Why Backbone',
+			],
+
+			// Gutenberg: Spotify embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-spotify wp-block-embed is-type-rich is-provider-spotify wp-embed-aspect-9-16 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Spotify Embed: M1 A1" width="300" height="380" allowtransparency="true" frameborder="0" allow="encrypted-media" src="https://open.spotify.com/embed/track/2qToAcex0ruZfbEbAy9OhW"></iframe>
+</div></figure>
+HTML
+				,
+				'https://open.spotify.com/embed/track/2qToAcex0ruZfbEbAy9OhW',
+				'Spotify',
+				'Spotify Embed: M1 A1',
+			],
+
+			// Gutenberg: TED embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-ted wp-block-embed is-type-video is-provider-ted wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Jill Bolte Taylor: My stroke of insight" src="https://embed.ted.com/talks/jill_bolte_taylor_s_powerful_stroke_of_insight" width="640" height="361" frameborder="0" scrolling="no" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>
+</div></figure>
+HTML
+				,
+				'https://embed.ted.com/talks/jill_bolte_taylor_s_powerful_stroke_of_insight',
+				'TED',
+				'Jill Bolte Taylor: My stroke of insight',
+			],
+
+			// Gutenberg: Tumblr embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-tumblr wp-block-embed is-type-rich is-provider-tumblr"><div class="wp-block-embed__wrapper">
+<div class="tumblr-post" data-href="https://embed.tumblr.com/embed/post/D5irYqe4SehhxRSSl9nZ2Q/186928288420" data-did="da39a3ee5e6b4b0d3255bfef95601890afd80709"  ><a href="https://blog.cutecataccessories.com/post/186928288420">https://blog.cutecataccessories.com/post/186928288420</a></div><script async src="https://assets.tumblr.com/post.js"></script>
+</div></figure>
+HTML
+				,
+				'https://embed.tumblr.com/embed/post/D5irYqe4SehhxRSSl9nZ2Q/186928288420',
+				'Tumblr',
+			],
+
+			// Gutenberg: VideoPress embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-videopress wp-block-embed is-type-video is-provider-videopress wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe title="Matt Mullenweg: Matt on WordPress" width='640' height='360' src='https://videopress.com/embed/bd2G0c0g?hd=0' frameborder='0' allowfullscreen></iframe><script src='https://v0.wordpress.com/js/next/videopress-iframe.js?m=1435166243'></script>
+</div></figure>
+HTML
+				,
+				'https://videopress.com/embed/bd2G0c0g?hd=0',
+				'VideoPress',
+				'Matt Mullenweg: Matt on WordPress',
+			],
+
+			// Gutenberg: WordPress embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-wordpress wp-block-embed is-type-link is-provider-the-wordpress-com-blog"><div class="wp-block-embed__wrapper">
+<a href="https://en.blog.wordpress.com/2019/08/10/the-second-edition-of-our-learn-user-support-workshop-is-open-for-signups/">The Second Edition of Our &#8220;Learn User Support&#8221; Workshop Is Open for&nbsp;Signups</a>
+</div></figure>
+HTML
+				,
+				'https://en.blog.wordpress.com/2019/08/10/the-second-edition-of-our-learn-user-support-workshop-is-open-for-signups/',
+				'the original site',
+			],
+
+			// Gutenberg: WordPress.tv embed.
+			[
+				<<<HTML
+<figure class="wp-block-embed-wordpress-tv wp-block-embed is-type-video wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+<iframe width='640' height='360' src='https://videopress.com/embed/DK5mLrbr?hd=0' frameborder='0' allowfullscreen></iframe><script src='https://v0.wordpress.com/js/next/videopress-iframe.js?m=1435166243'></script>
+</div></figure>
+HTML
+				,
+				'https://videopress.com/embed/DK5mLrbr?hd=0',
+				'WordPress.tv',
+			],
+
 			// Classic: WordPress.tv embed.
 			[
 				<<<HTML
