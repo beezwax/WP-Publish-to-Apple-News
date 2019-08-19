@@ -401,12 +401,12 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			->willReturn( $response )
 			->shouldBeCalled();
 
-		// We need to create an iframe, so run as administrator
+		// We need to create a nonsense HTML element, so run as administrator.
 		$user_id = $this->set_admin();
 
 		// Create post
 		$post_id = $this->factory->post->create( array(
-			'post_content' => '<p><iframe width="460" height="460" src="http://unsupportedservice.com/embed.html?video=1232345&autoplay=0" frameborder="0" allowfullscreen></iframe></p>',
+			'post_content' => '<p><invalidelement src="http://unsupportedservice.com/embed.html?video=1232345&autoplay=0"></invalidelement></p>',
 		) );
 
 		$action = new Push( $this->settings, $post_id );
@@ -419,7 +419,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 
 		array_pop( $notices );
 		$component_notice = end( $notices );
-		$this->assertEquals( 'The following components are unsupported by Apple News and were removed: iframe', $component_notice['message'] );
+		$this->assertEquals( 'The following components are unsupported by Apple News and were removed: invalidelement', $component_notice['message'] );
 
 		// The post was still sent to Apple News
 		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
@@ -439,12 +439,12 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			->willReturn( $response )
 			->shouldNotBeCalled();
 
-		// We need to create an iframe, so run as administrator
+		// We need to create a nonsense HTML element, so run as administrator.
 		$user_id = $this->set_admin();
 
 		// Create post
 		$post_id = $this->factory->post->create( array(
-			'post_content' => '<p><iframe width="460" height="460" src="http://unsupportedservice.com/embed.html?video=1232345&autoplay=0" frameborder="0" allowfullscreen></iframe></p>',
+			'post_content' => '<p><invalidelement src="http://unsupportedservice.com/embed.html?video=1232345&autoplay=0"></invalidelement></p>',
 		) );
 
 		$action = new Push( $this->settings, $post_id );
@@ -459,7 +459,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			$this->assertNotEmpty( $notices );
 
 			$component_notice = end( $notices );
-			$this->assertEquals( 'The following components are unsupported by Apple News and prevented publishing: iframe', $e->getMessage() );
+			$this->assertEquals( 'The following components are unsupported by Apple News and prevented publishing: invalidelement', $e->getMessage() );
 
 			// The post was not sent to Apple News
 			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_id', true ) );

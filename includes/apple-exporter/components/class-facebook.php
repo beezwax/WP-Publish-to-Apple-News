@@ -62,12 +62,20 @@ class Facebook extends Component {
 	 */
 	public static function node_matches( $node ) {
 
-		// Check for element with just facebook url.
+		// Handling for a Gutenberg Facebook embed.
+		if (
+			'figure' === $node->nodeName // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+			&& self::node_has_class( $node, 'wp-block-embed-facebook' )
+		) {
+			return $node;
+		}
+
+		// Check for element with just a Facebook url.
 		if ( false !== self::get_facebook_url( $node->nodeValue ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 			return $node;
 		}
 
-		// Handling for a rendered facebook embed.
+		// Handling for a rendered Facebook embed.
 		if (
 			'div' === $node->nodeName // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 			&& self::node_has_class( $node, 'fb-post' )
