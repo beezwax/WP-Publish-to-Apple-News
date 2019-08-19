@@ -53,6 +53,16 @@ class Embed_Web_Video extends Component {
 	 */
 	public static function node_matches( $node ) {
 
+		// Handling for a Gutenberg web video embed.
+		if (
+			'figure' === $node->nodeName // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+			&& ( self::node_has_class( $node, 'wp-block-embed-vimeo' )
+				|| self::node_has_class( $node, 'wp-block-embed-youtube' )
+			)
+		) {
+			return $node;
+		}
+
 		// Is this node valid for further processing?
 		if ( self::is_embed_web_video( $node, self::YOUTUBE_MATCH )
 			|| self::is_embed_web_video( $node, self::VIMEO_MATCH )

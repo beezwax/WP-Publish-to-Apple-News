@@ -24,6 +24,15 @@ class Tweet extends Component {
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
+
+		// Handling for a Gutenberg Twitter embed.
+		if (
+			'figure' === $node->nodeName // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+			&& self::node_has_class( $node, 'wp-block-embed-twitter' )
+		) {
+			return $node;
+		}
+
 		// Check if the body of a node is solely a tweet URL.
 		$is_twitter_url = 'p' === $node->nodeName && preg_match( // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
 			'#https?://(www\.)?twitter\.com/.+?/status(es)?/.*#i',
