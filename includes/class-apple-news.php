@@ -39,7 +39,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $version = '2.0.1';
+	public static $version = '2.0.2';
 
 	/**
 	 * Link to support for the plugin on WordPress.org.
@@ -200,8 +200,8 @@ class Apple_News {
 	 */
 	public function __construct() {
 		add_action(
-			'admin_enqueue_scripts',
-			[ $this, 'action_admin_enqueue_scripts' ]
+			'enqueue_block_editor_assets',
+			[ $this, 'enqueue_block_editor_scripts' ]
 		);
 		add_action(
 			'plugins_loaded',
@@ -222,7 +222,12 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function action_admin_enqueue_scripts( $hook ) {
+	public function enqueue_block_editor_scripts( $hook ) {
+
+		// Bail if gutenberg is not enabled.
+		if ( ! function_exists( 'use_block_editor_for_post' ) ) {
+			return;
+		}
 
 		// If the block editor is active, add PluginSidebar.
 		if ( get_the_ID() && use_block_editor_for_post( get_the_ID() ) ) {
