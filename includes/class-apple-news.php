@@ -39,7 +39,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $version = '2.0.2';
+	public static $version = '2.0.3';
 
 	/**
 	 * Link to support for the plugin on WordPress.org.
@@ -225,7 +225,11 @@ class Apple_News {
 	public function enqueue_block_editor_scripts( $hook ) {
 
 		// Bail if gutenberg is not enabled.
-		if ( ! function_exists( 'use_block_editor_for_post' ) ) {
+		// Or if the post type is not active from settings.
+		if (
+			! function_exists( 'use_block_editor_for_post' )
+			|| ! in_array( get_post_type(), Admin_Apple_Settings_Section::$loaded_settings['post_types'], true )
+		) {
 			return;
 		}
 

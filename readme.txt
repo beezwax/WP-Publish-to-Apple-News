@@ -5,7 +5,7 @@ Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 5.2.2
 Requires PHP: 5.6
-Stable tag: 2.0.2
+Stable tag: 2.0.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,9 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.0.3 =
+* Bugfix: Resolves fatal error when trying to load posts that aren't active in some cases.
 
 = 2.0.2 =
 * Bugfix: Adds check for some 5.0.0+ functions before attempting to execute.
