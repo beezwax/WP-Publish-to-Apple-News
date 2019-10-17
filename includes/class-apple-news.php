@@ -272,7 +272,7 @@ class Apple_News {
 	 */
 	public function action_enqueue_block_editor_assets() {
 		// Bail if the post type is not one of the Publish to Apple News post types configured in settings.
-		if ( ! in_array( get_post_type(), Admin_Apple_Settings_Section::$loaded_settings['post_types'], true ) ) {
+		if ( ! in_array( get_post_type(), (array) Admin_Apple_Settings_Section::$loaded_settings['post_types'], true ) ) {
 			return;
 		}
 
