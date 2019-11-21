@@ -28,7 +28,17 @@ class Image extends Component {
 
 		// Is this an image node?
 		if (
-			( self::node_has_class( $node, 'wp-block-cover' ) || 'img' === $node->nodeName || ( 'figure' === $node->nodeName && Component::is_embed_figure( $node ) ) )
+			(
+				self::node_has_class( $node, 'wp-block-cover' )
+				|| 'img' === $node->nodeName
+				|| (
+					'figure' === $node->nodeName
+					&& (
+						Component::is_embed_figure( $node )
+						|| self::node_has_class( $node, 'wp-caption' )
+					)
+				)
+			)
 			&& self::remote_file_exists( $node )
 		) {
 			return $node;
@@ -174,7 +184,7 @@ class Image extends Component {
 		}
 
 		// Check for caption.
-		$caption_regex = $is_cover_block ? '#<div.*?>?\n(.*)#m' : '#<figcaption.*?>(.*?)</figcaption>#m';
+		$caption_regex = $is_cover_block ? '#<div.*?>?\n(.*)#m' : '#<figcaption.*?>(.*?)</figcaption>#ms';
 		if ( preg_match( $caption_regex, $html, $matches ) ) {
 			$caption                  = trim( $matches[1] );
 			$values['#caption#']      = ! $is_cover_block ? $caption : array(

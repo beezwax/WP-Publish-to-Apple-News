@@ -35,6 +35,93 @@ class Image_Test extends Component_TestCase {
 	}
 
 	/**
+	 * Test Image component matching and JSON
+	 * output with HTML markup for an image.
+	 *
+	 * @access public
+	 */
+	public function testTransformImage() {
+		$this->settings->set( 'html_support', 'yes' );
+		$this->settings->set( 'use_remote_images', 'yes' );
+
+		$html = '<img src="http://someurl.com/filename.jpg" alt="Example" align="left" />';
+
+		$component = new Image(
+			$html,
+			new Workspace( 1 ),
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
+
+		// Build the node.
+		$node = self::build_node( $html );
+
+		// Test the match is not `null` and that it matches the original node.
+		$this->assertNotNull( $component->node_matches( $node ) );
+		$this->assertEquals(
+			$component->node_matches( $node ),
+			$node
+		);
+
+		// Get the JSON.
+		$json = $component->to_array();
+
+		// Test the JSON.
+		$this->assertEquals( 'photo', $json['role'] );
+		$this->assertEquals( 'http://someurl.com/filename.jpg', $json['URL'] );
+	}
+
+	/**
+	 * Test Image component matching and JSON output
+	 * with HTML5 markup for an image with a caption.
+	 *
+	 * @access public
+	 */
+	public function testTransformImageCaption() {
+		$this->settings->set( 'html_support', 'yes' );
+		$this->settings->set( 'use_remote_images', 'yes' );
+
+		$html_caption = <<<HTML
+	<figure class="wp-caption">
+		<img src="http://someurl.com/filename.jpg" alt="Example" align="left" />
+		<figcaption class="wp-caption-text">
+			Sed <strong>ac metus</strong> sagittis <em>urna feugiat</em> interdum. Duis vel blandit nisi, id tempus sem. Credit: <a href="https://domain.suffix">Domain</a>
+		</figcaption>
+	</figure>
+HTML;
+
+		// Assign an Image component.
+		$component = new Image(
+			$html_caption,
+			new Workspace( 1 ),
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
+
+		// Build the node.
+		$node = self::build_node( $html_caption );
+
+		// Test the match is not `null` and that it matches the original node.
+		$this->assertNotNull( $component->node_matches( $node ) );
+		$this->assertEquals(
+			$component->node_matches( $node ),
+			$node
+		);
+
+		// Get the JSON.
+		$json = $component->to_array();
+
+		// Test the JSON.
+		$this->assertEquals( 'container', $json['role'] );
+		$this->assertContains( $json['components'], $json );
+		$this->assertEquals( 'photo', $json['components'][0]['role'] );
+		$this->assertEquals( 'http://someurl.com/filename.jpg', $json['components'][0]['URL'] );
+		$this->assertEquals( 'Sed <strong>ac metus</strong> sagittis <em>urna feugiat</em> interdum. Duis vel blandit nisi, id tempus sem. Credit: <a href="https://domain.suffix">Domain</a>', $json['components'][0]['caption'] );
+	}
+
+	/**
 	 * Test empty src attribute.
 	 *
 	 * @access public
