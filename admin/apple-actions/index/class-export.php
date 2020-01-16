@@ -126,9 +126,9 @@ class Export extends Action {
 		// Now pass all the variables into the Exporter_Content array.
 		$base_content = new Exporter_Content(
 			$post->ID,
-			$slug,
 			$title,
 			$content,
+            $slug,
 			$excerpt,
 			$post_thumb,
 			$byline,
