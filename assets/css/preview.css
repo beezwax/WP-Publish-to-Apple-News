@@ -82,6 +82,10 @@
 	position: relative;
 }
 
+.wrap .apple-news-title {
+	margin-top: 20px;
+}
+
 .wrap .apple-news-slug {
 	margin-top: 30px;
 	margin-bottom: 0px;
