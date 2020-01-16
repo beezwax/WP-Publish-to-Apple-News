@@ -54,6 +54,9 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 			// Register assets used by the meta box.
 			add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
+
+			// Refresh the nonce after the user re-authenticates due to a wp_auth_check() to avoid failing check_admin_referrer().
+			add_action( 'wp_refresh_nonces', array( $this, 'refresh_nonce' ), 20, 1 );
 		}
 	}
 
@@ -155,6 +158,13 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			delete_post_meta( $post_id, 'apple_news_sections' );
 		}
 
+		if ( ! empty( $_POST['apple_news_is_paid'] ) && 1 === intval( $_POST['apple_news_is_paid'] ) ) {
+			$is_paid = true;
+		} else {
+			$is_paid = false;
+		}
+		update_post_meta( $post_id, 'apple_news_is_paid', $is_paid );
+
 		if ( ! empty( $_POST['apple_news_is_preview'] ) && 1 === intval( $_POST['apple_news_is_preview'] ) ) {
 			$is_preview = true;
 		} else {
@@ -205,6 +215,19 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	}
 
 	/**
+	 * Filters the Heartbeat response to refresh the apple_news_nonce
+	 *
+	 * @param array $response Heartbeat response.
+	 * @return array Filtered Heartbeat $response.
+	 * @access public
+	 */
+	public function refresh_nonce( $response ) {
+		$response['wp-refresh-post-nonces']['replace']['apple_news_nonce'] = wp_create_nonce( self::PUBLISH_ACTION );
+
+		return $response;
+	}
+
+	/**
 	 * Add the Apple News meta boxes
 	 *
 	 * @since 0.9.0
@@ -212,6 +235,12 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 * @access public
 	 */
 	public function add_meta_boxes( $post ) {
+
+		// If the block editor is active, do not add meta boxes.
+		if ( function_exists( 'use_block_editor_for_post' ) && use_block_editor_for_post( $post->ID ) ) {
+			return;
+		}
+
 		// Add the publish meta box.
 		add_meta_box(
 			'apple_news_publish',
@@ -237,6 +266,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		$api_id             = get_post_meta( $post->ID, 'apple_news_api_id', true );
 		$deleted            = get_post_meta( $post->ID, 'apple_news_api_deleted', true );
 		$pending            = get_post_meta( $post->ID, 'apple_news_api_pending', true );
+		$is_paid            = get_post_meta( $post->ID, 'apple_news_is_paid', true );
 		$is_preview         = get_post_meta( $post->ID, 'apple_news_is_preview', true );
 		$is_hidden          = get_post_meta( $post->ID, 'apple_news_is_hidden', true );
 		$maturity_rating    = get_post_meta( $post->ID, 'apple_news_maturity_rating', true );
@@ -284,7 +314,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		foreach ( $sections as $section ) {
 			?>
 			<div class="section">
-				<input id="apple-news-section-<?php echo esc_attr( $section->id ); ?>" name="apple_news_sections[]" type="checkbox" value="<?php echo esc_attr( $section->links->self ); ?>" <?php checked( self::section_is_checked( $apple_news_sections, $section->links->self, $section->isDefault ) ); ?>> <?php /* phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar */ ?>
+				<input id="apple-news-section-<?php echo esc_attr( $section->id ); ?>" name="apple_news_sections[]" type="checkbox" value="<?php echo esc_attr( $section->links->self ); ?>" <?php checked( self::section_is_checked( $apple_news_sections, $section->links->self, $section->isDefault ) ); ?>>
 				<label for="apple-news-section-<?php echo esc_attr( $section->id ); ?>"><?php echo esc_html( $section->name ); ?></label>
 			</div>
 			<?php
@@ -372,7 +402,9 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 		// Localize the JS file for meta boxes.
 		wp_localize_script(
-			$this->plugin_slug . '_meta_boxes_js', 'apple_news_meta_boxes', array(
+			$this->plugin_slug . '_meta_boxes_js',
+			'apple_news_meta_boxes',
+			array(
 				'publish_action' => self::PUBLISH_ACTION,
 			)
 		);

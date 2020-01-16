@@ -20,15 +20,98 @@ class Admin_Apple_Notice {
 	const KEY = 'apple_news_notice';
 
 	/**
+	 * Clear one or more admin notices.
+	 *
+	 * Accepts an array of notification objects to clear. First performs a
+	 * check to ensure that the notification objects match, then clears them
+	 * according to the following rules:
+	 *
+	 * - If a notification is set to be dismissible, sets the dismissed flag
+	 *   to true.
+	 * - If a notification is not set to be dismissible, removes the
+	 *   notification entirely.
+	 *
+	 * @access public
+	 *
+	 * @param array $notifications Notification objects to clear.
+	 * @return bool True if notifications were cleared, false if they were not.
+	 */
+	public static function clear( $notifications ) {
+		// Ensure a user is logged in before proceeding.
+		$current_user = get_current_user_id();
+		if ( empty( $current_user ) ) {
+			return false;
+		}
+
+		// Ensure we were given a non-empty array of notifications to clear.
+		if ( empty( $notifications ) || ! is_array( $notifications ) ) {
+			return false;
+		}
+
+		// Ensure the user has notices to compare to.
+		$notices = self::get_user_meta( $current_user );
+		if ( empty( $notices ) || ! is_array( $notices ) ) {
+			return false;
+		}
+
+		// Sort and JSON-encode the removal array to simplify comparison.
+		$notifications = array_map(
+			function( $value ) {
+				ksort( $value );
+				return wp_json_encode( $value );
+			},
+			$notifications
+		);
+
+		// Build an updated array of notices.
+		$updated = false;
+		$notices = array_filter(
+			array_map(
+				function ( $notice ) use ( $notifications, &$updated ) {
+					ksort( $notice );
+					if ( in_array( wp_json_encode( $notice ), $notifications, true ) ) {
+						$updated = true;
+						if ( ! empty( $notice['dismissible'] ) && true === $notice['dismissible'] ) {
+							$notice['dismissed'] = true;
+						} else {
+							return null;
+						}
+					}
+
+					return $notice;
+				},
+				$notices
+			)
+		);
+
+		// If there are no changes, bail out.
+		if ( ! $updated ) {
+			return false;
+		}
+
+		return false !== self::update_user_meta( $current_user, $notices );
+	}
+
+	/**
 	 * Add an error message.
 	 *
 	 * @param string $message     The message to be displayed.
 	 * @param int    $user_id     The user ID for which to display the message.
-	 * @param bool   $dismissable Whether the message is dismissable (dismissed state stored in DB).
+	 * @param bool   $dismissible Whether the message is dismissible (dismissed state stored in DB).
 	 * @access public
 	 */
-	public static function error( $message, $user_id = null, $dismissable = false ) {
-		self::message( $message, 'error', $user_id, $dismissable );
+	public static function error( $message, $user_id = null, $dismissible = false ) {
+		self::message( $message, 'error', $user_id, $dismissible );
+	}
+
+	/**
+	 * Get the admin notice(s).
+	 *
+	 * @access public
+	 */
+	public static function get() {
+		$notices = self::get_user_meta( get_current_user_id() );
+		return ( ! empty( $notices ) && is_array( $notices ) ) ? $notices : [];
 	}
 
 	/**
@@ -47,11 +130,11 @@ class Admin_Apple_Notice {
 	 *
 	 * @param string $message     The message to be displayed.
 	 * @param int    $user_id     The user ID for which to display the message.
-	 * @param bool   $dismissable Whether the message is dismissable (dismissed state stored in DB).
+	 * @param bool   $dismissible Whether the message is dismissible (dismissed state stored in DB).
 	 * @access public
 	 */
-	public static function info( $message, $user_id = null, $dismissable = false ) {
-		self::message( $message, 'warning', $user_id, $dismissable );
+	public static function info( $message, $user_id = null, $dismissible = false ) {
+		self::message( $message, 'warning', $user_id, $dismissible );
 	}
 
 	/**
@@ -60,10 +143,10 @@ class Admin_Apple_Notice {
 	 * @param string $message     The message to be displayed.
 	 * @param string $type        The type of message to display.
 	 * @param int    $user_id     The user ID for which to display the message.
-	 * @param bool   $dismissable Whether the message is dismissable (dismissed state stored in DB).
+	 * @param bool   $dismissible Whether the message is dismissible (dismissed state stored in DB).
 	 * @access public
 	 */
-	public static function message( $message, $type, $user_id = null, $dismissable = false ) {
+	public static function message( $message, $type, $user_id = null, $dismissible = false ) {
 
 		// Default to the current user, if no ID was specified.
 		if ( empty( $user_id ) ) {
@@ -92,7 +175,7 @@ class Admin_Apple_Notice {
 		self::add_user_meta(
 			$user_id,
 			array(
-				'dismissable' => $dismissable,
+				'dismissible' => $dismissible,
 				'dismissed'   => false,
 				'message'     => $message,
 				'type'        => $type,
@@ -124,6 +207,11 @@ class Admin_Apple_Notice {
 	 */
 	public static function show() {
 
+		// If we are on a single page and the block editor is in use, don't trigger this functionality.
+		if ( apple_news_block_editor_is_active_for_post() ) {
+			return;
+		}
+
 		// Check for notices.
 		$notices = self::get_user_meta( get_current_user_id() );
 		if ( empty( $notices ) || ! is_array( $notices ) ) {
@@ -149,8 +237,8 @@ class Admin_Apple_Notice {
 				self::show_notice( $notice['message'], $type );
 			}
 
-			// If the notice is dismissable, ensure it persists in the DB.
-			if ( ! empty( $notice['dismissable'] ) ) {
+			// If the notice is dismissible, ensure it persists in the DB.
+			if ( ! empty( $notice['dismissible'] ) ) {
 				$updated_notices[] = $notice;
 			}
 		}
@@ -166,11 +254,11 @@ class Admin_Apple_Notice {
 	 *
 	 * @param string $message     The message to be displayed.
 	 * @param int    $user_id     The user ID for which to display the message.
-	 * @param bool   $dismissable Whether the message is dismissable (dismissed state stored in DB).
+	 * @param bool   $dismissible Whether the message is dismissible (dismissed state stored in DB).
 	 * @access public
 	 */
-	public static function success( $message, $user_id = null, $dismissable = false ) {
-		self::message( $message, 'success', $user_id, $dismissable );
+	public static function success( $message, $user_id = null, $dismissible = false ) {
+		self::message( $message, 'success', $user_id, $dismissible );
 	}
 
 	/**
@@ -262,7 +350,7 @@ class Admin_Apple_Notice {
 	private static function get_user_meta( $user_id ) {
 
 		// Negotiate meta value.
-		if ( defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ) {
+		if ( defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV && function_exists( 'get_user_attribute' ) ) {
 			$meta_value = get_user_attribute( $user_id, self::KEY );
 		} else {
 			$meta_value = get_user_meta( $user_id, self::KEY, true ); // phpcs:ignore WordPress.VIP.RestrictedFunctions.user_meta_get_user_meta

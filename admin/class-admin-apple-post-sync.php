@@ -48,7 +48,7 @@ class Admin_Apple_Post_Sync {
 			|| 'yes' === $this->settings->get( 'api_autosync_update' )
 		) {
 			// This needs to happen after meta boxes save.
-			add_action( 'save_post', array( $this, 'do_publish' ), 99, 2 );
+			add_action( 'save_post', [ $this, 'do_publish' ], 99, 2 );
 		}
 
 		// Register delete hook if needed.
@@ -69,7 +69,8 @@ class Admin_Apple_Post_Sync {
 		if ( 'publish' !== $post->post_status
 			|| ! in_array( $post->post_type, $this->settings->post_types, true )
 			|| ( ! current_user_can( apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $post->post_type ) ) )
-				&& ! ( defined( 'DOING_CRON' ) && DOING_CRON ) ) ) {
+				&& ! ( defined( 'DOING_CRON' ) && DOING_CRON ) )
+		) {
 			return;
 		}
 

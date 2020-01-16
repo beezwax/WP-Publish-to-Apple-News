@@ -160,6 +160,13 @@ abstract class Component {
 	public $specs;
 
 	/**
+	 * Variable to store the parsed text alignment
+	 *
+	 * @var string
+	 */
+	protected $text_alignment;
+
+	/**
 	 * Allowed HTML tags for components that support it.
 	 *
 	 * @since 1.2.7
@@ -283,7 +290,7 @@ abstract class Component {
 		libxml_clear_errors( true );
 
 		// Find the first-level nodes of the body tag.
-		$element = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes->item( 0 ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+		$element = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes->item( 0 );
 		$html    = $dom->saveHTML( $element );
 		return preg_replace( '#<[^/>][^>]*></[^>]+>#', '', $html );
 	}
@@ -658,7 +665,6 @@ abstract class Component {
 	 * @return string The value for textAlignment.
 	 */
 	protected function find_text_alignment() {
-
 		// TODO: In a future release, update this logic to respect "align" values.
 		return 'left';
 	}
@@ -734,7 +740,7 @@ abstract class Component {
 	protected static function remote_file_exists( $node ) {
 
 		// Try to get a URL from the src attribute of the HTML.
-		$html = $node->ownerDocument->saveXML( $node ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+		$html = $node->ownerDocument->saveXML( $node );
 		$path = self::url_from_src( $html );
 		if ( empty( $path ) ) {
 			return false;
@@ -765,11 +771,11 @@ abstract class Component {
 	protected static function url_from_src( $html ) {
 
 		// Try to find src values in the provided HTML.
-		if ( ! preg_match_all( '/src=[\'"]([^\'"]+)[\'"]/im', $html, $matches ) ) {
+		if ( ! preg_match_all( '/src=[\'"]([^\'"]+)[\'"]|background-image:url\((.*?)\)/im', $html, $matches ) ) {
 			return '';
 		}
 
-		// Loop through matches, returning the first valid URL found.
+		// Loop through matches, returning the first valid URL found, matching on src=.
 		foreach ( $matches[1] as $url ) {
 
 			// Run the URL through the formatter.
@@ -781,6 +787,55 @@ abstract class Component {
 			}
 		}
 
+		// Matching on background-image:url.
+		foreach ( $matches[2] as $url ) {
+
+			// Run the URL through the formatter.
+			$url = Exporter_Content::format_src_url( $url );
+
+			// If the URL passes validation, return it.
+			if ( ! empty( $url ) ) {
+				return $url;
+			}
+		}
+
 		return '';
+	}
+
+	/**
+	 * Get iframe/embed node.
+	 *
+	 * @param \DOMElement $node The node to examine.
+	 * @return bool True if the figure is an iframe.
+	 */
+	public static function is_embed_figure( $node ) {
+
+		// Set default.
+		$has_figure_iframe = false;
+
+		// Return false if we don't have any child nodes.
+		if ( ! $node->hasChildNodes() ) {
+			return $has_figure_iframe;
+		}
+
+		// Loop those child nodes.
+		foreach ( $node->childNodes as $child ) {
+
+			// Return false if we don't have children, or if is an image.
+			if ( ! $child->hasChildNodes() || 'img' === $child->nodeName ) {
+				return $has_figure_iframe;
+			}
+
+			// Loop subchildren.
+			foreach ( $child->childNodes as $c ) {
+
+				// Return true if we're seeing an iframe.
+				if ( 'iframe' === $c->nodeName ) {
+					return true;
+				}
+			}
+		}
+
+		return $has_figure_iframe;
 	}
 }

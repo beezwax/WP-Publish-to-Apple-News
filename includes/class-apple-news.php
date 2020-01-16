@@ -39,7 +39,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $version = '1.4.3';
+	public static $version = '2.0.3';
 
 	/**
 	 * Link to support for the plugin on WordPress.org.
@@ -55,7 +55,7 @@ class Apple_News {
 	 * @var bool
 	 * @access private
 	 */
-	private static $_is_initialized;
+	private static $is_initialized;
 
 	/**
 	 * Plugin domain.
@@ -79,7 +79,7 @@ class Apple_News {
 	 * @var array
 	 * @access private
 	 */
-	private $_contexts = array(
+	private $contexts = array(
 		'post.php',
 		'post-new.php',
 		'toplevel_page_apple_news_index',
@@ -182,15 +182,15 @@ class Apple_News {
 	public static function is_initialized() {
 
 		// Look up required information in plugin settings, if necessary.
-		if ( null === self::$_is_initialized ) {
-			$settings              = get_option( self::$option_name );
-			self::$_is_initialized = ( ! empty( $settings['api_channel'] )
+		if ( null === self::$is_initialized ) {
+			$settings             = get_option( self::$option_name );
+			self::$is_initialized = ( ! empty( $settings['api_channel'] )
 				&& ! empty( $settings['api_key'] )
 				&& ! empty( $settings['api_secret'] )
 			);
 		}
 
-		return self::$_is_initialized;
+		return self::$is_initialized;
 	}
 
 	/**
@@ -201,11 +201,21 @@ class Apple_News {
 	public function __construct() {
 		add_action(
 			'admin_enqueue_scripts',
-			array( $this, 'action_admin_enqueue_scripts' )
+			[ $this, 'action_admin_enqueue_scripts' ]
+		);
+		add_action(
+			'enqueue_block_editor_assets',
+			[ $this, 'action_enqueue_block_editor_assets' ]
 		);
 		add_action(
 			'plugins_loaded',
-			array( $this, 'action_plugins_loaded' )
+			[ $this, 'action_plugins_loaded' ]
+		);
+		add_filter(
+			'update_post_metadata',
+			[ $this, 'filter_update_post_metadata' ],
+			10,
+			5
 		);
 	}
 
@@ -217,9 +227,8 @@ class Apple_News {
 	 * @access public
 	 */
 	public function action_admin_enqueue_scripts( $hook ) {
-
 		// Ensure we are in an appropriate context.
-		if ( ! in_array( $hook, $this->_contexts, true ) ) {
+		if ( ! in_array( $hook, $this->contexts, true ) ) {
 			return;
 		}
 
@@ -245,13 +254,44 @@ class Apple_News {
 
 		// Localize scripts.
 		wp_localize_script(
-			$this->plugin_slug . '_cover_art_js', 'apple_news_cover_art', array(
+			$this->plugin_slug . '_cover_art_js',
+			'apple_news_cover_art',
+			array(
 				'image_sizes'        => Admin_Apple_News::get_image_sizes(),
 				'image_too_small'    => esc_html__( 'You must select an image that is at least the height and width specified above.', 'apple-news' ),
 				'media_modal_button' => esc_html__( 'Select image', 'apple-news' ),
 				'media_modal_title'  => esc_html__( 'Choose an image', 'apple-news' ),
 			)
 		);
+	}
+
+	/**
+	 * Enqueues scripts for the block editor.
+	 *
+	 * @access public
+	 */
+	public function action_enqueue_block_editor_assets() {
+		// Bail if the post type is not one of the Publish to Apple News post types configured in settings.
+		if ( ! in_array( get_post_type(), (array) Admin_Apple_Settings_Section::$loaded_settings['post_types'], true ) ) {
+			return;
+		}
+
+		// Bail if this post isn't using the block editor.
+		if ( ! function_exists( 'use_block_editor_for_post' )
+			|| ! use_block_editor_for_post( get_the_ID() )
+		) {
+			return;
+		}
+
+		// Add the PluginSidebar.
+		wp_enqueue_script(
+			'publish-to-apple-news-plugin-sidebar',
+			plugins_url( 'build/pluginSidebar.js', __DIR__ ),
+			[ 'wp-i18n', 'wp-edit-post' ],
+			self::$version,
+			true
+		);
+		$this->inline_locale_data( 'apple-news-plugin-sidebar' );
 	}
 
 	/**
@@ -329,6 +369,55 @@ class Apple_News {
 	}
 
 	/**
+	 * A filter callback for update_post_metadata to fix a bug with WordPress
+	 * whereby meta values passed via the REST API that require slashing but are
+	 * otherwise the same as the existing value in the database will cause a failure
+	 * during post save.
+	 *
+	 * @see \update_metadata
+	 *
+	 * @param null|bool $check      Whether to allow updating metadata for the given type.
+	 * @param int       $object_id  Object ID.
+	 * @param string    $meta_key   Meta key.
+	 * @param mixed     $meta_value Meta value. Must be serializable if non-scalar.
+	 * @param mixed     $prev_value Optional. If specified, only update existing.
+	 * @return null|bool True if the conditions are ripe for the fix, otherwise the existing value of $check.
+	 */
+	public function filter_update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
+		if ( empty( $prev_value ) ) {
+			$old_value = get_metadata( 'post', $object_id, $meta_key );
+			if ( 1 === count( $old_value ) ) {
+				if ( $old_value[0] === $meta_value ) {
+					return true;
+				}
+			}
+		}
+
+		return $check;
+	}
+
+	/**
+	 * Creates a new Jed instance with specified locale data configuration.
+	 *
+	 * @param string $to_handle The script handle to attach the inline script to.
+	 */
+	public function inline_locale_data( $to_handle ) {
+		// Define locale data for Jed.
+		$locale_data = [
+			'' => [
+				'domain' => 'publish-to-apple-news',
+				'lang'   => get_user_locale(),
+			],
+		];
+
+		// Pass the Jed configuration to the admin to properly register i18n.
+		wp_add_inline_script(
+			$to_handle,
+			'wp.i18n.setLocaleData( ' . wp_json_encode( $locale_data ) . ", 'publish-to-apple-news' );"
+		);
+	}
+
+	/**
 	 * Initialize the value of api_autosync_delete if not set.
 	 *
 	 * @access public
@@ -358,7 +447,8 @@ class Apple_News {
 		// Check for the presence of blockquote-specific settings.
 		$wp_settings = get_option( self::$option_name );
 		if ( $this->all_keys_exist(
-			$wp_settings, array(
+			$wp_settings,
+			array(
 				'blockquote_background_color',
 				'blockquote_border_color',
 				'blockquote_border_style',
@@ -434,7 +524,8 @@ class Apple_News {
 		// Check for the presence of caption-specific settings.
 		$wp_settings = get_option( self::$option_name );
 		if ( $this->all_keys_exist(
-			$wp_settings, array(
+			$wp_settings,
+			array(
 				'caption_color',
 				'caption_font',
 				'caption_line_height',
@@ -545,7 +636,8 @@ class Apple_News {
 
 		// Clone settings, as necessary.
 		$wp_settings = $this->clone_settings(
-			$wp_settings, array(
+			$wp_settings,
+			array(
 				'header1_color'       => 'header_color',
 				'header2_color'       => 'header_color',
 				'header3_color'       => 'header_color',

@@ -27,7 +27,7 @@ class Text_Styles extends Builder {
 	 * @access private
 	 * @var array
 	 */
-	private $_styles = array();
+	private $styles = array();
 
 	/**
 	 * Constructor.
@@ -61,7 +61,7 @@ class Text_Styles extends Builder {
 		 *
 		 * @param array $styles The styles to be filtered.
 		 */
-		return apply_filters( 'apple_news_text_styles', $this->_styles );
+		return apply_filters( 'apple_news_text_styles', $this->styles );
 	}
 
 	/**
@@ -75,12 +75,12 @@ class Text_Styles extends Builder {
 	public function register_style( $name, $values ) {
 
 		// Only register once, since styles have unique names.
-		if ( array_key_exists( $name, $this->_styles ) ) {
+		if ( array_key_exists( $name, $this->styles ) ) {
 			return;
 		}
 
 		// Register the style.
-		$this->_styles[ $name ] = $values;
+		$this->styles[ $name ] = $values;
 	}
 
 	/**
@@ -95,7 +95,8 @@ class Text_Styles extends Builder {
 
 		// Add style for <code> tags.
 		$this->register_style(
-			'default-tag-code', array(
+			'default-tag-code',
+			array(
 				'fontName'   => $theme->get_value( 'monospaced_font' ),
 				'fontSize'   => intval( $theme->get_value( 'monospaced_size' ) ),
 				'tracking'   => intval( $theme->get_value( 'monospaced_tracking' ) ) / 100,
@@ -106,7 +107,8 @@ class Text_Styles extends Builder {
 
 		// Add style for <pre> tags.
 		$this->register_style(
-			'default-tag-pre', array(
+			'default-tag-pre',
+			array(
 				'textAlignment'          => 'left',
 				'fontName'               => $theme->get_value( 'monospaced_font' ),
 				'fontSize'               => intval( $theme->get_value( 'monospaced_size' ) ),
@@ -120,7 +122,8 @@ class Text_Styles extends Builder {
 
 		// Add style for <samp> tags.
 		$this->register_style(
-			'default-tag-samp', array(
+			'default-tag-samp',
+			array(
 				'fontName'   => $theme->get_value( 'monospaced_font' ),
 				'fontSize'   => intval( $theme->get_value( 'monospaced_size' ) ),
 				'tracking'   => intval( $theme->get_value( 'monospaced_tracking' ) ) / 100,

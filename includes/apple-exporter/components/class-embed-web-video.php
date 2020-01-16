@@ -9,9 +9,10 @@
 
 namespace Apple_Exporter\Components;
 
+use Apple_Exporter\Components\Component;
+
 /**
- * An embedded video from Youtube or Vimeo, for example. For now, assume
- * any iframe is an embedded video.
+ * An embedded video from Youtube or Vimeo, which are the only two providers that Apple supports.
  *
  * @since 0.2.0
  */
@@ -37,8 +38,9 @@ class Embed_Web_Video extends Component {
 	 */
 	public static function is_embed_web_video( $node, $pattern ) {
 		return (
-			( 'p' === $node->nodeName && preg_match( $pattern, trim( $node->nodeValue ) ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
-			|| ( 'iframe' === $node->nodeName && preg_match( $pattern, trim( $node->getAttribute( 'src' ) ) ) ) // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+			( 'p' === $node->nodeName && preg_match( $pattern, trim( $node->nodeValue ) ) )
+			|| ( 'iframe' === $node->nodeName && preg_match( $pattern, trim( $node->getAttribute( 'src' ) ) ) )
+			|| ( 'figure' === $node->nodeName && Component::is_embed_figure( $node ) && preg_match( $pattern, trim( $node->nodeValue ) ) )
 		);
 	}
 
@@ -50,6 +52,16 @@ class Embed_Web_Video extends Component {
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
+
+		// Handling for a Gutenberg web video embed.
+		if (
+			'figure' === $node->nodeName
+			&& ( self::node_has_class( $node, 'wp-block-embed-vimeo' )
+				|| self::node_has_class( $node, 'wp-block-embed-youtube' )
+			)
+		) {
+			return $node;
+		}
 
 		// Is this node valid for further processing?
 		if ( self::is_embed_web_video( $node, self::YOUTUBE_MATCH )

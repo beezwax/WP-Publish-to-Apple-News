@@ -70,7 +70,8 @@ class Request {
 
 		// Set the default WordPress HTTP API args.
 		$this->default_args = apply_filters(
-			'apple_news_request_args', array(
+			'apple_news_request_args',
+			array(
 				'reject_unsafe_urls' => true,
 				'timeout'            => 5,
 			)
@@ -246,7 +247,7 @@ class Request {
 			 *
 			 * See https://developer.wordpress.org/reference/functions/wp_mail/ for documentation and examples.
 			 *
-			 * @since x.x.x
+			 * @since 1.4.4
 			 *
 			 * @param string|array $headers     Optional. Additional headers.
 			 */
@@ -281,8 +282,8 @@ class Request {
 			foreach ( $response_decoded->errors as $error ) {
 				// If there is a keyPath, build it into a string.
 				$key_path = '';
-				if ( ! empty( $error->keyPath ) && is_array( $error->keyPath ) ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
-					foreach ( $error->keyPath as $i => $path ) { // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+				if ( ! empty( $error->keyPath ) && is_array( $error->keyPath ) ) {
+					foreach ( $error->keyPath as $i => $path ) {
 						if ( $i > 0 ) {
 							$key_path .= "->$path";
 						} else {
@@ -290,7 +291,7 @@ class Request {
 						}
 					}
 
-					$key_path = " (keyPath $key_path)"; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+					$key_path = " (keyPath $key_path)";
 				}
 
 				// Add the code, message and keyPath.
@@ -384,4 +385,4 @@ class Request {
  * @package Apple_News
  * @subpackage Apple_Push_API\Request
  */
-class Request_Exception extends \Exception {} // phpcs:ignore Generic.Files.OneClassPerFile.MultipleFound
+class Request_Exception extends \Exception {} // phpcs:ignore Generic.Files.OneObjectStructurePerFile.MultipleFound

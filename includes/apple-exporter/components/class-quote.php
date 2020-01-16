@@ -26,7 +26,7 @@ class Quote extends Component {
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
-		return ( 'blockquote' === $node->nodeName ) ? $node : null; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+		return ( 'blockquote' === $node->nodeName || ( isset( $node->firstChild->tagName ) && 'blockquote' === $node->firstChild->tagName ) ) ? $node : null;
 	}
 
 	/**
@@ -57,7 +57,7 @@ class Quote extends Component {
 						'text'      => '#text#',
 						'format'    => '#format#',
 						'layout'    => 'blockquote-layout',
-						'textStyle' => 'default-blockquote',
+						'textStyle' => '#default_blockquote#',
 					),
 				),
 			)
@@ -95,7 +95,7 @@ class Quote extends Component {
 						'text'      => '#text#',
 						'format'    => '#format#',
 						'layout'    => 'blockquote-layout',
-						'textStyle' => 'default-blockquote',
+						'textStyle' => '#default_blockquote#',
 					),
 				),
 			)
@@ -228,10 +228,15 @@ class Quote extends Component {
 	 * @access protected
 	 */
 	protected function build( $html ) {
+		$is_pullquote = 0 === strpos( $html, '<figure class="wp-block-pullquote' );
+		$string_match = $is_pullquote ? '#<figure.*?align(.*?)"><blockquote.*?>(.*?)</blockquote>#si'
+			: '#<blockquote(?:\s[^>]*?text-align:\s*(left|center|right))?[^>]*>(.*?)</blockquote>#si';
 
 		// Extract text from blockquote HTML.
-		preg_match( '#<blockquote.*?>(.*?)</blockquote>#si', $html, $matches );
-		$text = $matches[1];
+		preg_match( $string_match, $html, $matches );
+		$this->text_alignment = 3 === count( $matches ) && $matches[1] ? $matches[1] : 'left';
+		$this->text_alignment = 'wide' === $this->text_alignment ? 'center' : $this->text_alignment;
+		$text                 = isset( $matches[2] ) ? $matches[2] : $matches[1];
 
 		// If there is no text for this element, bail.
 		$check = trim( $text );
@@ -326,6 +331,7 @@ class Quote extends Component {
 			'#blockquote_background_color#' => $theme->get_value( 'blockquote_background_color' ),
 			'#text#'                        => $this->parser->parse( $text ),
 			'#format#'                      => $this->parser->format,
+			'#default_blockquote#'          => 'default-blockquote-' . $this->text_alignment,
 		);
 
 		// Set component attributes.
@@ -432,20 +438,20 @@ class Quote extends Component {
 	private function set_blockquote_style() {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme          = \Apple_Exporter\Theme::get_used();
+		$text_alignment = $this->find_text_alignment( $this->text );
 
 		$this->register_style(
-			'default-blockquote',
+			'default-blockquote-' . $text_alignment,
 			'default-blockquote',
 			array(
 				'#blockquote_font#'        => $theme->get_value( 'blockquote_font' ),
 				'#blockquote_size#'        => intval( $theme->get_value( 'blockquote_size' ) ),
 				'#blockquote_color#'       => $theme->get_value( 'blockquote_color' ),
 				'#blockquote_line_height#' => intval( $theme->get_value( 'blockquote_line_height' ) ),
-				'#text_alignment#'         => $this->find_text_alignment(),
+				'#text_alignment#'         => $this->find_text_alignment( $this->text ),
 				'#blockquote_tracking#'    => intval( $theme->get_value( 'blockquote_tracking' ) ) / 100,
-			),
-			'textStyle'
+			)
 		);
 	}
 

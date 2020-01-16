@@ -8,16 +8,20 @@
  * @link    http://github.com/alleyinteractive/apple-news
  * @since   0.2.0
  * @package WP_Plugin
- *
+ */
+
+/*
  * Plugin Name: Publish to Apple News
  * Plugin URI:  http://github.com/alleyinteractive/apple-news
  * Description: Export and sync posts to Apple format.
- * Version:     1.4.3
- * Author:      Alley Interactive
- * Author URI:  https://www.alleyinteractive.com
+ * Version:     2.0.3
+ * Author:      Alley
+ * Author URI:  https://alley.co
  * Text Domain: apple-news
  * Domain Path: lang/
  */
+
+require_once plugin_dir_path( __FILE__ ) . './includes/meta.php';
 
 if ( ! defined( 'WPINC' ) ) {
 	die;
@@ -92,3 +96,99 @@ new Admin_Apple_News();
 function apple_news_is_exporting() {
 	return Apple_Actions\Index\Export::is_exporting();
 }
+
+/**
+ * Check if Block Editor is active.
+ * Must only be used after plugins_loaded action is fired.
+ *
+ * @return bool
+ */
+function apple_news_block_editor_is_active() {
+	$active = true;
+
+	// Gutenberg plugin is installed and activated.
+	$gutenberg = ! ( false === has_filter( 'replace_editor', 'gutenberg_init' ) );
+
+	// Block editor since 5.0.
+	$block_editor = version_compare( $GLOBALS['wp_version'], '5.0-beta', '>' );
+
+	if ( ! $gutenberg && ! $block_editor ) {
+		$active = false;
+	}
+
+	if ( $active && apple_news_is_classic_editor_plugin_active() ) {
+		$editor_option       = get_option( 'classic-editor-replace' );
+		$block_editor_active = array( 'no-replace', 'block' );
+
+		$active = in_array( $editor_option, $block_editor_active, true );
+	}
+
+	/**
+	 * Overrides whether Apple News thinks the block editor is active or not.
+	 *
+	 * @since 2.0.0
+	 *
+	 * @param bool $active Whether Apple News thinks the block editor is active or not.
+	 */
+	return apply_filters( 'apple_news_block_editor_is_active', $active );
+}
+
+/**
+ * Check if Block Editor is active for a given post ID.
+ *
+ * @param int $post_id Optional. The post ID to check. Defaults to the current post ID.
+ * @return bool
+ */
+function apple_news_block_editor_is_active_for_post( $post_id = 0 ) {
+
+	// If get_current_screen is not defined, we can't get info about the view, so bail out.
+	if ( ! function_exists( 'get_current_screen' ) || ! function_exists( 'use_block_editor_for_post' ) ) {
+		return false;
+	}
+
+	// Only return true if we are on the post add/edit screen.
+	$screen = get_current_screen();
+	if ( empty( $screen->base ) || 'post' !== $screen->base ) {
+		return false;
+	}
+
+	// If the post ID isn't specified, pull the current post ID.
+	if ( empty( $post_id ) ) {
+		$post_id = get_the_ID();
+	}
+
+	// If the post ID isn't defined, bail out.
+	if ( empty( $post_id ) ) {
+		return false;
+	}
+
+	return use_block_editor_for_post( $post_id );
+}
+
+/**
+ * Check if Classic Editor plugin is active.
+ *
+ * @return bool
+ */
+function apple_news_is_classic_editor_plugin_active() {
+	if ( ! function_exists( 'is_plugin_active' ) ) {
+		include_once ABSPATH . 'wp-admin/includes/plugin.php';
+	}
+
+	if ( is_plugin_active( 'classic-editor/classic-editor.php' ) ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Given a user ID, a post ID, and an action, determines whether a user can
+ * perform the action or not.
+ *
+ * @param int    $post_id The ID of the post to check.
+ * @param string $action  The action to check. One of 'publish', 'update', 'delete'.
+ * @param int    $user_id The user ID to check.
+ *
+ * @return bool True if the user can perform the action, false otherwise.
+ */

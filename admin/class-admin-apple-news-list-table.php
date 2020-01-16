@@ -227,12 +227,15 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 
 		// Return the row action HTML.
 		return apply_filters(
-			'apple_news_column_title', sprintf(
+			'apple_news_column_title',
+			sprintf(
 				'%1$s <span>(id:%2$s)</span> %3$s',
 				esc_html( $item->post_title ),
 				absint( $item->ID ),
 				$this->row_actions( $actions ) // Can't be escaped but all elements are fully escaped above.
-			), $item, $actions
+			),
+			$item,
+			$actions
 		);
 	}
 
@@ -245,7 +248,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 */
 	public function get_columns() {
 		return apply_filters(
-			'apple_news_export_list_columns', array(
+			'apple_news_export_list_columns',
+			array(
 				'cb'         => '<input type="checkbox">',
 				'title'      => __( 'Title', 'apple-news' ),
 				'updated_at' => __( 'Last updated at', 'apple-news' ),
@@ -286,7 +290,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 */
 	public function get_bulk_actions() {
 		return apply_filters(
-			'apple_news_bulk_actions', array(
+			'apple_news_bulk_actions',
+			array(
 				Admin_Apple_Index_Page::namespace_action( 'push' ) => __( 'Publish', 'apple-news' ),
 			)
 		);
@@ -402,7 +407,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		$total_items = $query->found_posts;
 		$this->set_pagination_args(
 			apply_filters(
-				'apple_news_export_table_pagination_args', array(
+				'apple_news_export_table_pagination_args',
+				array(
 					'total_items' => $total_items,
 					'per_page'    => $this->per_page,
 					'total_pages' => ceil( $total_items / $this->per_page ),
@@ -447,8 +453,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @access protected
 	 */
 	protected function get_publish_status_filter() {
-		return ( ! empty( $_GET['apple_news_publish_status'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
-			? sanitize_text_field( wp_unslash( $_GET['apple_news_publish_status'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
+		return ( ! empty( $_GET['apple_news_publish_status'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected, WordPress.Security.NonceVerification.Recommended
+			? sanitize_text_field( wp_unslash( $_GET['apple_news_publish_status'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected, WordPress.Security.NonceVerification.Recommended
 			: '';
 	}
 
@@ -459,8 +465,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @access protected
 	 */
 	protected function get_date_from_filter() {
-		return ( ! empty( $_GET['apple_news_date_from'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
-			? sanitize_text_field( wp_unslash( $_GET['apple_news_date_from'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
+		return ( ! empty( $_GET['apple_news_date_from'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected, WordPress.Security.NonceVerification.Recommended
+			? sanitize_text_field( wp_unslash( $_GET['apple_news_date_from'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected, WordPress.Security.NonceVerification.Recommended
 			: '';
 	}
 
@@ -471,8 +477,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @access protected
 	 */
 	protected function get_date_to_filter() {
-		return ( ! empty( $_GET['apple_news_date_to'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
-			? sanitize_text_field( wp_unslash( $_GET['apple_news_date_to'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected
+		return ( ! empty( $_GET['apple_news_date_to'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected, WordPress.Security.NonceVerification.Recommended
+			? sanitize_text_field( wp_unslash( $_GET['apple_news_date_to'] ) ) // phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected, WordPress.Security.NonceVerification.Recommended
 			: '';
 	}
 
@@ -483,8 +489,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @access protected
 	 */
 	protected function get_search_filter() {
-		return ( ! empty( $_GET['s'] ) )
-			? sanitize_text_field( wp_unslash( $_GET['s'] ) )
+		return ( ! empty( $_GET['s'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			? sanitize_text_field( wp_unslash( $_GET['s'] ) ) // phpcs:ignore WordPress.Security.NonceVerification.Recommended
 			: '';
 	}
 
@@ -496,7 +502,8 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	protected function publish_status_filter_field() {
 		// Add available statuses.
 		$publish_statuses = apply_filters(
-			'apple_news_publish_statuses', array(
+			'apple_news_publish_statuses',
+			array(
 				''              => __( 'Show All Statuses', 'apple-news' ),
 				'published'     => __( 'Published', 'apple-news' ),
 				'not_published' => __( 'Not Published', 'apple-news' ),
