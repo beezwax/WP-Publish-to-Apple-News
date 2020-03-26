@@ -26,6 +26,16 @@ class Image extends Component {
 	 */
 	public static function node_matches( $node ) {
 
+		$has_image_child = false;
+		// If this is a figure and it has children, see if we can find an image
+		if ( $node->hasChildNodes() && 'figure' === $node->tagName ) {
+			foreach ( $node->childNodes as $child ) {
+				if ( 'img' === $child->tagName ) {
+					$has_image_child = true;
+				}
+			}
+		}
+
 		// Is this an image node?
 		if (
 			(
@@ -36,6 +46,7 @@ class Image extends Component {
 					&& (
 						Component::is_embed_figure( $node )
 						|| self::node_has_class( $node, 'wp-caption' )
+						|| $has_image_child
 					)
 				)
 			)
