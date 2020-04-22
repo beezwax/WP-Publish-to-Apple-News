@@ -273,7 +273,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			} elseif ( ! empty( $multiple_attr ) ) {
 				$field = '<select id="%s" name="%s' . $multiple_name . '" ' . $multiple_attr . ' size="%s">';
 			} else {
-				$field = '<select id="%s" name="%s" >';
+				$field = '<select id="%s" name="%s">';
 			}
 
 			foreach ( $type as $key => $option ) {
