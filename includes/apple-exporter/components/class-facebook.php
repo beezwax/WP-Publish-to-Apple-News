@@ -71,7 +71,9 @@ class Facebook extends Component {
 		}
 
 		// Check for element with just a Facebook url.
-		if ( false !== self::get_facebook_url( $node->nodeValue ) ) {
+		if ( false !== self::get_facebook_url( $node->nodeValue )
+			&& false !== filter_var( $node->nodeValue, FILTER_VALIDATE_URL )
+		) {
 			return $node;
 		}
 
