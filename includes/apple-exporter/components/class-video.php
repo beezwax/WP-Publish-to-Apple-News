@@ -21,6 +21,26 @@ use \Apple_Exporter\Exporter_Content;
 class Video extends Component {
 
 	/**
+	 * Check if the remote file's headers return HTTP 200
+	 *
+	 * @param \DOMElement $node The node to examine for matches.
+	 * @return boolean
+	 * @access protected
+	 */
+	protected static function remote_file_exists( $node ) {
+
+		// Try to get a URL from the src attribute of the HTML.
+		$html = $node->ownerDocument->saveXML( $node );
+		$path = self::url_from_src( $html );
+		if ( empty( $path ) ) {
+			return false;
+		}
+
+		$headers = get_headers( $path );
+		return stripos( $headers[0], '200 OK' ) ? true : false;
+	}
+
+	/**
 	 * Look for node matches for this component.
 	 *
 	 * @param \DOMElement $node The node to examine for matches.
@@ -29,8 +49,15 @@ class Video extends Component {
 	 */
 	public static function node_matches( $node ) {
 
-		// Ensure that this is a video tag and that the source exists.
-		if ( 'video' === $node->nodeName && self::remote_file_exists( $node ) ) {
+		if (
+			// Is this a gutenberg video block?
+			(
+				self::node_has_class( $node, 'wp-block-video' ) &&
+				$node->hasChildNodes() &&
+				'video' === $node->firstChild->nodeName && self::remote_file_exists( $node->firstChild )
+			) ||
+			// Or is this a stand-along video tag?
+			'video' === $node->nodeName && self::remote_file_exists( $node ) ) {
 			return $node;
 		}
 
@@ -43,6 +70,26 @@ class Video extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
+		$this->register_spec(
+			'json-with-caption-text',
+			__('JSON With Caption Text', 'apple-news'),
+			array(
+				'role' => 'container',
+				'components' => array(
+					array(
+						'role' => 'video',
+						'URL' => '#url#',
+						'stillURL' => '#still_url#',
+					),
+					array(
+						'role' => 'caption',
+						'text' => '#caption_text#',
+						'format' => 'html',
+					),
+				),
+			),
+		);
+
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
@@ -73,9 +120,15 @@ class Video extends Component {
 			return;
 		}
 
+		preg_match( '/<figcaption>(.*?)<\/figcaption>/', $html, $caption_match );
+		$video_caption = $caption_match[1] ?? '';
+		$video_spec = ! empty( $video_caption ) ? 'json-with-caption-text' : 'json';
+
+
 		// Set values.
 		$values = array(
 			'#url#' => esc_url_raw( $url ),
+			'#caption_text#' => $video_caption,
 		);
 
 		// Add poster frame, if defined.
@@ -87,7 +140,7 @@ class Video extends Component {
 		}
 
 		$this->register_json(
-			'json',
+			$video_spec,
 			$values
 		);
 	}
