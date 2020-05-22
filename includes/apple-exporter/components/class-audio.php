@@ -95,9 +95,11 @@ class Audio extends Component {
 			return;
 		}
 
-		preg_match( '/<figcaption>(.*?)<\/figcaption>/', $html, $caption_match );
-		$audio_caption = $caption_match[1] ?? '';
-		$audio_spec = ! empty( $audio_caption ) ? 'json-with-caption-text' : 'json';
+		$audio_spec = 'json';
+		if ( preg_match( '/<figcaption>(.+?)<\/figcaption>/', $html, $caption_match ) ) {
+			$audio_caption = $caption_match[1];
+			$audio_spec = 'json-with-caption-text';
+		}
 		$values = array(
 			'#url#' => esc_url_raw( $url ),
 			'#caption_text#' => $audio_caption,
@@ -107,4 +109,3 @@ class Audio extends Component {
 	}
 
 }
-
