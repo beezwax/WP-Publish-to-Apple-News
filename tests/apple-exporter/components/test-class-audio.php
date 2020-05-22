@@ -18,6 +18,38 @@ class Audio_Test extends Component_TestCase {
 		$this->assertEquals( 'http://someurl.com/audio-file.mp3?some_query=string', $json['URL'] );
 	}
 
+	/**
+	 * Tests HTML formatting with captions.
+	 *
+	 * @access public
+	 */
+	public function testCaption() {
+		$workspace = $this->prophet->prophesize( '\Exporter\Workspace' );
+
+		// Pass the mock workspace as a dependency
+		$component = new Audio( '<figure class="wp-block-audio"><audio controls="" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"/><figcaption>caption</figcaption></figure>',
+			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
+
+		// Test.
+		$this->assertEquals(
+			array(
+				'role' => 'container',
+				'components' => array(
+					array(
+						"role" => "audio",
+						"URL" => "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+					),
+					array(
+						"role" => "caption",
+						"text" => "caption",
+						"format" => "html",
+					)
+				)
+			),
+			$component->to_array()
+		);
+	}
+
 	public function testFilter() {
 		$workspace = $this->prophet->prophesize( '\Exporter\Workspace' );
 

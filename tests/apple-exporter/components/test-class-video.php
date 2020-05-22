@@ -74,6 +74,39 @@ HTML;
 	}
 
 	/**
+	 * Tests the ability for the Video component to get and save caption information
+	 *
+	 * @access public
+	 */
+	public function testCaption() {
+		$workspace = $this->prophet->prophesize( '\Exporter\Workspace' );
+
+		// Pass the mock workspace as a dependency
+		$component = new Video( '<figure class="wp-block-video"><video controls="" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"/><figcaption>caption</figcaption></figure>',
+			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
+
+		// Test.
+		$this->assertEquals(
+			array(
+				'role' => 'container',
+				'components' => array(
+					array(
+						"role" => "video",
+						"URL" => "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+					),
+					array(
+						"role" => "caption",
+						"text" => "caption",
+						"format" => "html",
+					)
+				)
+			),
+			$component->to_array()
+		);
+		$html = '';
+	}
+
+	/**
 	 * Tests the transformation process from a video element to a Video component.
 	 *
 	 * @access public
