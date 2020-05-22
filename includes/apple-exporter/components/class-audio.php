@@ -96,6 +96,7 @@ class Audio extends Component {
 		}
 
 		$audio_spec = 'json';
+		$audio_caption = '';
 		if ( preg_match( '/<figcaption>(.+?)<\/figcaption>/', $html, $caption_match ) ) {
 			$audio_caption = $caption_match[1];
 			$audio_spec = 'json-with-caption-text';

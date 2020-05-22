@@ -19,27 +19,6 @@ use \Apple_Exporter\Exporter_Content;
  * @since 0.2.0
  */
 class Video extends Component {
-
-	/**
-	 * Check if the remote file's headers return HTTP 200
-	 *
-	 * @param \DOMElement $node The node to examine for matches.
-	 * @return boolean
-	 * @access protected
-	 */
-	protected static function remote_file_exists( $node ) {
-
-		// Try to get a URL from the src attribute of the HTML.
-		$html = $node->ownerDocument->saveXML( $node );
-		$path = self::url_from_src( $html );
-		if ( empty( $path ) ) {
-			return false;
-		}
-
-		$headers = get_headers( $path );
-		return stripos( $headers[0], '200 OK' ) ? true : false;
-	}
-
 	/**
 	 * Look for node matches for this component.
 	 *
@@ -120,12 +99,12 @@ class Video extends Component {
 			return;
 		}
 
-		preg_match( '/<figcaption>(.*?)<\/figcaption>/', $html, $caption_match );
-		$video_caption = $caption_match[1] ?? '';
-		$video_spec = ! empty( $video_caption ) ? 'json-with-caption-text' : 'json';
-
-
-		// Set values.
+		$video_spec = 'json';
+		$video_caption = '';
+		if ( preg_match( '/<figcaption>(.*?)<\/figcaption>/', $html, $caption_match ) ) {
+			$video_caption = $caption_match[1];
+			$video_spec = 'json-with-caption-text';
+		}
 		$values = array(
 			'#url#' => esc_url_raw( $url ),
 			'#caption_text#' => $video_caption,
