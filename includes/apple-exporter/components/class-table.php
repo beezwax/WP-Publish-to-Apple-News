@@ -82,7 +82,7 @@ class Table extends Component {
 						'format' => 'html',
 					),
 				),
-			),
+			)
 		);
 
 		// Register the JSON for the table layout.
