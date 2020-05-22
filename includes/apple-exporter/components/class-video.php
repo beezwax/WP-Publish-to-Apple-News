@@ -66,7 +66,7 @@ class Video extends Component {
 						'format' => 'html',
 					),
 				),
-			),
+			)
 		);
 
 		$this->register_spec(

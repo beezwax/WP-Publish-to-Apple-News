@@ -64,7 +64,7 @@ class Audio extends Component {
 						'format' => 'html',
 					),
 				),
-			),
+			)
 		);
 
 		$this->register_spec(
