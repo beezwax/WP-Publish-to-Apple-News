@@ -24,18 +24,24 @@ class Table extends Component {
 	 */
 	public static function node_matches( $node ) {
 
-		// First, check to see if the primary node is a table.
-		if ( 'table' !== $node->nodeName ) {
-			return null;
-		}
-
 		// In order to match, HTML support needs to be turned on globally.
 		$settings = get_option( \Admin_Apple_Settings::$option_name );
 		if ( ! empty( $settings['html_support'] ) && 'no' === $settings['html_support'] ) {
 			return null;
 		}
 
-		return $node;
+		// Check if node is a table, or a figure with a table class
+		if (
+			(
+				self::node_has_class( $node, 'wp-block-table' ) &&
+				$node->hasChildNodes() &&
+				'table' === $node->firstChild->nodeName
+			) || 
+			'table' === $node->nodeName ) {
+ 			return $node;
+		}
+
+		return null;
 	}
 
 	/**
@@ -54,6 +60,28 @@ class Table extends Component {
 				'html'   => '#html#',
 				'layout' => 'table-layout',
 				'style'  => 'default-table',
+			)
+		);
+		$this->register_spec(
+			'json-with-caption-text',
+			__('JSON With Caption Text', 'apple-news'),
+			array(
+				'role' => 'container',
+				// Table Component
+				'components' => array(
+					array(
+						'role' => 'htmltable',
+						'html' => '#html#',
+						'layout' => 'table-layout',
+						'style' => 'default-table',
+					),
+					// Caption Component
+					array(
+						'role' => 'caption',
+						'text' => '#caption_text#',
+						'format' => 'html',
+					),
+				),
 			)
 		);
 
@@ -153,23 +181,29 @@ class Table extends Component {
 		 *
 		 * @since 1.4.0
 		 */
-		$html = apply_filters(
+		$table_html = apply_filters(
 			'apple_news_build_table_html',
 			$this->parser->parse( $html )
 		);
 
 		// If we don't have any table HTML at this point, bail.
-		if ( empty( $html ) ) {
+		if ( empty( $table_html ) ) {
 			return;
 		}
 
-		// Add the JSON for this component.
-		$this->register_json(
-			'json',
-			array(
-				'#html#' => $html,
-			)
+		$table_spec = 'json';
+		$table_caption = '';
+		if ( preg_match( '/<figcaption>(.+?)<\/figcaption>/', $html, $caption_match ) ) {
+			$table_caption = $caption_match[1];
+			$table_spec = 'json-with-caption-text';
+		}
+		$values = array(
+			'#html#' => str_replace( $table_caption, '', $table_html ),
+			'#caption_text#' => $table_caption,
 		);
+
+		// Add the JSON for this component.
+		$this->register_json( $table_spec, $values );
 
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
