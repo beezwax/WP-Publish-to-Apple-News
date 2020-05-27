@@ -8,9 +8,11 @@
  * @subpackage Tests
  */
 
+require_once plugin_dir_path( __FILE__ ) . '../../mocks/class-mock-video.php';
 require_once __DIR__ . '/class-component-testcase.php';
 
-use Apple_Exporter\Components\Video;
+use Apple_Exporter\Components\MockVideo as MockVideo;
+use Apple_Exporter\Components\Video as Video;
 use Apple_Exporter\Workspace;
 
 /**
@@ -82,7 +84,7 @@ HTML;
 		$workspace = $this->prophet->prophesize( '\Exporter\Workspace' );
 
 		// Pass the mock workspace as a dependency
-		$component = new Video( '<figure class="wp-block-video"><video controls="" src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"/><figcaption>caption</figcaption></figure>',
+		$component = new MockVideo( '<figure class="wp-block-video"><video controls="" src="http://www.url.com/test.mp4"/><figcaption>caption</figcaption></figure>',
 			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
 
 		// Test.
@@ -91,13 +93,13 @@ HTML;
 				'role' => 'container',
 				'components' => array(
 					array(
-						"role" => "video",
-						"URL" => "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+						'role' => 'video',
+						'URL' => 'http://www.url.com/test.mp4',
 					),
 					array(
-						"role" => "caption",
-						"text" => "caption",
-						"format" => "html",
+						'role' => 'caption',
+						'text' => 'caption',
+						'format' => 'html',
 					)
 				)
 			),

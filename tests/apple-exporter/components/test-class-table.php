@@ -80,15 +80,15 @@ HTML;
 				'role' => 'container',
 				'components' => array(
 					array(
-						"role" => "htmltable",
-						"html" => "<table><thead><tr><th>Column Header 1</th><th>Column Header 2</th></tr></thead><tbody><tr><td>Column Data 1</td><td>Column Data 2</td></tr></tbody><tfoot><tr><td>Column Footer 1</td><td>Column Footer 2</td></tr></tfoot></table>",
-						"layout" => "table-layout",
-						"style" => "default-table",
+						'role' => 'htmltable',
+						'html' => '<table><thead><tr><th>Column Header 1</th><th>Column Header 2</th></tr></thead><tbody><tr><td>Column Data 1</td><td>Column Data 2</td></tr></tbody><tfoot><tr><td>Column Footer 1</td><td>Column Footer 2</td></tr></tfoot></table>',
+						'layout' => 'table-layout',
+						'style' => 'default-table',
 					),
 					array(
-						"role" => "caption",
-						"text" => "Caption",
-						"format" => "html",
+						'role' => 'caption',
+						'text' => 'Caption',
+						'format' => 'html',
 					)
 				)
 			),
