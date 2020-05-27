@@ -747,7 +747,7 @@ abstract class Component {
 		}
 
 		$headers = get_headers( $path );
-		return stripos( $headers[0], '200 OK' ) ? true : false;
+		return ! empty( $headers[0] ) && false !== stripos( $headers[0], '200 OK' );
 	}
 
 	/**
