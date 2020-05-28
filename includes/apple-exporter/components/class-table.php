@@ -198,7 +198,7 @@ class Table extends Component {
 			$table_spec = 'json-with-caption-text';
 		}
 		$values = array(
-			'#html#' => str_replace( $table_caption, '', $table_html ),
+			'#html#' => preg_replace( '/<\/table>.*/', '</table>', $table_html ),
 			'#caption_text#' => $table_caption,
 		);
 
