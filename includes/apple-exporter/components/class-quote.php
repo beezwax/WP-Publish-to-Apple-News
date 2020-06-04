@@ -230,7 +230,7 @@ class Quote extends Component {
 	protected function build( $html ) {
 		$is_pullquote = 0 === strpos( $html, '<figure class="wp-block-pullquote' );
 		$string_match = $is_pullquote ? '#<figure.*?align(.*?)"><blockquote.*?>(.*?)</blockquote>#si'
-			: '#<blockquote(?:\s[^>]*?text-align:\s*(left|center|right))?[^>]*>(.*?)</blockquote>#si';
+			: '#<blockquote(?:\s[^>]*?text-align(?:\:|-)\s*(left|center|right))?[^>]*>(.*?)<\/blockquote>#si';
 
 		// Extract text from blockquote HTML.
 		preg_match( $string_match, $html, $matches );
@@ -439,17 +439,16 @@ class Quote extends Component {
 
 		// Get information about the currently loaded theme.
 		$theme          = \Apple_Exporter\Theme::get_used();
-		$text_alignment = $this->find_text_alignment( $this->text );
 
 		$this->register_style(
-			'default-blockquote-' . $text_alignment,
+			'default-blockquote-' . $this->text_alignment,
 			'default-blockquote',
 			array(
 				'#blockquote_font#'        => $theme->get_value( 'blockquote_font' ),
 				'#blockquote_size#'        => intval( $theme->get_value( 'blockquote_size' ) ),
 				'#blockquote_color#'       => $theme->get_value( 'blockquote_color' ),
 				'#blockquote_line_height#' => intval( $theme->get_value( 'blockquote_line_height' ) ),
-				'#text_alignment#'         => $this->find_text_alignment( $this->text ),
+				'#text_alignment#'         => $this->text_alignment,
 				'#blockquote_tracking#'    => intval( $theme->get_value( 'blockquote_tracking' ) ) / 100,
 			)
 		);
