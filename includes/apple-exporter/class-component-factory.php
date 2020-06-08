@@ -95,7 +95,6 @@ class Component_Factory {
 		self::register_component( 'table', '\\Apple_Exporter\\Components\\Table' );
 		self::register_component( 'iframe', '\\Apple_Exporter\\Components\\Embed_Web_Video' );
 		self::register_component( 'embed', '\\Apple_Exporter\\Components\\Embed_Generic' );
-		self::register_component( 'button', '\\Apple_Exporter\\Components\\Button' );
 		self::register_component( 'img', '\\Apple_Exporter\\Components\\Image' );
 		self::register_component( 'video', '\\Apple_Exporter\\Components\\Video' );
 		self::register_component( 'audio', '\\Apple_Exporter\\Components\\Audio' );

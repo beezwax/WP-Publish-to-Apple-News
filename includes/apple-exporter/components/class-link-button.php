@@ -23,7 +23,7 @@ class Link_Button extends Component {
 	 * @return array|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
-		// We are only interested in p, pre, ul and ol.
+
 		if ( 'a' !== $node->nodeName ) {
 			return null;
 		}
@@ -49,7 +49,38 @@ class Link_Button extends Component {
 				'role'   => 'link_button',
 				'text'   => '#text#',
         'URL' => '#url#',
-        // 'style'  => 'default-link-button',
+        'style' => 'default-link-button',
+        'layout' => 'link-button-layout',
+			)
+		);
+
+		// Register the JSON for the table layout.
+		$this->register_spec(
+			'link-button-layout',
+			__( 'Button Layout', 'apple-news' ),
+			array(
+				'margin' => array(
+					'bottom' => 20,
+				),
+				'padding' => array(
+					'top' => 10,
+					'bottom' => 10,
+					'left' => 15,
+					'right' => 15,
+				),
+			)
+		);
+
+		// Register the JSON for the table style.
+		$this->register_spec(
+			'default-link-button',
+			__( 'Link Button Style', 'apple-news' ),
+			array(
+				'backgroundColor' => '#DDD',
+				'mask' => array(
+					'type' => 'corners',
+					'radius' => 25,
+				),
 			)
 		);
 	}
@@ -68,7 +99,7 @@ class Link_Button extends Component {
 			return;
 		}
 
-		if ( preg_match( '/[^<]*(<a href="([^"]+)">([^<]+)<\/a>)/', $html, $link_button_match ) ) {
+		if ( preg_match( '/^(<a.*?href="([^"]+)".*?>([^<]+)|<<\/a>)/', $html, $link_button_match ) ) {
 			$this->register_json(
 				'json',
 				array(
@@ -78,63 +109,13 @@ class Link_Button extends Component {
 			);
 		}
 
-    $this->set_default_style();
-	}
+    // Register the layout for the table.
+		$this->register_layout( 'link-button-layout', 'link-button-layout' );
 
-	/**
-	 * Get the default style spec for the component.
-	 *
-	 * @return array
-	 * @access private
-	 */
-	private function get_default_style_spec() {
-		return array(
-			'textAlignment'          => 'left',
-			'fontName'               => '#body_font#',
-			'fontSize'               => '#body_size#',
-			'tracking'               => '#body_tracking#',
-			'lineHeight'             => '#body_line_height#',
-			'textColor'              => '#body_color#',
-			'linkStyle'              => array(
-				'textColor' => '#body_link_color#',
-			),
-			'paragraphSpacingBefore' => 18,
-			'paragraphSpacingAfter'  => 18,
-		);
-	}
-
-	/**
-	 * Get the default style values for the component.
-	 *
-	 * @return array
-	 * @access private
-	 */
-	private function get_default_style_values() {
-
-		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
-
-		return array(
-			'#body_font#'        => $theme->get_value( 'body_font' ),
-			'#body_size#'        => intval( $theme->get_value( 'body_size' ) ),
-			'#body_tracking#'    => intval( $theme->get_value( 'body_tracking' ) ) / 100,
-			'#body_line_height#' => intval( $theme->get_value( 'body_line_height' ) ),
-			'#body_color#'       => $theme->get_value( 'body_color' ),
-			'#body_link_color#'  => $theme->get_value( 'body_link_color' ),
-		);
-	}
-
-	/**
-	 * Set the default style for the component.
-	 *
-	 * @access public
-	 */
-	public function set_default_style() {
-		$this->register_style(
-			'default-body',
-			'default-body',
-			$this->get_default_style_values(),
-			'textStyle'
+		// Register the style for the table.
+		$this->register_component_style(
+			'default-link-button',
+			'default-link-button'
 		);
 	}
 }
