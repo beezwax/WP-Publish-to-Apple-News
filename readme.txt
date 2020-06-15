@@ -5,7 +5,7 @@ Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 5.4.0
 Requires PHP: 5.6
-Stable tag: 2.0.4
+Stable tag: 2.0.5
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,13 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.0.5 =
+* Enhancement: Added support for audio, video, and table captions in Gutenberg.
+* Enhancement: Adds styles for Button elements that are links.
+* Bugfix: Blockquotes using alignments other than left are now properly recognized.
+* Bugfix: Facebook URLs inline within other elements no longer getting converted to Facebook embeds.
+* Diversity and Inclusion: Replaced instances of "whitelist" with "allowlist" throughout the codebase. Language matters.
 
 = 2.0.4 =
 * Bump "tested up to" tag to 5.4.
