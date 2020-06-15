@@ -51,7 +51,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Enhancement: Adds styles for Button elements that are links.
 * Bugfix: Blockquotes using alignments other than left are now properly recognized.
 * Bugfix: Facebook URLs inline within other elements no longer getting converted to Facebook embeds.
-* Diversity and Inclusion: Replaced instances of "whitelist" with "allowlist" throughout the codebase. Language matters.
+* Diversity and Inclusion: Replaced instances of "whitelist" with "allowlist" throughout the codebase, change head branch from "master" to "develop". Language matters.
 
 = 2.0.4 =
 * Bump "tested up to" tag to 5.4.
