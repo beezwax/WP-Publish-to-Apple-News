@@ -1697,7 +1697,7 @@ class Theme {
 					// Sanitize.
 					$value = sanitize_text_field( $value );
 
-					// Ensure the named font is part of the whitelist.
+					// Ensure the named font is part of the allowlist.
 					if ( ! in_array( $value, self::get_fonts(), true ) ) {
 						$this->log_error(
 							sprintf(
