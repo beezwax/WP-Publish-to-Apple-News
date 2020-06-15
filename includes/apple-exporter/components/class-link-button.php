@@ -50,11 +50,12 @@ class Link_Button extends Component {
 				'text'   => '#text#',
         'URL' => '#url#',
         'style' => 'default-link-button',
-        'layout' => 'link-button-layout',
+				'layout' => 'link-button-layout',
+				'textStyle' => 'default-link-button-text-style',
 			)
 		);
 
-		// Register the JSON for the table layout.
+		// Register the JSON for the link button layout.
 		$this->register_spec(
 			'link-button-layout',
 			__( 'Button Layout', 'apple-news' ),
@@ -71,7 +72,7 @@ class Link_Button extends Component {
 			)
 		);
 
-		// Register the JSON for the table style.
+		// Register the JSON for the link button style.
 		$this->register_spec(
 			'default-link-button',
 			__( 'Link Button Style', 'apple-news' ),
@@ -81,6 +82,15 @@ class Link_Button extends Component {
 					'type' => 'corners',
 					'radius' => 25,
 				),
+			)
+		);
+
+		// Register the JSON for the link button text style.
+		$this->register_spec(
+			'default-link-button-text-style',
+			__( 'Link Button Text Style', 'apple-news' ),
+			array(
+				'textColor' => '#000',
 			)
 		);
 	}
@@ -109,13 +119,18 @@ class Link_Button extends Component {
 			);
 		}
 
-    // Register the layout for the table.
+    // Register the layout for the link button.
 		$this->register_layout( 'link-button-layout', 'link-button-layout' );
 
-		// Register the style for the table.
+		// Register the style for the link button.
 		$this->register_component_style(
 			'default-link-button',
 			'default-link-button'
+		);
+		// Register the style for the link button text.
+		$this->register_style(
+			'default-link-button-text-style',
+			'default-link-button-text-style'
 		);
 	}
 }
