@@ -16,24 +16,55 @@ namespace Apple_Exporter\Components;
 class Link_Button extends Component {
 
 	/**
+	 * Determines whether a node is an anchor tag with an HREF
+	 * and a class of wp-block-button__link, which is the signature
+	 * of a link button element.
+	 *
+	 * @param \DOMElement $node The node to examine for matches.
+	 *
+	 * @return bool True if the node is a link button, false if not.
+	 */
+	public static function is_link_button( $node ) {
+		return 'a' === $node->nodeName
+			&& self::node_has_class( $node, 'wp-block-button__link' )
+			&& ! empty( $node->getAttribute( 'href' ) );
+	}
+
+	/**
 	 * Look for node matches for this component.
 	 *
 	 * @param \DOMElement $node The node to examine for matches.
 	 * @access public
-	 * @return array|null The node on success, or null on no match.
+	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
-
-		if ( 'a' !== $node->nodeName ) {
-			return null;
+		// Anchors with an href and the button class will match.
+		if ( self::is_link_button( $node ) ) {
+			return $node;
 		}
 
-		// If the node is a AND it's empty, just ignore.
-		if ( empty( $node->nodeValue ) ) {
-			return null;
+		// DIVs for a single button will match.
+		if ( 'div' === $node->nodeName
+			&& self::node_has_class( $node, 'wp-block-button' )
+			&& $node->hasChildNodes()
+			&& self::is_link_button( $node->childNodes[0] )
+		) {
+			return $node;
 		}
 
-		return $node;
+		// DIVs for button groups will match.
+		if ( 'div' === $node->nodeName
+			&& self::node_has_class( $node, 'wp-block-buttons' )
+			&& $node->hasChildNodes()
+			&& 'div' === $node->childNodes[0]->nodeName
+			&& self::node_has_class( $node->childNodes[0], 'wp-block-button' )
+			&& $node->childNodes[0]->hasChildNodes()
+			&& self::is_link_button( $node->childNodes[0]->childNodes[0] )
+		) {
+			return $node;
+		}
+
+		return null;
 	}
 
 	/**

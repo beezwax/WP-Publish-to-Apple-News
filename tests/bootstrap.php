@@ -14,6 +14,12 @@ require_once dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php';
  * Manually load the plugin for tests.
  */
 function _manually_load_plugin() {
+	// Disable VIP cache manager when testing against VIP Go integration.
+	if ( method_exists( 'WPCOM_VIP_Cache_Manager', 'instance' ) ) {
+		remove_action( 'init', [ WPCOM_VIP_Cache_Manager::instance(), 'init' ] );
+	}
+
+	// Load the plugin.
 	require dirname( dirname( __FILE__ ) ) . '/apple-news.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
