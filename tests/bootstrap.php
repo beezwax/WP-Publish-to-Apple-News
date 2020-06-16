@@ -19,6 +19,9 @@ function _manually_load_plugin() {
 		remove_action( 'init', [ WPCOM_VIP_Cache_Manager::instance(), 'init' ] );
 	}
 
+	// Set the permalink structure.
+	update_option( 'permalink_structure', '/%postname%' );
+
 	// Load the plugin.
 	require dirname( dirname( __FILE__ ) ) . '/apple-news.php';
 }

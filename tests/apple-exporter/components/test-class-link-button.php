@@ -9,13 +9,41 @@
 require_once __DIR__ . '/class-component-testcase.php';
 
 use Apple_Exporter\Components\Link_Button;
-use Apple_Exporter\Exporter;
-use Apple_Exporter\Exporter_Content;
 
 /**
  * A class which is used to test the Apple_Exporter\Components\Link_Button class.
  */
 class Link_Button_Test extends Component_TestCase {
+
+	/**
+	 * Holds a WP_Post object containing test data.
+	 *
+	 * @var WP_Post
+	 */
+	public static $test_post;
+
+	/**
+	 * Code to run once before the entire test suite.
+	 */
+	public static function setUpBeforeClass() {
+		parent::setUpBeforeClass();
+		self::$test_post = self::factory()->post->create_and_get(
+			[
+				'post_status' => 'publish',
+				'post_title'  => 'test-post',
+			]
+		);
+	}
+
+	/**
+	 * Code to run before each test in the suite.
+	 */
+	public function setUp() {
+		parent::setUp();
+		global $post;
+		$post = self::$test_post;
+	}
+
 	/**
 	 * A data provider for the node matches test.
 	 *
@@ -28,35 +56,71 @@ class Link_Button_Test extends Component_TestCase {
 				'<a href="https://example.org/">Test Button</a>',
 				false,
 			],
-			// A bare link with the button class should match.
+			// A button link with the button class but no href should not match.
+			[
+				'<a class="wp-block-button__link">Test Button</a>',
+				false,
+			],
+			// A button link with the button class and an empty href should not match.
+			[
+				'<a class="wp-block-button__link" href="">Test Button</a>',
+				false,
+			],
+			// A button link with the button class and an href but no button text should not match.
+			[
+				'<a class="wp-block-button__link" href="https://example.org/"></a>',
+				false,
+			],
+			// A button link with the button class should match.
 			[
 				'<a class="wp-block-button__link" href="https://example.org/">Test Button</a>',
 				true,
 			],
-			// An element with the button class surrounded by a plain div should not match.
+		];
+	}
+
+	/**
+	 * A data provider for the testTransform function.
+	 *
+	 * @return array An array of function arguments for the test function.
+	 */
+	public function dataProviderTransform() {
+		return [
+			// Test a normal button.
 			[
-				'<div><a class="wp-block-button__link" href="https://example.org/">Test Button</a></div>',
-				false,
+				'<a class="wp-block-button__link" href="https://example.org/">Test Button</a>',
+				[
+					'role'      => 'link_button',
+					'text'      => 'Test Button',
+					'URL'       => 'https://example.org/',
+					'style'     => 'default-link-button',
+					'layout'    => 'link-button-layout',
+					'textStyle' => 'default-link-button-text-style',
+				],
 			],
-			// A standalone button should match.
+			// Test a root-relative URL.
 			[
-				'<div class="wp-block-button"><a class="wp-block-button__link" href="https://example.org/">Test Button</a></div>',
-				true,
+				'<a class="wp-block-button__link" href="/test">Test Button</a>',
+				[
+					'role'      => 'link_button',
+					'text'      => 'Test Button',
+					'URL'       => 'http://example.org/test',
+					'style'     => 'default-link-button',
+					'layout'    => 'link-button-layout',
+					'textStyle' => 'default-link-button-text-style',
+				],
 			],
-			// A standalone button surrounded by a plain div should not match.
+			// Test an anchor button.
 			[
-				'<div><div class="wp-block-button"><a class="wp-block-button__link" href="https://example.org/">Test Button</a></div></div>',
-				false,
-			],
-			// A full button group with one button should match.
-			[
-				'<div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link" href="https://example.org/">Test Button</a></div></div>',
-				true,
-			],
-			// A full button group with more than one button should match.
-			[
-				'<div class="wp-block-buttons"><div class="wp-block-button"><a class="wp-block-button__link" href="https://example.org/">Test Button</a></div><div class="wp-block-button"><a class="wp-block-button__link" href="https://example2.org/">Test Button 2</a></div></div>',
-				true,
+				'<a class="wp-block-button__link" href="#test">Test Button</a>',
+				[
+					'role'      => 'link_button',
+					'text'      => 'Test Button',
+					'URL'       => 'http://example.org/test-post/#test',
+					'style'     => 'default-link-button',
+					'layout'    => 'link-button-layout',
+					'textStyle' => 'default-link-button-text-style',
+				],
 			],
 		];
 	}
@@ -83,29 +147,23 @@ class Link_Button_Test extends Component_TestCase {
 	/**
 	 * Tests the transformation process from a button to a Link_Button component.
 	 *
-	 * @access public
+	 * @param string $html     The HTML to transform into a Link Button.
+	 * @param array  $expected The expected result from the component's to_array method.
+	 *
+	 * @dataProvider dataProviderTransform
 	 */
-	public function testTransformLinkButton() {
-		$this->assertTrue( true );
-		return;
-
+	public function testTransform( $html, $expected ) {
 		// Setup.
 		$component = new Link_Button(
-			'<blockquote><p>my quote</p></blockquote>',
+			$html,
 			null,
 			$this->settings,
 			$this->styles,
-			$this->layouts
+			$this->layouts,
+			null,
+			$this->component_styles
 		);
-		$result_wrapper = $component->to_array();
-		$result = $result_wrapper['components'][0];
-
-		// Test.
-		$this->assertEquals( 'container', $result_wrapper['role'] );
-		$this->assertEquals( 'quote', $result['role'] );
-		$this->assertEquals( '<p>my quote</p>', $result['text'] );
-		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-blockquote-left', $result['textStyle'] );
-		$this->assertEquals( 'blockquote-layout', $result['layout'] );
+		$result = $component->to_array();
+		$this->assertEquals( $expected, $result );
 	}
 }

@@ -16,21 +16,6 @@ namespace Apple_Exporter\Components;
 class Link_Button extends Component {
 
 	/**
-	 * Determines whether a node is an anchor tag with an HREF
-	 * and a class of wp-block-button__link, which is the signature
-	 * of a link button element.
-	 *
-	 * @param \DOMElement $node The node to examine for matches.
-	 *
-	 * @return bool True if the node is a link button, false if not.
-	 */
-	public static function is_link_button( $node ) {
-		return 'a' === $node->nodeName
-			&& self::node_has_class( $node, 'wp-block-button__link' )
-			&& ! empty( $node->getAttribute( 'href' ) );
-	}
-
-	/**
 	 * Look for node matches for this component.
 	 *
 	 * @param \DOMElement $node The node to examine for matches.
@@ -38,33 +23,12 @@ class Link_Button extends Component {
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
-		// Anchors with an href and the button class will match.
-		if ( self::is_link_button( $node ) ) {
-			return $node;
-		}
-
-		// DIVs for a single button will match.
-		if ( 'div' === $node->nodeName
-			&& self::node_has_class( $node, 'wp-block-button' )
-			&& $node->hasChildNodes()
-			&& self::is_link_button( $node->childNodes[0] )
-		) {
-			return $node;
-		}
-
-		// DIVs for button groups will match.
-		if ( 'div' === $node->nodeName
-			&& self::node_has_class( $node, 'wp-block-buttons' )
-			&& $node->hasChildNodes()
-			&& 'div' === $node->childNodes[0]->nodeName
-			&& self::node_has_class( $node->childNodes[0], 'wp-block-button' )
-			&& $node->childNodes[0]->hasChildNodes()
-			&& self::is_link_button( $node->childNodes[0]->childNodes[0] )
-		) {
-			return $node;
-		}
-
-		return null;
+		return 'a' === $node->nodeName
+			&& self::node_has_class( $node, 'wp-block-button__link' )
+			&& ! empty( $node->getAttribute( 'href' ) )
+			&& ! empty( $node->nodeValue )
+				? $node
+				: null;
 	}
 
 	/**
@@ -77,11 +41,11 @@ class Link_Button extends Component {
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role'   => 'link_button',
-				'text'   => '#text#',
-        'URL' => '#url#',
-        'style' => 'default-link-button',
-				'layout' => 'link-button-layout',
+				'role'      => 'link_button',
+				'text'      => '#text#',
+				'URL'       => '#url#',
+				'style'     => 'default-link-button',
+				'layout'    => 'link-button-layout',
 				'textStyle' => 'default-link-button-text-style',
 			)
 		);
@@ -91,14 +55,14 @@ class Link_Button extends Component {
 			'link-button-layout',
 			__( 'Button Layout', 'apple-news' ),
 			array(
-				'margin' => array(
+				'margin'  => array(
 					'bottom' => 20,
 				),
 				'padding' => array(
-					'top' => 10,
+					'top'    => 10,
 					'bottom' => 10,
-					'left' => 15,
-					'right' => 15,
+					'left'   => 15,
+					'right'  => 15,
 				),
 			)
 		);
@@ -109,8 +73,8 @@ class Link_Button extends Component {
 			__( 'Link Button Style', 'apple-news' ),
 			array(
 				'backgroundColor' => '#DDD',
-				'mask' => array(
-					'type' => 'corners',
+				'mask'            => array(
+					'type'   => 'corners',
 					'radius' => 25,
 				),
 			)
@@ -134,23 +98,30 @@ class Link_Button extends Component {
 	 */
 	protected function build( $html ) {
 
-		// If there is no text for this element, bail.
-		$check = trim( $html );
-		if ( empty( $check ) ) {
-			return;
-		}
+		// Extract the button href and text to register the JSON.
+		if ( preg_match( '/<a.+?href="([^"]+)".*?>([^<]+)<\/a>/', $html, $link_button_match ) ) {
+			// Negotiate the URL.
+			$url = $link_button_match[1];
+			if ( 0 === strpos( $url, '/' ) ) {
+				$url = home_url( $url );
+			} elseif ( 0 === strpos( $url, '#' ) ) {
+				$url = trailingslashit( get_the_permalink() ) . $url;
+			}
 
-		if ( preg_match( '/^(<a.*?href="([^"]+)".*?>([^<]+)|<<\/a>)/', $html, $link_button_match ) ) {
+			// Register JSON for this component.
 			$this->register_json(
 				'json',
 				array(
-					'#url#' => $link_button_match[2],
-					'#text#' => $link_button_match[3],
+					'#url#'  => $url,
+					'#text#' => $link_button_match[2],
 				)
 			);
+		} else {
+			// If, for some reason, the match failed, bail out.
+			return;
 		}
 
-    // Register the layout for the link button.
+		// Register the layout for the link button.
 		$this->register_layout( 'link-button-layout', 'link-button-layout' );
 
 		// Register the style for the link button.
@@ -158,6 +129,7 @@ class Link_Button extends Component {
 			'default-link-button',
 			'default-link-button'
 		);
+
 		// Register the style for the link button text.
 		$this->register_style(
 			'default-link-button-text-style',
