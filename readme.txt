@@ -46,6 +46,10 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 
 == Changelog ==
 
+= 2.0.5 =
+* Fixes a bug where sections by category is not checked by default for new posts.
+* Fixes visual bug when manual section selection are visible.
+
 = 2.0.4 =
 * Bump "tested up to" tag to 5.4.
 * Upgrades node version used for compiling assets to version 12, and patches vulnerabilities reported via npm audit.
