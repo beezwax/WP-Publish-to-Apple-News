@@ -5,7 +5,11 @@ Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 5.4.0
 Requires PHP: 5.6
+<<<<<<< HEAD
 Stable tag: 2.0.5
+=======
+Stable tag: 2.0.6
+>>>>>>> develop
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -46,9 +50,19 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 
 == Changelog ==
 
-= 2.0.5 =
+= 2.0.7 =
 * Fixes a bug where sections by category is not checked by default for new posts.
 * Fixes visual bug when manual section selection are visible.
+
+= 2.0.6 =
+* Bugfix: Rolled back support for Button elements for now due to a problematic implementation.
+
+= 2.0.5 =
+* Enhancement: Added support for audio, video, and table captions in Gutenberg.
+* Enhancement: Adds styles for Button elements that are links.
+* Bugfix: Blockquotes using alignments other than left are now properly recognized.
+* Bugfix: Facebook URLs inline within other elements no longer getting converted to Facebook embeds.
+* Diversity and Inclusion: Replaced instances of "whitelist" with "allowlist" throughout the codebase, change head branch from "master" to "develop". Language matters.
 
 = 2.0.4 =
 * Bump "tested up to" tag to 5.4.
@@ -82,7 +96,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Enhancement: Added the apple_news_notification_headers filter to allow headers to be added to the notification email message. Props to @paulschreiber for the addition.
 * Bugfix: Improved handling of UTF-8 multibyte characters to provide better support for the French language.
 * Updated the description that appears below the section selection checkboxes to more accurately explain the current behavior.
-* Updated to the latest version of the phpcs and vipwpcs standards, resolving most issues, while whitelisting some rules for resolution in the next version. Props to @paulschreiber for doing most of the work here.
+* Updated to the latest version of the phpcs and vipwpcs standards, resolving most issues, while allowlisting some rules for resolution in the next version. Props to @paulschreiber for doing most of the work here.
 
 = 1.4.3 =
 * Bugfix: Decodes HTML entities in URLs before performing remote file exists check for embedded media. Props to @kasparsd for the fix.
