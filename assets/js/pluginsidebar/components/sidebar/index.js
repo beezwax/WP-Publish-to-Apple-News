@@ -265,9 +265,14 @@ class Sidebar extends React.PureComponent {
       } = {},
     } = this.props;
 
+    const parsedSelectedSections = safeJsonParseArray(selectedSections) || [];
+
     apiFetch({ path })
       .then((settings) => this.setState({
-        autoAssignCategories: 'null' === selectedSections
+        autoAssignCategories: (
+          null === parsedSelectedSections
+          || 0 === parsedSelectedSections.length
+        )
           && true === settings.automaticAssignment,
         settings,
       }))
