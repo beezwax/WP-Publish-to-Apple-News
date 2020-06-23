@@ -265,9 +265,14 @@ class Sidebar extends React.PureComponent {
       } = {},
     } = this.props;
 
+    const parsedSelectedSections = safeJsonParseArray(selectedSections) || [];
+
     apiFetch({ path })
       .then((settings) => this.setState({
-        autoAssignCategories: 'null' === selectedSections
+        autoAssignCategories: (
+          null === parsedSelectedSections
+          || 0 === parsedSelectedSections.length
+        )
           && true === settings.automaticAssignment,
         settings,
       }))
@@ -554,7 +559,7 @@ class Sidebar extends React.PureComponent {
               dismissNotification={this.dismissNotification}
               notifications={notifications}
             />
-            <h3>Sections</h3>
+            <h3>{__('Sections', 'apple-news')}</h3>
             {automaticAssignment && [
               <CheckboxControl
                 label={__('Assign sections by category', 'apple-news')}
@@ -586,32 +591,36 @@ class Sidebar extends React.PureComponent {
               />,
               <hr />,
             ]}
-            {(! autoAssignCategories || ! automaticAssignment) && [
-              <h4>Manual Section Selection</h4>,
-              Array.isArray(sections) && (
-                <ul className="apple-news-sections">
-                  {sections.map(({ id, name }) => (
-                    <li key={id}>
-                      <CheckboxControl
-                        label={name}
-                        checked={- 1 !== selectedSectionsArray.indexOf(id)}
-                        onChange={
-                          (checked) => this.updateSelectedSections(checked, id)
-                        }
-                      />
-                    </li>
-                  ))}
-                </ul>
-              ),
-            ]}
-            <p>
-              <em>
-                {
-                  // eslint-disable-next-line max-len
-                  __('Select the sections in which to publish this article. If none are selected, it will be published to the default section.', 'apple-news')
-                }
-              </em>
-            </p>
+            {(! autoAssignCategories || ! automaticAssignment) && (
+              sections && 0 < sections.length && (
+                <>
+                  <h4>Manual Section Selection</h4>
+                  {Array.isArray(sections) && (
+                    <ul className="apple-news-sections">
+                      {sections.map(({ id, name }) => (
+                        <li key={id}>
+                          <CheckboxControl
+                            label={name}
+                            checked={- 1 !== selectedSectionsArray.indexOf(id)}
+                            onChange={
+                              (checked) => this.updateSelectedSections(checked, id) // eslint-disable-line max-len
+                            }
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <p>
+                    <em>
+                      {
+                        // eslint-disable-next-line max-len
+                        __('Select the sections in which to publish this article. If none are selected, it will be published to the default section.', 'apple-news')
+                      }
+                    </em>
+                  </p>
+                </>
+              )
+            )}
             <h3>{__('Paid Article', 'apple-news')}</h3>
             <CheckboxControl
               // eslint-disable-next-line max-len
