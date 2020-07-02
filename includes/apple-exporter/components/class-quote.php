@@ -438,7 +438,7 @@ class Quote extends Component {
 	private function set_blockquote_style() {
 
 		// Get information about the currently loaded theme.
-		$theme          = \Apple_Exporter\Theme::get_used();
+		$theme = \Apple_Exporter\Theme::get_used();
 
 		$this->register_style(
 			'default-blockquote-' . $this->text_alignment,
