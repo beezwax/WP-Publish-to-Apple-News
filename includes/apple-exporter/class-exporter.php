@@ -204,7 +204,7 @@ class Exporter {
 
 		// Base JSON.
 		$json = array(
-			'version'    => '1.7',
+			'version'    => '1.11',
 			'identifier' => 'post-' . $this->content_id(),
 			'language'   => $language,
 			'title'      => wp_strip_all_tags( $this->content_title() ),
