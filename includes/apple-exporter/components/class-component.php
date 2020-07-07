@@ -731,7 +731,7 @@ abstract class Component {
 	}
 
 	/**
-	 * Check if the remote file exists for this node.
+	 * Check if the remote file's headers return HTTP 200
 	 *
 	 * @param \DOMElement $node The node to examine for matches.
 	 * @return boolean
@@ -746,18 +746,8 @@ abstract class Component {
 			return false;
 		}
 
-		// Fork for method of retrieval if running on VIP.
-		if ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) {
-			$result = vip_safe_wp_remote_get( $path );
-		} else {
-			$result = wp_safe_remote_get( $path );
-		}
-
-		// Check the headers in case of an error.
-		return ( ! is_wp_error( $result )
-			&& ! empty( $result['response']['code'] )
-			&& $result['response']['code'] < 400
-		);
+		$headers = get_headers( $path );
+		return ! empty( $headers[0] ) && false !== stripos( $headers[0], '200 OK' );
 	}
 
 	/**

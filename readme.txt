@@ -3,9 +3,9 @@ Contributors: potatomaster, kevinfodness, jomurgel, danbowles, alleyinteractive,
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 5.2.2
+Tested up to: 5.4.0
 Requires PHP: 5.6
-Stable tag: 2.0.3
+Stable tag: 2.0.7
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -46,6 +46,30 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 
 == Changelog ==
 
+= 2.0.7 =
+* Fixes a bug where sections by category is not checked by default for new posts.
+* Fixes visual bug when manual section selection are visible.
+
+= 2.0.6 =
+* Bugfix: Rolled back support for Button elements for now due to a problematic implementation.
+
+= 2.0.5 =
+* Enhancement: Added support for audio, video, and table captions in Gutenberg.
+* Enhancement: Adds styles for Button elements that are links.
+* Bugfix: Blockquotes using alignments other than left are now properly recognized.
+* Bugfix: Facebook URLs inline within other elements no longer getting converted to Facebook embeds.
+* Diversity and Inclusion: Replaced instances of "whitelist" with "allowlist" throughout the codebase, change head branch from "master" to "develop". Language matters.
+
+= 2.0.4 =
+* Bump "tested up to" tag to 5.4.
+* Upgrades node version used for compiling assets to version 12, and patches vulnerabilities reported via npm audit.
+* Adds TikTok compatibility to the generic embed handler (props to @hrkhal for the fix).
+* Fixes an undefined property notice when there is an error but no error message (props to @khoipro for the fix).
+* Adds size attributes to select fields and API configuration fields for better readability (props to @paulschreiber for the fix).
+* Fixes a bug where captions were not being correctly read from images.
+* Adds a warning for the isPaid flag to prevent confusion if a channel is not set up for paid content.
+* Fixes a bug where settings are not initialized to an array when the plugin is loaded via code.
+
 = 2.0.3 =
 * Bugfix: Resolves fatal error when trying to load posts that aren't active in some cases.
 
@@ -68,7 +92,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Enhancement: Added the apple_news_notification_headers filter to allow headers to be added to the notification email message. Props to @paulschreiber for the addition.
 * Bugfix: Improved handling of UTF-8 multibyte characters to provide better support for the French language.
 * Updated the description that appears below the section selection checkboxes to more accurately explain the current behavior.
-* Updated to the latest version of the phpcs and vipwpcs standards, resolving most issues, while whitelisting some rules for resolution in the next version. Props to @paulschreiber for doing most of the work here.
+* Updated to the latest version of the phpcs and vipwpcs standards, resolving most issues, while allowlisting some rules for resolution in the next version. Props to @paulschreiber for doing most of the work here.
 
 = 1.4.3 =
 * Bugfix: Decodes HTML entities in URLs before performing remote file exists check for embedded media. Props to @kasparsd for the fix.

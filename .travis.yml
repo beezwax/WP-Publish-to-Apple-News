@@ -16,7 +16,7 @@ language: php
 # Specify when Travis should build.
 branches:
   only:
-    - master
+    - develop
 
 cache:
   directories:

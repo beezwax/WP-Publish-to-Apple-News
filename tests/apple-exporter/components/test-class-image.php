@@ -44,7 +44,7 @@ class Image_Test extends Component_TestCase {
 		$this->settings->set( 'html_support', 'yes' );
 		$this->settings->set( 'use_remote_images', 'yes' );
 
-		$html = '<img src="http://someurl.com/filename.jpg" alt="Example" align="left" />';
+		$html = '<img src="https://placeimg.com/640/480/any" alt="Example" align="left" />';
 
 		$component = new Image(
 			$html,
@@ -69,7 +69,7 @@ class Image_Test extends Component_TestCase {
 
 		// Test the JSON.
 		$this->assertEquals( 'photo', $json['role'] );
-		$this->assertEquals( 'http://someurl.com/filename.jpg', $json['URL'] );
+		$this->assertEquals( 'https://placeimg.com/640/480/any', $json['URL'] );
 	}
 
 	/**
@@ -84,7 +84,7 @@ class Image_Test extends Component_TestCase {
 
 		$html_caption = <<<HTML
 	<figure class="wp-caption">
-		<img src="http://someurl.com/filename.jpg" alt="Example" align="left" />
+		<img src="https://placeimg.com/640/480/any" alt="Example" align="left" />
 		<figcaption class="wp-caption-text">
 			Sed <strong>ac metus</strong> sagittis <em>urna feugiat</em> interdum. Duis vel blandit nisi, id tempus sem. Credit: <a href="https://domain.suffix">Domain</a>
 		</figcaption>
@@ -117,7 +117,7 @@ HTML;
 		$this->assertEquals( 'container', $json['role'] );
 		$this->assertContains( $json['components'], $json );
 		$this->assertEquals( 'photo', $json['components'][0]['role'] );
-		$this->assertEquals( 'http://someurl.com/filename.jpg', $json['components'][0]['URL'] );
+		$this->assertEquals( 'https://placeimg.com/640/480/any', $json['components'][0]['URL'] );
 		$this->assertEquals( 'Sed <strong>ac metus</strong> sagittis <em>urna feugiat</em> interdum. Duis vel blandit nisi, id tempus sem. Credit: <a href="https://domain.suffix">Domain</a>', $json['components'][0]['caption'] );
 	}
 

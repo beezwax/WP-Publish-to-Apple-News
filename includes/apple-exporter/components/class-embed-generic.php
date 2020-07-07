@@ -138,6 +138,7 @@ class Embed_Generic extends Component {
 				'wordpress.tv'     => 'wordpress-tv',
 				'reddit.com'       => 'reddit',
 				'imgur.com'        => 'imgur',
+				'tiktok.com'       => 'tiktok',
 				'amazon.com'       => 'amazon-kindle',
 			];
 
@@ -151,7 +152,9 @@ class Embed_Generic extends Component {
 		}
 
 		// Fork for iframe handling vs. not. Non-iframe detection is less straightforward, so it is best-effort.
-		if ( false !== strpos( $html, '<iframe' ) ) {
+		if ( 'tiktok' === $provider && preg_match( '/<blockquote[^>]+?cite=[\'"]([^\'"]+)/', $html, $matches ) ) {
+			$url = $matches[1];
+		} elseif ( false !== strpos( $html, '<iframe' ) ) {
 			// Try to get the source URL.
 			if ( preg_match( '/<iframe[^>]+?src=[\'"]([^\'"]+)/', $html, $matches ) ) {
 				$url = $matches[1];
@@ -226,6 +229,9 @@ class Embed_Generic extends Component {
 				break;
 			case 'wordpress-tv':
 				$provider = 'WordPress.tv';
+				break;
+			case 'tiktok':
+				$provider = 'TikTok';
 				break;
 			default:
 				$provider = __( 'the original site', 'apple-news' );

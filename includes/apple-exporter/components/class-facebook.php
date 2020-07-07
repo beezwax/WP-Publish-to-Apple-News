@@ -19,7 +19,7 @@ namespace Apple_Exporter\Components;
 class Facebook extends Component {
 
 	/**
-	 * A list of regular expression patterns for whitelisted Facebook oEmbed formats.
+	 * A list of regular expression patterns for allowlisted Facebook oEmbed formats.
 	 *
 	 * @see https://developer.apple.com/library/prerelease/content/documentation/General/Conceptual/Apple_News_Format_Ref/FacebookPost.html#//apple_ref/doc/uid/TP40015408-CH106-SW1
 	 * @see https://developers.facebook.com/docs/plugins/oembed-endpoints/
@@ -71,7 +71,9 @@ class Facebook extends Component {
 		}
 
 		// Check for element with just a Facebook url.
-		if ( false !== self::get_facebook_url( $node->nodeValue ) ) {
+		if ( false !== self::get_facebook_url( $node->nodeValue )
+			&& false !== filter_var( $node->nodeValue, FILTER_VALIDATE_URL )
+		) {
 			return $node;
 		}
 
@@ -141,7 +143,7 @@ class Facebook extends Component {
 	}
 
 	/**
-	 * A method to get a Facebook URL from a whitelisted set of formats.
+	 * A method to get a Facebook URL from an allowlisted set of formats.
 	 *
 	 * @param string $text The text to parse for the Facebook URL.
 	 *
