@@ -186,7 +186,7 @@ class Apple_News {
 	public static function is_default_theme() {
 		// If the theme is not named "Default", then it is customized, and is not the default theme.
 		$active_theme = \Apple_Exporter\Theme::get_active_theme_name();
-		if ( 'Default' !== $active_theme ) {
+		if ( __( 'Default', 'apple-news' ) !== $active_theme ) {
 			return false;
 		}
 

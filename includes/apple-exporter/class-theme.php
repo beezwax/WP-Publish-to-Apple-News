@@ -1508,7 +1508,7 @@ class Theme {
 		}
 
 		// Update pointer to active theme, if this was the active theme.
-		if ( $old_name === self::get_active_theme_name() ) {
+		if ( self::get_active_theme_name() === $old_name ) {
 			$this->set_active();
 		}
 
