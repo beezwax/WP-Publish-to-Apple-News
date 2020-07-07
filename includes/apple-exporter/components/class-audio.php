@@ -50,17 +50,17 @@ class Audio extends Component {
 	public function register_specs() {
 		$this->register_spec(
 			'json-with-caption-text',
-			__('JSON With Caption Text', 'apple-news'),
+			__( 'JSON With Caption Text', 'apple-news' ),
 			array(
-				'role' => 'container',
+				'role'       => 'container',
 				'components' => array(
 					array(
 						'role' => 'audio',
-						'URL' => '#url#',
+						'URL'  => '#url#',
 					),
 					array(
-						'role' => 'caption',
-						'text' => '#caption_text#',
+						'role'   => 'caption',
+						'text'   => '#caption_text#',
 						'format' => 'html',
 					),
 				),
@@ -95,14 +95,14 @@ class Audio extends Component {
 			return;
 		}
 
-		$audio_spec = 'json';
+		$audio_spec    = 'json';
 		$audio_caption = '';
 		if ( preg_match( '/<figcaption>(.+?)<\/figcaption>/', $html, $caption_match ) ) {
 			$audio_caption = $caption_match[1];
-			$audio_spec = 'json-with-caption-text';
+			$audio_spec    = 'json-with-caption-text';
 		}
 		$values = array(
-			'#url#' => esc_url_raw( $url ),
+			'#url#'          => esc_url_raw( $url ),
 			'#caption_text#' => $audio_caption,
 		);
 

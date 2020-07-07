@@ -30,15 +30,15 @@ class Table extends Component {
 			return null;
 		}
 
-		// Check if node is a table, or a figure with a table class
+		// Check if node is a table, or a figure with a table class.
 		if (
 			(
 				self::node_has_class( $node, 'wp-block-table' ) &&
 				$node->hasChildNodes() &&
 				'table' === $node->firstChild->nodeName
-			) || 
+			) ||
 			'table' === $node->nodeName ) {
- 			return $node;
+			return $node;
 		}
 
 		return null;
@@ -64,21 +64,21 @@ class Table extends Component {
 		);
 		$this->register_spec(
 			'json-with-caption-text',
-			__('JSON With Caption Text', 'apple-news'),
+			__( 'JSON With Caption Text', 'apple-news' ),
 			array(
-				'role' => 'container',
-				// Table Component
+				'role'       => 'container',
+				// Table Component.
 				'components' => array(
 					array(
-						'role' => 'htmltable',
-						'html' => '#html#',
+						'role'   => 'htmltable',
+						'html'   => '#html#',
 						'layout' => 'table-layout',
-						'style' => 'default-table',
+						'style'  => 'default-table',
 					),
-					// Caption Component
+					// Caption Component.
 					array(
-						'role' => 'caption',
-						'text' => '#caption_text#',
+						'role'   => 'caption',
+						'text'   => '#caption_text#',
 						'format' => 'html',
 					),
 				),
@@ -191,14 +191,14 @@ class Table extends Component {
 			return;
 		}
 
-		$table_spec = 'json';
+		$table_spec    = 'json';
 		$table_caption = '';
 		if ( preg_match( '/<figcaption>(.+?)<\/figcaption>/', $html, $caption_match ) ) {
 			$table_caption = $caption_match[1];
-			$table_spec = 'json-with-caption-text';
+			$table_spec    = 'json-with-caption-text';
 		}
 		$values = array(
-			'#html#' => preg_replace( '/<\/table>.*/', '</table>', $table_html ),
+			'#html#'         => preg_replace( '/<\/table>.*/', '</table>', $table_html ),
 			'#caption_text#' => $table_caption,
 		);
 

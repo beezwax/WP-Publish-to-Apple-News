@@ -5,7 +5,7 @@ Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 5.4.0
 Requires PHP: 5.6
-Stable tag: 2.0.7
+Stable tag: 2.0.8
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,10 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.0.8 =
+* Enhancement: Adds styles for Button elements that are links which are added by the Gutenberg editor.
+* Enhancement: Bumps the Apple News Format version from 1.7 to 1.11 to make support for new features possible, like LinkButton.
 
 = 2.0.7 =
 * Fixes a bug where sections by category is not checked by default for new posts.
