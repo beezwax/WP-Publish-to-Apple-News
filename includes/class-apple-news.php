@@ -174,6 +174,40 @@ class Apple_News {
 	}
 
 	/**
+	 * Determines whether the currently selected theme is the default theme that
+	 * ships with the plugin or not.
+	 *
+	 * Returns true only if the name of the theme is "Default" and the config
+	 * options for the theme match the default theme from the plugin's source
+	 * files.
+	 *
+	 * @return bool True if the default theme is the current active theme, false otherwise.
+	 */
+	public static function is_default_theme() {
+		// If the theme is not named "Default", then it is customized, and is not the default theme.
+		if ( 'Default' !== \Apple_Exporter\Theme::get_active_theme_name() ) {
+			return false;
+		}
+
+		// If the theme _is_ named "Default", check its configuration against the default.
+		$default = new \Apple_Exporter\Theme();
+		$theme   = new \Apple_Exporter\Theme();
+		$theme->set_name( 'Default' );
+		$theme->load();
+
+		// Set the screenshot URL for the default theme.
+		$default->set_value(
+			'screenshot_url',
+			plugins_url(
+				'/assets/screenshots/default.png',
+				__DIR__
+			)
+		);
+
+		return $theme->all_settings() === $default->all_settings();
+	}
+
+	/**
 	 * Determines whether the plugin is initialized with the minimum settings.
 	 *
 	 * @access public
