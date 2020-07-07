@@ -185,26 +185,17 @@ class Apple_News {
 	 */
 	public static function is_default_theme() {
 		// If the theme is not named "Default", then it is customized, and is not the default theme.
-		if ( 'Default' !== \Apple_Exporter\Theme::get_active_theme_name() ) {
+		$active_theme = \Apple_Exporter\Theme::get_active_theme_name();
+		if ( 'Default' !== $active_theme ) {
 			return false;
 		}
 
 		// If the theme _is_ named "Default", check its configuration against the default.
-		$default = new \Apple_Exporter\Theme();
-		$theme   = new \Apple_Exporter\Theme();
-		$theme->set_name( 'Default' );
+		$theme = new \Apple_Exporter\Theme();
+		$theme->set_name( $active_theme );
 		$theme->load();
 
-		// Set the screenshot URL for the default theme.
-		$default->set_value(
-			'screenshot_url',
-			plugins_url(
-				'/assets/screenshots/default.png',
-				__DIR__
-			)
-		);
-
-		return $theme->all_settings() === $default->all_settings();
+		return $theme->is_default();
 	}
 
 	/**
