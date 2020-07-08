@@ -39,6 +39,36 @@ class Apple_News_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Tests the functionality of Apple_News::is_default_theme.
+	 */
+	public function testIsDefaultTheme() {
+		// Absent any customizations, the check for the default theme should return true.
+		$this->assertTrue( Apple_News::is_default_theme() );
+
+		// Load the default theme and change its name but not its settings.
+		$theme = new \Apple_Exporter\Theme();
+		$theme->set_name( 'Default' );
+		$theme->load();
+		$theme->rename( 'Not Default' );
+
+		// The check for the default theme should now return false, since the name was changed.
+		$this->assertFalse( Apple_News::is_default_theme() );
+
+		// If we change the name back to Default, the check should go back to being true.
+		$theme->rename( 'Default' );
+		$this->assertTrue( Apple_News::is_default_theme() );
+
+		// If we leave the name as Default but change one of the theme options, the check should return false.
+		$theme->set_value( 'body_size', 72 );
+		$theme->save();
+		$this->assertFalse( Apple_News::is_default_theme() );
+
+		// If we also rename the theme, the check should return false.
+		$theme->rename( 'Not Default' );
+		$this->assertFalse( Apple_News::is_default_theme() );
+	}
+
+	/**
 	 * Ensures that the migrate_api_settings function migrates settings.
 	 *
 	 * @see Apple_News::migrate_api_settings()

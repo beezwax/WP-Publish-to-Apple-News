@@ -1321,6 +1321,11 @@ class Theme {
 				continue;
 			}
 
+			// Ignore the screenshot URL. This gets set automatically on install but doesn't have a default value.
+			if ( 'screenshot_url' === $option ) {
+				continue;
+			}
+
 			// If the values don't match, it is not using the default.
 			if ( $this->values[ $option ] !== $option_config['default'] ) {
 				return false;
@@ -1500,6 +1505,11 @@ class Theme {
 		// Refresh used if in active use.
 		if ( $old_name === self::$used_name ) {
 			$this->use_this();
+		}
+
+		// Update pointer to active theme, if this was the active theme.
+		if ( self::get_active_theme_name() === $old_name ) {
+			$this->set_active();
 		}
 
 		return true;
