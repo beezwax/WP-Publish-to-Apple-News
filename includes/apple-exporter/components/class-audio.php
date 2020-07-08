@@ -29,13 +29,13 @@ class Audio extends Component {
 
 		if (
 			// Is this a gutenberg audio block?
-			(
-				self::node_has_class( $node, 'wp-block-audio' ) &&
-				$node->hasChildNodes() &&
-				'audio' === $node->firstChild->nodeName && self::remote_file_exists( $node->firstChild )
-			) ||
-			// Or is this a stand-along audio tag?
-			'audio' === $node->nodeName && self::remote_file_exists( $node ) ) {
+			( self::node_has_class( $node, 'wp-block-audio' )
+				&& $node->hasChildNodes()
+				&& 'audio' === $node->firstChild->nodeName
+			)
+			// Or is this a stand-alone audio tag?
+			|| 'audio' === $node->nodeName
+		) {
 			return $node;
 		}
 

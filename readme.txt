@@ -48,6 +48,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 
 = 2.1.0 =
 * Bugfix: Fixes the logic in the default theme checker to properly check the configured values against the defaults and prompt the user if they are using the default theme that ships with Apple News without modification.
+* Bugfix: If the same image is used for the featured image and the first image embedded into the post, it no longer shows up twice.
 
 = 2.0.8 =
 * Enhancement: Adds styles for Button elements that are links which are added by the Gutenberg editor.

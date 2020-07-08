@@ -129,6 +129,7 @@ class Components extends Builder {
 	private function add_thumbnail_if_needed( &$components ) {
 
 		// If a thumbnail is already defined, just return.
+		// TODO: Store this URL and check to see if it matches the first image item found. If no match, use cover. If match, use image instead of cover. If cover not defined, use first image, or fallback.
 		if ( $this->content_cover() ) {
 			return;
 		}
@@ -158,33 +159,38 @@ class Components extends Builder {
 				return;
 			}
 
-			// Isolate the bundle URL basename.
-			$bundle_basename = str_replace( 'bundle://', '', $json_url );
-
-			/**
-			 * We need to find the original URL from the bundle meta because it's
-			 * needed in order to override the thumbnail.
-			 */
-			$workspace = new Workspace( $this->content_id() );
-			$bundles   = $workspace->get_bundles();
-
-			// If we can't get the bundles, we can't search for the URL, so bail.
-			if ( empty( $bundles ) ) {
-				return;
-			}
-
-			// Try to get the original URL for the image.
+			// Fork for remote images versus bundled images.
 			$original_url = '';
-			foreach ( $bundles as $bundle_url ) {
-				if ( Apple_News::get_filename( $bundle_url ) === $bundle_basename ) {
-					$original_url = $bundle_url;
-					break;
-				}
-			}
+			if ( 'yes' === $this->get_setting( 'use_remote_images' ) ) {
+				$original_url = $json_url;
+			} else {
+				// Isolate the bundle URL basename.
+				$bundle_basename = str_replace( 'bundle://', '', $json_url );
 
-			// If we can't find the original URL, we can't proceed.
-			if ( empty( $original_url ) ) {
-				return;
+				/**
+				 * We need to find the original URL from the bundle meta because it's
+				 * needed in order to override the thumbnail.
+				 */
+				$workspace = new Workspace( $this->content_id() );
+				$bundles   = $workspace->get_bundles();
+
+				// If we can't get the bundles, we can't search for the URL, so bail.
+				if ( empty( $bundles ) ) {
+					return;
+				}
+
+				// Try to get the original URL for the image.
+				foreach ( $bundles as $bundle_url ) {
+					if ( Apple_News::get_filename( $bundle_url ) === $bundle_basename ) {
+						$original_url = $bundle_url;
+						break;
+					}
+				}
+
+				// If we can't find the original URL, we can't proceed.
+				if ( empty( $original_url ) ) {
+					return;
+				}
 			}
 
 			// Use this image as the cover.
