@@ -22,6 +22,45 @@ use \Apple_Exporter\Builders\Component_Text_Styles;
 class Component_Tests extends WP_UnitTestCase {
 
 	/**
+	 * A data provider for the full size image URL test.
+	 *
+	 * @return array
+	 */
+	public function dataImageFullSizeUrl() {
+		return [
+			// An image without crops should return itself.
+			[
+				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+			],
+
+			// An image with a crop should return the original image without the crop.
+			[
+				'http://example.org/wp-content/uploads/2020/07/image-150x150.jpg',
+				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+			],
+
+			// Scaled images should return the un-scaled version.
+			[
+				'http://example.org/wp-content/uploads/2020/07/image-scaled.jpg',
+				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+			],
+
+			// Rotated images should return the un-rotated version.
+			[
+				'http://example.org/wp-content/uploads/2020/07/image-rotated.jpg',
+				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+			],
+
+			// Photon images should return the original.
+			[
+				'http://example.org/wp-content/uploads/2020/07/image.jpg?w=234&crop=0%2C5px%2C100%2C134px&ssl=1',
+				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+			],
+		];
+	}
+
+	/**
 	 * A data provider for the meta component ordering test.
 	 *
 	 * @see self::testMetaComponentOrdering()
@@ -104,43 +143,6 @@ class Component_Tests extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Ensures that the specified component order is respected.
-	 *
-	 * @dataProvider dataMetaComponentOrdering
-	 *
-	 * @param array $order The meta component order setting to use.
-	 * @param array $expected The expected component order after compilation.
-	 * @param array $components The expected container components, in order.
-	 *
-	 * @access public
-	 */
-	public function testMetaComponentOrdering( $order, $expected, $components ) {
-
-		// Setup.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['enable_advertisement'] = 'no';
-		$settings['meta_component_order'] = $order;
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
-		$builder = new Components( $this->content, $this->settings );
-		$result = $builder->to_array();
-
-		// Test.
-		for ( $i = 0; $i < count( $expected ); $i ++ ) {
-			$this->assertEquals( $expected[ $i ], $result[ $i ]['role'] );
-			if ( 'container' === $result[ $i ]['role'] ) {
-				for ( $j = 0; $j < count( $components ); $j ++ ) {
-					$this->assertEquals(
-						$components[ $j ],
-						$result[ $i ]['components'][ $j ]['role']
-					);
-				}
-			}
-		}
-	}
-
-	/**
 	 * Tests the image deduping functionality of the Components class.
 	 *
 	 * Ensures that a featured image with the same source URL (minus any crops)
@@ -151,8 +153,10 @@ class Component_Tests extends WP_UnitTestCase {
 	 */
 	public function testFeaturedImageDeduping() {
 		// Get image URLs for the two attachment images created during setUp.
-		$image1 = wp_get_attachment_url( $this->cover );
-		$image2 = wp_get_attachment_url( $this->image2 );
+		$image1           = wp_get_attachment_url( $this->cover );
+		$image2           = wp_get_attachment_url( $this->image2 );
+		$image1_thumbnail = wp_get_attachment_image_url( $this->cover );
+		$image2_thumbnail = wp_get_attachment_image_url( $this->image2 );
 
 		/*
 		 * Scenario 1:
@@ -216,7 +220,7 @@ class Component_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
 		$this->assertEquals( $image1, $result[0]['components'][0]['URL'] );
 		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( wp_get_attachment_image_url( $this->image2 ), $result[1]['components'][3]['URL'] );
+		$this->assertEquals( $image2_thumbnail, $result[1]['components'][3]['URL'] );
 
 		/*
 		 * Scenario 4:
@@ -240,9 +244,9 @@ class Component_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
 		$this->assertEquals( $image1, $result[0]['components'][0]['URL'] );
 		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( wp_get_attachment_image_url( $this->image2 ), $result[1]['components'][3]['URL'] );
+		$this->assertEquals( $image2_thumbnail, $result[1]['components'][3]['URL'] );
 		$this->assertEquals( 'photo', $result[1]['components'][4]['role'] );
-		$this->assertEquals( wp_get_attachment_image_url( $this->cover ), $result[1]['components'][4]['URL'] );
+		$this->assertEquals( $image1_thumbnail, $result[1]['components'][4]['URL'] );
 
 		/*
 		 * Scenario 5:
@@ -264,9 +268,9 @@ class Component_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
 		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
 		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
-		$this->assertEquals( $image1, $result[0]['components'][0]['URL'] );
+		$this->assertEquals( $image1_thumbnail, $result[0]['components'][0]['URL'] );
 		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( wp_get_attachment_image_url( $this->image2 ), $result[1]['components'][3]['URL'] );
+		$this->assertEquals( $image2_thumbnail, $result[1]['components'][3]['URL'] );
 		$this->assertEquals( 4, count( $result[1]['components'] ) );
 
 		/*
@@ -289,9 +293,64 @@ class Component_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
 		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
 		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
-		$this->assertEquals( $image1, $result[0]['components'][0]['URL'] );
+		$this->assertEquals( $image1_thumbnail, $result[0]['components'][0]['URL'] );
 		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( wp_get_attachment_image_url( $this->image2 ), $result[1]['components'][3]['URL'] );
+		$this->assertEquals( $image2_thumbnail, $result[1]['components'][3]['URL'] );
 		$this->assertEquals( 4, count( $result[1]['components'] ) );
+	}
+
+	/**
+	 * Tests the functionality of the get_image_full_size_url function.
+	 *
+	 * @dataProvider dataImageFullSizeUrl
+	 *
+	 * @param string $original The original URL to test.
+	 * @param string $expected The expected result.
+	 *
+	 * @throws ReflectionException
+	 */
+	public function testGetImageFullSizeUrl( $original, $expected ) {
+		$class  = new ReflectionClass( 'Apple_Exporter\Builders\Components' );
+		$method = $class->getMethod( 'get_image_full_size_url' );
+		$method->setAccessible( true );
+		$builder = new Components( $this->content, $this->settings );
+		$this->assertEquals( $expected, $method->invokeArgs( $builder, [ $original ] ) );
+	}
+
+	/**
+	 * Ensures that the specified component order is respected.
+	 *
+	 * @dataProvider dataMetaComponentOrdering
+	 *
+	 * @param array $order The meta component order setting to use.
+	 * @param array $expected The expected component order after compilation.
+	 * @param array $components The expected container components, in order.
+	 *
+	 * @access public
+	 */
+	public function testMetaComponentOrdering( $order, $expected, $components ) {
+
+		// Setup.
+		$theme = \Apple_Exporter\Theme::get_used();
+		$settings = $theme->all_settings();
+		$settings['enable_advertisement'] = 'no';
+		$settings['meta_component_order'] = $order;
+		$theme->load( $settings );
+		$this->assertTrue( $theme->save() );
+		$builder = new Components( $this->content, $this->settings );
+		$result = $builder->to_array();
+
+		// Test.
+		for ( $i = 0; $i < count( $expected ); $i ++ ) {
+			$this->assertEquals( $expected[ $i ], $result[ $i ]['role'] );
+			if ( 'container' === $result[ $i ]['role'] ) {
+				for ( $j = 0; $j < count( $components ); $j ++ ) {
+					$this->assertEquals(
+						$components[ $j ],
+						$result[ $i ]['components'][ $j ]['role']
+					);
+				}
+			}
+		}
 	}
 }

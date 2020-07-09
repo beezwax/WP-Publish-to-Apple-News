@@ -195,7 +195,7 @@ class Components extends Builder {
 			}
 
 			// Use this image as the cover.
-			$this->set_content_property( 'cover', $normalized_url );
+			$this->set_content_property( 'cover', $original_url );
 
 			// If the cover is set to be displayed, remove it from the flow.
 			$order = $theme->get_value( 'meta_component_order' );
@@ -508,6 +508,8 @@ class Components extends Builder {
 	 * Attempts to guess the image's full size URL, minus any scaling or cropping.
 	 *
 	 * @param string $url The URL to evaluate.
+	 *
+	 * @since 2.1.0
 	 *
 	 * @return string The best guess as to an image's full size URL.
 	 */
