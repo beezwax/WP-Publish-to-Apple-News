@@ -203,7 +203,7 @@ class Component_Tests extends WP_UnitTestCase {
 		$content = new Exporter_Content(
 			1,
 			'My Title',
-			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->image2, 'full' ),
+			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->image2 ),
 			null,
 			$image1,
 			'Author Name'
@@ -216,7 +216,7 @@ class Component_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
 		$this->assertEquals( $image1, $result[0]['components'][0]['URL'] );
 		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( $image2, $result[1]['components'][3]['URL'] );
+		$this->assertEquals( wp_get_attachment_image_url( $this->image2 ), $result[1]['components'][3]['URL'] );
 
 		/*
 		 * Scenario 4:
@@ -227,7 +227,7 @@ class Component_Tests extends WP_UnitTestCase {
 		$content = new Exporter_Content(
 			1,
 			'My Title',
-			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->image2, 'full' ) . wp_get_attachment_image( $this->cover, 'full' ),
+			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->image2 ) . wp_get_attachment_image( $this->cover ),
 			null,
 			$image1,
 			'Author Name'
@@ -240,9 +240,9 @@ class Component_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
 		$this->assertEquals( $image1, $result[0]['components'][0]['URL'] );
 		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( $image2, $result[1]['components'][3]['URL'] );
+		$this->assertEquals( wp_get_attachment_image_url( $this->image2 ), $result[1]['components'][3]['URL'] );
 		$this->assertEquals( 'photo', $result[1]['components'][4]['role'] );
-		$this->assertEquals( $image1, $result[1]['components'][4]['URL'] );
+		$this->assertEquals( wp_get_attachment_image_url( $this->cover ), $result[1]['components'][4]['URL'] );
 
 		/*
 		 * Scenario 5:
@@ -253,7 +253,7 @@ class Component_Tests extends WP_UnitTestCase {
 		$content = new Exporter_Content(
 			1,
 			'My Title',
-			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->cover, 'full' ) . wp_get_attachment_image( $this->image2, 'full' ),
+			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->cover ) . wp_get_attachment_image( $this->image2 ),
 			null,
 			$image1,
 			'Author Name'
@@ -266,7 +266,7 @@ class Component_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
 		$this->assertEquals( $image1, $result[0]['components'][0]['URL'] );
 		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( $image2, $result[1]['components'][3]['URL'] );
+		$this->assertEquals( wp_get_attachment_image_url( $this->image2 ), $result[1]['components'][3]['URL'] );
 		$this->assertEquals( 4, count( $result[1]['components'] ) );
 
 		/*
@@ -278,7 +278,7 @@ class Component_Tests extends WP_UnitTestCase {
 		$content = new Exporter_Content(
 			1,
 			'My Title',
-			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->cover, 'full' ) . wp_get_attachment_image( $this->image2, 'full' ),
+			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->cover ) . wp_get_attachment_image( $this->image2 ),
 			null,
 			null,
 			'Author Name'
@@ -291,7 +291,7 @@ class Component_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
 		$this->assertEquals( $image1, $result[0]['components'][0]['URL'] );
 		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( $image2, $result[1]['components'][3]['URL'] );
+		$this->assertEquals( wp_get_attachment_image_url( $this->image2 ), $result[1]['components'][3]['URL'] );
 		$this->assertEquals( 4, count( $result[1]['components'] ) );
 	}
 }

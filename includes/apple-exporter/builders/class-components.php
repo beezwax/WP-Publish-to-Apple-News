@@ -128,12 +128,6 @@ class Components extends Builder {
 	 */
 	private function add_thumbnail_if_needed( &$components ) {
 
-		// If a thumbnail is already defined, just return.
-		// TODO: Store this URL and check to see if it matches the first image item found. If no match, use cover. If match, use image instead of cover. If cover not defined, use first image, or fallback.
-		if ( $this->content_cover() ) {
-			return;
-		}
-
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
@@ -193,8 +187,15 @@ class Components extends Builder {
 				}
 			}
 
+			// If the normalized URL for the first image is different than the URL for the featured image, use the featured image.
+			$cover_url      = $this->get_image_full_size_url( $this->content_cover() );
+			$normalized_url = $this->get_image_full_size_url( $original_url );
+			if ( ! empty( $cover_url ) && $normalized_url !== $cover_url ) {
+				return;
+			}
+
 			// Use this image as the cover.
-			$this->set_content_property( 'cover', $original_url );
+			$this->set_content_property( 'cover', $normalized_url );
 
 			// If the cover is set to be displayed, remove it from the flow.
 			$order = $theme->get_value( 'meta_component_order' );
@@ -501,6 +502,43 @@ class Components extends Builder {
 	 */
 	private function get_components_from_node( $node ) {
 		return Component_Factory::get_components_from_node( $node );
+	}
+
+	/**
+	 * Attempts to guess the image's full size URL, minus any scaling or cropping.
+	 *
+	 * @param string $url The URL to evaluate.
+	 *
+	 * @return string The best guess as to an image's full size URL.
+	 */
+	private function get_image_full_size_url( $url ) {
+
+		// Strip URL formatting for easier matching.
+		$url = urldecode( $url );
+
+		// Split out the URL into its component parts so we can put it back together again.
+		$url_parts = wp_parse_url( $url );
+		if ( empty( $url_parts['scheme'] )
+			|| empty( $url_parts['host'] )
+			|| empty( $url_parts['path'] )
+		) {
+			return $url;
+		}
+
+		/*
+		 * Strip off any scaling, rotating, or cropping indicators from the
+		 * filename. Handles image-150x150.jpg, image-scaled.jpg,
+		 * image-rotated.jpg, for example, and will return image.jpg.
+		 */
+		$normalized_path = preg_replace( '/-(?:\d+x\d+|scaled|rotated)(\.[^.]+)$/', '$1', $url_parts['path'] );
+
+		// Put Humpty Dumpty back together again.
+		return sprintf(
+			'%s://%s%s',
+			$url_parts['scheme'],
+			$url_parts['host'],
+			$normalized_path
+		);
 	}
 
 	/**
