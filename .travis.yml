@@ -17,6 +17,7 @@ language: php
 branches:
   only:
     - develop
+    - feature/v2.1.0
 
 cache:
   directories:
