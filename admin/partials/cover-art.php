@@ -5,8 +5,8 @@
  * @package Apple_News
  */
 
-$cover_art    = get_post_meta( $post->ID, 'apple_news_coverart', true );
-$orientations = array(
+$apple_cover_art    = get_post_meta( $post->ID, 'apple_news_coverart', true );
+$apple_orientations = array(
 	'landscape' => __( 'Landscape (4:3)', 'apple-news' ),
 	'portrait'  => __( 'Portrait (3:4)', 'apple-news' ),
 	'square'    => __( 'Square (1:1)', 'apple-news' ),
@@ -25,48 +25,48 @@ $orientations = array(
 <div>
 	<label for="apple-news-coverart-orientation"><?php esc_html_e( 'Orientation:', 'apple-news' ); ?></label>
 	<select id="apple-news-coverart-orientation" name="apple-news-coverart-orientation">
-		<?php $orientation = ( ! empty( $cover_art['orientation'] ) ) ? $cover_art['orientation'] : 'landscape'; ?>
-		<?php foreach ( $orientations as $key => $label ) : ?>
-			<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $orientation, $key ); ?>><?php echo esc_html( $label ); ?></option>
+		<?php $apple_orientation = ( ! empty( $apple_cover_art['orientation'] ) ) ? $apple_cover_art['orientation'] : 'landscape'; ?>
+		<?php foreach ( $apple_orientations as $apple_key => $apple_label ) : ?>
+			<option value="<?php echo esc_attr( $apple_key ); ?>" <?php selected( $apple_orientation, $apple_key ); ?>><?php echo esc_html( $apple_label ); ?></option>
 		<?php endforeach; ?>
 	</select>
 </div>
 <p class="description"><?php esc_html_e( 'Note: You must provide the largest size (iPad Pro 12.9 in) in order for your submission to be considered.', 'apple-news' ); ?></p>
-<?php $image_sizes = Admin_Apple_News::get_image_sizes(); ?>
-<?php foreach ( $image_sizes as $key => $data ) : ?>
+<?php $apple_image_sizes = Admin_Apple_News::get_image_sizes(); ?>
+<?php foreach ( $apple_image_sizes as $apple_key => $apple_data ) : ?>
 	<?php
-	if ( 'coverArt' !== $data['type'] ) {
+	if ( 'coverArt' !== $apple_data['type'] ) {
 		continue;
 	}
 	?>
-	<div class="apple-news-coverart-image-container apple-news-coverart-image-<?php echo esc_attr( $data['orientation'] ); ?>">
-		<?php $image_id = ( ! empty( $cover_art[ $key ] ) ) ? absint( $cover_art[ $key ] ) : ''; ?>
-		<h4><?php echo esc_html( $data['label'] ); ?></h4>
+	<div class="apple-news-coverart-image-container apple-news-coverart-image-<?php echo esc_attr( $apple_data['orientation'] ); ?>">
+		<?php $apple_image_id = ( ! empty( $apple_cover_art[ $apple_key ] ) ) ? absint( $apple_cover_art[ $apple_key ] ) : ''; ?>
+		<h4><?php echo esc_html( $apple_data['label'] ); ?></h4>
 		<div class="apple-news-coverart-image">
 			<?php
-			if ( ! empty( $image_id ) ) {
-				echo wp_get_attachment_image( $image_id, 'medium' );
-				$add_hidden    = 'hidden';
-				$remove_hidden = '';
+			if ( ! empty( $apple_image_id ) ) {
+				echo wp_get_attachment_image( $apple_image_id, 'medium' );
+				$apple_add_hidden    = 'hidden';
+				$apple_remove_hidden = '';
 			} else {
-				$add_hidden    = '';
-				$remove_hidden = 'hidden';
+				$apple_add_hidden    = '';
+				$apple_remove_hidden = 'hidden';
 			}
 			?>
 		</div>
-		<input name="<?php echo esc_attr( $key ); ?>"
+		<input name="<?php echo esc_attr( $apple_key ); ?>"
 			class="apple-news-coverart-id"
 			type="hidden"
-			value="<?php echo esc_attr( $image_id ); ?>"
-			data-height="<?php echo esc_attr( $data['height'] ); ?>"
-			data-width="<?php echo esc_attr( $data['width'] ); ?>"
+			value="<?php echo esc_attr( $apple_image_id ); ?>"
+			data-height="<?php echo esc_attr( $apple_data['height'] ); ?>"
+			data-width="<?php echo esc_attr( $apple_data['width'] ); ?>"
 		/>
 		<input type="button"
-			class="button-primary apple-news-coverart-add <?php echo esc_attr( $add_hidden ); ?>"
+			class="button-primary apple-news-coverart-add <?php echo esc_attr( $apple_add_hidden ); ?>"
 			value="<?php esc_attr_e( 'Add image', 'apple-news' ); ?>"
 		/>
 		<input type="button"
-			class="button-primary apple-news-coverart-remove <?php echo esc_attr( $remove_hidden ); ?>"
+			class="button-primary apple-news-coverart-remove <?php echo esc_attr( $apple_remove_hidden ); ?>"
 			value="<?php esc_attr_e( 'Remove image', 'apple-news' ); ?>"
 		/>
 	</div>
