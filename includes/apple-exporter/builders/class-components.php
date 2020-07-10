@@ -128,11 +128,6 @@ class Components extends Builder {
 	 */
 	private function add_thumbnail_if_needed( &$components ) {
 
-		// If a thumbnail is already defined, just return.
-		if ( $this->content_cover() ) {
-			return;
-		}
-
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
@@ -158,32 +153,44 @@ class Components extends Builder {
 				return;
 			}
 
-			// Isolate the bundle URL basename.
-			$bundle_basename = str_replace( 'bundle://', '', $json_url );
-
-			/**
-			 * We need to find the original URL from the bundle meta because it's
-			 * needed in order to override the thumbnail.
-			 */
-			$workspace = new Workspace( $this->content_id() );
-			$bundles   = $workspace->get_bundles();
-
-			// If we can't get the bundles, we can't search for the URL, so bail.
-			if ( empty( $bundles ) ) {
-				return;
-			}
-
-			// Try to get the original URL for the image.
+			// Fork for remote images versus bundled images.
 			$original_url = '';
-			foreach ( $bundles as $bundle_url ) {
-				if ( Apple_News::get_filename( $bundle_url ) === $bundle_basename ) {
-					$original_url = $bundle_url;
-					break;
+			if ( 'yes' === $this->get_setting( 'use_remote_images' ) ) {
+				$original_url = $json_url;
+			} else {
+				// Isolate the bundle URL basename.
+				$bundle_basename = str_replace( 'bundle://', '', $json_url );
+
+				/**
+				 * We need to find the original URL from the bundle meta because it's
+				 * needed in order to override the thumbnail.
+				 */
+				$workspace = new Workspace( $this->content_id() );
+				$bundles   = $workspace->get_bundles();
+
+				// If we can't get the bundles, we can't search for the URL, so bail.
+				if ( empty( $bundles ) ) {
+					return;
+				}
+
+				// Try to get the original URL for the image.
+				foreach ( $bundles as $bundle_url ) {
+					if ( Apple_News::get_filename( $bundle_url ) === $bundle_basename ) {
+						$original_url = $bundle_url;
+						break;
+					}
+				}
+
+				// If we can't find the original URL, we can't proceed.
+				if ( empty( $original_url ) ) {
+					return;
 				}
 			}
 
-			// If we can't find the original URL, we can't proceed.
-			if ( empty( $original_url ) ) {
+			// If the normalized URL for the first image is different than the URL for the featured image, use the featured image.
+			$cover_url      = $this->get_image_full_size_url( $this->content_cover() );
+			$normalized_url = $this->get_image_full_size_url( $original_url );
+			if ( ! empty( $cover_url ) && $normalized_url !== $cover_url ) {
 				return;
 			}
 
@@ -495,6 +502,45 @@ class Components extends Builder {
 	 */
 	private function get_components_from_node( $node ) {
 		return Component_Factory::get_components_from_node( $node );
+	}
+
+	/**
+	 * Attempts to guess the image's full size URL, minus any scaling or cropping.
+	 *
+	 * @param string $url The URL to evaluate.
+	 *
+	 * @since 2.1.0
+	 *
+	 * @return string The best guess as to an image's full size URL.
+	 */
+	private function get_image_full_size_url( $url ) {
+
+		// Strip URL formatting for easier matching.
+		$url = urldecode( $url );
+
+		// Split out the URL into its component parts so we can put it back together again.
+		$url_parts = wp_parse_url( $url );
+		if ( empty( $url_parts['scheme'] )
+			|| empty( $url_parts['host'] )
+			|| empty( $url_parts['path'] )
+		) {
+			return $url;
+		}
+
+		/*
+		 * Strip off any scaling, rotating, or cropping indicators from the
+		 * filename. Handles image-150x150.jpg, image-scaled.jpg,
+		 * image-rotated.jpg, for example, and will return image.jpg.
+		 */
+		$normalized_path = preg_replace( '/-(?:\d+x\d+|scaled|rotated)(\.[^.]+)$/', '$1', $url_parts['path'] );
+
+		// Put Humpty Dumpty back together again.
+		return sprintf(
+			'%s://%s%s',
+			$url_parts['scheme'],
+			$url_parts['host'],
+			$normalized_path
+		);
 	}
 
 	/**
