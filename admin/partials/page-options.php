@@ -11,15 +11,15 @@
 	<form method="post" action="" id="apple-news-settings-form">
 		<?php wp_nonce_field( 'apple_news_options' ); ?>
 		<input type="hidden" name="action" value="apple_news_options" />
-		<?php foreach ( $sections as $section ) : ?>
-			<?php $section->before_section(); ?>
+		<?php foreach ( $sections as $apple_section ) : ?>
+			<?php $apple_section->before_section(); ?>
 			<?php
-			if ( $section->is_hidden() ) {
+			if ( $apple_section->is_hidden() ) {
 				include plugin_dir_path( __FILE__ ) . 'page-options-section-hidden.php';
 			} else {
 				include plugin_dir_path( __FILE__ ) . 'page-options-section.php';
 			}
-				$section->after_section();
+				$apple_section->after_section();
 			?>
 		<?php endforeach; ?>
 

@@ -220,7 +220,7 @@ class Export extends Action {
 		 * HTML. We use 'the_content' filter for that.
 		 */
 		$content = apply_filters( 'apple_news_exporter_content_pre', $post->post_content, $post->ID );
-		$content = apply_filters( 'the_content', $content );
+		$content = apply_filters( 'the_content', $content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$content = $this->remove_tags( $content );
 		$content = $this->remove_entities( $content );
 		return $content;

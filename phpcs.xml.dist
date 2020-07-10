@@ -83,26 +83,16 @@
     </properties>
   </rule>
 
-  <!-- Turn off a few newly added or renamed rules until we put fixes in place. -->
-	<!-- We will target version 2.1.0 for these fixes. -->
+  <!-- Allow short array syntax. -->
   <rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
     <severity>0</severity>
   </rule>
-	<rule ref="Generic.CodeAnalysis.UselessOverridingMethod.Found">
-		<severity>0</severity>
-	</rule>
+
+  <!-- Turn off a few newly added or renamed rules until we put fixes in place. -->
+	<!-- We will target version 2.1.0 for these fixes. -->
   <rule ref="WordPress.DateTime.RestrictedFunctions.date_date">
     <severity>0</severity>
   </rule>
-	<rule ref="WordPress.DB.SlowDBQuery.slow_db_query_meta_query">
-		<severity>0</severity>
-	</rule>
-	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound">
-		<severity>0</severity>
-	</rule>
-	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound">
-		<severity>0</severity>
-	</rule>
   <rule ref="WordPress.PHP.DisallowShortTernary.Found">
     <severity>0</severity>
   </rule>
