@@ -81,7 +81,7 @@ class Intro_Test extends Component_TestCase {
 			[
 				'post_content' => '<p>Lorem ipsum dolor sit amet.</p>',
 				'post_excerpt' => '',
-			],
+			]
 		);
 
 		// Run the exporter against the sample post and verify that the Intro component is not used, since there is no custom excerpt.
@@ -95,7 +95,7 @@ class Intro_Test extends Component_TestCase {
 			[
 				'post_content' => '<p>Lorem ipsum dolor sit amet.</p>',
 				'post_excerpt' => 'Sample excerpt',
-			],
+			]
 		);
 
 		// Run the exporter against the sample post and verify that the Intro component is used, and matches the custom excerpt.
@@ -109,7 +109,7 @@ class Intro_Test extends Component_TestCase {
 			[
 				'post_content' => '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis arcu risus, vestibulum non nulla a, mollis posuere lectus. Quisque lectus ex, viverra nec massa et, elementum sodales dui. Nam nec congue libero. Nunc eu lectus quis quam eleifend gravida. Nulla condimentum, nisl ornare rhoncus ultrices, ex ipsum luctus dolor, vitae iaculis metus magna vitae neque. Maecenas in risus id est hendrerit mattis. Curabitur pulvinar ante a ligula tincidunt, id porta ante ornare. Donec neque metus, hendrerit nec lectus in, consectetur porta dolor. Curabitur egestas orci eu tortor congue, eu varius ipsum finibus. In in faucibus mi. Donec odio leo, blandit non varius nec, cursus ac eros. Aenean sagittis mauris eget interdum elementum. Etiam hendrerit lectus at lacus pretium pretium. Vivamus eu egestas dolor. Nam a ultricies lectus.</p>',
 				'post_excerpt' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis arcu risus, vestibulum non nulla a, mollis posuere lectus.',
-			],
+			]
 		);
 
 		// Run the exporter against the sample post and verify that the Intro component is not used because it duplicates content from the main body.
