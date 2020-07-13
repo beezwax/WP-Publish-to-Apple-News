@@ -72,7 +72,7 @@ class Intro_Test extends Component_TestCase {
 		$settings_object                  = new Settings();
 		$theme                            = \Apple_Exporter\Theme::get_used();
 		$settings                         = $theme->all_settings();
-		$settings['meta_component_order'] = ['cover', 'title', 'byline', 'intro'];
+		$settings['meta_component_order'] = [ 'cover', 'title', 'byline', 'intro' ];
 		$theme->load( $settings );
 		$this->assertTrue( $theme->save() );
 
