@@ -115,6 +115,21 @@ class Export extends Action {
 		// Get the content.
 		$content = $this->get_content( $post );
 
+		/*
+		 * If the excerpt looks too similar to the content, remove it.
+		 * We do this before the filter, to allow overrides for the final value.
+		 * This essentially prevents the case where someone intentionally copies
+		 * the first paragraph of content into the `post_excerpt` field and
+		 * unintentionally introduces a duplicate content issue.
+		 */
+		if ( ! empty( $excerpt ) ) {
+			$content_normalized = strtolower( str_replace( ' ', '', wp_strip_all_tags( $content ) ) );
+			$excerpt_normalized = strtolower( str_replace( ' ', '', wp_strip_all_tags( $excerpt ) ) );
+			if ( false !== strpos( $content_normalized, $excerpt_normalized ) ) {
+				$excerpt = '';
+			}
+		}
+
 		// Filter each of our items before passing into the exporter class.
 		$title      = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
 		$excerpt    = apply_filters( 'apple_news_exporter_excerpt', $excerpt, $post->ID );
