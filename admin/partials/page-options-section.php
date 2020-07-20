@@ -6,10 +6,10 @@
  */
 
 ?>
-<h3><?php echo esc_html( $section->name() ); ?></h3>
-<?php echo wp_kses_post( $section->get_section_info() ); ?>
+<h3><?php echo esc_html( $apple_section->name() ); ?></h3>
+<?php echo wp_kses_post( $apple_section->get_section_info() ); ?>
 <table class="form-table apple-news">
-	<?php foreach ( $section->groups() as $apple_group ) : ?>
+	<?php foreach ( $apple_section->groups() as $apple_group ) : ?>
 		<?php do_action( 'apple_news_before_setting_group', $apple_group, false ); ?>
 	<tr>
 		<th scope="row"><?php echo esc_html( $apple_group['label'] ); ?></th>
@@ -23,7 +23,7 @@
 					<?php endif; ?>
 					<?php
 						echo wp_kses(
-							$section->render_field(
+							$apple_section->render_field(
 								array(
 									$apple_setting_name,
 									$apple_setting_meta['default'],
