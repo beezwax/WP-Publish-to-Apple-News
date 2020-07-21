@@ -93,9 +93,6 @@ class Image extends Component {
 							'textColor'     => '#caption_color#',
 						),
 						'layout'    => array(
-							'margin'               => array(
-								'top' => 20,
-							),
 							'ignoreDocumentMargin' => '#full_bleed_images#',
 						),
 					),
