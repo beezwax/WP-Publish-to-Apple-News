@@ -2,7 +2,7 @@
 # @link https://travis-ci.org/
 
 # Xenial image has PHP versions 5.6,7.1,7.2 pre-installed
-dist: bionic
+dist: xenial
 
 # Xenial does not start mysql by default
 services:
