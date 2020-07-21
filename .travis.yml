@@ -2,12 +2,11 @@
 # @link https://travis-ci.org/
 
 # Xenial image has PHP versions 5.6,7.1,7.2 pre-installed
-dist: xenial
+dist: bionic
 
 # Xenial does not start mysql by default
 services:
   - mysql
-  - memcached
 
 # Declare project language.
 # @link http://about.travis-ci.org/docs/user/languages/php/
@@ -83,7 +82,7 @@ before_script:
   # Set up jest.
   - |
     if [[ "$WP_JS" == "1" ]] ; then
-      nvm install 8
+      nvm install 12
       npm i -g npm@6
       npm install
     fi
