@@ -1,10 +1,10 @@
 # Travis CI (MIT License) configuration file for Publish to Apple News
 # @link https://travis-ci.org/
 
-# Xenial image has PHP versions 5.6,7.1,7.2 pre-installed
-dist: xenial
+# Bionic image has PHP versions 7.1, 7.2, 7.3 pre-installed.
+dist: bionic
 
-# Xenial does not start mysql by default
+# Bionic does not start mysql by default.
 services:
   - mysql
 
