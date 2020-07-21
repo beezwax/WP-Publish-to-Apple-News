@@ -68,8 +68,8 @@ class Exporter {
 	 */
 	public function __construct( $content, $workspace = null, $settings = null ) {
 		$this->content   = $content;
-		$this->workspace = $workspace ?: new Workspace( $this->content_id() );
-		$this->settings  = $settings ?: new Settings();
+		$this->workspace = ! empty( $workspace ) ? $workspace : new Workspace( $this->content_id() );
+		$this->settings  = ! empty( $settings ) ? $settings : new Settings();
 		$this->builders  = array();
 	}
 
@@ -320,7 +320,8 @@ class Exporter {
 	 * @return string The title of the content being exported.
 	 */
 	private function content_title() {
-		return $this->content->title() ?: 'Untitled Article';
+		$title = $this->content->title();
+		return ! empty( $title ) ? $title : __( 'Untitled Article', 'apple-news' );
 	}
 
 	/**
