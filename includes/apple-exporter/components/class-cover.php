@@ -74,17 +74,25 @@ class Cover extends Component {
 	/**
 	 * Build the component.
 	 *
-	 * @param string $url The URL for the cover image.
+	 * @param string $html The HTML for the cover image. Can be a bare URL or an img or figure tag.
 	 * @access protected
 	 */
-	protected function build( $url ) {
+	protected function build( $html ) {
 
-		// If we can't get a valid URL, bail.
-		$url   = $this->maybe_bundle_source( $url );
-		$check = trim( $url );
-		if ( empty( $check ) ) {
+		// Determine if we were given a bare URL or HTML.
+		$url = filter_var( $html, FILTER_VALIDATE_URL )
+			? $html
+			: self::url_from_src( $html );
+
+		// Bundle the source, if necessary.
+		$url = trim( $this->maybe_bundle_source( $url ) );
+
+		// If we failed to get a URL, bail out.
+		if ( empty( $url ) ) {
 			return;
 		}
+
+		// TODO: Fork for caption vs. not.
 
 		$this->register_json(
 			'json',
