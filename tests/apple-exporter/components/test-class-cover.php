@@ -120,10 +120,27 @@ class Cover_Test extends Component_TestCase {
 			),
 			$component->to_array()
 		);
+	}
 
-		return;
+	/**
+	 * Tests the JSON generation for the Cover component when provided with image HTML and a caption.
+	 */
+	public function testGeneratedJSONFromHTMLWithCaption() {
+		$this->settings->set( 'use_remote_images', 'yes' );
 
-		// TODO: Caption.
+		// Create dummy post and attachment.
+		$file    = dirname( dirname( __DIR__ ) ) . '/data/test-image.jpg';
+		$post_id = self::factory()->post->create();
+		$image   = self::factory()->attachment->create_upload_object( $file, $post_id );
+
+		$component = new Cover(
+			do_shortcode( '[caption caption="Test Caption" width="300"]' . wp_get_attachment_image( $image, 'full' ) . '[/caption]' ),
+			new Workspace( $post_id ),
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
+
 		$this->assertEquals(
 			array(
 				'role' => 'header',
@@ -131,20 +148,20 @@ class Cover_Test extends Component_TestCase {
 				'components' => array(
 					array(
 						'role'    => 'photo',
-						'URL'     => 'http://someurl.com/filename.jpg',
+						'URL'     => wp_get_attachment_url( $image ),
 						'layout'  => 'headerPhotoLayout',
+						'caption' => 'Test Caption',
 					),
 					array(
 						'role'      => 'caption',
-						'text'      => '#caption_text#',
+						'text'      => 'Test Caption',
 						'format'    => 'html',
 						'textStyle' => array(
-							'textAlignment' => '#text_alignment#',
-							'fontName'      => '#caption_font#',
-							'fontSize'      => '#caption_size#',
-							'tracking'      => '#caption_tracking#',
-							'lineHeight'    => '#caption_line_height#',
-							'textColor'     => '#caption_color#',
+							'fontName' => 'AvenirNext-Italic',
+              'fontSize' => 16,
+              'tracking' => 0,
+              'lineHeight' => 24.0,
+              'textColor' => '#4f4f4f',
 						),
 					),
 				),

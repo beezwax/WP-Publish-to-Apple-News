@@ -47,6 +47,40 @@ class Cover extends Component {
 		);
 
 		$this->register_spec(
+			'jsonWithCaption',
+			__( 'JSON with Caption', 'apple-news' ),
+			array(
+				'role'       => 'header',
+				'layout'     => 'headerPhotoLayout',
+				'components' => array(
+					array(
+						'role'    => 'photo',
+						'layout'  => 'headerPhotoLayout',
+						'URL'     => '#url#',
+						'caption' => '#caption#',
+					),
+					array(
+						'role'      => 'caption',
+						'text'      => '#caption#',
+						'format'    => 'html',
+						'textStyle' => array(
+							'textAlignment' => '#text_alignment#',
+							'fontName'      => '#caption_font#',
+							'fontSize'      => '#caption_size#',
+							'tracking'      => '#caption_tracking#',
+							'lineHeight'    => '#caption_line_height#',
+							'textColor'     => '#caption_color#',
+						),
+					),
+				),
+				'behavior'   => array(
+					'type'   => 'parallax',
+					'factor' => 0.8,
+				),
+			)
+		);
+
+		$this->register_spec(
 			'headerPhotoLayout',
 			__( 'Layout', 'apple-news' ),
 			array(
@@ -92,14 +126,23 @@ class Cover extends Component {
 			return;
 		}
 
-		// TODO: Fork for caption vs. not.
-
-		$this->register_json(
-			'json',
-			array(
-				'#url#' => $url,
-			)
-		);
+		// Fork for caption vs. not.
+		if ( preg_match( '/<(?:figcaption|p)[^>]+class=[\'"][^\'"]*wp-caption-text[^\'"]*[\'"][^>]*>(.+?)(?:<\/figcaption|<\/p>)/', $html, $matches ) ) {
+			$this->register_json(
+				'jsonWithCaption',
+				array(
+					'#caption#' => $matches[1],
+					'#url#'     => $url,
+				)
+			);
+		} else {
+			$this->register_json(
+				'json',
+				array(
+					'#url#' => $url,
+				)
+			);
+		}
 
 		$this->set_default_layout();
 	}
@@ -130,6 +173,4 @@ class Cover extends Component {
 			)
 		);
 	}
-
 }
-
