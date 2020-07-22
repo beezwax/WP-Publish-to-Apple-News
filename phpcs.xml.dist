@@ -93,9 +93,6 @@
   <rule ref="WordPress.DateTime.RestrictedFunctions.date_date">
     <severity>0</severity>
   </rule>
-  <rule ref="WordPress.PHP.DisallowShortTernary.Found">
-    <severity>0</severity>
-  </rule>
 	<rule ref="WordPress.Security.NonceVerification.NoNonceVerification">
 		<severity>0</severity>
 	</rule>

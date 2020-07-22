@@ -130,7 +130,7 @@ class Exporter_Content {
 		$this->intro    = $intro;
 		$this->cover    = $cover;
 		$this->byline   = $byline;
-		$this->settings = $settings ?: new Exporter_Content_Settings();
+		$this->settings = ! empty( $settings ) ? $settings : new Exporter_Content_Settings();
 	}
 
 	/**

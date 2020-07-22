@@ -107,7 +107,10 @@ class Export extends Action {
 		$excerpt = has_excerpt( $post ) ? wp_strip_all_tags( $post->post_excerpt ) : '';
 
 		// Get the post thumbnail.
-		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $this->id ) ) ?: null;
+		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $this->id ) );
+		if ( empty( $post_thumb ) ) {
+			$post_thumb = null;
+		}
 
 		// Build the byline.
 		$byline = $this->format_byline( $post );

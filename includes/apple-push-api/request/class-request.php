@@ -66,7 +66,7 @@ class Request {
 	public function __construct( $credentials, $debug = false, $mime_builder = null ) {
 		$this->credentials  = $credentials;
 		$this->debug        = $debug;
-		$this->mime_builder = $mime_builder ?: new MIME_Builder();
+		$this->mime_builder = ! empty( $mime_builder ) ? $mime_builder : new MIME_Builder();
 
 		// Set the default WordPress HTTP API args.
 		$this->default_args = apply_filters(
