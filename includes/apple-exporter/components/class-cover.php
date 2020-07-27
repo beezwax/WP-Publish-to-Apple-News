@@ -108,30 +108,36 @@ class Cover extends Component {
 	/**
 	 * Build the component.
 	 *
-	 * @param string $html The HTML for the cover image. Can be a bare URL or an img or figure tag.
+	 * @param array|string $options {
+	 *    The options for the component. If a string is provided, assume it is a URL.
+	 *
+	 *    @type string $caption The caption for the image.
+	 *    @type string $url     The URL to the featured image.
+	 * }
 	 * @access protected
 	 */
-	protected function build( $html ) {
+	protected function build( $options ) {
 
-		// Determine if we were given a bare URL or HTML.
-		$url = filter_var( $html, FILTER_VALIDATE_URL )
-			? $html
-			: self::url_from_src( $html );
+		// Handle case where options is a URL.
+		if ( is_string( $options ) ) {
+			$options = [
+				'url' => $options,
+			];
+		}
 
-		// Bundle the source, if necessary.
-		$url = trim( $this->maybe_bundle_source( $url ) );
-
-		// If we failed to get a URL, bail out.
-		if ( empty( $url ) ) {
+		// If we can't get a valid URL, bail.
+		$url   = $this->maybe_bundle_source( $options['url'] );
+		$check = trim( $url );
+		if ( empty( $check ) ) {
 			return;
 		}
 
 		// Fork for caption vs. not.
-		if ( preg_match( '/<(?:figcaption|p)[^>]+class=[\'"][^\'"]*wp-caption-text[^\'"]*[\'"][^>]*>(.+?)(?:<\/figcaption|<\/p>)/', $html, $matches ) ) {
+		if ( ! empty( $options['caption'] ) ) {
 			$this->register_json(
 				'jsonWithCaption',
 				array(
-					'#caption#' => $matches[1],
+					'#caption#' => $options['caption'],
 					'#url#'     => $url,
 				)
 			);

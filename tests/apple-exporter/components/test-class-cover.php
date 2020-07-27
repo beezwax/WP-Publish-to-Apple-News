@@ -95,7 +95,7 @@ class Cover_Test extends Component_TestCase {
 		$image   = self::factory()->attachment->create_upload_object( $file, $post_id );
 
 		$component = new Cover(
-			wp_get_attachment_image( $image, 'full' ),
+			wp_get_attachment_url( $image ),
 			new Workspace( $post_id ),
 			$this->settings,
 			$this->styles,
@@ -134,7 +134,10 @@ class Cover_Test extends Component_TestCase {
 		$image   = self::factory()->attachment->create_upload_object( $file, $post_id );
 
 		$component = new Cover(
-			do_shortcode( '[caption caption="Test Caption" width="300"]' . wp_get_attachment_image( $image, 'full' ) . '[/caption]' ),
+			[
+				'caption' => 'Test Caption',
+				'url'     => wp_get_attachment_url( $image ),
+			],
 			new Workspace( $post_id ),
 			$this->settings,
 			$this->styles,
