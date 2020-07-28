@@ -188,7 +188,8 @@ class Components extends Builder {
 			}
 
 			// If the normalized URL for the first image is different than the URL for the featured image, use the featured image.
-			$cover_url      = $this->get_image_full_size_url( $this->content_cover() );
+			$cover_config   = $this->content_cover();
+			$cover_url      = $this->get_image_full_size_url( ! empty( $cover_config['url'] ) ? $cover_config['url'] : $cover_config );
 			$normalized_url = $this->get_image_full_size_url( $original_url );
 			if ( ! empty( $cover_url ) && $normalized_url !== $cover_url ) {
 				return;

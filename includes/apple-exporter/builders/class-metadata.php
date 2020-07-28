@@ -37,9 +37,10 @@ class Metadata extends Builder {
 		}
 
 		// If the content has a cover, use it as thumb.
-		if ( $this->content_cover() ) {
+		$content_cover = $this->content_cover();
+		if ( ! empty( $content_cover ) ) {
 			$meta['thumbnailURL'] = $this->maybe_bundle_source(
-				$this->content_cover()
+				! empty( $content_cover['url'] ) ? $content_cover['url'] : $content_cover
 			);
 		}
 
