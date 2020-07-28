@@ -57,7 +57,10 @@ class Cover extends Component {
 						'role'    => 'photo',
 						'layout'  => 'headerPhotoLayoutWithCaption',
 						'URL'     => '#url#',
-						'caption' => '#caption#',
+						'caption' => array(
+							'format' => 'html',
+							'text'   => '#caption#',
+						),
 					),
 					array(
 						'role'      => 'caption',
