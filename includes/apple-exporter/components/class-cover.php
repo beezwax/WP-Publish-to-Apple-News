@@ -55,7 +55,7 @@ class Cover extends Component {
 				'components' => array(
 					array(
 						'role'    => 'photo',
-						'layout'  => 'headerPhotoLayout',
+						'layout'  => 'headerPhotoLayoutWithCaption',
 						'URL'     => '#url#',
 						'caption' => '#caption#',
 					),
@@ -87,6 +87,19 @@ class Cover extends Component {
 				'ignoreDocumentMargin' => true,
 				'columnStart'          => 0,
 				'columnSpan'           => '#layout_columns#',
+			)
+		);
+
+		$this->register_spec(
+			'headerPhotoLayoutWithCaption',
+			__( 'Layout with Caption', 'apple-news' ),
+			array(
+				'ignoreDocumentMargin' => true,
+				'columnStart'          => 0,
+				'columnSpan'           => '#layout_columns#',
+				'margin'               => array(
+					'bottom' => '#caption_line_height#',
+				),
 			)
 		);
 
@@ -168,6 +181,15 @@ class Cover extends Component {
 			'headerPhotoLayout',
 			array(
 				'#layout_columns#' => $theme->get_layout_columns(),
+			)
+		);
+
+		$this->register_layout(
+			'headerPhotoLayoutWithCaption',
+			'headerPhotoLayoutWithCaption',
+			array(
+				'#caption_line_height#' => $theme->get_value( 'caption_line_height' ),
+				'#layout_columns#'      => $theme->get_layout_columns(),
 			)
 		);
 
