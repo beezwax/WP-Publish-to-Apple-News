@@ -33,17 +33,17 @@ class Cover_Test extends Component_TestCase {
 
 		$this->assertEquals(
 			array(
-				'role' => 'header',
-				'layout' => 'headerPhotoLayout',
+				'role'       => 'header',
+				'layout'     => 'headerPhotoLayout',
 				'components' => array(
 					array(
-						'role' => 'photo',
+						'role'   => 'photo',
 						'layout' => 'headerPhotoLayout',
-						'URL' => 'bundle://filename.jpg'
-						)
-					),
-				'behavior' => array(
-					'type' => 'parallax',
+						'URL'    => 'bundle://filename.jpg'
+					)
+				),
+				'behavior'   => array(
+					'type'   => 'parallax',
 					'factor' => 0.8
 				),
 			),
@@ -65,17 +65,17 @@ class Cover_Test extends Component_TestCase {
 
 		$this->assertEquals(
 			array(
-				'role' => 'header',
-				'layout' => 'headerPhotoLayout',
+				'role'       => 'header',
+				'layout'     => 'headerPhotoLayout',
 				'components' => array(
 					array(
-						'role' => 'photo',
+						'role'   => 'photo',
 						'layout' => 'headerPhotoLayout',
-						'URL' => 'http://someurl.com/filename.jpg'
+						'URL'    => 'http://someurl.com/filename.jpg'
 					)
 				),
-				'behavior' => array(
-					'type' => 'parallax',
+				'behavior'   => array(
+					'type'   => 'parallax',
 					'factor' => 0.8
 				),
 			),
@@ -146,8 +146,8 @@ class Cover_Test extends Component_TestCase {
 
 		$this->assertEquals(
 			array(
-				'role' => 'header',
-				'layout' => 'headerPhotoLayout',
+				'role'       => 'header',
+				'layout'     => 'headerPhotoLayout',
 				'components' => array(
 					array(
 						'role'    => 'photo',
@@ -163,16 +163,16 @@ class Cover_Test extends Component_TestCase {
 						'text'      => 'Test Caption',
 						'format'    => 'html',
 						'textStyle' => array(
-							'fontName' => 'AvenirNext-Italic',
-              'fontSize' => 16,
-              'tracking' => 0,
-              'lineHeight' => 24.0,
-              'textColor' => '#4f4f4f',
+							'fontName'   => 'AvenirNext-Italic',
+							'fontSize'   => 16,
+							'tracking'   => 0,
+							'lineHeight' => 24.0,
+							'textColor'  => '#4f4f4f',
 						),
 					),
 				),
-				'behavior' => array(
-					'type' => 'parallax',
+				'behavior'   => array(
+					'type'   => 'parallax',
 					'factor' => 0.8
 				),
 			),
@@ -193,22 +193,25 @@ class Cover_Test extends Component_TestCase {
 		$component = new Cover( 'http://someurl.com/filename.jpg',
 			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
 
-		add_filter( 'apple_news_cover_json', function( $json ) {
+		add_filter( 'apple_news_cover_json', function ( $json ) {
 			$json['behavior']['type'] = 'background_motion';
+
 			return $json;
 		} );
 
 		$this->assertEquals(
 			array(
-				'role' => 'header',
-				'layout' => 'headerPhotoLayout',
-				'components' => array( array(
-					'role' => 'photo',
-					'layout' => 'headerPhotoLayout',
-					'URL' => 'bundle://filename.jpg'
-				) ),
-				'behavior' => array(
-					'type' => 'background_motion',
+				'role'       => 'header',
+				'layout'     => 'headerPhotoLayout',
+				'components' => array(
+					array(
+						'role'   => 'photo',
+						'layout' => 'headerPhotoLayout',
+						'URL'    => 'bundle://filename.jpg'
+					)
+				),
+				'behavior'   => array(
+					'type'   => 'background_motion',
 					'factor' => 0.8
 				),
 			),
