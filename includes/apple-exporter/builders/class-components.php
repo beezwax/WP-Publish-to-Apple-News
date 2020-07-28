@@ -195,15 +195,23 @@ class Components extends Builder {
 				return;
 			}
 
-			// Use this image as the cover.
-			$this->set_content_property( 'cover', $original_url );
-
 			// If the cover is set to be displayed, remove it from the flow.
-			$order = $theme->get_value( 'meta_component_order' );
+			$cover_caption = '';
+			$order         = $theme->get_value( 'meta_component_order' );
 			if ( is_array( $order ) && in_array( 'cover', $order, true ) ) {
+				$image_json = $components[ $i ]->to_array();
+				$cover_caption = ! empty( $image_json['components'][0]['caption'] ) ? $image_json['components'][0]['caption'] : '';
 				unset( $components[ $i ] );
 				$components = array_values( $components );
 			}
+
+			// Use this image as the cover.
+			$this->set_content_property(
+				'cover', [
+					'caption' => $cover_caption,
+					'url'     => $original_url,
+				]
+			);
 
 			break;
 		}
