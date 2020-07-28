@@ -168,6 +168,24 @@ class Component_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 'Test Caption', $result[0]['components'][0]['caption']['text'] );
 		$this->assertEquals( 'caption', $result[0]['components'][1]['role'] );
 		$this->assertEquals( 'Test Caption', $result[0]['components'][1]['text'] );
+
+		// Test setting the caption from within the content rather than as part of the Exporter_Content config (featured image).
+		$content = new Exporter_Content(
+			1,
+			'My Title',
+			'<p>Hello, World!</p><figure class="wp-block-image size-full"><img src="' . $cover_url . '" alt="" class="wp-image-' . $this->cover . '"/><figcaption>Test caption!</figcaption></figure>',
+			null,
+			null,
+			'Author Name'
+		);
+		$builder = new Components( $content, $this->settings );
+		$result = $builder->to_array();
+		$this->assertEquals( 'header', $result[0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
+		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayoutWithCaption', $result[0]['components'][0]['layout'] );
+		$this->assertEquals( $cover_url, $result[0]['components'][0]['URL'] );
+		$this->assertEquals( 'Test caption!', $result[0]['components'][0]['caption']['text'] );
 	}
 
 	/**

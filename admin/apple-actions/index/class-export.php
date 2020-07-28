@@ -141,11 +141,11 @@ class Export extends Action {
 		}
 
 		// Filter each of our items before passing into the exporter class.
-		$title      = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
-		$excerpt    = apply_filters( 'apple_news_exporter_excerpt', $excerpt, $post->ID );
-		$cover_url  = apply_filters( 'apple_news_exporter_post_thumb', ! empty( $post_thumb['url'] ) ? $post_thumb['url'] : null, $post->ID );
-		$byline     = apply_filters( 'apple_news_exporter_byline', $byline, $post->ID );
-		$content    = apply_filters( 'apple_news_exporter_content', $content, $post->ID );
+		$title     = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
+		$excerpt   = apply_filters( 'apple_news_exporter_excerpt', $excerpt, $post->ID );
+		$cover_url = apply_filters( 'apple_news_exporter_post_thumb', ! empty( $post_thumb['url'] ) ? $post_thumb['url'] : null, $post->ID );
+		$byline    = apply_filters( 'apple_news_exporter_byline', $byline, $post->ID );
+		$content   = apply_filters( 'apple_news_exporter_content', $content, $post->ID );
 
 		// Re-apply the cover URL after filtering.
 		if ( ! empty( $cover_url ) ) {

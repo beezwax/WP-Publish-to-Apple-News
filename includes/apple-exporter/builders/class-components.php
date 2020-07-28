@@ -199,15 +199,16 @@ class Components extends Builder {
 			$cover_caption = '';
 			$order         = $theme->get_value( 'meta_component_order' );
 			if ( is_array( $order ) && in_array( 'cover', $order, true ) ) {
-				$image_json = $components[ $i ]->to_array();
-				$cover_caption = ! empty( $image_json['components'][0]['caption'] ) ? $image_json['components'][0]['caption'] : '';
+				$image_json    = $components[ $i ]->to_array();
+				$cover_caption = ! empty( $image_json['components'][0]['caption']['text'] ) ? $image_json['components'][0]['caption']['text'] : '';
 				unset( $components[ $i ] );
 				$components = array_values( $components );
 			}
 
 			// Use this image as the cover.
 			$this->set_content_property(
-				'cover', [
+				'cover',
+				[
 					'caption' => $cover_caption,
 					'url'     => $original_url,
 				]
