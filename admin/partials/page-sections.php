@@ -49,36 +49,36 @@
 			</tr>
 			</thead>
 			<tbody id="apple-news-sections-list">
-			<?php $count = 0; ?>
-			<?php foreach ( $sections as $section_id => $section_name ) : ?>
-				<tr id="apple-news-section-<?php echo esc_attr( $section_id ); ?>">
-					<td><?php echo esc_html( $section_name ); ?></td>
+			<?php $apple_count = 0; ?>
+			<?php foreach ( $sections as $apple_section_id => $apple_section_name ) : ?>
+				<tr id="apple-news-section-<?php echo esc_attr( $apple_section_id ); ?>">
+					<td><?php echo esc_html( $apple_section_name ); ?></td>
 					<td>
 						<ul class="apple-news-section-taxonomy-mapping-list">
-						<?php if ( ! empty( $taxonomy_mappings[ $section_id ] ) ) : ?>
-							<?php foreach ( $taxonomy_mappings[ $section_id ] as $term ) : ?>
-								<?php $taxonomy_id = 'apple-news-section-mapping-' . ( ++ $count ); ?>
+						<?php if ( ! empty( $taxonomy_mappings[ $apple_section_id ] ) ) : ?>
+							<?php foreach ( $taxonomy_mappings[ $apple_section_id ] as $term ) : ?>
+								<?php $apple_taxonomy_id = 'apple-news-section-mapping-' . ( ++ $apple_count ); ?>
 								<li>
-									<label for="<?php echo esc_attr( $taxonomy_id ); ?>" class="screen-reader-text"><?php echo esc_html( $taxonomy->labels->singular_name ); ?></label>
-									<input name="taxonomy-mapping-<?php echo esc_attr( $section_id ); ?>[]" id="<?php echo esc_attr( $taxonomy_id ); ?>" type="text" class="apple-news-section-taxonomy-autocomplete" value="<?php echo esc_attr( $term ); ?>" />
+									<label for="<?php echo esc_attr( $apple_taxonomy_id ); ?>" class="screen-reader-text"><?php echo esc_html( $taxonomy->labels->singular_name ); ?></label>
+									<input name="taxonomy-mapping-<?php echo esc_attr( $apple_section_id ); ?>[]" id="<?php echo esc_attr( $apple_taxonomy_id ); ?>" type="text" class="apple-news-section-taxonomy-autocomplete" value="<?php echo esc_attr( $term ); ?>" />
 									<button type="button" class="apple-news-section-taxonomy-remove"><span class="apple-news-section-taxonomy-remove-icon" aria-hidden="true"></span><span class="screen-reader-text"><?php esc_html_e( 'Remove mapping', 'apple-news' ); ?></span></button>
 								</li>
 							<?php endforeach; ?>
 						<?php endif; ?>
 						</ul>
-						<button type="button" class="apple-news-add-section-taxonomy-mapping" data-section-id="<?php echo esc_attr( $section_id ); ?>"><?php esc_html_e( 'Add', 'apple-news' ); ?> <?php echo esc_html( $taxonomy->labels->singular_name ); ?></button>
+						<button type="button" class="apple-news-add-section-taxonomy-mapping" data-section-id="<?php echo esc_attr( $apple_section_id ); ?>"><?php esc_html_e( 'Add', 'apple-news' ); ?> <?php echo esc_html( $taxonomy->labels->singular_name ); ?></button>
 					</td>
 					<td>
 						<?php
-							$theme_id       = 'apple-news-theme-mapping-' . ( ++ $count );
-							$selected_theme = ( isset( $theme_mappings[ $section_id ] ) ) ? $theme_mappings[ $section_id ] : '';
+							$apple_theme_id       = 'apple-news-theme-mapping-' . ( ++ $apple_count );
+							$apple_selected_theme = ( isset( $apple_theme_mappings[ $apple_section_id ] ) ) ? $apple_theme_mappings[ $apple_section_id ] : '';
 						?>
-						<select name="theme-mapping-<?php echo esc_attr( $section_id ); ?>" id="<?php echo esc_attr( $theme_id ); ?>">
+						<select name="theme-mapping-<?php echo esc_attr( $apple_section_id ); ?>" id="<?php echo esc_attr( $apple_theme_id ); ?>">
 							<option value=""></option>
 							<?php
-							foreach ( $themes as $theme ) :
+							foreach ( $themes as $apple_theme ) :
 								?>
-								<option value="<?php echo esc_attr( $theme ); ?>" <?php selected( $theme, $selected_theme ); ?>><?php echo esc_html( $theme ); ?></option>
+								<option value="<?php echo esc_attr( $apple_theme ); ?>" <?php selected( $apple_theme, $apple_selected_theme ); ?>><?php echo esc_html( $apple_theme ); ?></option>
 									<?php
 								endforeach;
 							?>

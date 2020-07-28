@@ -39,7 +39,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $version = '2.0.8';
+	public static $version = '2.1.0';
 
 	/**
 	 * Link to support for the plugin on WordPress.org.
@@ -171,6 +171,31 @@ class Apple_News {
 		}
 
 		return $support_info;
+	}
+
+	/**
+	 * Determines whether the currently selected theme is the default theme that
+	 * ships with the plugin or not.
+	 *
+	 * Returns true only if the name of the theme is "Default" and the config
+	 * options for the theme match the default theme from the plugin's source
+	 * files.
+	 *
+	 * @return bool True if the default theme is the current active theme, false otherwise.
+	 */
+	public static function is_default_theme() {
+		// If the theme is not named "Default", then it is customized, and is not the default theme.
+		$active_theme = \Apple_Exporter\Theme::get_active_theme_name();
+		if ( __( 'Default', 'apple-news' ) !== $active_theme ) {
+			return false;
+		}
+
+		// If the theme _is_ named "Default", check its configuration against the default.
+		$theme = new \Apple_Exporter\Theme();
+		$theme->set_name( $active_theme );
+		$theme->load();
+
+		return $theme->is_default();
 	}
 
 	/**

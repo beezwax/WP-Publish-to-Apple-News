@@ -37,20 +37,14 @@ class Image extends Component {
 		}
 
 		// Is this an image node?
-		if (
-			(
-				self::node_has_class( $node, 'wp-block-cover' )
-				|| 'img' === $node->nodeName
-				|| (
-					'figure' === $node->nodeName
-					&& (
-						Component::is_embed_figure( $node )
-						|| self::node_has_class( $node, 'wp-caption' )
-						|| $has_image_child
-					)
+		if ( self::node_has_class( $node, 'wp-block-cover' )
+			|| 'img' === $node->nodeName
+			|| ( 'figure' === $node->nodeName
+				&& ( Component::is_embed_figure( $node )
+					|| self::node_has_class( $node, 'wp-caption' )
+					|| $has_image_child
 				)
 			)
-			&& self::remote_file_exists( $node )
 		) {
 			return $node;
 		}
@@ -99,9 +93,6 @@ class Image extends Component {
 							'textColor'     => '#caption_color#',
 						),
 						'layout'    => array(
-							'margin'               => array(
-								'top' => 20,
-							),
 							'ignoreDocumentMargin' => '#full_bleed_images#',
 						),
 					),
@@ -156,7 +147,7 @@ class Image extends Component {
 	 * @access protected
 	 */
 	protected function build( $html ) {
-		// Is this is Gutenberg Cover Bloock?
+		// Is this is Gutenberg Cover Block?
 		$is_cover_block = preg_match( '#class="wp-block-cover#', $html );
 
 		// Extract the URL from the text.

@@ -107,13 +107,31 @@ class Export extends Action {
 		$excerpt = has_excerpt( $post ) ? wp_strip_all_tags( $post->post_excerpt ) : '';
 
 		// Get the post thumbnail.
-		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $this->id ) ) ?: null;
+		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $this->id ) );
+		if ( empty( $post_thumb ) ) {
+			$post_thumb = null;
+		}
 
 		// Build the byline.
 		$byline = $this->format_byline( $post );
 
 		// Get the content.
 		$content = $this->get_content( $post );
+
+		/*
+		 * If the excerpt looks too similar to the content, remove it.
+		 * We do this before the filter, to allow overrides for the final value.
+		 * This essentially prevents the case where someone intentionally copies
+		 * the first paragraph of content into the `post_excerpt` field and
+		 * unintentionally introduces a duplicate content issue.
+		 */
+		if ( ! empty( $excerpt ) ) {
+			$content_normalized = strtolower( str_replace( ' ', '', wp_strip_all_tags( $content ) ) );
+			$excerpt_normalized = strtolower( str_replace( ' ', '', wp_strip_all_tags( $excerpt ) ) );
+			if ( false !== strpos( $content_normalized, $excerpt_normalized ) ) {
+				$excerpt = '';
+			}
+		}
 
 		// Filter each of our items before passing into the exporter class.
 		$title      = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
@@ -220,7 +238,7 @@ class Export extends Action {
 		 * HTML. We use 'the_content' filter for that.
 		 */
 		$content = apply_filters( 'apple_news_exporter_content_pre', $post->post_content, $post->ID );
-		$content = apply_filters( 'the_content', $content );
+		$content = apply_filters( 'the_content', $content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$content = $this->remove_tags( $content );
 		$content = $this->remove_entities( $content );
 		return $content;

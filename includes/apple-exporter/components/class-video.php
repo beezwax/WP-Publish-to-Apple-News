@@ -30,13 +30,13 @@ class Video extends Component {
 
 		if (
 			// Is this a gutenberg video block?
-			(
-				self::node_has_class( $node, 'wp-block-video' ) &&
-				$node->hasChildNodes() &&
-				'video' === $node->firstChild->nodeName && self::remote_file_exists( $node->firstChild )
-			) ||
-			// Or is this a stand-along video tag?
-			'video' === $node->nodeName && self::remote_file_exists( $node ) ) {
+			( self::node_has_class( $node, 'wp-block-video' )
+				&& $node->hasChildNodes()
+				&& 'video' === $node->firstChild->nodeName
+			)
+			// Or is this a stand-alone video tag?
+			|| 'video' === $node->nodeName
+		) {
 			return $node;
 		}
 

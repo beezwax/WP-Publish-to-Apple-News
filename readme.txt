@@ -3,9 +3,9 @@ Contributors: potatomaster, kevinfodness, jomurgel, danbowles, alleyinteractive,
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 5.4.0
+Tested up to: 5.4.2
 Requires PHP: 5.6
-Stable tag: 2.0.8
+Stable tag: 2.1.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,14 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.1.0 =
+* Bugfix: Fixes the logic in the default theme checker to properly check the configured values against the defaults and prompt the user if they are using the default theme that ships with Apple News without modification.
+* Bugfix: Fixes a bug where renaming a theme would not carry over any changes made to the theme, and renaming the active theme would make it no longer active.
+* Bugfix: If the same image is used for the featured image and the first image embedded into the post, it no longer shows up twice.
+* Bugfix: Removed extra space between an image and its caption.
+* Bugfix: If a custom excerpt is used, but the custom excerpt repeats text in its entirety from elsewhere in the article (e.g., the first paragraph), then the Intro component will be skipped. This prevents an issue where Apple will flag articles that contain repeated text due to the Intro component using a custom excerpt suitable in a WordPress context but not an Apple News context.
+* Bugfix: Select menus are no longer oversized on the settings page.
 
 = 2.0.8 =
 * Enhancement: Adds styles for Button elements that are links which are added by the Gutenberg editor.
