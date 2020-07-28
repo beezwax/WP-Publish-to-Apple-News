@@ -152,8 +152,11 @@ class Cover_Test extends Component_TestCase {
 					array(
 						'role'    => 'photo',
 						'URL'     => wp_get_attachment_url( $image ),
-						'layout'  => 'headerPhotoLayout',
-						'caption' => 'Test Caption',
+						'layout'  => 'headerPhotoLayoutWithCaption',
+						'caption' => array(
+							'format' => 'html',
+							'text'   => 'Test Caption',
+						),
 					),
 					array(
 						'role'      => 'caption',

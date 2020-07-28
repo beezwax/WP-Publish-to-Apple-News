@@ -165,7 +165,7 @@ class Component_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
 		$this->assertEquals( $cover_url, $result[0]['components'][0]['URL'] );
 		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
-		$this->assertEquals( 'Test Caption', $result[0]['components'][0]['caption'] );
+		$this->assertEquals( 'Test Caption', $result[0]['components'][0]['caption']['text'] );
 		$this->assertEquals( 'caption', $result[0]['components'][1]['role'] );
 		$this->assertEquals( 'Test Caption', $result[0]['components'][1]['text'] );
 	}

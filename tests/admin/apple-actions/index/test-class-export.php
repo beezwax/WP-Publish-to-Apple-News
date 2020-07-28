@@ -43,7 +43,7 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 		$json     = json_decode( $export->perform(), true );
 		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
 		$this->assertEquals( wp_get_attachment_url( $image ), $json['components'][0]['components'][0]['URL'] );
-		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][0]['caption'] );
+		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][0]['caption']['text'] );
 		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
 		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][1]['text'] );
 	}
