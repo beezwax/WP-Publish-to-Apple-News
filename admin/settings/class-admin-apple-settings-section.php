@@ -261,7 +261,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			if ( $this->is_multiple( $name ) ) {
 				$multiple_name = '[]';
 				$multiple_attr = 'multiple="multiple"';
-				$size = min( $size, count( $type ) );
+				$size          = min( $size, count( $type ) );
 			} else {
 				$size = 1;
 			}
