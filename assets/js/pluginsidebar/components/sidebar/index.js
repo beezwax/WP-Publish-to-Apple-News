@@ -57,6 +57,8 @@ class Sidebar extends React.PureComponent {
         // Other keys are determined in part by orientation
         // see `coverArtSizes` variable below
       }),
+      coverImageId: PropTypes.number,
+      coverImageCaption: PropTypes.string,
       apiId: PropTypes.string,
       dateCreated: PropTypes.string,
       dateModified: PropTypes.string,
@@ -485,6 +487,8 @@ class Sidebar extends React.PureComponent {
         pullquotePosition = '',
         selectedSections = '',
         coverArt = '',
+        coverImageId = 0,
+        coverImageCaption = '',
         apiId = '',
         dateCreated = '',
         dateModified = '',
@@ -729,6 +733,30 @@ class Sidebar extends React.PureComponent {
           </PanelBody>
           <PanelBody
             initialOpen={false}
+            title={__('Cover Image', 'apple_news')}
+          >
+            <ImagePicker
+              metaKey='apple_news_coverimage'
+              onUpdate={onUpdate}
+              value={coverImageId}
+            />
+            <TextareaControl
+              label={__('Caption', 'apple_news')}
+              value={coverImageCaption}
+              onChange={(value) => onUpdate(
+                'apple_news_coverimage_caption',
+                value
+              )}
+              placeholder="Add an image caption here."
+            />
+            <p>
+              <em>
+                This is optional and can be left blank.
+              </em>
+            </p>
+          </PanelBody>
+          <PanelBody
+            initialOpen={false}
             title={__('Cover Art', 'apple-news')}
           >
             {
@@ -905,6 +933,8 @@ export default compose([
       apple_news_pullquote_position: pullquotePosition = '',
       apple_news_sections: selectedSections = '',
       apple_news_coverart: coverArt = {},
+      apple_news_coverimage: coverImageId = 0,
+      apple_news_coverimage_caption: coverImageCaption = '',
       apple_news_api_id: apiId = '',
       apple_news_api_created_at: dateCreated = '',
       apple_news_api_modified_at: dateModified = '',
@@ -927,6 +957,8 @@ export default compose([
         pullquotePosition,
         selectedSections,
         coverArt,
+        coverImageId,
+        coverImageCaption,
         apiId,
         dateCreated,
         dateModified,
