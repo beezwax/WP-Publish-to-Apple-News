@@ -119,7 +119,7 @@ class Cover extends Component {
 	protected function build( $options ) {
 
 		// Handle case where options is a URL.
-		if ( is_string( $options ) ) {
+		if ( ! is_array( $options ) ) {
 			$options = [
 				'url' => $options,
 			];

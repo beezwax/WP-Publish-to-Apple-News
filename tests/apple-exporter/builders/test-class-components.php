@@ -118,7 +118,7 @@ class Component_Tests extends WP_UnitTestCase {
 			'My Title',
 			'<p>Hello, World!</p>',
 			null,
-			$this->cover,
+			wp_get_attachment_url( $this->cover ),
 			'Author Name'
 		);
 		$this->styles = new Component_Text_Styles( $this->content, $this->settings );
