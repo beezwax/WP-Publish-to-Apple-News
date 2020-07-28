@@ -118,7 +118,7 @@ class Exporter_Content {
 	 * @param string                   $title    The title of the post to be exported.
 	 * @param string                   $content  The content of the post to be exported.
 	 * @param string                   $intro    Optional. The intro of the post to be exported.
-	 * @param string                   $cover    Optional. The cover of the post to be exported.
+	 * @param string|array             $cover    Optional. The cover of the post to be exported. If string, just the URL. If array, properties are 'url' and 'caption'.
 	 * @param string                   $byline   Optional. The byline of the post to be exported.
 	 * @param \Apple_Exporter\Settings $settings Optional. Settings for the exporter.
 	 * @access public

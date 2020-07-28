@@ -143,6 +143,34 @@ class Component_Tests extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Tests the ability to provide cover configuration as an array instead of
+	 * a URL, which lets us build cover images with captions.
+	 */
+	public function testCoverImageArrayConfig() {
+		$cover_url = wp_get_attachment_url( $this->cover );
+		$content   = new Exporter_Content(
+			1,
+			'My Title',
+			'<p>Hello, World!</p>',
+			null,
+			[
+				'caption' => 'Test Caption',
+				'url'     => $cover_url,
+			],
+			'Author Name'
+		);
+		$builder = new Components( $content, $this->settings );
+		$result  = $builder->to_array();
+		$this->assertEquals( 'header', $result[0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
+		$this->assertEquals( $cover_url, $result[0]['components'][0]['URL'] );
+		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
+		$this->assertEquals( 'Test Caption', $result[0]['components'][0]['caption'] );
+		$this->assertEquals( 'caption', $result[0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Caption', $result[0]['components'][1]['text'] );
+	}
+
+	/**
 	 * Tests the image deduping functionality of the Components class.
 	 *
 	 * Ensures that a featured image with the same source URL (minus any crops)
