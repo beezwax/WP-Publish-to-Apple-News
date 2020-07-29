@@ -210,8 +210,8 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		}
 		update_post_meta( $post_id, 'apple_news_pullquote_position', $pullquote_position );
 
-		if ( ! empty( (int) $_POST['apple_news_coverimage'] ) ) {
-			$cover_image = (int) $_POST['apple_news_coverimage'];
+		if ( ! empty( $_POST['apple_news_coverimage'] ) ) {
+			$cover_image = ! empty( (int) $_POST['apple_news_coverimage'] ) ? (int) $_POST['apple_news_coverimage'] : '';
 		} else {
 			$cover_image = '';
 		}
