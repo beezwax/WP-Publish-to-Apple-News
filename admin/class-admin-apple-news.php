@@ -109,6 +109,10 @@ class Admin_Apple_News extends Apple_News {
 						'prepare_callback' => 'apple_news_json_encode',
 					],
 				],
+				'apple_news_coverimage'         => [
+					'type' => 'integer',
+				],
+				'apple_news_coverimage_caption' => [],
 				'apple_news_is_hidden'          => [
 					'type' => 'boolean',
 				],
