@@ -106,17 +106,25 @@ class Export extends Action {
 		// Only include excerpt if exists.
 		$excerpt = has_excerpt( $post ) ? wp_strip_all_tags( $post->post_excerpt ) : '';
 
-		// Get the post thumbnail.
-		$thumb_id   = get_post_thumbnail_id( $this->id );
-		$post_thumb = wp_get_attachment_url( $thumb_id );
-		if ( empty( $post_thumb ) ) {
-			$post_thumb = null;
-		} else {
-			$caption    = wp_get_attachment_caption( $thumb_id );
-			$post_thumb = [
-				'caption' => ! empty( $caption ) ? $caption : '',
-				'url'     => $post_thumb,
+		// Get the cover configuration.
+		$post_thumb    = null;
+		$cover_meta_id = get_post_meta( $this->id, 'apple_news_coverimage', true );
+		if ( ! empty( $cover_meta_id ) ) {
+			$cover_meta_caption = get_post_meta( $this->id, 'apple_news_coverimage_caption', true );
+			$post_thumb         = [
+				'caption' => ! empty( $cover_meta_caption ) ? $cover_meta_caption : '',
+				'url'     => wp_get_attachment_url( $cover_meta_id ),
 			];
+		} else {
+			$thumb_id       = get_post_thumbnail_id( $this->id );
+			$post_thumb_url = wp_get_attachment_url( $thumb_id );
+			if ( ! empty( $post_thumb_url ) ) {
+				$caption    = wp_get_attachment_caption( $thumb_id );
+				$post_thumb = [
+					'caption' => ! empty( $caption ) ? $caption : '',
+					'url'     => $post_thumb_url,
+				];
+			}
 		}
 
 		// Build the byline.
