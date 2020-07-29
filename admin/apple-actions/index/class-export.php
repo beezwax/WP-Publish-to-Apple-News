@@ -109,22 +109,35 @@ class Export extends Action {
 		// Get the cover configuration.
 		$post_thumb    = null;
 		$cover_meta_id = get_post_meta( $this->id, 'apple_news_coverimage', true );
+		$cover_caption = get_post_meta( $this->id, 'apple_news_coverimage_caption', true );
 		if ( ! empty( $cover_meta_id ) ) {
-			$cover_meta_caption = get_post_meta( $this->id, 'apple_news_coverimage_caption', true );
-			$post_thumb         = [
-				'caption' => ! empty( $cover_meta_caption ) ? $cover_meta_caption : '',
+			if ( empty( $cover_caption ) ) {
+				$cover_caption = wp_get_attachment_caption( $cover_meta_id );
+			}
+			$post_thumb = [
+				'caption' => ! empty( $cover_caption ) ? $cover_caption : '',
 				'url'     => wp_get_attachment_url( $cover_meta_id ),
 			];
 		} else {
 			$thumb_id       = get_post_thumbnail_id( $this->id );
 			$post_thumb_url = wp_get_attachment_url( $thumb_id );
+			if ( empty( $cover_caption ) ) {
+				$cover_caption = wp_get_attachment_caption( $thumb_id );
+			}
 			if ( ! empty( $post_thumb_url ) ) {
-				$caption    = wp_get_attachment_caption( $thumb_id );
 				$post_thumb = [
-					'caption' => ! empty( $caption ) ? $caption : '',
+					'caption' => ! empty( $cover_caption ) ? $cover_caption : '',
 					'url'     => $post_thumb_url,
 				];
 			}
+		}
+
+		// If there is a cover caption but not a cover image URL, preserve it, so it can take precedence later.
+		if ( empty( $post_thumb ) && ! empty( $cover_caption ) ) {
+			$post_thumb = [
+				'caption' => $cover_caption,
+				'url'     => '',
+			];
 		}
 
 		// Build the byline.

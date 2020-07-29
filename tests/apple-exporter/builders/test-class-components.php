@@ -343,6 +343,36 @@ class Component_Tests extends WP_UnitTestCase {
 		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
 		$this->assertEquals( $image2_thumbnail, $result[1]['components'][3]['URL'] );
 		$this->assertEquals( 4, count( $result[1]['components'] ) );
+
+		/*
+		 * Scenario 7:
+		 * - No featured image is set.
+		 * - Images in the content.
+		 * - Caption set via postmeta.
+		 * Expected: The first image from the content is set as the cover image and the first image from the content has been removed, but the caption from postmeta is used.
+		 */
+		$content = new Exporter_Content(
+			1,
+			'My Title',
+			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->cover ) . wp_get_attachment_image( $this->image2 ),
+			null,
+			[
+				'caption' => 'Test caption from postmeta',
+				'url'     => '',
+			],
+			'Author Name'
+		);
+		$builder = new Components( $content, $this->settings );
+		$result = $builder->to_array();
+		$this->assertEquals( 'header', $result[0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
+		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
+		$this->assertEquals( 'Test caption from postmeta', $result[0]['components'][0]['caption']['text'] );
+		$this->assertEquals( 'headerPhotoLayoutWithCaption', $result[0]['components'][0]['layout'] );
+		$this->assertEquals( $image1_thumbnail, $result[0]['components'][0]['URL'] );
+		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
+		$this->assertEquals( $image2_thumbnail, $result[1]['components'][3]['URL'] );
+		$this->assertEquals( 4, count( $result[1]['components'] ) );
 	}
 
 	/**
