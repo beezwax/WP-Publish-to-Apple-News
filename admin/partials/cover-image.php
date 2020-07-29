@@ -22,7 +22,8 @@ $cover_image_caption = get_post_meta( $post->ID, 'apple_news_coverimage_caption'
 			}
 		?>
 	</div>
-	<input name="apple-news-coverimage"
+	<input name="apple_news_coverimage"
+				 class="apple-news-coverimage-id"
 	       type="hidden"
 	       value="<?php echo esc_attr( $cover_image_id ); ?>"
 	/>
@@ -37,7 +38,5 @@ $cover_image_caption = get_post_meta( $post->ID, 'apple_news_coverimage_caption'
 </div>
 <div>
 	<label for="apple-news-coverimage-caption"><?php esc_html_e( 'Cover Image Caption:', 'apple-news' ); ?></label>
-	<textarea id="apple-news-coverimage-caption" name="apple-news-coverimage-caption">
-		<?php echo esc_textarea( $cover_image_caption ); ?>
-	</textarea>
+	<textarea id="apple-news-coverimage-caption" name="apple_news_coverimage_caption"><?php echo esc_textarea( $cover_image_caption ); ?></textarea>
 </div>
