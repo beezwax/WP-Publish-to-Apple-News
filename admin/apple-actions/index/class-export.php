@@ -107,9 +107,16 @@ class Export extends Action {
 		$excerpt = has_excerpt( $post ) ? wp_strip_all_tags( $post->post_excerpt ) : '';
 
 		// Get the post thumbnail.
-		$post_thumb = wp_get_attachment_url( get_post_thumbnail_id( $this->id ) );
+		$thumb_id   = get_post_thumbnail_id( $this->id );
+		$post_thumb = wp_get_attachment_url( $thumb_id );
 		if ( empty( $post_thumb ) ) {
 			$post_thumb = null;
+		} else {
+			$caption    = wp_get_attachment_caption( $thumb_id );
+			$post_thumb = [
+				'caption' => ! empty( $caption ) ? $caption : '',
+				'url'     => $post_thumb,
+			];
 		}
 
 		// Build the byline.
@@ -134,11 +141,33 @@ class Export extends Action {
 		}
 
 		// Filter each of our items before passing into the exporter class.
-		$title      = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
-		$excerpt    = apply_filters( 'apple_news_exporter_excerpt', $excerpt, $post->ID );
-		$post_thumb = apply_filters( 'apple_news_exporter_post_thumb', $post_thumb, $post->ID );
-		$byline     = apply_filters( 'apple_news_exporter_byline', $byline, $post->ID );
-		$content    = apply_filters( 'apple_news_exporter_content', $content, $post->ID );
+		$title     = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
+		$excerpt   = apply_filters( 'apple_news_exporter_excerpt', $excerpt, $post->ID );
+		$cover_url = apply_filters( 'apple_news_exporter_post_thumb', ! empty( $post_thumb['url'] ) ? $post_thumb['url'] : null, $post->ID );
+		$byline    = apply_filters( 'apple_news_exporter_byline', $byline, $post->ID );
+		$content   = apply_filters( 'apple_news_exporter_content', $content, $post->ID );
+
+		// Re-apply the cover URL after filtering.
+		if ( ! empty( $cover_url ) ) {
+			$cover_caption = ! empty( $post_thumb['caption'] ) ? $post_thumb['caption'] : '';
+
+			/**
+			 * Filters the cover caption.
+			 *
+			 * @param string $caption The caption to use for the cover image.
+			 * @param int    $post_id The post ID.
+			 *
+			 * @since 2.1.0
+			 */
+			$cover_caption = apply_filters( 'apple_news_exporter_cover_caption', $cover_caption, $post->ID );
+
+			$post_thumb = [
+				'caption' => $cover_caption,
+				'url'     => $cover_url,
+			];
+		} else {
+			$post_thumb = null;
+		}
 
 		// Now pass all the variables into the Exporter_Content array.
 		$base_content = new Exporter_Content(

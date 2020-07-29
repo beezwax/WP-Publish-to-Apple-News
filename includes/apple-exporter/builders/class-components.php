@@ -188,21 +188,31 @@ class Components extends Builder {
 			}
 
 			// If the normalized URL for the first image is different than the URL for the featured image, use the featured image.
-			$cover_url      = $this->get_image_full_size_url( $this->content_cover() );
+			$cover_config   = $this->content_cover();
+			$cover_url      = $this->get_image_full_size_url( ! empty( $cover_config['url'] ) ? $cover_config['url'] : $cover_config );
 			$normalized_url = $this->get_image_full_size_url( $original_url );
 			if ( ! empty( $cover_url ) && $normalized_url !== $cover_url ) {
 				return;
 			}
 
-			// Use this image as the cover.
-			$this->set_content_property( 'cover', $original_url );
-
 			// If the cover is set to be displayed, remove it from the flow.
-			$order = $theme->get_value( 'meta_component_order' );
+			$cover_caption = '';
+			$order         = $theme->get_value( 'meta_component_order' );
 			if ( is_array( $order ) && in_array( 'cover', $order, true ) ) {
+				$image_json    = $components[ $i ]->to_array();
+				$cover_caption = ! empty( $image_json['components'][0]['caption']['text'] ) ? $image_json['components'][0]['caption']['text'] : '';
 				unset( $components[ $i ] );
 				$components = array_values( $components );
 			}
+
+			// Use this image as the cover.
+			$this->set_content_property(
+				'cover',
+				[
+					'caption' => $cover_caption,
+					'url'     => $original_url,
+				]
+			);
 
 			break;
 		}

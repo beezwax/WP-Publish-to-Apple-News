@@ -118,7 +118,7 @@ class Component_Tests extends WP_UnitTestCase {
 			'My Title',
 			'<p>Hello, World!</p>',
 			null,
-			$this->cover,
+			wp_get_attachment_url( $this->cover ),
 			'Author Name'
 		);
 		$this->styles = new Component_Text_Styles( $this->content, $this->settings );
@@ -140,6 +140,52 @@ class Component_Tests extends WP_UnitTestCase {
 		$theme = new \Apple_Exporter\Theme;
 		$theme->set_name( \Apple_Exporter\Theme::get_active_theme_name() );
 		$theme->delete();
+	}
+
+	/**
+	 * Tests the ability to provide cover configuration as an array instead of
+	 * a URL, which lets us build cover images with captions.
+	 */
+	public function testCoverImageArrayConfig() {
+		$cover_url = wp_get_attachment_url( $this->cover );
+		$content   = new Exporter_Content(
+			1,
+			'My Title',
+			'<p>Hello, World!</p>',
+			null,
+			[
+				'caption' => 'Test Caption',
+				'url'     => $cover_url,
+			],
+			'Author Name'
+		);
+		$builder = new Components( $content, $this->settings );
+		$result  = $builder->to_array();
+		$this->assertEquals( 'header', $result[0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
+		$this->assertEquals( $cover_url, $result[0]['components'][0]['URL'] );
+		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
+		$this->assertEquals( 'Test Caption', $result[0]['components'][0]['caption']['text'] );
+		$this->assertEquals( 'caption', $result[0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Caption', $result[0]['components'][1]['text'] );
+
+		// Test setting the caption from within the content rather than as part of the Exporter_Content config (featured image).
+		$content = new Exporter_Content(
+			1,
+			'My Title',
+			'<p>Hello, World!</p><figure class="wp-block-image size-full"><img src="' . $cover_url . '" alt="" class="wp-image-' . $this->cover . '"/><figcaption>Test caption!</figcaption></figure>',
+			null,
+			null,
+			'Author Name'
+		);
+		$builder = new Components( $content, $this->settings );
+		$result = $builder->to_array();
+		$this->assertEquals( 'header', $result[0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
+		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayoutWithCaption', $result[0]['components'][0]['layout'] );
+		$this->assertEquals( $cover_url, $result[0]['components'][0]['URL'] );
+		$this->assertEquals( 'Test caption!', $result[0]['components'][0]['caption']['text'] );
 	}
 
 	/**

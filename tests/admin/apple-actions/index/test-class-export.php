@@ -19,6 +19,35 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 		return apple_news_is_exporting() ? 'is exporting' : 'is not exporting';
 	}
 
+	/**
+	 * Tests the ability to include a caption with a cover image.
+	 */
+	public function testCoverWithCaption() {
+
+		// Create dummy post and attachment.
+		$file    = dirname( dirname( dirname( __DIR__ ) ) ) . '/data/test-image.jpg';
+		$post_id = self::factory()->post->create();
+		$image   = self::factory()->attachment->create_upload_object( $file, $post_id );
+
+		// Add a caption to the image.
+		$image_post = get_post( $image );
+		$image_post->post_excerpt = 'Test Caption';
+		wp_update_post( $image_post );
+
+		// Set the image as the featured image for the post.
+		update_post_meta( $post_id, '_thumbnail_id', $image );
+
+		// Run the export and check the result.
+		$sections = \Admin_Apple_Sections::get_sections_for_post( $post_id );
+		$export   = new Export( $this->settings, $post_id, $sections );
+		$json     = json_decode( $export->perform(), true );
+		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
+		$this->assertEquals( wp_get_attachment_url( $image ), $json['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][0]['caption']['text'] );
+		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][1]['text'] );
+	}
+
 	public function testHasExcerpt() {
 		$title = 'My Title';
 		$excerpt = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue...';

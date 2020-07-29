@@ -78,7 +78,10 @@ class Image extends Component {
 						'role'    => 'photo',
 						'URL'     => '#url#',
 						'layout'  => '#layout#',
-						'caption' => '#caption#',
+						'caption' => array(
+							'format' => 'html',
+							'text'   => '#caption#',
+						),
 					),
 					array(
 						'role'      => 'caption',
