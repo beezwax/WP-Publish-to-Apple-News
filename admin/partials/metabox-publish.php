@@ -81,6 +81,10 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 		</select>
 		<p class="description"><?php esc_html_e( 'The position in the article where the pull quote will appear.', 'apple-news' ); ?></p>
 	</div>
+	<div id="apple-news-metabox-coverimage" class="apple-news-metabox-section apple-news-metabox-section-collapsable">
+		<h3><?php esc_html_e( 'Cover Image', 'apple-news' ); ?></h3>
+		<?php include plugin_dir_path( __FILE__ ) . 'cover-image.php'; ?>
+	</div>
 	<?php
 	if ( 'yes' !== $this->settings->get( 'api_autosync' )
 		&& current_user_can( apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $post->post_type ) ) )
