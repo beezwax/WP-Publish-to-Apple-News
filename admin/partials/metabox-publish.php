@@ -83,7 +83,7 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 	</div>
 	<div id="apple-news-metabox-coverimage" class="apple-news-metabox-section apple-news-metabox-section-collapsable">
 		<h3><?php esc_html_e( 'Cover Image', 'apple-news' ); ?></h3>
-		<?php include plugin_dir_path( __FILE__ ) . 'cover-image.php'; ?>
+		<?php require plugin_dir_path( __FILE__ ) . 'cover-image.php'; ?>
 	</div>
 	<?php
 	if ( 'yes' !== $this->settings->get( 'api_autosync' )
