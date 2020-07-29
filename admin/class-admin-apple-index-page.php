@@ -104,9 +104,8 @@ class Admin_Apple_Index_Page extends Apple_News {
 					Admin_Apple_Notice::error( $e->getMessage() );
 				}
 
-				$post             = get_post( $id );
-				$post_meta        = get_post_meta( $id );
-				$enable_cover_art = ( 'yes' === $this->settings->enable_cover_art );
+				$post      = get_post( $id );
+				$post_meta = get_post_meta( $id );
 				include plugin_dir_path( __FILE__ ) . 'partials/page-single-push.php';
 				break;
 			default:

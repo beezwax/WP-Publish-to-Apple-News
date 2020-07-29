@@ -259,35 +259,6 @@ class Apple_News {
 
 		// Ensure media modal assets are enqueued.
 		wp_enqueue_media();
-
-		// Enqueue styles.
-		wp_enqueue_style(
-			$this->plugin_slug . '_cover_art_css',
-			plugin_dir_url( __FILE__ ) . '../assets/css/cover-art.css',
-			array(),
-			self::$version
-		);
-
-		// Enqueue scripts.
-		wp_enqueue_script(
-			$this->plugin_slug . '_cover_art_js',
-			plugin_dir_url( __FILE__ ) . '../assets/js/cover-art.js',
-			array( 'jquery' ),
-			self::$version,
-			true
-		);
-
-		// Localize scripts.
-		wp_localize_script(
-			$this->plugin_slug . '_cover_art_js',
-			'apple_news_cover_art',
-			array(
-				'image_sizes'        => Admin_Apple_News::get_image_sizes(),
-				'image_too_small'    => esc_html__( 'You must select an image that is at least the height and width specified above.', 'apple-news' ),
-				'media_modal_button' => esc_html__( 'Select image', 'apple-news' ),
-				'media_modal_title'  => esc_html__( 'Choose an image', 'apple-news' ),
-			)
-		);
 	}
 
 	/**
@@ -833,11 +804,6 @@ class Apple_News {
 				$this->migrate_table_settings( $theme );
 			}
 		}
-
-		// Default cover art to on for existing installations.
-		$wp_settings                     = get_option( self::$option_name );
-		$wp_settings['enable_cover_art'] = 'yes';
-		update_option( self::$option_name, $wp_settings, 'no' );
 	}
 
 	/**

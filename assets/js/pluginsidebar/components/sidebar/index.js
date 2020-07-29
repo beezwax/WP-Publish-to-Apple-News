@@ -52,11 +52,6 @@ class Sidebar extends React.PureComponent {
       pullquoteText: PropTypes.string,
       pullquotePosition: PropTypes.string,
       selectedSections: PropTypes.string,
-      coverArt: PropTypes.shape({
-        orientation: PropTypes.string,
-        // Other keys are determined in part by orientation
-        // see `coverArtSizes` variable below
-      }),
       coverImageId: PropTypes.number,
       coverImageCaption: PropTypes.string,
       apiId: PropTypes.string,
@@ -401,37 +396,6 @@ class Sidebar extends React.PureComponent {
   }
 
   /**
-   * Select Cover Art Image
-   *
-   * @param   {string}  metaKey  metakey name
-   * @param   {string}  value    meta key value
-   */
-  updateSelectCoverArtImage(metaKey, value) {
-    const {
-      onUpdate,
-      meta: {
-        coverArt,
-      } = {},
-    } = this.props;
-
-    let parsedCoverArt = safeJsonParseObject(coverArt);
-
-    if (! value) {
-      delete parsedCoverArt[metaKey];
-    } else {
-      parsedCoverArt = {
-        [metaKey]: value,
-        ...parsedCoverArt,
-      };
-    }
-
-    onUpdate(
-      'apple_news_coverart',
-      JSON.stringify(parsedCoverArt)
-    );
-  }
-
-  /**
    * Update which sections are selected.
    *
    * @param   {boolean} checked  is selected
@@ -486,7 +450,6 @@ class Sidebar extends React.PureComponent {
         pullquoteText = '',
         pullquotePosition = '',
         selectedSections = '',
-        coverArt = '',
         coverImageId = 0,
         coverImageCaption = '',
         apiId = '',
@@ -512,39 +475,12 @@ class Sidebar extends React.PureComponent {
         apiAutosyncDelete,
         apiAutosyncUpdate,
         automaticAssignment,
-        enableCoverArt,
       } = {},
       selectedSectionsPrev,
       userCanPublish,
     } = this.state;
 
     const selectedSectionsArray = safeJsonParseArray(selectedSections);
-    const parsedCoverArt = safeJsonParseObject(coverArt);
-
-    const coverArtOrientation = parsedCoverArt.orientation || 'landscape';
-
-    const coverArtSizes = [
-      {
-        title: __('iPad Pro (12.9 in): 1832 x 1374 px', 'apple-news'),
-        key: `apple_news_ca_${coverArtOrientation}_12_9`,
-      },
-      {
-        title: __('iPad (7.9/9.7 in): 1376 x 1032 px', 'apple-news'),
-        key: `apple_news_ca_${coverArtOrientation}_9_7`,
-      },
-      {
-        title: __('iPhone (5.5 in): 1044 x 783 px', 'apple-news'),
-        key: `apple_news_ca_${coverArtOrientation}_5_5`,
-      },
-      {
-        title: __('iPhone (4.7 in): 632 x 474 px', 'apple-news'),
-        key: `apple_news_ca_${coverArtOrientation}_4_7`,
-      },
-      {
-        title: __('iPhone (4 in): 536 x 402 px', 'apple-news'),
-        key: `apple_news_ca_${coverArtOrientation}_4_0`,
-      },
-    ];
 
     return (
       <Fragment>
@@ -757,97 +693,6 @@ class Sidebar extends React.PureComponent {
           </PanelBody>
           <PanelBody
             initialOpen={false}
-            title={__('Cover Art', 'apple-news')}
-          >
-            {
-              enableCoverArt ? (
-                <div>
-                  <p>
-                    <em>
-                      <a href="https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/CoverArt.html">
-                        {__('Cover Art', 'apple-news')}
-                      </a>
-                      {
-                        // eslint-disable-next-line max-len
-                        __(' will represent your article if editorially chosen for Featured Stories. Cover Art must include your channel logo with text at 24 pt minimum that is related to the headline. The image provided must match the dimensions listed. Limit submissions to 1-3 articles per day.', 'apple-news')
-                      }
-                    </em>
-                  </p>
-                  <SelectControl
-                    label={__('Orientation', 'apple-news')}
-                    value={coverArtOrientation}
-                    options={[
-                      /* eslint-disable max-len */
-                      { label: __('Landscape (4:3)', 'apple-news'), value: 'landscape' },
-                      { label: __('Portrait (3:4)', 'apple-news'), value: 'portrait' },
-                      { label: __('Square (1:1)', 'apple-news'), value: 'square' },
-                      /* eslint-enable */
-                    ]}
-                    onChange={(value) => {
-                      const mediaKeys = Object
-                        .keys(parsedCoverArt)
-                        .filter((key) => 'orientation' !== key);
-                      const updatedOrientation = {
-                        orientation: value,
-                      };
-
-                      const updatedCoverArt = mediaKeys.reduce((acc, curr) => {
-                        const newKey = curr.replace(coverArtOrientation, value);
-                        return {
-                          [newKey]: parsedCoverArt[curr],
-                          ...acc,
-                        };
-                      }, updatedOrientation);
-
-                      onUpdate(
-                        'apple_news_coverart',
-                        JSON.stringify(updatedCoverArt)
-                      );
-                    }}
-                  />
-                  <p>
-                    <em>
-                      {
-                        // eslint-disable-next-line max-len
-                        __('Note: You must provide the largest size (iPad Pro 12.9 in) in order for your submission to be considered.', 'apple-news')
-                      }
-                    </em>
-
-                  </p>
-                  <div>
-                    {
-                      coverArtSizes.map((item) => (
-                        <div>
-                          <h4>{item.title}</h4>
-                          <ImagePicker
-                            metaKey={item.key}
-                            onUpdate={(metaKey, value) => this
-                              .updateSelectCoverArtImage(
-                                metaKey,
-                                value
-                              )
-                            }
-                            value={parsedCoverArt[item.key]}
-                          />
-                        </div>
-                      ))
-                    }
-                  </div>
-                </div>
-              ) : (
-                <p>
-                  <em>
-                    {__('Cover Art must be enabled on the ', 'apple-news')}
-                    <a href={adminUrl}>
-                      {__('settings page', 'apple-news')}
-                    </a>
-                  </em>
-                </p>
-              )
-            }
-          </PanelBody>
-          <PanelBody
-            initialOpen={false}
             title={__('Apple News Publish Information', 'apple-news')}
           >
             {'' !== publishState && 'N/A' !== publishState && (
@@ -932,7 +777,6 @@ export default compose([
       apple_news_pullquote: pullquoteText = '',
       apple_news_pullquote_position: pullquotePosition = '',
       apple_news_sections: selectedSections = '',
-      apple_news_coverart: coverArt = {},
       apple_news_coverimage: coverImageId = 0,
       apple_news_coverimage_caption: coverImageCaption = '',
       apple_news_api_id: apiId = '',
@@ -956,7 +800,6 @@ export default compose([
         pullquoteText,
         pullquotePosition,
         selectedSections,
-        coverArt,
         coverImageId,
         coverImageCaption,
         apiId,

@@ -40,7 +40,6 @@ class Settings {
 		'apple_news_admin_email'      => '',
 		'apple_news_enable_debugging' => 'no',
 		'component_alerts'            => 'none',
-		'enable_cover_art'            => 'no',
 		'full_bleed_images'           => 'no',
 		'html_support'                => 'yes',
 		'json_alerts'                 => 'warn',

@@ -99,23 +99,6 @@
 					<p class="description"><?php esc_html_e( 'The position in the article where the pull quote will appear.', 'apple-news' ); ?></p>
 				</td>
 			</tr>
-			<tr>
-				<th scope="row"><?php esc_html_e( 'Cover art', 'apple-news' ); ?></th>
-				<td>
-					<?php if ( $enable_cover_art ) : ?>
-						<?php include plugin_dir_path( __FILE__ ) . 'cover-art.php'; ?>
-					<?php else : ?>
-						<?php
-							printf(
-								/* translators: First token is opening a tag, second is closing a tag */
-								esc_html__( 'Cover Art must be enabled on the %1$ssettings page%2$s.', 'apple-news' ),
-								'<a href="' . esc_url( admin_url( 'admin.php?page=apple-news-options' ) ) . '">',
-								'</a>'
-							);
-						?>
-					<?php endif; ?>
-				</td>
-			</tr>
 		</table>
 		<?php do_action( 'apple_news_after_single_settings' ); ?>
 
