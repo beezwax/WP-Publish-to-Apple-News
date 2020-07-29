@@ -50,7 +50,7 @@
 
 		// Check that we are fully compatible
 		if ( ! appleNewsSupportsMacFeatures() ) {
-			$( '.apple-news-preview' ).prepend(
+			$( '.apple-news-preview' ).prepend( // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend
 				$( '<div>' )
 					.addClass( 'font-notice' )
 					.text( appleNewsSettings.fontNotice )
@@ -290,7 +290,7 @@
 				componentKey = value + '-' + componentKey;
 
 				// Add back at the beginning
-				$( '.apple-news-preview' ).prepend( $detached );
+				$( '.apple-news-preview' ).prepend( $detached ); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend
 
 				// Ensure element is visible.
 				$detached.show();

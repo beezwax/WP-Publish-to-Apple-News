@@ -79,39 +79,6 @@ function apple_news_register_meta_helper( $object_type, $object_slugs, $meta_key
 }
 
 /**
- * A 'sanitize_callback' for the apple_news_coverart meta field.
- *
- * @param mixed $meta_value Meta value to sanitize.
- * @return array Sanitized meta value.
- */
-function apple_news_sanitize_coverart_data( $meta_value ) {
-	if ( ! is_string( $meta_value ) ) {
-		return $meta_value;
-	}
-
-	// Get an array of image size keys for use in validating the meta.
-	$image_sizes = array_keys( Admin_Apple_News::get_image_sizes() );
-
-	// Construct the meta value from the array of image sizes.
-	$raw_value       = json_decode( $meta_value, true );
-	$sanitized_value = [];
-	foreach ( $image_sizes as $image_size ) {
-		if ( ! empty( $raw_value[ $image_size ] ) && is_int( $raw_value[ $image_size ] ) ) {
-			$sanitized_value[ $image_size ] = $raw_value[ $image_size ];
-		}
-	}
-
-	// Add the orientation, if it is set.
-	if ( ! empty( $raw_value['orientation'] )
-		&& in_array( $raw_value['orientation'], [ 'landscape', 'portrait', 'square' ], true )
-	) {
-		$sanitized_value['orientation'] = $raw_value['orientation'];
-	}
-
-	return $sanitized_value;
-}
-
-/**
  * A 'sanitize_callback' for a registered meta key that sanitizes based on type.
  *
  * @param mixed  $meta_value     Meta value to sanitize.

@@ -1,13 +1,3 @@
-.apple-news-coverart-image-container img {
-	height: auto;
-	max-width: 75%;
-}
-
-.apple-news-coverart-image-container .hidden {
-	display: none;
-	visibility: hidden;
-}
-
 .apple-news-notice {
 	border-left-style: solid;
 	border-left-width: 3px;

@@ -209,9 +209,6 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			$pullquote_position = 'middle';
 		}
 		update_post_meta( $post_id, 'apple_news_pullquote_position', $pullquote_position );
-
-		// Save cover art.
-		self::save_coverart_meta( $post_id );
 	}
 
 	/**
@@ -408,54 +405,5 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 				'publish_action' => self::PUBLISH_ACTION,
 			)
 		);
-	}
-
-	/**
-	 * Saves a cover art image(s) to meta, given a post ID.
-	 *
-	 * @param int $post_id The post ID to update meta for.
-	 *
-	 * @access private
-	 */
-	private static function save_coverart_meta( $post_id ) {
-
-		// Check the nonce.
-		check_admin_referer( self::PUBLISH_ACTION, 'apple_news_nonce' );
-
-		// Ensure there is an orientation.
-		if ( empty( $_POST['apple-news-coverart-orientation'] ) ) {
-			return;
-		}
-
-		// Start building cover art meta using the orientation.
-		$meta_value = array(
-			'orientation' => sanitize_text_field( wp_unslash( $_POST['apple-news-coverart-orientation'] ) ),
-		);
-
-		// Iterate through image sizes and add each that is set for the orientation.
-		$image_sizes = Admin_Apple_News::get_image_sizes();
-		foreach ( $image_sizes as $key => $data ) {
-
-			// Skip any defined image sizes that are not intended for cover art.
-			if ( 'coverArt' !== $data['type'] ) {
-				continue;
-			}
-
-			// Ensure the orientation is a match.
-			if ( $meta_value['orientation'] !== $data['orientation'] ) {
-				continue;
-			}
-
-			// Determine if there was an image ID provided for this size.
-			if ( empty( $_POST[ $key ] ) ) {
-				continue;
-			}
-
-			// Save this image ID to the cover art postmeta.
-			$meta_value[ $key ] = absint( $_POST[ $key ] );
-		}
-
-		// Save post meta for this key.
-		update_post_meta( $post_id, 'apple_news_coverart', $meta_value );
 	}
 }
