@@ -46,6 +46,18 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][0]['caption']['text'] );
 		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
 		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][1]['text'] );
+
+		// Set cover image and caption via postmeta and ensure it takes priority.
+		$image2 = self::factory()->attachment->create_upload_object( $file );
+		update_post_meta( $post_id, 'apple_news_coverimage', $image2 );
+		update_post_meta( $post_id, 'apple_news_coverimage_caption', 'Test Caption 2' );
+		$export   = new Export( $this->settings, $post_id, $sections );
+		$json     = json_decode( $export->perform(), true );
+		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
+		$this->assertEquals( wp_get_attachment_url( $image2 ), $json['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'Test Caption 2', $json['components'][0]['components'][0]['caption']['text'] );
+		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Caption 2', $json['components'][0]['components'][1]['text'] );
 	}
 
 	public function testHasExcerpt() {

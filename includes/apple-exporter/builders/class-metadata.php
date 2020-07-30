@@ -40,7 +40,7 @@ class Metadata extends Builder {
 		$content_cover = $this->content_cover();
 		if ( ! empty( $content_cover ) ) {
 			$meta['thumbnailURL'] = $this->maybe_bundle_source(
-				! empty( $content_cover['url'] ) ? $content_cover['url'] : $content_cover
+				isset( $content_cover['url'] ) ? $content_cover['url'] : $content_cover
 			);
 		}
 

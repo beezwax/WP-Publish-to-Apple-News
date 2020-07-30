@@ -209,6 +209,20 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			$pullquote_position = 'middle';
 		}
 		update_post_meta( $post_id, 'apple_news_pullquote_position', $pullquote_position );
+
+		if ( ! empty( $_POST['apple_news_coverimage'] ) ) {
+			$cover_image = ! empty( (int) $_POST['apple_news_coverimage'] ) ? (int) $_POST['apple_news_coverimage'] : '';
+		} else {
+			$cover_image = '';
+		}
+		update_post_meta( $post_id, 'apple_news_coverimage', $cover_image );
+
+		if ( ! empty( $_POST['apple_news_coverimage_caption'] ) ) {
+			$cover_image_caption = sanitize_textarea_field( wp_unslash( $_POST['apple_news_coverimage_caption'] ) );
+		} else {
+			$cover_image_caption = '';
+		}
+		update_post_meta( $post_id, 'apple_news_coverimage_caption', $cover_image_caption );
 	}
 
 	/**

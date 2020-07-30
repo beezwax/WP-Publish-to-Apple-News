@@ -259,6 +259,15 @@ class Apple_News {
 
 		// Ensure media modal assets are enqueued.
 		wp_enqueue_media();
+
+		// Enqueue the script for cover images in the classic editor.
+		wp_enqueue_script(
+			$this->plugin_slug . '_cover_image_js',
+			plugin_dir_url( __FILE__ ) . '../assets/js/cover-image.js',
+			array( 'jquery' ),
+			self::$version,
+			true
+		);
 	}
 
 	/**
