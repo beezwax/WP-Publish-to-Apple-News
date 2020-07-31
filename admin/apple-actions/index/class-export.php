@@ -303,10 +303,29 @@ class Export extends Action {
 			}
 		}
 
+		// Replace Brightcove shortcodes with plain video tags with a specially-formatted Brightcove source URL.
+		$bc_video_regex = '/' . get_shortcode_regex( [ 'bc_video' ] ) . '/';
+		if ( preg_match_all( $bc_video_regex, $content, $matches ) ) {
+			foreach ( $matches[0] as $match ) {
+				$atts = shortcode_parse_atts( $match );
+				if ( ! empty( $atts['account_id'] ) && ! empty( $atts['video_id'] ) ) {
+					$content = str_replace(
+						$match,
+						sprintf(
+							'<video controls src="https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s"></video>',
+							$atts['account_id'],
+							$atts['video_id']
+						),
+						$content
+					);
+				}
+			}
+		}
+
 		return $content;
 	}
 
-		/**
+	/**
 	 * Gets the content
 	 *
 	 * @since 1.4.0
