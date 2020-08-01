@@ -123,7 +123,4 @@
 	<rule ref="WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable">
 		<severity>0</severity>
 	</rule>
-  <rule ref="WordPress.WP.GlobalVariablesOverride.Prohibited">
-    <severity>0</severity>
-  </rule>
 </ruleset>
