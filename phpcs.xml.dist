@@ -114,9 +114,6 @@
 	<rule ref="WordPressVIPMinimum.Security.ExitAfterRedirect.NoExit">
 		<severity>0</severity>
 	</rule>
-	<rule ref="WordPressVIPMinimum.Variables.VariableAnalysis.SelfOutsideClass">
-		<severity>0</severity>
-	</rule>
 	<rule ref="WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable">
 		<severity>0</severity>
 	</rule>
