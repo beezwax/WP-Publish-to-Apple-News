@@ -93,9 +93,6 @@
   <rule ref="WordPress.DateTime.RestrictedFunctions.date_date">
     <severity>0</severity>
   </rule>
-	<rule ref="WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail">
-		<severity>0</severity>
-	</rule>
 	<rule ref="WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get">
 		<severity>0</severity>
 	</rule>
