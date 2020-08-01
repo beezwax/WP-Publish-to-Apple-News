@@ -93,12 +93,6 @@
   <rule ref="WordPress.DateTime.RestrictedFunctions.date_date">
     <severity>0</severity>
   </rule>
-	<rule ref="WordPress.Security.NonceVerification.NoNonceVerification">
-		<severity>0</severity>
-	</rule>
-	<rule ref="WordPressVIPMinimum.Files.IncludingFile.UsingVariable">
-		<severity>0</severity>
-	</rule>
 	<rule ref="WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail">
 		<severity>0</severity>
 	</rule>
