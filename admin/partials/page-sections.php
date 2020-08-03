@@ -56,11 +56,11 @@
 					<td>
 						<ul class="apple-news-section-taxonomy-mapping-list">
 						<?php if ( ! empty( $taxonomy_mappings[ $apple_section_id ] ) ) : ?>
-							<?php foreach ( $taxonomy_mappings[ $apple_section_id ] as $term ) : ?>
+							<?php foreach ( $taxonomy_mappings[ $apple_section_id ] as $apple_taxonomy_term ) : ?>
 								<?php $apple_taxonomy_id = 'apple-news-section-mapping-' . ( ++ $apple_count ); ?>
 								<li>
 									<label for="<?php echo esc_attr( $apple_taxonomy_id ); ?>" class="screen-reader-text"><?php echo esc_html( $taxonomy->labels->singular_name ); ?></label>
-									<input name="taxonomy-mapping-<?php echo esc_attr( $apple_section_id ); ?>[]" id="<?php echo esc_attr( $apple_taxonomy_id ); ?>" type="text" class="apple-news-section-taxonomy-autocomplete" value="<?php echo esc_attr( $term ); ?>" />
+									<input name="taxonomy-mapping-<?php echo esc_attr( $apple_section_id ); ?>[]" id="<?php echo esc_attr( $apple_taxonomy_id ); ?>" type="text" class="apple-news-section-taxonomy-autocomplete" value="<?php echo esc_attr( $apple_taxonomy_term ); ?>" />
 									<button type="button" class="apple-news-section-taxonomy-remove"><span class="apple-news-section-taxonomy-remove-icon" aria-hidden="true"></span><span class="screen-reader-text"><?php esc_html_e( 'Remove mapping', 'apple-news' ); ?></span></button>
 								</li>
 							<?php endforeach; ?>

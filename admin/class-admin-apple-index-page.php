@@ -148,7 +148,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 						$ids  = is_array( $_GET['article'] ) ? array_map( 'absint', $_GET['article'] ) : absint( $_GET['article'] ); //  phpcs:ignore WordPress.VIP.SuperGlobalInputUsage.AccessDetected, WordPress.Security.NonceVerification.Recommended
 						$url .= '&ids=' . implode( '.', $ids );
 					}
-					wp_safe_redirect( esc_url_raw( $url ) );
+					wp_safe_redirect( esc_url_raw( $url ) ); // phpcs:ignore WordPressVIPMinimum.Security.ExitAfterRedirect.NoExit
 					if ( ! defined( 'APPLE_NEWS_UNIT_TESTS' ) || ! APPLE_NEWS_UNIT_TESTS ) {
 						exit;
 					}
@@ -189,7 +189,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 */
 	private function do_redirect() {
 		// Perform the redirect.
-		wp_safe_redirect( esc_url_raw( self::action_query_params( '', menu_page_url( $this->plugin_slug . '_index', false ) ) ) );
+		wp_safe_redirect( esc_url_raw( self::action_query_params( '', menu_page_url( $this->plugin_slug . '_index', false ) ) ) ); // phpcs:ignore WordPressVIPMinimum.Security.ExitAfterRedirect.NoExit
 		if ( ! defined( 'APPLE_NEWS_UNIT_TESTS' ) || ! APPLE_NEWS_UNIT_TESTS ) {
 			exit;
 		}

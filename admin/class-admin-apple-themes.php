@@ -559,9 +559,9 @@ class Admin_Apple_Themes extends Apple_News {
 		check_admin_referer( $this->valid_actions[ $action ]['nonce'] );
 
 		// Attempt to get the name of the theme from postdata.
-		if ( empty( $name ) && ! empty( $_POST['apple_news_theme'] ) ) {
-			$name = sanitize_text_field( wp_unslash( $_POST['apple_news_theme'] ) );
-		}
+		$name = ! empty( $_POST['apple_news_theme'] )
+			? sanitize_text_field( wp_unslash( $_POST['apple_news_theme'] ) )
+			: '';
 
 		// Ensure a name was provided.
 		if ( empty( $name ) ) {

@@ -390,9 +390,7 @@ class Push extends API_Action {
 		$alert_message = '';
 
 		// Get the current user id.
-		if ( empty( $user_id ) ) {
-			$user_id = get_current_user_id();
-		}
+		$user_id = get_current_user_id();
 
 		// Build the component alert error message, if required.
 		if ( ! empty( $errors[0]['component_errors'] ) ) {

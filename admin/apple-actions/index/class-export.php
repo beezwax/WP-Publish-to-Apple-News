@@ -101,7 +101,7 @@ class Export extends Action {
 		 * Fetch WP_Post object, and all required post information to fill up the
 		 * Exporter_Content instance.
 		 */
-		$post = get_post( $this->id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
+		$post = get_post( $this->id ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 
 		// Only include excerpt if exists.
 		$excerpt = has_excerpt( $post ) ? wp_strip_all_tags( $post->post_excerpt ) : '';

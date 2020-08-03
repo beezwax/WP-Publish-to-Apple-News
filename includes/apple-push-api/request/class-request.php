@@ -255,7 +255,7 @@ class Request {
 
 			// Send the email.
 			if ( ! empty( $body ) ) {
-				wp_mail(
+				wp_mail( // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail
 					$admin_email,
 					esc_html__( 'Apple News Notification', 'apple-news' ),
 					$body,

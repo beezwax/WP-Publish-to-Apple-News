@@ -93,15 +93,6 @@
   <rule ref="WordPress.DateTime.RestrictedFunctions.date_date">
     <severity>0</severity>
   </rule>
-	<rule ref="WordPress.Security.NonceVerification.NoNonceVerification">
-		<severity>0</severity>
-	</rule>
-	<rule ref="WordPressVIPMinimum.Files.IncludingFile.UsingVariable">
-		<severity>0</severity>
-	</rule>
-	<rule ref="WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail">
-		<severity>0</severity>
-	</rule>
 	<rule ref="WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get">
 		<severity>0</severity>
 	</rule>
@@ -120,19 +111,7 @@
 	<rule ref="WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout">
 		<severity>0</severity>
 	</rule>
-	<rule ref="WordPressVIPMinimum.Security.ExitAfterRedirect.NoExit">
-		<severity>0</severity>
-	</rule>
-	<rule ref="WordPressVIPMinimum.Variables.VariableAnalysis.SelfOutsideClass">
-		<severity>0</severity>
-	</rule>
-	<rule ref="WordPressVIPMinimum.Variables.VariableAnalysis.UndefinedVariable">
-		<severity>0</severity>
-	</rule>
 	<rule ref="WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable">
 		<severity>0</severity>
 	</rule>
-  <rule ref="WordPress.WP.GlobalVariablesOverride.Prohibited">
-    <severity>0</severity>
-  </rule>
 </ruleset>

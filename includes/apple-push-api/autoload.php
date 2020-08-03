@@ -15,7 +15,7 @@ spl_autoload_register(
 		$path = realpath( __DIR__ . '/../' . $path );
 
 		if ( file_exists( $path ) ) {
-			require_once $path;
+			require_once $path; // phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
 		}
 	}
 );

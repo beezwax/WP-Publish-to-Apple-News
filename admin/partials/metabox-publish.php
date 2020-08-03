@@ -61,6 +61,7 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 		<label for="apple-news-maturity-rating">
 			<select id="apple-news-maturity-rating" name="apple_news_maturity_rating">
 				<option value=""></option>
+				<?php // phpcs:ignore WordPressVIPMinimum.Variables.VariableAnalysis.SelfOutsideClass ?>
 				<?php foreach ( self::$maturity_ratings as $apple_rating ) : ?>
 					<option value="<?php echo esc_attr( $apple_rating ); ?>" <?php selected( $maturity_rating, $apple_rating ); ?>><?php echo esc_html( ucwords( strtolower( $apple_rating ) ) ); ?></option>
 				<?php endforeach; ?>
