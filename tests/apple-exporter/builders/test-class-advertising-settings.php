@@ -31,7 +31,7 @@ class Test_Class_Advertising_Settings extends WP_UnitTestCase {
 		$builder = new Advertising_Settings( $this->content, $this->settings );
 		$result = $builder->to_array();
 		$this->assertEquals( 2, count( $result ) );
-		$this->assertEquals( 1, $result['frequency'] );
+		$this->assertEquals( 5, $result['frequency'] );
 		$this->assertEquals( 1, count( $result['layout'] ) );
 		$this->assertEquals( 15, $result['layout']['margin']['top'] );
 		$this->assertEquals( 15, $result['layout']['margin']['bottom'] );
@@ -81,7 +81,7 @@ class Test_Class_Advertising_Settings extends WP_UnitTestCase {
 		$builder = new Advertising_Settings( $this->content, $this->settings );
 		$result  = $builder->to_array();
 		$this->assertEquals( 2, count( $result ) );
-		$this->assertEquals( 1, $result['frequency'] );
+		$this->assertEquals( 5, $result['frequency'] );
 		$this->assertEquals( 1, count( $result['layout'] ) );
 		$this->assertEquals( 20, $result['layout']['margin']['top'] );
 		$this->assertEquals( 20, $result['layout']['margin']['bottom'] );
