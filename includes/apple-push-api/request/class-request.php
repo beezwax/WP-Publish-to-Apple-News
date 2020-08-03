@@ -374,6 +374,7 @@ class Request {
 				}
 			}
 		}
+
 		// NULL is a valid response for DELETE.
 		if ( 'DELETE' === $verb && is_null( $response ) ) {
 			return null;
