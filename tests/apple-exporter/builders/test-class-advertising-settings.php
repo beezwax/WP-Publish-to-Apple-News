@@ -24,12 +24,14 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 		$builder = new Advertising_Settings( $this->content, $this->content_settings );
 		$this->assertEquals(
 			[
-				'bannerType'        => 'any',
-				'distanceFromMedia' => '10vh',
-				'enabled'           => true,
-				'frequency'         => 5,
-				'layout'            => [
-					'margin'          => 15,
+				'advertisement' => [
+					'bannerType'        => 'any',
+					'distanceFromMedia' => '10vh',
+					'enabled'           => true,
+					'frequency'         => 5,
+					'layout'            => [
+						'margin'          => 15,
+					],
 				],
 			],
 			$builder->to_array()
@@ -68,12 +70,14 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 		$builder = new Advertising_Settings( $this->content, $this->content_settings );
 		$this->assertEquals(
 			[
-				'bannerType'        => 'any',
-				'distanceFromMedia' => '10vh',
-				'enabled'           => true,
-				'frequency'         => 10,
-				'layout'            => [
-					'margin'          => 15,
+				'advertisement' => [
+					'bannerType'        => 'any',
+					'distanceFromMedia' => '10vh',
+					'enabled'           => true,
+					'frequency'         => 10,
+					'layout'            => [
+						'margin'          => 15,
+					],
 				],
 			],
 			$builder->to_array()
@@ -95,15 +99,39 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 		$builder = new Advertising_Settings( $this->content, $this->content_settings );
 		$this->assertEquals(
 			[
-				'bannerType'        => 'any',
-				'distanceFromMedia' => '10vh',
-				'enabled'           => true,
-				'frequency'         => 5,
-				'layout'            => [
-					'margin'          => 20,
+				'advertisement' => [
+					'bannerType'        => 'any',
+					'distanceFromMedia' => '10vh',
+					'enabled'           => true,
+					'frequency'         => 5,
+					'layout'            => [
+						'margin'          => 20,
+					],
 				],
 			],
 			$builder->to_array()
+		);
+	}
+
+	/**
+	 * Tests the article-level automatic advertisement settings.
+	 */
+	public function testAutoplacement() {
+		$post_id = self::factory()->post->create();
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			[
+				'advertisement' => [
+					'bannerType'        => 'any',
+					'distanceFromMedia' => '10vh',
+					'enabled'           => true,
+					'frequency'         => 5,
+					'layout'            => [
+						'margin'          => 15,
+					],
+				],
+			],
+			$json['autoplacement']
 		);
 	}
 }

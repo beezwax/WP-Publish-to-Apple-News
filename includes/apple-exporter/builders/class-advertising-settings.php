@@ -47,6 +47,23 @@ class Advertising_Settings extends Builder {
 			}
 		}
 
-		return apply_filters( 'apple_news_advertising_settings', $advertising_settings, $this->content_id() );
+		/**
+		 * Filters the advertisement settings.
+		 *
+		 * @since 0.4.0
+		 *
+		 * @param array $advertising_settings The advertising settings to be modified.
+		 */
+		$advertising_settings = apply_filters( 'apple_news_advertising_settings', $advertising_settings, $this->content_id() );
+
+		// If there are no advertising settings, bail out.
+		if ( empty( $advertising_settings ) ) {
+			return [];
+		}
+
+		// Wrap the advertising settings in the advertisement key.
+		return [
+			'advertisement' => $advertising_settings,
+		];
 	}
 }
