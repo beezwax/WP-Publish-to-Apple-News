@@ -311,7 +311,7 @@ class Request {
 	 * @param array  $data Optional. Data to send along with the request. Only applies to POST requests.
 	 *
 	 * @return mixed The parsed response from the API.
-	 * @throws Request_Exception
+	 * @throws Request_Exception If the request fails.
 	 */
 	private function request( $verb, $url, $data = [] ) {
 		// If this is a POST request, build the content.
@@ -366,7 +366,7 @@ class Request {
 						\Admin_Apple_Notice::error(
 							__(
 								'The date and time on your server does not match the date and time on the Apple server. All API requests will fail until you synchronize your server clock.',
-							'apple-news'
+								'apple-news'
 							)
 						);
 						break;
