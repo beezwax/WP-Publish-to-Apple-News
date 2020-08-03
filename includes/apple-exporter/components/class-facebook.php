@@ -21,7 +21,7 @@ class Facebook extends Component {
 	/**
 	 * A list of regular expression patterns for allowlisted Facebook oEmbed formats.
 	 *
-	 * @see https://developer.apple.com/library/prerelease/content/documentation/General/Conceptual/Apple_News_Format_Ref/FacebookPost.html#//apple_ref/doc/uid/TP40015408-CH106-SW1
+	 * @see https://developer.apple.com/documentation/apple_news/facebookpost
 	 * @see https://developers.facebook.com/docs/plugins/oembed-endpoints/
 	 */
 	const FACEBOOK_MATCH = '/(?:https?:\/\/)?(?:www\.)?(?:facebook|fb|m\.facebook)\.(?:com|me)\/(?:(?:\w)*#!\/)?(?:pages\/)?(?:[\w\-]*\/)*([\w\-\.]+)(?:\/)?/i';
