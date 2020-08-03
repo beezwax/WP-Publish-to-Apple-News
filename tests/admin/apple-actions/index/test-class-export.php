@@ -6,8 +6,6 @@
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/../../../class-apple-news-testcase.php';
-
 use \Apple_Actions\Index\Export as Export;
 
 /**

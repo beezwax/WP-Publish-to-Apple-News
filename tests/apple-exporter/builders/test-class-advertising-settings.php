@@ -1,10 +1,23 @@
 <?php
+/**
+ * Publish to Apple News tests: Test_Class_Advertising_Settings class
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
 
 use Apple_Exporter\Exporter_Content as Exporter_Content;
 use Apple_Exporter\Settings as Settings;
 use Apple_Exporter\Builders\Advertising_Settings as Advertising_Settings;
 
-class Test_Class_Advertising_Settings extends WP_UnitTestCase {
+/**
+ * A class to test the behavior of the
+ * Apple_Exporter\Builders\Advertising_Settings class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
+class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 
 	public function setup() {
 		$themes = new Admin_Apple_Themes;

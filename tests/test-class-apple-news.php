@@ -8,8 +8,6 @@
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/class-apple-news-testcase.php';
-
 /**
  * A class which is used to test the Apple_News class.
  *
