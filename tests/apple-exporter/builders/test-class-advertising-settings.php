@@ -6,9 +6,7 @@
  * @subpackage Tests
  */
 
-use Apple_Exporter\Exporter_Content as Exporter_Content;
-use Apple_Exporter\Settings as Settings;
-use Apple_Exporter\Builders\Advertising_Settings as Advertising_Settings;
+use Apple_Exporter\Builders\Advertising_Settings;
 
 /**
  * A class to test the behavior of the
@@ -19,29 +17,11 @@ use Apple_Exporter\Builders\Advertising_Settings as Advertising_Settings;
  */
 class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 
-	public function setup() {
-		$themes = new Admin_Apple_Themes;
-		$themes->setup_theme_pages();
-		$this->theme = new \Apple_Exporter\Theme;
-		$this->theme->set_name( \Apple_Exporter\Theme::get_active_theme_name() );
-		$this->theme->load();
-		$this->settings = new Settings();
-		$this->content = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>' );
-	}
-
 	/**
-	 * Cleanup to be run after every execution.
-	 *
-	 * @access public
+	 * Tests the default advertising settings.
 	 */
-	public function tearDown() {
-		$this->theme = new \Apple_Exporter\Theme;
-		$this->theme->set_name( \Apple_Exporter\Theme::get_active_theme_name() );
-		$this->assertTrue( $this->theme->save() );
-	}
-
 	public function testDefaultAdSettings() {
-		$builder = new Advertising_Settings( $this->content, $this->settings );
+		$builder = new Advertising_Settings( $this->content, $this->content_settings );
 		$result = $builder->to_array();
 		$this->assertEquals( 2, count( $result ) );
 		$this->assertEquals( 5, $result['frequency'] );
@@ -50,6 +30,9 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 		$this->assertEquals( 15, $result['layout']['margin']['bottom'] );
 	}
 
+	/**
+	 * Tests the behavior of the component when advertisements are disabled.
+	 */
 	public function testNoAds() {
 
 		// Setup.
@@ -59,29 +42,35 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 		$this->assertTrue( $this->theme->save() );
 
 		// Test.
-		$builder = new Advertising_Settings( $this->content, $this->settings );
+		$builder = new Advertising_Settings( $this->content, $this->content_settings );
 		$result = $builder->to_array();
 		$this->assertEquals( 0, count( $result ) );
 	}
 
+	/**
+	 * Tests the ability to customize ad frequency.
+	 */
 	public function testCustomAdFrequency() {
 
 		// Setup.
 		$settings = $this->theme->all_settings();
-		$settings['ad_frequency'] = 5;
+		$settings['ad_frequency'] = 10;
 		$this->theme->load( $settings );
 		$this->assertTrue( $this->theme->save() );
 
 		// Test.
-		$builder = new Advertising_Settings( $this->content, $this->settings );
+		$builder = new Advertising_Settings( $this->content, $this->content_settings );
 		$result  = $builder->to_array();
 		$this->assertEquals( 2, count( $result ) );
-		$this->assertEquals( 5, $result['frequency'] );
+		$this->assertEquals( 10, $result['frequency'] );
 		$this->assertEquals( 1, count( $result['layout'] ) );
 		$this->assertEquals( 15, $result['layout']['margin']['top'] );
 		$this->assertEquals( 15, $result['layout']['margin']['bottom'] );
 	}
 
+	/**
+	 * Tests the ability to customize the ad margin.
+	 */
 	public function testCustomAdMargin() {
 
 		// Setup.
@@ -91,7 +80,7 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 		$this->assertTrue( $this->theme->save() );
 
 		// Test.
-		$builder = new Advertising_Settings( $this->content, $this->settings );
+		$builder = new Advertising_Settings( $this->content, $this->content_settings );
 		$result  = $builder->to_array();
 		$this->assertEquals( 2, count( $result ) );
 		$this->assertEquals( 5, $result['frequency'] );
