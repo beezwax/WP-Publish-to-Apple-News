@@ -22,12 +22,18 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 	 */
 	public function testDefaultAdSettings() {
 		$builder = new Advertising_Settings( $this->content, $this->content_settings );
-		$result = $builder->to_array();
-		$this->assertEquals( 2, count( $result ) );
-		$this->assertEquals( 5, $result['frequency'] );
-		$this->assertEquals( 1, count( $result['layout'] ) );
-		$this->assertEquals( 15, $result['layout']['margin']['top'] );
-		$this->assertEquals( 15, $result['layout']['margin']['bottom'] );
+		$this->assertEquals(
+			[
+				'bannerType'        => 'any',
+				'distanceFromMedia' => '10vh',
+				'enabled'           => true,
+				'frequency'         => 5,
+				'layout'            => [
+					'margin'          => 15,
+				],
+			],
+			$builder->to_array()
+		);
 	}
 
 	/**
@@ -60,12 +66,18 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 
 		// Test.
 		$builder = new Advertising_Settings( $this->content, $this->content_settings );
-		$result  = $builder->to_array();
-		$this->assertEquals( 2, count( $result ) );
-		$this->assertEquals( 10, $result['frequency'] );
-		$this->assertEquals( 1, count( $result['layout'] ) );
-		$this->assertEquals( 15, $result['layout']['margin']['top'] );
-		$this->assertEquals( 15, $result['layout']['margin']['bottom'] );
+		$this->assertEquals(
+			[
+				'bannerType'        => 'any',
+				'distanceFromMedia' => '10vh',
+				'enabled'           => true,
+				'frequency'         => 10,
+				'layout'            => [
+					'margin'          => 15,
+				],
+			],
+			$builder->to_array()
+		);
 	}
 
 	/**
@@ -81,11 +93,17 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 
 		// Test.
 		$builder = new Advertising_Settings( $this->content, $this->content_settings );
-		$result  = $builder->to_array();
-		$this->assertEquals( 2, count( $result ) );
-		$this->assertEquals( 5, $result['frequency'] );
-		$this->assertEquals( 1, count( $result['layout'] ) );
-		$this->assertEquals( 20, $result['layout']['margin']['top'] );
-		$this->assertEquals( 20, $result['layout']['margin']['bottom'] );
+		$this->assertEquals(
+			[
+				'bannerType'        => 'any',
+				'distanceFromMedia' => '10vh',
+				'enabled'           => true,
+				'frequency'         => 5,
+				'layout'            => [
+					'margin'          => 20,
+				],
+			],
+			$builder->to_array()
+		);
 	}
 }
