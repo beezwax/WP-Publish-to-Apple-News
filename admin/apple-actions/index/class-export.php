@@ -273,6 +273,59 @@ class Export extends Action {
 	}
 
 	/**
+	 * Converts Brightcove Gutenberg blocks and shortcodes to video tags that
+	 * can be handled by Apple News. Requires that Apple connect the Brightcove
+	 * account to the Apple News channel.
+	 *
+	 * @since 2.1.0
+	 *
+	 * @param string $content The post content to filter.
+	 *
+	 * @return string The modified content.
+	 */
+	private function format_brightcove( $content ) {
+
+		// Replace Brightcove Gutenberg blocks with Gutenberg video blocks with a specially-formatted Brightcove source URL.
+		if ( preg_match_all( '/<!-- wp:bc\/brightcove ({.+?}) \/-->/', $content, $matches ) ) {
+			foreach ( $matches[0] as $index => $match ) {
+				$atts = json_decode( $matches[1][ $index ], true );
+				if ( ! empty( $atts['account_id'] ) && ! empty( $atts['video_id'] ) ) {
+					$content = str_replace(
+						$match,
+						sprintf(
+							'<!-- wp:video -->' . "\n" . '<figure class="wp-block-video"><video controls src="https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s"></video></figure>' . "\n" . '<!-- /wp:video -->',
+							$atts['account_id'],
+							$atts['video_id']
+						),
+						$content
+					);
+				}
+			}
+		}
+
+		// Replace Brightcove shortcodes with plain video tags with a specially-formatted Brightcove source URL.
+		$bc_video_regex = '/' . get_shortcode_regex( [ 'bc_video' ] ) . '/';
+		if ( preg_match_all( $bc_video_regex, $content, $matches ) ) {
+			foreach ( $matches[0] as $match ) {
+				$atts = shortcode_parse_atts( $match );
+				if ( ! empty( $atts['account_id'] ) && ! empty( $atts['video_id'] ) ) {
+					$content = str_replace(
+						$match,
+						sprintf(
+							'<video controls src="https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s"></video>',
+							$atts['account_id'],
+							$atts['video_id']
+						),
+						$content
+					);
+				}
+			}
+		}
+
+		return $content;
+	}
+
+	/**
 	 * Gets the content
 	 *
 	 * @since 1.4.0
@@ -288,6 +341,7 @@ class Export extends Action {
 		 * HTML. We use 'the_content' filter for that.
 		 */
 		$content = apply_filters( 'apple_news_exporter_content_pre', $post->post_content, $post->ID );
+		$content = $this->format_brightcove( $content );
 		$content = apply_filters( 'the_content', $content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		$content = $this->remove_tags( $content );
 		$content = $this->remove_entities( $content );

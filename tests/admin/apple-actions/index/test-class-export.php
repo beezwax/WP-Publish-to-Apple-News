@@ -10,6 +10,21 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Returns an array of arrays representing function arguments to the
+	 * testBrightcoveVideo function.
+	 */
+	public function dataProviderBrightcoveVideo() {
+		return [
+			[
+				'<!-- wp:bc/brightcove {"account_id":"1234567890","player_id":"abcd1234-ef56-ab78-cd90-efa1234567890","video_id":"1234567890123","playlist_id":"","experience_id":"","video_ids":"","embed":"in-page","autoplay":"","playsinline":"","picture_in_picture":"","height":"100%","width":"100%","min_width":"0px","max_width":"640px","padding_top":"56%"} /-->',
+			],
+			[
+				'[bc_video video_id="1234567890123" account_id="1234567890" player_id="abcd1234-ef56-ab78-cd90-efa1234567890" embed="in-page" padding_top="56%" autoplay="" min_width="0px" playsinline="" picture_in_picture="" max_width="640px" mute="" width="100%" height="100%" ]',
+			],
+		];
+	}
+
+	/**
 	 * A filter to ensure that the is_exporting flag is set during export.
 	 *
 	 * @access public
@@ -17,6 +32,26 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 	 */
 	public function filterTheContentTestIsExporting() {
 		return apple_news_is_exporting() ? 'is exporting' : 'is not exporting';
+	}
+
+	/**
+	 * Tests Brightcove video support.
+	 *
+	 * @param string $post_content The post content to load for the test.
+	 *
+	 * @dataProvider dataProviderBrightcoveVideo
+	 */
+	public function testBrightcoveVideo( $post_content ) {
+		$post_id  = self::factory()->post->create(
+			[
+				'post_content' => $post_content,
+			]
+		);
+		$sections = \Admin_Apple_Sections::get_sections_for_post( $post_id );
+		$export   = new Export( $this->settings, $post_id, $sections );
+		$json     = json_decode( $export->perform(), true );
+		$this->assertEquals( 'video', $json['components'][3]['role'] );
+		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][3]['URL'] );
 	}
 
 	/**
