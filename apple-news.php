@@ -21,6 +21,25 @@
  * Domain Path: lang/
  */
 
+/**
+ * A shim for wp_date, if it is not defined.
+ *
+ * @param string       $format    PHP date format.
+ * @param int          $timestamp Optional. Unix timestamp. Defaults to current time.
+ * @param DateTimeZone $timezone  Optional. Timezone to output result in. Defaults to timezone from site settings.
+ *
+ * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
+ */
+function apple_news_date( $format, $timestamp = null, $timezone = null ) {
+	// If wp_date exists (WP >= 5.3.0) use it.
+	if ( function_exists( 'wp_date' ) ) {
+		return wp_date( $format, $timestamp, $timezone );
+	}
+
+	// Fall back to using the date function if wp_date does not exist, to preserve backwards compatibility.
+	return date( $format, $timestamp ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+}
+
 require_once plugin_dir_path( __FILE__ ) . './includes/meta.php';
 
 if ( ! defined( 'WPINC' ) ) {

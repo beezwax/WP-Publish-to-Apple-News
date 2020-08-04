@@ -63,7 +63,7 @@ class Admin_Apple_Preview extends Apple_News {
 
 			// Build the byline.
 			$author = __( 'John Doe', 'apple-news' );
-			$date   = date( 'M j, Y g:i A' );
+			$date   = apple_news_date( 'M j, Y g:i A' );
 			$export = new Apple_Actions\Index\Export( $settings );
 			$byline = sprintf(
 				'<div class="apple-news-byline apple-news-component apple-news-meta-component">%s</div>',

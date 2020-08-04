@@ -87,10 +87,4 @@
   <rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
     <severity>0</severity>
   </rule>
-
-  <!-- Turn off a few newly added or renamed rules until we put fixes in place. -->
-	<!-- We will target version 2.1.0 for these fixes. -->
-  <rule ref="WordPress.DateTime.RestrictedFunctions.date_date">
-    <severity>0</severity>
-  </rule>
 </ruleset>

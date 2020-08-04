@@ -363,7 +363,7 @@ class Request {
 	 * @return string The signature string for use in signing API requests.
 	 */
 	private function sign( $url, $verb, $content = null ) {
-		$current_date = date( 'c' );
+		$current_date = gmdate( 'c' );
 
 		$request_info = $verb . $url . $current_date;
 		if ( 'POST' === $verb ) {
