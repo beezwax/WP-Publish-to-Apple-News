@@ -352,7 +352,7 @@ class Apple_News {
 		$options        = \Apple_Exporter\Theme::get_options();
 		$wp_settings    = get_option( self::$option_name, array() );
 		$theme_settings = array();
-		foreach ( $options as $option_key => $option ) {
+		foreach ( array_keys( $options ) as $option_key ) {
 			if ( isset( $wp_settings[ $option_key ] ) ) {
 				$theme_settings[ $option_key ] = $wp_settings[ $option_key ];
 			}

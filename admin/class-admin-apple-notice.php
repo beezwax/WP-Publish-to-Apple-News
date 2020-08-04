@@ -67,7 +67,7 @@ class Admin_Apple_Notice {
 		$updated = false;
 		$notices = array_filter(
 			array_map(
-				function ( $notice ) use ( $notifications, &$updated ) {
+				function ( $notice ) use ( $notifications, &$updated ) { // phpcs:ignore WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable
 					ksort( $notice );
 					if ( in_array( wp_json_encode( $notice ), $notifications, true ) ) {
 						$updated = true;

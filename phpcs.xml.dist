@@ -93,7 +93,4 @@
   <rule ref="WordPress.DateTime.RestrictedFunctions.date_date">
     <severity>0</severity>
   </rule>
-	<rule ref="WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable">
-		<severity>0</severity>
-	</rule>
 </ruleset>

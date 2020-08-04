@@ -45,7 +45,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/apple-exporter/class-settings.ph
  */
 function apple_news_uninstall_wp_plugin() {
 	$settings = new Apple_Exporter\Settings();
-	foreach ( $settings->all() as $name => $value ) {
+	foreach ( array_keys( $settings->all() ) as $name ) {
 		delete_option( $name );
 	}
 }
