@@ -58,7 +58,7 @@ class Admin_Apple_Settings_Section_Advanced extends Admin_Apple_Settings_Section
 				'description' => sprintf(
 					// Translators: Placeholder 1 is an opening <a> tag, placeholder 2 is </a>.
 					__( 'If set to no, certain text fields will use Markdown instead of %1$sApple News HTML format%2$s. As of version 1.4.0, HTML format is the preferred output format. Support for Markdown may be removed in the future.', 'apple-news' ),
-					'<a href="' . esc_url( 'https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/HTMLMarkupforAppleNewsFormat.html' ) . '">',
+					'<a href="' . esc_url( 'https://developer.apple.com/documentation/apple_news/apple_news_format/components/using_html_with_apple_news_format' ) . '">',
 					'</a>'
 				),
 			),

@@ -555,8 +555,8 @@ class Theme {
 	private static function initialize_options() {
 		self::$options = array(
 			'ad_frequency'                      => array(
-				'default'     => 1,
-				'description' => __( 'A number between 1 and 10 defining the frequency for automatically inserting Banner Advertisement components into articles. For more information, see the <a href="https://developer.apple.com/library/ios/documentation/General/Conceptual/Apple_News_Format_Ref/AdvertisingSettings.html#//apple_ref/doc/uid/TP40015408-CH93-SW1" target="_blank">Apple News Format Reference</a>.', 'apple-news' ),
+				'default'     => 5,
+				'description' => __( 'A number between 1 and 10 defining the frequency for automatically inserting dynamic advertisements into articles. For more information, see the <a href="https://developer.apple.com/documentation/apple_news/advertisementautoplacement" target="_blank">Apple News Format Reference</a>.', 'apple-news' ),
 				'label'       => __( 'Ad Frequency', 'apple-news' ),
 				'type'        => 'integer',
 			),
