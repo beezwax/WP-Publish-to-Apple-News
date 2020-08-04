@@ -8,22 +8,12 @@
  * @subpackage Tests
  */
 
-use \Apple_Exporter\Settings;
-
 /**
  * A class which is used to test the Apple_News class.
+ *
+ * @package Apple_News
  */
-class Apple_News_Test extends WP_UnitTestCase {
-
-	/**
-	 * A function containing operations to be run before each test function.
-	 *
-	 * @access public
-	 */
-	public function setUp() {
-		parent::setup();
-		$this->settings = new Settings();
-	}
+class Apple_News_Test extends Apple_News_Testcase {
 
 	/**
 	 * Ensures that the get_filename function properly returns an image filename.

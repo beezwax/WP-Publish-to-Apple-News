@@ -51,7 +51,7 @@
 				sprintf(
 					// translators: first argument is an opening <a> tag, second argument is </a>.
 					__( 'For more information on the Apple News format options for each component, please read the %1$sApple News Format Reference%2$s.', 'apple-news' ),
-					'<a href="https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/Component.html#//apple_ref/doc/uid/TP40015408-CH5-SW1">',
+					'<a href="https://developer.apple.com/documentation/apple_news/apple_news_format">',
 					'</a>'
 				),
 				array(
