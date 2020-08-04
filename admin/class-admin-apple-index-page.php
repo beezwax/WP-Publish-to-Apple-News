@@ -97,6 +97,8 @@ class Admin_Apple_Index_Page extends Apple_News {
 
 		switch ( $action ) {
 			case self::namespace_action( 'push' ):
+				/* phpcs:disable WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable */
+
 				$section = new Apple_Actions\Index\Section( $this->settings );
 				try {
 					$sections = $section->get_sections();
@@ -106,6 +108,9 @@ class Admin_Apple_Index_Page extends Apple_News {
 
 				$post      = get_post( $id );
 				$post_meta = get_post_meta( $id );
+
+				/* phpcs:enable */
+
 				include plugin_dir_path( __FILE__ ) . 'partials/page-single-push.php';
 				break;
 			default:
@@ -368,8 +373,6 @@ class Admin_Apple_Index_Page extends Apple_News {
 
 		// Save fields.
 		\Admin_Apple_Meta_Boxes::save_post_meta( $id );
-
-		$message = __( 'Settings saved.', 'apple-news' );
 
 		// Push the post.
 		$action = new Apple_Actions\Index\Push( $this->settings, $id );

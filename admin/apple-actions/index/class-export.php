@@ -55,9 +55,7 @@ class Export extends Action {
 		parent::__construct( $settings );
 		$this->set_theme( $sections );
 		$this->id = $id;
-
-		// Assign instance of an active Jetpack tiled gallery installation.
-		$jetpack_tiled_gallery = Jetpack_Tiled_Gallery::instance();
+		Jetpack_Tiled_Gallery::instance();
 	}
 
 	/**
@@ -254,7 +252,7 @@ class Export extends Action {
 			preg_match( '/#(.*?)#/', $byline, $matches );
 			if ( ! empty( $matches[1] ) && ! empty( $date ) ) {
 				// Set the date using the custom format.
-				$byline = str_replace( $matches[0], date( $matches[1], strtotime( $date ) ), $byline );
+				$byline = str_replace( $matches[0], apple_news_date( $matches[1], strtotime( $date ) ), $byline );
 			}
 
 			// Replace the temporary placeholder with the actual byline.
@@ -265,7 +263,7 @@ class Export extends Action {
 			$byline = sprintf(
 				'by %1$s | %2$s',
 				$author,
-				date( $date_format, strtotime( $date ) )
+				apple_news_date( $date_format, strtotime( $date ) )
 			);
 		}
 

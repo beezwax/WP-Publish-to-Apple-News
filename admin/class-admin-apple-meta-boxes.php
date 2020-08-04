@@ -272,6 +272,8 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 */
 	public function publish_meta_box( $post ) {
 
+		/* phpcs:disable WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable */
+
 		// Only show the publish feature if the user is authorized and auto sync is not enabled.
 		// Also check if the post has been previously published and/or deleted.
 		$api_id             = get_post_meta( $post->ID, 'apple_news_api_id', true );
@@ -292,6 +294,8 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 		// Create local copies of values to pass into the partial.
 		$publish_action = self::PUBLISH_ACTION;
+
+		/* phpcs:enable */
 
 		include plugin_dir_path( __FILE__ ) . 'partials/metabox-publish.php';
 	}

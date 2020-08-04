@@ -234,7 +234,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @return mixed The result of the callback, if provided.
 	 */
 	public function render_field( $args ) {
-		list( $name, $default_value, $callback ) = $args;
+		list( $name, , $callback ) = $args;
 
 		$type = $this->get_type_for( $name );
 

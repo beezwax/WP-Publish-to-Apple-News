@@ -119,9 +119,9 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 		$apple_state       = \Admin_Apple_News::get_post_status( $post->ID );
 		$apple_share_url   = get_post_meta( $post->ID, 'apple_news_api_share_url', true );
 		$apple_created_at  = get_post_meta( $post->ID, 'apple_news_api_created_at', true );
-		$apple_created_at  = empty( $apple_created_at ) ? __( 'None', 'apple-news' ) : get_date_from_gmt( date( 'Y-m-d H:i:s', strtotime( $apple_created_at ) ), 'F j, h:i a' );
+		$apple_created_at  = empty( $apple_created_at ) ? __( 'None', 'apple-news' ) : get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( $apple_created_at ) ), 'F j, h:i a' );
 		$apple_modified_at = get_post_meta( $post->ID, 'apple_news_api_modified_at', true );
-		$apple_modified_at = empty( $apple_modified_at ) ? __( 'None', 'apple-news' ) : get_date_from_gmt( date( 'Y-m-d H:i:s', strtotime( $apple_modified_at ) ), 'F j, h:i a' );
+		$apple_modified_at = empty( $apple_modified_at ) ? __( 'None', 'apple-news' ) : get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( $apple_modified_at ) ), 'F j, h:i a' );
 		?>
 	<div id="apple-news-metabox-pullquote" class="apple-news-metabox-section apple-news-metabox-section-collapsable">
 		<h3><?php esc_html_e( 'Apple News Publish Information', 'apple-news' ); ?></h3>
