@@ -73,7 +73,7 @@ class Request {
 			'apple_news_request_args',
 			array(
 				'reject_unsafe_urls' => true,
-				'timeout'            => 5,
+				'timeout'            => 3,
 			)
 		);
 	}
@@ -103,7 +103,7 @@ class Request {
 				'Content-Type'   => 'multipart/form-data; boundary=' . $this->mime_builder->boundary(),
 			),
 			'body'    => $content,
-			'timeout' => 30, // Required because we need to package all images.
+			'timeout' => 30, // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
 		);
 
 		// Allow filtering and merge with the default args.
