@@ -96,15 +96,6 @@
 	<rule ref="WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get">
 		<severity>0</severity>
 	</rule>
-	<rule ref="WordPressVIPMinimum.JS.HTMLExecutingFunctions.append">
-		<severity>0</severity>
-	</rule>
-	<rule ref="WordPressVIPMinimum.JS.HTMLExecutingFunctions.html">
-		<severity>0</severity>
-	</rule>
-	<rule ref="WordPressVIPMinimum.JS.StringConcat.Found">
-		<severity>0</severity>
-	</rule>
 	<rule ref="WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown">
 		<severity>0</severity>
 	</rule>
