@@ -9,10 +9,11 @@
 namespace Apple_Exporter\Components;
 
 /**
- * Represents an Article Format End_Of_Article. It gets generated automatically
- * so not much to do here but define the static JSON.
+ * Represents an End of Article module. The module initializes as empty and
+ * is defined by the user via the Customize JSON feature. If non-empty, it is
+ * inserted onto the end of the article body.
  *
- * @since 0.4.0
+ * @since 2.1.0
  */
 class End_Of_Article extends Component {
 
