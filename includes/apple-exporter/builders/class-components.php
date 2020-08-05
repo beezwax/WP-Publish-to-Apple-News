@@ -15,6 +15,7 @@ use \Apple_Exporter\Component_Factory;
 use \Apple_Exporter\Components\Component;
 use \Apple_Exporter\Components\Image;
 use \Apple_Exporter\Workspace;
+use \Apple_Exporter\Theme;
 use \Apple_News;
 use \DOMNode;
 
@@ -787,6 +788,13 @@ class Components extends Builder {
 		$this->add_thumbnail_if_needed( $components );
 		$this->anchor_components( $components );
 		$this->add_pullquote_if_needed( $components );
+
+		$theme          = Theme::get_used();
+		$json_templates = $theme->get_value( 'json_templates' );
+
+		if ( ! empty( $json_templates['end_of_article']['json'] ) ) {
+			$components[] = Component_Factory::get_component( 'end-of-article', '' );
+		}
 
 		return $components;
 	}
