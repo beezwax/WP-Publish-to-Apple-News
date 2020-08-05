@@ -8,7 +8,7 @@
 
 /**
  * A class to test the behavior of the
- * Apple_Exporter\Builders\Advertising_Settings class.
+ * Apple_Exporter\Components\End_Of_Article class.
  *
  * @package Apple_News
  * @subpackage Tests
