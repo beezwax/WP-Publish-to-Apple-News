@@ -352,7 +352,7 @@ class Apple_News {
 		$options        = \Apple_Exporter\Theme::get_options();
 		$wp_settings    = get_option( self::$option_name, array() );
 		$theme_settings = array();
-		foreach ( $options as $option_key => $option ) {
+		foreach ( array_keys( $options ) as $option_key ) {
 			if ( isset( $wp_settings[ $option_key ] ) ) {
 				$theme_settings[ $option_key ] = $wp_settings[ $option_key ];
 			}
@@ -843,8 +843,7 @@ class Apple_News {
 			}
 
 			// Load the theme data from the JSON configuration file.
-			$filename = dirname( __DIR__ ) . '/assets/themes/' . $slug . '.json';
-			$options  = json_decode( file_get_contents( $filename ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			$options = json_decode( file_get_contents( dirname( __DIR__ ) . '/assets/themes/' . $slug . '.json' ), true ); // phpcs:ignore
 
 			// Negotiate screenshot URL.
 			$options['screenshot_url'] = plugins_url(

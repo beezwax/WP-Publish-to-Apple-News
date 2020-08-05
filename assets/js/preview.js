@@ -108,7 +108,7 @@
 		}
 
 		// Remove existing dropcap.
-		dropcapParagraph.html(
+		dropcapParagraph.html( // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
 			dropcapParagraph.html().replace( /<span[^>]*>([^<]+)<\/span>/, '$1' )
 		);
 
@@ -116,9 +116,9 @@
 		if ( 'yes' === $( '#initial_dropcap' ).val() ) {
 
 			// Create the dropcap span with the specified number of characters.
-			dropcapParagraph.html(
-				'<span class="apple-news-dropcap">' +
-				dropcapParagraph.html().substr( 0, dropcapCharacters ) +
+			dropcapParagraph.html( // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
+				'<span class="apple-news-dropcap">' + // phpcs:ignore WordPressVIPMinimum.JS.StringConcat.Found
+				dropcapParagraph.html().substr( 0, dropcapCharacters ) + // phpcs:ignore WordPressVIPMinimum.JS.StringConcat.Found
 				'</span>' +
 				dropcapParagraph.html().substr( dropcapCharacters )
 			);

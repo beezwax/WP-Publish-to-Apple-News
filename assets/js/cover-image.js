@@ -47,7 +47,7 @@
         $imgIdInput.val( '' );
 
         // Add the image and ID, swap visibility of add and remove buttons.
-        $imgContainer.append( '<img src="' + imgUrl + '" alt="" />' );
+        $imgContainer.append( '<img src="' + imgUrl + '" alt="" />' ); // phpcs:ignore WordPressVIPMinimum.JS.StringConcat.Found, WordPressVIPMinimum.JS.HTMLExecutingFunctions.append
         $imgIdInput.val( attachment.id );
         $addImgButton.addClass( 'hidden' );
         $delImgButton.removeClass( 'hidden' );

@@ -73,7 +73,7 @@ class Request {
 			'apple_news_request_args',
 			array(
 				'reject_unsafe_urls' => true,
-				'timeout'            => 5,
+				'timeout'            => 3,
 			)
 		);
 	}
@@ -332,7 +332,17 @@ class Request {
 			$args['headers']['Content-Length'] = strlen( $content );
 			$args['headers']['Content-Type']   = 'multipart/form-data; boundary=' . $this->mime_builder->boundary();
 			$args['body']                      = $content;
-			$args['timeout']                   = 30; // Required because we need to package and send all images.
+
+			/*
+			 * If the remote images setting is off, increase the timeout to 30s so
+			 * there is enough time to send the bundled images.
+			 */
+			$settings = get_option( 'apple_news_settings' );
+			if ( ! empty( $settings['use_remote_images'] )
+				&& 'no' === $settings['use_remote_images']
+			) {
+				$args['timeout'] = 30; // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
+			}
 		}
 
 		/**
@@ -405,7 +415,7 @@ class Request {
 	 * @return string The signature string for use in signing API requests.
 	 */
 	private function sign( $url, $verb, $content = null ) {
-		$current_date = date( 'c' );
+		$current_date = gmdate( 'c' );
 
 		$request_info = $verb . $url . $current_date;
 		if ( 'POST' === $verb ) {

@@ -490,7 +490,7 @@ class Theme {
 
 		// Get inactive components.
 		$options             = self::get_options();
-		$inactive_components = array_diff(
+		$inactive_components = array_diff( // phpcs:ignore WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable
 			$options['meta_component_order']['default'],
 			$component_order
 		);
@@ -1162,7 +1162,7 @@ class Theme {
 		// Loop through options and compile an array of all options with values.
 		$all_settings = array();
 		$options      = self::get_options();
-		foreach ( $options as $option_key => $option ) {
+		foreach ( array_keys( $options ) as $option_key ) {
 			$all_settings[ $option_key ] = $this->get_value( $option_key );
 		}
 
