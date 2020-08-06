@@ -149,7 +149,7 @@ class Admin_Apple_Settings extends Apple_News {
 			wp_die( esc_html__( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}
 
-		$sections = $this->sections;
+		$sections = $this->sections; // phpcs:ignore WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable
 		include plugin_dir_path( __FILE__ ) . 'partials/page-options.php';
 	}
 

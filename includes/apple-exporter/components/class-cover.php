@@ -47,12 +47,62 @@ class Cover extends Component {
 		);
 
 		$this->register_spec(
+			'jsonWithCaption',
+			__( 'JSON with Caption', 'apple-news' ),
+			array(
+				'role'       => 'header',
+				'layout'     => 'headerPhotoLayout',
+				'components' => array(
+					array(
+						'role'    => 'photo',
+						'layout'  => 'headerPhotoLayoutWithCaption',
+						'URL'     => '#url#',
+						'caption' => array(
+							'format' => 'html',
+							'text'   => '#caption#',
+						),
+					),
+					array(
+						'role'      => 'caption',
+						'text'      => '#caption#',
+						'format'    => 'html',
+						'textStyle' => array(
+							'textAlignment' => '#text_alignment#',
+							'fontName'      => '#caption_font#',
+							'fontSize'      => '#caption_size#',
+							'tracking'      => '#caption_tracking#',
+							'lineHeight'    => '#caption_line_height#',
+							'textColor'     => '#caption_color#',
+						),
+					),
+				),
+				'behavior'   => array(
+					'type'   => 'parallax',
+					'factor' => 0.8,
+				),
+			)
+		);
+
+		$this->register_spec(
 			'headerPhotoLayout',
 			__( 'Layout', 'apple-news' ),
 			array(
 				'ignoreDocumentMargin' => true,
 				'columnStart'          => 0,
 				'columnSpan'           => '#layout_columns#',
+			)
+		);
+
+		$this->register_spec(
+			'headerPhotoLayoutWithCaption',
+			__( 'Layout with Caption', 'apple-news' ),
+			array(
+				'ignoreDocumentMargin' => true,
+				'columnStart'          => 0,
+				'columnSpan'           => '#layout_columns#',
+				'margin'               => array(
+					'bottom' => '#caption_line_height#',
+				),
 			)
 		);
 
@@ -74,24 +124,47 @@ class Cover extends Component {
 	/**
 	 * Build the component.
 	 *
-	 * @param string $url The URL for the cover image.
+	 * @param array|string $options {
+	 *    The options for the component. If a string is provided, assume it is a URL.
+	 *
+	 *    @type string $caption The caption for the image.
+	 *    @type string $url     The URL to the featured image.
+	 * }
 	 * @access protected
 	 */
-	protected function build( $url ) {
+	protected function build( $options ) {
+
+		// Handle case where options is a URL.
+		if ( ! is_array( $options ) ) {
+			$options = [
+				'url' => $options,
+			];
+		}
 
 		// If we can't get a valid URL, bail.
-		$url   = $this->maybe_bundle_source( $url );
+		$url   = $this->maybe_bundle_source( $options['url'] );
 		$check = trim( $url );
 		if ( empty( $check ) ) {
 			return;
 		}
 
-		$this->register_json(
-			'json',
-			array(
-				'#url#' => $url,
-			)
-		);
+		// Fork for caption vs. not.
+		if ( ! empty( $options['caption'] ) ) {
+			$this->register_json(
+				'jsonWithCaption',
+				array(
+					'#caption#' => $options['caption'],
+					'#url#'     => $url,
+				)
+			);
+		} else {
+			$this->register_json(
+				'json',
+				array(
+					'#url#' => $url,
+				)
+			);
+		}
 
 		$this->set_default_layout();
 	}
@@ -115,6 +188,15 @@ class Cover extends Component {
 		);
 
 		$this->register_layout(
+			'headerPhotoLayoutWithCaption',
+			'headerPhotoLayoutWithCaption',
+			array(
+				'#caption_line_height#' => $theme->get_value( 'caption_line_height' ),
+				'#layout_columns#'      => $theme->get_layout_columns(),
+			)
+		);
+
+		$this->register_layout(
 			'headerBelowTextPhotoLayout',
 			'headerBelowTextPhotoLayout',
 			array(
@@ -122,6 +204,4 @@ class Cover extends Component {
 			)
 		);
 	}
-
 }
-

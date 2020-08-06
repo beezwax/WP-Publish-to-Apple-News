@@ -26,7 +26,16 @@ class Audio extends Component {
 	 */
 	public static function node_matches( $node ) {
 		// Is this an audio node?
-		if ( 'audio' === $node->nodeName && self::remote_file_exists( $node ) ) {
+
+		if (
+			// Is this a gutenberg audio block?
+			( self::node_has_class( $node, 'wp-block-audio' )
+				&& $node->hasChildNodes()
+				&& 'audio' === $node->firstChild->nodeName
+			)
+			// Or is this a stand-alone audio tag?
+			|| 'audio' === $node->nodeName
+		) {
 			return $node;
 		}
 
@@ -39,6 +48,25 @@ class Audio extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
+		$this->register_spec(
+			'json-with-caption-text',
+			__( 'JSON With Caption Text', 'apple-news' ),
+			array(
+				'role'       => 'container',
+				'components' => array(
+					array(
+						'role' => 'audio',
+						'URL'  => '#url#',
+					),
+					array(
+						'role'   => 'caption',
+						'text'   => '#caption_text#',
+						'format' => 'html',
+					),
+				),
+			)
+		);
+
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
@@ -67,13 +95,18 @@ class Audio extends Component {
 			return;
 		}
 
-		$this->register_json(
-			'json',
-			array(
-				'#url#' => esc_url_raw( $url ),
-			)
+		$audio_spec    = 'json';
+		$audio_caption = '';
+		if ( preg_match( '/<figcaption>(.+?)<\/figcaption>/', $html, $caption_match ) ) {
+			$audio_caption = $caption_match[1];
+			$audio_spec    = 'json-with-caption-text';
+		}
+		$values = array(
+			'#url#'          => esc_url_raw( $url ),
+			'#caption_text#' => $audio_caption,
 		);
+
+		$this->register_json( $audio_spec, $values );
 	}
 
 }
-

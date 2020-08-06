@@ -490,7 +490,7 @@ class Theme {
 
 		// Get inactive components.
 		$options             = self::get_options();
-		$inactive_components = array_diff(
+		$inactive_components = array_diff( // phpcs:ignore WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable
 			$options['meta_component_order']['default'],
 			$component_order
 		);
@@ -555,8 +555,8 @@ class Theme {
 	private static function initialize_options() {
 		self::$options = array(
 			'ad_frequency'                      => array(
-				'default'     => 1,
-				'description' => __( 'A number between 1 and 10 defining the frequency for automatically inserting Banner Advertisement components into articles. For more information, see the <a href="https://developer.apple.com/library/ios/documentation/General/Conceptual/Apple_News_Format_Ref/AdvertisingSettings.html#//apple_ref/doc/uid/TP40015408-CH93-SW1" target="_blank">Apple News Format Reference</a>.', 'apple-news' ),
+				'default'     => 5,
+				'description' => __( 'A number between 1 and 10 defining the frequency for automatically inserting dynamic advertisements into articles. For more information, see the <a href="https://developer.apple.com/documentation/apple_news/advertisementautoplacement" target="_blank">Apple News Format Reference</a>.', 'apple-news' ),
 				'label'       => __( 'Ad Frequency', 'apple-news' ),
 				'type'        => 'integer',
 			),
@@ -1162,7 +1162,7 @@ class Theme {
 		// Loop through options and compile an array of all options with values.
 		$all_settings = array();
 		$options      = self::get_options();
-		foreach ( $options as $option_key => $option ) {
+		foreach ( array_keys( $options ) as $option_key ) {
 			$all_settings[ $option_key ] = $this->get_value( $option_key );
 		}
 
@@ -1318,6 +1318,11 @@ class Theme {
 
 			// If the option is not specified, it is using the default.
 			if ( ! isset( $this->values[ $option ] ) ) {
+				continue;
+			}
+
+			// Ignore the screenshot URL. This gets set automatically on install but doesn't have a default value.
+			if ( 'screenshot_url' === $option ) {
 				continue;
 			}
 
@@ -1500,6 +1505,11 @@ class Theme {
 		// Refresh used if in active use.
 		if ( $old_name === self::$used_name ) {
 			$this->use_this();
+		}
+
+		// Update pointer to active theme, if this was the active theme.
+		if ( self::get_active_theme_name() === $old_name ) {
+			$this->set_active();
 		}
 
 		return true;
@@ -1697,7 +1707,7 @@ class Theme {
 					// Sanitize.
 					$value = sanitize_text_field( $value );
 
-					// Ensure the named font is part of the whitelist.
+					// Ensure the named font is part of the allowlist.
 					if ( ! in_array( $value, self::get_fonts(), true ) ) {
 						$this->log_error(
 							sprintf(

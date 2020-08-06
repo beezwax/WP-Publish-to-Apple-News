@@ -150,5 +150,10 @@ class Facebook_Test extends Component_TestCase {
 		$node_failure = self::build_node( sprintf( '<div class="invalid-fb-post" data-href="%s"></div>', esc_url( $url ) ) );
 
 		$this->assertEmpty( $component->node_matches( $node_failure ) );
+
+		// Test the node - in-text Facebook URL.
+		$node_failure = self::build_node( sprintf( 'Visit us on Facebook at <a href="%s">%s</a>!', esc_url( $url ), esc_html( $url ) ) );
+
+		$this->assertEmpty( $component->node_matches( $node_failure ) );
 	}
 }

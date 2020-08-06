@@ -118,7 +118,7 @@ HTML;
 		$this->assertContains( $json['components'], $json );
 		$this->assertEquals( 'photo', $json['components'][0]['role'] );
 		$this->assertEquals( 'https://placeimg.com/640/480/any', $json['components'][0]['URL'] );
-		$this->assertEquals( 'Sed <strong>ac metus</strong> sagittis <em>urna feugiat</em> interdum. Duis vel blandit nisi, id tempus sem. Credit: <a href="https://domain.suffix">Domain</a>', $json['components'][0]['caption'] );
+		$this->assertEquals( 'Sed <strong>ac metus</strong> sagittis <em>urna feugiat</em> interdum. Duis vel blandit nisi, id tempus sem. Credit: <a href="https://domain.suffix">Domain</a>', $json['components'][0]['caption']['text'] );
 	}
 
 	/**

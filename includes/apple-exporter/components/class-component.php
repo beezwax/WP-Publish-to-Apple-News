@@ -731,36 +731,6 @@ abstract class Component {
 	}
 
 	/**
-	 * Check if the remote file exists for this node.
-	 *
-	 * @param \DOMElement $node The node to examine for matches.
-	 * @return boolean
-	 * @access protected
-	 */
-	protected static function remote_file_exists( $node ) {
-
-		// Try to get a URL from the src attribute of the HTML.
-		$html = $node->ownerDocument->saveXML( $node );
-		$path = self::url_from_src( $html );
-		if ( empty( $path ) ) {
-			return false;
-		}
-
-		// Fork for method of retrieval if running on VIP.
-		if ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) {
-			$result = vip_safe_wp_remote_get( $path );
-		} else {
-			$result = wp_safe_remote_get( $path );
-		}
-
-		// Check the headers in case of an error.
-		return ( ! is_wp_error( $result )
-			&& ! empty( $result['response']['code'] )
-			&& $result['response']['code'] < 400
-		);
-	}
-
-	/**
 	 * Returns a full URL from the first `src` parameter in the provided HTML that
 	 * has content.
 	 *
