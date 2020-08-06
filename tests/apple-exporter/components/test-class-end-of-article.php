@@ -13,7 +13,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Test_End_Of_Article extends Apple_News_Testcase {
+class Test_End_Of_Article extends Component_TestCase {
 
 	/**
 	 * Test default End Of Article behavior

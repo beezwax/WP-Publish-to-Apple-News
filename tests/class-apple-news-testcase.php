@@ -14,6 +14,13 @@
 abstract class Apple_News_Testcase extends WP_UnitTestCase {
 
 	/**
+	 * Contains an instance of the Apple_Exporter\Builders\Component_Styles class for use in tests.
+	 *
+	 * @var Apple_Exporter\Builders\Component_Styles
+	 */
+	protected $component_styles;
+
+	/**
 	 * Contains an instance of the Apple_Exporter\Exporter_Content class for use in tests.
 	 *
 	 * @var Apple_Exporter\Exporter_Content
@@ -28,11 +35,32 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	protected $content_settings;
 
 	/**
+	 * Contains an instance of the Apple_Exporter\Builders\Component_Layouts class for use in tests.
+	 *
+	 * @var Apple_Exporter\Builders\Component_Layouts
+	 */
+	protected $layouts;
+
+	/**
+	 * An instance of Prophet for use in tests.
+	 *
+	 * @var Prophecy\Prophet
+	 */
+	protected $prophet;
+
+	/**
 	 * Contains an instance of the Apple_Exporter\Settings class for use in tests.
 	 *
 	 * @var Apple_Exporter\Settings
 	 */
 	protected $settings;
+
+	/**
+	 * Contains an instance of the Apple_Exporter\Builders\Component_Text_Styles class for use in tests.
+	 *
+	 * @var Apple_Exporter\Builders\Component_Text_Styles
+	 */
+	protected $styles;
 
 	/**
 	 * Contains an instance of the Apple_Exporter\Theme class for use in tests.
@@ -42,12 +70,19 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	protected $theme;
 
 	/**
+	 * Contains an instance of the Apple_Exporter\Workspace class for use in tests.
+	 *
+	 * @var Apple_Exporter\Workspace
+	 */
+	protected $workspace;
+
+	/**
 	 * A function containing operations to be run before each test function.
 	 *
 	 * @access public
 	 */
 	public function setUp() {
-		parent::setup();
+		parent::setUp();
 
 		// Create some dummy content and save it for future use.
 		$this->content = new Apple_Exporter\Exporter_Content(
@@ -62,10 +97,43 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		// Create a new instance of the Exporter_Content_Settings object and save it for future use.
 		$this->content_settings = new Apple_Exporter\Exporter_Content_Settings();
 
+		// Create a new instance of Prophet for future use.
+		$this->prophet = new Prophecy\Prophet();
+
+		// Create a workspace for future use. Default it to use post ID 1, but this can be overridden at the test level.
+		$this->workspace = new Apple_Exporter\Workspace( 1 );
+
 		// Create a new theme and save it for future use.
 		$this->theme = new Apple_Exporter\Theme();
 		$this->theme->save();
 		$this->theme->set_active();
+
+		// Create styles for future use.
+		$this->styles = new Apple_Exporter\Builders\Component_Text_Styles(
+			$this->content,
+			$this->content_settings
+		);
+
+		// Create layouts for future use.
+		$this->layouts = new Apple_Exporter\Builders\Component_Layouts(
+			$this->content,
+			$this->content_settings
+		);
+
+		// Create component styles for future use.
+		$this->component_styles = new Apple_Exporter\Builders\Component_Styles(
+			$this->content,
+			$this->content_settings
+		);
+	}
+
+	/**
+	 * Actions to be run after every test.
+	 *
+	 * @access public
+	 */
+	public function tearDown() {
+		$this->prophet->checkPredictions();
 	}
 
 	/**
