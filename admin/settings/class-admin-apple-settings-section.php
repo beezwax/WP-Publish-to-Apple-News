@@ -273,10 +273,8 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			// Use select2 only when there is a considerable amount of options available.
 			if ( count( $type ) > 10 ) {
 				$field = '<select class="select2 standard" id="%s" name="%s' . $multiple_name . '" ' . $multiple_attr . ' size="%s">';
-			} elseif ( ! empty( $multiple_attr ) ) {
-				$field = '<select id="%s" name="%s' . $multiple_name . '" ' . $multiple_attr . ' size="%s">';
 			} else {
-				$field = '<select id="%s" name="%s">';
+				$field = '<select id="%s" name="%s' . $multiple_name . '" ' . $multiple_attr . ' size="%s">';
 			}
 
 			foreach ( $type as $key => $option ) {
