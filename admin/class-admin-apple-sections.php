@@ -181,6 +181,15 @@ class Admin_Apple_Sections extends Apple_News {
 			$post_sections[] = reset( $sections );
 		}
 
+		/**
+		 * Filters the sections for a post.
+		 *
+		 * @since 2.1.0
+		 *
+		 * @param array  $post_sections The sections for the post.
+		 * @param int    $post_id       The post ID.
+		 * @param string $format        The section format (e.g., 'url').
+		 */
 		return apply_filters( 'get_sections_for_post', $post_sections, $post_id, $format );
 	}
 
