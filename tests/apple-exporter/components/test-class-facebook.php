@@ -1,19 +1,19 @@
 <?php
 /**
- * Publish to Apple News Tests: Facebook_Test class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Facebook.
+ * Publish to Apple News tests: Facebook_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/class-component-testcase.php';
-
 use Apple_Exporter\Components\Facebook;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Facebook class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Facebook class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Facebook_Test extends Component_TestCase {
 
@@ -60,7 +60,7 @@ class Facebook_Test extends Component_TestCase {
 		// Setup.
 		$component = new Facebook(
 			'https://www.facebook.com/test/posts/12345',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -98,7 +98,7 @@ class Facebook_Test extends Component_TestCase {
 		// Setup.
 		$component = new Facebook(
 			$url,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -132,7 +132,7 @@ class Facebook_Test extends Component_TestCase {
 
 		$component = new Facebook(
 			$wpcom_embed_html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts

@@ -29,17 +29,18 @@ class Test_End_Of_Article extends Component_TestCase {
 	 */
 	public function testEndOfArticleContent() {
 		// Setup.
-		$settings = $this->theme->all_settings();
-		$settings['json_templates'] = array(
-			'end_of_article' => array(
-				'json' => array(
-					'role' => 'heading'
-				),
-				'layout' => array(),
-			),
+		$this->set_theme_settings(
+			[
+				'json_templates' => [
+					'end_of_article' => [
+						'json'   => [
+							'role' => 'heading',
+						],
+						'layout' => [],
+					],
+				],
+			]
 		);
-		$this->theme->load( $settings );
-		$this->assertTrue( $this->theme->save() );
 
 		$post_id = self::factory()->post->create();
 		$json    = $this->get_json_for_post( $post_id );

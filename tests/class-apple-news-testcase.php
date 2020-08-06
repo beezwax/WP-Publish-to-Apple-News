@@ -42,6 +42,13 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	protected $layouts;
 
 	/**
+	 * Contains a Prophecy-wrapped instance of the Apple_Exporter\Workspace class.
+	 *
+	 * @var Prophecy\Prophecy\ObjectProphecy
+	 */
+	protected $prophecized_workspace;
+
+	/**
 	 * An instance of Prophet for use in tests.
 	 *
 	 * @var Prophecy\Prophet
@@ -97,11 +104,9 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		// Create a new instance of the Exporter_Content_Settings object and save it for future use.
 		$this->content_settings = new Apple_Exporter\Exporter_Content_Settings();
 
-		// Create a new instance of Prophet for future use.
-		$this->prophet = new Prophecy\Prophet();
-
-		// Create a workspace for future use. Default it to use post ID 1, but this can be overridden at the test level.
-		$this->workspace = new Apple_Exporter\Workspace( 1 );
+		// Create a new instance of Prophet for future use and create a prophecized workspace.
+		$this->prophet               = new Prophecy\Prophet();
+		$this->prophecized_workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
 
 		// Create a new theme and save it for future use.
 		$this->theme = new Apple_Exporter\Theme();
@@ -125,6 +130,9 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 			$this->content,
 			$this->content_settings
 		);
+
+		// Create a workspace for future use. Default it to use post ID 1, but this can be overridden at the test level.
+		$this->set_workspace_post_id( 1 );
 	}
 
 	/**
@@ -134,6 +142,17 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 */
 	public function tearDown() {
 		$this->prophet->checkPredictions();
+	}
+
+	/**
+	 * Runs create_upload_object using a test image and returns the image ID.
+	 *
+	 * @param int $parent Optional. The parent post ID. Defaults to no parent.
+	 *
+	 * @return int The post ID of the attachment image that was created.
+	 */
+	protected function get_new_attachment( $parent = 0 ) {
+		return self::factory()->attachment->create_upload_object( __DIR__ . '/data/test-image.jpg', $parent );
 	}
 
 	/**
@@ -151,5 +170,25 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		);
 
 		return json_decode( $export->perform(), true );
+	}
+
+	/**
+	 * Given an array of theme settings, applies them to the currently active theme.
+	 *
+	 * @param array $settings The settings to apply to the theme.
+	 */
+	protected function set_theme_settings( $settings ) {
+		$settings = wp_parse_args( $settings, $this->theme->all_settings() );
+		$this->theme->load( $settings );
+		$this->theme->save();
+	}
+
+	/**
+	 * Sets the workspace post ID to the ID provided.
+	 *
+	 * @param int $post_id The post ID to set for the workspace.
+	 */
+	protected function set_workspace_post_id( $post_id ) {
+		$this->workspace = new Apple_Exporter\Workspace( $post_id );
 	}
 }
