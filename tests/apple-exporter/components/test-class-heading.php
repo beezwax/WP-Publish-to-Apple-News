@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Advertisement_Test class
+ * Publish to Apple News tests: Heading_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -13,7 +13,7 @@ use Apple_Exporter\Theme;
 
 /**
  * A class to test the behavior of the
- * Apple_Exporter\Components\Advertisement class.
+ * Apple_Exporter\Components\Heading class.
  *
  * @package Apple_News
  * @subpackage Tests

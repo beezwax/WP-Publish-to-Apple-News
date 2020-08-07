@@ -10,7 +10,7 @@ use Apple_Exporter\Components\Image;
 
 /**
  * A class to test the behavior of the
- * Apple_Exporter\Components\Advertisement class.
+ * Apple_Exporter\Components\Image class.
  *
  * @package Apple_News
  * @subpackage Tests

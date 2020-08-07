@@ -1,20 +1,20 @@
 <?php
 /**
- * Apple News Tests: Intro_Test class
+ * Publish to Apple News tests: Intro_Test class
  *
  * @package Apple_News
+ * @subpackage Tests
  */
-
-require_once __DIR__ . '/class-component-testcase.php';
 
 use Apple_Exporter\Components\Intro;
 use Apple_Actions\Index\Export;
-use Apple_Exporter\Settings;
 
 /**
- * A class to test the functionality of the Intro component.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Intro class.
  *
  * @package Apple_News
+ * @subpackage Tests
  */
 class Intro_Test extends Component_TestCase {
 
@@ -24,7 +24,7 @@ class Intro_Test extends Component_TestCase {
 	public function testBuild() {
 		$component = new Intro(
 			'Test intro text.',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -44,13 +44,21 @@ class Intro_Test extends Component_TestCase {
 	 * Tests the filter for intro content.
 	 */
 	public function testFilter() {
-		$component = new Intro( 'Test intro text.', null, $this->settings,
-			$this->styles, $this->layouts );
+		$component = new Intro(
+			'Test intro text.',
+			$this->workspace,
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
 
-		add_filter( 'apple_news_intro_json', function( $json ) {
-			$json['textStyle'] = 'fancy-intro';
-			return $json;
-		} );
+		add_filter(
+			'apple_news_intro_json',
+			function( $json ) {
+				$json['textStyle'] = 'fancy-intro';
+				return $json;
+			}
+		);
 
 		$this->assertEquals(
 			array(
@@ -69,12 +77,7 @@ class Intro_Test extends Component_TestCase {
 	 */
 	public function testSkip() {
 		// Set up the theme to have a specific component order that includes the intro.
-		$settings_object                  = new Settings();
-		$theme                            = \Apple_Exporter\Theme::get_used();
-		$settings                         = $theme->all_settings();
-		$settings['meta_component_order'] = [ 'cover', 'title', 'byline', 'intro' ];
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'title', 'byline', 'intro' ] ] );
 
 		// Create an example post without a customized excerpt.
 		$sample_post = self::factory()->post->create(
@@ -85,7 +88,7 @@ class Intro_Test extends Component_TestCase {
 		);
 
 		// Run the exporter against the sample post and verify that the Intro component is not used, since there is no custom excerpt.
-		$export           = new Export( $settings_object, $sample_post );
+		$export           = new Export( $this->settings, $sample_post );
 		$exporter         = $export->fetch_exporter();
 		$exporter_content = $exporter->get_content();
 		$this->assertEquals( '', $exporter_content->intro() );
@@ -99,7 +102,7 @@ class Intro_Test extends Component_TestCase {
 		);
 
 		// Run the exporter against the sample post and verify that the Intro component is used, and matches the custom excerpt.
-		$export           = new Export( $settings_object, $sample_post );
+		$export           = new Export( $this->settings, $sample_post );
 		$exporter         = $export->fetch_exporter();
 		$exporter_content = $exporter->get_content();
 		$this->assertEquals( 'Sample excerpt', $exporter_content->intro() );
@@ -113,7 +116,7 @@ class Intro_Test extends Component_TestCase {
 		);
 
 		// Run the exporter against the sample post and verify that the Intro component is not used because it duplicates content from the main body.
-		$export           = new Export( $settings_object, $sample_post );
+		$export           = new Export( $this->settings, $sample_post );
 		$exporter         = $export->fetch_exporter();
 		$exporter_content = $exporter->get_content();
 		$this->assertEquals( '', $exporter_content->intro() );

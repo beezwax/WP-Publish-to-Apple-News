@@ -1,17 +1,19 @@
 <?php
 /**
- * Publish to Apple News Tests: Link_Button Class
+ * Publish to Apple News tests: Link_Button_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/class-component-testcase.php';
-
 use Apple_Exporter\Components\Link_Button;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Link_Button class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Link_Button class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Link_Button_Test extends Component_TestCase {
 
@@ -156,7 +158,7 @@ class Link_Button_Test extends Component_TestCase {
 		// Setup.
 		$component = new Link_Button(
 			$html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts,

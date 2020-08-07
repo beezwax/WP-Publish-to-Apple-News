@@ -1,20 +1,19 @@
 <?php
 /**
- * Publish to Apple News Tests: Quote_Test class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Quote.
+ * Publish to Apple News tests: Video_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/class-component-testcase.php';
-
 use Apple_Exporter\Components\Video;
-use Apple_Exporter\Workspace;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Video class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Video class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Video_Test extends Component_TestCase {
 
@@ -24,7 +23,7 @@ class Video_Test extends Component_TestCase {
 	 * @access private
 	 * @var string
 	 */
-	private $_content = <<<HTML
+	private $video_content = <<<HTML
 <video class="wp-video-shortcode" id="video-71-1" width="525" height="295" poster="https://example.com/wp-content/uploads/2017/02/ExamplePoster.jpg" preload="metadata" controls="controls">
 	<source type="video/mp4" src="https://example.com/wp-content/uploads/2017/02/example-video.mp4?_=1" />
 	<a href="https://example.com/wp-content/uploads/2017/02/example-video.mp4">https://example.com/wp-content/uploads/2017/02/example-video.mp4</a>
@@ -53,7 +52,7 @@ HTML;
 	public function testFilter() {
 
 		// Setup.
-		$component = $this->_get_component();
+		$component = $this->get_component();
 		add_filter(
 			'apple_news_video_json',
 			array( $this, 'filter_apple_news_video_json' )
@@ -79,11 +78,7 @@ HTML;
 	 * @access public
 	 */
 	public function testCaption() {
-		$workspace = $this->prophet->prophesize( '\Exporter\Workspace' );
-
-		// Pass the workspace as a dependency.
-		$component = new Video( '<figure class="wp-block-video"><video controls="" src="http://www.url.com/test.mp4"/><figcaption>caption</figcaption></figure>',
-			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
+		$component = $this->get_component( '<figure class="wp-block-video"><video controls="" src="http://www.url.com/test.mp4"/><figcaption>caption</figcaption></figure>' );
 
 		// Test.
 		$this->assertEquals(
@@ -103,7 +98,6 @@ HTML;
 			),
 			$component->to_array()
 		);
-		$html = '';
 	}
 
 	/**
@@ -115,7 +109,7 @@ HTML;
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
-		$component = $this->_get_component();
+		$component = $this->get_component();
 
 		// Test.
 		$result = $component->to_array();
@@ -136,25 +130,18 @@ HTML;
 	/**
 	 * A function to get a basic component for testing using defined content.
 	 *
+	 * @param string $content HTML for the component.
+	 *
 	 * @access private
 	 * @return Video A Video object containing the specified content.
 	 */
-	private function _get_component( $content = '' ) {
-
-		// Negotiate content.
-		if ( empty( $content ) ) {
-			$content = $this->_content;
-		}
-
-		// Build the component.
-		$component = new Video(
-			$content,
-			new Workspace( 1 ),
+	private function get_component( $content = '' ) {
+		return new Video(
+			! empty( $content ) ? $content : $this->video_content,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
 		);
-
-		return $component;
 	}
 }

@@ -316,7 +316,7 @@ HTML;
 		$content = new Exporter_Content( 3, 'Title', $content, null, $cover );
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
@@ -385,7 +385,7 @@ HTML;
 		);
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
@@ -463,7 +463,7 @@ HTML;
 		$this->set_theme_settings( [ 'body_line_height' => 0 ] );
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
