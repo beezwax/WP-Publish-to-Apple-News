@@ -1,21 +1,21 @@
 <?php
 /**
- * Publish to Apple News Tests: Byline_Test class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Byline.
+ * Publish to Apple News tests: Byline_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
-
-require_once __DIR__ . '/class-component-testcase.php';
 
 use Apple_Exporter\Components\Byline;
 use Apple_Exporter\Exporter;
 use Apple_Exporter\Exporter_Content;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Byline class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Byline class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Byline_Test extends Component_TestCase {
 
@@ -43,7 +43,7 @@ class Byline_Test extends Component_TestCase {
 		// Setup.
 		$component = new Byline(
 			'This is the byline',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -89,18 +89,18 @@ class Byline_Test extends Component_TestCase {
 		);
 
 		// Set byline settings.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['byline_font'] = 'AmericanTypewriter';
-		$settings['byline_size'] = 20;
-		$settings['byline_color'] = '#abcdef';
-		$settings['byline_line_height'] = 28;
-		$settings['byline_tracking'] = 50;
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings(
+			[
+				'byline_font'        => 'AmericanTypewriter',
+				'byline_size'        => 20,
+				'byline_color'       => '#abcdef',
+				'byline_line_height' => 28,
+				'byline_tracking'    => 50,
+			]
+		);
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
@@ -138,7 +138,7 @@ class Byline_Test extends Component_TestCase {
 		// Setup.
 		$component = new Byline(
 			'This is the byline',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts

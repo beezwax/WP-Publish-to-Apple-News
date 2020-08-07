@@ -1,20 +1,19 @@
 <?php
 /**
- * Publish to Apple News Tests: Cover_Test class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Cover.
+ * Publish to Apple News tests: Cover_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/class-component-testcase.php';
-
 use Apple_Exporter\Components\Cover;
-use Apple_Exporter\Workspace;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Cover class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Cover class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Cover_Test extends Component_TestCase {
 
@@ -24,12 +23,15 @@ class Cover_Test extends Component_TestCase {
 	public function testGeneratedJSON() {
 		$this->settings->set( 'use_remote_images', 'no' );
 
-		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
-		// get_file_contents and write_tmp_files must be caleld with the specified params
-		$workspace->bundle_source( 'filename.jpg', 'http://someurl.com/filename.jpg' )->shouldBeCalled();
+		$this->prophecized_workspace->bundle_source( 'filename.jpg', 'http://someurl.com/filename.jpg' )->shouldBeCalled();
 
-		$component = new Cover( 'http://someurl.com/filename.jpg',
-			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
+		$component = new Cover(
+			'http://someurl.com/filename.jpg',
+			$this->prophecized_workspace->reveal(),
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
 
 		$this->assertEquals(
 			array(
@@ -56,12 +58,16 @@ class Cover_Test extends Component_TestCase {
 	 */
 	public function testGeneratedJSONRemoteImages() {
 		$this->settings->set( 'use_remote_images', 'yes' );
-		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
-		// get_file_contents and write_tmp_files must be caleld with the specified params
-		$workspace->bundle_source( 'filename.jpg', 'http://someurl.com/filename.jpg' )->shouldNotBeCalled();
 
-		$component = new Cover( 'http://someurl.com/filename.jpg',
-			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
+		$this->prophecized_workspace->bundle_source( 'filename.jpg', 'http://someurl.com/filename.jpg' )->shouldNotBeCalled();
+
+		$component = new Cover(
+			'http://someurl.com/filename.jpg',
+			$this->prophecized_workspace->reveal(),
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
 
 		$this->assertEquals(
 			array(
@@ -90,13 +96,13 @@ class Cover_Test extends Component_TestCase {
 		$this->settings->set( 'use_remote_images', 'yes' );
 
 		// Create dummy post and attachment.
-		$file    = dirname( dirname( __DIR__ ) ) . '/data/test-image.jpg';
 		$post_id = self::factory()->post->create();
-		$image   = self::factory()->attachment->create_upload_object( $file, $post_id );
+		$image   = $this->get_new_attachment( $post_id );
+		$this->set_workspace_post_id( $post_id );
 
 		$component = new Cover(
 			wp_get_attachment_url( $image ),
-			new Workspace( $post_id ),
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -129,16 +135,16 @@ class Cover_Test extends Component_TestCase {
 		$this->settings->set( 'use_remote_images', 'yes' );
 
 		// Create dummy post and attachment.
-		$file    = dirname( dirname( __DIR__ ) ) . '/data/test-image.jpg';
 		$post_id = self::factory()->post->create();
-		$image   = self::factory()->attachment->create_upload_object( $file, $post_id );
+		$image   = $this->get_new_attachment( $post_id );
+		$this->set_workspace_post_id( $post_id );
 
 		$component = new Cover(
 			[
 				'caption' => 'Test Caption',
 				'url'     => wp_get_attachment_url( $image ),
 			],
-			new Workspace( $post_id ),
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -186,18 +192,24 @@ class Cover_Test extends Component_TestCase {
 	public function testFilter() {
 		$this->settings->set( 'use_remote_images', 'no' );
 
-		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
-		// get_file_contents and write_tmp_files must be caleld with the specified params
-		$workspace->bundle_source( 'filename.jpg', 'http://someurl.com/filename.jpg' )->shouldBeCalled();
+		$this->prophecized_workspace->bundle_source( 'filename.jpg', 'http://someurl.com/filename.jpg' )->shouldBeCalled();
 
-		$component = new Cover( 'http://someurl.com/filename.jpg',
-			$workspace->reveal(), $this->settings, $this->styles, $this->layouts );
+		$component = new Cover(
+			'http://someurl.com/filename.jpg',
+			$this->prophecized_workspace->reveal(),
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
 
-		add_filter( 'apple_news_cover_json', function ( $json ) {
-			$json['behavior']['type'] = 'background_motion';
+		add_filter(
+			'apple_news_cover_json',
+			function ( $json ) {
+				$json['behavior']['type'] = 'background_motion';
 
-			return $json;
-		} );
+				return $json;
+			}
+		);
 
 		$this->assertEquals(
 			array(

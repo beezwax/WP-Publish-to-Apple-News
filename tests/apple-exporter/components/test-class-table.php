@@ -1,21 +1,21 @@
 <?php
 /**
- * Publish to Apple News Tests: Table_Test class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Table.
+ * Publish to Apple News tests: Table_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
-
-require_once __DIR__ . '/class-component-testcase.php';
 
 use Apple_Exporter\Exporter;
 use Apple_Exporter\Exporter_Content;
 use Apple_Exporter\Components\Table;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Table class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Table class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Table_Test extends Component_TestCase {
 
@@ -28,8 +28,6 @@ class Table_Test extends Component_TestCase {
 
 		// Run the parent setup function (not done automatically).
 		parent::setup();
-
-		// Turn on HTML support globally in the
 
 		// Create an example table to use in tests.
 		$this->html = <<<HTML
@@ -66,7 +64,7 @@ HTML;
 	public function testCaptions() {
 		$component = new Table(
 			$this->html_caption,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts,
@@ -106,7 +104,7 @@ HTML;
 		// Setup.
 		$component = new Table(
 			$this->html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts,
@@ -141,34 +139,34 @@ HTML;
 		);
 
 		// Set table settings.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['table_border_color'] = '#abcdef';
-		$settings['table_border_style'] = 'dashed';
-		$settings['table_border_width'] = 5;
-		$settings['table_body_background_color'] = '#fedcba';
-		$settings['table_body_color'] = '#123456';
-		$settings['table_body_font'] = 'AmericanTypewriter';
-		$settings['table_body_horizontal_alignment'] = 'center';
-		$settings['table_body_line_height'] = 1;
-		$settings['table_body_padding'] = 2;
-		$settings['table_body_size'] = 3;
-		$settings['table_body_tracking'] = 4;
-		$settings['table_body_vertical_alignment'] = 'bottom';
-		$settings['table_header_background_color'] = '#654321';
-		$settings['table_header_color'] = '#987654';
-		$settings['table_header_font'] = 'Menlo-Regular';
-		$settings['table_header_horizontal_alignment'] = 'right';
-		$settings['table_header_line_height'] = 5;
-		$settings['table_header_padding'] = 6;
-		$settings['table_header_size'] = 7;
-		$settings['table_header_tracking'] = 8;
-		$settings['table_header_vertical_alignment'] = 'top';
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings(
+			[
+				'table_border_color'                => '#abcdef',
+				'table_border_style'                => 'dashed',
+				'table_border_width'                => 5,
+				'table_body_background_color'       => '#fedcba',
+				'table_body_color'                  => '#123456',
+				'table_body_font'                   => 'AmericanTypewriter',
+				'table_body_horizontal_alignment'   => 'center',
+				'table_body_line_height'            => 1,
+				'table_body_padding'                => 2,
+				'table_body_size'                   => 3,
+				'table_body_tracking'               => 4,
+				'table_body_vertical_alignment'     => 'bottom',
+				'table_header_background_color'     => '#654321',
+				'table_header_color'                => '#987654',
+				'table_header_font'                 => 'Menlo-Regular',
+				'table_header_horizontal_alignment' => 'right',
+				'table_header_line_height'          => 5,
+				'table_header_padding'              => 6,
+				'table_header_size'                 => 7,
+				'table_header_tracking'             => 8,
+				'table_header_vertical_alignment'   => 'top',
+			]
+		);
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );

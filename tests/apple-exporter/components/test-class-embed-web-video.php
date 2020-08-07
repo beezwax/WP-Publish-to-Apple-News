@@ -1,17 +1,19 @@
 <?php
 /**
- * Publish to Apple News Tests: Embed_Web_Video_Test class
+ * Publish to Apple News tests: Embed_Web_Video_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/class-component-testcase.php';
-
-use Apple_Exporter\Components\Embed_Web_Video as Embed_Web_Video;
+use Apple_Exporter\Components\Embed_Web_Video;
 
 /**
- * A class to test the behavior of the Embed_Web_Video component.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Embed_Web_Video class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Embed_Web_Video_Test extends Component_TestCase {
 
@@ -139,7 +141,7 @@ class Embed_Web_Video_Test extends Component_TestCase {
 		);
 		$component = new Embed_Web_Video(
 			'<p>https://vimeo.com/12819723</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -181,7 +183,7 @@ class Embed_Web_Video_Test extends Component_TestCase {
 		// Setup.
 		$component = new Embed_Web_Video(
 			$html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -208,7 +210,7 @@ class Embed_Web_Video_Test extends Component_TestCase {
 		// Setup.
 		$component = new Embed_Web_Video(
 			'<iframe src="//player.notvimeo.com/video/12819723" width="560" height="315" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
