@@ -61,6 +61,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Bugfix: Removed extra space between an image and its caption.
 * Bugfix: If a custom excerpt is used, but the custom excerpt repeats text in its entirety from elsewhere in the article (e.g., the first paragraph), then the Intro component will be skipped. This prevents an issue where Apple will flag articles that contain repeated text due to the Intro component using a custom excerpt suitable in a WordPress context but not an Apple News context.
 * Bugfix: Select menus are no longer oversized on the settings page.
+* Updated filter name for `get_sections_for_post` to `apple_news_get_sections_for_post`.
 
 = 2.0.8 =
 * Enhancement: Adds styles for Button elements that are links which are added by the Gutenberg editor.
