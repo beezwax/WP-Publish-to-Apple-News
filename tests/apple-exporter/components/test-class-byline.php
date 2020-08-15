@@ -126,6 +126,30 @@ class Byline_Test extends Component_TestCase {
 			0.5,
 			$json['componentTextStyles']['default-byline']['tracking']
 		);
+		$this->assertFalse(
+			isset( $json['componentTextStyles']['default-byline']['conditional'] )
+		);
+	}
+
+	/**
+	 * Test the setting for dark mode byline text color
+	 *
+	 * @access public
+	 */
+	public function testDarkModeColor() {
+		// Setup.
+		$this->set_theme_settings(
+			[
+				'byline_color_dark' => '#123456'
+			]
+		);
+
+		$post_id = self::factory()->post->create();
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			'#123456',
+			$json['componentTextStyles']['default-byline']['conditional']['textColor']
+		);
 	}
 
 	/**

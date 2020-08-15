@@ -26,6 +26,7 @@ class Cover extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
+		$theme = \Apple_Exporter\Theme::get_used();
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
@@ -45,6 +46,18 @@ class Cover extends Component {
 				),
 			)
 		);
+
+		$conditional = array();
+		if ( ! empty( $theme->get_value( 'caption_color_dark' ) ) ) {
+			$conditional = array(
+				'conditional' => array(
+					'textColor' => '#caption_color_dark#',
+					'conditions' => array(
+						'preferredColorScheme' => 'dark',
+					)
+				)
+			);
+		}
 
 		$this->register_spec(
 			'jsonWithCaption',
@@ -66,13 +79,15 @@ class Cover extends Component {
 						'role'      => 'caption',
 						'text'      => '#caption#',
 						'format'    => 'html',
-						'textStyle' => array(
-							'textAlignment' => '#text_alignment#',
-							'fontName'      => '#caption_font#',
-							'fontSize'      => '#caption_size#',
-							'tracking'      => '#caption_tracking#',
-							'lineHeight'    => '#caption_line_height#',
-							'textColor'     => '#caption_color#',
+						'textStyle' => (
+							array(
+								'textAlignment' => '#text_alignment#',
+								'fontName'      => '#caption_font#',
+								'fontSize'      => '#caption_size#',
+								'tracking'      => '#caption_tracking#',
+								'lineHeight'    => '#caption_line_height#',
+								'textColor'     => '#caption_color#',
+							) + $conditional
 						),
 					),
 				),

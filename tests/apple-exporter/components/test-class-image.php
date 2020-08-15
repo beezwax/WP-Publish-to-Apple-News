@@ -279,6 +279,38 @@ HTML;
 	}
 
 	/**
+	 * Tests dark color setting for image captions
+	 *
+	 * @access public
+	 */
+	public function testDarkColors() {
+		$this->set_theme_settings(
+			[
+				'caption_color_dark'       => '#abcdef',
+			]
+		);
+
+		$html = <<<HTML
+<figure>
+	<img src="http://someurl.com/filename.jpg" alt="Example">
+	<figcaption class="wp-caption-text">Caption Text</figcaption>
+</figure>
+HTML;
+		$component = new Image(
+			$html,
+			$this->workspace,
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
+		$result = $component->to_array();
+		$this->assertEquals(
+			'#abcdef',
+			$result['components'][1]['textStyle']['conditional']['textColor']
+		);
+	}
+
+	/**
 	 * Tests image and image caption settings.
 	 *
 	 * @access public
@@ -332,6 +364,9 @@ HTML;
 		$this->assertEquals(
 			0.5,
 			$result['components'][1]['textStyle']['tracking']
+		);
+		$this->assertFalse(
+			isset( $json['components'][1]['textStyle']['conditional'] )
 		);
 	}
 }

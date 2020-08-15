@@ -72,6 +72,8 @@ class Body extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
+		$theme = \Apple_Exporter\Theme::get_used();
+		$default_spec = $this->get_default_style_spec();
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
@@ -111,8 +113,37 @@ class Body extends Component {
 		$this->register_spec(
 			'default-body',
 			__( 'Default Style', 'apple-news' ),
-			$this->get_default_style_spec()
+			$default_spec
 		);
+
+		$dropcap_color_dark = $theme->get_value( 'dropcap_color_dark' );
+		$dropcap_background_color_dark = $theme->get_value( 'dropcap_background_color_dark' );;
+		$dark_colors_exist = ! empty( $dropcap_color_dark ) || ! empty( $dropcap_background_color_dark );
+
+		$conditional = array();
+		if ( $dark_colors_exist ) {
+			$conditional = array(
+				'conditional' => array_merge(
+						array(
+						'dropCapStyle' => array(
+							'numberOfLines'       => '#dropcap_number_of_lines#',
+						),
+						'conditions' => array(
+							'preferredColorScheme' => 'dark',
+						)
+					),
+					$default_spec['conditional']
+				)
+			);
+		}
+
+		if ( ! empty( $dropcap_color_dark ) ) {
+			$conditional['conditional']['dropCapStyle']['textColor'] = '#dropcap_color_dark#';
+		}
+		
+		if ( ! empty( $dropcap_background_color_dark ) ) {
+			$conditional['conditional']['dropCapStyle']['backgroundColor'] = '#dropcap_background_color_dark#';
+		}
 
 		$this->register_spec(
 			'dropcapBodyStyle',
@@ -129,7 +160,8 @@ class Body extends Component {
 						'numberOfRaisedLines' => '#dropcap_number_of_raised_lines#',
 						'backgroundColor'     => '#dropcap_background_color#',
 					),
-				)
+				),
+				$conditional
 			)
 		);
 	}
@@ -300,18 +332,46 @@ class Body extends Component {
 	 * @access private
 	 */
 	private function get_default_style_spec() {
-		return array(
-			'textAlignment'          => 'left',
-			'fontName'               => '#body_font#',
-			'fontSize'               => '#body_size#',
-			'tracking'               => '#body_tracking#',
-			'lineHeight'             => '#body_line_height#',
-			'textColor'              => '#body_color#',
-			'linkStyle'              => array(
-				'textColor' => '#body_link_color#',
-			),
-			'paragraphSpacingBefore' => 18,
-			'paragraphSpacingAfter'  => 18,
+		$theme = \Apple_Exporter\Theme::get_used();
+		$body_color_dark = $theme->get_value( 'body_color_dark' );
+		$body_link_color_dark = $theme->get_value( 'body_link_color_dark' );
+		$dark_colors_exist = ! empty( $body_color_dark ) || ! empty( $body_link_color_dark );
+
+		$conditional = array();
+		if ( $dark_colors_exist ) {
+			$conditional = array(
+				'conditional' => array(
+					'conditions' => array(
+						'preferredColorScheme' => 'dark',
+					)
+				)
+			);
+		}
+
+		if ( ! empty( $body_color_dark ) ) {
+			$conditional['conditional']['textColor'] = '#body_color_dark#';
+		}
+		
+		if ( ! empty( $body_link_color_dark ) ) {
+			$conditional['conditional']['linkStyle'] = array(
+				'textColor' => '#body_link_color_dark#'
+			);
+		}
+
+		return (
+			array(
+				'textAlignment'          => 'left',
+				'fontName'               => '#body_font#',
+				'fontSize'               => '#body_size#',
+				'tracking'               => '#body_tracking#',
+				'lineHeight'             => '#body_line_height#',
+				'textColor'              => '#body_color#',
+				'linkStyle'              => array(
+					'textColor' => '#body_link_color#',
+				),
+				'paragraphSpacingBefore' => 18,
+				'paragraphSpacingAfter'  => 18,
+			) + $conditional
 		);
 	}
 
@@ -327,12 +387,14 @@ class Body extends Component {
 		$theme = \Apple_Exporter\Theme::get_used();
 
 		return array(
-			'#body_font#'        => $theme->get_value( 'body_font' ),
-			'#body_size#'        => intval( $theme->get_value( 'body_size' ) ),
-			'#body_tracking#'    => intval( $theme->get_value( 'body_tracking' ) ) / 100,
-			'#body_line_height#' => intval( $theme->get_value( 'body_line_height' ) ),
-			'#body_color#'       => $theme->get_value( 'body_color' ),
-			'#body_link_color#'  => $theme->get_value( 'body_link_color' ),
+			'#body_font#'            => $theme->get_value( 'body_font' ),
+			'#body_size#'            => intval( $theme->get_value( 'body_size' ) ),
+			'#body_tracking#'        => intval( $theme->get_value( 'body_tracking' ) ) / 100,
+			'#body_line_height#'     => intval( $theme->get_value( 'body_line_height' ) ),
+			'#body_color#'           => $theme->get_value( 'body_color' ),
+			'#body_link_color#'      => $theme->get_value( 'body_link_color' ),
+			'#body_color_dark#'      => $theme->get_value( 'body_color_dark' ),
+			'#body_link_color_dark#' => $theme->get_value( 'body_link_color_dark' ),
 		);
 	}
 

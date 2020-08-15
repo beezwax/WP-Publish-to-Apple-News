@@ -571,8 +571,18 @@ class Theme {
 				'label'   => __( 'Blockquote background color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'blockquote_background_color_dark'       => array(
+				'default' => '',
+				'label'   => __( 'Blockquote background color', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'blockquote_border_color'           => array(
 				'default' => '#4f4f4f',
+				'label'   => __( 'Blockquote border color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'blockquote_border_color_dark'           => array(
+				'default' => '',
 				'label'   => __( 'Blockquote border color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -589,6 +599,11 @@ class Theme {
 			),
 			'blockquote_color'                  => array(
 				'default' => '#4f4f4f',
+				'label'   => __( 'Blockquote color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'blockquote_color_dark'                  => array(
+				'default' => '',
 				'label'   => __( 'Blockquote color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -618,8 +633,18 @@ class Theme {
 				'label'   => __( 'Body background color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'body_background_color_dark'             => array(
+				'default' => '',
+				'label'   => __( 'Body background color', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'body_color'                        => array(
 				'default' => '#4f4f4f',
+				'label'   => __( 'Body font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'body_color_dark'                        => array(
+				'default' => '',
 				'label'   => __( 'Body font color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -635,6 +660,11 @@ class Theme {
 			),
 			'body_link_color'                   => array(
 				'default' => '#428bca',
+				'label'   => __( 'Body font hyperlink color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'body_link_color_dark'                   => array(
+				'default' => '',
 				'label'   => __( 'Body font hyperlink color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -658,6 +688,11 @@ class Theme {
 			),
 			'byline_color'                      => array(
 				'default' => '#7c7c7c',
+				'label'   => __( 'Byline font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'byline_color_dark'                      => array(
+				'default' => '',
 				'label'   => __( 'Byline font color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -693,6 +728,11 @@ class Theme {
 				'label'   => __( 'Caption font color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'caption_color_dark'                     => array(
+				'default' => '',
+				'label'   => __( 'Caption font color', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'caption_font'                      => array(
 				'default' => 'AvenirNext-Italic',
 				'label'   => __( 'Caption font face', 'apple-news' ),
@@ -714,13 +754,28 @@ class Theme {
 				'label'       => __( 'Caption tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
+			'dark_mode_colors_heading'					=> array(
+				'label' => __( 'Dark Mode Colors', 'apple-news' ),
+				'description' => __( 'Colors specific to Apple News Dark Mode', 'apple-news' ),
+				'type' => 'group_heading',
+			),
 			'dropcap_background_color'          => array(
+				'default' => '',
+				'label'   => __( 'Drop cap background color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'dropcap_background_color_dark'          => array(
 				'default' => '',
 				'label'   => __( 'Drop cap background color', 'apple-news' ),
 				'type'    => 'color',
 			),
 			'dropcap_color'                     => array(
 				'default' => '#4f4f4f',
+				'label'   => __( 'Drop cap font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'dropcap_color_dark'                     => array(
+				'default' => '',
 				'label'   => __( 'Drop cap font color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -767,6 +822,11 @@ class Theme {
 				'label'   => __( 'Header 1 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'header1_color_dark'                     => array(
+				'default' => '',
+				'label'   => __( 'Header 1 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'header1_font'                      => array(
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Header 1 font face', 'apple-news' ),
@@ -790,6 +850,11 @@ class Theme {
 			),
 			'header2_color'                     => array(
 				'default' => '#333333',
+				'label'   => __( 'Header 2 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'header2_color_dark'                     => array(
+				'default' => '',
 				'label'   => __( 'Header 2 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -819,6 +884,11 @@ class Theme {
 				'label'   => __( 'Header 3 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'header3_color_dark'                     => array(
+				'default' => '',
+				'label'   => __( 'Header 3 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'header3_font'                      => array(
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Header 3 font face', 'apple-news' ),
@@ -842,6 +912,11 @@ class Theme {
 			),
 			'header4_color'                     => array(
 				'default' => '#333333',
+				'label'   => __( 'Header 4 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'header4_color_dark'                     => array(
+				'default' => '',
 				'label'   => __( 'Header 4 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -871,6 +946,11 @@ class Theme {
 				'label'   => __( 'Header 5 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'header5_color_dark'                     => array(
+				'default' => '',
+				'label'   => __( 'Header 5 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'header5_font'                      => array(
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Header 5 font face', 'apple-news' ),
@@ -894,6 +974,11 @@ class Theme {
 			),
 			'header6_color'                     => array(
 				'default' => '#333333',
+				'label'   => __( 'Header 6 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'header6_color_dark'                     => array(
+				'default' => '',
 				'label'   => __( 'Header 6 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -954,6 +1039,11 @@ class Theme {
 				'label'   => __( 'Monospaced font color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'monospaced_color_dark'                  => array(
+				'default' => '',
+				'label'   => __( 'Monospaced font color', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'monospaced_font'                   => array(
 				'default' => 'Menlo-Regular',
 				'label'   => __( 'Monospaced font face', 'apple-news' ),
@@ -976,7 +1066,12 @@ class Theme {
 				'type'        => 'integer',
 			),
 			'pullquote_border_color'            => array(
-				'default' => '#53585f',
+				'default' => '',
+				'label'   => __( 'Pull quote border color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'pullquote_border_color_dark'            => array(
+				'default' => '',
 				'label'   => __( 'Pull quote border color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -992,6 +1087,11 @@ class Theme {
 				'type'    => 'integer',
 			),
 			'pullquote_color'                   => array(
+				'default' => '#53585f',
+				'label'   => __( 'Pull quote color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'pullquote_color_dark'                   => array(
 				'default' => '#53585f',
 				'label'   => __( 'Pull quote color', 'apple-news' ),
 				'type'    => 'color',
@@ -1041,8 +1141,18 @@ class Theme {
 				'label'   => __( 'Table body background color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'table_body_background_color_dark'       => array(
+				'default' => '',
+				'label'   => __( 'Table body background color', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'table_body_color'                  => array(
 				'default' => '#4f4f4f',
+				'label'   => __( 'Table body font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'table_body_color_dark'                  => array(
+				'default' => '',
 				'label'   => __( 'Table body font color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -1089,6 +1199,11 @@ class Theme {
 				'label'   => __( 'Table border color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'table_border_color_dark'                => array(
+				'default' => '',
+				'label'   => __( 'Table border color', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'table_border_style'                => array(
 				'default' => 'solid',
 				'label'   => __( 'Table border style', 'apple-news' ),
@@ -1105,8 +1220,18 @@ class Theme {
 				'label'   => __( 'Table header background color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'table_header_background_color_dark'     => array(
+				'default' => '',
+				'label'   => __( 'Table header background color', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'table_header_color'                => array(
 				'default' => '#4f4f4f',
+				'label'   => __( 'Table header font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'table_header_color_dark'                => array(
+				'default' => '',
 				'label'   => __( 'Table header font color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -1828,6 +1953,10 @@ class Theme {
 					'body_link_color',
 					'body_background_color',
 					'body_orientation',
+					'dark_mode_colors_heading',
+					'body_color_dark',
+					'body_link_color_dark',
+					'body_background_color_dark',
 				),
 			),
 			'dropcap'         => array(
@@ -1841,6 +1970,9 @@ class Theme {
 					'dropcap_number_of_lines',
 					'dropcap_number_of_raised_lines',
 					'dropcap_padding',
+					'dark_mode_colors_heading',
+					'dropcap_background_color_dark',
+					'dropcap_color_dark',
 				),
 			),
 			'byline'          => array(
@@ -1853,6 +1985,8 @@ class Theme {
 					'byline_tracking',
 					'byline_color',
 					'byline_format',
+					'dark_mode_colors_heading',
+					'byline_color_dark',
 				),
 			),
 			'heading1'        => array(
@@ -1863,6 +1997,8 @@ class Theme {
 					'header1_size',
 					'header1_line_height',
 					'header1_tracking',
+					'dark_mode_colors_heading',
+					'header1_color_dark',
 				),
 			),
 			'heading2'        => array(
@@ -1873,6 +2009,9 @@ class Theme {
 					'header2_size',
 					'header2_line_height',
 					'header2_tracking',
+					'dark_mode_colors_heading',
+					'header2_color_dark',
+
 				),
 			),
 			'heading3'        => array(
@@ -1883,6 +2022,8 @@ class Theme {
 					'header3_size',
 					'header3_line_height',
 					'header3_tracking',
+					'dark_mode_colors_heading',
+					'header3_color_dark',
 				),
 			),
 			'heading4'        => array(
@@ -1893,6 +2034,8 @@ class Theme {
 					'header4_size',
 					'header4_line_height',
 					'header4_tracking',
+					'dark_mode_colors_heading',
+					'header4_color_dark',
 				),
 			),
 			'heading5'        => array(
@@ -1903,6 +2046,8 @@ class Theme {
 					'header5_size',
 					'header5_line_height',
 					'header5_tracking',
+					'dark_mode_colors_heading',
+					'header5_color_dark',
 				),
 			),
 			'heading6'        => array(
@@ -1913,6 +2058,8 @@ class Theme {
 					'header6_size',
 					'header6_line_height',
 					'header6_tracking',
+					'dark_mode_colors_heading',
+					'header6_color_dark',
 				),
 			),
 			'caption'         => array(
@@ -1923,6 +2070,8 @@ class Theme {
 					'caption_line_height',
 					'caption_tracking',
 					'caption_color',
+					'dark_mode_colors_heading',
+					'caption_color_dark',
 				),
 			),
 			'pullquote'       => array(
@@ -1943,6 +2092,9 @@ class Theme {
 					'pullquote_border_color',
 					'pullquote_border_width',
 					'pullquote_transform',
+					'dark_mode_colors_heading',
+					'pullquote_color_dark',
+					'pullquote_border_color_dark',
 				),
 			),
 			'blockquote'      => array(
@@ -1957,6 +2109,10 @@ class Theme {
 					'blockquote_border_color',
 					'blockquote_border_width',
 					'blockquote_background_color',
+					'dark_mode_colors_heading',
+					'blockquote_color_dark',
+					'blockquote_border_color_dark',
+					'blockquote_background_color_dark',
 				),
 			),
 			'table'           => array(
@@ -1983,6 +2139,12 @@ class Theme {
 					'table_header_size',
 					'table_header_tracking',
 					'table_header_vertical_alignment',
+					'dark_mode_colors_heading',
+					'table_border_color_dark',
+					'table_body_background_color_dark',
+					'table_body_color_dark',
+					'table_header_background_color_dark',
+					'table_header_color_dark',
 				),
 			),
 			'monospaced'      => array(
@@ -1993,6 +2155,8 @@ class Theme {
 					'monospaced_line_height',
 					'monospaced_tracking',
 					'monospaced_color',
+					'dark_mode_colors_heading',
+					'monospaced_color_dark',
 				),
 			),
 			'gallery'         => array(
