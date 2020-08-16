@@ -17,8 +17,9 @@ add_action(
 			'apple-news/v1',
 			'/get-notifications',
 			[
-				'methods'  => 'GET',
-				'callback' => [ 'Admin_Apple_Notice', 'get' ],
+				'methods'             => 'GET',
+				'callback'            => [ 'Admin_Apple_Notice', 'get' ],
+				'permission_callback' => '__return_true',
 			]
 		);
 	}

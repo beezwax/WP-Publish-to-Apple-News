@@ -48,8 +48,9 @@ add_action(
 			'apple-news/v1',
 			'/get-settings',
 			[
-				'methods'  => 'GET',
-				'callback' => __NAMESPACE__ . '\get_settings_response',
+				'methods'             => 'GET',
+				'callback'            => __NAMESPACE__ . '\get_settings_response',
+				'permission_callback' => '__return_true',
 			]
 		);
 	}
