@@ -97,11 +97,11 @@ class Text_Styles extends Builder {
 		if ( ! empty( $theme->get_value( 'monospaced_color_dark' ) ) ) {
 			$conditional = array(
 				'conditional' => array(
-					'textColor' => $theme->get_value( 'monospaced_color_dark' ),
+					'textColor'  => $theme->get_value( 'monospaced_color_dark' ),
 					'conditions' => array(
 						'preferredColorScheme' => 'dark',
-					)
-				)
+					),
+				),
 			);
 		}
 

@@ -46,12 +46,12 @@ class Byline extends Component {
 				) + (
 					! empty( $theme->get_value( 'byline_color_dark' ) )
 						? array(
-							'conditional'   => array(
-								'textColor' => '#byline_color_dark#',
+							'conditional' => array(
+								'textColor'  => '#byline_color_dark#',
 								'conditions' => array(
 									'preferredColorScheme' => 'dark',
 								),
-							)
+							),
 						)
 						: array()
 				)

@@ -44,11 +44,11 @@
 										<label class="setting-container">
 											<?php if ( ! empty( $theme_options[ $apple_setting_name ]['label'] ) ) : ?>
 												<span class="label-name">
-													<?php if ( 'group_heading' === $theme_options[ $apple_setting_name ]['type'] ): ?>
+													<?php if ( 'group_heading' === $theme_options[ $apple_setting_name ]['type'] ) : ?>
 														<strong>
 													<?php endif; ?>
 													<?php echo esc_html( $theme_options[ $apple_setting_name ]['label'] ); ?>
-													<?php if ( 'group_heading' === $theme_options[ $apple_setting_name ]['type'] ): ?>
+													<?php if ( 'group_heading' === $theme_options[ $apple_setting_name ]['type'] ) : ?>
 														</strong>
 													<?php endif; ?>
 												</span>

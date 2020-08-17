@@ -72,7 +72,7 @@ class Body extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme        = \Apple_Exporter\Theme::get_used();
 		$default_spec = $this->get_default_style_spec();
 		$this->register_spec(
 			'json',
@@ -116,24 +116,25 @@ class Body extends Component {
 			$default_spec
 		);
 
-		$dropcap_color_dark = $theme->get_value( 'dropcap_color_dark' );
-		$dropcap_background_color_dark = $theme->get_value( 'dropcap_background_color_dark' );;
+		$dropcap_color_dark            = $theme->get_value( 'dropcap_color_dark' );
+		$dropcap_background_color_dark = $theme->get_value( 'dropcap_background_color_dark' );
+
 		$dark_colors_exist = ! empty( $dropcap_color_dark ) || ! empty( $dropcap_background_color_dark );
 
 		$conditional = array();
 		if ( $dark_colors_exist ) {
 			$conditional = array(
 				'conditional' => array_merge(
-						array(
+					array(
 						'dropCapStyle' => array(
-							'numberOfLines'       => '#dropcap_number_of_lines#',
+							'numberOfLines' => '#dropcap_number_of_lines#',
 						),
-						'conditions' => array(
+						'conditions'   => array(
 							'preferredColorScheme' => 'dark',
-						)
+						),
 					),
 					$default_spec['conditional']
-				)
+				),
 			);
 		}
 
@@ -332,10 +333,10 @@ class Body extends Component {
 	 * @access private
 	 */
 	private function get_default_style_spec() {
-		$theme = \Apple_Exporter\Theme::get_used();
-		$body_color_dark = $theme->get_value( 'body_color_dark' );
+		$theme                = \Apple_Exporter\Theme::get_used();
+		$body_color_dark      = $theme->get_value( 'body_color_dark' );
 		$body_link_color_dark = $theme->get_value( 'body_link_color_dark' );
-		$dark_colors_exist = ! empty( $body_color_dark ) || ! empty( $body_link_color_dark );
+		$dark_colors_exist    = ! empty( $body_color_dark ) || ! empty( $body_link_color_dark );
 
 		$conditional = array();
 		if ( $dark_colors_exist ) {
@@ -343,8 +344,8 @@ class Body extends Component {
 				'conditional' => array(
 					'conditions' => array(
 						'preferredColorScheme' => 'dark',
-					)
-				)
+					),
+				),
 			);
 		}
 
@@ -354,7 +355,7 @@ class Body extends Component {
 		
 		if ( ! empty( $body_link_color_dark ) ) {
 			$conditional['conditional']['linkStyle'] = array(
-				'textColor' => '#body_link_color_dark#'
+				'textColor' => '#body_link_color_dark#',
 			);
 		}
 

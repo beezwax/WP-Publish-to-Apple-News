@@ -37,11 +37,11 @@ class Title extends Component {
 		if ( ! empty( $theme->get_value( 'header1_color_dark' ) ) ) {
 			$conditional = array(
 				'conditional' => array(
-					'textColor' => '#header1_color_dark#',
+					'textColor'  => '#header1_color_dark#',
 					'conditions' => array(
 						'preferredColorScheme' => 'dark',
-					)
-				)
+					),
+				),
 			);
 		}
 

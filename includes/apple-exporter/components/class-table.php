@@ -99,14 +99,14 @@ class Table extends Component {
 		);
 
 		// Register the JSON for the table style.
-		$table_cell_base_conditional = array();
+		$table_cell_base_conditional    = array();
 		$table_row_col_base_conditional = array();
 		// Get Dark Table Colors
-		$table_border_color_dark = $theme->get_value( 'table_border_color_dark' );
-		$table_body_background_color_dark = $theme->get_value( 'table_body_background_color_dark' );
-		$table_body_color_dark = $theme->get_value( 'table_body_color_dark' );
+		$table_border_color_dark            = $theme->get_value( 'table_border_color_dark' );
+		$table_body_background_color_dark   = $theme->get_value( 'table_body_background_color_dark' );
+		$table_body_color_dark              = $theme->get_value( 'table_body_color_dark' );
 		$table_header_background_color_dark = $theme->get_value( 'table_header_background_color_dark' );
-		$table_header_color_dark = $theme->get_value( 'table_header_color_dark' );
+		$table_header_color_dark            = $theme->get_value( 'table_header_color_dark' );
 
 		// If all are empty, do not add conditional styles
 		$dark_table_colors_exist =
@@ -116,27 +116,27 @@ class Table extends Component {
 			! empty( $table_header_background_color_dark ) ||
 			! empty( $table_header_color_dark );
 		if ( $dark_table_colors_exist ) {
-			$table_cell_base_conditional = array(
+			$table_cell_base_conditional    = array(
 				array(
-					'selectors' => array(
+					'selectors'  => array(
 						array( 'evenRows' => true ),
-						array( 'oddRows' => true )
+						array( 'oddRows' => true ),
 					),
 					'conditions' => array(
-						'preferredColorScheme' => 'dark'
-					)
-				)
+						'preferredColorScheme' => 'dark',
+					),
+				),
 			);
 			$table_row_col_base_conditional = array(
 				array(
-					'selectors' => array(
+					'selectors'  => array(
 						array( 'even' => true ),
-						array( 'odd' => true )
+						array( 'odd' => true ),
 					),
 					'conditions' => array(
-						'preferredColorScheme' => 'dark'
-					)
-				)
+						'preferredColorScheme' => 'dark',
+					),
+				),
 			);
 		}
 
@@ -197,7 +197,7 @@ class Table extends Component {
 							'style' => '#table_border_style#',
 							'width' => '#table_border_width#',
 						),
-					)
+					),
 				),
 			);
 		}
@@ -215,9 +215,9 @@ class Table extends Component {
 						),
 					),
 					'conditions' => array(
-						'preferredColorScheme' => 'dark'
+						'preferredColorScheme' => 'dark',
 					),
-				)
+				),
 			);
 		}
 
@@ -279,7 +279,7 @@ class Table extends Component {
 									'color' => '#table_border_color#',
 									'style' => '#table_border_style#',
 									'width' => '#table_border_width#',
-								)
+								),
 							) + $dark_inner_border_conditional
 						),
 						'rows'        => (

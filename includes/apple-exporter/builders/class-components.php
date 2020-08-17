@@ -696,12 +696,12 @@ class Components extends Builder {
 			$conditional = array(
 				'conditional' => array(
 					'backgroundColor' => $theme->get_value( 'body_background_color_dark' ),
-					'conditions' => array(
+					'conditions'      => array(
 						'preferredColorScheme' => 'dark',
-					)
-				)
+					),
+				),
 			);
-		}		
+		}       
 		$regrouped_components = array(
 			'role'       => 'container',
 			'layout'     => array(

@@ -73,11 +73,11 @@ class Image extends Component {
 		if ( ! empty( $theme->get_value( 'caption_color_dark' ) ) ) {
 			$conditional = array(
 				'conditional' => array(
-					'textColor' => '#caption_color_dark#',
+					'textColor'  => '#caption_color_dark#',
 					'conditions' => array(
 						'preferredColorScheme' => 'dark',
-					)
-				)
+					),
+				),
 			);
 		}
 

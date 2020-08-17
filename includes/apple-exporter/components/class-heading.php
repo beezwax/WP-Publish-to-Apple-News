@@ -85,11 +85,11 @@ class Heading extends Component {
 			if ( ! empty( $theme->get_value( 'header' . $level . '_color_dark' ) ) ) {
 				$conditional = array(
 					'conditional' => array(
-						'textColor' => '#header' . $level . '_color_dark#',
+						'textColor'  => '#header' . $level . '_color_dark#',
 						'conditions' => array(
 							'preferredColorScheme' => 'dark',
-						)
-					)
+						),
+					),
 				);
 			}
 			$this->register_spec(

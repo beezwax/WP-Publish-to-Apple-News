@@ -79,10 +79,10 @@ class Quote extends Component {
 						'right'  => false,
 						'top'    => false,
 					),
-					'conditions' => array(
+					'conditions'      => array(
 						'preferredColorScheme' => 'dark',
-					)
-				)
+					),
+				),
 			);
 		}
 		$this->register_spec(
@@ -142,11 +142,11 @@ class Quote extends Component {
 		if ( ! empty( $theme->get_value( 'blockquote_color_dark' ) ) ) {
 			$blockquote_conditional_text_color = array(
 				'conditional' => array(
-					'textColor' => '#blockquote_color_dark#',
+					'textColor'  => '#blockquote_color_dark#',
 					'conditions' => array(
 						'preferredColorScheme' => 'dark',
-					)
-				)
+					),
+				),
 			);
 		}
 		$this->register_spec(
@@ -196,7 +196,7 @@ class Quote extends Component {
 		if ( ! empty( $theme->get_value( 'pullquote_border_color_dark' ) ) ) {
 			$pullquote_conditional_style = array(
 				'conditional' => array(
-					'border' => array(
+					'border'     => array(
 						'all'   => array(
 							'width' => '#pullquote_border_width#',
 							'style' => '#pullquote_border_style#',
@@ -207,8 +207,8 @@ class Quote extends Component {
 					),
 					'conditions' => array(
 						'preferredColorScheme' => 'dark',
-					)
-				)
+					),
+				),
 			);
 		}
 		$this->register_spec(
@@ -267,11 +267,11 @@ class Quote extends Component {
 		if ( ! empty( $theme->get_value( 'pullquote_color_dark' ) ) ) {
 			$pullquote_conditional_text_color = array(
 				'conditional' => array(
-					'textColor' => '#pullquote_color_dark#',
+					'textColor'  => '#pullquote_color_dark#',
 					'conditions' => array(
 						'preferredColorScheme' => 'dark',
-					)
-				)
+					),
+				),
 			);
 		}
 		$this->register_spec(
@@ -402,14 +402,14 @@ class Quote extends Component {
 
 		// Set JSON for this element.
 		$values = array(
-			'#body_offset#'                 => $theme->get_body_offset(),
-			'#body_column_span#'            => $theme->get_body_column_span(),
-			'#layout_gutter#'               => $theme->get_value( 'layout_gutter' ),
-			'#blockquote_background_color#' => $theme->get_value( 'blockquote_background_color' ),
+			'#body_offset#'                      => $theme->get_body_offset(),
+			'#body_column_span#'                 => $theme->get_body_column_span(),
+			'#layout_gutter#'                    => $theme->get_value( 'layout_gutter' ),
+			'#blockquote_background_color#'      => $theme->get_value( 'blockquote_background_color' ),
 			'#blockquote_background_color_dark#' => $theme->get_value( 'blockquote_background_color_dark' ),
-			'#text#'                        => $this->parser->parse( $text ),
-			'#format#'                      => $this->parser->format,
-			'#default_blockquote#'          => 'default-blockquote-' . $this->text_alignment,
+			'#text#'                             => $this->parser->parse( $text ),
+			'#format#'                           => $this->parser->format,
+			'#default_blockquote#'               => 'default-blockquote-' . $this->text_alignment,
 		);
 
 		// Set component attributes.
@@ -489,9 +489,9 @@ class Quote extends Component {
 		return array_merge(
 			$values,
 			array(
-				'#blockquote_border_width#' => $theme->get_value( 'blockquote_border_width' ),
-				'#blockquote_border_style#' => $theme->get_value( 'blockquote_border_style' ),
-				'#blockquote_border_color#' => $theme->get_value( 'blockquote_border_color' ),
+				'#blockquote_border_width#'      => $theme->get_value( 'blockquote_border_width' ),
+				'#blockquote_border_style#'      => $theme->get_value( 'blockquote_border_style' ),
+				'#blockquote_border_color#'      => $theme->get_value( 'blockquote_border_color' ),
 				'#blockquote_border_color_dark#' => $theme->get_value( 'blockquote_border_color_dark' ),
 			)
 		);
@@ -559,9 +559,9 @@ class Quote extends Component {
 		return array_merge(
 			$values,
 			array(
-				'#pullquote_border_width#' => $theme->get_value( 'pullquote_border_width' ),
-				'#pullquote_border_style#' => $theme->get_value( 'pullquote_border_style' ),
-				'#pullquote_border_color#' => $theme->get_value( 'pullquote_border_color' ),
+				'#pullquote_border_width#'      => $theme->get_value( 'pullquote_border_width' ),
+				'#pullquote_border_style#'      => $theme->get_value( 'pullquote_border_style' ),
+				'#pullquote_border_color#'      => $theme->get_value( 'pullquote_border_color' ),
 				'#pullquote_border_color_dark#' => $theme->get_value( 'pullquote_border_color_dark' ),
 			)
 		);
