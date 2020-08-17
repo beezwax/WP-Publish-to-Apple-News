@@ -257,7 +257,7 @@ class Body extends Component {
 	 * @access protected
 	 * @return bool Whether HTML format is enabled for this component type.
 	 */
-	protected function html_enabled( $enabled = true ) {
+	protected function html_enabled( $enabled = true ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 		return parent::html_enabled( $enabled );
 	}
 

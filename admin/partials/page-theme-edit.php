@@ -32,42 +32,42 @@
 					?>
 				</p>
 				<table class="form-table apple-news">
-					<?php foreach ( $theme->get_groups() as $group ) : ?>
-						<?php do_action( 'apple_news_before_setting_group', $group, false ); ?>
+					<?php foreach ( $theme->get_groups() as $apple_group ) : ?>
+						<?php do_action( 'apple_news_before_setting_group', $apple_group, false ); ?>
 						<tr>
-							<th scope="row"><?php echo esc_html( $group['label'] ); ?></th>
+							<th scope="row"><?php echo esc_html( $apple_group['label'] ); ?></th>
 							<td>
 								<fieldset>
-									<?php foreach ( $group['settings'] as $setting_name ) : ?>
-										<?php do_action( 'apple_news_before_setting', $setting_name, $theme_options[ $setting_name ] ); ?>
+									<?php foreach ( $apple_group['settings'] as $apple_setting_name ) : ?>
+										<?php do_action( 'apple_news_before_setting', $apple_setting_name, $theme_options[ $apple_setting_name ] ); ?>
 										<label class="setting-container">
-											<?php if ( ! empty( $theme_options[ $setting_name ]['label'] ) ) : ?>
-												<span class="label-name"><?php echo esc_html( $theme_options[ $setting_name ]['label'] ); ?></span>
+											<?php if ( ! empty( $theme_options[ $apple_setting_name ]['label'] ) ) : ?>
+												<span class="label-name"><?php echo esc_html( $theme_options[ $apple_setting_name ]['label'] ); ?></span>
 											<?php endif; ?>
 											<?php
 											echo wp_kses(
-												Admin_Apple_Themes::render_field( $theme, $setting_name ),
+												Admin_Apple_Themes::render_field( $theme, $apple_setting_name ),
 												Admin_Apple_Settings_Section::$allowed_html
 											);
 											?>
 										</label>
-										<?php do_action( 'apple_news_after_setting', $setting_name, $theme_options[ $setting_name ] ); ?>
+										<?php do_action( 'apple_news_after_setting', $apple_setting_name, $theme_options[ $apple_setting_name ] ); ?>
 										<br />
 									<?php endforeach; ?>
 
-									<?php if ( ! empty( $group['description'] ) ) : ?>
-										<p class="description"><?php echo '(' . wp_kses_post( $group['description'] ) . ')'; ?></p>
+									<?php if ( ! empty( $apple_group['description'] ) ) : ?>
+										<p class="description"><?php echo '(' . wp_kses_post( $apple_group['description'] ) . ')'; ?></p>
 									<?php endif; ?>
 								</fieldset>
 							</td>
 						</tr>
-						<?php do_action( 'apple_news_after_setting_group', $group, false ); ?>
+						<?php do_action( 'apple_news_after_setting_group', $apple_group, false ); ?>
 					<?php endforeach; ?>
 				</table>
 			</div>
 			<?php
-				$preview = new Admin_Apple_Preview();
-				$preview->get_preview_html( $theme->get_name() );
+				$apple_preview = new Admin_Apple_Preview();
+				$apple_preview->get_preview_html( $theme->get_name() );
 			?>
 		</div>
 		<p class="apple-news-theme-edit-buttons">

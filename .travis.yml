@@ -7,7 +7,6 @@ dist: xenial
 # Xenial does not start mysql by default
 services:
   - mysql
-  - memcached
 
 # Declare project language.
 # @link http://about.travis-ci.org/docs/user/languages/php/
@@ -17,6 +16,7 @@ language: php
 branches:
   only:
     - develop
+    - feature/v2.1.0
 
 cache:
   directories:
@@ -57,12 +57,12 @@ before_script:
   - |
     case "$TRAVIS_PHP_VERSION" in
       7.*)
-        echo "Using PHPUnit 6.1"
-        composer global require "phpunit/phpunit=6.1.*"
+        echo "Using PHPUnit 6.5"
+        composer global require "phpunit/phpunit=6.5.*"
         ;;
       *)
-        echo "Using PHPUnit 4.8"
-        composer global require "phpunit/phpunit=4.8.*"
+        echo "Using PHPUnit 5.7"
+        composer global require "phpunit/phpunit=5.7.*"
         ;;
     esac
 
@@ -82,7 +82,7 @@ before_script:
   # Set up jest.
   - |
     if [[ "$WP_JS" == "1" ]] ; then
-      nvm install 8
+      nvm install 12
       npm i -g npm@6
       npm install
     fi

@@ -31,3 +31,7 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 tests_add_filter( 'apple_news_block_editor_is_active', '__return_false' );
 
 require $_tests_dir . '/includes/bootstrap.php';
+
+require_once __DIR__ . '/class-apple-news-testcase.php';
+
+require_once __DIR__ . '/apple-exporter/components/class-component-testcase.php';

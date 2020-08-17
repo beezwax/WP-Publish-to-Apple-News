@@ -1,12 +1,34 @@
 <?php
+/**
+ * Publish to Apple News tests: Admin_Action_Index_Export_Test class
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
 
 use \Apple_Actions\Index\Export as Export;
-use \Apple_Exporter\Settings as Settings;
 
-class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
+/**
+ * A class to test the functionality of the Apple_Actions\Index\Export class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
+class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 
-	public function setup() {
-		$this->settings = new Settings();
+	/**
+	 * Returns an array of arrays representing function arguments to the
+	 * testBrightcoveVideo function.
+	 */
+	public function dataProviderBrightcoveVideo() {
+		return [
+			[
+				'<!-- wp:bc/brightcove {"account_id":"1234567890","player_id":"abcd1234-ef56-ab78-cd90-efa1234567890","video_id":"1234567890123","playlist_id":"","experience_id":"","video_ids":"","embed":"in-page","autoplay":"","playsinline":"","picture_in_picture":"","height":"100%","width":"100%","min_width":"0px","max_width":"640px","padding_top":"56%"} /-->',
+			],
+			[
+				'[bc_video video_id="1234567890123" account_id="1234567890" player_id="abcd1234-ef56-ab78-cd90-efa1234567890" embed="in-page" padding_top="56%" autoplay="" min_width="0px" playsinline="" picture_in_picture="" max_width="640px" mute="" width="100%" height="100%" ]',
+			],
+		];
 	}
 
 	/**
@@ -17,6 +39,62 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 	 */
 	public function filterTheContentTestIsExporting() {
 		return apple_news_is_exporting() ? 'is exporting' : 'is not exporting';
+	}
+
+	/**
+	 * Tests Brightcove video support.
+	 *
+	 * @param string $post_content The post content to load for the test.
+	 *
+	 * @dataProvider dataProviderBrightcoveVideo
+	 */
+	public function testBrightcoveVideo( $post_content ) {
+		$post_id = self::factory()->post->create(
+			[
+				'post_content' => $post_content,
+			]
+		);
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'video', $json['components'][3]['role'] );
+		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][3]['URL'] );
+	}
+
+	/**
+	 * Tests the ability to include a caption with a cover image.
+	 */
+	public function testCoverWithCaption() {
+
+		// Create dummy post and attachment.
+		$file    = dirname( dirname( dirname( __DIR__ ) ) ) . '/data/test-image.jpg';
+		$post_id = self::factory()->post->create();
+		$image   = self::factory()->attachment->create_upload_object( $file, $post_id );
+
+		// Add a caption to the image.
+		$image_post = get_post( $image );
+		$image_post->post_excerpt = 'Test Caption';
+		wp_update_post( $image_post );
+
+		// Set the image as the featured image for the post.
+		update_post_meta( $post_id, '_thumbnail_id', $image );
+
+		// Run the export and check the result.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
+		$this->assertEquals( wp_get_attachment_url( $image ), $json['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][0]['caption']['text'] );
+		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][1]['text'] );
+
+		// Set cover image and caption via postmeta and ensure it takes priority.
+		$image2 = self::factory()->attachment->create_upload_object( $file );
+		update_post_meta( $post_id, 'apple_news_coverimage', $image2 );
+		update_post_meta( $post_id, 'apple_news_coverimage_caption', 'Test Caption 2' );
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
+		$this->assertEquals( wp_get_attachment_url( $image2 ), $json['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'Test Caption 2', $json['components'][0]['components'][0]['caption']['text'] );
+		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Caption 2', $json['components'][0]['components'][1]['text'] );
 	}
 
 	public function testHasExcerpt() {
@@ -267,15 +345,10 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 		);
 
 		// Get sections for the post.
-		$sections = \Admin_Apple_Sections::get_sections_for_post( $post_id );
-		$export = new Export( $this->settings, $post_id, $sections );
-		$exporter = $export->fetch_exporter();
-		$exporter->generate();
-		$json = $exporter->get_json();
-		$settings = json_decode( $json );
+		$json = $this->get_json_for_post( $post_id );
 
 		$this->assertEquals(
-			$settings->componentTextStyles->dropcapBodyStyle->textColor,
+			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
 			$test_settings['body_color']
 		);
 
@@ -312,12 +385,10 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 		);
 
 		// Get sections for the post.
-		$sections = \Admin_Apple_Sections::get_sections_for_post( $post_id );
-		$export = new Export( $this->settings, $post_id, $sections );
-		$json = json_decode( $export->perform() );
+		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
 			'<p>is exporting</p>',
-			$json->components[3]->text
+			$json['components'][3]['text']
 		);
 
 		// Ensure is_exporting returns false after exporting.

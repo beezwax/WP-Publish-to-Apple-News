@@ -1,21 +1,21 @@
 <?php
 /**
- * Publish to Apple News Tests: Quote_Test class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Quote.
+ * Publish to Apple News tests: Quote_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
-
-require_once __DIR__ . '/class-component-testcase.php';
 
 use Apple_Exporter\Components\Quote;
 use Apple_Exporter\Exporter;
 use Apple_Exporter\Exporter_Content;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Quote class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Quote class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Quote_Test extends Component_TestCase {
 
@@ -71,11 +71,7 @@ class Quote_Test extends Component_TestCase {
 	public function testFilterHangingPunctuation() {
 
 		// Setup.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['pullquote_hanging_punctuation'] = 'yes';
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings( [ 'pullquote_hanging_punctuation' => 'yes' ] );
 		add_filter(
 			'apple_news_apply_hanging_punctuation',
 			array( $this, 'filter_apple_news_apply_hanging_punctuation' ),
@@ -84,7 +80,7 @@ class Quote_Test extends Component_TestCase {
 		);
 		$component = new Quote(
 			'<blockquote class="apple-news-pullquote"><p>my quote</p></blockquote>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -114,7 +110,7 @@ class Quote_Test extends Component_TestCase {
 		// Setup.
 		$component = new Quote(
 			'<blockquote><p>my quote</p></blockquote>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -150,22 +146,22 @@ class Quote_Test extends Component_TestCase {
 		);
 
 		// Set quote settings.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['blockquote_font'] = 'AmericanTypewriter';
-		$settings['blockquote_size'] = 20;
-		$settings['blockquote_color'] = '#abcdef';
-		$settings['blockquote_line_height'] = 28;
-		$settings['blockquote_tracking'] = 50;
-		$settings['blockquote_background_color'] = '#fedcba';
-		$settings['blockquote_border_color'] = '#012345';
-		$settings['blockquote_border_style'] = 'dashed';
-		$settings['blockquote_border_width'] = 10;
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings(
+			[
+				'blockquote_font'             => 'AmericanTypewriter',
+				'blockquote_size'             => 20,
+				'blockquote_color'            => '#abcdef',
+				'blockquote_line_height'      => 28,
+				'blockquote_tracking'         => 50,
+				'blockquote_background_color' => '#fedcba',
+				'blockquote_border_color'     => '#012345',
+				'blockquote_border_style'     => 'dashed',
+				'blockquote_border_width'     => 10,
+			]
+		);
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
@@ -224,20 +220,20 @@ class Quote_Test extends Component_TestCase {
 		);
 
 		// Set quote settings.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['pullquote_font'] = 'AmericanTypewriter';
-		$settings['pullquote_size'] = 20;
-		$settings['pullquote_color'] = '#abcdef';
-		$settings['pullquote_hanging_punctuation'] = 'yes';
-		$settings['pullquote_line_height'] = 28;
-		$settings['pullquote_tracking'] = 50;
-		$settings['pullquote_transform'] = 'uppercase';
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings(
+			[
+				'pullquote_font'                => 'AmericanTypewriter',
+				'pullquote_size'                => 20,
+				'pullquote_color'               => '#abcdef',
+				'pullquote_hanging_punctuation' => 'yes',
+				'pullquote_line_height'         => 28,
+				'pullquote_tracking'            => 50,
+				'pullquote_transform'           => 'uppercase',
+			]
+		);
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
@@ -282,7 +278,7 @@ class Quote_Test extends Component_TestCase {
 		// Setup.
 		$component = new Quote(
 			'<blockquote><p>my quote</p></blockquote>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -309,7 +305,7 @@ class Quote_Test extends Component_TestCase {
 		// Setup.
 		$componentLeft = new Quote(
 			'<blockquote style="text-align:left" class="wp-block-quote"><p>Quote Text</p></blockquote>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -317,7 +313,7 @@ class Quote_Test extends Component_TestCase {
 
 		$componentCenter = new Quote(
 			'<blockquote style="text-align:center" class="wp-block-quote"><p>Quote Text</p></blockquote>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -325,7 +321,7 @@ class Quote_Test extends Component_TestCase {
 
 		$componentRight = new Quote(
 			'<blockquote style="text-align:right" class="wp-block-quote"><p>Quote Text</p></blockquote>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -375,7 +371,7 @@ class Quote_Test extends Component_TestCase {
 		// Setup.
 		$componentLeft = new Quote(
 			'<figure class="wp-block-pullquote alignleft"><blockquote><p>Quote Text</p></blockquote></figure>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -383,7 +379,7 @@ class Quote_Test extends Component_TestCase {
 
 		$componentCenter = new Quote(
 			'<figure class="wp-block-pullquote alignwide"><blockquote><p>Quote Text</p></blockquote></figure>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -391,7 +387,7 @@ class Quote_Test extends Component_TestCase {
 
 		$componentRight = new Quote(
 			'<figure class="wp-block-pullquote alignright"><blockquote><p>Quote Text</p></blockquote></figure>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -445,14 +441,10 @@ class Quote_Test extends Component_TestCase {
 	public function testTransformPullquote( $text, $expected, $hanging_punctuation ) {
 
 		// Setup.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['pullquote_hanging_punctuation'] = $hanging_punctuation;
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings( [ 'pullquote_hanging_punctuation' => $hanging_punctuation ] );
 		$component = new Quote(
 			'<blockquote class="apple-news-pullquote"><p>' . $text . '</p></blockquote>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts

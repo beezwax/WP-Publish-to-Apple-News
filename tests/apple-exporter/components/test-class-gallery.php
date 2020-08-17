@@ -1,19 +1,19 @@
 <?php
 /**
- * Publish to Apple News Tests: Gallery_Test class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Gallery.
+ * Publish to Apple News tests: Gallery_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/class-component-testcase.php';
-
 use \Apple_Exporter\Components\Gallery;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Gallery class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Gallery class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Gallery_Test extends Component_TestCase {
 
@@ -75,7 +75,7 @@ HTML;
 	public function testFilter() {
 
 		// Setup.
-		$component = $this->_setup_component( $this->_simple_html );
+		$component = $this->setup_component( $this->_simple_html );
 
 		// Add the filter and set a custom layout.
 		add_filter(
@@ -117,7 +117,7 @@ HTML;
 	public function testGeneratedJSON() {
 
 		// Setup.
-		$component = $this->_setup_component( $this->_simple_html );
+		$component = $this->setup_component( $this->_simple_html );
 
 		// Test for valid JSON.
 		$this->assertEquals(
@@ -147,7 +147,7 @@ HTML;
 	public function testGeneratedJSONComplex() {
 
 		// Setup.
-		$component = $this->_setup_component( $this->_complex_html );
+		$component = $this->setup_component( $this->_complex_html );
 
 		// Test for valid JSON.
 		$this->assertEquals(
@@ -184,18 +184,17 @@ HTML;
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
-		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
-		$workspace->bundle_source(
+		$this->prophecized_workspace->bundle_source(
 			'filename-1.jpg',
 			'http://someurl.com/filename-1.jpg'
 		)->shouldNotBeCalled();
-		$workspace->bundle_source(
+		$this->prophecized_workspace->bundle_source(
 			'another-filename-2.jpg',
 			'http://someurl.com/another-filename-2.jpg'
 		)->shouldNotBeCalled();
 		$component = new Gallery(
 			$this->_simple_html,
-			$workspace->reveal(),
+			$this->prophecized_workspace->reveal(),
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -229,23 +228,22 @@ HTML;
 	 * @access private
 	 * @return Gallery The Gallery component constructed from the content.
 	 */
-	private function _setup_component( $content ) {
+	private function setup_component( $content ) {
 
 		// Set up the workspace.
 		$this->settings->set( 'use_remote_images', 'no' );
-		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
-		$workspace->bundle_source(
+		$this->prophecized_workspace->bundle_source(
 			'filename-1.jpg',
 			'http://someurl.com/filename-1.jpg'
 		)->shouldBeCalled();
-		$workspace->bundle_source(
+		$this->prophecized_workspace->bundle_source(
 			'another-filename-2.jpg',
 			'http://someurl.com/another-filename-2.jpg'
 		)->shouldBeCalled();
 
 		return new Gallery(
 			$content,
-			$workspace->reveal(),
+			$this->prophecized_workspace->reveal(),
 			$this->settings,
 			$this->styles,
 			$this->layouts

@@ -731,26 +731,6 @@ abstract class Component {
 	}
 
 	/**
-	 * Check if the remote file's headers return HTTP 200
-	 *
-	 * @param \DOMElement $node The node to examine for matches.
-	 * @return boolean
-	 * @access protected
-	 */
-	protected static function remote_file_exists( $node ) {
-
-		// Try to get a URL from the src attribute of the HTML.
-		$html = $node->ownerDocument->saveXML( $node );
-		$path = self::url_from_src( $html );
-		if ( empty( $path ) ) {
-			return false;
-		}
-
-		$headers = get_headers( $path );
-		return ! empty( $headers[0] ) && false !== stripos( $headers[0], '200 OK' );
-	}
-
-	/**
 	 * Returns a full URL from the first `src` parameter in the provided HTML that
 	 * has content.
 	 *

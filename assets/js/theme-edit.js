@@ -32,7 +32,7 @@
 			});
 		} else {
 			$( '.select2' ).select2();
-			$( 'span.select2' ).after(
+			$( 'span.select2' ).after( // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.after
 				$( '<div>' )
 					.addClass( 'font-notice' )
 					.text( appleNewsThemeEdit.fontNotice )
@@ -86,7 +86,7 @@
 					.attr( 'name', key )
 					.attr( 'value', value );
 
-				$sortableElement.after( $hidden );
+				$sortableElement.after( $hidden ); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.after
 			} );
 		}
 

@@ -68,8 +68,8 @@ class Exporter {
 	 */
 	public function __construct( $content, $workspace = null, $settings = null ) {
 		$this->content   = $content;
-		$this->workspace = $workspace ?: new Workspace( $this->content_id() );
-		$this->settings  = $settings ?: new Settings();
+		$this->workspace = ! empty( $workspace ) ? $workspace : new Workspace( $this->content_id() );
+		$this->settings  = ! empty( $settings ) ? $settings : new Settings();
 		$this->builders  = array();
 	}
 
@@ -92,7 +92,7 @@ class Exporter {
 			$this->register_builder( 'textStyles', new Builders\Text_Styles( $this->content, $this->settings ) );
 			$this->register_builder( 'componentLayouts', new Builders\Component_Layouts( $this->content, $this->settings ) );
 			$this->register_builder( 'metadata', new Builders\Metadata( $this->content, $this->settings ) );
-			$this->register_builder( 'advertisingSettings', new Builders\Advertising_Settings( $this->content, $this->settings ) );
+			$this->register_builder( 'autoplacement', new Builders\Advertising_Settings( $this->content, $this->settings ) );
 		}
 
 		Component_Factory::initialize(
@@ -320,7 +320,8 @@ class Exporter {
 	 * @return string The title of the content being exported.
 	 */
 	private function content_title() {
-		return $this->content->title() ?: 'Untitled Article';
+		$title = $this->content->title();
+		return ! empty( $title ) ? $title : __( 'Untitled Article', 'apple-news' );
 	}
 
 	/**

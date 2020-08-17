@@ -28,7 +28,6 @@ function get_settings_response( $data ) {
 		'apiAutosync'         => 'yes' === $settings->api_autosync,
 		'apiAutosyncDelete'   => 'yes' === $settings->api_autosync_delete,
 		'apiAutosyncUpdate'   => 'yes' === $settings->api_autosync_update,
-		'enableCoverArt'      => 'yes' === $settings->enable_cover_art,
 		'fullBleedImages'     => 'yes' === $settings->full_bleed_images,
 		'htmlSupport'         => 'yes' === $settings->html_support,
 		'postTypes'           => ! empty( $settings->post_types ) && is_array( $settings->post_types ) ? array_map( 'sanitize_text_field', $settings->post_types ) : [],

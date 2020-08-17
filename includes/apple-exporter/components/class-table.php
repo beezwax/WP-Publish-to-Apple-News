@@ -205,9 +205,6 @@ class Table extends Component {
 		// Add the JSON for this component.
 		$this->register_json( $table_spec, $values );
 
-		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
-
 		// Register the layout for the table.
 		$this->register_layout( 'table-layout', 'table-layout' );
 
@@ -226,7 +223,7 @@ class Table extends Component {
 	 * @access protected
 	 * @return bool Whether HTML format is enabled for this component type.
 	 */
-	protected function html_enabled( $enabled = true ) {
+	protected function html_enabled( $enabled = true ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 		return parent::html_enabled( $enabled );
 	}
 }

@@ -50,7 +50,7 @@
 	});
 
 	function appleNewsThemesShowError( selector, message ) {
-		$( selector ).append( $( '<p>' )
+		$( selector ).append( $( '<p>' ) // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.append
 			.attr( 'id', 'apple_news_theme_error' )
 			.addClass( 'error-message' )
 			.text( message )

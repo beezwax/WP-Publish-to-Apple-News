@@ -1,8 +1,6 @@
 <?php
 /**
- * Publish to Apple News Tests: Body_Test class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Body.
+ * Publish to Apple News tests: Body_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -15,7 +13,11 @@ use Apple_Exporter\Exporter;
 use Apple_Exporter\Exporter_Content;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Body class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Body class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Body_Test extends Component_TestCase {
 
@@ -57,7 +59,7 @@ class Body_Test extends Component_TestCase {
 		$html = '<p><a href="https://www.apple.com/">&nbsp;</a></p>';
 		$component = new Body(
 			$html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -84,7 +86,7 @@ class Body_Test extends Component_TestCase {
 		$html = '<p>a</p><p>&nbsp;</p><p>b</p>';
 		$component = new Body(
 			$html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -112,15 +114,10 @@ class Body_Test extends Component_TestCase {
 
 		// Setup.
 		$this->settings->html_support = 'no';
-		$theme = new \Apple_Exporter\Theme;
-		$theme->set_name( \Apple_Exporter\Theme::get_active_theme_name() );
-		$theme->load();
-		$settings = $theme->all_settings();
-		$settings['initial_dropcap'] = 'no';
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings( [ 'initial_dropcap' => 'no' ] );
 		$component = new Body(
 			'<p>my text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -152,7 +149,7 @@ class Body_Test extends Component_TestCase {
 		// Test before filter.
 		$component = new Body(
 			'<p>my text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -175,7 +172,7 @@ class Body_Test extends Component_TestCase {
 		);
 		$component = new Body(
 			'<p>my text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -215,7 +212,7 @@ class Body_Test extends Component_TestCase {
 HTML;
 		$component = new Body(
 			$html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -247,7 +244,7 @@ HTML;
 HTML;
 		$component = new Body(
 			$html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -277,7 +274,7 @@ HTML;
 		$this->settings->html_support = 'no';
 		$body_component = new Body(
 			'<p>my &amp; text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -315,12 +312,11 @@ HTML;
 <li>item 3</li>
 </ul>
 HTML;
-		$file = dirname( dirname( __DIR__ ) ) . '/data/test-image.jpg';
-		$cover = $this->factory->attachment->create_upload_object( $file );
+		$cover = $this->get_new_attachment();
 		$content = new Exporter_Content( 3, 'Title', $content, null, $cover );
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
@@ -370,26 +366,26 @@ HTML;
 		);
 
 		// Set body settings.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['body_font'] = 'AmericanTypewriter';
-		$settings['body_size'] = 20;
-		$settings['body_color'] = '#abcdef';
-		$settings['body_link_color'] = '#fedcba';
-		$settings['body_line_height'] = 28;
-		$settings['body_tracking'] = 50;
-		$settings['dropcap_background_color'] = '#abcabc';
-		$settings['dropcap_color'] = '#defdef';
-		$settings['dropcap_font'] = 'AmericanTypewriter-Bold';
-		$settings['dropcap_number_of_characters'] = 15;
-		$settings['dropcap_number_of_lines'] = 10;
-		$settings['dropcap_number_of_raised_lines'] = 5;
-		$settings['dropcap_padding'] = 20;
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings(
+			[
+				'body_font'                      => 'AmericanTypewriter',
+				'body_size'                      => 20,
+				'body_color'                     => '#abcdef',
+				'body_link_color'                => '#fedcba',
+				'body_line_height'               => 28,
+				'body_tracking'                  => 50,
+				'dropcap_background_color'       => '#abcabc',
+				'dropcap_color'                  => '#defdef',
+				'dropcap_font'                   => 'AmericanTypewriter-Bold',
+				'dropcap_number_of_characters'   => 15,
+				'dropcap_number_of_lines'        => 10,
+				'dropcap_number_of_raised_lines' => 5,
+				'dropcap_padding'                => 20,
+			]
+		);
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
@@ -464,14 +460,10 @@ HTML;
 		);
 
 		// Set body settings.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['body_line_height'] = 0;
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings( [ 'body_line_height' => 0 ] );
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
@@ -494,7 +486,7 @@ HTML;
 		$this->settings->html_support = 'no';
 		$component = new Body(
 			'<p>my text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -525,14 +517,10 @@ HTML;
 
 		// Setup.
 		$this->settings->html_support = 'no';
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['initial_dropcap'] = 'no';
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings( [ 'initial_dropcap' => 'no' ] );
 		$body_component = new Body(
 			'<p>my text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts

@@ -92,7 +92,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		$updated_at = get_post_meta( $post->ID, 'apple_news_api_modified_at', true );
 
 		if ( $updated_at ) {
-			return get_date_from_gmt( date( 'Y-m-d H:i:s', strtotime( $updated_at ) ), 'F j, h:i a' );
+			return get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( $updated_at ) ), 'F j, h:i a' );
 		}
 
 		return __( 'Never', 'apple-news' );
@@ -136,7 +136,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		}
 
 		$updated = get_post_meta( $post->ID, 'apple_news_api_modified_at', true );
-		$updated = strtotime( get_date_from_gmt( date( 'Y-m-d H:i:s', strtotime( $updated ) ) ) );
+		$updated = strtotime( get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( $updated ) ) ) );
 		$local   = strtotime( $post->post_modified );
 
 		if ( $local > $updated ) {
@@ -326,7 +326,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		if ( ! empty( $publish_status ) ) {
 			switch ( $publish_status ) {
 				case 'published':
-					$args['meta_query'] = array(
+					$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						array(
 							'key'     => 'apple_news_api_id',
 							'compare' => '!=',
@@ -335,7 +335,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 					);
 					break;
 				case 'not_published':
-					$args['meta_query'] = array(
+					$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						'relation' => 'AND',
 						array(
 							'relation' => 'OR',
@@ -356,7 +356,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 					);
 					break;
 				case 'deleted':
-					$args['meta_query'] = array(
+					$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						array(
 							'key'     => 'apple_news_api_deleted',
 							'compare' => 'EXISTS',
@@ -364,7 +364,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 					);
 					break;
 				case 'pending':
-					$args['meta_query'] = array(
+					$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						array(
 							'key'     => 'apple_news_api_pending',
 							'compare' => 'EXISTS',

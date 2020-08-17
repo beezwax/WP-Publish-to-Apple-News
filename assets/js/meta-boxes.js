@@ -30,10 +30,10 @@
 		// Add the expand controls.
 		var $heading = $this.find( 'h3' ).first().clone();
 		$heading.addClass( 'apple-news-metabox-section-control' );
-		$heading.insertBefore( $this );
+		$heading.insertBefore( $this ); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.insertBefore
 
 		// Add the close controls.
-		$this.prepend(
+		$this.prepend( // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend
 			$( '<div></div>' ).addClass( 'apple-news-metabox-section-close' )
 		);
 	} );
