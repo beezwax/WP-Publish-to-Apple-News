@@ -32,8 +32,9 @@ add_action(
 			'apple-news/v1',
 			'/delete',
 			[
-				'methods'  => 'POST',
-				'callback' => __NAMESPACE__ . '\rest_post_delete',
+				'methods'             => 'POST',
+				'callback'            => __NAMESPACE__ . '\rest_post_delete',
+				'permission_callback' => '__return_true',
 			]
 		);
 	}
