@@ -187,6 +187,7 @@ class Quote_Test extends Component_TestCase {
 			0.5,
 			$json['componentTextStyles']['default-blockquote-left']['tracking']
 		);
+		$this->assertFalse( isset( $json['componentTextStyles']['default-blockquote-left']['conditional'] ) );
 		$this->assertEquals(
 			'#fedcba',
 			$json['components'][1]['style']['backgroundColor']
@@ -202,6 +203,88 @@ class Quote_Test extends Component_TestCase {
 		$this->assertEquals(
 			10,
 			$json['components'][1]['style']['border']['all']['width']
+		);
+		$this->assertFalse( isset( $json['components'][1]['style']['conditional'] ) );
+	}
+
+	/**
+	 * Test Dark Color Settings For Blockquote.
+	 *
+	 * @access public
+	 */
+	public function testDarkColorsBlockquote() {
+		// Setup.
+		$content = new Exporter_Content(
+			3,
+			'Title',
+			'<blockquote><p>my quote</p></blockquote>'
+		);
+
+		// Set quote settings.
+		$this->set_theme_settings(
+			[
+				'blockquote_color_dark'       			=> '#abcdef',
+				'blockquote_background_color_dark' 	=> '#fedcba',
+				'blockquote_border_color_dark'     	=> '#012345',
+			]
+		);
+
+		// Run the export.
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
+		$json = $exporter->export();
+		$this->ensure_tokens_replaced( $json );
+		$json = json_decode( $json, true );
+
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentTextStyles']['default-blockquote-left']['conditional']['textColor']
+		);
+		$this->assertEquals(
+			'#fedcba',
+			$json['components'][1]['style']['conditional']['backgroundColor']
+		);
+		$this->assertEquals(
+			'#012345',
+			$json['components'][1]['style']['conditional']['border']['all']['color']
+		);
+	}
+
+	/**
+	 * Test Dark Color Settings Pullquote
+	 *
+	 * @access public
+	 */
+	public function testDarkColorsPullquote() {
+
+		// Setup.
+		$content = new Exporter_Content(
+			3,
+			'Title',
+			'<blockquote class="apple-news-pullquote"><p>my quote</p></blockquote>'
+		);
+
+		// Set quote settings.
+		$this->set_theme_settings(
+			[
+				'pullquote_color_dark'               => '#abcdef',
+				'pullquote_border_color_dark'        => '#abcdef',
+			]
+		);
+
+		// Run the export.
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
+		$json = $exporter->export();
+		$this->ensure_tokens_replaced( $json );
+		$json = json_decode( $json, true );
+
+		// Validate body settings in generated JSON.
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentTextStyles']['default-pullquote']['conditional']['textColor']
+		);
+		$this->assertEquals(
+			'#abcdef',
+			$json['components'][1]['style']['conditional']['border']['all']['color']
 		);
 	}
 

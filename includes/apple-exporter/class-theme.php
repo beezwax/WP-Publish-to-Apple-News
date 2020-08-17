@@ -1092,7 +1092,7 @@ class Theme {
 				'type'    => 'color',
 			),
 			'pullquote_color_dark'                   => array(
-				'default' => '#53585f',
+				'default' => '',
 				'label'   => __( 'Pull quote color', 'apple-news' ),
 				'type'    => 'color',
 			),
