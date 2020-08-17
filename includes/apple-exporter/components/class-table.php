@@ -157,9 +157,9 @@ class Table extends Component {
 			$dark_bg_text_conditional['conditional'][0]['backgroundColor'] = '#table_body_background_color_dark#';
 		}
 		
-		if ( ! empty( $table_header_color_dark ) ) {
+		if ( ! empty( $table_body_color_dark ) ) {
 			$dark_bg_text_conditional['conditional'][0]['textStyle'] = array(
-				'textColor' => '#table_header_color_dark#',
+				'textColor' => '#table_body_color_dark#',
 			);
 		}
 
@@ -180,9 +180,9 @@ class Table extends Component {
 			$dark_header_bg_text_conditional['conditional'][0]['backgroundColor'] = '#table_header_background_color_dark#';
 		}
 		
-		if ( ! empty( $table_body_color_dark ) ) {
+		if ( ! empty( $table_header_color_dark ) ) {
 			$dark_header_bg_text_conditional['conditional'][0]['textStyle'] = array(
-				'textColor' => '#table_body_color_dark#',
+				'textColor' => '#table_header_color_dark#',
 			);
 		}
 
