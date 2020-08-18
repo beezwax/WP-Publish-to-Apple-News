@@ -280,7 +280,7 @@ class Quote_Test extends Component_TestCase {
 		// Validate body settings in generated JSON.
 		$this->assertEquals(
 			'#abcdef',
-			$json['componentTextStyles']['default-pullquote']['conditional']['textColor']
+			$json['componentTextStyles']['default-pullquote-left']['conditional']['textColor']
 		);
 		$this->assertEquals(
 			'#abcdef',
@@ -324,30 +324,30 @@ class Quote_Test extends Component_TestCase {
 		// Validate body settings in generated JSON.
 		$this->assertEquals(
 			'AmericanTypewriter',
-			$json['componentTextStyles']['default-pullquote']['fontName']
+			$json['componentTextStyles']['default-pullquote-left']['fontName']
 		);
 		$this->assertEquals(
 			20,
-			$json['componentTextStyles']['default-pullquote']['fontSize']
+			$json['componentTextStyles']['default-pullquote-left']['fontSize']
 		);
 		$this->assertTrue(
-			$json['componentTextStyles']['default-pullquote']['hangingPunctuation']
+			$json['componentTextStyles']['default-pullquote-left']['hangingPunctuation']
 		);
 		$this->assertEquals(
 			'#abcdef',
-			$json['componentTextStyles']['default-pullquote']['textColor']
+			$json['componentTextStyles']['default-pullquote-left']['textColor']
 		);
 		$this->assertEquals(
 			28,
-			$json['componentTextStyles']['default-pullquote']['lineHeight']
+			$json['componentTextStyles']['default-pullquote-left']['lineHeight']
 		);
 		$this->assertEquals(
 			0.5,
-			$json['componentTextStyles']['default-pullquote']['tracking']
+			$json['componentTextStyles']['default-pullquote-left']['tracking']
 		);
 		$this->assertEquals(
 			'uppercase',
-			$json['componentTextStyles']['default-pullquote']['textTransform']
+			$json['componentTextStyles']['default-pullquote-left']['textTransform']
 		);
 	}
 
@@ -484,8 +484,8 @@ class Quote_Test extends Component_TestCase {
 		$this->assertEquals( 'quote', $result['role'] );
 		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
 		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-blockquote-left', $result['textStyle'] );
-		$this->assertEquals( 'blockquote-layout', $result['layout'] );
+		$this->assertEquals( 'default-pullquote-left', $result['textStyle'] );
+		$this->assertEquals( 'pullquote-layout', $result['layout'] );
 
 		$result_wrapper = $componentCenter->to_array();
 		$result = $result_wrapper['components'][0];
@@ -495,8 +495,8 @@ class Quote_Test extends Component_TestCase {
 		$this->assertEquals( 'quote', $result['role'] );
 		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
 		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-blockquote-center', $result['textStyle'] );
-		$this->assertEquals( 'blockquote-layout', $result['layout'] );
+		$this->assertEquals( 'default-pullquote-center', $result['textStyle'] );
+		$this->assertEquals( 'pullquote-layout', $result['layout'] );
 
 		$result_wrapper = $componentRight->to_array();
 		$result = $result_wrapper['components'][0];
@@ -506,8 +506,8 @@ class Quote_Test extends Component_TestCase {
 		$this->assertEquals( 'quote', $result['role'] );
 		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
 		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-blockquote-right', $result['textStyle'] );
-		$this->assertEquals( 'blockquote-layout', $result['layout'] );
+		$this->assertEquals( 'default-pullquote-right', $result['textStyle'] );
+		$this->assertEquals( 'pullquote-layout', $result['layout'] );
 	}
 
 	/**
@@ -540,7 +540,7 @@ class Quote_Test extends Component_TestCase {
 		$this->assertEquals( 'quote', $result['role'] );
 		$this->assertEquals( $expected, $result['text'] );
 		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-pullquote', $result['textStyle'] );
+		$this->assertEquals( 'default-pullquote-left', $result['textStyle'] );
 		$this->assertEquals( 'pullquote-layout', $result['layout'] );
 	}
 }

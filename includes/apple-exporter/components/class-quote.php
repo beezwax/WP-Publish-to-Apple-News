@@ -179,7 +179,7 @@ class Quote extends Component {
 						'text'      => '#text#',
 						'format'    => '#format#',
 						'layout'    => 'pullquote-layout',
-						'textStyle' => 'default-pullquote',
+						'textStyle' => '#default_pullquote#',
 					),
 				),
 				'anchor'     => array(
@@ -226,7 +226,7 @@ class Quote extends Component {
 						'text'      => '#text#',
 						'format'    => '#format#',
 						'layout'    => 'pullquote-layout',
-						'textStyle' => 'default-pullquote',
+						'textStyle' => '#default_pullquote#',
 					),
 				),
 				'style'      => (
@@ -449,6 +449,7 @@ class Quote extends Component {
 		$values = array(
 			'#text#'   => $text,
 			'#format#' => $this->parser->format,
+			'#default_pullquote#'               => 'default-pullquote-' . $this->text_alignment,
 		);
 
 		// Determine if there is a border specified.
@@ -590,7 +591,7 @@ class Quote extends Component {
 		$theme = \Apple_Exporter\Theme::get_used();
 
 		$this->register_style(
-			'default-pullquote',
+			'default-pullquote-' . $this->text_alignment,
 			'default-pullquote',
 			array(
 				'#pullquote_font#'                => $theme->get_value( 'pullquote_font' ),
@@ -600,7 +601,7 @@ class Quote extends Component {
 				'#pullquote_color_dark#'          => $theme->get_value( 'pullquote_color_dark' ),
 				'#pullquote_transform#'           => $theme->get_value( 'pullquote_transform' ),
 				'#pullquote_line_height#'         => intval( $theme->get_value( 'pullquote_line_height' ) ),
-				'#text_alignment#'                => $this->find_text_alignment(),
+				'#text_alignment#'                => $this->text_alignment,
 				'#pullquote_tracking#'            => intval( $theme->get_value( 'pullquote_tracking' ) ) / 100,
 			),
 			'textStyle'
