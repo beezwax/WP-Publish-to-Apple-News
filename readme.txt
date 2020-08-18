@@ -53,6 +53,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Enhancement: Adds support for Brightcove videos via the Brightcove Video Connect plugin for videos added via either the Gutenberg block or the shortcode. Note that this feature will only work if you contact Apple support to link your Brightcove account with your Apple News channel.
 * Enhancement: Replaces usage of the deprecated `advertisingSettings` object with the new `autoplacement.advertising` object. Bumps default advertisement frequency from 1 to 5 (out of 10).
 * Enhancement: Adds an error to the notice bar if the `DATE_NOT_RECENT` API error is encountered advising the user to synchronize the time on their server to restore API connectivity.
+* Enhancement: Adds padding above and below `EmbedWebVideo` components.
 * Bugfix: Removes Cover Art configuration, as Cover Art is no longer used by Apple.
 * Bugfix: Fixes the logic in the default theme checker to properly check the configured values against the defaults and prompt the user if they are using the default theme that ships with Apple News without modification.
 * Bugfix: Fixes a bug where renaming a theme would not carry over any changes made to the theme, and renaming the active theme would make it no longer active.
@@ -60,6 +61,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Bugfix: Removed extra space between an image and its caption.
 * Bugfix: If a custom excerpt is used, but the custom excerpt repeats text in its entirety from elsewhere in the article (e.g., the first paragraph), then the Intro component will be skipped. This prevents an issue where Apple will flag articles that contain repeated text due to the Intro component using a custom excerpt suitable in a WordPress context but not an Apple News context.
 * Bugfix: Select menus are no longer oversized on the settings page.
+* Updated filter name for `get_sections_for_post` to `apple_news_get_sections_for_post`.
 
 = 2.0.8 =
 * Enhancement: Adds styles for Button elements that are links which are added by the Gutenberg editor.

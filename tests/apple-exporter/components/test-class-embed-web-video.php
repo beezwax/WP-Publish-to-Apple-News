@@ -153,6 +153,7 @@ class Embed_Web_Video_Test extends Component_TestCase {
 				'role'        => 'embedwebvideo',
 				'URL'         => 'https://player.vimeo.com/video/12819723',
 				'aspectRatio' => '1.4',
+				'layout'      => 'embed-web-video-layout',
 			),
 			$component->to_array()
 		);
@@ -195,6 +196,7 @@ class Embed_Web_Video_Test extends Component_TestCase {
 				'role'        => 'embedwebvideo',
 				'URL'         => $final_url,
 				'aspectRatio' => '1.777',
+				'layout'      => 'embed-web-video-layout'
 			),
 			$component->to_array()
 		);
