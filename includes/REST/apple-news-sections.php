@@ -39,8 +39,9 @@ add_action(
 			'apple-news/v1',
 			'/sections',
 			[
-				'methods'  => 'GET',
-				'callback' => __NAMESPACE__ . '\get_sections_response',
+				'methods'             => 'GET',
+				'callback'            => __NAMESPACE__ . '\get_sections_response',
+				'permission_callback' => '__return_true',
 			]
 		);
 	}
