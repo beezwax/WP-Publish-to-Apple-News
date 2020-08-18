@@ -292,7 +292,7 @@ HTML;
 
 		$html = <<<HTML
 <figure>
-	<img src="http://someurl.com/filename.jpg" alt="Example">
+	<img src="https://example.org/filename.jpg" alt="Example">
 	<figcaption class="wp-caption-text">Caption Text</figcaption>
 </figure>
 HTML;
