@@ -147,12 +147,40 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	/**
 	 * Runs create_upload_object using a test image and returns the image ID.
 	 *
-	 * @param int $parent Optional. The parent post ID. Defaults to no parent.
+	 * @param int    $parent  Optional. The parent post ID. Defaults to no parent.
+	 * @param string $caption Optional. The caption to set on the image.
 	 *
 	 * @return int The post ID of the attachment image that was created.
 	 */
-	protected function get_new_attachment( $parent = 0 ) {
-		return self::factory()->attachment->create_upload_object( __DIR__ . '/data/test-image.jpg', $parent );
+	protected function get_new_attachment( $parent = 0, $caption = '' ) {
+		$image_id = self::factory()->attachment->create_upload_object( __DIR__ . '/data/test-image.jpg', $parent );
+
+		if ( ! empty( $caption ) ) {
+			$image = get_post( $image_id );
+			$image->post_excerpt = $caption;
+			wp_update_post( $image );
+		}
+
+		return $image_id;
+	}
+
+	/**
+	 * Given an image ID, returns the HTML5 markup for an image with a caption.
+	 *
+	 * Extracts the caption from the database entry for the image (stored in post_excerpt).
+	 *
+	 * @param int $image_id The image ID to use when generating the <figure>.
+	 *
+	 * @return string HTML for the image and the caption.
+	 */
+	protected function get_image_with_caption( $image_id ) {
+		return img_caption_shortcode(
+			[
+				'caption' => wp_get_attachment_caption( $image_id ),
+				'width'   => 640,
+			],
+			wp_get_attachment_image( $image_id, 'full' )
+		);
 	}
 
 	/**
