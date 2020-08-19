@@ -48,7 +48,7 @@ class Title extends Component {
 		$this->register_spec(
 			'default-title',
 			__( 'Style', 'apple-news' ),
-			(
+			array_merge(
 				array(
 					'fontName'      => '#header1_font#',
 					'fontSize'      => '#header1_size#',
@@ -56,7 +56,8 @@ class Title extends Component {
 					'tracking'      => '#header1_tracking#',
 					'textColor'     => '#header1_color#',
 					'textAlignment' => '#text_alignment#',
-				) + $conditional
+				),
+				$conditional
 			)
 		);
 

@@ -224,7 +224,7 @@ class Table extends Component {
 		$this->register_spec(
 			'default-table',
 			__( 'Table Style', 'apple-news' ),
-			(
+			array_merge(
 				array(
 					'border'     => array(
 						'all' => array(
@@ -234,7 +234,7 @@ class Table extends Component {
 						),
 					),
 					'tableStyle' => array(
-						'cells'       => (
+						'cells'       => array_merge(
 							array(
 								'backgroundColor'     => '#table_body_background_color#',
 								'horizontalAlignment' => '#table_body_horizontal_alignment#',
@@ -247,18 +247,20 @@ class Table extends Component {
 									'tracking'   => '#table_body_tracking#',
 								),
 								'verticalAlignment'   => '#table_body_vertical_alignment#',
-							) + $dark_bg_text_conditional
+							),
+							$dark_bg_text_conditional
 						),
-						'columns'     => (
+						'columns'     => array_merge(
 							array(
 								'divider' => array(
 									'color' => '#table_border_color#',
 									'style' => '#table_border_style#',
 									'width' => '#table_border_width#',
 								),
-							) + $dark_inner_border_conditional
+							),
+							$dark_inner_border_conditional
 						),
-						'headerCells' => (
+						'headerCells' => array_merge(
 							array(
 								'backgroundColor'     => '#table_header_background_color#',
 								'horizontalAlignment' => '#table_header_horizontal_alignment#',
@@ -271,28 +273,32 @@ class Table extends Component {
 									'tracking'   => '#table_header_tracking#',
 								),
 								'verticalAlignment'   => '#table_header_vertical_alignment#',
-							) + $dark_header_bg_text_conditional
+							),
+							$dark_header_bg_text_conditional
 						),
-						'headerRows'  => (
+						'headerRows'  => array_merge(
 							array(
 								'divider' => array(
 									'color' => '#table_border_color#',
 									'style' => '#table_border_style#',
 									'width' => '#table_border_width#',
 								),
-							) + $dark_inner_border_conditional
+							),
+							$dark_inner_border_conditional
 						),
-						'rows'        => (
+						'rows'        => array_merge(
 							array(
 								'divider' => array(
 									'color' => '#table_border_color#',
 									'style' => '#table_border_style#',
 									'width' => '#table_border_width#',
 								),
-							) + $dark_inner_border_conditional
+							),
+							$dark_inner_border_conditional
 						),
 					),
-				) + $dark_outer_border_conditional
+				),
+				$dark_outer_border_conditional
 			)
 		);
 	}

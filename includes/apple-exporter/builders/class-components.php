@@ -709,10 +709,9 @@ class Components extends Builder {
 				'columnStart'          => 0,
 				'ignoreDocumentMargin' => true,
 			),
-			'style'      => (
-				array(
-					'backgroundColor' => $theme->get_value( 'body_background_color' ),
-				) + $conditional
+			'style'      => array_merge(
+				array( 'backgroundColor' => $theme->get_value( 'body_background_color' ) ),
+				$conditional
 			),
 			'components' => array_slice( $new_components, $cover_index + 1 ),
 		);

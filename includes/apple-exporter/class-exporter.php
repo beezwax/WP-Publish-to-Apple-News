@@ -287,22 +287,21 @@ class Exporter {
 
 		// Get information about the currently used theme.
 		$theme             = \Apple_Exporter\Theme::get_used();
-		$conditional_style = empty( $theme->get_value( 'body_background_color_dark' ) ) ?
-			array() : array(
-				'backgroundColor' => $theme->get_value( 'body_background_color_dark' ),
-				'conditions'      => array(
-					'preferredColorScheme' => 'dark',
-				),
+		$conditional = array();
+		if ( ! empty( $theme->get_value( 'body_background_color_dark' ) ) ) {
+			$conditional = array(
+				'conditional' => array(
+					'backgroundColor' => $theme->get_value( 'body_background_color_dark' ),
+					'conditions'      => array(
+						'preferredColorScheme' => 'dark',
+					),
+				)
 			);
+		}
 
-		return (
-			array(
-				'backgroundColor' => $theme->get_value( 'body_background_color' ),
-			) + (
-				! empty( $conditional_style )
-					? array( 'conditional' => $conditional_style )
-					: array()
-			)
+		return array_merge(
+			array( 'backgroundColor' => $theme->get_value( 'body_background_color' ) ),
+			$conditional
 		);
 	}
 

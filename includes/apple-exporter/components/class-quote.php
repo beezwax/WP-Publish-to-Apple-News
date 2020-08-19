@@ -98,7 +98,7 @@ class Quote extends Component {
 						'top'    => '#layout_gutter#',
 					),
 				),
-				'style'      => (
+				'style'      => array_merge(
 					array(
 						'backgroundColor' => '#blockquote_background_color#',
 						'border'          => array(
@@ -111,7 +111,8 @@ class Quote extends Component {
 							'right'  => false,
 							'top'    => false,
 						),
-					) + $blockquote_conditional_style
+					),
+					$blockquote_conditional_style
 				),
 				'components' => array(
 					array(
@@ -152,7 +153,7 @@ class Quote extends Component {
 		$this->register_spec(
 			'default-blockquote',
 			__( 'Blockquote Style', 'apple-news' ),
-			(
+			array_merge(
 				array(
 					'fontName'      => '#blockquote_font#',
 					'fontSize'      => '#blockquote_size#',
@@ -160,7 +161,8 @@ class Quote extends Component {
 					'lineHeight'    => '#blockquote_line_height#',
 					'textAlignment' => '#text_alignment#',
 					'tracking'      => '#blockquote_tracking#',
-				) + $blockquote_conditional_text_color
+				),
+				$blockquote_conditional_text_color
 			)
 		);
 
@@ -229,7 +231,7 @@ class Quote extends Component {
 						'textStyle' => '#default_pullquote#',
 					),
 				),
-				'style'      => (
+				'style'      => array_merge(
 					array(
 						'border' => array(
 							'all'   => array(
@@ -240,7 +242,8 @@ class Quote extends Component {
 							'left'  => false,
 							'right' => false,
 						),
-					) + $pullquote_conditional_style
+					),
+					$pullquote_conditional_style
 				),
 				'anchor'     => array(
 					'targetComponentIdentifier' => 'pullquoteAnchor',
@@ -277,7 +280,7 @@ class Quote extends Component {
 		$this->register_spec(
 			'default-pullquote',
 			__( 'Pull quote Style', 'apple-news' ),
-			(
+			array_merge(
 				array(
 					'fontName'           => '#pullquote_font#',
 					'fontSize'           => '#pullquote_size#',
@@ -287,7 +290,8 @@ class Quote extends Component {
 					'lineHeight'         => '#pullquote_line_height#',
 					'textAlignment'      => '#text_alignment#',
 					'tracking'           => '#pullquote_tracking#',
-				) + $pullquote_conditional_text_color
+				),
+				$pullquote_conditional_text_color
 			)
 		);
 	}

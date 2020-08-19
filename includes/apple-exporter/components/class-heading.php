@@ -99,7 +99,7 @@ class Heading extends Component {
 					__( 'Level %s Style', 'apple-news' ),
 					$level
 				),
-				(
+				array_merge(
 					array(
 						'fontName'      => '#header' . $level . '_font#',
 						'fontSize'      => '#header' . $level . '_size#',
@@ -107,7 +107,8 @@ class Heading extends Component {
 						'textColor'     => '#header' . $level . '_color#',
 						'textAlignment' => '#text_alignment#',
 						'tracking'      => '#header' . $level . '_tracking#',
-					) + $conditional
+					)
+					,$conditional
 				)
 			);
 		}

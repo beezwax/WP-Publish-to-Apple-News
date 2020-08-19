@@ -359,7 +359,7 @@ class Body extends Component {
 			);
 		}
 
-		return (
+		return array_merge(
 			array(
 				'textAlignment'          => 'left',
 				'fontName'               => '#body_font#',
@@ -372,7 +372,8 @@ class Body extends Component {
 				),
 				'paragraphSpacingBefore' => 18,
 				'paragraphSpacingAfter'  => 18,
-			) + $conditional
+			),
+			$conditional
 		);
 	}
 

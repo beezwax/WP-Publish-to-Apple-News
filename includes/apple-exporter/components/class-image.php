@@ -100,7 +100,7 @@ class Image extends Component {
 						'role'      => 'caption',
 						'text'      => '#caption_text#',
 						'format'    => 'html',
-						'textStyle' => (
+						'textStyle' => array_merge(
 							array(
 								'textAlignment' => '#text_alignment#',
 								'fontName'      => '#caption_font#',
@@ -108,7 +108,8 @@ class Image extends Component {
 								'tracking'      => '#caption_tracking#',
 								'lineHeight'    => '#caption_line_height#',
 								'textColor'     => '#caption_color#',
-							) + $conditional
+							),
+							$conditional
 						),
 						'layout'    => array(
 							'ignoreDocumentMargin' => '#full_bleed_images#',

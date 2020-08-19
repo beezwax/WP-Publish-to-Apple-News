@@ -79,7 +79,7 @@ class Cover extends Component {
 						'role'      => 'caption',
 						'text'      => '#caption#',
 						'format'    => 'html',
-						'textStyle' => (
+						'textStyle' => array_merge(
 							array(
 								'textAlignment' => '#text_alignment#',
 								'fontName'      => '#caption_font#',
@@ -87,7 +87,8 @@ class Cover extends Component {
 								'tracking'      => '#caption_tracking#',
 								'lineHeight'    => '#caption_line_height#',
 								'textColor'     => '#caption_color#',
-							) + $conditional
+							),
+							$conditional
 						),
 					),
 				),
