@@ -133,6 +133,7 @@ class Cover_Test extends Component_TestCase {
 	 */
 	public function testGeneratedJSONFromHTMLWithCaption() {
 		$this->settings->set( 'use_remote_images', 'yes' );
+		$this->set_theme_settings( [ 'cover_caption' => true ] );
 
 		// Create dummy post and attachment.
 		$post_id = self::factory()->post->create();
@@ -238,7 +239,12 @@ class Cover_Test extends Component_TestCase {
 	 * Ensures that the lightbox font is set to the same font face as the image caption.
 	 */
 	public function testLightboxFont() {
-		$this->set_theme_settings( [ 'caption_font' => 'Menlo-Regular' ] );
+		$this->set_theme_settings(
+			[
+				'caption_font'  => 'Menlo-Regular',
+				'cover_caption' => true,
+			]
+		);
 
 		// Create an image and give it a caption.
 		$image_id = $this->get_new_attachment( 0, 'Test Caption!' );

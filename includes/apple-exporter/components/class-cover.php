@@ -8,6 +8,8 @@
 
 namespace Apple_Exporter\Components;
 
+use Apple_Exporter\Theme;
+
 /**
  * A cover is optional and displayed at the very top of the article. It's
  * loaded from the Exporter_Content's cover attribute, if present.
@@ -137,6 +139,8 @@ class Cover extends Component {
 	 */
 	protected function build( $options ) {
 
+		$theme = Theme::get_used();
+
 		// Handle case where options is a URL.
 		if ( ! is_array( $options ) ) {
 			$options = [
@@ -152,7 +156,9 @@ class Cover extends Component {
 		}
 
 		// Fork for caption vs. not.
-		if ( ! empty( $options['caption'] ) ) {
+		if ( ! empty( $options['caption'] )
+			&& true === $theme->get_value( 'cover_caption' )
+		) {
 			$this->register_json(
 				'jsonWithCaption',
 				array(

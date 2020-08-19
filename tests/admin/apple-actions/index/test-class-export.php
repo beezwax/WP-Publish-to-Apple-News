@@ -63,19 +63,14 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 * Tests the ability to include a caption with a cover image.
 	 */
 	public function testCoverWithCaption() {
+		$this->set_theme_settings( [ 'cover_caption' => true ] );
 
 		// Create dummy post and attachment.
-		$file    = dirname( dirname( dirname( __DIR__ ) ) ) . '/data/test-image.jpg';
 		$post_id = self::factory()->post->create();
-		$image   = self::factory()->attachment->create_upload_object( $file, $post_id );
-
-		// Add a caption to the image.
-		$image_post = get_post( $image );
-		$image_post->post_excerpt = 'Test Caption';
-		wp_update_post( $image_post );
+		$image   = $this->get_new_attachment( $post_id, 'Test Caption' );
 
 		// Set the image as the featured image for the post.
-		update_post_meta( $post_id, '_thumbnail_id', $image );
+		set_post_thumbnail( $post_id, $image );
 
 		// Run the export and check the result.
 		$json = $this->get_json_for_post( $post_id );
@@ -86,7 +81,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][1]['text'] );
 
 		// Set cover image and caption via postmeta and ensure it takes priority.
-		$image2 = self::factory()->attachment->create_upload_object( $file );
+		$image2 = $this->get_new_attachment();
 		update_post_meta( $post_id, 'apple_news_coverimage', $image2 );
 		update_post_meta( $post_id, 'apple_news_coverimage_caption', 'Test Caption 2' );
 		$json = $this->get_json_for_post( $post_id );

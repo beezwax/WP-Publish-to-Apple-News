@@ -714,6 +714,11 @@ class Theme {
 				'label'       => __( 'Caption tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
+			'cover_caption'                     => array(
+				'default' => false,
+				'label'   => __( 'Enable caption on the Cover component', 'apple-news' ),
+				'type'    => 'boolean',
+			),
 			'dropcap_background_color'          => array(
 				'default' => '',
 				'label'   => __( 'Drop cap background color', 'apple-news' ),
@@ -1931,6 +1936,7 @@ class Theme {
 			'caption'         => array(
 				'label'    => __( 'Image caption', 'apple-news' ),
 				'settings' => array(
+					'cover_caption',
 					'caption_font',
 					'caption_size',
 					'caption_line_height',
