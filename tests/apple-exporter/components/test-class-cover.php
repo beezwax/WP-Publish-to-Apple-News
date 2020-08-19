@@ -160,8 +160,11 @@ class Cover_Test extends Component_TestCase {
 						'URL'     => wp_get_attachment_url( $image ),
 						'layout'  => 'headerPhotoLayoutWithCaption',
 						'caption' => array(
-							'format' => 'html',
-							'text'   => 'Test Caption',
+							'format'    => 'html',
+							'text'      => 'Test Caption',
+							'textStyle' => array(
+								'fontName' => 'AvenirNext-Italic',
+							),
 						),
 					),
 					array(
@@ -228,6 +231,29 @@ class Cover_Test extends Component_TestCase {
 				),
 			),
 			$component->to_array()
+		);
+	}
+
+	/**
+	 * Ensures that the lightbox font is set to the same font face as the image caption.
+	 */
+	public function testLightboxFont() {
+		$this->set_theme_settings( [ 'caption_font' => 'Menlo-Regular' ] );
+
+		// Create an image and give it a caption.
+		$image_id = $this->get_new_attachment( 0, 'Test Caption!' );
+
+		// Create a test post.
+		$post_id = self::factory()->post->create();
+
+		// Set the featured image for the post.
+		set_post_thumbnail( $post_id, $image_id );
+
+		// Ensure that the font set on the lightbox is the same as the font set on the caption above.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			'Menlo-Regular',
+			$json['components'][0]['components'][0]['caption']['textStyle']['fontName']
 		);
 	}
 }
