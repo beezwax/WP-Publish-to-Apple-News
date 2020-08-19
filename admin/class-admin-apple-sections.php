@@ -190,7 +190,7 @@ class Admin_Apple_Sections extends Apple_News {
 		 * @param int    $post_id       The post ID.
 		 * @param string $format        The section format (e.g., 'url').
 		 */
-		return apply_filters( 'get_sections_for_post', $post_sections, $post_id, $format );
+		return apply_filters( 'apple_news_get_sections_for_post', $post_sections, $post_id, $format );
 	}
 
 	/**
