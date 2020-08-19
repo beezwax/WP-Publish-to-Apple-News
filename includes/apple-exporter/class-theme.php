@@ -1029,8 +1029,8 @@ class Theme {
 				'hidden'  => true,
 				'type'    => 'integer',
 			),
-			'meta_component_order'               => array(
-				'default'  => array( 'cover', 'title', 'byline', 'intro' ),
+			'meta_component_order'              => array(
+				'default'  => array( 'cover', 'title', 'byline' ),
 				'callback' => array( get_called_class(), 'render_meta_component_order' ),
 				'type'     => 'array',
 			),

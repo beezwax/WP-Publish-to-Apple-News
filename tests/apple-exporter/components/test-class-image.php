@@ -369,4 +369,33 @@ HTML;
 			isset( $json['components'][1]['textStyle']['conditional'] )
 		);
 	}
+
+	/**
+	 * Ensures that the lightbox font is set to the same font face as the image caption.
+	 */
+	public function testLightboxFont() {
+		$this->set_theme_settings(
+			[
+				'caption_font'         => 'Menlo-Regular',
+				'meta_component_order' => [ 'title', 'byline' ],
+			]
+		);
+
+		// Create an image and give it a caption.
+		$image_id = $this->get_new_attachment( 0, 'Test Caption!' );
+
+		// Create a test post with the image with the caption.
+		$post_id = self::factory()->post->create(
+			[
+				'post_content' => $this->get_image_with_caption( $image_id ),
+			]
+		);
+
+		// Ensure that the font set on the lightbox is the same as the font set on the caption above.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			'Menlo-Regular',
+			$json['components'][2]['components'][0]['caption']['textStyle']['fontName']
+		);
+	}
 }

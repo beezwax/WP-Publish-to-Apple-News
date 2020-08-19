@@ -8,8 +8,6 @@
 
 namespace Apple_Exporter\Components;
 
-use Apple_Exporter\Components\Component;
-
 /**
  * Represents a simple image.
  *
@@ -92,8 +90,11 @@ class Image extends Component {
 						'URL'     => '#url#',
 						'layout'  => '#layout#',
 						'caption' => array(
-							'format' => 'html',
-							'text'   => '#caption#',
+							'format'    => 'html',
+							'text'      => '#caption#',
+							'textStyle' => array(
+								'fontName' => '#caption_font#',
+							),
 						),
 					),
 					array(
