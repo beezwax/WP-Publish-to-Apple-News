@@ -347,7 +347,7 @@ HTML;
 		);
 
 		// Create an image and give it a caption.
-		$image_id = $this->get_new_attachment(0, 'Test Caption!');
+		$image_id = $this->get_new_attachment( 0, 'Test Caption!' );
 
 		// Create a test post with the image with the caption.
 		$post_id = self::factory()->post->create(
