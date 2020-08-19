@@ -91,6 +91,9 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		// Ensure HTML5 image captions are supported.
+		add_theme_support( 'html5', ['caption'] );
+
 		// Create some dummy content and save it for future use.
 		$this->content = new Apple_Exporter\Exporter_Content(
 			1,
