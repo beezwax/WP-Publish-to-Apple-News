@@ -754,7 +754,7 @@ class Theme {
 				'label'       => __( 'Caption tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'cover_caption'                     => array(
+			'cover_caption'                      => array(
 				'default' => false,
 				'label'   => __( 'Enable caption on the Cover component', 'apple-news' ),
 				'type'    => 'boolean',
@@ -764,7 +764,7 @@ class Theme {
 				'description' => __( 'Colors specific to Apple News Dark Mode', 'apple-news' ),
 				'type'        => 'group_heading',
 			),
-			'dropcap_background_color'          => array(
+			'dropcap_background_color'           => array(
 				'default' => '',
 				'label'   => __( 'Drop cap background color', 'apple-news' ),
 				'type'    => 'color',
@@ -1034,7 +1034,7 @@ class Theme {
 				'hidden'  => true,
 				'type'    => 'integer',
 			),
-			'meta_component_order'              => array(
+			'meta_component_order'               => array(
 				'default'  => array( 'cover', 'title', 'byline' ),
 				'callback' => array( get_called_class(), 'render_meta_component_order' ),
 				'type'     => 'array',

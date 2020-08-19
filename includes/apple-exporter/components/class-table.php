@@ -101,14 +101,14 @@ class Table extends Component {
 		// Register the JSON for the table style.
 		$table_cell_base_conditional    = array();
 		$table_row_col_base_conditional = array();
-		// Get Dark Table Colors
+		// Get Dark Table Colors.
 		$table_border_color_dark            = $theme->get_value( 'table_border_color_dark' );
 		$table_body_background_color_dark   = $theme->get_value( 'table_body_background_color_dark' );
 		$table_body_color_dark              = $theme->get_value( 'table_body_color_dark' );
 		$table_header_background_color_dark = $theme->get_value( 'table_header_background_color_dark' );
 		$table_header_color_dark            = $theme->get_value( 'table_header_color_dark' );
 
-		// If all are empty, do not add conditional styles
+		// If all are empty, do not add conditional styles.
 		$dark_table_colors_exist =
 			! empty( $table_border_color_dark ) ||
 			! empty( $table_body_background_color_dark ) ||
@@ -142,7 +142,7 @@ class Table extends Component {
 
 		// The following block sets:
 		// Dark Background Color of Cells
-		// Dark Text Color of Cells
+		// Dark Text Color of Cells.
 		$dark_bg_text_conditional = array();
 		if (
 			! empty( $table_body_background_color_dark ) ||
@@ -156,7 +156,7 @@ class Table extends Component {
 		if ( ! empty( $table_body_background_color_dark ) ) {
 			$dark_bg_text_conditional['conditional'][0]['backgroundColor'] = '#table_body_background_color_dark#';
 		}
-		
+
 		if ( ! empty( $table_body_color_dark ) ) {
 			$dark_bg_text_conditional['conditional'][0]['textStyle'] = array(
 				'textColor' => '#table_body_color_dark#',
@@ -165,7 +165,7 @@ class Table extends Component {
 
 		// The following block sets:
 		// Dark Header Background Color of Cells
-		// Dark Header Text Color of Cells
+		// Dark Header Text Color of Cells.
 		$dark_header_bg_text_conditional = array();
 		if (
 			! empty( $table_body_background_color_dark ) ||
@@ -179,14 +179,14 @@ class Table extends Component {
 		if ( ! empty( $table_header_background_color_dark ) ) {
 			$dark_header_bg_text_conditional['conditional'][0]['backgroundColor'] = '#table_header_background_color_dark#';
 		}
-		
+
 		if ( ! empty( $table_header_color_dark ) ) {
 			$dark_header_bg_text_conditional['conditional'][0]['textStyle'] = array(
 				'textColor' => '#table_header_color_dark#',
 			);
 		}
 
-		// Set Dark Border for Columns
+		// Set Dark Border for Columns.
 		$dark_inner_border_conditional = array();
 		if ( ! empty( $table_border_color_dark ) ) {
 			$dark_inner_border_conditional = array(
@@ -202,7 +202,7 @@ class Table extends Component {
 			);
 		}
 
-		// Set Dark Outer Border for Table
+		// Set Dark Outer Border for Table.
 		$dark_outer_border_conditional = array();
 		if ( ! empty( $table_border_color_dark ) ) {
 			$dark_outer_border_conditional = array(

@@ -451,9 +451,9 @@ class Quote extends Component {
 
 		// Set JSON for this element.
 		$values = array(
-			'#text#'   => $text,
-			'#format#' => $this->parser->format,
-			'#default_pullquote#'               => 'default-pullquote-' . $this->text_alignment,
+			'#text#'              => $text,
+			'#format#'            => $this->parser->format,
+			'#default_pullquote#' => 'default-pullquote-' . $this->text_alignment,
 		);
 
 		// Determine if there is a border specified.

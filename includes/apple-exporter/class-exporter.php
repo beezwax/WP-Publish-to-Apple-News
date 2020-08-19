@@ -286,7 +286,7 @@ class Exporter {
 	private function build_article_style() {
 
 		// Get information about the currently used theme.
-		$theme             = \Apple_Exporter\Theme::get_used();
+		$theme       = \Apple_Exporter\Theme::get_used();
 		$conditional = array();
 		if ( ! empty( $theme->get_value( 'body_background_color_dark' ) ) ) {
 			$conditional = array(
@@ -295,7 +295,7 @@ class Exporter {
 					'conditions'      => array(
 						'preferredColorScheme' => 'dark',
 					),
-				)
+				),
 			);
 		}
 
