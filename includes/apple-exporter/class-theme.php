@@ -1366,6 +1366,9 @@ class Theme {
 
 			// Convert the format of the value based on type.
 			switch ( $options[ $key ]['type'] ) {
+				case 'boolean':
+					$this->values[ $key ] = (bool) $value;
+					break;
 				case 'float':
 					$this->values[ $key ] = (float) $value;
 					break;
@@ -1438,13 +1441,18 @@ class Theme {
 
 					break;
 
+				case 'boolean':
+					$this->values[ $option_key ] = (bool) $_POST[ $option_key ];
+
+					break;
+
 				case 'float':
-					$this->values[ $option_key ] = floatval( $_POST[ $option_key ] );
+					$this->values[ $option_key ] = (float) $_POST[ $option_key ];
 
 					break;
 
 				case 'integer':
-					$this->values[ $option_key ] = intval( $_POST[ $option_key ] );
+					$this->values[ $option_key ] = (int) $_POST[ $option_key ];
 
 					break;
 
@@ -1675,6 +1683,11 @@ class Theme {
 
 					break;
 
+				case 'boolean':
+					$value = (bool) $value;
+
+					break;
+
 				case 'color':
 					// Sanitize.
 					$value = sanitize_text_field( $value );
@@ -1699,7 +1712,7 @@ class Theme {
 					break;
 
 				case 'float':
-					$value = floatval( $value );
+					$value = (float) $value;
 
 					break;
 
@@ -1727,7 +1740,7 @@ class Theme {
 					break;
 
 				case 'integer':
-					$value = intval( $value );
+					$value = (int) $value;
 
 					break;
 
