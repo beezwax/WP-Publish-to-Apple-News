@@ -121,4 +121,19 @@ class Intro_Test extends Component_TestCase {
 		$exporter_content = $exporter->get_content();
 		$this->assertEquals( '', $exporter_content->intro() );
 	}
+
+	/**
+	 * Ensures that the Intro component is disabled by default.
+	 */
+	public function testDisabledByDefault() {
+		$post_id = self::factory()->post->create(
+			[
+				'post_content' => 'Test content!',
+				'post_excerpt' => 'Test excerpt!',
+			]
+		);
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'body', $json['components'][2]['role'] );
+		$this->assertEquals( '<p>Test content!</p>', $json['components'][2]['text'] );
+	}
 }

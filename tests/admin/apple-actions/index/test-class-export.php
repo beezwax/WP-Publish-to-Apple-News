@@ -55,8 +55,8 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 			]
 		);
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'video', $json['components'][3]['role'] );
-		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][3]['URL'] );
+		$this->assertEquals( 'video', $json['components'][2]['role'] );
+		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][2]['URL'] );
 	}
 
 	/**
@@ -388,7 +388,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
 			'<p>is exporting</p>',
-			$json['components'][3]['text']
+			$json['components'][2]['text']
 		);
 
 		// Ensure is_exporting returns false after exporting.
