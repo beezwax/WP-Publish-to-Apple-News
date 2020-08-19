@@ -286,10 +286,22 @@ class Exporter {
 	private function build_article_style() {
 
 		// Get information about the currently used theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme             = \Apple_Exporter\Theme::get_used();
+		$conditional = array();
+		if ( ! empty( $theme->get_value( 'body_background_color_dark' ) ) ) {
+			$conditional = array(
+				'conditional' => array(
+					'backgroundColor' => $theme->get_value( 'body_background_color_dark' ),
+					'conditions'      => array(
+						'preferredColorScheme' => 'dark',
+					),
+				)
+			);
+		}
 
-		return array(
-			'backgroundColor' => $theme->get_value( 'body_background_color' ),
+		return array_merge(
+			array( 'backgroundColor' => $theme->get_value( 'body_background_color' ) ),
+			$conditional
 		);
 	}
 

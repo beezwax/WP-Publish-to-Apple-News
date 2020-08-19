@@ -124,6 +124,89 @@ HTML;
 		);
 	}
 
+
+	/**
+	 * Tests table settings.
+	 *
+	 * @access public
+	 */
+	public function testDarkColors() {
+
+		// Setup.
+		$content = new Exporter_Content(
+			3,
+			'Title',
+			$this->html
+		);
+
+		// Set table settings.
+		$this->set_theme_settings(
+			[
+				'table_border_color_dark'                => '#abcdef',
+				'table_body_background_color_dark'       => '#fedcba',
+				'table_body_color_dark'                  => '#123456',
+				'table_header_background_color_dark'     => '#654321',
+				'table_header_color_dark'                => '#987654',
+			]
+		);
+
+		// Run the export.
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
+		$json = $exporter->export();
+		$this->ensure_tokens_replaced( $json );
+		$json = json_decode( $json, true );
+
+		// Ensure conditionals are set
+		// Outer Table Border.
+		$this->assertTrue( isset( $json['componentStyles']['default-table']['conditional'] ) );
+		// Background Color, Text Color.
+		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['cells']['conditional'] ) );
+		// Column Border.
+		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['columns']['conditional'] ) );
+		// Row Border.
+		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['rows']['conditional'] ) );
+		// Header Border
+		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['headerRows']['conditional'] ) );
+		// Header Background, Header Text Color
+		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'] ) );
+
+		// Ensure Color Values match
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['default-table']['conditional']['border']['all']['color']
+		);
+		$this->assertEquals(
+			'#fedcba',
+			$json['componentStyles']['default-table']['tableStyle']['cells']['conditional'][0]['backgroundColor']
+		);
+		$this->assertEquals(
+			'#123456',
+			$json['componentStyles']['default-table']['tableStyle']['cells']['conditional'][0]['textStyle']['textColor']
+		);
+
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['default-table']['tableStyle']['columns']['conditional'][0]['divider']['color']
+		);
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['default-table']['tableStyle']['rows']['conditional'][0]['divider']['color']
+		);
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['default-table']['tableStyle']['headerRows']['conditional'][0]['divider']['color']
+		);
+
+		$this->assertEquals(
+			'#654321',
+			$json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'][0]['backgroundColor']
+		);
+		$this->assertEquals(
+			'#987654',
+			$json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'][0]['textStyle']['textColor']
+		);
+	}
+
 	/**
 	 * Tests table settings.
 	 *
@@ -180,6 +263,20 @@ HTML;
 			),
 			$json['componentLayouts']['table-layout']
 		);
+
+		// Ensure conditionals are not set
+		// Outer Table Border.
+		$this->assertFalse( isset( $json['componentStyles']['default-table']['conditional'] ) );
+		// Background Color, Text Color.
+		$this->assertFalse( isset( $json['componentStyles']['default-table']['tableStyle']['cells']['conditional'] ) );
+		// Column Border.
+		$this->assertFalse( isset( $json['componentStyles']['default-table']['tableStyle']['columns']['conditional'] ) );
+		// Row Border.
+		$this->assertFalse( isset( $json['componentStyles']['default-table']['tableStyle']['rows']['conditional'] ) );
+		// Header Border
+		$this->assertFalse( isset( $json['componentStyles']['default-table']['tableStyle']['headerRows']['conditional'] ) );
+		// Header Background, Header Text Color
+		$this->assertFalse( isset( $json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'] ) );
 
 		// Validate table settings in generated JSON.
 		$this->assertEquals(

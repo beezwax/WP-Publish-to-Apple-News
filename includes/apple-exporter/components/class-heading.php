@@ -55,6 +55,8 @@ class Heading extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
+		$theme = \Apple_Exporter\Theme::get_used();
+
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
@@ -79,6 +81,17 @@ class Heading extends Component {
 		);
 
 		foreach ( self::$levels as $level ) {
+			$conditional = array();
+			if ( ! empty( $theme->get_value( 'header' . $level . '_color_dark' ) ) ) {
+				$conditional = array(
+					'conditional' => array(
+						'textColor'  => '#header' . $level . '_color_dark#',
+						'conditions' => array(
+							'preferredColorScheme' => 'dark',
+						),
+					),
+				);
+			}
 			$this->register_spec(
 				'default-heading-' . $level,
 				sprintf(
@@ -86,13 +99,16 @@ class Heading extends Component {
 					__( 'Level %s Style', 'apple-news' ),
 					$level
 				),
-				array(
-					'fontName'      => '#header' . $level . '_font#',
-					'fontSize'      => '#header' . $level . '_size#',
-					'lineHeight'    => '#header' . $level . '_line_height#',
-					'textColor'     => '#header' . $level . '_color#',
-					'textAlignment' => '#text_alignment#',
-					'tracking'      => '#header' . $level . '_tracking#',
+				array_merge(
+					array(
+						'fontName'      => '#header' . $level . '_font#',
+						'fontSize'      => '#header' . $level . '_size#',
+						'lineHeight'    => '#header' . $level . '_line_height#',
+						'textColor'     => '#header' . $level . '_color#',
+						'textAlignment' => '#text_alignment#',
+						'tracking'      => '#header' . $level . '_tracking#',
+					)
+					,$conditional
 				)
 			);
 		}
@@ -228,6 +244,7 @@ class Heading extends Component {
 				'#header' . $level . '_size#'        => intval( $theme->get_value( 'header' . $level . '_size' ) ),
 				'#header' . $level . '_line_height#' => intval( $theme->get_value( 'header' . $level . '_line_height' ) ),
 				'#header' . $level . '_color#'       => $theme->get_value( 'header' . $level . '_color' ),
+				'#header' . $level . '_color_dark#'  => $theme->get_value( 'header' . $level . '_color_dark' ),
 				'#text_alignment#'                   => $this->find_text_alignment(),
 				'#header' . $level . '_tracking#'    => intval( $theme->get_value( 'header' . $level . '_tracking' ) ) / 100,
 			),
