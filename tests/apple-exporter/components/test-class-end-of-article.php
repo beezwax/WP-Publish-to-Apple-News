@@ -21,7 +21,7 @@ class Test_End_Of_Article extends Component_TestCase {
 	public function testDefaultEndOfArticleSetting() {
 		$post_id = self::factory()->post->create();
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 4, count( $json['components'] ) );
+		$this->assertEquals( 3, count( $json['components'] ) );
 	}
 
 	/**
@@ -44,7 +44,7 @@ class Test_End_Of_Article extends Component_TestCase {
 
 		$post_id = self::factory()->post->create();
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 5, count( $json['components'] ) );
-		$this->assertEquals( 'heading', $json['components'][4]['role'] );
+		$this->assertEquals( 4, count( $json['components'] ) );
+		$this->assertEquals( 'heading', $json['components'][3]['role'] );
 	}
 }
