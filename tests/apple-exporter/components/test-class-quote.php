@@ -235,11 +235,11 @@ class Quote_Test extends Component_TestCase {
 		);
 		$this->assertEquals(
 			'#fedcba',
-			$json['components'][3]['style']['conditional']['backgroundColor']
+			$json['components'][2]['style']['conditional']['backgroundColor']
 		);
 		$this->assertEquals(
 			'#012345',
-			$json['components'][3]['style']['conditional']['border']['all']['color']
+			$json['components'][2]['style']['conditional']['border']['all']['color']
 		);
 
 		$this->assertEquals(
@@ -248,11 +248,11 @@ class Quote_Test extends Component_TestCase {
 		);
 		$this->assertEquals(
 			'#fedcba',
-			$json['components'][3]['style']['conditional']['backgroundColor']
+			$json['components'][2]['style']['conditional']['backgroundColor']
 		);
 		$this->assertEquals(
 			'#012345',
-			$json['components'][3]['style']['conditional']['border']['all']['color']
+			$json['components'][2]['style']['conditional']['border']['all']['color']
 		);
 	}
 
