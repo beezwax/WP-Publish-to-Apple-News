@@ -37,6 +37,22 @@ class Heading_Test extends Component_TestCase {
 	}
 
 	/**
+	 * A data provider for the testDarkColors function.
+	 *
+	 * @return array An array of arrays representing function arguments.
+	 */
+	public function data_headings_dark_colors() {
+		return [
+			[ 1, '#111111' ],
+			[ 2, '#222222' ],
+			[ 3, '#333333' ],
+			[ 4, '#444444' ],
+			[ 5, '#555555' ],
+			[ 6, '#666666' ],
+		];
+	}
+
+	/**
 	 * A filter function to modify the text style in the generated JSON.
 	 *
 	 * @param array $json The JSON array to modify.
@@ -199,6 +215,50 @@ HTML;
 		$this->assertEquals(
 			$tracking / 100,
 			$json['componentTextStyles']['default-heading-' . $level]['tracking']
+		);
+		$this->assertFalse(
+			isset( $json['componentTextStyles']['default-heading-' . $level]['conditional'] )
+		);
+	}
+
+	/**
+	 * Tests dark color settings.
+	 *
+	 * @dataProvider data_headings_dark_colors
+	 *
+	 * @param int    $level       Heading level. 1-6.
+	 * @param string $color       The hex color for the font.
+	 *
+	 * @access public
+	 */
+	public function testDarkColors( $level,  $color ) {
+		// Set header settings.
+		$this->set_theme_settings(
+			[
+				'header' . $level . '_color_dark'       => $color,
+			]
+		);
+		// Setup.
+		$content = new Exporter_Content(
+			3,
+			'Title',
+			sprintf(
+				'<h%d>Heading</h%d>',
+				$level,
+				$level
+			)
+		);
+
+		// Run the export.
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
+		$json     = $exporter->export();
+		$this->ensure_tokens_replaced( $json );
+		$json = json_decode( $json, true );
+
+		// Validate header settings in generated JSON.
+		$this->assertEquals(
+			$color,
+			$json['componentTextStyles']['default-heading-' . $level]['conditional']['textColor']
 		);
 	}
 

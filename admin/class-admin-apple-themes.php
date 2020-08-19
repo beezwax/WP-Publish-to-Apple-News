@@ -105,6 +105,8 @@ class Admin_Apple_Themes extends Apple_News {
 					. '</select>';
 
 				break;
+			case 'group_heading':
+				break;
 			case 'integer':
 				$field = '<input type="number" id="%s" name="%s" value="%s">';
 

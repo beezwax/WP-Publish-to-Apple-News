@@ -691,6 +691,17 @@ class Components extends Builder {
 		 * All components after the cover must be grouped to avoid issues with
 		 * parallax text scroll.
 		 */
+		$conditional = array();
+		if ( ! empty( $theme->get_value( 'body_background_color_dark' ) ) ) {
+			$conditional = array(
+				'conditional' => array(
+					'backgroundColor' => $theme->get_value( 'body_background_color_dark' ),
+					'conditions'      => array(
+						'preferredColorScheme' => 'dark',
+					),
+				),
+			);
+		}       
 		$regrouped_components = array(
 			'role'       => 'container',
 			'layout'     => array(
@@ -698,8 +709,9 @@ class Components extends Builder {
 				'columnStart'          => 0,
 				'ignoreDocumentMargin' => true,
 			),
-			'style'      => array(
-				'backgroundColor' => $theme->get_value( 'body_background_color' ),
+			'style'      => array_merge(
+				array( 'backgroundColor' => $theme->get_value( 'body_background_color' ) ),
+				$conditional
 			),
 			'components' => array_slice( $new_components, $cover_index + 1 ),
 		);

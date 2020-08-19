@@ -56,6 +56,7 @@ class Image extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
+		$theme = \Apple_Exporter\Theme::get_used();
 		$this->register_spec(
 			'json-without-caption',
 			__( 'JSON without caption', 'apple-news' ),
@@ -65,6 +66,18 @@ class Image extends Component {
 				'layout' => '#layout#',
 			)
 		);
+
+		$conditional = array();
+		if ( ! empty( $theme->get_value( 'caption_color_dark' ) ) ) {
+			$conditional = array(
+				'conditional' => array(
+					'textColor'  => '#caption_color_dark#',
+					'conditions' => array(
+						'preferredColorScheme' => 'dark',
+					),
+				),
+			);
+		}
 
 		$this->register_spec(
 			'json-with-caption',
@@ -88,13 +101,16 @@ class Image extends Component {
 						'role'      => 'caption',
 						'text'      => '#caption_text#',
 						'format'    => 'html',
-						'textStyle' => array(
-							'textAlignment' => '#text_alignment#',
-							'fontName'      => '#caption_font#',
-							'fontSize'      => '#caption_size#',
-							'tracking'      => '#caption_tracking#',
-							'lineHeight'    => '#caption_line_height#',
-							'textColor'     => '#caption_color#',
+						'textStyle' => array_merge(
+							array(
+								'textAlignment' => '#text_alignment#',
+								'fontName'      => '#caption_font#',
+								'fontSize'      => '#caption_size#',
+								'tracking'      => '#caption_tracking#',
+								'lineHeight'    => '#caption_line_height#',
+								'textColor'     => '#caption_color#',
+							),
+							$conditional
 						),
 						'layout'    => array(
 							'ignoreDocumentMargin' => '#full_bleed_images#',
@@ -321,6 +337,7 @@ class Image extends Component {
 				'#caption_tracking#'    => intval( $theme->get_value( 'caption_tracking' ) ) / 100,
 				'#caption_line_height#' => intval( $theme->get_value( 'caption_line_height' ) ),
 				'#caption_color#'       => $theme->get_value( 'caption_color' ),
+				'#caption_color_dark#'  => $theme->get_value( 'caption_color_dark' ),
 				'#full_bleed_images#'   => ( 'yes' === $this->get_setting( 'full_bleed_images' ) ),
 			)
 		);

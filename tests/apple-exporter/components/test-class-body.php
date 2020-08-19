@@ -415,6 +415,9 @@ HTML;
 			0.5,
 			$json['componentTextStyles']['default-body']['tracking']
 		);
+		$this->assertFalse(
+			isset( $json['componentTextStyles']['default-body']['conditional'] )
+		);
 		$this->assertEquals(
 			'#abcabc',
 			$json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['backgroundColor']
@@ -442,6 +445,43 @@ HTML;
 		$this->assertEquals(
 			20,
 			$json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['padding']
+		);
+		$this->assertFalse(
+			isset( $json['componentTextStyles']['dropCapStyle']['conditional'] )
+		);
+	}
+
+	public function testDarkColorSettings() {
+		// Setup.
+		$this->set_theme_settings(
+			[
+				'body_color_dark'                     => '#abcdef',
+				'body_link_color_dark'                => '#fedcba',
+				'dropcap_background_color_dark'       => '#abcabc',
+				'dropcap_color_dark'                  => '#defdef',
+			]
+		);
+
+		$post_id = $this->factory->post->create( array(
+			'post_content' => '<p>Lorem ipsum.</p><p>Dolor sit amet.</p>',
+		) );
+
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentTextStyles']['default-body']['conditional']['textColor']
+		);
+		$this->assertEquals(
+			'#fedcba',
+			$json['componentTextStyles']['default-body']['conditional']['linkStyle']['textColor']
+		);
+		$this->assertEquals(
+			'#abcabc',
+			$json['componentTextStyles']['dropcapBodyStyle']['conditional']['dropCapStyle']['backgroundColor']
+		);
+		$this->assertEquals(
+			'#defdef',
+			$json['componentTextStyles']['dropcapBodyStyle']['conditional']['dropCapStyle']['textColor']
 		);
 	}
 

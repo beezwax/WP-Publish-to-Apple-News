@@ -21,6 +21,7 @@
 			<div class="apple-news-settings-left">
 				<h3><?php esc_html_e( 'Theme Settings', 'apple-news' ); ?></h3>
 				<p><?php esc_html_e( 'Configuration for the visual appearance of the theme. Updates to these settings will not change the appearance of any articles previously published to your channel in Apple News using this theme unless you republish them.', 'apple-news' ); ?></p>
+				<p><?php esc_html_e( 'Apple News supports Dark Mode. Each applicable component is now given the ability to set its own dark mode colors. This will override the intelligent defaults that Apple News will attempt to use.', 'apple-news' ); ?></p>
 				<p>
 				<?php
 					printf(
@@ -42,7 +43,15 @@
 										<?php do_action( 'apple_news_before_setting', $apple_setting_name, $theme_options[ $apple_setting_name ] ); ?>
 										<label class="setting-container">
 											<?php if ( ! empty( $theme_options[ $apple_setting_name ]['label'] ) ) : ?>
-												<span class="label-name"><?php echo esc_html( $theme_options[ $apple_setting_name ]['label'] ); ?></span>
+												<span class="label-name">
+													<?php if ( 'group_heading' === $theme_options[ $apple_setting_name ]['type'] ) : ?>
+														<strong>
+													<?php endif; ?>
+													<?php echo esc_html( $theme_options[ $apple_setting_name ]['label'] ); ?>
+													<?php if ( 'group_heading' === $theme_options[ $apple_setting_name ]['type'] ) : ?>
+														</strong>
+													<?php endif; ?>
+												</span>
 											<?php endif; ?>
 											<?php
 											echo wp_kses(
