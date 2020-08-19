@@ -73,6 +73,13 @@ class Admin_Apple_Themes extends Apple_News {
 		$field = '';
 		$value = $theme->get_value( $option_name );
 		switch ( $option['type'] ) {
+			case 'boolean':
+				$field = '<select id="%s" name="%s">'
+					. '<option value="0" ' . selected( $value, false, false ) . '>No</option>'
+					. '<option value="1" ' . selected( $value, true, false ) . '>Yes</option>'
+					. '</select>';
+
+				break;
 			case 'color':
 				$field = '<input type="text" id="%s" name="%s" value="%s" class="apple-news-color-picker">';
 
