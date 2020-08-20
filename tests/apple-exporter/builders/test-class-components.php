@@ -19,7 +19,7 @@ use \Apple_Exporter\Builders\Component_Text_Styles;
 /**
  * A class which is used to test the \Apple_Exporter\Builders\Components class.
  */
-class Component_Tests extends WP_UnitTestCase {
+class Component_Tests extends Apple_News_Testcase {
 
 	/**
 	 * A data provider for the full size image URL test.
@@ -104,6 +104,7 @@ class Component_Tests extends WP_UnitTestCase {
 	 * @access public
 	 */
 	public function setup() {
+		parent::setUp();
 
 		// Setup.
 		$themes = new Admin_Apple_Themes;
@@ -147,6 +148,7 @@ class Component_Tests extends WP_UnitTestCase {
 	 * a URL, which lets us build cover images with captions.
 	 */
 	public function testCoverImageArrayConfig() {
+		$this->set_theme_settings( [ 'cover_caption' => true ] );
 		$cover_url = wp_get_attachment_url( $this->cover );
 		$content   = new Exporter_Content(
 			1,
@@ -198,6 +200,8 @@ class Component_Tests extends WP_UnitTestCase {
 	 * cover image.
 	 */
 	public function testFeaturedImageDeduping() {
+		$this->set_theme_settings( [ 'cover_caption' => true ] );
+
 		// Get image URLs for the two attachment images created during setUp.
 		$image1           = wp_get_attachment_url( $this->cover );
 		$image2           = wp_get_attachment_url( $this->image2 );

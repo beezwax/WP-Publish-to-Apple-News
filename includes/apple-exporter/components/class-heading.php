@@ -107,8 +107,8 @@ class Heading extends Component {
 						'textColor'     => '#header' . $level . '_color#',
 						'textAlignment' => '#text_alignment#',
 						'tracking'      => '#header' . $level . '_tracking#',
-					)
-					,$conditional
+					),
+					$conditional
 				)
 			);
 		}

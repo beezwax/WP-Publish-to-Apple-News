@@ -133,6 +133,7 @@ class Cover_Test extends Component_TestCase {
 	 */
 	public function testGeneratedJSONFromHTMLWithCaption() {
 		$this->settings->set( 'use_remote_images', 'yes' );
+		$this->set_theme_settings( [ 'cover_caption' => true ] );
 
 		// Create dummy post and attachment.
 		$post_id = self::factory()->post->create();
@@ -238,7 +239,12 @@ class Cover_Test extends Component_TestCase {
 	 * Ensures that the lightbox font is set to the same font face as the image caption.
 	 */
 	public function testLightboxFont() {
-		$this->set_theme_settings( [ 'caption_font' => 'Menlo-Regular' ] );
+		$this->set_theme_settings(
+			[
+				'caption_font'  => 'Menlo-Regular',
+				'cover_caption' => true,
+			]
+		);
 
 		// Create an image and give it a caption.
 		$image_id = $this->get_new_attachment( 0, 'Test Caption!' );
@@ -255,5 +261,34 @@ class Cover_Test extends Component_TestCase {
 			'Menlo-Regular',
 			$json['components'][0]['components'][0]['caption']['textStyle']['fontName']
 		);
+	}
+
+	/**
+	 * Ensures that the cover caption is not enabled by default, but can be
+	 * enabled via a setting.
+	 */
+	public function testCaptionSetting() {
+		// Create an image and give it a caption.
+		$image_id = $this->get_new_attachment( 0, 'Test Caption!' );
+
+		// Create a test post.
+		$post_id = self::factory()->post->create();
+
+		// Set the featured image for the post.
+		set_post_thumbnail( $post_id, $image_id );
+
+		// Ensure that the caption is not set on the Cover component by default.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 1, count( $json['components'][0]['components'] ) );
+		$this->assertEquals( 'headerPhotoLayout', $json['components'][0]['components'][0]['layout'] );
+
+		// Enable support for the cover caption.
+		$this->set_theme_settings( [ 'cover_caption' => true ] );
+
+		// Ensure that the caption is set on the Cover component.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 2, count( $json['components'][0]['components'] ) );
+		$this->assertEquals( 'headerPhotoLayoutWithCaption', $json['components'][0]['components'][0]['layout'] );
+		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
 	}
 }

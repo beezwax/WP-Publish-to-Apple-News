@@ -754,6 +754,11 @@ class Theme {
 				'label'       => __( 'Caption tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
+			'cover_caption'                      => array(
+				'default' => false,
+				'label'   => __( 'Enable caption on the Cover component', 'apple-news' ),
+				'type'    => 'boolean',
+			),
 			'dark_mode_colors_heading'           => array(
 				'label'       => __( 'Dark Mode Colors', 'apple-news' ),
 				'description' => __( 'Colors specific to Apple News Dark Mode', 'apple-news' ),
@@ -1029,7 +1034,7 @@ class Theme {
 				'hidden'  => true,
 				'type'    => 'integer',
 			),
-			'meta_component_order'              => array(
+			'meta_component_order'               => array(
 				'default'  => array( 'cover', 'title', 'byline' ),
 				'callback' => array( get_called_class(), 'render_meta_component_order' ),
 				'type'     => 'array',
@@ -1491,6 +1496,9 @@ class Theme {
 
 			// Convert the format of the value based on type.
 			switch ( $options[ $key ]['type'] ) {
+				case 'boolean':
+					$this->values[ $key ] = (bool) $value;
+					break;
 				case 'float':
 					$this->values[ $key ] = (float) $value;
 					break;
@@ -1563,13 +1571,18 @@ class Theme {
 
 					break;
 
+				case 'boolean':
+					$this->values[ $option_key ] = (bool) $_POST[ $option_key ];
+
+					break;
+
 				case 'float':
-					$this->values[ $option_key ] = floatval( $_POST[ $option_key ] );
+					$this->values[ $option_key ] = (float) $_POST[ $option_key ];
 
 					break;
 
 				case 'integer':
-					$this->values[ $option_key ] = intval( $_POST[ $option_key ] );
+					$this->values[ $option_key ] = (int) $_POST[ $option_key ];
 
 					break;
 
@@ -1800,6 +1813,11 @@ class Theme {
 
 					break;
 
+				case 'boolean':
+					$value = (bool) $value;
+
+					break;
+
 				case 'color':
 					// Sanitize.
 					$value = sanitize_text_field( $value );
@@ -1824,7 +1842,7 @@ class Theme {
 					break;
 
 				case 'float':
-					$value = floatval( $value );
+					$value = (float) $value;
 
 					break;
 
@@ -1852,7 +1870,7 @@ class Theme {
 					break;
 
 				case 'integer':
-					$value = intval( $value );
+					$value = (int) $value;
 
 					break;
 
@@ -2065,6 +2083,7 @@ class Theme {
 			'caption'         => array(
 				'label'    => __( 'Image caption', 'apple-news' ),
 				'settings' => array(
+					'cover_caption',
 					'caption_font',
 					'caption_size',
 					'caption_line_height',
