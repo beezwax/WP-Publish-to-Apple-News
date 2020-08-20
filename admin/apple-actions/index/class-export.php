@@ -291,9 +291,10 @@ class Export extends Action {
 					$content = str_replace(
 						$match,
 						sprintf(
-							'<!-- wp:video -->' . "\n" . '<figure class="wp-block-video"><video controls src="https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s"></video></figure>' . "\n" . '<!-- /wp:video -->',
+							'<!-- wp:video -->' . "\n" . '<figure class="wp-block-video"><video controls src="https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s" poster="%s"></video></figure>' . "\n" . '<!-- /wp:video -->',
 							$atts['account_id'],
-							$atts['video_id']
+							$atts['video_id'],
+							$this->get_brightcove_stillurl( $atts['account_id'], $atts['video_id'] )
 						),
 						$content
 					);
@@ -310,9 +311,10 @@ class Export extends Action {
 					$content = str_replace(
 						$match,
 						sprintf(
-							'<video controls src="https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s"></video>',
+							'<video controls src="https://edge.api.brightcove.com/playback/v1/accounts/%s/videos/%s" poster="%s"></video>',
 							$atts['account_id'],
-							$atts['video_id']
+							$atts['video_id'],
+							$this->get_brightcove_stillurl( $atts['account_id'], $atts['video_id'] )
 						),
 						$content
 					);
@@ -321,6 +323,45 @@ class Export extends Action {
 		}
 
 		return $content;
+	}
+
+	/**
+	 * Given an account ID and video ID, gets the Brightcove still image URL.
+	 *
+	 * @param string $account_id The Brightcove account ID to use.
+	 * @param string $video_id   The Brightcove video ID to use.
+	 *
+	 * @return string The URL to the still image. Empty string on failure.
+	 */
+	private function get_brightcove_stillurl( $account_id, $video_id ) {
+		global $bc_accounts;
+
+		// If the $bc_accounts global doesn't exist, or if the BC_CMS_API class doesn't exist, bail.
+		if ( empty( $bc_accounts ) || ! class_exists( '\BC_CMS_API' ) ) {
+			return '';
+		}
+
+		// Ensure the account ID and video IDs are strings.
+		$account_id = (string) $account_id;
+		$video_id   = (string) $video_id;
+
+		// Get the current account ID and switch accounts if necessary.
+		$old_account_id = (string) $bc_accounts->get_account_id();
+		if ( $old_account_id !== $account_id ) {
+			$bc_accounts->set_current_account_by_id( $account_id );
+		}
+
+		// Initialize a new BC_CMS_API instance and fetch the video images.
+		$bc_cms_api = new \BC_CMS_API();
+		$response   = $bc_cms_api->video_get_images( $video_id );
+		$image      = ! empty( $response['poster']['src'] ) ? $response['poster']['src'] : '';
+
+		// Switch accounts back, if necessary.
+		if ( $old_account_id !== $account_id ) {
+			$bc_accounts->set_current_account_by_id( $old_account_id );
+		}
+
+		return $image;
 	}
 
 	/**

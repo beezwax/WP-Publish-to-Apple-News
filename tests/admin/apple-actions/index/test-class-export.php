@@ -57,6 +57,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$json    = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 'video', $json['components'][2]['role'] );
 		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][2]['URL'] );
+		$this->assertEquals( 'https://cf-images.us-east-1.prod.boltdns.net/v1/jit/1234567890/abcd1234-ef56-ab78-cd90-efabcd123456/main/1280x720/1s234ms/match/image.jpg', $json['components'][2]['stillURL'] );
 	}
 
 	/**
