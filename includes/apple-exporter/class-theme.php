@@ -489,9 +489,8 @@ class Theme {
 		}
 
 		// Get inactive components.
-		$options             = self::get_options();
 		$inactive_components = array_diff( // phpcs:ignore WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable
-			$options['meta_component_order']['default'],
+			[ 'cover', 'title', 'byline', 'intro' ],
 			$component_order
 		);
 
