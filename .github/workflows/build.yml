@@ -14,4 +14,12 @@ jobs:
     steps:
       - name: 'curl to build server'
         shell: bash
-        run: curl -X POST https://alleyinteractive.deploybot.com/webhook/dd3e327ef03a30b9b6f84a8a6293cc21750da4f81fa35886
+        env:
+          URL: ${{ secrets.DB_BUILD_URL }}
+          TOKEN: ${{ secrets.DB_BUILD_SECRET }}
+          ENV_ID: ${{ secrets.DB_BUILD_ENV }}
+        run: |
+          curl -s "$URL" \
+            -X POST \
+            -H "X-Api-Token: $TOKEN" \
+            -d "{\"environment_id\":${ENV_ID},\"deploy_from_scratch\":true,\"trigger_notifications\":true,\"comment\":\"Build Trigger from GitHub Actions\"}"
