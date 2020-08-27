@@ -332,17 +332,7 @@ class Request {
 			$args['headers']['Content-Length'] = strlen( $content );
 			$args['headers']['Content-Type']   = 'multipart/form-data; boundary=' . $this->mime_builder->boundary();
 			$args['body']                      = $content;
-
-			/*
-			 * If the remote images setting is off, increase the timeout to 30s so
-			 * there is enough time to send the bundled images.
-			 */
-			$settings = get_option( 'apple_news_settings' );
-			if ( ! empty( $settings['use_remote_images'] )
-				&& 'no' === $settings['use_remote_images']
-			) {
-				$args['timeout'] = 30; // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
-			}
+			$args['timeout']                   = 30; // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
 		}
 
 		/**
@@ -368,7 +358,7 @@ class Request {
 		$response = wp_safe_remote_request( esc_url_raw( $url ), $args );
 
 		// Check for DATE_NOT_RECENT error and add a warning for it explicitly.
-		if ( ! empty( $response['body'] ) && false !== strpos( $response['body'], 'DATE_NOT_RECENT' ) ) {
+		if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) && false !== strpos( $response['body'], 'DATE_NOT_RECENT' ) ) {
 			$response_body = json_decode( $response['body'], true );
 			if ( ! empty( $response_body['errors'] ) && is_array( $response_body['errors'] ) ) {
 				foreach ( $response_body['errors'] as $error ) {
