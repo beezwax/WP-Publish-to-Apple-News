@@ -22,6 +22,162 @@ use Apple_Exporter\Exporter_Content;
 class Body_Test extends Component_TestCase {
 
 	/**
+	 * A data provider that supplies empty HTML signatures to ensure that they
+	 * are not erroneously transformed into empty body elements.
+	 *
+	 * @return array An array of arrays representing function arguments.
+	 */
+	public function data_empty_html() {
+		return [
+			// Test classic editor, multiple line breaks.
+			[
+				<<<HTML
+A
+
+
+
+B
+HTML
+			],
+
+			// Test classic editor, multiple line breaks with &nbsp.
+			[
+				<<<HTML
+A
+
+&nbsp;
+
+B
+HTML
+			],
+
+			// Test classic editor, extra line breaks at the end.
+			[
+				<<<HTML
+A
+
+B
+
+
+HTML
+			],
+
+			// Test classic editor, extra line breaks at the end with a non-breaking space.
+			[
+				<<<HTML
+A
+
+B
+
+&nbsp;
+HTML
+			],
+
+			// Test Gutenberg editor, empty paragraph tag.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+HTML
+			],
+
+			// Test Gutenberg editor, paragraph tag containing a single space.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p> </p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+HTML
+			],
+
+			// Test Gutenberg editor, paragraph tag containing a non-breaking space.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>&nbsp;</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+HTML
+			],
+
+			// Test Gutenberg editor, extra paragraph at the end.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p></p>
+<!-- /wp:paragraph -->
+HTML
+			],
+
+			// Test Gutenberg editor, extra paragraph at the end containing a space.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p> </p>
+<!-- /wp:paragraph -->
+HTML
+			],
+
+			// Test Gutenberg editor, extra paragraph at the end containing a non-breaking space.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>&nbsp;</p>
+<!-- /wp:paragraph -->
+HTML
+			],
+		];
+	}
+
+	/**
 	 * A filter function to modify the text style in the generated JSON.
 	 *
 	 * @param array $json The JSON array to modify.
@@ -52,7 +208,7 @@ class Body_Test extends Component_TestCase {
 	 *
 	 * @access public
 	 */
-	public function testEmptyContent() {
+	public function test_empty_content() {
 
 		// Setup.
 		$this->settings->html_support = 'no';
@@ -78,31 +234,18 @@ class Body_Test extends Component_TestCase {
 	/**
 	 * Tests handling for empty HTML content.
 	 *
-	 * @access public
+	 * @dataProvider data_empty_html
+	 *
+	 * @param string $post_content The post content for the post.
 	 */
-	public function testEmptyHTMLContent() {
+	public function test_empty_html_content( $post_content ) {
+		$post_id = self::factory()->post->create( [ 'post_content' => $post_content ] );
+		$json    = $this->get_json_for_post( $post_id );
 
-		// Setup.
-		$html = '<p>a</p><p>&nbsp;</p><p>b</p>';
-		$component = new Body(
-			$html,
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		// Test.
-		$this->assertEquals(
-			array(
-				'role'      => 'body',
-				'text'      => '<p>a</p><p>b</p>',
-				'format'    => 'html',
-				'textStyle' => 'dropcapBodyStyle',
-				'layout'    => 'body-layout',
-			),
-			$component->to_array()
-		);
+		// There should only be two body components, one containing A, one containing B.
+		$this->assertEquals( 4, count( $json['components'] ) );
+		$this->assertEquals( '<p>A</p>', $json['components'][2]['text'] );
+		$this->assertEquals( '<p>B</p>', $json['components'][3]['text'] );
 	}
 
 	/**
