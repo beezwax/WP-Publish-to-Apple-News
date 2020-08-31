@@ -20,7 +20,7 @@ branches:
 
 cache:
   directories:
-    - $HOME/.composer/cache
+    - $HOME/.config/composer/cache
     - ./vendor
     - node_modules
 
@@ -51,7 +51,7 @@ before_script:
   # Turn off Xdebug. See https://core.trac.wordpress.org/changeset/40138.
   - phpenv config-rm xdebug.ini || echo "Xdebug not available"
 
-  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - export PATH="$HOME/.config/composer/vendor/bin:$PATH"
 
   # Couple the PHPUnit version to the PHP version.
   - |
@@ -76,7 +76,7 @@ before_script:
   - |
     if [[ "$WP_PHPCS" == "1" ]] ; then
       composer global require automattic/vipwpcs
-      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs,$HOME/.composer/vendor/automattic/vipwpcs
+      phpcs --config-set installed_paths $HOME/.config/composer/vendor/wp-coding-standards/wpcs,$HOME/.config/composer/vendor/automattic/vipwpcs
     fi
 
   # Set up jest.
@@ -107,8 +107,7 @@ script:
   # @link http://pear.php.net/package/PHP_CodeSniffer/
   - |
     if [[ "$WP_PHPCS" == "1" ]] ; then
-      phpcs -i
-      phpcs -v
+      phpcs
     fi
 
   # Run the plugin's unit tests in standalone mode.
