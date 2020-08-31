@@ -37,6 +37,8 @@ require_once __DIR__ . '/class-apple-news-testcase.php';
 require_once __DIR__ . '/apple-exporter/components/class-component-testcase.php';
 
 // Load mocks for integration tests.
-require_once __DIR__ . '/mocks/class-bc-accounts.php';
-require_once __DIR__ . '/mocks/class-bc-cms-api.php';
-$bc_accounts = new BC_Accounts();
+require_once __DIR__ . '/mocks/class-bc-setup.php';
+
+// Activate mocked Brightcove functionality.
+$bc_setup = new BC_Setup();
+$bc_setup->action_init();
