@@ -45,8 +45,32 @@ class Body extends Component {
 			return null;
 		}
 
+		// UTF-8 whitespace values to remove when checking for "empty" content.
+		$whitespace = [
+			'SPACE'                     => "\x20",
+			'NO-BREAK SPACE'            => "\xc2\xa0",
+			'OGHAM SPACE MARK'          => "\xe1\x9a\x80",
+			'EN QUAD'                   => "\xe2\x80\x80",
+			'EM QUAD'                   => "\xe2\x80\x81",
+			'EN SPACE'                  => "\xe2\x80\x82",
+			'EM SPACE'                  => "\xe2\x80\x83",
+			'THREE-PER-EM SPACE'        => "\xe2\x80\x84",
+			'FOUR-PER-EM SPACE'         => "\xe2\x80\x85",
+			'SIX-PER-EM SPACE'          => "\xe2\x80\x86",
+			'FIGURE SPACE'              => "\xe2\x80\x87",
+			'PUNCTUATION SPACE'         => "\xe2\x80\x88",
+			'THIN SPACE'                => "\xe2\x80\x89",
+			'HAIR SPACE'                => "\xe2\x80\x8a",
+			'ZERO WIDTH SPACE'          => "\xe2\x80\x8b",
+			'NARROW NO-BREAK SPACE'     => "\xe2\x80\xaf",
+			'MEDIUM MATHEMATICAL SPACE' => "\xe2\x81\x9f",
+			'IDEOGRAPHIC SPACE'         => "\xe3\x80\x80",
+		];
+
 		// If the node is p, ul or ol AND it's empty, just ignore.
-		if ( empty( $node->nodeValue ) ) {
+		if ( empty( $node->nodeValue )
+			|| empty( str_replace( $whitespace, '', $node->nodeValue ) )
+		) {
 			return null;
 		}
 
@@ -141,7 +165,7 @@ class Body extends Component {
 		if ( ! empty( $dropcap_color_dark ) ) {
 			$conditional['conditional']['dropCapStyle']['textColor'] = '#dropcap_color_dark#';
 		}
-		
+
 		if ( ! empty( $dropcap_background_color_dark ) ) {
 			$conditional['conditional']['dropCapStyle']['backgroundColor'] = '#dropcap_background_color_dark#';
 		}
@@ -352,7 +376,7 @@ class Body extends Component {
 		if ( ! empty( $body_color_dark ) ) {
 			$conditional['conditional']['textColor'] = '#body_color_dark#';
 		}
-		
+
 		if ( ! empty( $body_link_color_dark ) ) {
 			$conditional['conditional']['linkStyle'] = array(
 				'textColor' => '#body_link_color_dark#',
