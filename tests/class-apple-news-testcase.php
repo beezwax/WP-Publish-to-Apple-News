@@ -111,10 +111,8 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		$this->prophet               = new Prophecy\Prophet();
 		$this->prophecized_workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
 
-		// Create a new theme and save it for future use.
-		$this->theme = new Apple_Exporter\Theme();
-		$this->theme->save();
-		$this->theme->set_active();
+		// Load the Default theme from config and save it for future use.
+		$this->load_example_theme( 'default' );
 
 		// Create styles for future use.
 		$this->styles = new Apple_Exporter\Builders\Component_Text_Styles(
@@ -201,6 +199,36 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		);
 
 		return json_decode( $export->perform(), true );
+	}
+
+	/**
+	 * Loads an example theme given a slug.
+	 *
+	 * @param string $slug The slug of the example theme to load.
+	 */
+	protected function load_example_theme( $slug ) {
+		// Load the theme data from the JSON configuration file.
+		$options = json_decode( file_get_contents( dirname( __DIR__ ) . '/assets/themes/' . $slug . '.json' ), true );
+		if ( empty( $options ) ) {
+			return;
+		}
+
+		// Negotiate screenshot URL.
+		$options['screenshot_url'] = plugins_url(
+			'/assets/screenshots/' . $slug . '.png',
+			__DIR__
+		);
+
+		// Create a new instance of the Theme class and set the theme name.
+		$this->theme = new \Apple_Exporter\Theme();
+		$this->theme->set_name( $options['theme_name'] );
+
+		// Save the theme.
+		$this->theme->load( $options );
+		$this->theme->save();
+
+		// Make this theme the active theme.
+		$this->theme->set_active();
 	}
 
 	/**
