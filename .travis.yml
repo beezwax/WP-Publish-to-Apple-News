@@ -107,7 +107,8 @@ script:
   # @link http://pear.php.net/package/PHP_CodeSniffer/
   - |
     if [[ "$WP_PHPCS" == "1" ]] ; then
-      phpcs
+      phpcs -i
+      phpcs -v
     fi
 
   # Run the plugin's unit tests in standalone mode.
