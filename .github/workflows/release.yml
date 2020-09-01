@@ -18,6 +18,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided by Actions
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          body: A version that contains pre-built JavaScript assets for Gutenberg. This version matches what is deployed to WordPress.org, minus some development and wiki image files, and is suitable for inclusion via submodule.
           draft: false
           prerelease: true
