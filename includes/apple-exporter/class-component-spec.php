@@ -232,15 +232,15 @@ class Component_Spec {
 		// Validate the JSON.
 		$json = json_decode( $spec, true );
 		if ( empty( $json ) ) {
-			\Admin_Apple_Notice::error(
+			\Admin_Apple_Notice::info(
 				sprintf(
 					// translators: token is a spec label.
-					__( 'The spec for %s was invalid and cannot be saved', 'apple-news' ),
+					__( 'The spec for %s was empty or invalid. Reverting to the default spec.', 'apple-news' ),
 					$this->label
 				)
 			);
 
-			return false;
+			$json = $this->spec;
 		}
 
 		// Compare this JSON to the built-in JSON.
