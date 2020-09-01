@@ -1070,7 +1070,7 @@ class Theme {
 				'type'        => 'integer',
 			),
 			'pullquote_border_color'             => array(
-				'default' => '',
+				'default' => '#53585f',
 				'label'   => __( 'Pull quote border color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -1172,17 +1172,17 @@ class Theme {
 				'type'    => 'select',
 			),
 			'table_body_line_height'             => array(
-				'default' => 20.0,
+				'default' => 24.0,
 				'label'   => __( 'Table body line height', 'apple-news' ),
 				'type'    => 'float',
 			),
 			'table_body_padding'                 => array(
-				'default' => 5.0,
+				'default' => 10.0,
 				'label'   => __( 'Table body padding', 'apple-news' ),
 				'type'    => 'float',
 			),
 			'table_body_size'                    => array(
-				'default' => 16,
+				'default' => 17,
 				'label'   => __( 'Table body font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
@@ -1199,7 +1199,7 @@ class Theme {
 				'type'    => 'select',
 			),
 			'table_border_color'                 => array(
-				'default' => '#4f4f4f',
+				'default' => '#333333',
 				'label'   => __( 'Table border color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -1220,7 +1220,7 @@ class Theme {
 				'type'    => 'float',
 			),
 			'table_header_background_color'      => array(
-				'default' => '#fafafa',
+				'default' => '#e1e1e1',
 				'label'   => __( 'Table header background color', 'apple-news' ),
 				'type'    => 'color',
 			),
@@ -1245,13 +1245,13 @@ class Theme {
 				'type'    => 'font',
 			),
 			'table_header_horizontal_alignment'  => array(
-				'default' => 'center',
+				'default' => 'left',
 				'label'   => __( 'Table header horizontal alignment', 'apple-news' ),
 				'options' => array( 'left', 'center', 'right' ),
 				'type'    => 'select',
 			),
 			'table_header_line_height'           => array(
-				'default' => 20.0,
+				'default' => 24.0,
 				'label'   => __( 'Table header line height', 'apple-news' ),
 				'type'    => 'float',
 			),
@@ -1261,7 +1261,7 @@ class Theme {
 				'type'    => 'float',
 			),
 			'table_header_size'                  => array(
-				'default' => 16,
+				'default' => 17,
 				'label'   => __( 'Table header font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
