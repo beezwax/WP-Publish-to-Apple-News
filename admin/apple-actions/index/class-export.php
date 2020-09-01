@@ -336,9 +336,21 @@ class Export extends Action {
 	private function get_brightcove_stillurl( $account_id, $video_id ) {
 		global $bc_accounts;
 
-		// If the $bc_accounts global doesn't exist, or if the BC_CMS_API class doesn't exist, bail.
-		if ( empty( $bc_accounts ) || ! class_exists( '\BC_CMS_API' ) ) {
+		// If the $bc_accounts global doesn't exist, bail.
+		if ( empty( $bc_accounts ) ) {
 			return '';
+		}
+
+		/*
+		 * BC_Setup only runs if is_admin returns true, which won't be if the
+		 * publish was triggered from a REST request (which it will be if the
+		 * user is using Gutenberg to publish manually, or on publish of the
+		 * post with auto-publish turned on). Therefore, we need to bootstrap
+		 * the functionality ourselves by mimicing the behavior of the init
+		 * hook.
+		 */
+		if ( ! class_exists( '\BC_CMS_API' ) && class_exists( '\BC_Setup' ) ) {
+			\BC_Setup::action_init();
 		}
 
 		// Ensure the account ID and video IDs are strings.
