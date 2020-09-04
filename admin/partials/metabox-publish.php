@@ -2,6 +2,19 @@
 /**
  * Publish to Apple News partials: Publish Metabox template
  *
+ * @global string  $api_id
+ * @global bool    $deleted
+ * @global bool    $is_hidden
+ * @global bool    $is_paid
+ * @global bool    $is_preview
+ * @global bool    $is_sponsored
+ * @global string  $maturity_rating
+ * @global bool    $pending
+ * @global string  $pullquote
+ * @global string  $pullquote_position
+ * @global WP_Post $post
+ * @global string  $publish_action
+ *
  * @package Apple_News
  */
 

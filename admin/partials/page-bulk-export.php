@@ -2,6 +2,8 @@
 /**
  * Publish to Apple News partials: Bulk Export page template
  *
+ * @global array $articles
+ *
  * @package Apple_News
  */
 

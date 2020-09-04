@@ -2,6 +2,8 @@
 /**
  * Publish to Apple News partials: Cover Image template
  *
+ * @global WP_Post $post
+ *
  * @package Apple_News
  */
 
