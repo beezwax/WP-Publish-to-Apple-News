@@ -221,7 +221,7 @@ class Component_Spec {
 	/**
 	 * Save the provided spec override.
 	 *
-	 * @param array  $spec       The spec definition to save.
+	 * @param string $spec       The spec definition to save.
 	 * @param string $theme_name Optional. Theme name to save to if other than default.
 	 *
 	 * @access public
@@ -232,13 +232,15 @@ class Component_Spec {
 		// Validate the JSON.
 		$json = json_decode( $spec, true );
 		if ( empty( $json ) ) {
-			\Admin_Apple_Notice::info(
-				sprintf(
+			if ( null === $json ) {
+				\Admin_Apple_Notice::info(
+					sprintf(
 					// translators: token is a spec label.
-					__( 'The spec for %s was empty or invalid. Reverting to the default spec.', 'apple-news' ),
-					$this->label
-				)
-			);
+						__( 'The spec for %s was empty or invalid. Reverting to the default spec.', 'apple-news' ),
+						$this->label
+					)
+				);
+			}
 
 			$json = $this->spec;
 		}
@@ -407,7 +409,9 @@ class Component_Spec {
 	 * @return string The JSON for the spec.
 	 */
 	public function format_json( $spec ) {
-		return wp_json_encode( $spec, JSON_PRETTY_PRINT );
+		return ! empty( $spec )
+			? wp_json_encode( $spec, JSON_PRETTY_PRINT )
+			: '{}';
 	}
 
 	/**

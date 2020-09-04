@@ -105,7 +105,7 @@
 				foreach ( $specs as $apple_spec ) :
 					$apple_field_name   = 'apple_news_json_' . $apple_spec->key_from_name( $apple_spec->name );
 					$apple_json_display = $apple_spec->format_json( $apple_spec->get_spec( $selected_theme ) );
-					$apple_rows         = substr_count( $apple_json_display, "\n" ) + 1;
+					$apple_rows         = max( substr_count( $apple_json_display, "\n" ) + 1, 5 );
 					$apple_editor_name  = 'editor_' . str_replace( '-', '_', $apple_field_name );
 					$apple_editor_style = sprintf(
 						'width: %spx; height: %spx',
