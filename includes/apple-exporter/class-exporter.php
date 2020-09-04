@@ -293,6 +293,7 @@ class Exporter {
 				'conditional' => array(
 					'backgroundColor' => $theme->get_value( 'body_background_color_dark' ),
 					'conditions'      => array(
+						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
 					),
 				),

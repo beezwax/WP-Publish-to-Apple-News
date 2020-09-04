@@ -80,6 +80,7 @@ class Quote extends Component {
 						'top'    => false,
 					),
 					'conditions'      => array(
+						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
 					),
 				),
@@ -145,6 +146,7 @@ class Quote extends Component {
 				'conditional' => array(
 					'textColor'  => '#blockquote_color_dark#',
 					'conditions' => array(
+						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
 					),
 				),
@@ -208,6 +210,7 @@ class Quote extends Component {
 						'right' => false,
 					),
 					'conditions' => array(
+						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
 					),
 				),
@@ -272,6 +275,7 @@ class Quote extends Component {
 				'conditional' => array(
 					'textColor'  => '#pullquote_color_dark#',
 					'conditions' => array(
+						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
 					),
 				),
