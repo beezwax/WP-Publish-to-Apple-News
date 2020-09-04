@@ -2,6 +2,13 @@
 /**
  * Publish to Apple News partials: Sections page template
  *
+ * @global array       $sections
+ * @global WP_Taxonomy $taxonomy
+ * @global array       $taxonomy_mappings
+ * @global string      $theme_admin_url
+ * @global array       $theme_mappings
+ * @global array       $themes
+ *
  * @package Apple_News
  */
 
@@ -71,7 +78,7 @@
 					<td>
 						<?php
 							$apple_theme_id       = 'apple-news-theme-mapping-' . ( ++ $apple_count );
-							$apple_selected_theme = ( isset( $apple_theme_mappings[ $apple_section_id ] ) ) ? $apple_theme_mappings[ $apple_section_id ] : '';
+							$apple_selected_theme = ( isset( $theme_mappings[ $apple_section_id ] ) ) ? $theme_mappings[ $apple_section_id ] : '';
 						?>
 						<select name="theme-mapping-<?php echo esc_attr( $apple_section_id ); ?>" id="<?php echo esc_attr( $apple_theme_id ); ?>">
 							<option value=""></option>

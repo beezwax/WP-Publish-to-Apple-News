@@ -2,6 +2,13 @@
 /**
  * Publish to Apple News partials: JSON page template
  *
+ * @global array  $all_themes
+ * @global array  $components
+ * @global string $selected_component
+ * @global string $selected_theme
+ * @global array  $specs
+ * @global string $theme_admin_url
+ *
  * @package Apple_News
  */
 
