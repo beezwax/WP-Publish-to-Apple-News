@@ -2,6 +2,8 @@
 /**
  * Publish to Apple News partials: Options page template
  *
+ * @global array $sections
+ *
  * @package Apple_News
  */
 

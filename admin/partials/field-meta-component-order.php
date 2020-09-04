@@ -2,6 +2,9 @@
 /**
  * Partial for the meta component order field in theme options configuration.
  *
+ * @global array $component_order
+ * @global array $inactive_components
+ *
  * @package Apple_News
  */
 

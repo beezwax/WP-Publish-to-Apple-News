@@ -2,6 +2,11 @@
 /**
  * Publish to Apple News partials: Single Push page template
  *
+ * @global string  $message
+ * @global WP_Post $post
+ * @global array   $post_meta
+ * @global array   $sections
+ *
  * @package Apple_News
  */
 
