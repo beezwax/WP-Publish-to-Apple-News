@@ -2,6 +2,8 @@
 /**
  * Publish to Apple News partials: Options Section Hidden page template
  *
+ * @global Admin_Apple_Settings_Section $apple_section
+ *
  * @package Apple_News
  */
 

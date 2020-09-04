@@ -2,6 +2,11 @@
 /**
  * Publish to Apple News partials: Theme Edit page template
  *
+ * @global Apple_Exporter\Theme $theme
+ * @global array                $theme_options
+ * @global string               $theme_admin_url
+ * @global string               $theme_name
+ *
  * @package Apple_News
  */
 

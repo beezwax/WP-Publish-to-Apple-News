@@ -2,6 +2,9 @@
 /**
  * Publish to Apple News partials: Notice template
  *
+ * @global string $message
+ * @global string $type
+ *
  * @package Apple_News
  */
 
