@@ -87,6 +87,7 @@ class Heading extends Component {
 					'conditional' => array(
 						'textColor'  => '#header' . $level . '_color_dark#',
 						'conditions' => array(
+							'minSpecVersion'       => '1.14',
 							'preferredColorScheme' => 'dark',
 						),
 					),

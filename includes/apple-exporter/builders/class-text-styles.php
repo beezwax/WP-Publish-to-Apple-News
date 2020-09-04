@@ -99,6 +99,7 @@ class Text_Styles extends Builder {
 				'conditional' => array(
 					'textColor'  => $theme->get_value( 'monospaced_color_dark' ),
 					'conditions' => array(
+						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
 					),
 				),

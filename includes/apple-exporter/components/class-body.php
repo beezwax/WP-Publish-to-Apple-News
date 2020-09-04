@@ -154,6 +154,7 @@ class Body extends Component {
 							'numberOfLines' => '#dropcap_number_of_lines#',
 						),
 						'conditions'   => array(
+							'minSpecVersion'       => '1.14',
 							'preferredColorScheme' => 'dark',
 						),
 					),
@@ -367,6 +368,7 @@ class Body extends Component {
 			$conditional = array(
 				'conditional' => array(
 					'conditions' => array(
+						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
 					),
 				),

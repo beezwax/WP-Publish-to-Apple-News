@@ -123,6 +123,7 @@ class Table extends Component {
 						array( 'oddRows' => true ),
 					),
 					'conditions' => array(
+						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
 					),
 				),
@@ -134,6 +135,7 @@ class Table extends Component {
 						array( 'odd' => true ),
 					),
 					'conditions' => array(
+						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
 					),
 				),
@@ -215,6 +217,7 @@ class Table extends Component {
 						),
 					),
 					'conditions' => array(
+						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
 					),
 				),
