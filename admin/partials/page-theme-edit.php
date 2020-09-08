@@ -2,6 +2,8 @@
 /**
  * Publish to Apple News partials: Theme Edit page template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
  * @global Apple_Exporter\Theme $theme
  * @global array                $theme_options
  * @global string               $theme_admin_url

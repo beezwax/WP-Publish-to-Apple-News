@@ -175,7 +175,7 @@ class MIME_Builder {
 			$name,
 			$filename,
 			$contents,
-			$this->get_mime_type_for( $filepath ),
+			'application/octet-stream',
 			$size
 		);
 	}
@@ -244,19 +244,6 @@ class MIME_Builder {
 		}
 
 		return $attachment;
-	}
-
-	/**
-	 * Get the MIME type for a file.
-	 *
-	 * @todo replace with the proper WordPress function.
-	 * @param string $filepath The filepath to get the MIME type for.
-	 * @access private
-	 * @return string The MIME type for the filepath.
-	 */
-	private function get_mime_type_for( $filepath ) {
-		// TODO: rethink this for better integration with WordPress.
-		return 'application/octet-stream';
 	}
 
 	/**

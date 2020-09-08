@@ -13,7 +13,7 @@ namespace Apple_News\REST;
  * @param array $data data from query args.
  * @return array updated response.
  */
-function get_settings_response( $data ) {
+function get_settings_response( $data ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 	if ( empty( get_current_user_id() ) ) {
 		return [];
 	}

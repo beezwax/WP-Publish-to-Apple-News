@@ -272,7 +272,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 */
 	public function publish_meta_box( $post ) {
 
-		/* phpcs:disable WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable */
+		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
 
 		// Only show the publish feature if the user is authorized and auto sync is not enabled.
 		// Also check if the post has been previously published and/or deleted.

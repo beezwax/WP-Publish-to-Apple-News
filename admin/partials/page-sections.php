@@ -2,6 +2,8 @@
 /**
  * Publish to Apple News partials: Sections page template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
  * @global array       $sections
  * @global WP_Taxonomy $taxonomy
  * @global array       $taxonomy_mappings

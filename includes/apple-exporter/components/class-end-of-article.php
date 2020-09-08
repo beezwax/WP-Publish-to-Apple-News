@@ -42,7 +42,7 @@ class End_Of_Article extends Component {
 	 * @param string $html The HTML to parse into text for processing.
 	 * @access protected
 	 */
-	protected function build( $html ) {
+	protected function build( $html ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		$this->register_json(
 			'json',
 			array()
