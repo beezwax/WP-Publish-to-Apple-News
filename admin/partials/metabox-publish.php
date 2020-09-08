@@ -2,6 +2,9 @@
 /**
  * Publish to Apple News partials: Publish Metabox template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.SelfOutsideClass
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
  * @global string  $api_id
  * @global bool    $deleted
  * @global bool    $is_hidden

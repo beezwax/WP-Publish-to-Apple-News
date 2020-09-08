@@ -270,7 +270,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 */
 	public function page_theme_edit_render() {
 
-		/* phpcs:disable WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable */
+		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
 
 		// Ensure the user has permission to load this screen.
 		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {

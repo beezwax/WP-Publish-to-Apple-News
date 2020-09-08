@@ -97,7 +97,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 
 		switch ( $action ) {
 			case self::namespace_action( 'push' ):
-				/* phpcs:disable WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable */
+				/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
 
 				$section = new Apple_Actions\Index\Section( $this->settings );
 				try {

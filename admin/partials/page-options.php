@@ -2,6 +2,8 @@
 /**
  * Publish to Apple News partials: Options page template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
  * @global array $sections
  *
  * @package Apple_News

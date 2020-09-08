@@ -2,6 +2,8 @@
 /**
  * Publish to Apple News partials: Single Push page template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
  * @global string  $message
  * @global WP_Post $post
  * @global array   $post_meta

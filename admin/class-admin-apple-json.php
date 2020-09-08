@@ -165,7 +165,7 @@ class Admin_Apple_JSON extends Apple_News {
 			wp_die( esc_html__( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}
 
-		/* phpcs:disable WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable */
+		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
 
 		// Get components for the dropdown.
 		$components = $this->list_components();

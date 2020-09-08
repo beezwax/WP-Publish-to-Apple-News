@@ -48,7 +48,7 @@ class Admin_Apple_Preview extends Apple_News {
 		?>
 		<div class="apple-news-preview">
 			<?php
-			/* phpcs:disable WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable */
+			/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
 
 			// Build sample content.
 			$title = sprintf(

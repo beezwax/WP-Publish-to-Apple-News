@@ -2,6 +2,8 @@
 /**
  * Publish to Apple News partials: JSON page template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
  * @global array  $all_themes
  * @global array  $components
  * @global string $selected_component

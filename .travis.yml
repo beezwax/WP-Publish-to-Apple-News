@@ -21,12 +21,13 @@ branches:
 cache:
   directories:
     - $HOME/.config/composer/cache
+    - ./npm
     - ./vendor
-    - node_modules
 
 # Git clone depth.
 git:
   depth: 1
+  quiet: true
 
 matrix:
   fast_finish: true
@@ -75,8 +76,7 @@ before_script:
   # Set up phpcs.
   - |
     if [[ "$WP_PHPCS" == "1" ]] ; then
-      composer global require automattic/vipwpcs
-      phpcs --config-set installed_paths $HOME/.config/composer/vendor/wp-coding-standards/wpcs,$HOME/.config/composer/vendor/automattic/vipwpcs
+      composer g require --dev automattic/vipwpcs dealerdirect/phpcodesniffer-composer-installer
     fi
 
   # Set up jest.
@@ -84,7 +84,7 @@ before_script:
     if [[ "$WP_JS" == "1" ]] ; then
       nvm install 12
       npm i -g npm@6
-      npm install
+      npm ci
     fi
 
 # Run test script commands.

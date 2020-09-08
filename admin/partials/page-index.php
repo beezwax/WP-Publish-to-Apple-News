@@ -2,6 +2,8 @@
 /**
  * Publish to Apple News partials: Index page template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
  * @global Admin_Apple_News_List_Table $table
  *
  * @package Apple_News

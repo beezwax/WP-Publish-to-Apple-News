@@ -482,6 +482,8 @@ class Theme {
 	 */
 	public static function render_meta_component_order( $theme ) {
 
+		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
+
 		// Get the current order.
 		$component_order = $theme->get_value( 'meta_component_order' );
 		if ( empty( $component_order ) || ! is_array( $component_order ) ) {
@@ -489,10 +491,12 @@ class Theme {
 		}
 
 		// Get inactive components.
-		$inactive_components = array_diff( // phpcs:ignore WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable
+		$inactive_components = array_diff(
 			[ 'cover', 'title', 'byline', 'intro' ],
 			$component_order
 		);
+
+		/* phpcs:enable */
 
 		// Load the template.
 		include dirname( dirname( plugin_dir_path( __FILE__ ) ) )

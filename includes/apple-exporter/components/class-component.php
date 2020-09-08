@@ -270,7 +270,7 @@ abstract class Component {
 	 * @access public
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
-	public static function node_matches( $node ) {
+	public static function node_matches( $node ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		return null;
 	}
 

@@ -2,6 +2,8 @@
 /**
  * Partial for the meta component order field in theme options configuration.
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
  * @global array $component_order
  * @global array $inactive_components
  *

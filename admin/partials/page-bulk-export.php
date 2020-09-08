@@ -2,6 +2,8 @@
 /**
  * Publish to Apple News partials: Bulk Export page template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
  * @global array $articles
  *
  * @package Apple_News
