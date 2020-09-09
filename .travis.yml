@@ -22,6 +22,7 @@ cache:
   directories:
     - $HOME/.config/composer/cache
     - $HOME/.npm
+    - $HOME/.nvm
 
 # Git clone depth.
 git:
