@@ -464,22 +464,58 @@ class Export extends Action {
 			return;
 		}
 
-		// Negotiate the section to use based on priority.
+		/*
+		 * Get a list of priorities from the options table. If no priorities have
+		 * been set, then this will return an empty array, and the priority of
+		 * each section will default to 1.
+		 */
 		$priorities = get_option(
 			Admin_Apple_Sections::PRIORITY_MAPPING_KEY,
 			[]
 		);
+
+		/*
+		 * Priorities are stored as section_id => priority, so we can just run
+		 * arsort here to preserve keys and sort by values in reverse order, so
+		 * sections with highest priority are sorted to the top.
+		 */
 		arsort( $priorities );
+
+		// Default to the first section in the list.
 		$assigned_section = basename( $sections[0] );
-		$section_keys     = array_map(
+
+		// Loop over the priority map and find the priority of the default section.
+		$section_priority = 1;
+		foreach ( $priorities as $section_id => $priority ) {
+			if ( $assigned_section === $section_id ) {
+				$section_priority = $priority;
+				break;
+			}
+		}
+
+		/*
+		 * Sections are stored as URLs, but we really need the section ID, which is
+		 * the last segment of the URL. Loop over the section list and extract the
+		 * last segment using basename() into a new array that we can use for easy
+		 * comparison.
+		 */
+		$section_keys = array_map(
 			function ( $section ) {
 				return basename( $section );
 			},
 			$sections
 		);
-		foreach ( array_keys( $priorities ) as $priority ) {
-			if ( in_array( $priority, $section_keys, true ) ) {
-				$assigned_section = $priority;
+
+		/*
+		 * Loop over the priority list and try to find a section that is assigned
+		 * to the post that has a higher priority than the default section. If
+		 * found, swap the active section.
+		 */
+		foreach ( $priorities as $section_id => $priority ) {
+			if ( in_array( $section_id, $section_keys, true )
+				&& $priority >= $section_priority
+			) {
+				$assigned_section = $section_id;
 				break;
 			}
 		}
