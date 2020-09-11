@@ -4,6 +4,7 @@
  *
  * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
  *
+ * @global array       $priority_mappings
  * @global array       $sections
  * @global WP_Taxonomy $taxonomy
  * @global array       $taxonomy_mappings
@@ -34,12 +35,20 @@
 	echo wp_kses_post(
 		sprintf(
 			// translators: first argument is an opening <a> tag, second argument is </a>.
-			__( 'You can also map a theme to automatically be used for posts with a specific Apple News section, if you want to use something other than the %1$sactive theme%2$s. This will only work for posts with precisely one Apple News section to avoid conflicts.', 'apple-news' ),
+			__( 'You can also map a theme to automatically be used for posts with a specific Apple News section, if you want to use something other than the %1$sactive theme%2$s.', 'apple-news' ),
 			'<a href="' . esc_url( $theme_admin_url ) . '">',
 			'</a>'
 		)
 	);
 	?>
+	</p>
+	<p>
+		<?php
+			esc_html_e(
+				'Additionally, you can assign a priority to each section. If a post will be published to more than one section, the priority determines which theme is used for the post. A higher priority will take precedence. The theme assigned to the section with the highest priority that is assigned to the post will be used as the selected theme for the post.',
+				'apple-news'
+			);
+			?>
 	</p>
 	<form method="post" action="" id="apple-news-section-form" enctype="multipart/form-data">
 		<?php wp_nonce_field( 'apple_news_sections' ); ?>
@@ -53,6 +62,7 @@
 			<thead>
 			<tr>
 				<th scope="col" id="apple_news_section_name" class="manage-column column-apple-news-section-name column-primary"><?php esc_html_e( 'Section', 'apple-news' ); ?></th>
+				<th scope="col" id="apple_news_section_priority" class="manage-column column-apple-news-section-priority"><?php esc_html_e( 'Priority', 'apple-news' ); ?></th>
 				<th scope="col" id="apple_news_section_taxonomy_mapping" class="manage-column column-apple-news-section-taxonomy-mapping"><?php echo esc_html( $taxonomy->label ); ?></th>
 				<th scope="col" id="apple_news_section_theme_mapping" class="manage-column column-apple-news-section-theme-mapping column-primary"><?php esc_html_e( 'Theme', 'apple-news' ); ?></th>
 			</tr>
@@ -62,6 +72,15 @@
 			<?php foreach ( $sections as $apple_section_id => $apple_section_name ) : ?>
 				<tr id="apple-news-section-<?php echo esc_attr( $apple_section_id ); ?>">
 					<td><?php echo esc_html( $apple_section_name ); ?></td>
+					<td>
+						<input
+							aria-labelledby="apple_news_section_priority"
+							name="priority-mapping-<?php echo esc_attr( $apple_section_id ); ?>"
+							type="number"
+							step="1"
+							value="<?php echo esc_attr( isset( $priority_mappings[ $apple_section_id ] ) ? (int) $priority_mappings[ $apple_section_id ] : 1 ); ?>"
+						/>
+					</td>
 					<td>
 						<ul class="apple-news-section-taxonomy-mapping-list">
 						<?php if ( ! empty( $taxonomy_mappings[ $apple_section_id ] ) ) : ?>
