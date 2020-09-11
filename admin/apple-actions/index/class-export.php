@@ -459,13 +459,33 @@ class Export extends Action {
 	 */
 	private function set_theme( $sections ) {
 
-		// This can only work if there is explicitly one section.
-		if ( ! is_array( $sections ) || 1 !== count( $sections ) ) {
+		// If there are no sections, bail.
+		if ( empty( $sections ) || ! is_array( $sections ) ) {
 			return;
 		}
 
+		// Negotiate the section to use based on priority.
+		$priorities = get_option(
+			Admin_Apple_Sections::PRIORITY_MAPPING_KEY,
+			[]
+		);
+		arsort( $priorities );
+		$assigned_section = basename( $sections[0] );
+		$section_keys     = array_map(
+			function ( $section ) {
+				return basename( $section );
+			},
+			$sections
+		);
+		foreach ( array_keys( $priorities ) as $priority ) {
+			if ( in_array( $priority, $section_keys, true ) ) {
+				$assigned_section = $priority;
+				break;
+			}
+		}
+
 		// Check if there is a custom theme mapping.
-		$theme_name = Admin_Apple_Sections::get_theme_for_section( basename( $sections[0] ) );
+		$theme_name = Admin_Apple_Sections::get_theme_for_section( $assigned_section );
 		if ( empty( $theme_name ) ) {
 			return;
 		}

@@ -352,6 +352,122 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$default_theme->delete();
 		$test_theme->delete();
 		delete_option( \Admin_Apple_Sections::TAXONOMY_MAPPING_KEY );
+		delete_option( \Admin_Apple_Sections::THEME_MAPPING_KEY );
+		delete_transient( 'apple_news_sections' );
+	}
+
+	/**
+	 * Tests the priority level setting.
+	 */
+	public function testPriority() {
+		// Load an additional example theme to facilitate mapping.
+		$this->load_example_theme( 'colorful' );
+
+		// Create a post.
+		$post_id = self::factory()->post->create();
+
+		// Create a term and add it to the post.
+		$term_id = self::factory()->term->create( array(
+			'taxonomy' => 'category',
+			'name' => 'politics',
+		) );
+		wp_set_post_terms( $post_id, array( $term_id ), 'category' );
+
+		// Create a taxonomy map that maps to multiple sections..
+		update_option(
+			\Admin_Apple_Sections::TAXONOMY_MAPPING_KEY,
+			array(
+				'abcdef01-2345-6789-abcd-ef012356789a' => array( $term_id ),
+				'abcdef01-2345-6789-abcd-ef012356789b' => array( $term_id ),
+			)
+		);
+
+		// Map each section to a different theme.
+		update_option(
+			\Admin_Apple_Sections::THEME_MAPPING_KEY,
+			array(
+				'abcdef01-2345-6789-abcd-ef012356789a' => 'Default',
+				'abcdef01-2345-6789-abcd-ef012356789b' => 'Colorful',
+			)
+		);
+
+		// Cache as a transient to bypass the API call.
+		$self = 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a';
+		set_transient(
+			'apple_news_sections',
+			array(
+				(object) array(
+					'createdAt' => '2017-01-01T00:00:00Z',
+					'id' => 'abcdef01-2345-6789-abcd-ef012356789a',
+					'isDefault' => true,
+					'links' => (object) array(
+						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
+						'self' => $self,
+					),
+					'modifiedAt' => '2017-01-01T00:00:00Z',
+					'name' => 'Main',
+					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
+					'type' => 'section',
+				),
+				(object) array(
+					'createdAt' => '2017-01-01T00:00:00Z',
+					'id' => 'abcdef01-2345-6789-abcd-ef012356789b',
+					'isDefault' => false,
+					'links' => (object) array(
+						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
+						'self' => $self,
+					),
+					'modifiedAt' => '2017-01-01T00:00:00Z',
+					'name' => 'Secondary',
+					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUw',
+					'type' => 'section',
+				),
+			)
+		);
+
+		// Ensure that the default theme is used when no priority is specified.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
+			'#4f4f4f'
+		);
+
+		// Set the priority on the sections to boost the priority of the secondary section.
+		update_option(
+			\Admin_Apple_Sections::PRIORITY_MAPPING_KEY,
+			array(
+				'abcdef01-2345-6789-abcd-ef012356789a' => 1,
+				'abcdef01-2345-6789-abcd-ef012356789b' => 2,
+			)
+		);
+
+		// Re-run the export and ensure the Colorful theme is used.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
+			'#000000'
+		);
+
+		// Set the priority on the sections to boost the priority of the main section.
+		update_option(
+			\Admin_Apple_Sections::PRIORITY_MAPPING_KEY,
+			array(
+				'abcdef01-2345-6789-abcd-ef012356789a' => 2,
+				'abcdef01-2345-6789-abcd-ef012356789b' => 1,
+			)
+		);
+
+		// Re-run the export and ensure the Default theme is used.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
+			'#4f4f4f'
+		);
+
+		// Clean up.
+		delete_option( \Admin_Apple_Sections::PRIORITY_MAPPING_KEY );
+		delete_option( \Admin_Apple_Sections::TAXONOMY_MAPPING_KEY );
+		delete_option( \Admin_Apple_Sections::THEME_MAPPING_KEY );
 		delete_transient( 'apple_news_sections' );
 	}
 
