@@ -499,12 +499,7 @@ class Export extends Action {
 		 * last segment using basename() into a new array that we can use for easy
 		 * comparison.
 		 */
-		$section_keys = array_map(
-			function ( $section ) {
-				return basename( $section );
-			},
-			$sections
-		);
+		$section_keys = array_map( 'basename', $sections );
 
 		/*
 		 * Loop over the priority list and try to find a section that is assigned
