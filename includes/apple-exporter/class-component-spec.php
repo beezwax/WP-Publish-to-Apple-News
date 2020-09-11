@@ -235,7 +235,7 @@ class Component_Spec {
 			if ( null === $json ) {
 				\Admin_Apple_Notice::info(
 					sprintf(
-					// translators: token is a spec label.
+						// translators: token is a spec label.
 						__( 'The spec for %s was empty or invalid. Reverting to the default spec.', 'apple-news' ),
 						$this->label
 					)

@@ -179,9 +179,9 @@ class Cover extends Component {
 			$this->register_json(
 				'jsonWithCaption',
 				array(
-					'#caption#' => $options['caption'],
-					'#url#'     => $url,
-					'#caption_tracking#'    => intval( $theme->get_value( 'caption_tracking' ) ) / 100,
+					'#caption#'          => $options['caption'],
+					'#url#'              => $url,
+					'#caption_tracking#' => intval( $theme->get_value( 'caption_tracking' ) ) / 100,
 				)
 			);
 		} else {
