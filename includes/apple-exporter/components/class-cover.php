@@ -155,7 +155,11 @@ class Cover extends Component {
 	 * @access protected
 	 */
 	protected function build( $options ) {
-
+		// If options['caption'] is an array, bail.
+		if ( isset( $options['caption'] ) && is_array( $options['caption'] ) ) {
+			var_dump($options);
+		}
+		
 		$theme = Theme::get_used();
 
 		// Handle case where options is a URL.
@@ -181,6 +185,7 @@ class Cover extends Component {
 				array(
 					'#caption#' => $options['caption'],
 					'#url#'     => $url,
+					'#caption_tracking#'    => intval( $theme->get_value( 'caption_tracking' ) ) / 100,
 				)
 			);
 		} else {

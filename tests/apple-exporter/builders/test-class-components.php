@@ -19,7 +19,7 @@ use \Apple_Exporter\Builders\Component_Text_Styles;
 /**
  * A class which is used to test the \Apple_Exporter\Builders\Components class.
  */
-class Component_Tests extends Apple_News_Testcase {
+class Component_Tests extends Component_TestCase {
 
 	/**
 	 * A data provider for the full size image URL test.
