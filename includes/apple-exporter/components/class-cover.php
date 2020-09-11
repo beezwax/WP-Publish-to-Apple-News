@@ -155,10 +155,6 @@ class Cover extends Component {
 	 * @access protected
 	 */
 	protected function build( $options ) {
-		// If options['caption'] is an array, bail.
-		if ( isset( $options['caption'] ) && is_array( $options['caption'] ) ) {
-			var_dump($options);
-		}
 		
 		$theme = Theme::get_used();
 
