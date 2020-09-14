@@ -155,7 +155,7 @@ class Cover extends Component {
 	 * @access protected
 	 */
 	protected function build( $options ) {
-		
+
 		$theme = Theme::get_used();
 
 		// Handle case where options is a URL.
