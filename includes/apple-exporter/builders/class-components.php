@@ -201,7 +201,7 @@ class Components extends Builder {
 			$order         = $theme->get_value( 'meta_component_order' );
 			if ( is_array( $order ) && in_array( 'cover', $order, true ) ) {
 				$image_json    = $components[ $i ]->to_array();
-				$cover_caption = ! empty( $image_json['components'][0]['caption']['text'] ) ? $image_json['components'][0]['caption']['text'] : '';
+				$cover_caption = ! empty( $image_json['components'][1]['text'] ) ? $image_json['components'][1]['text'] : '';
 				unset( $components[ $i ] );
 				$components = array_values( $components );
 			}

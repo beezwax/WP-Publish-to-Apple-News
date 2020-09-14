@@ -483,6 +483,7 @@ class Theme {
 	public static function render_meta_component_order( $theme ) {
 
 		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
+		$options = self::get_options();
 
 		// Get the current order.
 		$component_order = $theme->get_value( 'meta_component_order' );
@@ -492,7 +493,7 @@ class Theme {
 
 		// Get inactive components.
 		$inactive_components = array_diff(
-			[ 'cover', 'title', 'byline', 'intro' ],
+			$options['meta_component_order']['all_options'],
 			$component_order
 		);
 
@@ -1038,9 +1039,10 @@ class Theme {
 				'type'    => 'integer',
 			),
 			'meta_component_order'               => array(
-				'default'  => array( 'cover', 'title', 'byline' ),
-				'callback' => array( get_called_class(), 'render_meta_component_order' ),
-				'type'     => 'array',
+				'default'     => array( 'cover', 'title', 'byline' ),
+				'all_options' => array( 'cover', 'title', 'byline', 'intro' ),
+				'callback'    => array( get_called_class(), 'render_meta_component_order' ),
+				'type'        => 'array',
 			),
 			'monospaced_color'                   => array(
 				'default' => '#4f4f4f',
@@ -1909,7 +1911,7 @@ class Theme {
 
 			// Ensure no values were provided other than what is permissible.
 			foreach ( $this->values['meta_component_order'] as $component ) {
-				if ( ! in_array( $component, $options['meta_component_order']['default'], true ) ) {
+				if ( ! in_array( $component, $options['meta_component_order']['all_options'], true ) ) {
 					$this->log_error(
 						__( 'Invalid value for meta component order', 'apple-news' )
 					);
