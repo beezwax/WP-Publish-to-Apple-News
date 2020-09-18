@@ -150,16 +150,21 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 *
 	 * @param int    $parent  Optional. The parent post ID. Defaults to no parent.
 	 * @param string $caption Optional. The caption to set on the image.
+	 * @param string $alt     Optional. The alt text to set on the image.
 	 *
 	 * @return int The post ID of the attachment image that was created.
 	 */
-	protected function get_new_attachment( $parent = 0, $caption = '' ) {
+	protected function get_new_attachment( $parent = 0, $caption = '', $alt = '' ) {
 		$image_id = self::factory()->attachment->create_upload_object( __DIR__ . '/data/test-image.jpg', $parent );
 
 		if ( ! empty( $caption ) ) {
 			$image = get_post( $image_id );
 			$image->post_excerpt = $caption;
 			wp_update_post( $image );
+		}
+
+		if ( ! empty( $alt ) ) {
+			update_post_meta( $image_id, '_wp_attachment_image_alt', $alt );
 		}
 
 		return $image_id;
