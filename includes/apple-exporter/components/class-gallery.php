@@ -126,22 +126,14 @@ class Gallery extends Component {
 				'URL' => $this->maybe_bundle_source( esc_url_raw( $url ) ),
 			);
 
-			// Negotiate the caption container.
-			$caption = $item->getElementsByTagName( 'figcaption' );
-			if ( empty( $caption->length ) ) {
-				// This is necessary if the theme doesn't have HTML5 caption support.
-				$caption = $item->getElementsByTagName( 'dd' );
-			}
-
 			// Try to add the caption.
-			if ( ! empty( $caption->length ) ) {
+			$caption_regex = '/<(dd|figcaption).*?>(.*)<\/\g1>/s';
+			if ( preg_match( $caption_regex, $item_html, $matches ) ) {
 				$content['caption'] = array(
 					'format'    => 'html',
-					'text'      => sanitize_text_field(
-						trim( $caption->item( 0 )->nodeValue )
-					),
+					'text'      => trim( $matches[2] ),
 					'textStyle' => array(
-						'fontName' => '#caption_font#',
+						'fontName' => $theme->get_value( 'caption_font' ),
 					),
 				);
 			}
