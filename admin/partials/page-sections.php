@@ -45,7 +45,7 @@
 	<p>
 		<?php
 			esc_html_e(
-				'Additionally, you can assign a priority to each section. If a post will be published to more than one section, the priority determines which theme is used for the post. A higher priority will take precedence. The theme assigned to the section with the highest priority that is assigned to the post will be used as the selected theme for the post.',
+				'Additionally, you can assign a priority to each section. If a post will be published to more than one section, the priority determines which theme is used for the post. The section with the higher priority number will take precedence. The theme assigned to the section with the highest priority that is assigned to the post will be used as the selected theme for the post.',
 				'apple-news'
 			);
 			?>
