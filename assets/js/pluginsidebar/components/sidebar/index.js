@@ -1,10 +1,10 @@
 /* global React, wp */
 
+import dompurify from 'dompurify';
 import PropTypes from 'prop-types';
 import safeJsonParseArray from 'util/safeJsonParseArray';
 import safeJsonParseObject from 'util/safeJsonParseObject';
 import ImagePicker from '../imagePicker';
-import Notifications from '../notifications';
 
 const {
   apiFetch,
@@ -20,6 +20,7 @@ const {
     TextareaControl,
   } = {},
   data: {
+    dispatch,
     select,
     subscribe,
     withDispatch,
@@ -354,12 +355,20 @@ class Sidebar extends React.PureComponent {
 
     const selectedSectionsArray = safeJsonParseArray(selectedSections);
 
+    while(appleNewsNotices.length) {
+      const notification = appleNewsNotices.shift();
+      const type = notification.type === 'success' ? 'snackbar' : 'default';
+      dispatch('core/notices').createNotice(
+        notification.type,
+        dompurify.sanitize(notification.message),
+        {
+          type,
+        });
+        setNotifications(appleNewsNotices);
+    };
+
     return (
       <Fragment>
-        <Notifications
-          notifications={appleNewsNotices}
-          setNotifications={setNotifications}
-        />
         <PluginSidebarMoreMenuItem target={target}>
           {label}
         </PluginSidebarMoreMenuItem>
