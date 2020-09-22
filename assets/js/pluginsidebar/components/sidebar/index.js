@@ -69,7 +69,7 @@ class Sidebar extends React.PureComponent {
     onUpdate: PropTypes.func.isRequired,
     post: PropTypes.shape({}).isRequired,
     refreshPost: PropTypes.func.isRequired,
-    clearNotifications: PropTypes.func.isRequired,
+    setNotifications: PropTypes.func.isRequired,
   };
 
   /**
@@ -311,7 +311,7 @@ class Sidebar extends React.PureComponent {
     const label = __('Apple News Options', 'apple-news');
 
     const {
-      clearNotifications,
+      setNotifications,
       onUpdate,
       meta: {
         isPaid = false,
@@ -353,13 +353,12 @@ class Sidebar extends React.PureComponent {
     } = this.state;
 
     const selectedSectionsArray = safeJsonParseArray(selectedSections);
-    console.log(appleNewsNotices);
 
     return (
       <Fragment>
         <Notifications
           notifications={appleNewsNotices}
-          clearNotifications={clearNotifications}
+          setNotifications={setNotifications}
         />
         <PluginSidebarMoreMenuItem target={target}>
           {label}
@@ -700,9 +699,9 @@ export default compose([
     refreshPost: () => {
       dispatch('core/editor').refreshPost();
     },
-    clearNotifications: () => {
+    setNotifications: (value) => {
       dispatch('core/editor').editPost({
-        apple_news_notices: [],
+        apple_news_notices: value,
       });
     },
   })),
