@@ -430,4 +430,22 @@ class Admin_Apple_Notice {
 
 		return true;
 	}
+
+	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public static function get_if_allowed( $request ) {
+		$post_type = ( $request['type'] );
+		if ( current_user_can(
+			apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $post_type ) )
+		) ) {
+			$notifications = self::get();
+			self::clear( $notifications );
+		} else {
+			$notifications = [];
+		}
+		return $notifications;
+	}
 }

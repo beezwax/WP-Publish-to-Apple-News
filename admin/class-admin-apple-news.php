@@ -21,9 +21,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-themes.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
 // REST Includes.
-require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-clear-notifications.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-delete.php';
-require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-notifications.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-published-state.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-settings.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-modify-post.php';
@@ -133,6 +131,19 @@ class Admin_Apple_News extends Apple_News {
 			foreach ( $postmeta as $meta_key => $options ) {
 				apple_news_register_meta_helper( 'post', $post_types, $meta_key, $options );
 			}
+
+			add_action(
+				'rest_api_init',
+				function() {
+					register_rest_field(
+						'post',
+						'apple_news_notices',
+						[
+							'get_callback' => 'Admin_Apple_Notice::get_if_allowed',
+						]
+					);
+				}
+			);
 		}
 	}
 
