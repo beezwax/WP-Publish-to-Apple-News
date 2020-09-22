@@ -432,12 +432,13 @@ class Admin_Apple_Notice {
 	}
 
 	/**
-	 * Undocumented function
+	 * Checks if the current user has access to see the notifications and returns them if true.
 	 *
-	 * @return void
+	 * @param array $object The requested object.
+	 * @return array
 	 */
-	public static function get_if_allowed( $request ) {
-		$post_type = ( $request['type'] );
+	public static function get_if_allowed( $object ) {
+		$post_type = ( $object['type'] );
 		if ( current_user_can(
 			apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $post_type ) )
 		) ) {
