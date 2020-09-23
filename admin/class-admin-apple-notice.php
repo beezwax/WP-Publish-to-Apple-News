@@ -179,7 +179,7 @@ class Admin_Apple_Notice {
 				'dismissed'   => false,
 				'message'     => $message,
 				'type'        => $type,
-				'timstamp'    => time(),
+				'timestamp'    => time(),
 			)
 		);
 	}
