@@ -15,6 +15,7 @@ use \Apple_Exporter\Component_Factory;
 use \Apple_Exporter\Components\Component;
 use \Apple_Exporter\Components\Image;
 use \Apple_Exporter\Workspace;
+use \Apple_Exporter\Theme;
 use \Apple_News;
 use \DOMNode;
 
@@ -128,11 +129,6 @@ class Components extends Builder {
 	 */
 	private function add_thumbnail_if_needed( &$components ) {
 
-		// If a thumbnail is already defined, just return.
-		if ( $this->content_cover() ) {
-			return;
-		}
-
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
@@ -158,44 +154,66 @@ class Components extends Builder {
 				return;
 			}
 
-			// Isolate the bundle URL basename.
-			$bundle_basename = str_replace( 'bundle://', '', $json_url );
-
-			/**
-			 * We need to find the original URL from the bundle meta because it's
-			 * needed in order to override the thumbnail.
-			 */
-			$workspace = new Workspace( $this->content_id() );
-			$bundles   = $workspace->get_bundles();
-
-			// If we can't get the bundles, we can't search for the URL, so bail.
-			if ( empty( $bundles ) ) {
-				return;
-			}
-
-			// Try to get the original URL for the image.
+			// Fork for remote images versus bundled images.
 			$original_url = '';
-			foreach ( $bundles as $bundle_url ) {
-				if ( Apple_News::get_filename( $bundle_url ) === $bundle_basename ) {
-					$original_url = $bundle_url;
-					break;
+			if ( 'yes' === $this->get_setting( 'use_remote_images' ) ) {
+				$original_url = $json_url;
+			} else {
+				// Isolate the bundle URL basename.
+				$bundle_basename = str_replace( 'bundle://', '', $json_url );
+
+				/**
+				 * We need to find the original URL from the bundle meta because it's
+				 * needed in order to override the thumbnail.
+				 */
+				$workspace = new Workspace( $this->content_id() );
+				$bundles   = $workspace->get_bundles();
+
+				// If we can't get the bundles, we can't search for the URL, so bail.
+				if ( empty( $bundles ) ) {
+					return;
+				}
+
+				// Try to get the original URL for the image.
+				foreach ( $bundles as $bundle_url ) {
+					if ( Apple_News::get_filename( $bundle_url ) === $bundle_basename ) {
+						$original_url = $bundle_url;
+						break;
+					}
+				}
+
+				// If we can't find the original URL, we can't proceed.
+				if ( empty( $original_url ) ) {
+					return;
 				}
 			}
 
-			// If we can't find the original URL, we can't proceed.
-			if ( empty( $original_url ) ) {
+			// If the normalized URL for the first image is different than the URL for the featured image, use the featured image.
+			$cover_config   = $this->content_cover();
+			$cover_url      = $this->get_image_full_size_url( isset( $cover_config['url'] ) ? $cover_config['url'] : $cover_config );
+			$normalized_url = $this->get_image_full_size_url( $original_url );
+			if ( ! empty( $cover_url ) && $normalized_url !== $cover_url ) {
 				return;
 			}
 
-			// Use this image as the cover.
-			$this->set_content_property( 'cover', $original_url );
-
 			// If the cover is set to be displayed, remove it from the flow.
-			$order = $theme->get_value( 'meta_component_order' );
+			$cover_caption = '';
+			$order         = $theme->get_value( 'meta_component_order' );
 			if ( is_array( $order ) && in_array( 'cover', $order, true ) ) {
+				$image_json    = $components[ $i ]->to_array();
+				$cover_caption = ! empty( $image_json['components'][1]['text'] ) ? $image_json['components'][1]['text'] : '';
 				unset( $components[ $i ] );
 				$components = array_values( $components );
 			}
+
+			// Use this image as the cover.
+			$this->set_content_property(
+				'cover',
+				[
+					'caption' => ! empty( $cover_config['caption'] ) ? $cover_config['caption'] : $cover_caption,
+					'url'     => $original_url,
+				]
+			);
 
 			break;
 		}
@@ -498,6 +516,45 @@ class Components extends Builder {
 	}
 
 	/**
+	 * Attempts to guess the image's full size URL, minus any scaling or cropping.
+	 *
+	 * @param string $url The URL to evaluate.
+	 *
+	 * @since 2.1.0
+	 *
+	 * @return string The best guess as to an image's full size URL.
+	 */
+	private function get_image_full_size_url( $url ) {
+
+		// Strip URL formatting for easier matching.
+		$url = urldecode( $url );
+
+		// Split out the URL into its component parts so we can put it back together again.
+		$url_parts = wp_parse_url( $url );
+		if ( empty( $url_parts['scheme'] )
+			|| empty( $url_parts['host'] )
+			|| empty( $url_parts['path'] )
+		) {
+			return $url;
+		}
+
+		/*
+		 * Strip off any scaling, rotating, or cropping indicators from the
+		 * filename. Handles image-150x150.jpg, image-scaled.jpg,
+		 * image-rotated.jpg, for example, and will return image.jpg.
+		 */
+		$normalized_path = preg_replace( '/-(?:\d+x\d+|scaled|rotated)(\.[^.]+)$/', '$1', $url_parts['path'] );
+
+		// Put Humpty Dumpty back together again.
+		return sprintf(
+			'%s://%s%s',
+			$url_parts['scheme'],
+			$url_parts['host'],
+			$normalized_path
+		);
+	}
+
+	/**
 	 * Attempts to get an image ratio from a URL.
 	 *
 	 * @param string $url The image URL to probe for ratio data.
@@ -634,6 +691,18 @@ class Components extends Builder {
 		 * All components after the cover must be grouped to avoid issues with
 		 * parallax text scroll.
 		 */
+		$conditional = array();
+		if ( ! empty( $theme->get_value( 'body_background_color_dark' ) ) ) {
+			$conditional = array(
+				'conditional' => array(
+					'backgroundColor' => $theme->get_value( 'body_background_color_dark' ),
+					'conditions'      => array(
+						'minSpecVersion'       => '1.14',
+						'preferredColorScheme' => 'dark',
+					),
+				),
+			);
+		}
 		$regrouped_components = array(
 			'role'       => 'container',
 			'layout'     => array(
@@ -641,8 +710,9 @@ class Components extends Builder {
 				'columnStart'          => 0,
 				'ignoreDocumentMargin' => true,
 			),
-			'style'      => array(
-				'backgroundColor' => $theme->get_value( 'body_background_color' ),
+			'style'      => array_merge(
+				array( 'backgroundColor' => $theme->get_value( 'body_background_color' ) ),
+				$conditional
 			),
 			'components' => array_slice( $new_components, $cover_index + 1 ),
 		);
@@ -731,6 +801,13 @@ class Components extends Builder {
 		$this->add_thumbnail_if_needed( $components );
 		$this->anchor_components( $components );
 		$this->add_pullquote_if_needed( $components );
+
+		$theme          = Theme::get_used();
+		$json_templates = $theme->get_value( 'json_templates' );
+
+		if ( ! empty( $json_templates['end_of_article']['json'] ) ) {
+			$components[] = Component_Factory::get_component( 'end-of-article', '' );
+		}
 
 		return $components;
 	}

@@ -4,8 +4,8 @@ import dompurify from 'dompurify';
 import PropTypes from 'prop-types';
 
 const {
-  components: {
-    Notice,
+  data: {
+    dispatch,
   },
   element: {
     Fragment,
@@ -18,7 +18,6 @@ const {
 export default class Notifications extends React.PureComponent {
   // Define PropTypes for this component.
   static propTypes = {
-    dismissNotification: PropTypes.func.isRequired,
     notifications: PropTypes.arrayOf(PropTypes.shape({
       dismissed: PropTypes.bool,
       dismissible: PropTypes.bool,
@@ -34,30 +33,21 @@ export default class Notifications extends React.PureComponent {
    */
   render() {
     const {
-      dismissNotification,
       notifications,
     } = this.props;
 
-    const visibleNotifications = notifications
-      .filter((notification) => true !== notification.dismissed);
-
     return (
       <Fragment>
-        {visibleNotifications.map((notification) => (
-          <Notice
-            isDismissible={true === notification.dismissible}
-            key={notification.message}
-            onRemove={() => dismissNotification(notification)}
-            status={notification.type}
-          >
-            <p
-              // phpcs:ignore WordPressVIPMinimum.JS.DangerouslySetInnerHTML.Found
-              dangerouslySetInnerHTML={{ // eslint-disable-line react/no-danger
-                __html: dompurify.sanitize(notification.message),
-              }}
-            />
-          </Notice>
-        ))}
+        {notifications.map((notification) => {
+          const type = notification.type === 'success' ? 'snackbar' : 'default';
+          dispatch('core/notices').createNotice(
+            notification.type,
+            dompurify.sanitize(notification.message),
+            {
+              type,
+            }
+          );
+        })}
       </Fragment>
     );
   }

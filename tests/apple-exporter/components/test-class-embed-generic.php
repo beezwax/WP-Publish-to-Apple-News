@@ -1,19 +1,19 @@
 <?php
 /**
- * Publish to Apple News Tests: Embed_Generic class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Embed_Generic.
+ * Publish to Apple News tests: Embed_Generic_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/class-component-testcase.php';
-
 use Apple_Exporter\Components\Embed_Generic;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Embed_Generic class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Embed_Generic class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Embed_Generic_Test extends Component_TestCase {
 
@@ -584,9 +584,9 @@ HTML
 	 *
 	 * @access public
 	 * @return array The modified JSON.
-	 *
+	 */
 	public function filter_apple_news_embed_generic_json( $json ) {
-		$json['URL'] = 'https://www.embed_generic.com/test/posts/54321';
+		$json['URL'] = 'https://www.example.org/test/posts/54321';
 
 		return $json;
 	}
@@ -595,13 +595,13 @@ HTML
 	 * Test the `apple_news_embed_generic_json` filter.
 	 *
 	 * @access public
-	 *
+	 */
 	public function testFilter() {
 
 		// Setup.
 		$component = new Embed_Generic(
-			'https://www.embed_generic.com/test/posts/12345',
-			null,
+			'https://www.example.org/test/posts/12345',
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -614,7 +614,7 @@ HTML
 		// Test.
 		$result = $component->to_array();
 		$this->assertEquals(
-			'https://www.embed_generic.com/test/posts/54321',
+			'https://www.example.org/test/posts/54321',
 			$result['URL']
 		);
 
@@ -642,7 +642,7 @@ HTML
 		// Setup.
 		$component = new Embed_Generic(
 			$html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts

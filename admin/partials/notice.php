@@ -2,6 +2,11 @@
 /**
  * Publish to Apple News partials: Notice template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
+ * @global string $message
+ * @global string $type
+ *
  * @package Apple_News
  */
 

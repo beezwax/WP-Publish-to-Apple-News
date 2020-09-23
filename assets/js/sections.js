@@ -26,7 +26,7 @@
 							$input;
 
 						// Copy the HTML from the template.
-						$item.html( $template.html() );
+						$item.html( $template.html() ); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
 
 						// Create a unique ID on the input and map it to the label.
 						$input = $item.find( 'input' );
@@ -37,7 +37,7 @@
 						$input.attr( 'name', 'taxonomy-mapping-' + $( this ).attr( 'data-section-id' ) + '[]' );
 
 						// Add the item to the list.
-						$( this ).siblings( '.apple-news-section-taxonomy-mapping-list' ).append( $item );
+						$( this ).siblings( '.apple-news-section-taxonomy-mapping-list' ).append( $item ); // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.append
 
 						// Activate autocomplete.
 						apple_news_sections.enable_autocomplete();

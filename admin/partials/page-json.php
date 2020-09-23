@@ -2,6 +2,15 @@
 /**
  * Publish to Apple News partials: JSON page template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
+ * @global array  $all_themes
+ * @global array  $components
+ * @global string $selected_component
+ * @global string $selected_theme
+ * @global array  $specs
+ * @global string $theme_admin_url
+ *
  * @package Apple_News
  */
 
@@ -51,7 +60,7 @@
 				sprintf(
 					// translators: first argument is an opening <a> tag, second argument is </a>.
 					__( 'For more information on the Apple News format options for each component, please read the %1$sApple News Format Reference%2$s.', 'apple-news' ),
-					'<a href="https://developer.apple.com/library/content/documentation/General/Conceptual/Apple_News_Format_Ref/Component.html#//apple_ref/doc/uid/TP40015408-CH5-SW1">',
+					'<a href="https://developer.apple.com/documentation/apple_news/apple_news_format">',
 					'</a>'
 				),
 				array(
@@ -67,10 +76,10 @@
 					<?php esc_html_e( 'Theme', 'apple-news' ); ?>:
 					<select id="apple_news_theme" name="apple_news_theme">
 						<option value="""><?php esc_html_e( 'Select a theme', 'apple-news' ); ?></option>
-						<?php foreach ( $all_themes as $theme_name ) : ?>
-							<option value="<?php echo esc_attr( $theme_name ); ?>"
-								<?php selected( $theme_name, $selected_theme ); ?>>
-									<?php echo esc_html( $theme_name ); ?>
+						<?php foreach ( $all_themes as $apple_theme_name ) : ?>
+							<option value="<?php echo esc_attr( $apple_theme_name ); ?>"
+								<?php selected( $apple_theme_name, $selected_theme ); ?>>
+									<?php echo esc_html( $apple_theme_name ); ?>
 							</option>
 						<?php endforeach; ?>
 					</select>
@@ -82,10 +91,10 @@
 						<?php esc_html_e( 'Component', 'apple-news' ); ?>:
 						<select id="apple_news_component" name="apple_news_component">
 							<option value=""><?php esc_html_e( 'Select a component', 'apple-news' ); ?></option>
-							<?php foreach ( $components as $component_key => $component_name ) : ?>
-								<option value="<?php echo esc_attr( $component_key ); ?>"
-									<?php selected( $component_key, $selected_component ); ?>>
-										<?php echo esc_html( $component_name ); ?>
+							<?php foreach ( $components as $apple_component_key => $apple_component_name ) : ?>
+								<option value="<?php echo esc_attr( $apple_component_key ); ?>"
+									<?php selected( $apple_component_key, $selected_component ); ?>>
+										<?php echo esc_html( $apple_component_name ); ?>
 								</option>
 							<?php endforeach; ?>
 						</select>
@@ -95,34 +104,34 @@
 
 			<?php if ( ! empty( $specs ) ) : ?>
 				<?php
-				foreach ( $specs as $spec ) :
-					$field_name   = 'apple_news_json_' . $spec->key_from_name( $spec->name );
-					$json_display = $spec->format_json( $spec->get_spec( $selected_theme ) );
-					$rows         = substr_count( $json_display, "\n" ) + 1;
-					$editor_name  = 'editor_' . str_replace( '-', '_', $field_name );
-					$editor_style = sprintf(
+				foreach ( $specs as $apple_spec ) :
+					$apple_field_name   = 'apple_news_json_' . $apple_spec->key_from_name( $apple_spec->name );
+					$apple_json_display = $apple_spec->format_json( $apple_spec->get_spec( $selected_theme ) );
+					$apple_rows         = max( substr_count( $apple_json_display, "\n" ) + 1, 5 );
+					$apple_editor_name  = 'editor_' . str_replace( '-', '_', $apple_field_name );
+					$apple_editor_style = sprintf(
 						'width: %spx; height: %spx',
 						500,
-						absint( 17 * $rows )
+						absint( 17 * $apple_rows )
 					);
 					?>
 					<p>
-						<label for="<?php echo esc_attr( $field_name ); ?>"><?php echo esc_html( $spec->label ); ?></label>
-						<div id="<?php echo esc_attr( $editor_name ); ?>" style="<?php echo esc_attr( $editor_style ); ?>"></div>
-						<textarea id="<?php echo esc_attr( $field_name ); ?>" name="<?php echo esc_attr( $field_name ); ?>"><?php echo esc_textarea( $json_display ); ?></textarea>
+						<label for="<?php echo esc_attr( $apple_field_name ); ?>"><?php echo esc_html( $apple_spec->label ); ?></label>
+						<div id="<?php echo esc_attr( $apple_editor_name ); ?>" style="<?php echo esc_attr( $apple_editor_style ); ?>"></div>
+						<textarea id="<?php echo esc_attr( $apple_field_name ); ?>" name="<?php echo esc_attr( $apple_field_name ); ?>"><?php echo esc_textarea( $apple_json_display ); ?></textarea>
 						<script type="text/javascript">
-							var <?php echo esc_js( $editor_name ); ?> = ace.edit( '<?php echo esc_js( $editor_name ); ?>' );
+							var <?php echo esc_js( $apple_editor_name ); ?> = ace.edit( '<?php echo esc_js( $apple_editor_name ); ?>' );
 							jQuery( function() {
-								jQuery( '#<?php echo esc_js( $field_name ); ?>' ).hide();
-								<?php echo esc_js( $editor_name ); ?>.setTheme( '<?php echo esc_js( apply_filters( 'apple_news_json_editor_ace_theme', 'ace/theme/textmate', $selected_component, $field_name ) ); ?>' );
-								<?php echo esc_js( $editor_name ); ?>.getSession().setMode( 'ace/mode/json' );
-								<?php echo esc_js( $editor_name ); ?>.getSession().setTabSize( 2 );
-								<?php echo esc_js( $editor_name ); ?>.getSession().setUseSoftTabs( false );
-								<?php echo esc_js( $editor_name ); ?>.setReadOnly( false );
-								<?php echo esc_js( $editor_name ); ?>.getSession().setUseWrapMode( true );
-								<?php echo esc_js( $editor_name ); ?>.getSession().setValue( jQuery( '#<?php echo esc_js( $field_name ); ?>' ).val() );
-								<?php echo esc_js( $editor_name ); ?>.getSession().on( 'change', function() {
-									jQuery( '#<?php echo esc_js( $field_name ); ?>' ).val( <?php echo esc_js( $editor_name ); ?>.getSession().getValue() );
+								jQuery( '#<?php echo esc_js( $apple_field_name ); ?>' ).hide();
+								<?php echo esc_js( $apple_editor_name ); ?>.setTheme( '<?php echo esc_js( apply_filters( 'apple_news_json_editor_ace_theme', 'ace/theme/textmate', $selected_component, $apple_field_name ) ); ?>' );
+								<?php echo esc_js( $apple_editor_name ); ?>.getSession().setMode( 'ace/mode/json' );
+								<?php echo esc_js( $apple_editor_name ); ?>.getSession().setTabSize( 2 );
+								<?php echo esc_js( $apple_editor_name ); ?>.getSession().setUseSoftTabs( false );
+								<?php echo esc_js( $apple_editor_name ); ?>.setReadOnly( false );
+								<?php echo esc_js( $apple_editor_name ); ?>.getSession().setUseWrapMode( true );
+								<?php echo esc_js( $apple_editor_name ); ?>.getSession().setValue( jQuery( '#<?php echo esc_js( $apple_field_name ); ?>' ).val() );
+								<?php echo esc_js( $apple_editor_name ); ?>.getSession().on( 'change', function() {
+									jQuery( '#<?php echo esc_js( $apple_field_name ); ?>' ).val( <?php echo esc_js( $apple_editor_name ); ?>.getSession().getValue() );
 								} );
 							} );
 						</script>

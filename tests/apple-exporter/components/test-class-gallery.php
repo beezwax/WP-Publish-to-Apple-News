@@ -1,254 +1,150 @@
 <?php
 /**
- * Publish to Apple News Tests: Gallery_Test class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Gallery.
+ * Publish to Apple News tests: Gallery_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/class-component-testcase.php';
-
 use \Apple_Exporter\Components\Gallery;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Gallery class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Gallery class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Gallery_Test extends Component_TestCase {
 
 	/**
-	 * Test content representing the output of a complex gallery.
+	 * A data provider that includes various ways of making galleries.
 	 *
-	 * @access private
-	 * @var string
+	 * @return array An array of arrays representing function arguments.
 	 */
-	private $_complex_html = <<<HTML
-<div id="gallery-1" class="gallery galleryid-0 gallery-columns-3 gallery-size-full">
-	<figure class="gallery-item">
-		<div class="gallery-icon landscape">
-			<img width="721" height="643" src="http://someurl.com/filename-1.jpg" class="attachment-full size-full" alt="Alt Text 1" aria-describedby="gallery-1-52" srcset="http://someurl.com/filename-1.jpg 721w, http://someurl.com/filename-1-300x268.jpg 300w" sizes="100vw"/>
-		</div>
-		<figcaption class="wp-caption-text gallery-caption" id="gallery-1-52">Caption 1</figcaption>
-	</figure>
-	<figure class="gallery-item">
-		<div class="gallery-icon portrait">
-			<img width="700" height="766" src="http://someurl.com/another-filename-2.jpg" class="attachment-full size-full" alt="Alt Text 2" aria-describedby="gallery-1-53" srcset="http://someurl.com/another-filename-2.jpg 700w, http://someurl.com/another-filename-2-274x300.jpg 274w" sizes="100vw"/>
-		</div>
-		<figcaption class="wp-caption-text gallery-caption" id="gallery-1-53">Caption 2</figcaption>
-	</figure>
-</div>
+	public function data_gallery_content() {
+		$content = [];
+
+		// Gutenberg, standard gallery, three images.
+		$content[][] = <<<HTML
+<!-- wp:gallery {"ids":[%1\$d,%4\$d,%7\$d]} -->
+<figure class="wp-block-gallery columns-3 is-cropped">
+	<ul class="blocks-gallery-grid">
+		<li class="blocks-gallery-item">
+			<figure>
+				<img src="%2\$s" alt="Alt Text 1" data-id="%1\$d" data-full-url="%2\$s" data-link="%3\$s" class="wp-image-%1\$d"/>
+				<figcaption class="blocks-gallery-item__caption">Test Caption 1</figcaption>
+			</figure>
+		</li>
+		<li class="blocks-gallery-item">
+			<figure>
+				<img src="%5\$s" alt="Alt Text 2" data-id="%4\$d" data-full-url="%5\$s" data-link="%6\$s" class="wp-image-%4\$d"/>
+				<figcaption class="blocks-gallery-item__caption">Test Caption 2</figcaption>
+			</figure>
+		</li>
+		<li class="blocks-gallery-item">
+			<figure>
+				<img src="%8\$s" alt="Alt Text 3" data-id="%7\$d" data-full-url="%8\$s" data-link="%9\$s" class="wp-image-%7\$d"/>
+				<figcaption class="blocks-gallery-item__caption">Test Caption 3</figcaption>
+			</figure>
+		</li>
+	</ul>
+</figure>
+<!-- /wp:gallery -->
 HTML;
 
-	/**
-	 * Test content representing the output of a simple gallery.
-	 *
-	 * @access private
-	 * @var string
-	 */
-	private $_simple_html = <<<HTML
-<div class="gallery">
-	<img src="http://someurl.com/filename-1.jpg" alt="Example" />
-	<img src="http://someurl.com/another-filename-2.jpg" alt="Example" />
+		// Gutenberg, Jetpack slideshow, three images.
+		$content[][] = <<<HTML
+<!-- wp:jetpack/slideshow {"ids":[%1\$d,%4\$d,%7\$d],"sizeSlug":"large"} -->
+<div class="wp-block-jetpack-slideshow aligncenter" data-effect="slide">
+	<div class="wp-block-jetpack-slideshow_container swiper-container">
+		<ul class="wp-block-jetpack-slideshow_swiper-wrapper swiper-wrapper">
+			<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+				<figure>
+					<img alt="Alt Text 1" class="wp-block-jetpack-slideshow_image wp-image-%1\$d" data-id="%1\$d" src="%2\$s"/>
+					<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">Test Caption 1</figcaption>
+				</figure>
+			</li>
+			<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+				<figure>
+					<img alt="Alt Text 2" class="wp-block-jetpack-slideshow_image wp-image-%4\$d" data-id="%4\$d" src="%5\$s"/>
+					<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">Test Caption 2</figcaption>
+				</figure>
+			</li>
+			<li class="wp-block-jetpack-slideshow_slide swiper-slide">
+				<figure>
+					<img alt="Alt Text 3" class="wp-block-jetpack-slideshow_image wp-image-%7\$d" data-id="%7\$d" src="%8\$s"/>
+					<figcaption class="wp-block-jetpack-slideshow_caption gallery-caption">Test Caption 3</figcaption>
+				</figure>
+			</li>
+		</ul>
+		<a class="wp-block-jetpack-slideshow_button-prev swiper-button-prev swiper-button-white" role="button"></a>
+		<a class="wp-block-jetpack-slideshow_button-next swiper-button-next swiper-button-white" role="button"></a>
+		<a aria-label="Pause Slideshow" class="wp-block-jetpack-slideshow_button-pause" role="button"></a>
+		<div class="wp-block-jetpack-slideshow_pagination swiper-pagination swiper-pagination-white"></div>
+	</div>
 </div>
+<!-- /wp:jetpack/slideshow -->
 HTML;
 
-	/**
-	 * A filter function to modify the layout in the generated JSON.
-	 *
-	 * @param array $json The JSON array to modify.
-	 *
-	 * @access public
-	 * @return array The modified JSON.
-	 */
-	public function filter_apple_news_gallery_json( $json ) {
-		$json['layout'] = 'fancy-layout';
+		// Classic editor, gallery, three images.
+		$content[][] = '[gallery ids="%1$d,%4$d,%7$d"]';
 
-		return $json;
+		return $content;
 	}
 
 	/**
-	 * Test the apple_news_gallery_json filter.
+	 * Given post content, ensures that the gallery is properly converted to
+	 * Apple News Format.
 	 *
-	 * @access public
+	 * @dataProvider data_gallery_content
+	 *
+	 * @param string $post_content The post content to load into the example post.
 	 */
-	public function testFilter() {
+	public function test_component( $post_content ) {
+		// Create three new images for testing.
+		$images = [
+			$this->get_new_attachment( 0, 'Test Caption 1', 'Alt Text 1' ),
+			$this->get_new_attachment( 0, 'Test Caption 2', 'Alt Text 2' ),
+			$this->get_new_attachment( 0, 'Test Caption 3', 'Alt Text 3' ),
+		];
 
-		// Setup.
-		$component = $this->_setup_component( $this->_simple_html );
-
-		// Add the filter and set a custom layout.
-		add_filter(
-			'apple_news_gallery_json',
-			array( $this, 'filter_apple_news_gallery_json' )
+		// Replace the tokens in post_content using real values from the attachments.
+		$post_content = sprintf(
+			$post_content,
+			$images[0],
+			wp_get_attachment_image_url( $images[0] ),
+			get_permalink( $images[0] ),
+			$images[1],
+			wp_get_attachment_image_url( $images[1] ),
+			get_permalink( $images[1] ),
+			$images[2],
+			wp_get_attachment_image_url( $images[2] ),
+			get_permalink( $images[2] )
 		);
 
-		// Ensure the filter properly modified the layout.
-		$this->assertEquals(
-			array(
-				'role' => 'gallery',
-				'items' => array(
-					array(
-						'URL' => 'bundle://filename-1.jpg',
-						'accessibilityCaption' => 'Example',
-					),
-					array(
-						'URL' => 'bundle://another-filename-2.jpg',
-						'accessibilityCaption' => 'Example',
-					),
-				),
-				'layout' => 'fancy-layout',
-			),
-			$component->to_array()
+		// Create the test post with the remapped post content.
+		$post_id = self::factory()->post->create( [ 'post_content' => $post_content ] );
+
+		// Create a new attachment and assign it as the featured image for the cover component.
+		set_post_thumbnail(
+			$post_id,
+			$this->get_new_attachment( 0 )
 		);
 
-		// Teardown.
-		remove_filter(
-			'apple_news_gallery_json',
-			array( $this, 'filter_apple_news_gallery_json' )
-		);
-	}
-
-	/**
-	 * Ensures that the component generates the proper JSON for a simple gallery.
-	 *
-	 * @access public
-	 */
-	public function testGeneratedJSON() {
-
-		// Setup.
-		$component = $this->_setup_component( $this->_simple_html );
-
-		// Test for valid JSON.
-		$this->assertEquals(
-			array(
-				'role' => 'gallery',
-				'items' => array(
-					array(
-						'URL' => 'bundle://filename-1.jpg',
-						'accessibilityCaption' => 'Example',
-					),
-					array(
-						'URL' => 'bundle://another-filename-2.jpg',
-						'accessibilityCaption' => 'Example',
-					),
-				),
-				'layout' => 'gallery-layout',
-			),
-			$component->to_array()
-		);
-	}
-
-	/**
-	 * Ensures that the component generates the proper JSON for a complex gallery.
-	 *
-	 * @access public
-	 */
-	public function testGeneratedJSONComplex() {
-
-		// Setup.
-		$component = $this->_setup_component( $this->_complex_html );
-
-		// Test for valid JSON.
-		$this->assertEquals(
-			array(
-				'role' => 'gallery',
-				'items' => array(
-					array(
-						'URL' => 'bundle://filename-1.jpg',
-						'accessibilityCaption' => 'Alt Text 1',
-						'caption' => array(
-							'text' => 'Caption 1',
-						),
-					),
-					array(
-						'URL' => 'bundle://another-filename-2.jpg',
-						'accessibilityCaption' => 'Alt Text 2',
-						'caption' => array(
-							'text' => 'Caption 2',
-						),
-					),
-				),
-				'layout' => 'gallery-layout',
-			),
-			$component->to_array()
-		);
-	}
-
-	/**
-	 * Tests the functionality of the `use_remote_images` setting.
-	 *
-	 * @access public
-	 */
-	public function testGeneratedJSONRemoteImages() {
-
-		// Setup.
-		$this->settings->set( 'use_remote_images', 'yes' );
-		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
-		$workspace->bundle_source(
-			'filename-1.jpg',
-			'http://someurl.com/filename-1.jpg'
-		)->shouldNotBeCalled();
-		$workspace->bundle_source(
-			'another-filename-2.jpg',
-			'http://someurl.com/another-filename-2.jpg'
-		)->shouldNotBeCalled();
-		$component = new Gallery(
-			$this->_simple_html,
-			$workspace->reveal(),
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		// Ensure that the URL parameters are using remote images.
-		$this->assertEquals(
-			array(
-				'role' => 'gallery',
-				'items' => array(
-					array(
-						'URL' => 'http://someurl.com/filename-1.jpg',
-						'accessibilityCaption' => 'Example',
-					),
-					array(
-						'URL' => 'http://someurl.com/another-filename-2.jpg',
-						'accessibilityCaption' => 'Example',
-					),
-				),
-				'layout' => 'gallery-layout',
-			),
-			$component->to_array()
-		);
-	}
-
-	/**
-	 * Given HTML content, sets up a workspace and a Gallery component.
-	 *
-	 * @param string $content The HTML content to feed into the component.
-	 *
-	 * @access private
-	 * @return Gallery The Gallery component constructed from the content.
-	 */
-	private function _setup_component( $content ) {
-
-		// Set up the workspace.
-		$this->settings->set( 'use_remote_images', 'no' );
-		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
-		$workspace->bundle_source(
-			'filename-1.jpg',
-			'http://someurl.com/filename-1.jpg'
-		)->shouldBeCalled();
-		$workspace->bundle_source(
-			'another-filename-2.jpg',
-			'http://someurl.com/another-filename-2.jpg'
-		)->shouldBeCalled();
-
-		return new Gallery(
-			$content,
-			$workspace->reveal(),
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
+		// Get the JSON for the article and test the gallery output.
+		$json    = $this->get_json_for_post( $post_id );
+		$gallery = $json['components'][1]['components'][2];
+		$this->assertEquals( 'gallery', $gallery['role'] );
+		$this->assertEquals( 3, count( $gallery['items'] ) );
+		$this->assertEquals( wp_get_attachment_image_url( $images[0] ), $gallery['items'][0]['URL'] );
+		$this->assertEquals( 'Alt Text 1', $gallery['items'][0]['accessibilityCaption'] );
+		$this->assertEquals( 'Test Caption 1', $gallery['items'][0]['caption']['text'] );
+		$this->assertEquals( wp_get_attachment_image_url( $images[1] ), $gallery['items'][1]['URL'] );
+		$this->assertEquals( 'Alt Text 2', $gallery['items'][1]['accessibilityCaption'] );
+		$this->assertEquals( 'Test Caption 2', $gallery['items'][1]['caption']['text'] );
+		$this->assertEquals( wp_get_attachment_image_url( $images[2] ), $gallery['items'][2]['URL'] );
+		$this->assertEquals( 'Alt Text 3', $gallery['items'][2]['accessibilityCaption'] );
+		$this->assertEquals( 'Test Caption 3', $gallery['items'][2]['caption']['text'] );
 	}
 }

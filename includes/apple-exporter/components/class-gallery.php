@@ -33,7 +33,11 @@ class Gallery extends Component {
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
-		return ( self::node_has_class( $node, 'gallery' ) || self::node_has_class( $node, 'wp-block-gallery' ) ) ? $node : null;
+		return self::node_has_class( $node, 'gallery' )
+			|| self::node_has_class( $node, 'wp-block-gallery' )
+			|| self::node_has_class( $node, 'wp-block-jetpack-slideshow' )
+				? $node
+				: null;
 	}
 
 	/**
@@ -77,17 +81,31 @@ class Gallery extends Component {
 		$dom->loadHTML( '<?xml encoding="UTF-8">' . $html );
 		libxml_clear_errors();
 		libxml_use_internal_errors( false );
-		$nodes = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes;
+
+		// Negotiate container. This will either be a <ul> or a <div> with a class of "gallery".
+		$nodes     = $dom->getElementsByTagName( 'ul' );
+		$container = null;
+		if ( ! empty( $nodes->item( 0 ) ) ) {
+			$container = $nodes->item( 0 );
+		} else {
+			$nodes = $dom->getElementsByTagName( 'div' );
+			foreach ( $nodes as $node ) {
+				if ( self::node_has_class( $node, 'gallery' ) ) {
+					$container = $node;
+					break;
+				}
+			}
+		}
 
 		// Determine if we have items.
-		if ( ! $nodes || ! $nodes->item( 0 )->childNodes ) {
+		if ( empty( $container->childNodes ) ) {
 			return;
 		}
 
 		// Loop through items and construct slides.
 		$theme = \Apple_Exporter\Theme::get_used();
 		$items = array();
-		foreach ( $nodes->item( 0 )->childNodes as $item ) {
+		foreach ( $container->childNodes as $item ) {
 
 			// Convert item into HTML for regex matching.
 			$item_html = $item->ownerDocument->saveXML( $item );
@@ -109,11 +127,13 @@ class Gallery extends Component {
 			);
 
 			// Try to add the caption.
-			$caption = $item->getElementsByTagName( 'figcaption' );
-			if ( $caption && $caption->length ) {
+			$caption_regex = '/<(dd|figcaption).*?>(.*)<\/\g1>/s';
+			if ( preg_match( $caption_regex, $item_html, $matches ) ) {
 				$content['caption'] = array(
-					'text' => sanitize_text_field(
-						trim( $caption->item( 0 )->nodeValue )
+					'format'    => 'html',
+					'text'      => trim( $matches[2] ),
+					'textStyle' => array(
+						'fontName' => $theme->get_value( 'caption_font' ),
 					),
 				);
 			}

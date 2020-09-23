@@ -73,6 +73,13 @@ class Admin_Apple_Themes extends Apple_News {
 		$field = '';
 		$value = $theme->get_value( $option_name );
 		switch ( $option['type'] ) {
+			case 'boolean':
+				$field = '<select id="%s" name="%s">'
+					. '<option value="0" ' . selected( $value, false, false ) . '>No</option>'
+					. '<option value="1" ' . selected( $value, true, false ) . '>Yes</option>'
+					. '</select>';
+
+				break;
 			case 'color':
 				$field = '<input type="text" id="%s" name="%s" value="%s" class="apple-news-color-picker">';
 
@@ -97,6 +104,8 @@ class Admin_Apple_Themes extends Apple_News {
 				$field = '<select class="select2 font" id="%s" name="%s">' . $field
 					. '</select>';
 
+				break;
+			case 'group_heading':
 				break;
 			case 'integer':
 				$field = '<input type="number" id="%s" name="%s" value="%s">';
@@ -261,6 +270,8 @@ class Admin_Apple_Themes extends Apple_News {
 	 */
 	public function page_theme_edit_render() {
 
+		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
+
 		// Ensure the user has permission to load this screen.
 		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
 			wp_die( esc_html__( 'You do not have permissions to access this page.', 'apple-news' ) );
@@ -286,6 +297,8 @@ class Admin_Apple_Themes extends Apple_News {
 
 		// Get information about theme options.
 		$theme_options = \Apple_Exporter\Theme::get_options();
+
+		/* phpcs:enable */
 
 		// Load the edit page.
 		include plugin_dir_path( __FILE__ ) . 'partials/page-theme-edit.php';
@@ -529,18 +542,8 @@ class Admin_Apple_Themes extends Apple_News {
 			);
 		}
 
-		// If the active theme isn't named "Default", don't nag the user.
-		if ( __( 'Default', 'apple-news' ) !== \Apple_Exporter\Theme::get_active_theme_name() ) {
-			return;
-		}
-
-		// Determine if the theme is using the default settings.
-		$theme = new \Apple_Exporter\Theme();
-		$theme->set_name( \Apple_Exporter\Theme::get_active_theme_name() );
-		$theme->load();
-
-		// If the theme has been customized, don't nag the user.
-		if ( ! $theme->is_default() ) {
+		// If the active theme isn't the default, don't nag the user.
+		if ( ! Apple_News::is_default_theme() ) {
 			return;
 		}
 
@@ -569,9 +572,9 @@ class Admin_Apple_Themes extends Apple_News {
 		check_admin_referer( $this->valid_actions[ $action ]['nonce'] );
 
 		// Attempt to get the name of the theme from postdata.
-		if ( empty( $name ) && ! empty( $_POST['apple_news_theme'] ) ) {
-			$name = sanitize_text_field( wp_unslash( $_POST['apple_news_theme'] ) );
-		}
+		$name = ! empty( $_POST['apple_news_theme'] )
+			? sanitize_text_field( wp_unslash( $_POST['apple_news_theme'] ) )
+			: '';
 
 		// Ensure a name was provided.
 		if ( empty( $name ) ) {

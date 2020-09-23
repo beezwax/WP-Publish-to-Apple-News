@@ -1,22 +1,19 @@
 <?php
 /**
- * Publish to Apple News Tests: Image_Test class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Image.
+ * Publish to Apple News tests: Image_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/class-component-testcase.php';
-
 use Apple_Exporter\Components\Image;
-use Apple_Exporter\Exporter;
-use Apple_Exporter\Exporter_Content;
-use Apple_Exporter\Workspace;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Image class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Image class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Image_Test extends Component_TestCase {
 
@@ -48,7 +45,7 @@ class Image_Test extends Component_TestCase {
 
 		$component = new Image(
 			$html,
-			new Workspace( 1 ),
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -94,7 +91,7 @@ HTML;
 		// Assign an Image component.
 		$component = new Image(
 			$html_caption,
-			new Workspace( 1 ),
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -118,7 +115,7 @@ HTML;
 		$this->assertContains( $json['components'], $json );
 		$this->assertEquals( 'photo', $json['components'][0]['role'] );
 		$this->assertEquals( 'https://placeimg.com/640/480/any', $json['components'][0]['URL'] );
-		$this->assertEquals( 'Sed <strong>ac metus</strong> sagittis <em>urna feugiat</em> interdum. Duis vel blandit nisi, id tempus sem. Credit: <a href="https://domain.suffix">Domain</a>', $json['components'][0]['caption'] );
+		$this->assertEquals( 'Sed <strong>ac metus</strong> sagittis <em>urna feugiat</em> interdum. Duis vel blandit nisi, id tempus sem. Credit: <a href="https://domain.suffix">Domain</a>', $json['components'][0]['caption']['text'] );
 	}
 
 	/**
@@ -130,10 +127,9 @@ HTML;
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
-		$workspace = new \Apple_Exporter\Workspace( 1 );
 		$component = new Image(
 			'<img src="" alt="Example" align="left" />',
-			$workspace,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -153,14 +149,13 @@ HTML;
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'no' );
-		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
-		$workspace->bundle_source(
+		$this->prophecized_workspace->bundle_source(
 			'filename.jpg',
 			'http://someurl.com/filename.jpg'
 		)->shouldBeCalled();
 		$component = new Image(
 			'<img src="http://someurl.com/filename.jpg" alt="Example" />',
-			$workspace->reveal(),
+			$this->prophecized_workspace->reveal(),
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -190,10 +185,9 @@ HTML;
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
-		$workspace = new \Apple_Exporter\Workspace( 1 );
 		$component = new Image(
 			'<img src="#fragment" alt="Example" align="left" />',
-			$workspace,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -213,14 +207,13 @@ HTML;
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'no' );
-		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
-		$workspace->bundle_source(
+		$this->prophecized_workspace->bundle_source(
 			'filename.jpg',
 			'http://someurl.com/filename.jpg'
 		)->shouldBeCalled();
 		$component = new Image(
 			'<img src="http://someurl.com/filename.jpg" alt="Example" align="left" />',
-			$workspace->reveal(),
+			$this->prophecized_workspace->reveal(),
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -242,14 +235,13 @@ HTML;
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
-		$workspace = $this->prophet->prophesize( '\Apple_Exporter\Workspace' );
-		$workspace->bundle_source(
+		$this->prophecized_workspace->bundle_source(
 			'filename.jpg',
 			'http://someurl.com/filename.jpg'
 		)->shouldNotBeCalled();
 		$component = new Image(
 			'<img src="http://someurl.com/filename.jpg" alt="Example" align="left" />',
-			$workspace->reveal(),
+			$this->prophecized_workspace->reveal(),
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -271,10 +263,9 @@ HTML;
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
-		$workspace = new \Apple_Exporter\Workspace( 1 );
 		$component = new Image(
 			'<img src="/relative/path/to/image.jpg" alt="Example" align="left" />',
-			$workspace,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -288,6 +279,38 @@ HTML;
 	}
 
 	/**
+	 * Tests dark color setting for image captions
+	 *
+	 * @access public
+	 */
+	public function testDarkColors() {
+		$this->set_theme_settings(
+			[
+				'caption_color_dark'       => '#abcdef',
+			]
+		);
+
+		$html = <<<HTML
+<figure>
+	<img src="https://example.org/filename.jpg" alt="Example">
+	<figcaption class="wp-caption-text">Caption Text</figcaption>
+</figure>
+HTML;
+		$component = new Image(
+			$html,
+			$this->workspace,
+			$this->settings,
+			$this->styles,
+			$this->layouts
+		);
+		$result = $component->to_array();
+		$this->assertEquals(
+			'#abcdef',
+			$result['components'][1]['textStyle']['conditional']['textColor']
+		);
+	}
+
+	/**
 	 * Tests image and image caption settings.
 	 *
 	 * @access public
@@ -295,16 +318,16 @@ HTML;
 	public function testSettings() {
 
 		// Setup.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
 		$this->settings->full_bleed_images = 'yes';
-		$settings['caption_color'] = '#abcdef';
-		$settings['caption_font'] = 'AmericanTypewriter';
-		$settings['caption_line_height'] = 28;
-		$settings['caption_size'] = 20;
-		$settings['caption_tracking'] = 50;
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings(
+			[
+				'caption_color'       => '#abcdef',
+				'caption_font'        => 'AmericanTypewriter',
+				'caption_line_height' => 28,
+				'caption_size'        => 20,
+				'caption_tracking'    => 50,
+			]
+		);
 		$html = <<<HTML
 <figure>
 	<img src="http://someurl.com/filename.jpg" alt="Example">
@@ -313,7 +336,7 @@ HTML;
 HTML;
 		$component = new Image(
 			$html,
-			new Workspace( 1 ),
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -341,6 +364,38 @@ HTML;
 		$this->assertEquals(
 			0.5,
 			$result['components'][1]['textStyle']['tracking']
+		);
+		$this->assertFalse(
+			isset( $json['components'][1]['textStyle']['conditional'] )
+		);
+	}
+
+	/**
+	 * Ensures that the lightbox font is set to the same font face as the image caption.
+	 */
+	public function testLightboxFont() {
+		$this->set_theme_settings(
+			[
+				'caption_font'         => 'Menlo-Regular',
+				'meta_component_order' => [ 'title', 'byline' ],
+			]
+		);
+
+		// Create an image and give it a caption.
+		$image_id = $this->get_new_attachment( 0, 'Test Caption!' );
+
+		// Create a test post with the image with the caption.
+		$post_id = self::factory()->post->create(
+			[
+				'post_content' => $this->get_image_with_caption( $image_id ),
+			]
+		);
+
+		// Ensure that the font set on the lightbox is the same as the font set on the caption above.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			'Menlo-Regular',
+			$json['components'][2]['components'][0]['caption']['textStyle']['fontName']
 		);
 	}
 }

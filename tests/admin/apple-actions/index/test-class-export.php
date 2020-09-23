@@ -1,12 +1,34 @@
 <?php
+/**
+ * Publish to Apple News tests: Admin_Action_Index_Export_Test class
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
 
 use \Apple_Actions\Index\Export as Export;
-use \Apple_Exporter\Settings as Settings;
 
-class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
+/**
+ * A class to test the functionality of the Apple_Actions\Index\Export class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
+class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 
-	public function setup() {
-		$this->settings = new Settings();
+	/**
+	 * Returns an array of arrays representing function arguments to the
+	 * testBrightcoveVideo function.
+	 */
+	public function dataProviderBrightcoveVideo() {
+		return [
+			[
+				'<!-- wp:bc/brightcove {"account_id":"1234567890","player_id":"abcd1234-ef56-ab78-cd90-efa1234567890","video_id":"1234567890123","playlist_id":"","experience_id":"","video_ids":"","embed":"in-page","autoplay":"","playsinline":"","picture_in_picture":"","height":"100%","width":"100%","min_width":"0px","max_width":"640px","padding_top":"56%"} /-->',
+			],
+			[
+				'[bc_video video_id="1234567890123" account_id="1234567890" player_id="abcd1234-ef56-ab78-cd90-efa1234567890" embed="in-page" padding_top="56%" autoplay="" min_width="0px" playsinline="" picture_in_picture="" max_width="640px" mute="" width="100%" height="100%" ]',
+			],
+		];
 	}
 
 	/**
@@ -17,6 +39,58 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 	 */
 	public function filterTheContentTestIsExporting() {
 		return apple_news_is_exporting() ? 'is exporting' : 'is not exporting';
+	}
+
+	/**
+	 * Tests Brightcove video support.
+	 *
+	 * @param string $post_content The post content to load for the test.
+	 *
+	 * @dataProvider dataProviderBrightcoveVideo
+	 */
+	public function testBrightcoveVideo( $post_content ) {
+		$post_id = self::factory()->post->create(
+			[
+				'post_content' => $post_content,
+			]
+		);
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'video', $json['components'][2]['role'] );
+		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][2]['URL'] );
+		$this->assertEquals( 'https://cf-images.us-east-1.prod.boltdns.net/v1/jit/1234567890/abcd1234-ef56-ab78-cd90-efabcd123456/main/1280x720/1s234ms/match/image.jpg', $json['components'][2]['stillURL'] );
+	}
+
+	/**
+	 * Tests the ability to include a caption with a cover image.
+	 */
+	public function testCoverWithCaption() {
+		$this->set_theme_settings( [ 'cover_caption' => true ] );
+
+		// Create dummy post and attachment.
+		$post_id = self::factory()->post->create();
+		$image   = $this->get_new_attachment( $post_id, 'Test Caption' );
+
+		// Set the image as the featured image for the post.
+		set_post_thumbnail( $post_id, $image );
+
+		// Run the export and check the result.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
+		$this->assertEquals( wp_get_attachment_url( $image ), $json['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][0]['caption']['text'] );
+		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][1]['text'] );
+
+		// Set cover image and caption via postmeta and ensure it takes priority.
+		$image2 = $this->get_new_attachment();
+		update_post_meta( $post_id, 'apple_news_coverimage', $image2 );
+		update_post_meta( $post_id, 'apple_news_coverimage_caption', 'Test Caption 2' );
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
+		$this->assertEquals( wp_get_attachment_url( $image2 ), $json['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'Test Caption 2', $json['components'][0]['components'][0]['caption']['text'] );
+		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Caption 2', $json['components'][0]['components'][1]['text'] );
 	}
 
 	public function testHasExcerpt() {
@@ -149,100 +223,24 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 		);
 	}
 
+	/**
+	 * Tests mapping taxonomy terms to Apple News sections.
+	 */
 	public function testSectionMapping() {
-		// Create a post
-		$title = 'My Title';
-		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
-
-		$post_id = $this->factory->post->create( array(
-			'post_title' => $title,
-			'post_content' => $content,
-		) );
-
-		// Create a term and add it to the post
-		$term_id = $this->factory->term->create( array(
-			'taxonomy' => 'category',
-			'name' => 'news',
-		) );
-		wp_set_post_terms( $post_id, array( $term_id ), 'category' );
-
-		// Create a taxonomy map
-		update_option( \Admin_Apple_Sections::TAXONOMY_MAPPING_KEY, array(
-			'abcdef01-2345-6789-abcd-ef012356789a' => array( $term_id ),
-		) );
-
-		// Cache as a transient to bypass the API call
-		$self = 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a';
-		set_transient(
-			'apple_news_sections',
-			array(
-				(object) array(
-					'createdAt' => '2017-01-01T00:00:00Z',
-					'id' => 'abcdef01-2345-6789-abcd-ef012356789a',
-					'isDefault' => true,
-					'links' => (object) array(
-						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
-						'self' => $self,
-					),
-					'modifiedAt' => '2017-01-01T00:00:00Z',
-					'name' => 'Main',
-					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
-					'type' => 'section',
-				),
-			)
-		);
-
-		// Get sections for the post
-		$sections = \Admin_Apple_Sections::get_sections_for_post( $post_id );
-
-		// Check that the correct mapping was returned
-		$this->assertEquals(
-			$sections,
-			array( $self )
-		);
-
-		// Remove the transient and the map
-		delete_option( \Admin_Apple_Sections::TAXONOMY_MAPPING_KEY );
-		delete_transient( 'apple_news_sections' );
-	}
-
-	public function testThemeMapping() {
-
-		// Create a default theme.
-		$default_theme = new \Apple_Exporter\Theme;
-		$default_theme->set_name( 'Default' );
-		$this->assertTrue( $default_theme->save() );
-
-		// Create a test theme with different settings to differentiate.
-		$test_theme = new \Apple_Exporter\Theme;
-		$test_theme->set_name( 'Test Theme' );
-		$test_settings = $test_theme->all_settings();
-		$test_settings['body_color'] = '#123456';
-		$test_theme->load( $test_settings );
-		$this->assertTrue( $test_theme->save() );
 
 		// Create a post.
-		$title = 'My Title';
-		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
-
-		$post_id = $this->factory->post->create( array(
-			'post_title' => $title,
-			'post_content' => $content,
-		) );
+		$post_id = self::factory()->post->create();
 
 		// Create a term and add it to the post.
-		$term_id = $this->factory->term->create( array(
+		$term_id = self::factory()->term->create( array(
 			'taxonomy' => 'category',
-			'name' => 'entertainment',
+			'name' => 'news',
 		) );
 		wp_set_post_terms( $post_id, array( $term_id ), 'category' );
 
 		// Create a taxonomy map.
 		update_option( \Admin_Apple_Sections::TAXONOMY_MAPPING_KEY, array(
 			'abcdef01-2345-6789-abcd-ef012356789a' => array( $term_id ),
-		) );
-		update_option( \Admin_Apple_Sections::THEME_MAPPING_KEY, array(
-			'abcdef01-2345-6789-abcd-ef012356789a' => 'Test Theme',
 		) );
 
 		// Cache as a transient to bypass the API call.
@@ -268,21 +266,210 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 
 		// Get sections for the post.
 		$sections = \Admin_Apple_Sections::get_sections_for_post( $post_id );
-		$export = new Export( $this->settings, $post_id, $sections );
-		$exporter = $export->fetch_exporter();
-		$exporter->generate();
-		$json = $exporter->get_json();
-		$settings = json_decode( $json );
 
+		// Check that the correct mapping was returned.
 		$this->assertEquals(
-			$settings->componentTextStyles->dropcapBodyStyle->textColor,
-			$test_settings['body_color']
+			$sections,
+			array( $self )
+		);
+
+		// Remove the transient and the map.
+		delete_option( \Admin_Apple_Sections::TAXONOMY_MAPPING_KEY );
+		delete_transient( 'apple_news_sections' );
+	}
+
+	/**
+	 * Tests the behavior of theme mapping by ensuring that a post with a
+	 * category that is mapped to a particular section also gets the theme
+	 * that is mapped to that section.
+	 */
+	public function testThemeMapping() {
+
+		// Load an additional example theme to facilitate mapping.
+		$this->load_example_theme( 'colorful' );
+
+		// Ensure the default theme is active.
+		$this->load_example_theme( 'default' );
+
+		// Create a post.
+		$post_id = self::factory()->post->create();
+
+		// Create a term and add it to the post.
+		$term_id = self::factory()->term->create( array(
+			'taxonomy' => 'category',
+			'name' => 'entertainment',
+		) );
+		wp_set_post_terms( $post_id, array( $term_id ), 'category' );
+
+		// Create a taxonomy map.
+		update_option( \Admin_Apple_Sections::TAXONOMY_MAPPING_KEY, array(
+			'abcdef01-2345-6789-abcd-ef012356789a' => array( $term_id ),
+		) );
+		update_option( \Admin_Apple_Sections::THEME_MAPPING_KEY, array(
+			'abcdef01-2345-6789-abcd-ef012356789a' => 'Colorful',
+		) );
+
+		// Cache as a transient to bypass the API call.
+		$self = 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a';
+		set_transient(
+			'apple_news_sections',
+			array(
+				(object) array(
+					'createdAt' => '2017-01-01T00:00:00Z',
+					'id' => 'abcdef01-2345-6789-abcd-ef012356789a',
+					'isDefault' => true,
+					'links' => (object) array(
+						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
+						'self' => $self,
+					),
+					'modifiedAt' => '2017-01-01T00:00:00Z',
+					'name' => 'Main',
+					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
+					'type' => 'section',
+				),
+			)
+		);
+
+		// Get sections for the post.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
+			'#000000'
+		);
+
+		// Change the theme mapping to use the Default theme instead and re-test.
+		update_option( \Admin_Apple_Sections::THEME_MAPPING_KEY, array(
+			'abcdef01-2345-6789-abcd-ef012356789a' => 'Default',
+		) );
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
+			'#4f4f4f'
 		);
 
 		// Clean up.
-		$default_theme->delete();
-		$test_theme->delete();
 		delete_option( \Admin_Apple_Sections::TAXONOMY_MAPPING_KEY );
+		delete_option( \Admin_Apple_Sections::THEME_MAPPING_KEY );
+		delete_transient( 'apple_news_sections' );
+	}
+
+	/**
+	 * Tests the priority level setting. Ensures that a post that is mapped to
+	 * multiple sections by taxonomy gets the theme that is associated with the
+	 * section that has the highest priority among the sections assigned to the
+	 * post.
+	 */
+	public function testPriority() {
+		// Load an additional example theme to facilitate mapping.
+		$this->load_example_theme( 'colorful' );
+
+		// Ensure the default theme is active.
+		$this->load_example_theme( 'default' );
+
+		// Create a post.
+		$post_id = self::factory()->post->create();
+
+		// Create a term and add it to the post.
+		$term_id = self::factory()->term->create( array(
+			'taxonomy' => 'category',
+			'name' => 'politics',
+		) );
+		wp_set_post_terms( $post_id, array( $term_id ), 'category' );
+
+		// Create a taxonomy map that maps to multiple sections..
+		update_option(
+			\Admin_Apple_Sections::TAXONOMY_MAPPING_KEY,
+			array(
+				'abcdef01-2345-6789-abcd-ef012356789a' => array( $term_id ),
+				'abcdef01-2345-6789-abcd-ef012356789b' => array( $term_id ),
+			)
+		);
+
+		// Map each section to a different theme.
+		update_option(
+			\Admin_Apple_Sections::THEME_MAPPING_KEY,
+			array(
+				'abcdef01-2345-6789-abcd-ef012356789a' => 'Default',
+				'abcdef01-2345-6789-abcd-ef012356789b' => 'Colorful',
+			)
+		);
+
+		// Cache as a transient to bypass the API call.
+		set_transient(
+			'apple_news_sections',
+			array(
+				(object) array(
+					'createdAt' => '2017-01-01T00:00:00Z',
+					'id' => 'abcdef01-2345-6789-abcd-ef012356789a',
+					'isDefault' => true,
+					'links' => (object) array(
+						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
+						'self' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
+					),
+					'modifiedAt' => '2017-01-01T00:00:00Z',
+					'name' => 'Main',
+					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
+					'type' => 'section',
+				),
+				(object) array(
+					'createdAt' => '2017-01-01T00:00:00Z',
+					'id' => 'abcdef01-2345-6789-abcd-ef012356789b',
+					'isDefault' => false,
+					'links' => (object) array(
+						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
+						'self' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789b',
+					),
+					'modifiedAt' => '2017-01-01T00:00:00Z',
+					'name' => 'Secondary',
+					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUw',
+					'type' => 'section',
+				),
+			)
+		);
+
+		// Ensure that the default theme is used when no priority is specified.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
+			'#4f4f4f'
+		);
+
+		// Set the priority on the sections to boost the priority of the secondary section.
+		update_option(
+			\Admin_Apple_Sections::PRIORITY_MAPPING_KEY,
+			array(
+				'abcdef01-2345-6789-abcd-ef012356789a' => 1,
+				'abcdef01-2345-6789-abcd-ef012356789b' => 2,
+			)
+		);
+
+		// Re-run the export and ensure the Colorful theme is used.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
+			'#000000'
+		);
+
+		// Set the priority on the sections to boost the priority of the main section.
+		update_option(
+			\Admin_Apple_Sections::PRIORITY_MAPPING_KEY,
+			array(
+				'abcdef01-2345-6789-abcd-ef012356789a' => 2,
+				'abcdef01-2345-6789-abcd-ef012356789b' => 1,
+			)
+		);
+
+		// Re-run the export and ensure the Default theme is used.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
+			'#4f4f4f'
+		);
+
+		// Clean up.
+		delete_option( \Admin_Apple_Sections::PRIORITY_MAPPING_KEY );
+		delete_option( \Admin_Apple_Sections::TAXONOMY_MAPPING_KEY );
+		delete_option( \Admin_Apple_Sections::THEME_MAPPING_KEY );
 		delete_transient( 'apple_news_sections' );
 	}
 
@@ -312,12 +499,10 @@ class Admin_Action_Index_Export_Test extends WP_UnitTestCase {
 		);
 
 		// Get sections for the post.
-		$sections = \Admin_Apple_Sections::get_sections_for_post( $post_id );
-		$export = new Export( $this->settings, $post_id, $sections );
-		$json = json_decode( $export->perform() );
+		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
 			'<p>is exporting</p>',
-			$json->components[3]->text
+			$json['components'][2]['text']
 		);
 
 		// Ensure is_exporting returns false after exporting.

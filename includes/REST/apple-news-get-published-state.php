@@ -34,8 +34,9 @@ add_action(
 			'apple-news/v1',
 			'/get-published-state/(?P<id>\d+)',
 			[
-				'methods'  => 'GET',
-				'callback' => __NAMESPACE__ . '\get_published_state_response',
+				'methods'             => 'GET',
+				'callback'            => __NAMESPACE__ . '\get_published_state_response',
+				'permission_callback' => '__return_true',
 			]
 		);
 	}

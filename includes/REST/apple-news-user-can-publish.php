@@ -56,8 +56,9 @@ add_action(
 			'apple-news/v1',
 			'/user-can-publish/(?P<id>\d+)',
 			[
-				'methods'  => 'GET',
-				'callback' => __NAMESPACE__ . '\get_user_can_publish',
+				'methods'             => 'GET',
+				'callback'            => __NAMESPACE__ . '\get_user_can_publish',
+				'permission_callback' => '__return_true',
 			]
 		);
 	}

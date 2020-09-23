@@ -66,14 +66,14 @@ class Request {
 	public function __construct( $credentials, $debug = false, $mime_builder = null ) {
 		$this->credentials  = $credentials;
 		$this->debug        = $debug;
-		$this->mime_builder = $mime_builder ?: new MIME_Builder();
+		$this->mime_builder = ! empty( $mime_builder ) ? $mime_builder : new MIME_Builder();
 
 		// Set the default WordPress HTTP API args.
 		$this->default_args = apply_filters(
 			'apple_news_request_args',
 			array(
 				'reject_unsafe_urls' => true,
-				'timeout'            => 5,
+				'timeout'            => 3,
 			)
 		);
 	}
@@ -92,31 +92,16 @@ class Request {
 	 * @throws Request_Exception If the request fails.
 	 */
 	public function post( $url, $article, $bundles = array(), $meta = null, $post_id = null ) {
-		// Assemble the content to send.
-		$content = $this->build_content( $article, $bundles, $meta, $post_id );
-
-		// Build the post request args.
-		$args = array(
-			'headers' => array(
-				'Authorization'  => $this->sign( $url, 'POST', $content ),
-				'Content-Length' => strlen( $content ),
-				'Content-Type'   => 'multipart/form-data; boundary=' . $this->mime_builder->boundary(),
-			),
-			'body'    => $content,
-			'timeout' => 30, // Required because we need to package all images.
+		return $this->request(
+			'POST',
+			$url,
+			[
+				'article' => $article,
+				'bundles' => $bundles,
+				'meta'    => $meta,
+				'post_id' => $post_id,
+			]
 		);
-
-		// Allow filtering and merge with the default args.
-		$args = apply_filters( 'apple_news_post_args', wp_parse_args( $args, $this->default_args ), $post_id );
-
-		// Perform the request.
-		$response = wp_safe_remote_post( esc_url_raw( $url ), $args );
-
-		// Build a debug version of the MIME content for the debug email.
-		$debug_mime_request = $this->mime_builder->get_debug_content( $args );
-
-		// Parse and return the response.
-		return $this->parse_response( $response, true, 'post', $meta, $bundles, $article, $debug_mime_request );
 	}
 
 	/**
@@ -129,27 +114,7 @@ class Request {
 	 * @throws Request_Exception If the request fails.
 	 */
 	public function delete( $url ) {
-		// Build the delete request args.
-		$args = array(
-			'headers' => array(
-				'Authorization' => $this->sign( $url, 'DELETE' ),
-			),
-			'method'  => 'DELETE',
-		);
-
-		// Allow filtering and merge with the default args.
-		$args = apply_filters( 'apple_news_delete_args', wp_parse_args( $args, $this->default_args ) );
-
-		// Perform the delete.
-		$response = wp_safe_remote_request( esc_url_raw( $url ), $args );
-
-		// NULL is a valid response for DELETE.
-		if ( is_null( $response ) ) {
-			return null;
-		}
-
-		// Parse and return the response.
-		return $this->parse_response( $response, true, 'delete' );
+		return $this->request( 'DELETE', $url );
 	}
 
 	/**
@@ -162,21 +127,7 @@ class Request {
 	 * @throws Request_Exception If the request fails.
 	 */
 	public function get( $url ) {
-		// Build the get request args.
-		$args = array(
-			'headers' => array(
-				'Authorization' => $this->sign( $url, 'GET' ),
-			),
-		);
-
-		// Allow filtering and merge with the default args.
-		$args = apply_filters( 'apple_news_get_args', wp_parse_args( $args, $this->default_args ) );
-
-		// Perform the get.
-		$response = wp_safe_remote_get( esc_url_raw( $url ), $args );
-
-		// Parse and return the response.
-		return $this->parse_response( $response, true, 'get' );
+		return $this->request( 'GET', $url );
 	}
 
 	/**
@@ -255,7 +206,7 @@ class Request {
 
 			// Send the email.
 			if ( ! empty( $body ) ) {
-				wp_mail(
+				wp_mail( // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_mail_wp_mail
 					$admin_email,
 					esc_html__( 'Apple News Notification', 'apple-news' ),
 					$body,
@@ -353,6 +304,97 @@ class Request {
 	}
 
 	/**
+	 * A generic request method for handling requests to the API.
+	 *
+	 * @param string $verb The HTTP verb to use. One of GET, POST, DELETE.
+	 * @param string $url  The URL against which to make the request.
+	 * @param array  $data Optional. Data to send along with the request. Only applies to POST requests.
+	 *
+	 * @return mixed The parsed response from the API.
+	 * @throws Request_Exception If the request fails.
+	 */
+	private function request( $verb, $url, $data = [] ) {
+		// If this is a POST request, build the content.
+		$content = 'POST' === $verb
+			? $this->build_content( $data['article'], $data['bundles'], $data['meta'], $data['post_id'] )
+			: null;
+
+		// Build the request args.
+		$args = array(
+			'headers' => array(
+				'Authorization' => $this->sign( $url, $verb, $content ),
+			),
+			'method'  => $verb,
+		);
+
+		// If this is a POST request, add the content to it.
+		if ( 'POST' === $verb ) {
+			$args['headers']['Content-Length'] = strlen( $content );
+			$args['headers']['Content-Type']   = 'multipart/form-data; boundary=' . $this->mime_builder->boundary();
+			$args['body']                      = $content;
+			$args['timeout']                   = 30; // phpcs:ignore WordPressVIPMinimum.Performance.RemoteRequestTimeout.timeout_timeout
+		}
+
+		/**
+		 * Allow filtering of the default arguments for the request.
+		 *
+		 * The verb will be dynamically inserted in the hook name, so this hook
+		 * will support the following permutations:
+		 *
+		 *    apple_news_delete_args
+		 *    apple_news_get_args
+		 *    apple_news_post_args
+		 *
+		 * @param array $args    Arguments to be filtered.
+		 * @param int   $post_id The post ID, if this is a POST request.
+		 */
+		$args = apply_filters(
+			'apple_news_' . strtolower( $verb ) . '_args',
+			wp_parse_args( $args, $this->default_args ),
+			! empty( $data['post_id'] ) ? $data['post_id'] : 0
+		);
+
+		// Perform the request.
+		$response = wp_safe_remote_request( esc_url_raw( $url ), $args );
+
+		// Check for DATE_NOT_RECENT error and add a warning for it explicitly.
+		if ( ! is_wp_error( $response ) && ! empty( $response['body'] ) && false !== strpos( $response['body'], 'DATE_NOT_RECENT' ) ) {
+			$response_body = json_decode( $response['body'], true );
+			if ( ! empty( $response_body['errors'] ) && is_array( $response_body['errors'] ) ) {
+				foreach ( $response_body['errors'] as $error ) {
+					if ( ! empty( $error['code'] ) && 'DATE_NOT_RECENT' === $error['code'] ) {
+						\Admin_Apple_Notice::error(
+							__(
+								'The date and time on your server does not match the date and time on the Apple server. All API requests will fail until you synchronize your server clock.',
+								'apple-news'
+							)
+						);
+						break;
+					}
+				}
+			}
+		}
+
+		// NULL is a valid response for DELETE.
+		if ( 'DELETE' === $verb && is_null( $response ) ) {
+			return null;
+		}
+
+		// Parse the response.
+		$response = $this->parse_response(
+			$response,
+			true,
+			strtolower( $verb ),
+			! empty( $data['meta'] ) ? $data['meta'] : null,
+			! empty( $data['bundles'] ) ? $data['bundles'] : null,
+			! empty( $data['article'] ) ? $data['article'] : '',
+			'POST' === $verb ? $this->mime_builder->get_debug_content( $args ) : ''
+		);
+
+		return $response;
+	}
+
+	/**
 	 * Signs the API request.
 	 *
 	 * @since 0.2.0
@@ -363,7 +405,7 @@ class Request {
 	 * @return string The signature string for use in signing API requests.
 	 */
 	private function sign( $url, $verb, $content = null ) {
-		$current_date = date( 'c' );
+		$current_date = gmdate( 'c' );
 
 		$request_info = $verb . $url . $current_date;
 		if ( 'POST' === $verb ) {
