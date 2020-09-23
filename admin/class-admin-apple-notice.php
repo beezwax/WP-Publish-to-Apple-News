@@ -438,15 +438,29 @@ class Admin_Apple_Notice {
 	 * @return array
 	 */
 	public static function get_if_allowed( $object ) {
-		$post_type = ( $object['type'] );
-		if ( current_user_can(
-			apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $post_type ) )
-		) ) {
-			$notifications = self::get();
-			self::clear( $notifications );
-		} else {
-			$notifications = [];
+		$notifications = [];
+
+		// Ensure we have an object type.
+		if ( empty( $object['type'] ) ) {
+			return $notifications;
 		}
+		
+		// This functionality is only available to logged in users.
+		if ( ! is_user_logged_in() ) {
+			return $notifications;
+		}
+		
+		// Ensure current user has the appropriate publish permission.
+		if ( ! current_user_can(
+			apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $object['type'] ) )
+		) ) {
+			return $notifications;
+		}
+		
+		// Get notifications.
+		$notifications = self::get();
+		self::clear( $notifications );
+
 		return $notifications;
 	}
 }
