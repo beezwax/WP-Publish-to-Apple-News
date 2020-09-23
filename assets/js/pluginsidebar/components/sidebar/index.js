@@ -1,10 +1,10 @@
 /* global React, wp */
 
-import dompurify from 'dompurify';
 import PropTypes from 'prop-types';
 import safeJsonParseArray from 'util/safeJsonParseArray';
 import safeJsonParseObject from 'util/safeJsonParseObject';
 import ImagePicker from '../imagePicker';
+import Notifications from '../notifications';
 
 const {
   apiFetch,
@@ -80,7 +80,6 @@ class Sidebar extends React.PureComponent {
     autoAssignCategories: false,
     loading: false,
     modified: 0,
-    notifications: [],
     publishState: '',
     sections: [],
     selectedSectionsPrev: null,
@@ -105,14 +104,6 @@ class Sidebar extends React.PureComponent {
     this.fetchSections();
     this.fetchSettings();
     this.fetchUserCanPublish();
-  }
-
-  /**
-   * Updates the state when new notices come in from the REST API.
-   */
-  componentDidUpdate() {
-    const { appleNewsNotices } = this.props;
-    this.setState({ notifications: appleNewsNotices });
   }
 
   /**
@@ -333,7 +324,6 @@ class Sidebar extends React.PureComponent {
     const {
       autoAssignCategories,
       loading,
-      notifications,
       publishState,
       sections,
       settings: {
@@ -349,20 +339,11 @@ class Sidebar extends React.PureComponent {
 
     const selectedSectionsArray = safeJsonParseArray(selectedSections);
 
-    while(notifications.length) {
-      const notification = notifications.shift();
-      const type = notification.type === 'success' ? 'snackbar' : 'default';
-      dispatch('core/notices').createNotice(
-        notification.type,
-        dompurify.sanitize(notification.message),
-        {
-          type,
-        });
-        this.setState({ notifications });
-    };
-
     return (
       <Fragment>
+        <Notifications
+          notifications={appleNewsNotices}
+        />
         <PluginSidebarMoreMenuItem target={target}>
           {label}
         </PluginSidebarMoreMenuItem>
