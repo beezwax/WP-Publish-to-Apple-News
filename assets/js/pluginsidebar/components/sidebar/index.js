@@ -66,11 +66,10 @@ class Sidebar extends React.PureComponent {
       dismissible: PropTypes.bool,
       message: PropTypes.string,
       type: PropTypes.string,
-    })),
+    })).isRequired,
     onUpdate: PropTypes.func.isRequired,
     post: PropTypes.shape({}).isRequired,
     refreshPost: PropTypes.func.isRequired,
-    setNotifications: PropTypes.func.isRequired,
   };
 
   /**
@@ -81,11 +80,11 @@ class Sidebar extends React.PureComponent {
     autoAssignCategories: false,
     loading: false,
     modified: 0,
+    notifications: [],
     publishState: '',
     sections: [],
     selectedSectionsPrev: null,
     settings: {},
-    unsubscribe: undefined,
     userCanPublish: false,
   };
 
@@ -109,16 +108,11 @@ class Sidebar extends React.PureComponent {
   }
 
   /**
-   * De-initializes functionality before the component is destroyed.
+   * Updates the state when new notices come in from the REST API.
    */
-  componentWillUnmount() {
-    const {
-      unsubscribe,
-    } = this.state;
-
-    if (unsubscribe) {
-      unsubscribe();
-    }
+  componentDidUpdate() {
+    const { appleNewsNotices } = this.props;
+    this.setState({ notifications: appleNewsNotices });
   }
 
   /**
@@ -312,7 +306,6 @@ class Sidebar extends React.PureComponent {
     const label = __('Apple News Options', 'apple-news');
 
     const {
-      setNotifications,
       onUpdate,
       meta: {
         isPaid = false,
@@ -340,6 +333,7 @@ class Sidebar extends React.PureComponent {
     const {
       autoAssignCategories,
       loading,
+      notifications,
       publishState,
       sections,
       settings: {
@@ -355,8 +349,8 @@ class Sidebar extends React.PureComponent {
 
     const selectedSectionsArray = safeJsonParseArray(selectedSections);
 
-    while(appleNewsNotices.length) {
-      const notification = appleNewsNotices.shift();
+    while(notifications.length) {
+      const notification = notifications.shift();
       const type = notification.type === 'success' ? 'snackbar' : 'default';
       dispatch('core/notices').createNotice(
         notification.type,
@@ -364,7 +358,7 @@ class Sidebar extends React.PureComponent {
         {
           type,
         });
-        setNotifications(appleNewsNotices);
+        this.setState({ notifications });
     };
 
     return (
@@ -707,11 +701,6 @@ export default compose([
     },
     refreshPost: () => {
       dispatch('core/editor').refreshPost();
-    },
-    setNotifications: (value) => {
-      dispatch('core/editor').editPost({
-        apple_news_notices: value,
-      });
     },
   })),
 ])(Sidebar);
