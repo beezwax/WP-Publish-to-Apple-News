@@ -462,6 +462,15 @@ class Admin_Apple_Notice {
 		$notifications = self::get();
 		self::clear( $notifications );
 
+		$notifications = array_values(
+			array_filter(
+				$notifications,
+				function ( $notification ) {
+					return empty( $notification['dismissible'] );
+				}
+			)
+		);
+
 		return $notifications;
 	}
 }
