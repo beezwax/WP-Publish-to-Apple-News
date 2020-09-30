@@ -20,9 +20,6 @@ const {
     TextareaControl,
   } = {},
   data: {
-    dispatch,
-    select,
-    subscribe,
     withDispatch,
     withSelect,
   } = {},
@@ -316,6 +313,7 @@ class Sidebar extends React.PureComponent {
         revision = '',
       } = {},
       appleNewsNotices = [],
+      postIsDirty,
       post: {
         status = '',
       } = {},
@@ -597,6 +595,18 @@ class Sidebar extends React.PureComponent {
                     </Fragment>
                   ) : (
                     <Fragment>
+                      {
+                        postIsDirty && (
+                          <div className="components-notice is-warning">
+                            <strong>
+                              {__(
+                                'Please click the Update button above to ensure that all changes are saved before publishing to Apple News',
+                                'apple-news'
+                              )}
+                            </strong>
+                          </div>
+                        )
+                      }
                       {! apiAutosync && (
                         <Button
                           isPrimary
@@ -621,6 +631,7 @@ class Sidebar extends React.PureComponent {
 export default compose([
   withSelect((selector) => {
     const editor = selector('core/editor');
+    const postIsDirty = editor.isEditedPostDirty();
     const meta = editor && editor.getEditedPostAttribute
       ? editor.getEditedPostAttribute('meta') || {}
       : {};
@@ -669,6 +680,7 @@ export default compose([
         postId,
       },
       appleNewsNotices,
+      postIsDirty,
       post: editor && editor.getCurrentPost ? editor.getCurrentPost() : {},
     };
   }),
