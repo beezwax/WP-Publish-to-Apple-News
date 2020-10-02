@@ -1,10 +1,15 @@
 /* global React, wp */
 
 import PropTypes from 'prop-types';
-import safeJsonParseArray from 'util/safeJsonParseArray';
-import safeJsonParseObject from 'util/safeJsonParseObject';
+
+// Components.
 import ImagePicker from '../imagePicker';
-import Notifications from '../notifications';
+
+// Services.
+import dispatchNotification from '../../services/dispatchNotification';
+
+// Utils.
+import safeJsonParseArray from '../../../util/safeJsonParseArray';
 
 const {
   apiFetch,
@@ -41,6 +46,14 @@ const {
 class Sidebar extends React.PureComponent {
   // Define PropTypes for this component.
   static propTypes = {
+    appleNewsNotices: PropTypes.arrayOf(PropTypes.shape({
+      dismissed: PropTypes.bool,
+      dismissible: PropTypes.bool,
+      message: PropTypes.string,
+      timestamp: PropTypes.number,
+      type: PropTypes.string,
+    })).isRequired,
+    displayNotification: PropTypes.func.isRequired,
     meta: PropTypes.shape({
       isPaid: PropTypes.bool,
       isPreview: PropTypes.bool,
@@ -58,15 +71,8 @@ class Sidebar extends React.PureComponent {
       shareUrl: PropTypes.string,
       revision: PropTypes.string,
     }).isRequired,
-    appleNewsNotices: PropTypes.arrayOf(PropTypes.shape({
-      dismissed: PropTypes.bool,
-      dismissible: PropTypes.bool,
-      message: PropTypes.string,
-      type: PropTypes.string,
-    })).isRequired,
     onUpdate: PropTypes.func.isRequired,
     post: PropTypes.shape({}).isRequired,
-    refreshPost: PropTypes.func.isRequired,
   };
 
   /**
@@ -88,6 +94,7 @@ class Sidebar extends React.PureComponent {
     super(props);
 
     this.deletePost = this.deletePost.bind(this);
+    this.displayErrors = this.displayErrors.bind(this);
     this.publishPost = this.publishPost.bind(this);
     this.updatePost = this.updatePost.bind(this);
     this.updateSelectedSections = this.updateSelectedSections.bind(this);
@@ -104,6 +111,25 @@ class Sidebar extends React.PureComponent {
   }
 
   /**
+   * Actions to be taken after the component updated.
+   * @param {object} prevProps - Previous props before the update.
+   */
+  componentDidUpdate(prevProps) {
+    const {
+      appleNewsNotices = [],
+      displayNotification,
+    } = this.props;
+    const {
+      appleNewsNotices: appleNewsNoticesOld = [],
+    } = prevProps;
+
+    // Compare old notices to new notices in a simple way.
+    if (JSON.stringify(appleNewsNotices) !== JSON.stringify(appleNewsNoticesOld)) {
+      appleNewsNotices.forEach(displayNotification);
+    }
+  }
+
+  /**
    * Sends a request to the REST API to delete the post.
    */
   deletePost() {
@@ -117,6 +143,24 @@ class Sidebar extends React.PureComponent {
   }
 
   /**
+   * A helper function for displaying errors using Gutenberg error notices.
+   * @param {Error} error - The error object.
+   */
+  displayErrors(error) {
+    const {
+      displayNotification,
+    } = this.props;
+
+    displayNotification({
+      dismissed: false,
+      dismissible: false,
+      message: error.message,
+      timestamp: Math.ceil(Date.now() / 1000),
+      type: 'error',
+    })
+  }
+
+  /**
    * Fetch published state.
    */
   fetchPublishState() {
@@ -127,7 +171,7 @@ class Sidebar extends React.PureComponent {
 
     apiFetch({ path })
       .then(({ publishState }) => (this.setState({ publishState })))
-      .catch((error) => console.error(error)); /* eslint-disable-line no-console */
+      .catch(this.displayErrors);
   }
 
   /**
@@ -138,7 +182,7 @@ class Sidebar extends React.PureComponent {
 
     apiFetch({ path })
       .then((sections) => (this.setState({ sections })))
-      .catch((error) => console.error(error)); /* eslint-disable-line no-console */
+      .catch(this.displayErrors);
   }
 
   /**
@@ -164,7 +208,7 @@ class Sidebar extends React.PureComponent {
           && true === settings.automaticAssignment,
         settings,
       }))
-      .catch((error) => console.error(error)); /* eslint-disable-line no-console */
+      .catch(this.displayErrors);
   }
 
   /**
@@ -178,7 +222,7 @@ class Sidebar extends React.PureComponent {
 
     apiFetch({ path })
       .then(({ userCanPublish }) => (this.setState({ userCanPublish })))
-      .catch((error) => console.error(error)); /* eslint-disable-line no-console */
+      .catch(this.displayErrors);
   }
 
   /**
@@ -186,7 +230,7 @@ class Sidebar extends React.PureComponent {
    */
   modifyPost(id, operation) {
     const {
-      refreshPost,
+      displayNotification,
     } = this.props;
 
     const path = `/apple-news/v1/${operation}`;
@@ -204,23 +248,21 @@ class Sidebar extends React.PureComponent {
     })
       .then((data) => {
         const {
+          notifications = [],
           publishState = '',
         } = data;
 
-        refreshPost();
+        notifications.forEach(displayNotification);
 
         this.setState({
           loading: false,
           publishState,
         });
       })
-      .catch(() => {
-        refreshPost();
-
-        this.setState({
-          loading: false,
-        });
-      });
+      .catch(this.displayErrors)
+      .finally(() => this.setState({
+        loading: false,
+      }));
   }
 
   /**
@@ -312,7 +354,6 @@ class Sidebar extends React.PureComponent {
         shareUrl = '',
         revision = '',
       } = {},
-      appleNewsNotices = [],
       postIsDirty,
       post: {
         status = '',
@@ -325,7 +366,6 @@ class Sidebar extends React.PureComponent {
       publishState,
       sections,
       settings: {
-        adminUrl,
         apiAutosync,
         apiAutosyncDelete,
         apiAutosyncUpdate,
@@ -339,9 +379,6 @@ class Sidebar extends React.PureComponent {
 
     return (
       <Fragment>
-        <Notifications
-          notifications={appleNewsNotices}
-        />
         <PluginSidebarMoreMenuItem target={target}>
           {label}
         </PluginSidebarMoreMenuItem>
@@ -600,7 +637,7 @@ class Sidebar extends React.PureComponent {
                           <div className="components-notice is-warning">
                             <strong>
                               {__(
-                                'Please click the Update button above to ensure that all changes are saved before publishing to Apple News',
+                                'Please click the Update button above to ensure that all changes are saved before publishing to Apple News.',
                                 'apple-news'
                               )}
                             </strong>
@@ -685,15 +722,13 @@ export default compose([
     };
   }),
   withDispatch((dispatch) => ({
+    displayNotification: (notification) => dispatchNotification(dispatch, notification),
     onUpdate: (metaKey, metaValue) => {
       dispatch('core/editor').editPost({
         meta: {
           [metaKey]: metaValue,
         },
       });
-    },
-    refreshPost: () => {
-      dispatch('core/editor').refreshPost();
     },
   })),
 ])(Sidebar);

@@ -139,7 +139,7 @@ class Admin_Apple_News extends Apple_News {
 						'post',
 						'apple_news_notices',
 						[
-							'get_callback' => 'Admin_Apple_Notice::get_if_allowed',
+							'get_callback' => [ 'Admin_Apple_Notice', 'get_if_allowed' ],
 						]
 					);
 				}
