@@ -458,9 +458,6 @@ class Admin_Apple_Notice {
 			return $notifications;
 		}
 
-		// TODO: REMOVE THIS
-		Admin_Apple_Notice::error( 'Test error message.' );
-
 		// Get notifications.
 		$notifications = self::get();
 		self::clear( $notifications );

@@ -93,6 +93,7 @@ class Sidebar extends React.PureComponent {
     super(props);
 
     this.deletePost = this.deletePost.bind(this);
+    this.displayErrors = this.displayErrors.bind(this);
     this.publishPost = this.publishPost.bind(this);
     this.updatePost = this.updatePost.bind(this);
     this.updateSelectedSections = this.updateSelectedSections.bind(this);
@@ -141,6 +142,23 @@ class Sidebar extends React.PureComponent {
   }
 
   /**
+   * A helper function for displaying errors using Gutenberg error notices.
+   * @param {Error} error - The error object.
+   */
+  displayErrors(error) {
+    const {
+      displayNotification,
+    } = this.props;
+
+    displayNotification({
+      dismissed: false,
+      dismissible: false,
+      message: error.message,
+      type: 'error',
+    })
+  }
+
+  /**
    * Fetch published state.
    */
   fetchPublishState() {
@@ -151,7 +169,7 @@ class Sidebar extends React.PureComponent {
 
     apiFetch({ path })
       .then(({ publishState }) => (this.setState({ publishState })))
-      .catch((error) => console.error(error)); /* eslint-disable-line no-console */
+      .catch(this.displayErrors);
   }
 
   /**
@@ -162,7 +180,7 @@ class Sidebar extends React.PureComponent {
 
     apiFetch({ path })
       .then((sections) => (this.setState({ sections })))
-      .catch((error) => console.error(error)); /* eslint-disable-line no-console */
+      .catch(this.displayErrors);
   }
 
   /**
@@ -188,7 +206,7 @@ class Sidebar extends React.PureComponent {
           && true === settings.automaticAssignment,
         settings,
       }))
-      .catch((error) => console.error(error)); /* eslint-disable-line no-console */
+      .catch(this.displayErrors);
   }
 
   /**
@@ -202,13 +220,17 @@ class Sidebar extends React.PureComponent {
 
     apiFetch({ path })
       .then(({ userCanPublish }) => (this.setState({ userCanPublish })))
-      .catch((error) => console.error(error)); /* eslint-disable-line no-console */
+      .catch(this.displayErrors);
   }
 
   /**
    * Sends a request to the REST API to modify the post.
    */
   modifyPost(id, operation) {
+    const {
+      displayNotification,
+    } = this.props;
+
     const path = `/apple-news/v1/${operation}`;
 
     this.setState({
@@ -224,19 +246,21 @@ class Sidebar extends React.PureComponent {
     })
       .then((data) => {
         const {
+          notifications = [],
           publishState = '',
         } = data;
+
+        notifications.forEach(displayNotification);
 
         this.setState({
           loading: false,
           publishState,
         });
       })
-      .catch(() => {
-        this.setState({
-          loading: false,
-        });
-      });
+      .catch(this.displayErrors)
+      .finally(() => this.setState({
+        loading: false,
+      }));
   }
 
   /**
@@ -611,7 +635,7 @@ class Sidebar extends React.PureComponent {
                           <div className="components-notice is-warning">
                             <strong>
                               {__(
-                                'Please click the Update button above to ensure that all changes are saved before publishing to Apple News',
+                                'Please click the Update button above to ensure that all changes are saved before publishing to Apple News.',
                                 'apple-news'
                               )}
                             </strong>
