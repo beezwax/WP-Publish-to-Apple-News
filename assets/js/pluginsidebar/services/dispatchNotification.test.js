@@ -38,6 +38,7 @@ test('dispatchNotification should dispatch a success message.', () => {
     dismissed: false,
     dismissible: false,
     message: 'Test Success Message',
+    timestamp: Math.ceil(Date.now() / 1000),
     type: 'success',
   };
   expect(dispatchNotification(dispatch, notification)).toStrictEqual({
@@ -58,6 +59,7 @@ test('dispatchNotification should dispatch an error message.', () => {
     dismissed: false,
     dismissible: false,
     message: 'Test Error Message',
+    timestamp: Math.ceil(Date.now() / 1000),
     type: 'error',
   };
   expect(dispatchNotification(dispatch, notification)).toStrictEqual({

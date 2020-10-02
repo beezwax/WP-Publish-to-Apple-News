@@ -50,6 +50,7 @@ class Sidebar extends React.PureComponent {
       dismissed: PropTypes.bool,
       dismissible: PropTypes.bool,
       message: PropTypes.string,
+      timestamp: PropTypes.number,
       type: PropTypes.string,
     })).isRequired,
     displayNotification: PropTypes.func.isRequired,
@@ -154,6 +155,7 @@ class Sidebar extends React.PureComponent {
       dismissed: false,
       dismissible: false,
       message: error.message,
+      timestamp: Math.ceil(Date.now() / 1000),
       type: 'error',
     })
   }

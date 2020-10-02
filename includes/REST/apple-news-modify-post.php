@@ -94,6 +94,7 @@ function modify_post( $post_id, $operation ) {
 				'dismissed'   => false,
 				'dismissible' => false,
 				'message'     => __( 'Your changes will be applied shortly.', 'apple-news' ),
+				'timestamp'   => time(),
 				'type'        => 'success',
 			];
 		} elseif ( 'delete' === $operation ) {
@@ -101,6 +102,7 @@ function modify_post( $post_id, $operation ) {
 				'dismissed'   => false,
 				'dismissible' => false,
 				'message'     => __( 'Article successfully deleted from Apple News.', 'apple-news' ),
+				'timestamp'   => time(),
 				'type'        => 'success',
 			];
 		}
