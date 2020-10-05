@@ -1,8 +1,6 @@
 <?php
 /**
- * Publish to Apple News Tests: Body_Test class
- *
- * Contains a class which is used to test Apple_Exporter\Components\Body.
+ * Publish to Apple News tests: Body_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -15,9 +13,169 @@ use Apple_Exporter\Exporter;
 use Apple_Exporter\Exporter_Content;
 
 /**
- * A class which is used to test the Apple_Exporter\Components\Body class.
+ * A class to test the behavior of the
+ * Apple_Exporter\Components\Body class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
  */
 class Body_Test extends Component_TestCase {
+
+	/**
+	 * A data provider that supplies empty HTML signatures to ensure that they
+	 * are not erroneously transformed into empty body elements.
+	 *
+	 * @return array An array of arrays representing function arguments.
+	 */
+	public function data_empty_html() {
+		return [
+			// Test classic editor, multiple line breaks.
+			[
+				<<<HTML
+A
+
+
+
+B
+HTML
+			],
+
+			// Test classic editor, multiple line breaks with &nbsp.
+			[
+				<<<HTML
+A
+
+&nbsp;
+
+B
+HTML
+			],
+
+			// Test classic editor, extra line breaks at the end.
+			[
+				<<<HTML
+A
+
+B
+
+
+HTML
+			],
+
+			// Test classic editor, extra line breaks at the end with a non-breaking space.
+			[
+				<<<HTML
+A
+
+B
+
+&nbsp;
+HTML
+			],
+
+			// Test Gutenberg editor, empty paragraph tag.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p></p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+HTML
+			],
+
+			// Test Gutenberg editor, paragraph tag containing a single space.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p> </p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+HTML
+			],
+
+			// Test Gutenberg editor, paragraph tag containing a non-breaking space.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>&nbsp;</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+HTML
+			],
+
+			// Test Gutenberg editor, extra paragraph at the end.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p></p>
+<!-- /wp:paragraph -->
+HTML
+			],
+
+			// Test Gutenberg editor, extra paragraph at the end containing a space.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p> </p>
+<!-- /wp:paragraph -->
+HTML
+			],
+
+			// Test Gutenberg editor, extra paragraph at the end containing a non-breaking space.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>&nbsp;</p>
+<!-- /wp:paragraph -->
+HTML
+			],
+		];
+	}
 
 	/**
 	 * A filter function to modify the text style in the generated JSON.
@@ -50,14 +208,14 @@ class Body_Test extends Component_TestCase {
 	 *
 	 * @access public
 	 */
-	public function testEmptyContent() {
+	public function test_empty_content() {
 
 		// Setup.
 		$this->settings->html_support = 'no';
 		$html = '<p><a href="https://www.apple.com/">&nbsp;</a></p>';
 		$component = new Body(
 			$html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -76,31 +234,18 @@ class Body_Test extends Component_TestCase {
 	/**
 	 * Tests handling for empty HTML content.
 	 *
-	 * @access public
+	 * @dataProvider data_empty_html
+	 *
+	 * @param string $post_content The post content for the post.
 	 */
-	public function testEmptyHTMLContent() {
+	public function test_empty_html_content( $post_content ) {
+		$post_id = self::factory()->post->create( [ 'post_content' => $post_content ] );
+		$json    = $this->get_json_for_post( $post_id );
 
-		// Setup.
-		$html = '<p>a</p><p>&nbsp;</p><p>b</p>';
-		$component = new Body(
-			$html,
-			null,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		// Test.
-		$this->assertEquals(
-			array(
-				'role'      => 'body',
-				'text'      => '<p>a</p><p>b</p>',
-				'format'    => 'html',
-				'textStyle' => 'dropcapBodyStyle',
-				'layout'    => 'body-layout',
-			),
-			$component->to_array()
-		);
+		// There should only be two body components, one containing A, one containing B.
+		$this->assertEquals( 4, count( $json['components'] ) );
+		$this->assertEquals( '<p>A</p>', $json['components'][2]['text'] );
+		$this->assertEquals( '<p>B</p>', $json['components'][3]['text'] );
 	}
 
 	/**
@@ -112,15 +257,10 @@ class Body_Test extends Component_TestCase {
 
 		// Setup.
 		$this->settings->html_support = 'no';
-		$theme = new \Apple_Exporter\Theme;
-		$theme->set_name( \Apple_Exporter\Theme::get_active_theme_name() );
-		$theme->load();
-		$settings = $theme->all_settings();
-		$settings['initial_dropcap'] = 'no';
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings( [ 'initial_dropcap' => 'no' ] );
 		$component = new Body(
 			'<p>my text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -152,7 +292,7 @@ class Body_Test extends Component_TestCase {
 		// Test before filter.
 		$component = new Body(
 			'<p>my text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -175,7 +315,7 @@ class Body_Test extends Component_TestCase {
 		);
 		$component = new Body(
 			'<p>my text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -215,7 +355,7 @@ class Body_Test extends Component_TestCase {
 HTML;
 		$component = new Body(
 			$html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -247,7 +387,7 @@ HTML;
 HTML;
 		$component = new Body(
 			$html,
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -277,7 +417,7 @@ HTML;
 		$this->settings->html_support = 'no';
 		$body_component = new Body(
 			'<p>my &amp; text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -315,12 +455,11 @@ HTML;
 <li>item 3</li>
 </ul>
 HTML;
-		$file = dirname( dirname( __DIR__ ) ) . '/data/test-image.jpg';
-		$cover = $this->factory->attachment->create_upload_object( $file );
+		$cover = $this->get_new_attachment();
 		$content = new Exporter_Content( 3, 'Title', $content, null, $cover );
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
@@ -370,26 +509,26 @@ HTML;
 		);
 
 		// Set body settings.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['body_font'] = 'AmericanTypewriter';
-		$settings['body_size'] = 20;
-		$settings['body_color'] = '#abcdef';
-		$settings['body_link_color'] = '#fedcba';
-		$settings['body_line_height'] = 28;
-		$settings['body_tracking'] = 50;
-		$settings['dropcap_background_color'] = '#abcabc';
-		$settings['dropcap_color'] = '#defdef';
-		$settings['dropcap_font'] = 'AmericanTypewriter-Bold';
-		$settings['dropcap_number_of_characters'] = 15;
-		$settings['dropcap_number_of_lines'] = 10;
-		$settings['dropcap_number_of_raised_lines'] = 5;
-		$settings['dropcap_padding'] = 20;
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings(
+			[
+				'body_font'                      => 'AmericanTypewriter',
+				'body_size'                      => 20,
+				'body_color'                     => '#abcdef',
+				'body_link_color'                => '#fedcba',
+				'body_line_height'               => 28,
+				'body_tracking'                  => 50,
+				'dropcap_background_color'       => '#abcabc',
+				'dropcap_color'                  => '#defdef',
+				'dropcap_font'                   => 'AmericanTypewriter-Bold',
+				'dropcap_number_of_characters'   => 15,
+				'dropcap_number_of_lines'        => 10,
+				'dropcap_number_of_raised_lines' => 5,
+				'dropcap_padding'                => 20,
+			]
+		);
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
@@ -419,6 +558,9 @@ HTML;
 			0.5,
 			$json['componentTextStyles']['default-body']['tracking']
 		);
+		$this->assertFalse(
+			isset( $json['componentTextStyles']['default-body']['conditional'] )
+		);
 		$this->assertEquals(
 			'#abcabc',
 			$json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['backgroundColor']
@@ -447,6 +589,43 @@ HTML;
 			20,
 			$json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['padding']
 		);
+		$this->assertFalse(
+			isset( $json['componentTextStyles']['dropCapStyle']['conditional'] )
+		);
+	}
+
+	public function testDarkColorSettings() {
+		// Setup.
+		$this->set_theme_settings(
+			[
+				'body_color_dark'                     => '#abcdef',
+				'body_link_color_dark'                => '#fedcba',
+				'dropcap_background_color_dark'       => '#abcabc',
+				'dropcap_color_dark'                  => '#defdef',
+			]
+		);
+
+		$post_id = $this->factory->post->create( array(
+			'post_content' => '<p>Lorem ipsum.</p><p>Dolor sit amet.</p>',
+		) );
+
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentTextStyles']['default-body']['conditional']['textColor']
+		);
+		$this->assertEquals(
+			'#fedcba',
+			$json['componentTextStyles']['default-body']['conditional']['linkStyle']['textColor']
+		);
+		$this->assertEquals(
+			'#abcabc',
+			$json['componentTextStyles']['dropcapBodyStyle']['conditional']['dropCapStyle']['backgroundColor']
+		);
+		$this->assertEquals(
+			'#defdef',
+			$json['componentTextStyles']['dropcapBodyStyle']['conditional']['dropCapStyle']['textColor']
+		);
 	}
 
 	/**
@@ -464,14 +643,10 @@ HTML;
 		);
 
 		// Set body settings.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['body_line_height'] = 0;
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings( [ 'body_line_height' => 0 ] );
 
 		// Run the export.
-		$exporter = new Exporter( $content, null, $this->settings );
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
 		$json = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
@@ -494,7 +669,7 @@ HTML;
 		$this->settings->html_support = 'no';
 		$component = new Body(
 			'<p>my text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts
@@ -525,14 +700,10 @@ HTML;
 
 		// Setup.
 		$this->settings->html_support = 'no';
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['initial_dropcap'] = 'no';
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
+		$this->set_theme_settings( [ 'initial_dropcap' => 'no' ] );
 		$body_component = new Body(
 			'<p>my text</p>',
-			null,
+			$this->workspace,
 			$this->settings,
 			$this->styles,
 			$this->layouts

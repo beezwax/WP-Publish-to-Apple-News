@@ -482,6 +482,9 @@ class Theme {
 	 */
 	public static function render_meta_component_order( $theme ) {
 
+		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
+		$options = self::get_options();
+
 		// Get the current order.
 		$component_order = $theme->get_value( 'meta_component_order' );
 		if ( empty( $component_order ) || ! is_array( $component_order ) ) {
@@ -489,11 +492,12 @@ class Theme {
 		}
 
 		// Get inactive components.
-		$options             = self::get_options();
 		$inactive_components = array_diff(
-			$options['meta_component_order']['default'],
+			$options['meta_component_order']['all_options'],
 			$component_order
 		);
+
+		/* phpcs:enable */
 
 		// Load the template.
 		include dirname( dirname( plugin_dir_path( __FILE__ ) ) )
@@ -554,595 +558,726 @@ class Theme {
 	 */
 	private static function initialize_options() {
 		self::$options = array(
-			'ad_frequency'                      => array(
-				'default'     => 1,
-				'description' => __( 'A number between 1 and 10 defining the frequency for automatically inserting Banner Advertisement components into articles. For more information, see the <a href="https://developer.apple.com/library/ios/documentation/General/Conceptual/Apple_News_Format_Ref/AdvertisingSettings.html#//apple_ref/doc/uid/TP40015408-CH93-SW1" target="_blank">Apple News Format Reference</a>.', 'apple-news' ),
+			'ad_frequency'                       => array(
+				'default'     => 5,
+				'description' => __( 'A number between 1 and 10 defining the frequency for automatically inserting dynamic advertisements into articles. For more information, see the <a href="https://developer.apple.com/documentation/apple_news/advertisementautoplacement" target="_blank">Apple News Format Reference</a>.', 'apple-news' ),
 				'label'       => __( 'Ad Frequency', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'ad_margin'                         => array(
+			'ad_margin'                          => array(
 				'default'     => 15,
 				'description' => __( 'The margin to use above and below inserted ads.', 'apple-news' ),
 				'label'       => __( 'Ad Margin', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'blockquote_background_color'       => array(
+			'blockquote_background_color'        => array(
 				'default' => '#e1e1e1',
 				'label'   => __( 'Blockquote background color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'blockquote_border_color'           => array(
+			'blockquote_background_color_dark'   => array(
+				'default' => '',
+				'label'   => __( 'Blockquote background color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'blockquote_border_color'            => array(
 				'default' => '#4f4f4f',
 				'label'   => __( 'Blockquote border color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'blockquote_border_style'           => array(
+			'blockquote_border_color_dark'       => array(
+				'default' => '',
+				'label'   => __( 'Blockquote border color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'blockquote_border_style'            => array(
 				'default' => 'solid',
 				'label'   => __( 'Blockquote border style', 'apple-news' ),
 				'options' => array( 'solid', 'dashed', 'dotted', 'none' ),
 				'type'    => 'select',
 			),
-			'blockquote_border_width'           => array(
+			'blockquote_border_width'            => array(
 				'default' => 3,
 				'label'   => __( 'Blockquote border width', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'blockquote_color'                  => array(
+			'blockquote_color'                   => array(
 				'default' => '#4f4f4f',
 				'label'   => __( 'Blockquote color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'blockquote_font'                   => array(
+			'blockquote_color_dark'              => array(
+				'default' => '',
+				'label'   => __( 'Blockquote color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'blockquote_font'                    => array(
 				'default' => 'AvenirNext-Regular',
 				'label'   => __( 'Blockquote font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'blockquote_line_height'            => array(
+			'blockquote_line_height'             => array(
 				'default' => 24.0,
 				'label'   => __( 'Blockquote line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'blockquote_size'                   => array(
+			'blockquote_size'                    => array(
 				'default' => 18,
 				'label'   => __( 'Blockquote font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'blockquote_tracking'               => array(
+			'blockquote_tracking'                => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Blockquote tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'body_background_color'             => array(
+			'body_background_color'              => array(
 				'default' => '#fafafa',
 				'label'   => __( 'Body background color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'body_color'                        => array(
+			'body_background_color_dark'         => array(
+				'default' => '',
+				'label'   => __( 'Body background color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'body_color'                         => array(
 				'default' => '#4f4f4f',
 				'label'   => __( 'Body font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'body_font'                         => array(
+			'body_color_dark'                    => array(
+				'default' => '',
+				'label'   => __( 'Body font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'body_font'                          => array(
 				'default' => 'AvenirNext-Regular',
 				'label'   => __( 'Body font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'body_line_height'                  => array(
+			'body_line_height'                   => array(
 				'default' => 24.0,
 				'label'   => __( 'Body line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'body_link_color'                   => array(
+			'body_link_color'                    => array(
 				'default' => '#428bca',
 				'label'   => __( 'Body font hyperlink color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'body_orientation'                  => array(
+			'body_link_color_dark'               => array(
+				'default' => '',
+				'label'   => __( 'Body font hyperlink color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'body_orientation'                   => array(
 				'default'     => 'left',
 				'description' => __( 'Controls margins on larger screens. Left orientation includes one column of margin on the right, right orientation includes one column of margin on the left, and center orientation includes one column of margin on either side.', 'apple-news' ),
 				'label'       => __( 'Body orientation', 'apple-news' ),
 				'options'     => array( 'left', 'center', 'right' ),
 				'type'        => 'select',
 			),
-			'body_size'                         => array(
+			'body_size'                          => array(
 				'default' => 18,
 				'label'   => __( 'Body font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'body_tracking'                     => array(
+			'body_tracking'                      => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Body tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'byline_color'                      => array(
+			'byline_color'                       => array(
 				'default' => '#7c7c7c',
 				'label'   => __( 'Byline font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'byline_font'                       => array(
+			'byline_color_dark'                  => array(
+				'default' => '',
+				'label'   => __( 'Byline font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'byline_font'                        => array(
 				'default' => 'AvenirNext-Medium',
 				'label'   => __( 'Byline font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'byline_format'                     => array(
+			'byline_format'                      => array(
 				'default'     => 'by #author# | #M j, Y | g:i A#',
 				'description' => __( 'Set the byline format. Two tokens can be present, #author# to denote the location of the author name and a <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string also encapsulated by #. The default format is "by #author# | #M j, Y | g:i A#". Note that byline format updates only preview on save.', 'apple-news' ),
 				'label'       => __( 'Byline format', 'apple-news' ),
 				'type'        => 'text',
 			),
-			'byline_line_height'                => array(
+			'byline_line_height'                 => array(
 				'default' => 24.0,
 				'label'   => __( 'Byline line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'byline_size'                       => array(
+			'byline_size'                        => array(
 				'default' => 13,
 				'label'   => __( 'Byline font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'byline_tracking'                   => array(
+			'byline_tracking'                    => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Byline tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'caption_color'                     => array(
+			'caption_color'                      => array(
 				'default' => '#4f4f4f',
 				'label'   => __( 'Caption font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'caption_font'                      => array(
+			'caption_color_dark'                 => array(
+				'default' => '',
+				'label'   => __( 'Caption font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'caption_font'                       => array(
 				'default' => 'AvenirNext-Italic',
 				'label'   => __( 'Caption font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'caption_line_height'               => array(
+			'caption_line_height'                => array(
 				'default' => 24.0,
 				'label'   => __( 'Caption line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'caption_size'                      => array(
+			'caption_size'                       => array(
 				'default' => 16,
 				'label'   => __( 'Caption font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'caption_tracking'                  => array(
+			'caption_tracking'                   => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Caption tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'dropcap_background_color'          => array(
+			'cover_caption'                      => array(
+				'default' => false,
+				'label'   => __( 'Enable caption on the Cover component', 'apple-news' ),
+				'type'    => 'boolean',
+			),
+			'dark_mode_colors_heading'           => array(
+				'label'       => __( 'Dark Mode Colors', 'apple-news' ),
+				'description' => __( 'Colors specific to Apple News Dark Mode', 'apple-news' ),
+				'type'        => 'group_heading',
+			),
+			'dropcap_background_color'           => array(
 				'default' => '',
 				'label'   => __( 'Drop cap background color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'dropcap_color'                     => array(
+			'dropcap_background_color_dark'      => array(
+				'default' => '',
+				'label'   => __( 'Drop cap background color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'dropcap_color'                      => array(
 				'default' => '#4f4f4f',
 				'label'   => __( 'Drop cap font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'dropcap_font'                      => array(
+			'dropcap_color_dark'                 => array(
+				'default' => '',
+				'label'   => __( 'Drop cap font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'dropcap_font'                       => array(
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Dropcap font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'dropcap_number_of_characters'      => array(
+			'dropcap_number_of_characters'       => array(
 				'default' => 1,
 				'label'   => __( 'Drop cap number of characters', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'dropcap_number_of_lines'           => array(
+			'dropcap_number_of_lines'            => array(
 				'default'     => 4,
 				'description' => __( 'Must be an integer between 2 and 10. Actual number of lines occupied will vary based on device size.', 'apple-news' ),
 				'label'       => __( 'Drop cap number of lines', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'dropcap_number_of_raised_lines'    => array(
+			'dropcap_number_of_raised_lines'     => array(
 				'default' => 0,
 				'label'   => __( 'Drop cap number of raised lines', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'dropcap_padding'                   => array(
+			'dropcap_padding'                    => array(
 				'default' => 5,
 				'label'   => __( 'Drop cap padding', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'enable_advertisement'              => array(
+			'enable_advertisement'               => array(
 				'default' => 'yes',
 				'label'   => __( 'Enable advertisements', 'apple-news' ),
 				'options' => array( 'yes', 'no' ),
 				'type'    => 'select',
 			),
-			'gallery_type'                      => array(
+			'gallery_type'                       => array(
 				'default' => 'gallery',
 				'label'   => __( 'Gallery type', 'apple-news' ),
 				'options' => array( 'gallery', 'mosaic' ),
 				'type'    => 'select',
 			),
-			'header1_color'                     => array(
+			'header1_color'                      => array(
 				'default' => '#333333',
 				'label'   => __( 'Header 1 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'header1_font'                      => array(
+			'header1_color_dark'                 => array(
+				'default' => '',
+				'label'   => __( 'Header 1 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'header1_font'                       => array(
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Header 1 font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'header1_line_height'               => array(
+			'header1_line_height'                => array(
 				'default' => 52.0,
 				'label'   => __( 'Header 1 line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'header1_size'                      => array(
+			'header1_size'                       => array(
 				'default' => 48,
 				'label'   => __( 'Header 1 font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'header1_tracking'                  => array(
+			'header1_tracking'                   => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Header 1 tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'header2_color'                     => array(
+			'header2_color'                      => array(
 				'default' => '#333333',
 				'label'   => __( 'Header 2 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'header2_font'                      => array(
+			'header2_color_dark'                 => array(
+				'default' => '',
+				'label'   => __( 'Header 2 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'header2_font'                       => array(
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Header 2 font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'header2_line_height'               => array(
+			'header2_line_height'                => array(
 				'default' => 36.0,
 				'label'   => __( 'Header 2 line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'header2_size'                      => array(
+			'header2_size'                       => array(
 				'default' => 32,
 				'label'   => __( 'Header 2 font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'header2_tracking'                  => array(
+			'header2_tracking'                   => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Header 2 tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'header3_color'                     => array(
+			'header3_color'                      => array(
 				'default' => '#333333',
 				'label'   => __( 'Header 3 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'header3_font'                      => array(
+			'header3_color_dark'                 => array(
+				'default' => '',
+				'label'   => __( 'Header 3 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'header3_font'                       => array(
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Header 3 font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'header3_line_height'               => array(
+			'header3_line_height'                => array(
 				'default' => 28.0,
 				'label'   => __( 'Header 3 line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'header3_size'                      => array(
+			'header3_size'                       => array(
 				'default' => 24,
 				'label'   => __( 'Header 3 font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'header3_tracking'                  => array(
+			'header3_tracking'                   => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Header 3 tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'header4_color'                     => array(
+			'header4_color'                      => array(
 				'default' => '#333333',
 				'label'   => __( 'Header 4 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'header4_font'                      => array(
+			'header4_color_dark'                 => array(
+				'default' => '',
+				'label'   => __( 'Header 4 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'header4_font'                       => array(
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Header 4 font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'header4_line_height'               => array(
+			'header4_line_height'                => array(
 				'default' => 26.0,
 				'label'   => __( 'Header 4 line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'header4_size'                      => array(
+			'header4_size'                       => array(
 				'default' => 21,
 				'label'   => __( 'Header 4 font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'header4_tracking'                  => array(
+			'header4_tracking'                   => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Header 4 tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'header5_color'                     => array(
+			'header5_color'                      => array(
 				'default' => '#333333',
 				'label'   => __( 'Header 5 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'header5_font'                      => array(
+			'header5_color_dark'                 => array(
+				'default' => '',
+				'label'   => __( 'Header 5 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'header5_font'                       => array(
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Header 5 font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'header5_line_height'               => array(
+			'header5_line_height'                => array(
 				'default' => 24.0,
 				'label'   => __( 'Header 5 line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'header5_size'                      => array(
+			'header5_size'                       => array(
 				'default' => 18,
 				'label'   => __( 'Header 5 font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'header5_tracking'                  => array(
+			'header5_tracking'                   => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Header 5 tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'header6_color'                     => array(
+			'header6_color'                      => array(
 				'default' => '#333333',
 				'label'   => __( 'Header 6 font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'header6_font'                      => array(
+			'header6_color_dark'                 => array(
+				'default' => '',
+				'label'   => __( 'Header 6 font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'header6_font'                       => array(
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Header 6 font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'header6_line_height'               => array(
+			'header6_line_height'                => array(
 				'default' => 22.0,
 				'label'   => __( 'Header 6 line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'header6_size'                      => array(
+			'header6_size'                       => array(
 				'default' => 16,
 				'label'   => __( 'Header 6 font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'header6_tracking'                  => array(
+			'header6_tracking'                   => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Header 6 tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'initial_dropcap'                   => array(
+			'initial_dropcap'                    => array(
 				'default' => 'yes',
 				'label'   => __( 'Use initial drop cap', 'apple-news' ),
 				'options' => array( 'yes', 'no' ),
 				'type'    => 'select',
 			),
-			'json_templates'                    => array(
+			'json_templates'                     => array(
 				'default' => array(),
 				'hidden'  => true,
 				'type'    => 'array',
 			),
-			'layout_gutter'                     => array(
+			'layout_gutter'                      => array(
 				'default' => 20,
 				'label'   => __( 'Layout gutter', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'layout_margin'                     => array(
+			'layout_margin'                      => array(
 				'default' => 100,
 				'label'   => __( 'Layout margin', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'layout_width'                      => array(
+			'layout_width'                       => array(
 				'default' => 1024,
 				'hidden'  => true,
 				'type'    => 'integer',
 			),
-			'meta_component_order'              => array(
-				'default'  => array( 'cover', 'title', 'byline', 'intro' ),
-				'callback' => array( get_called_class(), 'render_meta_component_order' ),
-				'type'     => 'array',
+			'meta_component_order'               => array(
+				'default'     => array( 'cover', 'title', 'byline' ),
+				'all_options' => array( 'cover', 'title', 'byline', 'intro' ),
+				'callback'    => array( get_called_class(), 'render_meta_component_order' ),
+				'type'        => 'array',
 			),
-			'monospaced_color'                  => array(
+			'monospaced_color'                   => array(
 				'default' => '#4f4f4f',
 				'label'   => __( 'Monospaced font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'monospaced_font'                   => array(
+			'monospaced_color_dark'              => array(
+				'default' => '',
+				'label'   => __( 'Monospaced font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'monospaced_font'                    => array(
 				'default' => 'Menlo-Regular',
 				'label'   => __( 'Monospaced font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'monospaced_line_height'            => array(
+			'monospaced_line_height'             => array(
 				'default' => 20.0,
 				'label'   => __( 'Monospaced line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'monospaced_size'                   => array(
+			'monospaced_size'                    => array(
 				'default' => 16,
 				'label'   => __( 'Monospaced font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'monospaced_tracking'               => array(
+			'monospaced_tracking'                => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Monospaced tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'pullquote_border_color'            => array(
+			'pullquote_border_color'             => array(
 				'default' => '#53585f',
 				'label'   => __( 'Pull quote border color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'pullquote_border_style'            => array(
+			'pullquote_border_color_dark'        => array(
+				'default' => '',
+				'label'   => __( 'Pull quote border color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'pullquote_border_style'             => array(
 				'default' => 'solid',
 				'label'   => __( 'Pull quote border style', 'apple-news' ),
 				'options' => array( 'solid', 'dashed', 'dotted', 'none' ),
 				'type'    => 'select',
 			),
-			'pullquote_border_width'            => array(
+			'pullquote_border_width'             => array(
 				'default' => 3,
 				'label'   => __( 'Pull quote border width', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'pullquote_color'                   => array(
+			'pullquote_color'                    => array(
 				'default' => '#53585f',
 				'label'   => __( 'Pull quote color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'pullquote_font'                    => array(
+			'pullquote_color_dark'               => array(
+				'default' => '',
+				'label'   => __( 'Pull quote color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'pullquote_font'                     => array(
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Pullquote font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'pullquote_hanging_punctuation'     => array(
+			'pullquote_hanging_punctuation'      => array(
 				'default'     => 'no',
 				'description' => __( 'If set to "yes," adds smart quotes (if not already present) and sets the hanging punctuation option to true.', 'apple-news' ),
 				'label'       => __( 'Pullquote hanging punctuation', 'apple-news' ),
 				'options'     => array( 'no', 'yes' ),
 				'type'        => 'select',
 			),
-			'pullquote_line_height'             => array(
+			'pullquote_line_height'              => array(
 				'default' => 48.0,
 				'label'   => __( 'Pull quote line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'pullquote_size'                    => array(
+			'pullquote_size'                     => array(
 				'default' => 48,
 				'label'   => __( 'Pull quote font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'pullquote_tracking'                => array(
+			'pullquote_tracking'                 => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Pullquote tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'pullquote_transform'               => array(
+			'pullquote_transform'                => array(
 				'default' => 'uppercase',
 				'label'   => __( 'Pull quote transformation', 'apple-news' ),
 				'options' => array( 'none', 'uppercase' ),
 				'type'    => 'select',
 			),
-			'screenshot_url'                    => array(
+			'screenshot_url'                     => array(
 				'default'     => '',
 				'description' => __( 'An optional URL to a screenshot of this theme. Should be a 1200x900 PNG.', 'apple-news' ),
 				'label'       => __( 'Screenshot URL', 'apple-news' ),
 				'type'        => 'text',
 			),
-			'table_body_background_color'       => array(
+			'table_body_background_color'        => array(
 				'default' => '#fafafa',
 				'label'   => __( 'Table body background color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'table_body_color'                  => array(
+			'table_body_background_color_dark'   => array(
+				'default' => '',
+				'label'   => __( 'Table body background color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'table_body_color'                   => array(
 				'default' => '#4f4f4f',
 				'label'   => __( 'Table body font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'table_body_font'                   => array(
+			'table_body_color_dark'              => array(
+				'default' => '',
+				'label'   => __( 'Table body font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'table_body_font'                    => array(
 				'default' => 'AvenirNext-Regular',
 				'label'   => __( 'Table body font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'table_body_horizontal_alignment'   => array(
+			'table_body_horizontal_alignment'    => array(
 				'default' => 'left',
 				'label'   => __( 'Table body horizontal alignment', 'apple-news' ),
 				'options' => array( 'left', 'center', 'right' ),
 				'type'    => 'select',
 			),
-			'table_body_line_height'            => array(
-				'default' => 20.0,
+			'table_body_line_height'             => array(
+				'default' => 24.0,
 				'label'   => __( 'Table body line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'table_body_padding'                => array(
-				'default' => 5.0,
+			'table_body_padding'                 => array(
+				'default' => 10.0,
 				'label'   => __( 'Table body padding', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'table_body_size'                   => array(
-				'default' => 16,
+			'table_body_size'                    => array(
+				'default' => 17,
 				'label'   => __( 'Table body font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'table_body_tracking'               => array(
+			'table_body_tracking'                => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Table body tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'table_body_vertical_alignment'     => array(
+			'table_body_vertical_alignment'      => array(
 				'default' => 'center',
 				'label'   => __( 'Table body vertical alignment', 'apple-news' ),
 				'options' => array( 'top', 'center', 'bottom' ),
 				'type'    => 'select',
 			),
-			'table_border_color'                => array(
-				'default' => '#4f4f4f',
+			'table_border_color'                 => array(
+				'default' => '#333333',
 				'label'   => __( 'Table border color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'table_border_style'                => array(
+			'table_border_color_dark'            => array(
+				'default' => '',
+				'label'   => __( 'Table border color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'table_border_style'                 => array(
 				'default' => 'solid',
 				'label'   => __( 'Table border style', 'apple-news' ),
 				'options' => array( 'solid', 'dashed', 'dotted', 'none' ),
 				'type'    => 'select',
 			),
-			'table_border_width'                => array(
+			'table_border_width'                 => array(
 				'default' => 1.0,
 				'label'   => __( 'Table border width', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'table_header_background_color'     => array(
-				'default' => '#fafafa',
+			'table_header_background_color'      => array(
+				'default' => '#e1e1e1',
 				'label'   => __( 'Table header background color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'table_header_color'                => array(
+			'table_header_background_color_dark' => array(
+				'default' => '',
+				'label'   => __( 'Table header background color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'table_header_color'                 => array(
 				'default' => '#4f4f4f',
 				'label'   => __( 'Table header font color', 'apple-news' ),
 				'type'    => 'color',
 			),
-			'table_header_font'                 => array(
+			'table_header_color_dark'            => array(
+				'default' => '',
+				'label'   => __( 'Table header font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'table_header_font'                  => array(
 				'default' => 'AvenirNext-Regular',
 				'label'   => __( 'Table header font face', 'apple-news' ),
 				'type'    => 'font',
 			),
-			'table_header_horizontal_alignment' => array(
-				'default' => 'center',
+			'table_header_horizontal_alignment'  => array(
+				'default' => 'left',
 				'label'   => __( 'Table header horizontal alignment', 'apple-news' ),
 				'options' => array( 'left', 'center', 'right' ),
 				'type'    => 'select',
 			),
-			'table_header_line_height'          => array(
-				'default' => 20.0,
+			'table_header_line_height'           => array(
+				'default' => 24.0,
 				'label'   => __( 'Table header line height', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'table_header_padding'              => array(
+			'table_header_padding'               => array(
 				'default' => 10.0,
 				'label'   => __( 'Table header padding', 'apple-news' ),
 				'type'    => 'float',
 			),
-			'table_header_size'                 => array(
-				'default' => 16,
+			'table_header_size'                  => array(
+				'default' => 17,
 				'label'   => __( 'Table header font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
-			'table_header_tracking'             => array(
+			'table_header_tracking'              => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
 				'label'       => __( 'Table header tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
-			'table_header_vertical_alignment'   => array(
+			'table_header_vertical_alignment'    => array(
 				'default' => 'center',
 				'label'   => __( 'Table header vertical alignment', 'apple-news' ),
 				'options' => array( 'top', 'center', 'bottom' ),
@@ -1162,7 +1297,7 @@ class Theme {
 		// Loop through options and compile an array of all options with values.
 		$all_settings = array();
 		$options      = self::get_options();
-		foreach ( $options as $option_key => $option ) {
+		foreach ( array_keys( $options ) as $option_key ) {
 			$all_settings[ $option_key ] = $this->get_value( $option_key );
 		}
 
@@ -1321,6 +1456,11 @@ class Theme {
 				continue;
 			}
 
+			// Ignore the screenshot URL. This gets set automatically on install but doesn't have a default value.
+			if ( 'screenshot_url' === $option ) {
+				continue;
+			}
+
 			// If the values don't match, it is not using the default.
 			if ( $this->values[ $option ] !== $option_config['default'] ) {
 				return false;
@@ -1361,6 +1501,9 @@ class Theme {
 
 			// Convert the format of the value based on type.
 			switch ( $options[ $key ]['type'] ) {
+				case 'boolean':
+					$this->values[ $key ] = (bool) $value;
+					break;
 				case 'float':
 					$this->values[ $key ] = (float) $value;
 					break;
@@ -1433,13 +1576,18 @@ class Theme {
 
 					break;
 
+				case 'boolean':
+					$this->values[ $option_key ] = (bool) $_POST[ $option_key ];
+
+					break;
+
 				case 'float':
-					$this->values[ $option_key ] = floatval( $_POST[ $option_key ] );
+					$this->values[ $option_key ] = (float) $_POST[ $option_key ];
 
 					break;
 
 				case 'integer':
-					$this->values[ $option_key ] = intval( $_POST[ $option_key ] );
+					$this->values[ $option_key ] = (int) $_POST[ $option_key ];
 
 					break;
 
@@ -1500,6 +1648,11 @@ class Theme {
 		// Refresh used if in active use.
 		if ( $old_name === self::$used_name ) {
 			$this->use_this();
+		}
+
+		// Update pointer to active theme, if this was the active theme.
+		if ( self::get_active_theme_name() === $old_name ) {
+			$this->set_active();
 		}
 
 		return true;
@@ -1665,6 +1818,11 @@ class Theme {
 
 					break;
 
+				case 'boolean':
+					$value = (bool) $value;
+
+					break;
+
 				case 'color':
 					// Sanitize.
 					$value = sanitize_text_field( $value );
@@ -1689,7 +1847,7 @@ class Theme {
 					break;
 
 				case 'float':
-					$value = floatval( $value );
+					$value = (float) $value;
 
 					break;
 
@@ -1717,7 +1875,7 @@ class Theme {
 					break;
 
 				case 'integer':
-					$value = intval( $value );
+					$value = (int) $value;
 
 					break;
 
@@ -1753,7 +1911,7 @@ class Theme {
 
 			// Ensure no values were provided other than what is permissible.
 			foreach ( $this->values['meta_component_order'] as $component ) {
-				if ( ! in_array( $component, $options['meta_component_order']['default'], true ) ) {
+				if ( ! in_array( $component, $options['meta_component_order']['all_options'], true ) ) {
 					$this->log_error(
 						__( 'Invalid value for meta component order', 'apple-news' )
 					);
@@ -1818,6 +1976,10 @@ class Theme {
 					'body_link_color',
 					'body_background_color',
 					'body_orientation',
+					'dark_mode_colors_heading',
+					'body_color_dark',
+					'body_link_color_dark',
+					'body_background_color_dark',
 				),
 			),
 			'dropcap'         => array(
@@ -1831,6 +1993,9 @@ class Theme {
 					'dropcap_number_of_lines',
 					'dropcap_number_of_raised_lines',
 					'dropcap_padding',
+					'dark_mode_colors_heading',
+					'dropcap_background_color_dark',
+					'dropcap_color_dark',
 				),
 			),
 			'byline'          => array(
@@ -1843,6 +2008,8 @@ class Theme {
 					'byline_tracking',
 					'byline_color',
 					'byline_format',
+					'dark_mode_colors_heading',
+					'byline_color_dark',
 				),
 			),
 			'heading1'        => array(
@@ -1853,6 +2020,8 @@ class Theme {
 					'header1_size',
 					'header1_line_height',
 					'header1_tracking',
+					'dark_mode_colors_heading',
+					'header1_color_dark',
 				),
 			),
 			'heading2'        => array(
@@ -1863,6 +2032,9 @@ class Theme {
 					'header2_size',
 					'header2_line_height',
 					'header2_tracking',
+					'dark_mode_colors_heading',
+					'header2_color_dark',
+
 				),
 			),
 			'heading3'        => array(
@@ -1873,6 +2045,8 @@ class Theme {
 					'header3_size',
 					'header3_line_height',
 					'header3_tracking',
+					'dark_mode_colors_heading',
+					'header3_color_dark',
 				),
 			),
 			'heading4'        => array(
@@ -1883,6 +2057,8 @@ class Theme {
 					'header4_size',
 					'header4_line_height',
 					'header4_tracking',
+					'dark_mode_colors_heading',
+					'header4_color_dark',
 				),
 			),
 			'heading5'        => array(
@@ -1893,6 +2069,8 @@ class Theme {
 					'header5_size',
 					'header5_line_height',
 					'header5_tracking',
+					'dark_mode_colors_heading',
+					'header5_color_dark',
 				),
 			),
 			'heading6'        => array(
@@ -1903,16 +2081,21 @@ class Theme {
 					'header6_size',
 					'header6_line_height',
 					'header6_tracking',
+					'dark_mode_colors_heading',
+					'header6_color_dark',
 				),
 			),
 			'caption'         => array(
 				'label'    => __( 'Image caption', 'apple-news' ),
 				'settings' => array(
+					'cover_caption',
 					'caption_font',
 					'caption_size',
 					'caption_line_height',
 					'caption_tracking',
 					'caption_color',
+					'dark_mode_colors_heading',
+					'caption_color_dark',
 				),
 			),
 			'pullquote'       => array(
@@ -1933,6 +2116,9 @@ class Theme {
 					'pullquote_border_color',
 					'pullquote_border_width',
 					'pullquote_transform',
+					'dark_mode_colors_heading',
+					'pullquote_color_dark',
+					'pullquote_border_color_dark',
 				),
 			),
 			'blockquote'      => array(
@@ -1947,6 +2133,10 @@ class Theme {
 					'blockquote_border_color',
 					'blockquote_border_width',
 					'blockquote_background_color',
+					'dark_mode_colors_heading',
+					'blockquote_color_dark',
+					'blockquote_border_color_dark',
+					'blockquote_background_color_dark',
 				),
 			),
 			'table'           => array(
@@ -1973,6 +2163,12 @@ class Theme {
 					'table_header_size',
 					'table_header_tracking',
 					'table_header_vertical_alignment',
+					'dark_mode_colors_heading',
+					'table_border_color_dark',
+					'table_body_background_color_dark',
+					'table_body_color_dark',
+					'table_header_background_color_dark',
+					'table_header_color_dark',
 				),
 			),
 			'monospaced'      => array(
@@ -1983,6 +2179,8 @@ class Theme {
 					'monospaced_line_height',
 					'monospaced_tracking',
 					'monospaced_color',
+					'dark_mode_colors_heading',
+					'monospaced_color_dark',
 				),
 			),
 			'gallery'         => array(

@@ -112,6 +112,7 @@ class Component_Factory {
 		self::register_component( 'title', '\\Apple_Exporter\\Components\\Title' );
 		self::register_component( 'byline', '\\Apple_Exporter\\Components\\Byline' );
 		self::register_component( 'advertisement', '\\Apple_Exporter\\Components\\Advertisement' );
+		self::register_component( 'end-of-article', '\\Apple_Exporter\\Components\\End_Of_Article' );
 
 		// Allow built-in components and order to be overridden.
 		self::$components = apply_filters( 'apple_news_initialize_components', self::$components );

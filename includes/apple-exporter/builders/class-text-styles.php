@@ -93,42 +93,64 @@ class Text_Styles extends Builder {
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
+		$conditional = array();
+		if ( ! empty( $theme->get_value( 'monospaced_color_dark' ) ) ) {
+			$conditional = array(
+				'conditional' => array(
+					'textColor'  => $theme->get_value( 'monospaced_color_dark' ),
+					'conditions' => array(
+						'minSpecVersion'       => '1.14',
+						'preferredColorScheme' => 'dark',
+					),
+				),
+			);
+		}
+
 		// Add style for <code> tags.
 		$this->register_style(
 			'default-tag-code',
-			array(
-				'fontName'   => $theme->get_value( 'monospaced_font' ),
-				'fontSize'   => intval( $theme->get_value( 'monospaced_size' ) ),
-				'tracking'   => intval( $theme->get_value( 'monospaced_tracking' ) ) / 100,
-				'lineHeight' => intval( $theme->get_value( 'monospaced_line_height' ) ),
-				'textColor'  => $theme->get_value( 'monospaced_color' ),
+			array_merge(
+				array(
+					'fontName'   => $theme->get_value( 'monospaced_font' ),
+					'fontSize'   => intval( $theme->get_value( 'monospaced_size' ) ),
+					'tracking'   => intval( $theme->get_value( 'monospaced_tracking' ) ) / 100,
+					'lineHeight' => intval( $theme->get_value( 'monospaced_line_height' ) ),
+					'textColor'  => $theme->get_value( 'monospaced_color' ),
+				),
+				$conditional
 			)
 		);
 
 		// Add style for <pre> tags.
 		$this->register_style(
 			'default-tag-pre',
-			array(
-				'textAlignment'          => 'left',
-				'fontName'               => $theme->get_value( 'monospaced_font' ),
-				'fontSize'               => intval( $theme->get_value( 'monospaced_size' ) ),
-				'tracking'               => intval( $theme->get_value( 'monospaced_tracking' ) ) / 100,
-				'lineHeight'             => intval( $theme->get_value( 'monospaced_line_height' ) ),
-				'textColor'              => $theme->get_value( 'monospaced_color' ),
-				'paragraphSpacingBefore' => 18,
-				'paragraphSpacingAfter'  => 18,
+			array_merge(
+				array(
+					'textAlignment'          => 'left',
+					'fontName'               => $theme->get_value( 'monospaced_font' ),
+					'fontSize'               => intval( $theme->get_value( 'monospaced_size' ) ),
+					'tracking'               => intval( $theme->get_value( 'monospaced_tracking' ) ) / 100,
+					'lineHeight'             => intval( $theme->get_value( 'monospaced_line_height' ) ),
+					'textColor'              => $theme->get_value( 'monospaced_color' ),
+					'paragraphSpacingBefore' => 18,
+					'paragraphSpacingAfter'  => 18,
+				),
+				$conditional
 			)
 		);
 
 		// Add style for <samp> tags.
 		$this->register_style(
 			'default-tag-samp',
-			array(
-				'fontName'   => $theme->get_value( 'monospaced_font' ),
-				'fontSize'   => intval( $theme->get_value( 'monospaced_size' ) ),
-				'tracking'   => intval( $theme->get_value( 'monospaced_tracking' ) ) / 100,
-				'lineHeight' => intval( $theme->get_value( 'monospaced_line_height' ) ),
-				'textColor'  => $theme->get_value( 'monospaced_color' ),
+			array_merge(
+				array(
+					'fontName'   => $theme->get_value( 'monospaced_font' ),
+					'fontSize'   => intval( $theme->get_value( 'monospaced_size' ) ),
+					'tracking'   => intval( $theme->get_value( 'monospaced_tracking' ) ) / 100,
+					'lineHeight' => intval( $theme->get_value( 'monospaced_line_height' ) ),
+					'textColor'  => $theme->get_value( 'monospaced_color' ),
+				),
+				$conditional
 			)
 		);
 	}

@@ -21,6 +21,11 @@ class Admin_Apple_Sections extends Apple_News {
 	/**
 	 * The option name for section/taxonomy mappings.
 	 */
+	const PRIORITY_MAPPING_KEY = 'apple_news_section_priority_mappings';
+
+	/**
+	 * The option name for section/taxonomy mappings.
+	 */
 	const TAXONOMY_MAPPING_KEY = 'apple_news_section_taxonomy_mappings';
 
 	/**
@@ -181,7 +186,16 @@ class Admin_Apple_Sections extends Apple_News {
 			$post_sections[] = reset( $sections );
 		}
 
-		return $post_sections;
+		/**
+		 * Filters the sections for a post.
+		 *
+		 * @since 2.1.0
+		 *
+		 * @param array  $post_sections The sections for the post.
+		 * @param int    $post_id       The post ID.
+		 * @param string $format        The section format (e.g., 'url').
+		 */
+		return apply_filters( 'apple_news_get_sections_for_post', $post_sections, $post_id, $format );
 	}
 
 	/**
@@ -347,7 +361,7 @@ class Admin_Apple_Sections extends Apple_News {
 			}
 		}
 
-		// Get mappings from settings.
+		// Get taxonomy mappings from settings.
 		$taxonomy_mappings = array();
 		$taxonomy_settings = get_option( self::TAXONOMY_MAPPING_KEY );
 		if ( ! empty( $taxonomy_settings ) && is_array( $taxonomy_settings ) ) {
@@ -361,10 +375,15 @@ class Admin_Apple_Sections extends Apple_News {
 			}
 		}
 
-		$theme_mappings  = get_option( self::THEME_MAPPING_KEY );
-		$theme_obj       = new Admin_Apple_Themes();
-		$theme_admin_url = add_query_arg( 'page', $theme_obj->theme_page_name, admin_url( 'admin.php' ) );
-		$themes          = \Apple_Exporter\Theme::get_registry();
+		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
+
+		$priority_mappings = get_option( self::PRIORITY_MAPPING_KEY );
+		$theme_mappings    = get_option( self::THEME_MAPPING_KEY );
+		$theme_obj         = new Admin_Apple_Themes();
+		$theme_admin_url   = add_query_arg( 'page', $theme_obj->theme_page_name, admin_url( 'admin.php' ) );
+		$themes            = \Apple_Exporter\Theme::get_registry();
+
+		/* phpcs:enable */
 
 		// Load the partial with the form.
 		include plugin_dir_path( __FILE__ ) . 'partials/page-sections.php';
@@ -444,11 +463,18 @@ class Admin_Apple_Sections extends Apple_News {
 		}
 
 		// Loop through sections and look for mappings in POST data.
+		$priority_mappings = array();
 		$taxonomy_mappings = array();
 		$theme_mappings    = array();
 		$taxonomy          = self::get_mapping_taxonomy();
 		$section_ids       = wp_list_pluck( $sections_raw, 'id' );
 		foreach ( $section_ids as $section_id ) {
+
+			// Determine if there is priority data for this section.
+			$priority_key                     = 'priority-mapping-' . $section_id;
+			$priority_mappings[ $section_id ] = isset( $_POST[ $priority_key ] )
+				? (int) $_POST[ $priority_key ]
+				: 1;
 
 			// Determine if there is taxonomy data for this section.
 			$taxonomy_key = 'taxonomy-mapping-' . $section_id;
@@ -478,6 +504,7 @@ class Admin_Apple_Sections extends Apple_News {
 		}
 
 		// Save the new mappings.
+		update_option( self::PRIORITY_MAPPING_KEY, $priority_mappings, false );
 		update_option( self::TAXONOMY_MAPPING_KEY, $taxonomy_mappings, false );
 		update_option( self::THEME_MAPPING_KEY, $theme_mappings, false );
 	}

@@ -2,6 +2,22 @@
 /**
  * Publish to Apple News partials: Publish Metabox template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.SelfOutsideClass
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
+ * @global string  $api_id
+ * @global bool    $deleted
+ * @global bool    $is_hidden
+ * @global bool    $is_paid
+ * @global bool    $is_preview
+ * @global bool    $is_sponsored
+ * @global string  $maturity_rating
+ * @global bool    $pending
+ * @global string  $pullquote
+ * @global string  $pullquote_position
+ * @global WP_Post $post
+ * @global string  $publish_action
+ *
  * @package Apple_News
  */
 
@@ -61,8 +77,9 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 		<label for="apple-news-maturity-rating">
 			<select id="apple-news-maturity-rating" name="apple_news_maturity_rating">
 				<option value=""></option>
-				<?php foreach ( self::$maturity_ratings as $rating ) : ?>
-					<option value="<?php echo esc_attr( $rating ); ?>" <?php selected( $maturity_rating, $rating ); ?>><?php echo esc_html( ucwords( strtolower( $rating ) ) ); ?></option>
+				<?php // phpcs:ignore WordPressVIPMinimum.Variables.VariableAnalysis.SelfOutsideClass ?>
+				<?php foreach ( self::$maturity_ratings as $apple_rating ) : ?>
+					<option value="<?php echo esc_attr( $apple_rating ); ?>" <?php selected( $maturity_rating, $apple_rating ); ?>><?php echo esc_html( ucwords( strtolower( $apple_rating ) ) ); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<p class="description"><?php esc_html_e( 'Select the optional maturity rating for this post.', 'apple-news' ); ?></p>
@@ -81,22 +98,9 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 		</select>
 		<p class="description"><?php esc_html_e( 'The position in the article where the pull quote will appear.', 'apple-news' ); ?></p>
 	</div>
-	<div id="apple-news-metabox-coverart" class="apple-news-metabox-section apple-news-metabox-section-collapsable">
-		<h3><?php esc_html_e( 'Cover art', 'apple-news' ); ?></h3>
-		<?php if ( 'yes' === $this->settings->get( 'enable_cover_art' ) ) : ?>
-			<?php include plugin_dir_path( __FILE__ ) . 'cover-art.php'; ?>
-		<?php else : ?>
-			<p>
-			<?php
-				printf(
-					/* translators: First token is opening a tag, second is closing a tag */
-					esc_html__( 'Cover Art must be enabled on the %1$ssettings page%2$s.', 'apple-news' ),
-					'<a href="' . esc_url( admin_url( 'admin.php?page=apple-news-options' ) ) . '">',
-					'</a>'
-				);
-			?>
-			</p>
-		<?php endif; ?>
+	<div id="apple-news-metabox-coverimage" class="apple-news-metabox-section apple-news-metabox-section-collapsable">
+		<h3><?php esc_html_e( 'Cover Image', 'apple-news' ); ?></h3>
+		<?php require plugin_dir_path( __FILE__ ) . 'cover-image.php'; ?>
 	</div>
 	<?php
 	if ( 'yes' !== $this->settings->get( 'api_autosync' )
@@ -128,22 +132,22 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 	<?php if ( ! empty( $api_id ) ) : ?>
 		<?php
 		// Add data about the article if it exists.
-		$state       = \Admin_Apple_News::get_post_status( $post->ID );
-		$share_url   = get_post_meta( $post->ID, 'apple_news_api_share_url', true );
-		$created_at  = get_post_meta( $post->ID, 'apple_news_api_created_at', true );
-		$created_at  = empty( $created_at ) ? __( 'None', 'apple-news' ) : get_date_from_gmt( date( 'Y-m-d H:i:s', strtotime( $created_at ) ), 'F j, h:i a' );
-		$modified_at = get_post_meta( $post->ID, 'apple_news_api_modified_at', true );
-		$modified_at = empty( $modified_at ) ? __( 'None', 'apple-news' ) : get_date_from_gmt( date( 'Y-m-d H:i:s', strtotime( $modified_at ) ), 'F j, h:i a' );
+		$apple_state       = \Admin_Apple_News::get_post_status( $post->ID );
+		$apple_share_url   = get_post_meta( $post->ID, 'apple_news_api_share_url', true );
+		$apple_created_at  = get_post_meta( $post->ID, 'apple_news_api_created_at', true );
+		$apple_created_at  = empty( $apple_created_at ) ? __( 'None', 'apple-news' ) : get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( $apple_created_at ) ), 'F j, h:i a' );
+		$apple_modified_at = get_post_meta( $post->ID, 'apple_news_api_modified_at', true );
+		$apple_modified_at = empty( $apple_modified_at ) ? __( 'None', 'apple-news' ) : get_date_from_gmt( gmdate( 'Y-m-d H:i:s', strtotime( $apple_modified_at ) ), 'F j, h:i a' );
 		?>
 	<div id="apple-news-metabox-pullquote" class="apple-news-metabox-section apple-news-metabox-section-collapsable">
 		<h3><?php esc_html_e( 'Apple News Publish Information', 'apple-news' ); ?></h3>
 		<ul>
 			<li><strong><?php esc_html_e( 'ID', 'apple-news' ); ?>:</strong> <?php echo esc_html( $api_id ); ?></li>
-			<li><strong><?php esc_html_e( 'Created at', 'apple-news' ); ?>:</strong> <?php echo esc_html( $created_at ); ?></li>
-			<li><strong><?php esc_html_e( 'Modified at', 'apple-news' ); ?>:</strong> <?php echo esc_html( $modified_at ); ?></li>
-			<li><strong><?php esc_html_e( 'Share URL', 'apple-news' ); ?>:</strong> <a href="<?php echo esc_url( $share_url ); ?>" target="_blank"><?php echo esc_html( $share_url ); ?></a></li>
+			<li><strong><?php esc_html_e( 'Created at', 'apple-news' ); ?>:</strong> <?php echo esc_html( $apple_created_at ); ?></li>
+			<li><strong><?php esc_html_e( 'Modified at', 'apple-news' ); ?>:</strong> <?php echo esc_html( $apple_modified_at ); ?></li>
+			<li><strong><?php esc_html_e( 'Share URL', 'apple-news' ); ?>:</strong> <a href="<?php echo esc_url( $apple_share_url ); ?>" target="_blank"><?php echo esc_html( $apple_share_url ); ?></a></li>
 			<li><strong><?php esc_html_e( 'Revision', 'apple-news' ); ?>:</strong> <?php echo esc_html( get_post_meta( $post->ID, 'apple_news_api_revision', true ) ); ?></li>
-			<li><strong><?php esc_html_e( 'State', 'apple-news' ); ?>:</strong> <?php echo esc_html( $state ); ?></li>
+			<li><strong><?php esc_html_e( 'State', 'apple-news' ); ?>:</strong> <?php echo esc_html( $apple_state ); ?></li>
 		</ul>
 	</div>
 	<?php endif; ?>

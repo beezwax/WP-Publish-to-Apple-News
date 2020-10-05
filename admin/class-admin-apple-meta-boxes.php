@@ -210,8 +210,19 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		}
 		update_post_meta( $post_id, 'apple_news_pullquote_position', $pullquote_position );
 
-		// Save cover art.
-		self::save_coverart_meta( $post_id );
+		if ( ! empty( $_POST['apple_news_coverimage'] ) ) {
+			$cover_image = ! empty( (int) $_POST['apple_news_coverimage'] ) ? (int) $_POST['apple_news_coverimage'] : '';
+		} else {
+			$cover_image = '';
+		}
+		update_post_meta( $post_id, 'apple_news_coverimage', $cover_image );
+
+		if ( ! empty( $_POST['apple_news_coverimage_caption'] ) ) {
+			$cover_image_caption = sanitize_textarea_field( wp_unslash( $_POST['apple_news_coverimage_caption'] ) );
+		} else {
+			$cover_image_caption = '';
+		}
+		update_post_meta( $post_id, 'apple_news_coverimage_caption', $cover_image_caption );
 	}
 
 	/**
@@ -261,6 +272,8 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 */
 	public function publish_meta_box( $post ) {
 
+		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
+
 		// Only show the publish feature if the user is authorized and auto sync is not enabled.
 		// Also check if the post has been previously published and/or deleted.
 		$api_id             = get_post_meta( $post->ID, 'apple_news_api_id', true );
@@ -281,6 +294,8 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 		// Create local copies of values to pass into the partial.
 		$publish_action = self::PUBLISH_ACTION;
+
+		/* phpcs:enable */
 
 		include plugin_dir_path( __FILE__ ) . 'partials/metabox-publish.php';
 	}
@@ -408,54 +423,5 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 				'publish_action' => self::PUBLISH_ACTION,
 			)
 		);
-	}
-
-	/**
-	 * Saves a cover art image(s) to meta, given a post ID.
-	 *
-	 * @param int $post_id The post ID to update meta for.
-	 *
-	 * @access private
-	 */
-	private static function save_coverart_meta( $post_id ) {
-
-		// Check the nonce.
-		check_admin_referer( self::PUBLISH_ACTION, 'apple_news_nonce' );
-
-		// Ensure there is an orientation.
-		if ( empty( $_POST['apple-news-coverart-orientation'] ) ) {
-			return;
-		}
-
-		// Start building cover art meta using the orientation.
-		$meta_value = array(
-			'orientation' => sanitize_text_field( wp_unslash( $_POST['apple-news-coverart-orientation'] ) ),
-		);
-
-		// Iterate through image sizes and add each that is set for the orientation.
-		$image_sizes = Admin_Apple_News::get_image_sizes();
-		foreach ( $image_sizes as $key => $data ) {
-
-			// Skip any defined image sizes that are not intended for cover art.
-			if ( 'coverArt' !== $data['type'] ) {
-				continue;
-			}
-
-			// Ensure the orientation is a match.
-			if ( $meta_value['orientation'] !== $data['orientation'] ) {
-				continue;
-			}
-
-			// Determine if there was an image ID provided for this size.
-			if ( empty( $_POST[ $key ] ) ) {
-				continue;
-			}
-
-			// Save this image ID to the cover art postmeta.
-			$meta_value[ $key ] = absint( $_POST[ $key ] );
-		}
-
-		// Save post meta for this key.
-		update_post_meta( $post_id, 'apple_news_coverart', $meta_value );
 	}
 }

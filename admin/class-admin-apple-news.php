@@ -21,9 +21,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-themes.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
 // REST Includes.
-require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-clear-notifications.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-delete.php';
-require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-notifications.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-published-state.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-settings.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-modify-post.php';
@@ -50,7 +48,6 @@ class Admin_Apple_News extends Apple_News {
 	public function __construct() {
 		// Register hooks.
 		add_action( 'admin_print_styles-toplevel_page_apple_news_index', array( $this, 'plugin_styles' ) );
-		add_action( 'init', array( $this, 'action_init' ) );
 
 		/**
 		 * Admin_Settings builds the settings page for the plugin. Besides setting
@@ -103,12 +100,10 @@ class Admin_Apple_News extends Apple_News {
 				'apple_news_api_modified_at'    => [],
 				'apple_news_api_revision'       => [],
 				'apple_news_api_share_url'      => [],
-				'apple_news_coverart'           => [
-					'sanitize_callback' => 'apple_news_sanitize_coverart_data',
-					'show_in_rest'      => [
-						'prepare_callback' => 'apple_news_json_encode',
-					],
+				'apple_news_coverimage'         => [
+					'type' => 'integer',
 				],
+				'apple_news_coverimage_caption' => [],
 				'apple_news_is_hidden'          => [
 					'type' => 'boolean',
 				],
@@ -136,123 +131,20 @@ class Admin_Apple_News extends Apple_News {
 			foreach ( $postmeta as $meta_key => $options ) {
 				apple_news_register_meta_helper( 'post', $post_types, $meta_key, $options );
 			}
-		}
-	}
 
-	/**
-	 * Returns an array of custom image sizes, indexed by key, with metadata.
-	 *
-	 * @access public
-	 * @return array The array of custom image sizes.
-	 */
-	public static function get_image_sizes() {
-		return array(
-			'apple_news_ca_landscape_12_9' => array(
-				'height'      => 1374,
-				'label'       => __( 'iPad Pro (12.9 in): 1832 x 1374 px', 'apple-news' ),
-				'orientation' => 'landscape',
-				'type'        => 'coverArt',
-				'width'       => 1832,
-			),
-			'apple_news_ca_landscape_9_7'  => array(
-				'height'      => 1032,
-				'label'       => __( 'iPad (7.9/9.7 in): 1376 x 1032 px', 'apple-news' ),
-				'orientation' => 'landscape',
-				'type'        => 'coverArt',
-				'width'       => 1376,
-			),
-			'apple_news_ca_landscape_5_5'  => array(
-				'height'      => 783,
-				'label'       => __( 'iPhone (5.5 in): 1044 x 783 px', 'apple-news' ),
-				'orientation' => 'landscape',
-				'type'        => 'coverArt',
-				'width'       => 1044,
-			),
-			'apple_news_ca_landscape_4_7'  => array(
-				'height'      => 474,
-				'label'       => __( 'iPhone (4.7 in): 632 x 474 px', 'apple-news' ),
-				'orientation' => 'landscape',
-				'type'        => 'coverArt',
-				'width'       => 632,
-			),
-			'apple_news_ca_landscape_4_0'  => array(
-				'height'      => 402,
-				'label'       => __( 'iPhone (4 in): 536 x 402 px', 'apple-news' ),
-				'orientation' => 'landscape',
-				'type'        => 'coverArt',
-				'width'       => 536,
-			),
-			'apple_news_ca_portrait_12_9'  => array(
-				'height'      => 1496,
-				'label'       => __( 'iPad Pro (12.9 in): 1122 x 1496 px', 'apple-news' ),
-				'orientation' => 'portrait',
-				'type'        => 'coverArt',
-				'width'       => 1122,
-			),
-			'apple_news_ca_portrait_9_7'   => array(
-				'height'      => 1120,
-				'label'       => __( 'iPad (7.9/9.7 in): 840 x 1120 px', 'apple-news' ),
-				'orientation' => 'portrait',
-				'type'        => 'coverArt',
-				'width'       => 840,
-			),
-			'apple_news_ca_portrait_5_5'   => array(
-				'height'      => 916,
-				'label'       => __( 'iPhone (5.5 in): 687 x 916 px', 'apple-news' ),
-				'orientation' => 'portrait',
-				'type'        => 'coverArt',
-				'width'       => 687,
-			),
-			'apple_news_ca_portrait_4_7'   => array(
-				'height'      => 552,
-				'label'       => __( 'iPhone (4.7 in): 414 x 552 px', 'apple-news' ),
-				'orientation' => 'portrait',
-				'type'        => 'coverArt',
-				'width'       => 414,
-			),
-			'apple_news_ca_portrait_4_0'   => array(
-				'height'      => 472,
-				'label'       => __( 'iPhone (4 in): 354 x 472 px', 'apple-news' ),
-				'orientation' => 'portrait',
-				'type'        => 'coverArt',
-				'width'       => 354,
-			),
-			'apple_news_ca_square_12_9'    => array(
-				'height'      => 1472,
-				'label'       => __( 'iPad Pro (12.9 in): 1472 x 1472 px', 'apple-news' ),
-				'orientation' => 'square',
-				'type'        => 'coverArt',
-				'width'       => 1472,
-			),
-			'apple_news_ca_square_9_7'     => array(
-				'height'      => 1104,
-				'label'       => __( 'iPad (7.9/9.7 in): 1104 x 1104 px', 'apple-news' ),
-				'orientation' => 'square',
-				'type'        => 'coverArt',
-				'width'       => 1104,
-			),
-			'apple_news_ca_square_5_5'     => array(
-				'height'      => 912,
-				'label'       => __( 'iPhone (5.5 in): 912 x 912 px', 'apple-news' ),
-				'orientation' => 'square',
-				'type'        => 'coverArt',
-				'width'       => 912,
-			),
-			'apple_news_ca_square_4_7'     => array(
-				'height'      => 550,
-				'label'       => __( 'iPhone (4.7 in): 550 x 550 px', 'apple-news' ),
-				'orientation' => 'square',
-				'type'        => 'coverArt',
-				'width'       => 550,
-			),
-			'apple_news_ca_square_4_0'     => array(
-				'height'      => 470,
-				'label'       => __( 'iPhone (4 in): 470 x 470 px', 'apple-news' ),
-				'orientation' => 'square',
-				'type'        => 'coverArt',
-				'width'       => 470,
-			),
-		);
+			add_action(
+				'rest_api_init',
+				function() {
+					register_rest_field(
+						'post',
+						'apple_news_notices',
+						[
+							'get_callback' => [ 'Admin_Apple_Notice', 'get_if_allowed' ],
+						]
+					);
+				}
+			);
+		}
 	}
 
 	/**
@@ -270,22 +162,6 @@ class Admin_Apple_News extends Apple_News {
 			echo '<div class="apple-news-notice apple-news-notice-error" role="alert"><p>'
 				. esc_html( $message )
 				. '</p></div>';
-		}
-	}
-
-	/**
-	 * Actions to be run on the `init` action hook.
-	 *
-	 * @access public
-	 */
-	public function action_init() {
-
-		// Register custom image crops.
-		if ( 'yes' === self::$settings->enable_cover_art ) {
-			$image_sizes = self::get_image_sizes();
-			foreach ( $image_sizes as $name => $data ) {
-				add_image_size( $name, $data['width'], $data['height'], true );
-			}
 		}
 	}
 

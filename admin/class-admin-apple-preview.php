@@ -48,28 +48,30 @@ class Admin_Apple_Preview extends Apple_News {
 		?>
 		<div class="apple-news-preview">
 			<?php
-				// Build sample content.
-				$title = sprintf(
-					'<h1 class="apple-news-title apple-news-component apple-news-meta-component">%s</h1>',
-					__( 'Sample Article', 'apple-news' )
-				);
+			/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
 
-				$cover = sprintf(
-					'<div class="apple-news-cover apple-news-meta-component">%s</div>',
-					__( 'Cover', 'apple-news' )
-				);
+			// Build sample content.
+			$title = sprintf(
+				'<h1 class="apple-news-title apple-news-component apple-news-meta-component">%s</h1>',
+				__( 'Sample Article', 'apple-news' )
+			);
 
-				// Build the byline.
-				$author = __( 'John Doe', 'apple-news' );
-				$date   = date( 'M j, Y g:i A' );
-				$export = new Apple_Actions\Index\Export( $settings );
-				$byline = sprintf(
-					'<div class="apple-news-byline apple-news-component apple-news-meta-component">%s</div>',
-					$export->format_byline( null, $author, $date )
-				);
+			$cover = sprintf(
+				'<div class="apple-news-cover apple-news-meta-component">%s</div>',
+				__( 'Cover', 'apple-news' )
+			);
 
-				// Get the order of the top components.
-				$meta_component_order = $theme->get_value( 'meta_component_order' );
+			// Build the byline.
+			$author = __( 'John Doe', 'apple-news' );
+			$date   = apple_news_date( 'M j, Y g:i A' );
+			$export = new Apple_Actions\Index\Export( $settings );
+			$byline = sprintf(
+				'<div class="apple-news-byline apple-news-component apple-news-meta-component">%s</div>',
+				$export->format_byline( null, $author, $date )
+			);
+
+			// Get the order of the top components.
+			$meta_component_order = $theme->get_value( 'meta_component_order' );
 			if ( ! is_array( $meta_component_order ) ) {
 				$meta_component_order = array();
 			}
@@ -78,6 +80,8 @@ class Admin_Apple_Preview extends Apple_News {
 					echo wp_kses( $$component, Admin_Apple_Settings_Section::$allowed_html );
 				}
 			}
+
+			/* phpcs:enable */
 			?>
 			<div class="apple-news-component">
 			<p><span class="apple-news-dropcap">L</span>orem ipsum dolor sit amet, consectetur adipiscing elit. Mauris sagittis, libero nulla pellentesque quam, non venenatis massa odio id dolor.</p>

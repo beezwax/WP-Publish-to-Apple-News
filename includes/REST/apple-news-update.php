@@ -32,8 +32,9 @@ add_action(
 			'apple-news/v1',
 			'/update',
 			[
-				'methods'  => 'POST',
-				'callback' => __NAMESPACE__ . '\rest_post_update',
+				'methods'             => 'POST',
+				'callback'            => __NAMESPACE__ . '\rest_post_update',
+				'permission_callback' => '__return_true',
 			]
 		);
 	}

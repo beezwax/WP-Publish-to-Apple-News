@@ -67,7 +67,7 @@ class Admin_Apple_Notice {
 		$updated = false;
 		$notices = array_filter(
 			array_map(
-				function ( $notice ) use ( $notifications, &$updated ) {
+				function ( $notice ) use ( $notifications, &$updated ) { // phpcs:ignore WordPressVIPMinimum.Variables.VariableAnalysis.UnusedVariable
 					ksort( $notice );
 					if ( in_array( wp_json_encode( $notice ), $notifications, true ) ) {
 						$updated = true;
@@ -179,6 +179,7 @@ class Admin_Apple_Notice {
 				'dismissed'   => false,
 				'message'     => $message,
 				'type'        => $type,
+				'timestamp'   => time(),
 			)
 		);
 	}
@@ -429,5 +430,47 @@ class Admin_Apple_Notice {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Checks if the current user has access to see the notifications and returns them if true.
+	 *
+	 * @param array $object The requested object.
+	 * @return array
+	 */
+	public static function get_if_allowed( $object ) {
+		$notifications = [];
+
+		// Ensure we have an object type.
+		if ( empty( $object['type'] ) ) {
+			return $notifications;
+		}
+
+		// This functionality is only available to logged in users.
+		if ( ! is_user_logged_in() ) {
+			return $notifications;
+		}
+
+		// Ensure current user has the appropriate publish permission.
+		if ( ! current_user_can(
+			apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $object['type'] ) )
+		) ) {
+			return $notifications;
+		}
+
+		// Get notifications.
+		$notifications = self::get();
+		self::clear( $notifications );
+
+		$notifications = array_values(
+			array_filter(
+				$notifications,
+				function ( $notification ) {
+					return empty( $notification['dismissible'] );
+				}
+			)
+		);
+
+		return $notifications;
 	}
 }

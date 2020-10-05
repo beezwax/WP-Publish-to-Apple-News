@@ -14,12 +14,31 @@
  * Plugin Name: Publish to Apple News
  * Plugin URI:  http://github.com/alleyinteractive/apple-news
  * Description: Export and sync posts to Apple format.
- * Version:     2.0.8
+ * Version:     2.1.0
  * Author:      Alley
  * Author URI:  https://alley.co
  * Text Domain: apple-news
  * Domain Path: lang/
  */
+
+/**
+ * A shim for wp_date, if it is not defined.
+ *
+ * @param string       $format    PHP date format.
+ * @param int          $timestamp Optional. Unix timestamp. Defaults to current time.
+ * @param DateTimeZone $timezone  Optional. Timezone to output result in. Defaults to timezone from site settings.
+ *
+ * @return string|false The date, translated if locale specifies it. False on invalid timestamp input.
+ */
+function apple_news_date( $format, $timestamp = null, $timezone = null ) {
+	// If wp_date exists (WP >= 5.3.0) use it.
+	if ( function_exists( 'wp_date' ) ) {
+		return wp_date( $format, $timestamp, $timezone );
+	}
+
+	// Fall back to using the date function if wp_date does not exist, to preserve backwards compatibility.
+	return date( $format, $timestamp ); // phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date
+}
 
 require_once plugin_dir_path( __FILE__ ) . './includes/meta.php';
 
@@ -45,7 +64,7 @@ require plugin_dir_path( __FILE__ ) . 'includes/apple-exporter/class-settings.ph
  */
 function apple_news_uninstall_wp_plugin() {
 	$settings = new Apple_Exporter\Settings();
-	foreach ( $settings->all() as $name => $value ) {
+	foreach ( array_keys( $settings->all() ) as $name ) {
 		delete_option( $name );
 	}
 }

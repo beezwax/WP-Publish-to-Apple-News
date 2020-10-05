@@ -37,9 +37,10 @@ class Metadata extends Builder {
 		}
 
 		// If the content has a cover, use it as thumb.
-		if ( $this->content_cover() ) {
+		$content_cover = $this->content_cover();
+		if ( ! empty( $content_cover ) ) {
 			$meta['thumbnailURL'] = $this->maybe_bundle_source(
-				$this->content_cover()
+				isset( $content_cover['url'] ) ? $content_cover['url'] : $content_cover
 			);
 		}
 
@@ -50,8 +51,8 @@ class Metadata extends Builder {
 		 */
 		$post = get_post( $this->content_id() );
 		if ( ! empty( $post ) ) {
-			$post_date     = date( 'c', strtotime( get_gmt_from_date( $post->post_date ) ) );
-			$post_modified = date( 'c', strtotime( get_gmt_from_date( $post->post_modified ) ) );
+			$post_date     = gmdate( 'c', strtotime( get_gmt_from_date( $post->post_date ) ) );
+			$post_modified = gmdate( 'c', strtotime( get_gmt_from_date( $post->post_modified ) ) );
 
 			$meta['dateCreated']   = $post_date;
 			$meta['dateModified']  = $post_modified;
@@ -68,9 +69,6 @@ class Metadata extends Builder {
 		$meta['generatorIdentifier'] = sanitize_title_with_dashes( $plugin_data['Name'] );
 		$meta['generatorName']       = $plugin_data['Name'];
 		$meta['generatorVersion']    = $plugin_data['Version'];
-
-		// Add cover art.
-		$this->add_cover_art( $meta );
 
 		// Extract all video elements that include a poster element.
 		if ( preg_match_all( '/<video[^>]+poster="([^"]+)".*?>(.+?)<\/video>/s', $this->content_text(), $matches ) ) {
@@ -97,86 +95,5 @@ class Metadata extends Builder {
 		}
 
 		return apply_filters( 'apple_news_metadata', $meta, $this->content_id() );
-	}
-
-	/**
-	 * Adds metadata for cover art.
-	 *
-	 * @param array $meta The metadata array to augment.
-	 *
-	 * @access private
-	 */
-	private function add_cover_art( &$meta ) {
-
-		// Try to get cover art meta.
-		$ca_meta = get_post_meta( $this->content_id(), 'apple_news_coverart', true );
-
-		// Ensure an orientation was specified.
-		if ( empty( $ca_meta['orientation'] ) ) {
-			return;
-		}
-
-		// Ensure the largest size for this orientation has been set.
-		if ( empty( $ca_meta[ 'apple_news_ca_' . $ca_meta['orientation'] . '_12_9' ] ) ) {
-			return;
-		}
-
-		// Loop through the defined image sizes and check for each.
-		$image_sizes = Admin_Apple_News::get_image_sizes();
-		foreach ( $image_sizes as $key => $data ) {
-
-			// Skip any image sizes that aren't related to cover art.
-			if ( 'coverArt' !== $data['type'] ) {
-				continue;
-			}
-
-			// Skip any image sizes that don't match the specified orientation.
-			if ( $ca_meta['orientation'] !== $data['orientation'] ) {
-				continue;
-			}
-
-			// Skip any image sizes that aren't saved.
-			if ( empty( $ca_meta[ $key ] ) ) {
-				continue;
-			}
-
-			// Try to get information about the specified image.
-			$image_id = $ca_meta[ $key ];
-			$image    = wp_get_attachment_metadata( $image_id );
-			$alt      = get_post_meta( $image_id, '_wp_attachment_image_alt', true );
-			if ( empty( $image['sizes'] ) ) {
-				continue;
-			}
-
-			// Skip images that don't meet the minimum size requirements.
-			if ( empty( $image['sizes'][ $key ]['width'] )
-				|| empty( $image['sizes'][ $key ]['height'] )
-				|| $data['width'] !== $image['sizes'][ $key ]['width']
-				|| $data['height'] !== $image['sizes'][ $key ]['height']
-			) {
-				/**
-				 * If the full size of the image is *exactly* the requested
-				 * dimensions, a crop won't be generated, but we don't want
-				 * to fail it either. So we need to check the height and
-				 * width of the original also.
-				 */
-				if ( $data['width'] !== $image['width']
-					|| $data['height'] !== $image['height']
-				) {
-					continue;
-				}
-			}
-
-			// Bundle source, if necessary.
-			$url = wp_get_attachment_image_url( $image_id, $key );
-			$url = $this->maybe_bundle_source( $url );
-
-			// Add this crop to the coverArt array.
-			$meta['coverArt'][] = array(
-				'accessibilityCaption' => $alt,
-				'type'                 => 'image',
-				'URL'                  => $url,
-			);
-		}
 	}
 }
