@@ -136,8 +136,7 @@ class Admin_Apple_News extends Apple_News {
 				'rest_api_init',
 				function() {
 					$admin_settings = new Admin_Apple_Settings();
-					$settings       = $admin_settings->fetch_settings();
-					$post_types     = $settings->post_types;
+					$post_types     = $admin_settings->fetch_settings()->post_types ?? [];
 					if ( ! is_array( $post_types ) ) {
 						$post_types = array( $post_types );
 					}
