@@ -47,6 +47,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 == Changelog ==
 
 = 2.1.0 =
+* Enhancement: Adds support for Dark Mode, including the ability to customize Dark Mode colors in a theme.
 * Enhancement: The cover component now supports captions. If a featured image is used for the cover, the caption will come from the attachment itself in the database. If the first image from the content is used, the caption will be read from the HTML. There is also a new filter, apple_news_exporter_cover_caption, which allows for filtering of the caption text.
 * Enhancement: Adds a new End of Article module, available via the Customize JSON feature, to allow publishers to insert content at the end of every article, customized per theme.
 * Enhancement: HTML is now allowed in lightbox image captions.
