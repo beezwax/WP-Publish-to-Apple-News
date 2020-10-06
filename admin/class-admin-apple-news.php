@@ -138,7 +138,7 @@ class Admin_Apple_News extends Apple_News {
 					$admin_settings = new Admin_Apple_Settings();
 					$post_types     = $admin_settings->fetch_settings()->post_types ?? [];
 					if ( ! is_array( $post_types ) ) {
-						$post_types = array( $post_types );
+						$post_types = [ $post_types ];
 					}
 
 					foreach ( $post_types as $post_type ) {
