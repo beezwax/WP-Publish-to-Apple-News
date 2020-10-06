@@ -135,13 +135,22 @@ class Admin_Apple_News extends Apple_News {
 			add_action(
 				'rest_api_init',
 				function() {
-					register_rest_field(
-						'post',
-						'apple_news_notices',
-						[
-							'get_callback' => [ 'Admin_Apple_Notice', 'get_if_allowed' ],
-						]
-					);
+					$admin_settings = new Admin_Apple_Settings();
+					$settings       = $admin_settings->fetch_settings();
+					$post_types     = $settings->post_types;
+					if ( ! is_array( $post_types ) ) {
+						$post_types = array( $post_types );
+					}
+
+					foreach ( $post_types as $post_type ) {
+						register_rest_field(
+							$post_type,
+							'apple_news_notices',
+							[
+								'get_callback' => [ 'Admin_Apple_Notice', 'get_if_allowed' ],
+							]
+						);
+					}
 				}
 			);
 		}
