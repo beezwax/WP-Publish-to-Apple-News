@@ -136,9 +136,6 @@ class Admin_Apple_News extends Apple_News {
 				'rest_api_init',
 				function() {
 					$post_types = ! empty( self::$settings->post_types ) ? self::$settings->post_types : [];
-					if ( ! is_array( $post_types ) ) {
-						$post_types = [ $post_types ];
-					}
 
 					foreach ( $post_types as $post_type ) {
 						register_rest_field(
