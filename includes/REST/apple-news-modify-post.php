@@ -24,6 +24,16 @@ use WP_Error;
  * @return array|WP_Error Response to the request - either data about a successful operation, or error.
  */
 function modify_post( $post_id, $operation ) {
+	// Ensure Apple News is first initialized.
+	if ( ! \Apple_News::is_initialized() ) {
+		return new WP_Error(
+			'apple_news_bad_operation',
+			__( 'You must enter your API information on the settings page before using Publish to Apple News.', 'apple-news' ),
+			[
+				'status' => 400,
+			]
+		);
+	}
 
 	// Ensure there is a post ID provided in the data.
 	if ( empty( $post_id ) ) {
