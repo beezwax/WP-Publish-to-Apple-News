@@ -25,15 +25,7 @@ use WP_Error;
  */
 function modify_post( $post_id, $operation ) {
 	// Ensure Apple News is first initialized.
-	if ( ! \Apple_News::is_initialized() ) {
-		return new WP_Error(
-			'apple_news_bad_operation',
-			__( 'You must enter your API information on the settings page before using Publish to Apple News.', 'apple-news' ),
-			[
-				'status' => 400,
-			]
-		);
-	}
+	\Apple_News::has_uninitialized_error();
 
 	// Ensure there is a post ID provided in the data.
 	if ( empty( $post_id ) ) {
