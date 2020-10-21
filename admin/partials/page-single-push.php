@@ -25,7 +25,12 @@
 
 	<form method="post">
 		<?php wp_nonce_field( 'publish', 'apple_news_nonce' ); ?>
-		<?php do_action( 'apple_news_before_single_settings' ); ?>
+		<?php
+		/**
+		 * Allows custom HTML to be printed before the publish single article form.
+		 */
+		do_action( 'apple_news_before_single_settings' );
+		?>
 		<table class="form-table">
 			<?php if ( ! empty( $sections ) ) : ?>
 			<tr>
@@ -107,7 +112,12 @@
 				</td>
 			</tr>
 		</table>
-		<?php do_action( 'apple_news_after_single_settings' ); ?>
+		<?php
+		/**
+		 * Allows custom HTML to be printed after the publish single article form.
+		 */
+		do_action( 'apple_news_after_single_settings' );
+		?>
 
 		<p class="submit">
 			<a href="<?php echo esc_url( Admin_Apple_Index_Page::action_query_params( '', admin_url( 'admin.php?page=apple_news_index' ) ) ); ?>" class="button"><?php esc_html_e( 'Back', 'apple-news' ); ?></a>

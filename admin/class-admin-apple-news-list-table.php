@@ -437,7 +437,10 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		// Add a dange range filter.
 		$this->date_range_filter_field();
 
-		// Allow for further options to be added within themes and plugins.
+		/**
+		 * Allows theme and plugin authors to add additional Apple News list table
+		 * filters.
+		 */
 		do_action( 'apple_news_extra_tablenav' );
 
 		submit_button( __( 'Filter', 'apple-news' ), 'button', 'filter_action', false, array( 'id' => 'post-query-submit' ) );

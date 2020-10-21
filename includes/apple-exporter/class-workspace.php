@@ -70,10 +70,22 @@ class Workspace {
 	 * @access public
 	 */
 	public function clean_up() {
+		/**
+		 * Actions to be taken before postmeta is cleaned up for a post.
+		 *
+		 * Cleaned postmeta includes the generated JSON, the bundles, and errors.
+		 */
 		do_action( 'apple_news_before_clean_up' );
+
 		delete_post_meta( $this->content_id, self::JSON_META_KEY );
 		delete_post_meta( $this->content_id, self::BUNDLE_META_KEY );
 		delete_post_meta( $this->content_id, self::ERRORS_META_KEY );
+
+		/**
+		 * Actions to be taken after postmeta is cleaned up for a post.
+		 *
+		 * Cleaned postmeta includes the generated JSON, the bundles, and errors.
+		 */
 		do_action( 'apple_news_after_clean_up' );
 	}
 

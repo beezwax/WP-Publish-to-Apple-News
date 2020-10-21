@@ -251,6 +251,11 @@ class Push extends API_Action {
 		$remote_id = get_post_meta( $this->id, 'apple_news_api_id', true );
 		$result    = null;
 
+		/**
+		 * Actions to be taken before the article is pushed to Apple News.
+		 *
+		 * @param int $post_id The ID of the post.
+		 */
 		do_action( 'apple_news_before_push', $this->id );
 
 		// Populate optional metadata.
@@ -331,6 +336,12 @@ class Push extends API_Action {
 			// Update the checksum for the article JSON version.
 			update_post_meta( $this->id, 'apple_news_article_checksum', $this->generate_checksum( $json, $meta, $bundles ) );
 
+			/**
+			 * Actions to be taken after an article was pushed to Apple News.
+			 *
+			 * @param int    $post_id The ID of the post.
+			 * @param object $result  The JSON returned by the Apple News API.
+			 */
 			do_action( 'apple_news_after_push', $this->id, $result );
 		} catch ( \Apple_Push_API\Request\Request_Exception $e ) {
 

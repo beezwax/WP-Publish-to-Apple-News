@@ -93,6 +93,11 @@ class Export extends Action {
 
 		global $post;
 
+		/**
+		 * Actions to be fired before the Exporter class is created and returned.
+		 *
+		 * @param int $post_id The ID of the post being exported.
+		 */
 		do_action( 'apple_news_do_fetch_exporter', $this->id );
 
 		/**
