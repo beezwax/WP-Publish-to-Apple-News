@@ -133,6 +133,7 @@ class Admin_Apple_Settings extends Apple_News {
 			'apple_news_index',
 			__( 'Apple News Options', 'apple-news' ),
 			__( 'Settings', 'apple-news' ),
+			/** This filter is documented in admin/class-admin-apple-settings.php */
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->page_name,
 			array( $this, 'page_options_render' )

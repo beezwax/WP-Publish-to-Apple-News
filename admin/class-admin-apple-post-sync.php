@@ -68,8 +68,16 @@ class Admin_Apple_Post_Sync {
 	public function do_publish( $id, $post ) {
 		if ( 'publish' !== $post->post_status
 			|| ! in_array( $post->post_type, $this->settings->post_types, true )
-			|| ( ! current_user_can( apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $post->post_type ) ) )
-				&& ! ( defined( 'DOING_CRON' ) && DOING_CRON ) )
+			|| (
+				! current_user_can(
+					/**
+					 * Filters the publish capability required to publish posts to Apple News.
+					 *
+					 * @param string $capability The capability required to publish posts to Apple News. Defaults to 'publish_posts', or the equivalent for the post type.
+					 */
+					apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $post->post_type ) )
+				) && ! ( defined( 'DOING_CRON' ) && DOING_CRON )
+			)
 		) {
 			return;
 		}

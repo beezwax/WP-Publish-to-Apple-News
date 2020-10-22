@@ -98,6 +98,7 @@ class Workspace {
 	 * @access public
 	 */
 	public function bundle_source( $filename, $source ) {
+		/** This filter is documented in includes/apple-exporter/builders/class-builder.php */
 		add_post_meta( $this->content_id, self::BUNDLE_META_KEY, esc_url_raw( apply_filters( 'apple_news_bundle_source', $source, $filename, $this->content_id ) ) );
 	}
 

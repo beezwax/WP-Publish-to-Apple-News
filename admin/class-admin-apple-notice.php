@@ -453,6 +453,7 @@ class Admin_Apple_Notice {
 
 		// Ensure current user has the appropriate publish permission.
 		if ( ! current_user_can(
+			/** This filter is documented in admin/class-admin-apple-post-sync.php */
 			apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $object['type'] ) )
 		) ) {
 			return $notifications;
