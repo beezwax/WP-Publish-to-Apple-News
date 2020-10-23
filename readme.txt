@@ -309,7 +309,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Added ability to publish preview articles
 
 = 1.0.8 =
-* Added support for date metadata (https://developer.apple.com/library/ios/documentation/General/Conceptual/Apple_News_Format_Ref/Metadata.html#//apple_ref/doc/uid/TP40015408-CH3-SW1)
+* Added support for date metadata (https://developer.apple.com/documentation/apple_news/metadata)
 * Fixed issue with shortcodes appearing in excerpt metadata
 * Added the ability to alter a component's style property via a filter
 * Refactored plugin settings to save as a single option value
