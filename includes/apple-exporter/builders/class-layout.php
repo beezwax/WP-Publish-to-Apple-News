@@ -26,6 +26,12 @@ class Layout extends Builder {
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
+		/**
+		 * Modifies the layout settings from the Apple News formatting options.
+		 *
+		 * @param array $layout  Layout settings.
+		 * @param int   $post_id The ID of the post.
+		 */
 		return apply_filters(
 			'apple_news_layout',
 			array(
