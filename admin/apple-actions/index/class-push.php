@@ -160,6 +160,11 @@ class Push extends API_Action {
 		/**
 		 * Allows for custom logic to determine if a post is in sync or not.
 		 *
+		 * By default, the plugin simply compares the last modified time to the
+		 * last time it was pushed to Apple News. If you want to apply custom
+		 * logic, you can do that by modifying `$in_sync`. The most common use case
+		 * is to not update posts based on custom criteria.
+		 *
 		 * @since 2.0.2 Added the $post_id, $json, $meta, and $bundles parameters.
 		 *
 		 * @param bool   $in_sync Whether the current post is in sync or not.
@@ -208,9 +213,15 @@ class Push extends API_Action {
 		}
 
 		/**
-		 * Should the post be skipped and not pushed to apple news.
+		 * Filters whether the post should be skipped and not pushed to Apple News.
 		 *
-		 * Default is false, but filterable.
+		 * Allows you to stop publication of a post to Apple News based on your own
+		 * custom logic. A common use case is to not publish posts with a certain
+		 * category or tag. By default this is always `false` as all posts are
+		 * published once they reach this step.
+		 *
+		 * @param bool $skip    Whether the post should be skipped. Defaults to `false`.
+		 * @param int  $post_id The ID of the post.
 		 */
 		if ( apply_filters( 'apple_news_skip_push', false, $this->id ) ) {
 			throw new \Apple_Actions\Action_Exception(

@@ -57,28 +57,34 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	/**
 	 * Set column defaults.
 	 *
-	 * @param mixed  $item        Default value for the column.
-	 * @param string $column_name The name of the column.
-	 * @access public
+	 * @param WP_Post $post        Default value for the column.
+	 * @param string  $column_name The name of the column.
+	 *
 	 * @return string
 	 */
-	public function column_default( $item, $column_name ) {
+	public function column_default( $post, $column_name ) {
+		$default = '';
+
 		switch ( $column_name ) {
-			case 'title':
-				$default = $item[ $column_name ];
-				break;
 			case 'updated_at':
-				$default = $this->get_updated_at( $item );
+				$default = $this->get_updated_at( $post );
 				break;
 			case 'status':
-				$default = $this->get_status_for( $item );
+				$default = $this->get_status_for( $post );
 				break;
 			case 'sync':
-				$default = $this->get_synced_status_for( $item );
+				$default = $this->get_synced_status_for( $post );
 				break;
 		}
 
-		return apply_filters( 'apple_news_column_default', $default, $column_name, $item );
+		/**
+		 * Filters the default value for a column in the article list table.
+		 *
+		 * @param string  $default     The default value.
+		 * @param string  $column_name The name of the column being rendered.
+		 * @param WP_Post $post        The post object being rendered.
+		 */
+		return apply_filters( 'apple_news_column_default', $default, $column_name, $post );
 	}
 
 	/**
