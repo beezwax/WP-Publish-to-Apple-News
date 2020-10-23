@@ -123,7 +123,16 @@
 							var <?php echo esc_js( $apple_editor_name ); ?> = ace.edit( '<?php echo esc_js( $apple_editor_name ); ?>' );
 							jQuery( function() {
 								jQuery( '#<?php echo esc_js( $apple_field_name ); ?>' ).hide();
-								<?php echo esc_js( $apple_editor_name ); ?>.setTheme( '<?php echo esc_js( apply_filters( 'apple_news_json_editor_ace_theme', 'ace/theme/textmate', $selected_component, $apple_field_name ) ); ?>' );
+								<?php echo esc_js( $apple_editor_name ); ?>.setTheme( '<?php echo esc_js(
+									/**
+									 * Modifies the JSON editor theme.
+									 *
+									 * @param string $theme      The ACE theme to use.
+									 * @param string $component  The component currently being edited.
+									 * @param string $field_name The field currently being edited.
+									 */
+									apply_filters( 'apple_news_json_editor_ace_theme', 'ace/theme/textmate', $selected_component, $apple_field_name )
+								); ?>' );
 								<?php echo esc_js( $apple_editor_name ); ?>.getSession().setMode( 'ace/mode/json' );
 								<?php echo esc_js( $apple_editor_name ); ?>.getSession().setTabSize( 2 );
 								<?php echo esc_js( $apple_editor_name ); ?>.getSession().setUseSoftTabs( false );

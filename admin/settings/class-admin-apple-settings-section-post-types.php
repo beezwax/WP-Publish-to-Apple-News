@@ -38,7 +38,11 @@ class Admin_Apple_Settings_Section_Post_Types extends Admin_Apple_Settings_Secti
 			),
 		);
 
-		// Build the post types to display.
+		/**
+		 * Modifies the post types available for selection on the settings page.
+		 *
+		 * @param array $post_types An array of WP_Post_Type objects.
+		 */
 		$post_types = apply_filters(
 			'apple_news_post_types',
 			get_post_types(
