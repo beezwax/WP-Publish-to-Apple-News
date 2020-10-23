@@ -412,6 +412,11 @@ class Theme {
 		 * fonts that have been approved by Apple and added to your
 		 * channel will be able to be added to the list for selection.
 		 *
+		 * Use this filter to add a custom font that has been loaded into your
+		 * Apple News channel. The font must be available on your system. TrueType
+		 * font names must be used (which may differ from the filename of the font
+		 * itself).
+		 *
 		 * @since 1.4.0
 		 *
 		 * @param array $fonts An array of TrueType font names.
