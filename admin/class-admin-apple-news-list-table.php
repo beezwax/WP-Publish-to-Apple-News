@@ -231,7 +231,13 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 			);
 		}
 
-		// Return the row action HTML.
+		/**
+		 * Filters the HTML of the `title` column in the article list table.
+		 *
+		 * @param string  $html    The HTML for the `title` column in the article list table.
+		 * @param WP_Post $item    The post item being displayed.
+		 * @param array   $actions An array of available row actions.
+		 */
 		return apply_filters(
 			'apple_news_column_title',
 			sprintf(
@@ -253,6 +259,11 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @return array An array where the key is the column slug and the value is the title text.
 	 */
 	public function get_columns() {
+		/**
+		 * Allows you to add, edit or delete the columns on the Apple News list table.
+		 *
+		 * @param array $columns An associative array of column slugs to column labels.
+		 */
 		return apply_filters(
 			'apple_news_export_list_columns',
 			array(
@@ -295,6 +306,19 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_bulk_actions() {
+		/**
+		 * Allows you to add, edit or delete available bulk actions on the Apple News list table.
+		 *
+		 * The actions array is an associative array where the keys are WordPress
+		 * action strings and the values are the labels for the items in the bulk
+		 * actions dropdown.
+		 *
+		 * This filter allows you to add your own bulk actions, or to remove bulk
+		 * actions defined by the plugin. By default, the plugin only defines one
+		 * bulk action: Publish.
+		 *
+		 * @param array $actions An associative array, where the keys are action slugs, and the values are the text of the bulk action label.
+		 */
 		return apply_filters(
 			'apple_news_bulk_actions',
 			array(
@@ -405,13 +429,23 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 			$args['s'] = $search;
 		}
 
-		// Data fetch.
+		/**
+		 * Allows you to manipulate the `$args` sent to WP_Query to populate the
+		 * posts on the Apple News list table.
+		 *
+		 * @param array $args The arguments sent to WP_Query to populate the list table.
+		 */
 		$query = new WP_Query( apply_filters( 'apple_news_export_table_get_posts_args', $args ) );
 
 		// Set data.
 		$this->items = $query->posts;
 		$total_items = $query->found_posts;
 		$this->set_pagination_args(
+			/**
+			 * Allows you to manipulate the arguments for paginating the Apple News list table.
+			 *
+			 * @param array $args An associative array of pagination arguments, including total_items, per_page, and total_pages.
+			 */
 			apply_filters(
 				'apple_news_export_table_pagination_args',
 				array(
@@ -509,7 +543,14 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 	 * @access protected
 	 */
 	protected function publish_status_filter_field() {
-		// Add available statuses.
+		/**
+		 * Filters the list of publish statuses available in the article list table.
+		 *
+		 * If you've added custom statuses to Apple News, this allows you to make
+		 * them available for filtering the Apple News list table.
+		 *
+		 * @param array $statuses An associative array, where the keys are status slugs, and the values are status labels.
+		 */
 		$publish_statuses = apply_filters(
 			'apple_news_publish_statuses',
 			array(

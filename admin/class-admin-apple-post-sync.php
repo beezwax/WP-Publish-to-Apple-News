@@ -128,7 +128,14 @@ class Admin_Apple_Post_Sync {
 	public function do_delete( $id ) {
 		$post = get_post( $id );
 		if ( empty( $post->post_type )
-			|| ! current_user_can( apply_filters( 'apple_news_delete_capability', Apple_News::get_capability_for_post_type( 'delete_posts', $post->post_type ) ) )
+			|| ! current_user_can(
+				/**
+				 * Filters the delete capability required to delete posts from Apple News.
+				 *
+				 * @param string $capability The capability required to delete posts from Apple News. Defaults to 'delete_posts', or the equivalent for the post type.
+				 */
+				apply_filters( 'apple_news_delete_capability', Apple_News::get_capability_for_post_type( 'delete_posts', $post->post_type ) )
+			)
 		) {
 			return;
 		}

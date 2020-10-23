@@ -395,7 +395,8 @@ class Admin_Apple_Notice {
 		}
 
 		/**
-		 * Allows the message content to be filtered before display.
+		 * Allows you to change any success, info, or error notice that appears in
+		 * the dashboard.
 		 *
 		 * @param string $message The message to be displayed.
 		 * @param string $type    The type of message being displayed.
