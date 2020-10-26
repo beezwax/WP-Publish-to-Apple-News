@@ -104,7 +104,10 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 	</div>
 	<?php
 	if ( 'yes' !== $this->settings->get( 'api_autosync' )
-		&& current_user_can( apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $post->post_type ) ) )
+		&& current_user_can(
+			/** This filter is documented in admin/class-admin-apple-post-sync.php */
+			apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $post->post_type ) )
+		)
 		&& 'publish' === $post->post_status
 		&& empty( $api_id )
 		&& empty( $deleted )

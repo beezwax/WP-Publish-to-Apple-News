@@ -204,6 +204,18 @@ class Admin_Apple_News extends Apple_News {
 			}
 
 			$cache_expiration = ( 'LIVE' === $state || 'TAKEN_DOWN' === $state ) ? 3600 : 60;
+
+			/**
+			 * Filters the cache lifetime for API responses.
+			 *
+			 * Most responses are cached to avoid repeatedly hitting the API, which
+			 * would slow down your admin dashboard. Different statuses are cached
+			 * for different times since some are more likely to change quickly than
+			 * others.
+			 *
+			 * @param int    $expiration The current cache lifetime.
+			 * @param string $state      The current Apple News API status for the post.
+			 */
 			set_transient( $key, $state, apply_filters( 'apple_news_post_status_cache_expiration', $cache_expiration, $state ) );
 		}
 

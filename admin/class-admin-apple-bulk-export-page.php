@@ -55,6 +55,11 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 			null,                                // Parent, if null, it won't appear in any menu.
 			__( 'Bulk Export', 'apple-news' ),   // Page title.
 			__( 'Bulk Export', 'apple-news' ),   // Menu title.
+			/**
+			 * Filters the capability required to be able to access the Bulk Export page.
+			 *
+			 * @param string $capability The capability required to be able to perform bulk exports. Defaults to 'manage_options'.
+			 */
 			apply_filters( 'apple_news_bulk_export_capability', 'manage_options' ), // Capability.
 			$this->plugin_slug . '_bulk_export', // Menu Slug.
 			array( $this, 'build_page' )         // Function.
@@ -128,7 +133,10 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 		}
 
 		// Check capabilities.
-		if ( ! current_user_can( apply_filters( 'apple_news_publish_capability', self::get_capability_for_post_type( 'publish_posts', $post->post_type ) ) ) ) {
+		if ( ! current_user_can(
+			/** This filter is documented in admin/class-admin-apple-post-sync.php */
+			apply_filters( 'apple_news_publish_capability', self::get_capability_for_post_type( 'publish_posts', $post->post_type ) )
+		) ) {
 			echo wp_json_encode(
 				array(
 					'success' => false,
