@@ -395,7 +395,8 @@ class Admin_Apple_Notice {
 		}
 
 		/**
-		 * Allows the message content to be filtered before display.
+		 * Allows you to change any success, info, or error notice that appears in
+		 * the dashboard.
 		 *
 		 * @param string $message The message to be displayed.
 		 * @param string $type    The type of message being displayed.
@@ -453,6 +454,7 @@ class Admin_Apple_Notice {
 
 		// Ensure current user has the appropriate publish permission.
 		if ( ! current_user_can(
+			/** This filter is documented in admin/class-admin-apple-post-sync.php */
 			apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $object['type'] ) )
 		) ) {
 			return $notifications;

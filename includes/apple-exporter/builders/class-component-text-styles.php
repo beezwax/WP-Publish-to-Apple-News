@@ -61,7 +61,11 @@ class Component_Text_Styles extends Builder {
 	 * @access protected
 	 */
 	protected function build() {
+		/**
+		 * Modifies available component text styles.
+		 *
+		 * @param array $styles Component text styles.
+		 */
 		return apply_filters( 'apple_news_component_text_styles', $this->styles );
 	}
-
 }

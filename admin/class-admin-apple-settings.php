@@ -120,6 +120,12 @@ class Admin_Apple_Settings extends Apple_News {
 	 */
 	public function register_sections() {
 		$this->add_sections();
+
+		/**
+		 * Modifies the available sections on the settings page.
+		 *
+		 * @param array $sections The list of available settings sections.
+		 */
 		$this->sections = apply_filters( 'apple_news_settings_sections', $this->sections );
 	}
 
@@ -133,6 +139,7 @@ class Admin_Apple_Settings extends Apple_News {
 			'apple_news_index',
 			__( 'Apple News Options', 'apple-news' ),
 			__( 'Settings', 'apple-news' ),
+			/** This filter is documented in admin/class-admin-apple-settings.php */
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->page_name,
 			array( $this, 'page_options_render' )
@@ -145,6 +152,12 @@ class Admin_Apple_Settings extends Apple_News {
 	 * @access public
 	 */
 	public function page_options_render() {
+		/**
+		 * Modifies the capability required to edit Apple News settings. Defaults
+		 * to `manage_options`.
+		 *
+		 * @param string $capability The capability required to edit Apple News settings. Defaults to `manage_options`.
+		 */
 		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
 			wp_die( esc_html__( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}
