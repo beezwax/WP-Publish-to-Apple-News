@@ -14,13 +14,19 @@
 <?php echo wp_kses_post( $apple_section->get_section_info() ); ?>
 <table class="form-table apple-news">
 	<?php foreach ( $apple_section->groups() as $apple_group ) : ?>
-		<?php do_action( 'apple_news_before_setting_group', $apple_group, false ); ?>
+		<?php
+		/** This action is documented in admin/partials/page-theme-edit.php */
+		do_action( 'apple_news_before_setting_group', $apple_group, false );
+		?>
 	<tr>
 		<th scope="row"><?php echo esc_html( $apple_group['label'] ); ?></th>
 		<td>
 			<fieldset>
 				<?php foreach ( $apple_group['settings'] as $apple_setting_name => $apple_setting_meta ) : ?>
-					<?php do_action( 'apple_news_before_setting', $apple_setting_name, $apple_setting_meta ); ?>
+					<?php
+					/** This action is documented in admin/partials/page-theme-edit.php */
+					do_action( 'apple_news_before_setting', $apple_setting_name, $apple_setting_meta );
+					?>
 				<label class="setting-container">
 					<?php if ( ! empty( $apple_setting_meta['label'] ) ) : ?>
 						<span class="label-name"><?php echo esc_html( $apple_setting_meta['label'] ); ?></span>
@@ -38,7 +44,10 @@
 						);
 					?>
 				</label>
-					<?php do_action( 'apple_news_after_setting', $apple_setting_name, $apple_setting_meta ); ?>
+					<?php
+					/** This action is documented in admin/partials/page-theme-edit.php */
+					do_action( 'apple_news_after_setting', $apple_setting_name, $apple_setting_meta );
+					?>
 				<br />
 				<?php endforeach; ?>
 
@@ -48,6 +57,9 @@
 			</fieldset>
 		</td>
 	</tr>
-		<?php do_action( 'apple_news_after_setting_group', $apple_group, false ); ?>
+		<?php
+		/** This action is documented in admin/partials/page-theme-edit.php */
+		do_action( 'apple_news_after_setting_group', $apple_group, false );
+		?>
 	<?php endforeach; ?>
 </table>

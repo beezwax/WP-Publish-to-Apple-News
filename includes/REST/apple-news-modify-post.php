@@ -50,6 +50,7 @@ function modify_post( $post_id, $operation ) {
 
 	// Ensure the user is authorized to make changes to Apple News posts.
 	if ( ! current_user_can(
+		/** This filter is documented in admin/class-admin-apple-post-sync.php */
 		apply_filters(
 			'apple_news_publish_capability',
 			Apple_News::get_capability_for_post_type( 'publish_posts', $post->post_type )

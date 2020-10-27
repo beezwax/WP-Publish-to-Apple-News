@@ -94,6 +94,12 @@ class Metadata extends Builder {
 			}
 		}
 
+		/**
+		 * Modifies the metadata for a post.
+		 *
+		 * @param array $meta    Apple News metadata for a post.
+		 * @param int   $post_id The ID of the post.
+		 */
 		return apply_filters( 'apple_news_metadata', $meta, $this->content_id() );
 	}
 }

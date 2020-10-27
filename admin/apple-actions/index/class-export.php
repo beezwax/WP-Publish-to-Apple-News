@@ -93,6 +93,11 @@ class Export extends Action {
 
 		global $post;
 
+		/**
+		 * Actions to be fired before the Exporter class is created and returned.
+		 *
+		 * @param int $post_id The ID of the post being exported.
+		 */
 		do_action( 'apple_news_do_fetch_exporter', $this->id );
 
 		/**
@@ -159,22 +164,70 @@ class Export extends Action {
 			}
 		}
 
-		// Filter each of our items before passing into the exporter class.
-		$title     = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
-		$excerpt   = apply_filters( 'apple_news_exporter_excerpt', $excerpt, $post->ID );
+		/**
+		 * Filters the title of an article before it is sent to Apple News.
+		 *
+		 * @param string $title   The title of the post.
+		 * @param int    $post_id The ID of the post.
+		 */
+		$title = apply_filters( 'apple_news_exporter_title', $post->post_title, $post->ID );
+
+		/**
+		 * Filters the excerpt of an article before it is sent to Apple News.
+		 *
+		 * The excerpt is used for the Intro component, if it is active.
+		 *
+		 * @param string $excerpt The excerpt of the post.
+		 * @param int    $post_id The ID of the post.
+		 */
+		$excerpt = apply_filters( 'apple_news_exporter_excerpt', $excerpt, $post->ID );
+
+		/**
+		 * Filters the cover image URL of an article before it is sent to Apple News.
+		 *
+		 * The cover image URL is used for the Cover component, if it is active.
+		 *
+		 * @param string|null $url     The cover image URL for the post.
+		 * @param int         $post_id The ID of the post.
+		 */
 		$cover_url = apply_filters( 'apple_news_exporter_post_thumb', ! empty( $post_thumb['url'] ) ? $post_thumb['url'] : null, $post->ID );
-		$byline    = apply_filters( 'apple_news_exporter_byline', $byline, $post->ID );
-		$content   = apply_filters( 'apple_news_exporter_content', $content, $post->ID );
+
+		/**
+		 * Filters the byline of an article before it is sent to Apple News.
+		 *
+		 * The byline is used for the Byline component, if it is active.
+		 *
+		 * @param string $byline  The byline for the post.
+		 * @param int    $post_id The ID of the post.
+		 */
+		$byline = apply_filters( 'apple_news_exporter_byline', $byline, $post->ID );
+
+		/**
+		 * Filters the HTML of a post after `the_content` filter is called, but
+		 * before the HTML is parsed into Apple News Format.
+		 *
+		 * This filter could be useful to remove content known to be incompatible
+		 * with Apple News, or to add content stored in other areas of the
+		 * database, such as postmeta or custom database tables.
+		 *
+		 * @param string $content The HTML content of the post, after the_content filter has been run.
+		 * @param int    $post_id The ID of the post.
+		 */
+		$content = apply_filters( 'apple_news_exporter_content', $content, $post->ID );
 
 		// Re-apply the cover URL after filtering.
 		if ( ! empty( $cover_url ) ) {
 			$cover_caption = ! empty( $post_thumb['caption'] ) ? $post_thumb['caption'] : '';
 
 			/**
-			 * Filters the cover caption.
+			 * Filters the cover image caption of an article before it is sent to Apple News.
+			 *
+			 * The cover image caption is used for the Cover component, if it is
+			 * active, and if support for cover image captions is turned on in theme
+			 * settings.
 			 *
 			 * @param string $caption The caption to use for the cover image.
-			 * @param int    $post_id The post ID.
+			 * @param int    $post_id The ID of the post.
 			 *
 			 * @since 2.1.0
 			 */
@@ -387,15 +440,33 @@ class Export extends Action {
 	 */
 	private function get_content( $post ) {
 		/**
+		 * Filters the HTML of a post before `the_content` filter is called, and
+		 * before the HTML is parsed into Apple News Format.
+		 *
+		 * This filter could be useful to remove content known to be incompatible
+		 * with Apple News, or to add content stored in other areas of the
+		 * database which should be run through `the_content` filter, such as
+		 * shortcodes stored in postmeta or custom database tables.
+		 *
+		 * @param string $content The post_content for the post, before the_content filter has been run.
+		 * @param int    $post_id The ID of the post.
+		 */
+		$content = apply_filters( 'apple_news_exporter_content_pre', $post->post_content, $post->ID );
+
+		// Replace Brightcove shortcodes and Gutenberg blocks with video tags.
+		$content = $this->format_brightcove( $content );
+
+		/**
 		 * The post_content is not raw HTML, as WordPress editor cleans up
 		 * paragraphs and new lines, so we need to transform the content to
 		 * HTML. We use 'the_content' filter for that.
 		 */
-		$content = apply_filters( 'apple_news_exporter_content_pre', $post->post_content, $post->ID );
-		$content = $this->format_brightcove( $content );
 		$content = apply_filters( 'the_content', $content ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
+
+		// Clean up the HTML a little.
 		$content = $this->remove_tags( $content );
 		$content = $this->remove_entities( $content );
+
 		return $content;
 	}
 
@@ -445,6 +516,15 @@ class Export extends Action {
 				$settings->set( $name, $value );
 			}
 		}
+
+		/**
+		 * Filters the Exporter_Content_Settings object for this article.
+		 *
+		 * Before this filter is called, the Exporter_Content_Settings object is
+		 * initialized and merged with settings stored in postmeta for this post.
+		 *
+		 * @param Apple_Exporter\Exporter_Content_Settings $settings The content settings for this article.
+		 */
 		return apply_filters( 'apple_news_content_settings', $settings );
 	}
 

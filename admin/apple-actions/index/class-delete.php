@@ -72,6 +72,12 @@ class Delete extends API_Action { // phpcs:ignore WordPress.VIP.FileSystemWrites
 		}
 
 		try {
+			/**
+			 * Actions to be taken before an article is deleted via the API.
+			 *
+			 * @param string $remote_id The API ID of the article from Apple's servers.
+			 * @param int    $post_id   The post ID from WordPress.
+			 */
 			do_action( 'apple_news_before_delete', $remote_id, $this->id );
 			$this->get_api()->delete_article( $remote_id );
 
@@ -86,6 +92,12 @@ class Delete extends API_Action { // phpcs:ignore WordPress.VIP.FileSystemWrites
 			// Clear the cache for post status.
 			delete_transient( 'apple_news_post_state_' . $this->id );
 
+			/**
+			 * Actions to be taken after an article is deleted via the API.
+			 *
+			 * @param string $remote_id The API ID of the article from Apple's servers.
+			 * @param int    $post_id   The post ID from WordPress.
+			 */
 			do_action( 'apple_news_after_delete', $remote_id, $this->id );
 		} catch ( \Exception $e ) {
 			return $e->getMessage();
