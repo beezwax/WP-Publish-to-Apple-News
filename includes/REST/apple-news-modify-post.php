@@ -24,6 +24,8 @@ use WP_Error;
  * @return array|WP_Error Response to the request - either data about a successful operation, or error.
  */
 function modify_post( $post_id, $operation ) {
+	// Ensure Apple News is first initialized.
+	\Apple_News::has_uninitialized_error();
 
 	// Ensure there is a post ID provided in the data.
 	if ( empty( $post_id ) ) {

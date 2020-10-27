@@ -16,6 +16,9 @@ namespace Apple_News\REST;
 function get_published_state_response( $data ) {
 	$response = [];
 
+	// Ensure Apple News is first initialized.
+	\Apple_News::has_uninitialized_error();
+
 	if ( ! empty( get_current_user_id() ) ) {
 		$response['publishState'] = \Admin_Apple_News::get_post_status( $data['id'] );
 	}

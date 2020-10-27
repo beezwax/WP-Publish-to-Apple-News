@@ -47,6 +47,8 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 == Changelog ==
 
 = 2.1.1 =
+* Enhancement: Adds checks for plugin initialization before making REST responses.
+* Bugfix: Replaces admin sections error display function.
 * Bugfix: Updates `pluginSidebar` sections default values to prevent save errors in some cases.
 
 = 2.1.0 =
