@@ -550,4 +550,57 @@ class Quote_Test extends Component_TestCase {
 		$this->assertEquals( 'default-pullquote-left', $result['textStyle'] );
 		$this->assertEquals( 'pullquote-layout', $result['layout'] );
 	}
+
+	/**
+	 * Tests a full transformation of a post containing a pullquote.
+	 */
+	public function testFullTransform() {
+		// Create a Gutenberg pullquote.
+		$post_content = <<<HTML
+<!-- wp:pullquote {"mainColor":"accent","textColor":"primary","align":"right","className":"has-background has-accent-background-color is-style-solid-color another-class"} -->
+<figure class="wp-block-pullquote alignright has-background has-accent-background-color is-style-solid-color another-class" id="testing-anchor"><blockquote class="has-text-color has-primary-color"><p>Testing pullquote.</p><cite>Testing citation.</cite></blockquote></figure>
+<!-- /wp:pullquote -->
+HTML;
+
+		// Create a post with the pullquote and get the JSON for it.
+		$post_id = self::factory()->post->create( [ 'post_content' => $post_content ] );
+		$json = $this->get_json_for_post( $post_id );
+
+		// Test the component itself.
+		$this->assertEquals(
+			[
+				'format'    => 'html',
+				'layout'    => 'pullquote-layout',
+				'role'      => 'quote',
+				'text'      => '<p>Testing pullquote.</p><cite>Testing citation.</cite>',
+				'textStyle' => 'default-pullquote-right',
+			],
+			$json['components'][2]['components'][0]
+		);
+
+		// Test the component text style.
+		$this->assertEquals(
+			[
+				'fontName'      => 'AvenirNext-Bold',
+				'fontSize'      => 48,
+				'lineHeight'    => 48,
+				'textAlignment' => 'right',
+				'textColor'     => '#53585f',
+				'textTransform' => 'uppercase',
+				'tracking'      => 0,
+			],
+			$json['componentTextStyles']['default-pullquote-right']
+		);
+
+		// Test the component layout.
+		$this->assertEquals(
+			[
+				'margin' => [
+					'bottom' => 12,
+					'top'    => 12,
+				],
+			],
+			$json['componentLayouts']['pullquote-layout']
+		);
+	}
 }
