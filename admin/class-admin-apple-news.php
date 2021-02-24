@@ -7,7 +7,6 @@
  * @package Apple_News
  */
 
-global $post;
 // Include dependencies.
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-post-sync.php';

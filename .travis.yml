@@ -32,8 +32,10 @@ git:
 matrix:
   fast_finish: true
   include:
-    - php: 7.3
+    - php: 7.4
       env: WP_VERSION=latest PHP_LINT=1 WP_PHPCS=1 WP_JS=1
+    - php: 7.3
+      env: WP_VERSION=latest PHP_LINT=1
     - php: 7.2
       env: WP_VERSION=latest PHP_LINT=1
     - php: 7.1
@@ -42,8 +44,6 @@ matrix:
       env: WP_VERSION=latest PHP_LINT=1
     - php: 5.6
       env: WP_VERSION=latest PHP_LINT=1
-    - php: 7.3
-      env: WP_VERSION=nightly
 
 # Use this to prepare your build for testing.
 # e.g. copy database configurations, environment variables, etc.
