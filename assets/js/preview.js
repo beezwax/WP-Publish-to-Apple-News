@@ -53,7 +53,7 @@
 			$( '.apple-news-preview' ).prepend( // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.prepend
 				$( '<div>' )
 					.addClass( 'font-notice' )
-					.text( appleNewsSettings.fontNotice )
+					.text( appleNewsThemeEdit.fontNotice )
 			);
 		}
 

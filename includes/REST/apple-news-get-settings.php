@@ -14,6 +14,9 @@ namespace Apple_News\REST;
  * @return array updated response.
  */
 function get_settings_response( $data ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
+	// Ensure Apple News is first initialized.
+	\Apple_News::has_uninitialized_error();
+
 	if ( empty( get_current_user_id() ) ) {
 		return [];
 	}

@@ -68,7 +68,11 @@ class Request {
 		$this->debug        = $debug;
 		$this->mime_builder = ! empty( $mime_builder ) ? $mime_builder : new MIME_Builder();
 
-		// Set the default WordPress HTTP API args.
+		/**
+		 * Sets the default arguments for requests of any type.
+		 *
+		 * @param array $args Arguments that will be passed to wp_safe_remote_request.
+		 */
 		$this->default_args = apply_filters(
 			'apple_news_request_args',
 			array(
@@ -287,7 +291,12 @@ class Request {
 		$bundles = array_unique( $bundles );
 		$content = '';
 
-		// Add custom meta for request.
+		/**
+		 * Filters custom metadata for the article before being sent to Apple.
+		 *
+		 * @param array $meta    The Apple News Format metadata to be sent to Apple.
+		 * @param int   $post_id The ID of the post being prepared.
+		 */
 		$meta = apply_filters( 'apple_news_api_post_meta', $meta, $post_id );
 
 		if ( ! empty( $meta['data'] ) && is_array( $meta['data'] ) ) {

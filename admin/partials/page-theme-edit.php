@@ -41,13 +41,39 @@
 				</p>
 				<table class="form-table apple-news">
 					<?php foreach ( $theme->get_groups() as $apple_group ) : ?>
-						<?php do_action( 'apple_news_before_setting_group', $apple_group, false ); ?>
+						<?php
+						/**
+						 * Allows custom HTML to be printed before the start of a setting
+						 * group on the theme edit page.
+						 *
+						 * @param array $group {
+						 *      Information about the setting group.
+						 *
+						 *      @type string $label       The group label.
+						 *      @type string $description Optional. The group description.
+						 *                              If there is no description, then
+						 *                              this property is not set.
+						 *      @type array  $settings    An array of settings keys in this group.
+						 * }
+						 * @param bool $hidden Whether this setting group is hidden or not.
+						 */
+						do_action( 'apple_news_before_setting_group', $apple_group, false );
+						?>
 						<tr>
 							<th scope="row"><?php echo esc_html( $apple_group['label'] ); ?></th>
 							<td>
 								<fieldset>
 									<?php foreach ( $apple_group['settings'] as $apple_setting_name ) : ?>
-										<?php do_action( 'apple_news_before_setting', $apple_setting_name, $theme_options[ $apple_setting_name ] ); ?>
+										<?php
+										/**
+										 * Allows custom HTML to be printed before the start of an
+										 * individual setting on the theme edit page.
+										 *
+										 * @param string $setting_key   The key for the current setting.
+										 * @param mixed  $setting_value The value for the current setting.
+										 */
+										do_action( 'apple_news_before_setting', $apple_setting_name, $theme_options[ $apple_setting_name ] );
+										?>
 										<label class="setting-container">
 											<?php if ( ! empty( $theme_options[ $apple_setting_name ]['label'] ) ) : ?>
 												<span class="label-name">
@@ -67,7 +93,16 @@
 											);
 											?>
 										</label>
-										<?php do_action( 'apple_news_after_setting', $apple_setting_name, $theme_options[ $apple_setting_name ] ); ?>
+										<?php
+										/**
+										 * Allows custom HTML to be printed after the end of an
+										 * individual setting on the theme edit page.
+										 *
+										 * @param string $setting_key   The key for the current setting.
+										 * @param mixed  $setting_value The value for the current setting.
+										 */
+										do_action( 'apple_news_after_setting', $apple_setting_name, $theme_options[ $apple_setting_name ] );
+										?>
 										<br />
 									<?php endforeach; ?>
 
@@ -77,7 +112,24 @@
 								</fieldset>
 							</td>
 						</tr>
-						<?php do_action( 'apple_news_after_setting_group', $apple_group, false ); ?>
+						<?php
+						/**
+						 * Allows custom HTML to be printed after the end of a setting
+						 * group on the theme edit page.
+						 *
+						 * @param array $group {
+						 *      Information about the setting group.
+						 *
+						 *      @type string $label       The group label.
+						 *      @type string $description Optional. The group description.
+						 *                              If there is no description, then
+						 *                              this property is not set.
+						 *      @type array  $settings    An array of settings keys in this group.
+						 * }
+						 * @param bool $hidden Whether this setting group is hidden or not.
+						 */
+						do_action( 'apple_news_after_setting_group', $apple_group, false );
+						?>
 					<?php endforeach; ?>
 				</table>
 			</div>

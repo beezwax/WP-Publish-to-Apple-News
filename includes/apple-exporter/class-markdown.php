@@ -163,7 +163,9 @@ class Markdown {
 		$text = $this->parse_nodes( $node->childNodes );
 
 		/**
-		 * Allows for filtering of the formatted content before return.
+		 * Modifies the URL for a specific hyperlink if for some reason it needed
+		 * to be reformatted for Apple News, such as to add tracking parameters to
+		 * track traffic originating from Apple News.
 		 *
 		 * @since 0.2.0
 		 *

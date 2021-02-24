@@ -97,7 +97,7 @@ class Admin_Apple_Sections extends Apple_News {
 		$sections       = $section_api->get_sections();
 		if ( empty( $sections ) || ! is_array( $sections ) ) {
 			$sections = array();
-			Admin_Apple_News::show_error(
+			Admin_Apple_News::error(
 				__( 'Unable to fetch a list of sections.', 'apple-news' )
 			);
 		}
@@ -322,6 +322,7 @@ class Admin_Apple_Sections extends Apple_News {
 			'apple_news_index',
 			__( 'Apple News Sections', 'apple-news' ),
 			__( 'Sections', 'apple-news' ),
+			/** This filter is documented in admin/class-admin-apple-settings.php */
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->page_name,
 			array( $this, 'page_sections_render' )
@@ -336,6 +337,7 @@ class Admin_Apple_Sections extends Apple_News {
 	public function page_sections_render() {
 
 		// Don't allow access to this page if the user does not have permission.
+		/** This filter is documented in admin/class-admin-apple-settings.php */
 		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
 			wp_die( esc_html__( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}

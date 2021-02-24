@@ -46,8 +46,15 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 
 == Changelog ==
 
+= 2.1.1 =
+* Enhancement: Adds checks for plugin initialization before making REST responses.
+* Bugfix: Replaces admin sections error display function.
+* Bugfix: Updates `pluginSidebar` sections default values to prevent save errors in some cases.
+
 = 2.1.0 =
+* Enhancement: Adds support for Dark Mode, including the ability to customize Dark Mode colors in a theme.
 * Enhancement: The cover component now supports captions. If a featured image is used for the cover, the caption will come from the attachment itself in the database. If the first image from the content is used, the caption will be read from the HTML. There is also a new filter, apple_news_exporter_cover_caption, which allows for filtering of the caption text.
+* Enhancement: Adds a new End of Article module, available via the Customize JSON feature, to allow publishers to insert content at the end of every article, customized per theme.
 * Enhancement: HTML is now allowed in lightbox image captions.
 * Enhancement: Allows configuration of cover images in the sidebar / metabox explicitly, rather than pulling them out of the featured image or main content.
 * Enhancement: Adds support for Brightcove videos via the Brightcove Video Connect plugin for videos added via either the Gutenberg block or the shortcode. Note that this feature will only work if you contact Apple support to link your Brightcove account with your Apple News channel.
@@ -303,7 +310,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Added ability to publish preview articles
 
 = 1.0.8 =
-* Added support for date metadata (https://developer.apple.com/library/ios/documentation/General/Conceptual/Apple_News_Format_Ref/Metadata.html#//apple_ref/doc/uid/TP40015408-CH3-SW1)
+* Added support for date metadata (https://developer.apple.com/documentation/apple_news/metadata)
 * Fixed issue with shortcodes appearing in excerpt metadata
 * Added the ability to alter a component's style property via a filter
 * Refactored plugin settings to save as a single option value

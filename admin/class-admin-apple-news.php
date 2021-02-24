@@ -19,6 +19,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-sections.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-themes.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
+
 // REST Includes.
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-delete.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-published-state.php';
@@ -134,13 +135,17 @@ class Admin_Apple_News extends Apple_News {
 			add_action(
 				'rest_api_init',
 				function() {
-					register_rest_field(
-						'post',
-						'apple_news_notices',
-						[
-							'get_callback' => [ 'Admin_Apple_Notice', 'get_if_allowed' ],
-						]
-					);
+					$post_types = ! empty( self::$settings->post_types ) ? self::$settings->post_types : [];
+
+					foreach ( $post_types as $post_type ) {
+						register_rest_field(
+							$post_type,
+							'apple_news_notices',
+							[
+								'get_callback' => [ 'Admin_Apple_Notice', 'get_if_allowed' ],
+							]
+						);
+					}
 				}
 			);
 
@@ -238,6 +243,18 @@ class Admin_Apple_News extends Apple_News {
 			}
 
 			$cache_expiration = ( 'LIVE' === $state || 'TAKEN_DOWN' === $state ) ? 3600 : 60;
+
+			/**
+			 * Filters the cache lifetime for API responses.
+			 *
+			 * Most responses are cached to avoid repeatedly hitting the API, which
+			 * would slow down your admin dashboard. Different statuses are cached
+			 * for different times since some are more likely to change quickly than
+			 * others.
+			 *
+			 * @param int    $expiration The current cache lifetime.
+			 * @param string $state      The current Apple News API status for the post.
+			 */
 			set_transient( $key, $state, apply_filters( 'apple_news_post_status_cache_expiration', $cache_expiration, $state ) );
 		}
 
