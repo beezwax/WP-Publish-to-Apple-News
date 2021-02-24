@@ -22,12 +22,6 @@ function _manually_load_plugin() {
 	// Set the permalink structure.
 	update_option( 'permalink_structure', '/%postname%' );
 
-	// Set the options.
-	$options = [
-		'post_types' => [ 'post' ],
-	];
-	update_option( 'apple_news_settings', $options );
-
 	// Load the plugin.
 	require dirname( dirname( __FILE__ ) ) . '/apple-news.php';
 }
