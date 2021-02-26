@@ -147,7 +147,7 @@ class Push extends API_Action {
 		// Ensure the post (still) exists. Async operations might result in this function being run against a non-existent post.
 		$post = get_post( $this->id );
 		if ( ! $post ) {
-			throw new \Apple_Actions\Action_Exception( __( 'Could not find post with id ', 'apple-news' ) . $this->id );
+			throw new \Apple_Actions\Action_Exception( __( 'Apple News Error: Could not find post with id ', 'apple-news' ) . $this->id );
 		}
 
 		// Compare checksums to determine whether the article is in sync or not.
@@ -193,7 +193,7 @@ class Push extends API_Action {
 		// Get the article from the API.
 		$result = $this->get_api()->get_article( $apple_id );
 		if ( empty( $result->data->revision ) ) {
-			throw new \Apple_Actions\Action_Exception( __( 'The API returned invalid data for this article since the revision is empty.', 'apple-news' ) );
+			throw new \Apple_Actions\Action_Exception( __( 'The Apple News API returned invalid data for this article since the revision is empty.', 'apple-news' ) );
 		}
 
 		// Update the revision.
@@ -307,7 +307,7 @@ class Push extends API_Action {
 			throw new \Apple_Actions\Action_Exception(
 				sprintf(
 					// Translators: Placeholder is a post ID.
-					__( 'Skipped push of article %d because it is already in sync.', 'apple-news' ),
+					__( 'Skipped push of article %d to Apple News because it is already in sync.', 'apple-news' ),
 					$this->id
 				)
 			);
@@ -365,9 +365,9 @@ class Push extends API_Action {
 			$this->clean_workspace();
 
 			if ( preg_match( '#WRONG_REVISION#', $e->getMessage() ) ) {
-				throw new \Apple_Actions\Action_Exception( __( 'It seems like the article was updated by another call. If the problem persists, try removing and pushing again.', 'apple-news' ) );
+				throw new \Apple_Actions\Action_Exception( __( 'Apple News Error: It seems like the article was updated by another call. If the problem persists, try removing and pushing again.', 'apple-news' ) );
 			} else {
-				throw new \Apple_Actions\Action_Exception( __( 'There has been an error with the API: ', 'apple-news' ) . $e->getMessage() );
+				throw new \Apple_Actions\Action_Exception( __( 'There has been an error with the Apple News API: ', 'apple-news' ) . $e->getMessage() );
 			}
 		}
 
@@ -447,13 +447,13 @@ class Push extends API_Action {
 			if ( 'warn' === $json_alerts ) {
 				$alert_message .= sprintf(
 					// translators: token is a list of errors.
-					__( 'The following JSON errors were detected: %s', 'apple-news' ),
+					__( 'The following JSON errors were detected when publishing to Apple News: %s', 'apple-news' ),
 					$json_errors
 				);
 			} elseif ( 'fail' === $json_alerts ) {
 				$alert_message .= sprintf(
 					// translators: token is a list of errors.
-					__( 'The following JSON errors were detected and prevented publishing: %s', 'apple-news' ),
+					__( 'The following JSON errors were detected and prevented publishing to Apple News: %s', 'apple-news' ),
 					$json_errors
 				);
 			}
