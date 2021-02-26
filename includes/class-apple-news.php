@@ -219,6 +219,24 @@ class Apple_News {
 	}
 
 	/**
+	 * Returns new WP_Error if uninitialized.
+	 *
+	 * @access public
+	 * @return WP_Error error if uninitialized.
+	 */
+	public static function has_uninitialized_error() {
+		if ( ! self::is_initialized() ) {
+			return new WP_Error(
+				'apple_news_bad_operation',
+				__( 'You must enter your API information on the settings page before using Publish to Apple News.', 'apple-news' ),
+				[
+					'status' => 400,
+				]
+			);
+		}
+	}
+
+	/**
 	 * Constructor. Registers action hooks.
 	 *
 	 * @access public

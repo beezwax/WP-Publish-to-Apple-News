@@ -114,7 +114,11 @@ class Component_Factory {
 		self::register_component( 'advertisement', '\\Apple_Exporter\\Components\\Advertisement' );
 		self::register_component( 'end-of-article', '\\Apple_Exporter\\Components\\End_Of_Article' );
 
-		// Allow built-in components and order to be overridden.
+		/**
+		 * Allows you to add custom component classes to the plugin.
+		 *
+		 * @param array $components The list of registered component classes.
+		 */
 		self::$components = apply_filters( 'apple_news_initialize_components', self::$components );
 	}
 
@@ -136,6 +140,15 @@ class Component_Factory {
 	 * @access private
 	 */
 	private static function register_component( $shortname, $classname ) {
+		/**
+		 * Allows you to modify a specific component class before it's registered.
+		 *
+		 * This filter could allow you to replace an existing component class with
+		 * your own custom version.
+		 *
+		 * @param string $classname The PHP class name for the component.
+		 * @param string $shortname The internal name used to refer to this component.
+		 */
 		self::$components[ $shortname ] = apply_filters( 'apple_news_register_component', $classname, $shortname );
 	}
 

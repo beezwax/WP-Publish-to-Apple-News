@@ -189,7 +189,10 @@ class Exporter {
 	 */
 	private function generate_json() {
 		/**
-		 * Allows the exporter language to be filtered.
+		 * Filters the language of the article.
+		 *
+		 * The language is pulled from the WordPress settings using
+		 * `get_bloginfo( 'language' )`.
 		 *
 		 * @since 1.4.0
 		 *
@@ -219,6 +222,17 @@ class Exporter {
 			}
 		}
 
+		/**
+		 * Filters the final article JSON before being sent to Apple News.
+		 *
+		 * One of the most powerful filters available. This allows you to change
+		 * any aspect of the final JSON right before it is sent to Apple News.
+		 * Some sites use this to replace the content with their own custom
+		 * templates.
+		 *
+		 * @param array $json    The PHP array representation of the article JSON before it is encoded into a string.
+		 * @param int   $post_id The ID of the post.
+		 */
 		$json = apply_filters( 'apple_news_generate_json', $json, $this->content_id() );
 
 		// Clean up the data array and convert to JSON format.

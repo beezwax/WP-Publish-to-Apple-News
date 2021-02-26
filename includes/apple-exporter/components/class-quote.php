@@ -313,15 +313,26 @@ class Quote extends Component {
 
 		// Extract text from blockquote HTML.
 		preg_match( $string_match, $html, $matches );
-		// Default to center.  Set to matches[1] if set.
+
+		// Negotiate alignment.
 		$this->text_alignment = 'left';
-		if ( 3 === count( $matches ) && $matches[1] ) {
-			$this->text_alignment = $matches[1];
+		if ( 3 === count( $matches ) && ! empty( $matches[1] ) ) {
+			// The regex is a little greedy, so trim off anything else it found.
+			$parts = explode( ' ', $matches[1] );
+			switch ( $parts[0] ) {
+				case 'center':
+				case 'full':
+				case 'wide':
+					$this->text_alignment = 'center';
+					break;
+				case 'right':
+					$this->text_alignment = 'right';
+					break;
+			}
 		}
-		$this->text_alignment =
-			'wide' === $this->text_alignment || 'full' === $this->text_alignment
-				? 'center' : $this->text_alignment;
-		$text                 = isset( $matches[2] ) ? $matches[2] : $matches[1];
+
+		// Negotiate the text.
+		$text = isset( $matches[2] ) ? $matches[2] : $matches[1];
 
 		// If there is no text for this element, bail.
 		$check = trim( $text );

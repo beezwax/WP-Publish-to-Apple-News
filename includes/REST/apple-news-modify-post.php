@@ -24,6 +24,8 @@ use WP_Error;
  * @return array|WP_Error Response to the request - either data about a successful operation, or error.
  */
 function modify_post( $post_id, $operation ) {
+	// Ensure Apple News is first initialized.
+	\Apple_News::has_uninitialized_error();
 
 	// Ensure there is a post ID provided in the data.
 	if ( empty( $post_id ) ) {
@@ -50,6 +52,7 @@ function modify_post( $post_id, $operation ) {
 
 	// Ensure the user is authorized to make changes to Apple News posts.
 	if ( ! current_user_can(
+		/** This filter is documented in admin/class-admin-apple-post-sync.php */
 		apply_filters(
 			'apple_news_publish_capability',
 			Apple_News::get_capability_for_post_type( 'publish_posts', $post->post_type )

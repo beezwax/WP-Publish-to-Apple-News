@@ -211,7 +211,6 @@ HTML
 	public function test_empty_content() {
 
 		// Setup.
-		$this->settings->html_support = 'no';
 		$html = '<p><a href="https://www.apple.com/">&nbsp;</a></p>';
 		$component = new Body(
 			$html,
@@ -226,9 +225,6 @@ HTML
 			array(),
 			$component->to_array()
 		);
-
-		// Teardown.
-		$this->settings->html_support = 'yes';
 	}
 
 	/**

@@ -85,7 +85,7 @@ class Sidebar extends React.PureComponent {
     modified: 0,
     publishState: '',
     sections: [],
-    selectedSectionsPrev: null,
+    selectedSectionsPrev: '',
     settings: {},
     userCanPublish: false,
   };
@@ -310,14 +310,14 @@ class Sidebar extends React.PureComponent {
     const selectedSectionsArray = safeJsonParseArray(selectedSections);
 
     const selectedArrayDefault = Array.isArray(selectedSectionsArray)
-      ? JSON.stringify([...selectedSectionsArray, name]) : null;
+      ? JSON.stringify([...selectedSectionsArray, name]) : '';
 
     const arrayFilter = selectedSectionsArray.filter(
       (section) => section !== name
     );
 
     const selectedArrayFilter = 0 < arrayFilter.length
-      ? JSON.stringify(arrayFilter) : null;
+      ? JSON.stringify(arrayFilter) : '';
 
     onUpdate(
       'apple_news_sections',
@@ -402,11 +402,11 @@ class Sidebar extends React.PureComponent {
                     });
                     if (checked) {
                       this.setState({
-                        selectedSectionsPrev: selectedSections || null,
+                        selectedSectionsPrev: selectedSections || [],
                       });
                       onUpdate(
                         'apple_news_sections',
-                        null
+                        ''
                       );
                     } else {
                       onUpdate(
@@ -414,7 +414,7 @@ class Sidebar extends React.PureComponent {
                         selectedSectionsPrev
                       );
                       this.setState({
-                        selectedSectionsPrev: null,
+                        selectedSectionsPrev: [],
                       });
                     }
                   }

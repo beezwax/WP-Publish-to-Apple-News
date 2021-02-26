@@ -70,10 +70,22 @@ class Workspace {
 	 * @access public
 	 */
 	public function clean_up() {
+		/**
+		 * Actions to be taken before postmeta is cleaned up for a post.
+		 *
+		 * Cleaned postmeta includes the generated JSON, the bundles, and errors.
+		 */
 		do_action( 'apple_news_before_clean_up' );
+
 		delete_post_meta( $this->content_id, self::JSON_META_KEY );
 		delete_post_meta( $this->content_id, self::BUNDLE_META_KEY );
 		delete_post_meta( $this->content_id, self::ERRORS_META_KEY );
+
+		/**
+		 * Actions to be taken after postmeta is cleaned up for a post.
+		 *
+		 * Cleaned postmeta includes the generated JSON, the bundles, and errors.
+		 */
 		do_action( 'apple_news_after_clean_up' );
 	}
 
@@ -86,6 +98,7 @@ class Workspace {
 	 * @access public
 	 */
 	public function bundle_source( $filename, $source ) {
+		/** This filter is documented in includes/apple-exporter/builders/class-builder.php */
 		add_post_meta( $this->content_id, self::BUNDLE_META_KEY, esc_url_raw( apply_filters( 'apple_news_bundle_source', $source, $filename, $this->content_id ) ) );
 	}
 
@@ -97,6 +110,13 @@ class Workspace {
 	 * @access public
 	 */
 	public function write_json( $content ) {
+		/**
+		 * Similar to `apple_news_generate_json`, but modifies the JSON before
+		 * it's written to the workspace.
+		 *
+		 * @param string $json    The JSON string, before it is written to the workspace.
+		 * @param int    $post_id The post ID.
+		 */
 		$json = apply_filters( 'apple_news_write_json', $content, $this->content_id );
 
 		/**
@@ -125,6 +145,14 @@ class Workspace {
 		if ( ! empty( $json ) ) {
 			$json = wp_json_encode( $json );
 		}
+
+		/**
+		 * Similar to `apple_news_generate_json`, but modifies the JSON as it's
+		 * retrieved from the workspace.
+		 *
+		 * @param string $json    The JSON string, after it is retrieved from the workspace.
+		 * @param int    $post_id The post ID.
+		 */
 		return apply_filters( 'apple_news_get_json', $json, $this->content_id );
 	}
 
@@ -136,6 +164,13 @@ class Workspace {
 	 * @return array The bundles configured for this post.
 	 */
 	public function get_bundles() {
+		/**
+		 * Modifies the list of bundled assets. This is an array of images that
+		 * were located in the post and need to be sent to Apple News.
+		 *
+		 * @param array $bundles The bundles for this post.
+		 * @param int   $post_id The post ID.
+		 */
 		return apply_filters( 'apple_news_get_bundles', get_post_meta( $this->content_id, self::BUNDLE_META_KEY ), $this->content_id );
 	}
 
@@ -176,6 +211,16 @@ class Workspace {
 	 * @return array An array of errors for this post.
 	 */
 	public function get_errors() {
+		/**
+		 * Modifies the list of errors encountered during publishing.
+		 *
+		 * This would allow you to manipulate this list prior to them being used
+		 * for validation against your alert settings and before they are displayed
+		 * as notices in the dashboard.
+		 *
+		 * @param array $errors  Errors for this post.
+		 * @param int   $post_id The post ID.
+		 */
 		return apply_filters( 'apple_news_get_errors', get_post_meta( $this->content_id, self::ERRORS_META_KEY ), $this->content_id );
 	}
 }
