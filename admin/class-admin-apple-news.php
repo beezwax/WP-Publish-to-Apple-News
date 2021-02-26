@@ -148,6 +148,16 @@ class Admin_Apple_News extends Apple_News {
 					}
 				}
 			);
+
+			// Loop over registered post types and add a callback for removing protected Apple News meta.
+			if ( ! empty( self::$settings->post_types ) && is_array( self::$settings->post_types ) ) {
+				foreach ( self::$settings->post_types as $post_type ) {
+					add_action(
+						'rest_insert_' . $post_type,
+						array( $this, 'action_rest_insert_post' )
+					);
+				}
+			}
 		}
 	}
 
@@ -167,6 +177,35 @@ class Admin_Apple_News extends Apple_News {
 				. esc_html( $message )
 				. '</p></div>';
 		}
+	}
+
+	/**
+	 * A callback function for the rest_insert_{$this->post_type} action hook.
+	 */
+	public function action_rest_insert_post() {
+		global $wp_rest_server;
+
+		// Ensure there is a last request. (There should be, at this point).
+		if ( empty( $wp_rest_server->last_request ) ) {
+			return;
+		}
+
+		// Try to get the meta param.
+		$meta = $wp_rest_server->last_request->get_param( 'meta' );
+		if ( empty( $meta ) || ! is_array( $meta ) ) {
+			return;
+		}
+
+		// Re-construct meta, removing protected keys.
+		$new_meta = [];
+		foreach ( $meta as $key => $value ) {
+			if ( false === strpos( $key, 'apple_news_api_' ) ) {
+				$new_meta[ $key ] = $value;
+			}
+		}
+
+		// Overwrite the meta property with the new value.
+		$wp_rest_server->last_request->set_param( 'meta', $new_meta );
 	}
 
 	/**

@@ -62,7 +62,7 @@ class Components extends Builder {
 		 * could change depending on the above body processing, such as if a
 		 * thumbnail was used from the body.
 		 */
-		$components = array_merge( $this->meta_components(), $components );
+		$components = array_values( array_filter( array_merge( $this->meta_components(), $components ) ) );
 
 		// Group body components to improve text flow at all orientations.
 		$components = $this->group_body_components( $components );
