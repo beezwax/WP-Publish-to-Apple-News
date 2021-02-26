@@ -351,7 +351,7 @@ class Admin_Apple_Notice {
 	private static function get_user_meta( $user_id ) {
 
 		// Negotiate meta value.
-		if ( defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV && function_exists( 'get_user_attribute' ) ) {
+		if ( defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV && ! defined( 'VIP_GO_APP_ENVIRONMENT' ) && function_exists( 'get_user_attribute' ) ) {
 			$meta_value = get_user_attribute( $user_id, self::KEY );
 		} else {
 			$meta_value = get_user_meta( $user_id, self::KEY, true ); // phpcs:ignore WordPress.VIP.RestrictedFunctions.user_meta_get_user_meta

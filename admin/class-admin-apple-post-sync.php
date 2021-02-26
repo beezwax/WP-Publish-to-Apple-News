@@ -47,8 +47,12 @@ class Admin_Apple_Post_Sync {
 		if ( 'yes' === $this->settings->get( 'api_autosync' )
 			|| 'yes' === $this->settings->get( 'api_autosync_update' )
 		) {
-			// This needs to happen after meta boxes save.
-			add_action( 'save_post', [ $this, 'do_publish' ], 99, 2 );
+			// Fork for new behavior in WP 5.6 vs. old behavior.
+			if ( function_exists( 'wp_after_insert_post' ) ) {
+				add_action( 'wp_after_insert_post', [ $this, 'do_publish' ], 10, 2 );
+			} else {
+				add_action( 'save_post', [ $this, 'do_publish' ], 99, 2 );
+			}
 		}
 
 		// Register delete hook if needed.
