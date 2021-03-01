@@ -147,7 +147,7 @@ class Push extends API_Action {
 		// Ensure the post (still) exists. Async operations might result in this function being run against a non-existent post.
 		$post = get_post( $this->id );
 		if ( ! $post ) {
-			throw new \Apple_Actions\Action_Exception( __( 'Could not find post with id ', 'apple-news' ) . $this->id );
+			throw new \Apple_Actions\Action_Exception( __( 'Apple News Error: Could not find post with id ', 'apple-news' ) . $this->id );
 		}
 
 		// Compare checksums to determine whether the article is in sync or not.
@@ -159,6 +159,11 @@ class Push extends API_Action {
 
 		/**
 		 * Allows for custom logic to determine if a post is in sync or not.
+		 *
+		 * By default, the plugin simply compares the last modified time to the
+		 * last time it was pushed to Apple News. If you want to apply custom
+		 * logic, you can do that by modifying `$in_sync`. The most common use case
+		 * is to not update posts based on custom criteria.
 		 *
 		 * @since 2.0.2 Added the $post_id, $json, $meta, and $bundles parameters.
 		 *
@@ -188,7 +193,7 @@ class Push extends API_Action {
 		// Get the article from the API.
 		$result = $this->get_api()->get_article( $apple_id );
 		if ( empty( $result->data->revision ) ) {
-			throw new \Apple_Actions\Action_Exception( __( 'The API returned invalid data for this article since the revision is empty.', 'apple-news' ) );
+			throw new \Apple_Actions\Action_Exception( __( 'The Apple News API returned invalid data for this article since the revision is empty.', 'apple-news' ) );
 		}
 
 		// Update the revision.
@@ -208,9 +213,15 @@ class Push extends API_Action {
 		}
 
 		/**
-		 * Should the post be skipped and not pushed to apple news.
+		 * Filters whether the post should be skipped and not pushed to Apple News.
 		 *
-		 * Default is false, but filterable.
+		 * Allows you to stop publication of a post to Apple News based on your own
+		 * custom logic. A common use case is to not publish posts with a certain
+		 * category or tag. By default this is always `false` as all posts are
+		 * published once they reach this step.
+		 *
+		 * @param bool $skip    Whether the post should be skipped. Defaults to `false`.
+		 * @param int  $post_id The ID of the post.
 		 */
 		if ( apply_filters( 'apple_news_skip_push', false, $this->id ) ) {
 			throw new \Apple_Actions\Action_Exception(
@@ -251,6 +262,11 @@ class Push extends API_Action {
 		$remote_id = get_post_meta( $this->id, 'apple_news_api_id', true );
 		$result    = null;
 
+		/**
+		 * Actions to be taken before the article is pushed to Apple News.
+		 *
+		 * @param int $post_id The ID of the post.
+		 */
 		do_action( 'apple_news_before_push', $this->id );
 
 		// Populate optional metadata.
@@ -291,7 +307,7 @@ class Push extends API_Action {
 			throw new \Apple_Actions\Action_Exception(
 				sprintf(
 					// Translators: Placeholder is a post ID.
-					__( 'Skipped push of article %d because it is already in sync.', 'apple-news' ),
+					__( 'Skipped push of article %d to Apple News because it is already in sync.', 'apple-news' ),
 					$this->id
 				)
 			);
@@ -331,6 +347,12 @@ class Push extends API_Action {
 			// Update the checksum for the article JSON version.
 			update_post_meta( $this->id, 'apple_news_article_checksum', $this->generate_checksum( $json, $meta, $bundles ) );
 
+			/**
+			 * Actions to be taken after an article was pushed to Apple News.
+			 *
+			 * @param int    $post_id The ID of the post.
+			 * @param object $result  The JSON returned by the Apple News API.
+			 */
 			do_action( 'apple_news_after_push', $this->id, $result );
 		} catch ( \Apple_Push_API\Request\Request_Exception $e ) {
 
@@ -343,9 +365,9 @@ class Push extends API_Action {
 			$this->clean_workspace();
 
 			if ( preg_match( '#WRONG_REVISION#', $e->getMessage() ) ) {
-				throw new \Apple_Actions\Action_Exception( __( 'It seems like the article was updated by another call. If the problem persists, try removing and pushing again.', 'apple-news' ) );
+				throw new \Apple_Actions\Action_Exception( __( 'Apple News Error: It seems like the article was updated by another call. If the problem persists, try removing and pushing again.', 'apple-news' ) );
 			} else {
-				throw new \Apple_Actions\Action_Exception( __( 'There has been an error with the API: ', 'apple-news' ) . $e->getMessage() );
+				throw new \Apple_Actions\Action_Exception( __( 'There has been an error with the Apple News API: ', 'apple-news' ) . $e->getMessage() );
 			}
 		}
 
@@ -425,13 +447,13 @@ class Push extends API_Action {
 			if ( 'warn' === $json_alerts ) {
 				$alert_message .= sprintf(
 					// translators: token is a list of errors.
-					__( 'The following JSON errors were detected: %s', 'apple-news' ),
+					__( 'The following JSON errors were detected when publishing to Apple News: %s', 'apple-news' ),
 					$json_errors
 				);
 			} elseif ( 'fail' === $json_alerts ) {
 				$alert_message .= sprintf(
 					// translators: token is a list of errors.
-					__( 'The following JSON errors were detected and prevented publishing: %s', 'apple-news' ),
+					__( 'The following JSON errors were detected and prevented publishing to Apple News: %s', 'apple-news' ),
 					$json_errors
 				);
 			}

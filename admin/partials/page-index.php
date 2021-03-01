@@ -25,7 +25,16 @@ $apple_current_screen = get_current_screen(); ?>
 		</div>
 	<?php else : ?>
 		<form method="get">
-			<?php do_action( 'apple_news_before_index_table' ); ?>
+			<?php
+			/**
+			 * Allows for custom HTML to be printed before the article list table.
+			 *
+			 * This is called the "index table" because it is the table that is
+			 * printed on the main (or "index") page of the plugin, which is accessed
+			 * by clicking on Apple News in the WordPress sidebar.
+			 */
+			do_action( 'apple_news_before_index_table' );
+			?>
 			<?php if ( ! empty( $apple_current_screen->parent_base ) ) : ?>
 			<input type="hidden" name="page" value="<?php echo esc_attr( $apple_current_screen->parent_base ); ?>">
 			<?php endif; ?>
@@ -33,7 +42,16 @@ $apple_current_screen = get_current_screen(); ?>
 				$table->search_box( __( 'Search', 'apple-news' ), 'apple-news-search' );
 				$table->display();
 			?>
-			<?php do_action( 'apple_news_after_index_table' ); ?>
+			<?php
+			/**
+			 * Allows for custom HTML to be printed after the article list table.
+			 *
+			 * This is called the "index table" because it is the table that is
+			 * printed on the main (or "index") page of the plugin, which is accessed
+			 * by clicking on Apple News in the WordPress sidebar.
+			 */
+			do_action( 'apple_news_after_index_table' );
+			?>
 		</form>
 	<?php endif; ?>
 </div>

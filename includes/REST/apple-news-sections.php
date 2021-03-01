@@ -13,6 +13,9 @@ namespace Apple_News\REST;
  * @return array An array of information about sections.
  */
 function get_sections_response() {
+	// Ensure Apple News is first initialized.
+	\Apple_News::has_uninitialized_error();
+
 	$sections = \Admin_Apple_Sections::get_sections();
 	$response = [];
 

@@ -7,7 +7,6 @@
  * @package Apple_News
  */
 
-global $post;
 // Include dependencies.
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-settings.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-post-sync.php';
@@ -20,6 +19,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-sections.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-themes.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
+
 // REST Includes.
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-delete.php';
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-get-published-state.php';
@@ -135,15 +135,29 @@ class Admin_Apple_News extends Apple_News {
 			add_action(
 				'rest_api_init',
 				function() {
-					register_rest_field(
-						'post',
-						'apple_news_notices',
-						[
-							'get_callback' => [ 'Admin_Apple_Notice', 'get_if_allowed' ],
-						]
-					);
+					$post_types = ! empty( self::$settings->post_types ) ? self::$settings->post_types : [];
+
+					foreach ( $post_types as $post_type ) {
+						register_rest_field(
+							$post_type,
+							'apple_news_notices',
+							[
+								'get_callback' => [ 'Admin_Apple_Notice', 'get_if_allowed' ],
+							]
+						);
+					}
 				}
 			);
+
+			// Loop over registered post types and add a callback for removing protected Apple News meta.
+			if ( ! empty( self::$settings->post_types ) && is_array( self::$settings->post_types ) ) {
+				foreach ( self::$settings->post_types as $post_type ) {
+					add_action(
+						'rest_insert_' . $post_type,
+						array( $this, 'action_rest_insert_post' )
+					);
+				}
+			}
 		}
 	}
 
@@ -163,6 +177,35 @@ class Admin_Apple_News extends Apple_News {
 				. esc_html( $message )
 				. '</p></div>';
 		}
+	}
+
+	/**
+	 * A callback function for the rest_insert_{$this->post_type} action hook.
+	 */
+	public function action_rest_insert_post() {
+		global $wp_rest_server;
+
+		// Ensure there is a last request. (There should be, at this point).
+		if ( empty( $wp_rest_server->last_request ) ) {
+			return;
+		}
+
+		// Try to get the meta param.
+		$meta = $wp_rest_server->last_request->get_param( 'meta' );
+		if ( empty( $meta ) || ! is_array( $meta ) ) {
+			return;
+		}
+
+		// Re-construct meta, removing protected keys.
+		$new_meta = [];
+		foreach ( $meta as $key => $value ) {
+			if ( false === strpos( $key, 'apple_news_api_' ) ) {
+				$new_meta[ $key ] = $value;
+			}
+		}
+
+		// Overwrite the meta property with the new value.
+		$wp_rest_server->last_request->set_param( 'meta', $new_meta );
 	}
 
 	/**
@@ -200,6 +243,18 @@ class Admin_Apple_News extends Apple_News {
 			}
 
 			$cache_expiration = ( 'LIVE' === $state || 'TAKEN_DOWN' === $state ) ? 3600 : 60;
+
+			/**
+			 * Filters the cache lifetime for API responses.
+			 *
+			 * Most responses are cached to avoid repeatedly hitting the API, which
+			 * would slow down your admin dashboard. Different statuses are cached
+			 * for different times since some are more likely to change quickly than
+			 * others.
+			 *
+			 * @param int    $expiration The current cache lifetime.
+			 * @param string $state      The current Apple News API status for the post.
+			 */
 			set_transient( $key, $state, apply_filters( 'apple_news_post_status_cache_expiration', $cache_expiration, $state ) );
 		}
 

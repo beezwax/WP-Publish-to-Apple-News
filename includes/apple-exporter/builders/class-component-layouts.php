@@ -63,6 +63,11 @@ class Component_Layouts extends Builder {
 	 * @access protected
 	 */
 	protected function build() {
+		/**
+		 * Modifies available component layouts.
+		 *
+		 * @param array $layouts Component layouts.
+		 */
 		return apply_filters( 'apple_news_component_layouts', $this->layouts );
 	}
 

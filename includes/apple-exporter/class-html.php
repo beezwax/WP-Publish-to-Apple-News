@@ -33,6 +33,7 @@ class HTML {
 		'blockquote' => array(),
 		'br'         => array(),
 		'caption'    => array(),
+		'cite'       => array(),
 		'code'       => array(),
 		'del'        => array(),
 		'em'         => array(),

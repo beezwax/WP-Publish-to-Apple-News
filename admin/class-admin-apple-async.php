@@ -57,12 +57,15 @@ class Admin_Apple_Async extends Apple_News {
 	 */
 	public function async_push( $post_id, $user_id ) {
 		/**
-		 * This hook could be used for an ini_set to increase max execution time
-		 * for asynchronous publishing to handle large push requests.
-		 * Since some hosts wouldn't support it, the code isn't added directly here.
+		 * Optional actions to be taken before an async push starts.
 		 *
-		 * On WordPress VIP this isn't necessary since the plugin
-		 * will automatically use the jobs system which can handle requests up to 12 hours.
+		 * This hook could be used for an ini_set to increase max execution time
+		 * for asynchronous publishing to handle large push requests. Since some
+		 * hosts wouldn't support it, the code isn't added directly here.
+		 *
+		 * On WordPress VIP this isn't necessary since the plugin will
+		 * automatically use the jobs system which can handle requests up to 12
+		 * hours.
 		 */
 		do_action( 'apple_news_before_async_push' );
 
@@ -95,6 +98,12 @@ class Admin_Apple_Async extends Apple_News {
 			Admin_Apple_Notice::error( $e->getMessage(), $user_id );
 		}
 
+		/**
+		 * Optional actions to be taken after an async push completes.
+		 *
+		 * This hook could be used to undo changes that were made in the
+		 * apple_news_before_async_push action.
+		 */
 		do_action( 'apple_news_after_async_push' );
 	}
 

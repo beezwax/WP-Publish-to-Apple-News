@@ -502,7 +502,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 		$notices = get_user_meta( $user_id, 'apple_news_notice', true );
 		$notice_messages = wp_list_pluck( $notices, 'message' );
 		$this->assertTrue( in_array(
-			'The following JSON errors were detected: Test JSON error.',
+			'The following JSON errors were detected when publishing to Apple News: Test JSON error.',
 			$notice_messages,
 			true
 		) );
@@ -551,7 +551,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 		try {
 			$action->perform();
 		} catch ( Action_Exception $e ) {
-			$this->assertEquals( 'The following JSON errors were detected and prevented publishing: Test JSON error.', $e->getMessage() );
+			$this->assertEquals( 'The following JSON errors were detected and prevented publishing to Apple News: Test JSON error.', $e->getMessage() );
 
 			// The post was not sent to Apple News
 			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_id', true ) );
@@ -603,7 +603,7 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 			$action->perform();
 		} catch ( Action_Exception $e ) {
 			$this->assertEquals(
-				sprintf( 'Skipped push of article %d because it is already in sync.', $post_id ),
+				sprintf( 'Skipped push of article %d to Apple News because it is already in sync.', $post_id ),
 				$e->getMessage()
 			);
 		}

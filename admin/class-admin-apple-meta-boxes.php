@@ -258,7 +258,26 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			__( 'Apple News', 'apple-news' ),
 			array( $this, 'publish_meta_box' ),
 			$post->post_type,
+			/**
+			 * Changes the context (i.e. column) where the Apple News meta box
+			 * appears by default on the post edit screen. Defaults to 'side'.
+			 *
+			 * For proper usage, please read the documentation on add_meta_box at
+			 * https://developer.wordpress.org/reference/functions/add_meta_box/.
+			 *
+			 * @param string $context The context where the meta box should display. Defaults to 'side'.
+			 */
 			apply_filters( 'apple_news_publish_meta_box_context', 'side' ),
+			/**
+			 * Changes the priority (i.e. vertical location) where the Apple News
+			 * meta box appears by default on the post edit screen. Defaults to
+			 * 'high'.
+			 *
+			 * For proper usage, please read the documentation on add_meta_box at
+			 * https://developer.wordpress.org/reference/functions/add_meta_box/.
+			 *
+			 * @param string $priority The priority of the meta box. Defaults to 'high'.
+			 */
 			apply_filters( 'apple_news_publish_meta_box_priority', 'high' )
 		);
 	}

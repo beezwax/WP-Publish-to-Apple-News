@@ -47,8 +47,12 @@ class Admin_Apple_Post_Sync {
 		if ( 'yes' === $this->settings->get( 'api_autosync' )
 			|| 'yes' === $this->settings->get( 'api_autosync_update' )
 		) {
-			// This needs to happen after meta boxes save.
-			add_action( 'save_post', [ $this, 'do_publish' ], 99, 2 );
+			// Fork for new behavior in WP 5.6 vs. old behavior.
+			if ( function_exists( 'wp_after_insert_post' ) ) {
+				add_action( 'wp_after_insert_post', [ $this, 'do_publish' ], 10, 2 );
+			} else {
+				add_action( 'save_post', [ $this, 'do_publish' ], 99, 2 );
+			}
 		}
 
 		// Register delete hook if needed.
@@ -68,8 +72,16 @@ class Admin_Apple_Post_Sync {
 	public function do_publish( $id, $post ) {
 		if ( 'publish' !== $post->post_status
 			|| ! in_array( $post->post_type, $this->settings->post_types, true )
-			|| ( ! current_user_can( apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $post->post_type ) ) )
-				&& ! ( defined( 'DOING_CRON' ) && DOING_CRON ) )
+			|| (
+				! current_user_can(
+					/**
+					 * Filters the publish capability required to publish posts to Apple News.
+					 *
+					 * @param string $capability The capability required to publish posts to Apple News. Defaults to 'publish_posts', or the equivalent for the post type.
+					 */
+					apply_filters( 'apple_news_publish_capability', Apple_News::get_capability_for_post_type( 'publish_posts', $post->post_type ) )
+				) && ! ( defined( 'DOING_CRON' ) && DOING_CRON )
+			)
 		) {
 			return;
 		}
@@ -120,7 +132,14 @@ class Admin_Apple_Post_Sync {
 	public function do_delete( $id ) {
 		$post = get_post( $id );
 		if ( empty( $post->post_type )
-			|| ! current_user_can( apply_filters( 'apple_news_delete_capability', Apple_News::get_capability_for_post_type( 'delete_posts', $post->post_type ) ) )
+			|| ! current_user_can(
+				/**
+				 * Filters the delete capability required to delete posts from Apple News.
+				 *
+				 * @param string $capability The capability required to delete posts from Apple News. Defaults to 'delete_posts', or the equivalent for the post type.
+				 */
+				apply_filters( 'apple_news_delete_capability', Apple_News::get_capability_for_post_type( 'delete_posts', $post->post_type ) )
+			)
 		) {
 			return;
 		}

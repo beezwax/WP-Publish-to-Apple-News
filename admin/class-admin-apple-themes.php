@@ -134,6 +134,7 @@ class Admin_Apple_Themes extends Apple_News {
 
 		// Add a description, if set.
 		if ( ! empty( $option['description'] ) ) {
+			/** This filter is documented in admin/settings/class-admin-apple-settings-section.php */
 			$field .= apply_filters(
 				'apple_news_field_description_output_html',
 				'<br/><i>' . $option['description'] . '</i>',
@@ -273,6 +274,7 @@ class Admin_Apple_Themes extends Apple_News {
 		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
 
 		// Ensure the user has permission to load this screen.
+		/** This filter is documented in admin/class-admin-apple-settings.php */
 		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
 			wp_die( esc_html__( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}
@@ -310,6 +312,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 * @access public
 	 */
 	public function page_themes_render() {
+		/** This filter is documented in admin/class-admin-apple-settings.php */
 		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
 			wp_die( esc_html__( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}
@@ -452,6 +455,7 @@ class Admin_Apple_Themes extends Apple_News {
 			'apple_news_index',
 			__( 'Apple News Themes', 'apple-news' ),
 			__( 'Themes', 'apple-news' ),
+			/** This filter is documented in admin/class-admin-apple-settings.php */
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->theme_page_name,
 			array( $this, 'page_themes_render' )
@@ -462,6 +466,7 @@ class Admin_Apple_Themes extends Apple_News {
 			null,
 			__( 'Apple News Edit Theme', 'apple-news' ),
 			__( 'Edit Theme', 'apple-news' ),
+			/** This filter is documented in admin/class-admin-apple-settings.php */
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->theme_edit_page_name,
 			array( $this, 'page_theme_edit_render' )
