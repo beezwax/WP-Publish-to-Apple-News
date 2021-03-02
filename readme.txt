@@ -5,7 +5,7 @@ Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 5.6.2
 Requires PHP: 5.6
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,10 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.1.2 =
+* Bugfix: Fixed an error that would occur if sections could not be fetched from the API, where the function being called to handle the error didn't exist.
+* Bugfix: Removed unnecessary argument to `libxml_clear_errors` which was causing an error in PHP 8.
 
 = 2.1.1 =
 * Enhancement: Clarifies source of admin messages coming from the plugin to ensure that they say "Apple News."

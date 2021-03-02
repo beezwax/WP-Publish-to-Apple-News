@@ -97,7 +97,7 @@ class Admin_Apple_Sections extends Apple_News {
 		$sections       = $section_api->get_sections();
 		if ( empty( $sections ) || ! is_array( $sections ) ) {
 			$sections = array();
-			Admin_Apple_News::error(
+			Admin_Apple_Notice::error(
 				__( 'Unable to fetch a list of sections.', 'apple-news' )
 			);
 		}
