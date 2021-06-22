@@ -121,7 +121,7 @@ class Admin_Apple_Sections extends Apple_News {
 
 		// Try to load sections from postmeta.
 		$meta_value = get_post_meta( $post_id, 'apple_news_sections', true );
-		if ( is_array( $meta_value ) ) {
+		if ( ! empty( $meta_value ) && is_array( $meta_value ) ) {
 			return $meta_value;
 		}
 
