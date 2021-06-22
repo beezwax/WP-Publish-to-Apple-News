@@ -226,42 +226,74 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	/**
 	 * Tests mapping taxonomy terms to Apple News sections.
 	 */
-	public function testSectionMapping() {
+	public function test_section_mapping() {
 
 		// Create a post.
 		$post_id = self::factory()->post->create();
 
 		// Create a term and add it to the post.
-		$term_id = self::factory()->term->create( array(
-			'taxonomy' => 'category',
-			'name' => 'news',
-		) );
-		wp_set_post_terms( $post_id, array( $term_id ), 'category' );
+		$term_id = self::factory()->term->create(
+			[
+				'name'     => 'news',
+				'taxonomy' => 'category',
+			]
+		);
+		wp_set_post_terms( $post_id, [ $term_id ], 'category' );
 
 		// Create a taxonomy map.
-		update_option( \Admin_Apple_Sections::TAXONOMY_MAPPING_KEY, array(
-			'abcdef01-2345-6789-abcd-ef012356789a' => array( $term_id ),
-		) );
+		update_option(
+			\Admin_Apple_Sections::TAXONOMY_MAPPING_KEY,
+			[
+				'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee' => [],
+				'abcdef01-2345-6789-abcd-ef0123567890' => [ $term_id ],
+				'bcdef012-3456-7890-abcd-ef0123567890' => [],
+			]
+		);
 
 		// Cache as a transient to bypass the API call.
-		$self = 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a';
 		set_transient(
 			'apple_news_sections',
-			array(
-				(object) array(
-					'createdAt' => '2017-01-01T00:00:00Z',
-					'id' => 'abcdef01-2345-6789-abcd-ef012356789a',
-					'isDefault' => true,
-					'links' => (object) array(
-						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
-						'self' => $self,
-					),
+			[
+				(object) [
+					'createdAt'  => '2017-01-01T00:00:00Z',
+					'id'         => 'aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+					'isDefault'  => true,
+					'links'      => (object) [
+						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
+						'self'    => 'https://news-api.apple.com/channels/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee',
+					],
 					'modifiedAt' => '2017-01-01T00:00:00Z',
-					'name' => 'Main',
-					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
-					'type' => 'section',
-				),
-			)
+					'name'       => 'Main',
+					'shareUrl'   => 'https://apple.news/AAAAAAAAAA-BBBBBBBBBBBB',
+					'type'       => 'section',
+				],
+				(object) [
+					'createdAt'  => '2017-01-01T00:00:00Z',
+					'id'         => 'abcdef01-2345-6789-abcd-ef0123567890',
+					'isDefault'  => false,
+					'links'      => (object) [
+						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
+						'self'    => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
+					],
+					'modifiedAt' => '2017-01-01T00:00:00Z',
+					'name'       => 'News',
+					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
+					'type'       => 'section',
+				],
+				(object) [
+					'createdAt'  => '2017-01-01T00:00:00Z',
+					'id'         => 'bcdef012-3456-7890-abcd-ef0123567890',
+					'isDefault'  => false,
+					'links'      => (object) [
+						'channel' => 'https://news-api.apple.com/channels/bcdef012-3456-7890-abcd-ef012356789a',
+						'self'    => 'https://news-api.apple.com/channels/bcdef012-3456-7890-abcd-ef0123567890',
+					],
+					'modifiedAt' => '2017-01-01T00:00:00Z',
+					'name'       => 'Opinion',
+					'shareUrl'   => 'https://apple.news/bCdEfGhIjK-lMnOpQrStUvW',
+					'type'       => 'section',
+				],
+			]
 		);
 
 		// Get sections for the post.
@@ -270,7 +302,25 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		// Check that the correct mapping was returned.
 		$this->assertEquals(
 			$sections,
-			array( $self )
+			[ 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890' ]
+		);
+
+		// Add an empty value for postmeta for manual section mapping.
+		add_post_meta( $post_id, 'apple_news_sections', [] );
+
+		// Ensure that the automatic section mapping works correctly.
+		$sections = \Admin_Apple_Sections::get_sections_for_post( $post_id );
+		$this->assertEquals(
+			$sections,
+			[ 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890' ]
+		);
+
+		// Set a manual mapping and ensure that it works properly.
+		update_post_meta( $post_id, 'apple_news_sections', [ 'https://news-api.apple.com/channels/bcdef012-3456-7890-abcd-ef0123567890' ] );
+		$sections = \Admin_Apple_Sections::get_sections_for_post( $post_id );
+		$this->assertEquals(
+			$sections,
+			[ 'https://news-api.apple.com/channels/bcdef012-3456-7890-abcd-ef0123567890' ]
 		);
 
 		// Remove the transient and the map.
