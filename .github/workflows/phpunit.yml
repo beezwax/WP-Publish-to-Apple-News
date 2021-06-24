@@ -19,11 +19,11 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        php: [7.4] # Could be extended to php 5.6,7.0, etc
         wp_version: ["latest"]
         can_fail: [false]
+        multisite: [0,1]
 
-    name: ${{ matrix.php }} @ ${{ matrix.wp_version }}
+    name: phpunit '7.4' @ WP ${{ matrix.wp_version }} WP_MULTISITE=${{ matrix.multisite }}
     env:
       CACHEDIR: /tmp/test-cache
       WP_CORE_DIR: /tmp/wordpress/
@@ -53,7 +53,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
+          php-version: '7.4'
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd
           tools: composer:v2
           coverage: none
@@ -82,9 +82,4 @@ jobs:
         shell: bash
         run: |
           cd ${WP_CORE_DIR}/wp-content/plugins/apple-news
-          composer run phpunit
-      - name: Test Plugin (Multisite)
-        shell: bash
-        run: |
-          cd ${WP_CORE_DIR}/wp-content/plugins/apple-news
-          WP_MULTISITE=1 composer run phpunit
+          WP_MULTISITE=${{ matrix.multisite }} composer run phpunit
