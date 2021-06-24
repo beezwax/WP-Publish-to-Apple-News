@@ -26,7 +26,7 @@ jobs:
     name: ${{ matrix.php }} @ ${{ matrix.wp_version }}
     env:
       CACHEDIR: /tmp/test-cache
-      WP_CORE_DIR: /tmp/wordpress
+      WP_CORE_DIR: /tmp/wordpress/
       WP_VERSION: ${{ matrix.wp_version }}
 
     steps:
