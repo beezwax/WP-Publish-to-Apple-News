@@ -5,7 +5,7 @@ on:
 
 jobs:
   npm-ci:
-    name: Install node dependencies
+    name: (npm) Install, build, and test
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -24,17 +24,7 @@ jobs:
           node-version: 12
       - name: Install node dependencies (npm ci)
         run: npm ci
-
-  npm-test:
-    needs: npm-ci
-    runs-on: ubuntu-latest
-    steps:
       - name: Run npm test
         run: npm run test
-
-  npm-build:
-    needs: npm-ci
-    runs-on: ubuntu-latest
-    steps:
       - name: Run npm build
         run: npm run build
