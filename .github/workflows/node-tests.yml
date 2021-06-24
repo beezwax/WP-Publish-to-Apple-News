@@ -27,12 +27,14 @@ jobs:
 
   npm-test:
     needs: npm-ci
+    runs-on: ubuntu-latest
     steps:
       - name: Run npm test
         run: npm run test
 
   npm-build:
     needs: npm-ci
+    runs-on: ubuntu-latest
     steps:
       - name: Run npm build
         run: npm run build
