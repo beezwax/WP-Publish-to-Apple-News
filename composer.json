@@ -9,9 +9,11 @@
   },
   "require-dev": {
     "phpspec/prophecy": "~1.0",
-    "alleyinteractive/alley-coding-standards": "^0.3.0"
+    "alleyinteractive/alley-coding-standards": "^0.3.0",
+    "phpunit/phpunit": "6.5.*"
   },
   "scripts": {
-    "phpcs" : "phpcs ."
+    "phpcs" : "phpcs .",
+    "phpunit" : "phpunit"
   }
 }
