@@ -28,6 +28,7 @@ jobs:
       CACHEDIR: /tmp/test-cache
       WP_CORE_DIR: /tmp/wordpress/
       WP_VERSION: ${{ matrix.wp_version }}
+      WP_MULTISITE: ${{ matrix.multisite }}
 
     steps:
       - name: Checkout code
@@ -82,4 +83,4 @@ jobs:
         shell: bash
         run: |
           cd ${WP_CORE_DIR}/wp-content/plugins/apple-news
-          WP_MULTISITE=${{ matrix.multisite }} composer run phpunit
+          composer run phpunit
