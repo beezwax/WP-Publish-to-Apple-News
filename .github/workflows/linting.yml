@@ -58,7 +58,7 @@ jobs:
         with:
           timeout_minutes: 5
           max_attempts: 5
-          command: composer global require "phpunit/phpunit=6.5.*" "alleyinteractive/alley-coding-standards"
+          command: composer global require "phpunit/phpunit=5.7.*" "alleyinteractive/alley-coding-standards"
 
       - name: PHPCompatibility for ${{ matrix.php }}
         run: composer phpcs -- --standard=PHPCompatibility --extensions=php --runtime-set testVersion ${{ matrix.php }} --ignore="/vendor/*" --ignore="/node-modules/*"
