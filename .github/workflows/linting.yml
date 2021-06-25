@@ -45,11 +45,20 @@ jobs:
           coverage: none
 
       - name: Install composer dependencies
+        if: ${{ matrix.php != '5.6' }}
         uses: nick-invision/retry@v1
         with:
           timeout_minutes: 5
           max_attempts: 5
           command: composer install
+
+      - name: Install phpcs
+        if: ${{ matrix.php == '5.6' }}
+        uses: nick-invision/retry@v1
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer global require "phpunit/phpunit=6.5.*" "alleyinteractive/alley-coding-standards"
 
       - name: PHPCompatibility for ${{ matrix.php }}
         run: composer phpcs -- --standard=PHPCompatibility --extensions=php --runtime-set testVersion ${{ matrix.php }} --ignore="/vendor/*" --ignore="/node-modules/*"
