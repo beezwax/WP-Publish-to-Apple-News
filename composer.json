@@ -3,11 +3,17 @@
   "description": "Enable your WordPress blog content to be published to your Apple News channel.",
   "homepage"   : "https://github.com/alleyinteractive/apple-news",
   "type"       : "wordpress-plugin",
-  "license"    : "GPL-3.0+",
+  "license"    : "GPL-3.0-or-later",
   "require"    : {
     "composer/installers": "~1.0"
   },
   "require-dev": {
-    "phpspec/prophecy": "~1.0"
+    "phpspec/prophecy": "~1.0",
+    "alleyinteractive/alley-coding-standards": "^0.3.0",
+    "phpunit/phpunit": "6.5.*"
+  },
+  "scripts": {
+    "phpcs" : "phpcs .",
+    "phpunit" : "phpunit"
   }
 }
