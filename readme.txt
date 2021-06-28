@@ -9,7 +9,7 @@ Stable tag: 2.1.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
-Enable your WordPress blog content to be published to your Apple News channel.
+The 'Publish to Apple News' plugin enables WordPress sites with approved Apple News channels to publish content directly on Apple News. Note that Apple News is a distribution platform for professional publications of a journalistic nature, and not all applications will be accepted.
 
 == Description ==
 
