@@ -22,6 +22,16 @@ function _manually_load_plugin() {
 	// Set the permalink structure.
 	update_option( 'permalink_structure', '/%postname%' );
 
+	// Load mocks for integration tests.
+	require_once __DIR__ . '/mocks/class-bc-setup.php';
+	if ( ! function_exists( 'coauthors' ) ) {
+		require_once __DIR__ . '/mocks/function-coauthors.php';
+	}
+
+	// Activate mocked Brightcove functionality.
+	$bc_setup = new BC_Setup();
+	$bc_setup->action_init();
+
 	// Load the plugin.
 	require dirname( dirname( __FILE__ ) ) . '/apple-news.php';
 }
@@ -32,10 +42,3 @@ require $_tests_dir . '/includes/bootstrap.php';
 require_once __DIR__ . '/class-apple-news-testcase.php';
 
 require_once __DIR__ . '/apple-exporter/components/class-component-testcase.php';
-
-// Load mocks for integration tests.
-require_once __DIR__ . '/mocks/class-bc-setup.php';
-
-// Activate mocked Brightcove functionality.
-$bc_setup = new BC_Setup();
-$bc_setup->action_init();

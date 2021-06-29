@@ -6,9 +6,6 @@
  * @subpackage Tests
  */
 
-use Apple_Exporter\Exporter_Content;
-use Apple_Exporter\Builders\Metadata;
-
 /**
  * A class which is used to test the Apple_Exporter\Builders\Metadata class.
  *
@@ -18,16 +15,36 @@ use Apple_Exporter\Builders\Metadata;
 class Metadata_Test extends Apple_News_Testcase {
 
 	/**
+	 * Ensures authors are properly added using Co-Authors Plus.
+	 *
+	 * @access public
+	 */
+	public function test_cap_authors() {
+		// Setup.
+		global $apple_news_coauthors;
+		$apple_news_coauthors = [ 'Test Author 1', 'Test Author 2' ];
+		$author   = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
+		$post_id  = self::factory()->post->create( [ 'post_author'  => $author ] );
+		$result   = $this->get_json_for_post( $post_id );
+		$metadata = $result['metadata'];
+
+		// Assertions.
+		$this->assertEquals(
+			[ 'Test Author 1', 'Test Author 2' ],
+			$metadata['authors']
+		);
+
+		// Cleanup.
+		$apple_news_coauthors = [];
+	}
+
+	/**
 	 * Ensures that metadata is properly set.
 	 */
 	public function test_metadata() {
 
 		// Setup.
-		$author  = self::factory()->user->create(
-			[
-				'display_name' => 'Test Author',
-			]
-		);
+		$author  = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
 		$post_id = self::factory()->post->create(
 			[
 				'post_author'  => $author,
@@ -94,7 +111,4 @@ class Metadata_Test extends Apple_News_Testcase {
 			$metadata['videoURL']
 		);
 	}
-
-	// TODO: Add test for coauthors authorship.
-	// $author = coauthors( null, null, null, null, false );
 }
