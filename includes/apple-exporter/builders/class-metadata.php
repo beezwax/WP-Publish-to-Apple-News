@@ -44,12 +44,23 @@ class Metadata extends Builder {
 			);
 		}
 
+		// Add authors.
+		// TODO: CAP.
+		$post = get_post( $this->content_id() );
+		if ( function_exists( 'coauthors' ) ) {
+			// $author = coauthors( null, null, null, null, false );
+		} else {
+			$author = ucfirst( get_the_author_meta( 'display_name', $post->post_author ) );
+			if ( ! empty( $author ) ) {
+				$meta['authors'] = [ $author ];
+			}
+		}
+
 		/**
 		 * Add date fields.
 		 * We need to get the WordPress post for this
 		 * since the date functions are inconsistent.
 		 */
-		$post = get_post( $this->content_id() );
 		if ( ! empty( $post ) ) {
 			$post_date     = gmdate( 'c', strtotime( get_gmt_from_date( $post->post_date ) ) );
 			$post_modified = gmdate( 'c', strtotime( get_gmt_from_date( $post->post_modified ) ) );

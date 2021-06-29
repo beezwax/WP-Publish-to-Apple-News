@@ -21,9 +21,16 @@ class Metadata_Test extends Apple_News_Testcase {
 	 * Ensures that metadata is properly set.
 	 */
 	public function test_metadata() {
+
 		// Setup.
+		$author  = self::factory()->user->create(
+			[
+				'display_name' => 'Test Author',
+			]
+		);
 		$post_id = self::factory()->post->create(
 			[
+				'post_author'  => $author,
 				'post_content' => '<p>Hello, World!</p>',
 				'post_date'    => '2016-04-01 00:00:00',
 				'post_excerpt' => 'Sample excerpt.',
@@ -36,11 +43,30 @@ class Metadata_Test extends Apple_News_Testcase {
 		$metadata = $result['metadata'];
 
 		// Assertions.
-		$this->assertEquals( '2016-04-01T00:00:00+00:00', $metadata['dateCreated'] );
-		$this->assertEquals( '2016-04-01T00:00:00+00:00', $metadata['dateModified'] );
-		$this->assertEquals( '2016-04-01T00:00:00+00:00', $metadata['datePublished'] );
-		$this->assertEquals( 'Sample excerpt.', $metadata['excerpt'] );
-		$this->assertEquals( wp_get_attachment_url( $image ), $metadata['thumbnailURL'] );
+		$this->assertEquals(
+			[ 'Test Author' ],
+			$metadata['authors']
+		);
+		$this->assertEquals(
+			'2016-04-01T00:00:00+00:00',
+			$metadata['dateCreated']
+		);
+		$this->assertEquals(
+			'2016-04-01T00:00:00+00:00',
+			$metadata['dateModified']
+		);
+		$this->assertEquals(
+			'2016-04-01T00:00:00+00:00',
+			$metadata['datePublished']
+		);
+		$this->assertEquals(
+			'Sample excerpt.',
+			$metadata['excerpt']
+		);
+		$this->assertEquals(
+			wp_get_attachment_url( $image ),
+			$metadata['thumbnailURL']
+		);
 	}
 
 	/**
@@ -68,4 +94,7 @@ class Metadata_Test extends Apple_News_Testcase {
 			$metadata['videoURL']
 		);
 	}
+
+	// TODO: Add test for coauthors authorship.
+	// $author = coauthors( null, null, null, null, false );
 }
