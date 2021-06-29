@@ -10,8 +10,9 @@ namespace Apple_Exporter\Builders;
 
 require_once plugin_dir_path( __FILE__ ) . '../../../admin/class-admin-apple-news.php';
 
-use \Admin_Apple_News;
-use \Apple_Exporter\Exporter_Content;
+use Admin_Apple_News;
+use Apple_Exporter\Exporter_Content;
+use Apple_News;
 
 /**
  * A class to handle building metadata.
@@ -45,24 +46,16 @@ class Metadata extends Builder {
 		}
 
 		// Add authors.
-		$post = get_post( $this->content_id() );
-		if ( function_exists( 'coauthors' ) ) {
-			$coauthors = array_values(
-				array_filter(
-					explode(
-						'APPLE_NEWS_DELIMITER',
-						coauthors( 'APPLE_NEWS_DELIMITER', 'APPLE_NEWS_DELIMITER', null, null, false )
-					)
+		$authors = array_values(
+			array_filter(
+				explode(
+					'APPLE_NEWS_DELIMITER',
+					Apple_News::get_authors( 'APPLE_NEWS_DELIMITER', 'APPLE_NEWS_DELIMITER' )
 				)
-			);
-			if ( ! empty( $coauthors ) ) {
-				$meta['authors'] = $coauthors;
-			}
-		} else {
-			$author = ucfirst( get_the_author_meta( 'display_name', $post->post_author ) );
-			if ( ! empty( $author ) ) {
-				$meta['authors'] = [ $author ];
-			}
+			)
+		);
+		if ( ! empty( $authors ) ) {
+			$meta['authors'] = $authors;
 		}
 
 		/**
@@ -70,6 +63,7 @@ class Metadata extends Builder {
 		 * We need to get the WordPress post for this
 		 * since the date functions are inconsistent.
 		 */
+		$post = get_post( $this->content_id() );
 		if ( ! empty( $post ) ) {
 			$post_date     = gmdate( 'c', strtotime( get_gmt_from_date( $post->post_date ) ) );
 			$post_modified = gmdate( 'c', strtotime( get_gmt_from_date( $post->post_modified ) ) );

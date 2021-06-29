@@ -21,6 +21,7 @@ class Metadata_Test extends Apple_News_Testcase {
 	 */
 	public function test_cap_authors() {
 		// Setup.
+		$this->enable_coauthors_support();
 		global $apple_news_coauthors;
 		$apple_news_coauthors = [ 'Test Author 1', 'Test Author 2' ];
 		$author   = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
@@ -36,13 +37,13 @@ class Metadata_Test extends Apple_News_Testcase {
 
 		// Cleanup.
 		$apple_news_coauthors = [];
+		$this->disable_coauthors_support();
 	}
 
 	/**
 	 * Ensures that metadata is properly set.
 	 */
 	public function test_metadata() {
-
 		// Setup.
 		$author  = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
 		$post_id = self::factory()->post->create(
