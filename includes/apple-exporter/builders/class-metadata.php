@@ -71,14 +71,14 @@ class Metadata extends Builder {
 		$meta['generatorVersion']    = $plugin_data['Version'];
 
 		// Extract all video elements that include a poster element.
-		if ( preg_match_all( '/<video[^>]+poster="([^"]+)".*?>(.+?)<\/video>/s', $this->content_text(), $matches ) ) {
+		if ( preg_match_all( '/<video[^>]+poster="([^"]+)".*?>.*?<\/video>/s', $this->content_text(), $matches ) ) {
 
 			// Loop through matched video elements looking for MP4 files.
-			$total = count( $matches[2] );
+			$total = count( $matches[0] );
 			for ( $i = 0; $i < $total; $i ++ ) {
 
 				// Try to match an MP4 source URL.
-				if ( preg_match( '/src="([^\?"]+\.mp4[^"]*)"/', $matches[2][ $i ], $src ) ) {
+				if ( preg_match( '/src="([^\?"]+\.mp4[^"]*)"/', $matches[0][ $i ], $src ) ) {
 
 					// Include the thumbnail and video URL if the video URL is valid.
 					$url = Exporter_Content::format_src_url( $src[1] );
