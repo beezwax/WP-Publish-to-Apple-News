@@ -146,6 +146,20 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	}
 
 	/**
+	 * A helper function for removing Co-Authors Plus support in a test context.
+	 */
+	protected function disable_coauthors_support() {
+		remove_filter( 'apple_news_use_coauthors', '__return_true', 99 );
+	}
+
+	/**
+	 * A helper function for adding Co-Authors Plus support in a test context.
+	 */
+	protected function enable_coauthors_support() {
+		add_filter( 'apple_news_use_coauthors', '__return_true', 99 );
+	}
+
+	/**
 	 * Runs create_upload_object using a test image and returns the image ID.
 	 *
 	 * @param int    $parent  Optional. The parent post ID. Defaults to no parent.

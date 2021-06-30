@@ -10,8 +10,9 @@ namespace Apple_Exporter\Builders;
 
 require_once plugin_dir_path( __FILE__ ) . '../../../admin/class-admin-apple-news.php';
 
-use \Admin_Apple_News;
-use \Apple_Exporter\Exporter_Content;
+use Admin_Apple_News;
+use Apple_Exporter\Exporter_Content;
+use Apple_News;
 
 /**
  * A class to handle building metadata.
@@ -44,6 +45,19 @@ class Metadata extends Builder {
 			);
 		}
 
+		// Add authors.
+		$authors = array_values(
+			array_filter(
+				explode(
+					'APPLE_NEWS_DELIMITER',
+					Apple_News::get_authors( 'APPLE_NEWS_DELIMITER', 'APPLE_NEWS_DELIMITER' )
+				)
+			)
+		);
+		if ( ! empty( $authors ) ) {
+			$meta['authors'] = $authors;
+		}
+
 		/**
 		 * Add date fields.
 		 * We need to get the WordPress post for this
@@ -71,14 +85,14 @@ class Metadata extends Builder {
 		$meta['generatorVersion']    = $plugin_data['Version'];
 
 		// Extract all video elements that include a poster element.
-		if ( preg_match_all( '/<video[^>]+poster="([^"]+)".*?>(.+?)<\/video>/s', $this->content_text(), $matches ) ) {
+		if ( preg_match_all( '/<video[^>]+poster="([^"]+)".*?>.*?<\/video>/s', $this->content_text(), $matches ) ) {
 
 			// Loop through matched video elements looking for MP4 files.
-			$total = count( $matches[2] );
+			$total = count( $matches[0] );
 			for ( $i = 0; $i < $total; $i ++ ) {
 
 				// Try to match an MP4 source URL.
-				if ( preg_match( '/src="([^\?"]+\.mp4[^"]*)"/', $matches[2][ $i ], $src ) ) {
+				if ( preg_match( '/src="([^\?"]+\.mp4[^"]*)"/', $matches[0][ $i ], $src ) ) {
 
 					// Include the thumbnail and video URL if the video URL is valid.
 					$url = Exporter_Content::format_src_url( $src[1] );

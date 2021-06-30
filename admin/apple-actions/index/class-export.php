@@ -17,7 +17,8 @@ use Apple_Exporter\Exporter as Exporter;
 use Apple_Exporter\Exporter_Content as Exporter_Content;
 use Apple_Exporter\Exporter_Content_Settings as Exporter_Content_Settings;
 use Apple_Exporter\Third_Party\Jetpack_Tiled_Gallery as Jetpack_Tiled_Gallery;
-use \Admin_Apple_Sections;
+use Admin_Apple_Sections;
+use Apple_News;
 
 /**
  * A class to handle an export request from the admin.
@@ -273,13 +274,7 @@ class Export extends Action {
 
 		// Get the author.
 		if ( empty( $author ) ) {
-
-			// Try to get the author information from Co-Authors Plus.
-			if ( function_exists( 'coauthors' ) ) {
-				$author = coauthors( null, null, null, null, false );
-			} else {
-				$author = ucfirst( get_the_author_meta( 'display_name', $post->post_author ) );
-			}
+			$author = Apple_News::get_authors();
 		}
 
 		// Get the date.

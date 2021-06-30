@@ -94,6 +94,45 @@ class Apple_News {
 	public static $maturity_ratings = array( 'KIDS', 'MATURE', 'GENERAL' );
 
 	/**
+	 * A helper function for getting authors for a post, which supports native
+	 * WordPress authors as well as Co-Authors Plus. Like the coauthors function,
+	 * must be used in the loop.
+	 *
+	 * @param ?string $between      Delimiter that should appear between the co-authors.
+	 * @param ?string $between_last Delimiter that should appear between the last two co-authors.
+	 * @param ?string $before       What should appear before the presentation of co-authors.
+	 * @param ?string $after        What should appear after the presentation of co-authors.
+	 *
+	 * @return string The author list, formatted according to the given options.
+	 */
+	public static function get_authors( $between = null, $between_last = null, $before = null, $after = null ) {
+		global $post;
+
+		// Bail out if we don't have a post.
+		if ( empty( $post ) ) {
+			return '';
+		}
+
+		/**
+		 * Allows for changing the option to use Co-Authors Plus for authorship.
+		 * Defaults to using Co-Authors Plus if the `coauthors` function is defined.
+		 *
+		 * @since 2.1.3
+		 *
+		 * @param bool $use_cap Whether to use Co-Authors Plus for authors.
+		 * @param int  $post_id The post ID being processed.
+		 */
+		$use_cap = apply_filters( 'apple_news_use_coauthors', function_exists( 'coauthors' ), get_the_ID() );
+
+		// Handle CAP authorship.
+		if ( $use_cap ) {
+			return coauthors( $between, $between_last, $before, $after, false );
+		}
+
+		return ucfirst( get_the_author_meta( 'display_name', $post->post_author ) );
+	}
+
+	/**
 	 * Maps a capability to a specific post type, with support for
 	 * custom post types.
 	 *
