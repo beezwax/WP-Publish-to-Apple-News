@@ -20,7 +20,7 @@
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = function(f) {
-          console.log(f.target.result);
+          $( '#api_config_file_input' ).text(f.target.result);
         };
         reader.readAsText(file);
       }
