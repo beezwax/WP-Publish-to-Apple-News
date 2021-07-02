@@ -3,9 +3,9 @@ Contributors: potatomaster, kevinfodness, jomurgel, danbowles, alleyinteractive,
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 5.6.2
+Tested up to: 5.7.2
 Requires PHP: 5.6
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,13 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.1.3 =
+* Enhancement: Added article authors to the `metadata.authors` property so they display in the article listing view on Apple News.
+* Enhancement: Added a new filter for whether to enable Co-Authors Plus support, which defaults to `true` if the `coauthors` function is defined (the same as the previous behavior, but now the setting is filterable).
+* Enhancement: Updated the plugin description to more clearly articulate its purpose and intended users.
+* Bugfix: Fixed a bug with applying automatic section mappings based on taxonomy in a Gutenberg context.
+* Bugfix: Fixed a bug with video metadata parsing related to having a `video` element with a `src` attribute rather than `source` inner elements.
 
 = 2.1.2 =
 * Bugfix: Fixed an error that would occur if sections could not be fetched from the API, where the function being called to handle the error didn't exist.
