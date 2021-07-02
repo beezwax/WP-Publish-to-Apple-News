@@ -108,6 +108,11 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			'id'       => array(),
 			'size'     => array(),
 		),
+    'textarea' => array(
+			'class'    => array(),
+			'name'     => array(),
+			'id'       => array(),
+		),
 		'option' => array(
 			'value'    => array(),
 			'selected' => array(),
@@ -311,6 +316,10 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			$field = '<input type="password" id="%s" name="%s" value="%s" size="%s" %s>';
 		} elseif ( 'hidden' === $type ) {
 			$field = '<input type="hidden" id="%s" name="%s" value="%s">';
+		} elseif ( 'file' === $type ) {
+			$field = '<input type="file" id="%s" name="%s">';
+		} elseif ( 'textarea' === $type ) {
+			$field = '<textarea id="%s" name="%s">%s</textarea>';
 		} else {
 			// If nothing else matches, it's a string.
 			$field = '<input type="text" id="%s" name="%s" value="%s" size="%s" %s>';
@@ -337,6 +346,19 @@ class Admin_Apple_Settings_Section extends Apple_News {
 				intval( $size )
 			);
 		} elseif ( 'hidden' === $type ) {
+			return sprintf(
+				$field,
+				esc_attr( $name ),
+				esc_attr( $name ),
+				esc_attr( $value )
+			);
+		} elseif ( 'file' === $type ) {
+			return sprintf(
+				$field,
+				esc_attr( $name ),
+				esc_attr( $name )
+			);
+		} elseif ( 'textarea' === $type ) {
 			return sprintf(
 				$field,
 				esc_attr( $name ),

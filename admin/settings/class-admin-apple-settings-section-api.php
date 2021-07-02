@@ -32,20 +32,22 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 
 		// Add the settings.
 		$this->settings = array(
+			'api_config_file'     => array(
+				'label' => __( 'PAPI File Upload', 'apple-news' ),
+				'type'  => 'file',
+			),
+      'api_config_file_input'     => array(
+				'label' => __( 'PAPI File Input', 'apple-news' ),
+				'type'  => 'textarea',
+			),
 			'api_channel'         => array(
-				'label' => __( 'Channel ID', 'apple-news' ),
-				'type'  => 'string',
-				'size'  => 40,
+				'type'  => 'hidden',
 			),
 			'api_key'             => array(
-				'label' => __( 'API Key ID', 'apple-news' ),
-				'type'  => 'string',
-				'size'  => 40,
+				'type'  => 'hidden',
 			),
 			'api_secret'          => array(
-				'label' => __( 'API Key Secret', 'apple-news' ),
-				'type'  => 'password',
-				'size'  => 40,
+				'type'  => 'hidden',
 			),
 			'api_autosync'        => array(
 				'label' => __( 'Automatically publish to Apple News when published in WordPress', 'apple-news' ),
@@ -70,7 +72,7 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 		$this->groups = array(
 			'apple_news' => array(
 				'label'    => __( 'Apple News API', 'apple-news' ),
-				'settings' => array( 'api_channel', 'api_key', 'api_secret', 'api_autosync', 'api_autosync_update', 'api_autosync_delete', 'api_async' ),
+				'settings' => array( 'api_config_file', 'api_config_file_input', 'api_channel', 'api_key', 'api_secret', 'api_autosync', 'api_autosync_update', 'api_autosync_delete', 'api_async' ),
 			),
 		);
 

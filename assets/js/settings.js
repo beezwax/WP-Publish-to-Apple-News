@@ -11,5 +11,19 @@
 				$email.removeAttr( 'required' );
 			}
 		} ).change();
+
+    // Code for reading uploaded papi file.
+		$( '#api_config_file' ).on( 'change', function (e) {
+			if (!e.target.files || !e.target.files[0]) {
+        return;
+      } else {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function(f) {
+          console.log(f.target.result);
+        };
+        reader.readAsText(file);
+      }
+		} );
 	}
 )( jQuery, window );
