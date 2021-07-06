@@ -32,35 +32,35 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 
 		// Add the settings.
 		$this->settings = array(
-			'api_config_file'     => array(
+			'api_config_file'       => array(
 				'description' => __( 'Having trouble? <a href="#api_config_file">Enter the contents of your .papi file manually</a>.', 'apple-news' ),
-				'type'  => 'file',
+				'type'        => 'file',
 			),
-			'api_config_file_input'     => array(
-				'type'  => 'textarea',
+			'api_config_file_input' => array(
+				'type' => 'textarea',
 			),
-			'api_channel'         => array(
-				'type'  => 'hidden',
+			'api_channel'           => array(
+				'type' => 'hidden',
 			),
-			'api_key'             => array(
-				'type'  => 'hidden',
+			'api_key'               => array(
+				'type' => 'hidden',
 			),
-			'api_secret'          => array(
-				'type'  => 'hidden',
+			'api_secret'            => array(
+				'type' => 'hidden',
 			),
-			'api_autosync'        => array(
+			'api_autosync'          => array(
 				'label' => __( 'Automatically publish to Apple News when published in WordPress', 'apple-news' ),
 				'type'  => array( 'yes', 'no' ),
 			),
-			'api_autosync_update' => array(
+			'api_autosync_update'   => array(
 				'label' => __( 'Automatically update in Apple News when updated in WordPress', 'apple-news' ),
 				'type'  => array( 'yes', 'no' ),
 			),
-			'api_autosync_delete' => array(
+			'api_autosync_delete'   => array(
 				'label' => __( 'Automatically delete from Apple News when deleted in WordPress', 'apple-news' ),
 				'type'  => array( 'yes', 'no' ),
 			),
-			'api_async'           => array(
+			'api_async'             => array(
 				'label'       => __( 'Asynchronously publish to Apple News', 'apple-news' ),
 				'type'        => array( 'yes', 'no' ),
 				'description' => $this->get_async_description(),
@@ -73,7 +73,7 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 				'label'    => __( 'Upload Channel Configuration File:', 'apple-news' ),
 				'settings' => array( 'api_config_file', 'api_config_file_input', 'api_channel', 'api_key', 'api_secret' ),
 			),
-			'apple_news_options' => array(
+			'apple_news_options'       => array(
 				'label'    => __( 'Apple News API Options', 'apple-news' ),
 				'settings' => array( 'api_autosync', 'api_autosync_update', 'api_autosync_delete', 'api_async' ),
 			),

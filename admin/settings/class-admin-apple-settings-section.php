@@ -101,7 +101,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @access public
 	 */
 	public static $allowed_html = array(
-		'select' => array(
+		'select'   => array(
 			'class'    => array(),
 			'name'     => array(),
 			'multiple' => array(),
@@ -109,15 +109,15 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			'size'     => array(),
 		),
 		'textarea' => array(
-			'class'    => array(),
-			'name'     => array(),
-			'id'       => array(),
+			'class' => array(),
+			'name'  => array(),
+			'id'    => array(),
 		),
-		'option' => array(
+		'option'   => array(
 			'value'    => array(),
 			'selected' => array(),
 		),
-		'input'  => array(
+		'input'    => array(
 			'class'       => array(),
 			'name'        => array(),
 			'value'       => array(),
@@ -128,34 +128,34 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			'size'        => array(),
 			'id'          => array(),
 		),
-		'br'     => array(),
-		'b'      => array(),
-		'strong' => array(),
-		'i'      => array(),
-		'em'     => array(),
-		'a'      => array(
+		'br'       => array(),
+		'b'        => array(),
+		'strong'   => array(),
+		'i'        => array(),
+		'em'       => array(),
+		'a'        => array(
 			'href'   => array(),
 			'target' => array(),
 		),
-		'div'    => array(
+		'div'      => array(
 			'class' => array(),
 		),
-		'h1'     => array(
+		'h1'       => array(
 			'class' => array(),
 		),
-		'h2'     => array(
+		'h2'       => array(
 			'class' => array(),
 		),
-		'h3'     => array(
+		'h3'       => array(
 			'class' => array(),
 		),
-		'h4'     => array(
+		'h4'       => array(
 			'class' => array(),
 		),
-		'h5'     => array(
+		'h5'       => array(
 			'class' => array(),
 		),
-		'h6'     => array(
+		'h6'       => array(
 			'class' => array(),
 		),
 	);
