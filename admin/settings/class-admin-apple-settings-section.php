@@ -315,7 +315,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		} elseif ( 'password' === $type ) {
 			$field = '<input type="password" id="%s" name="%s" value="%s" size="%s" %s>';
 		} elseif ( 'hidden' === $type ) {
-			$field = '<input type="hidden" id="%s" name="%s" value="%s">';
+			$field = '<input type="text" id="%s" name="%s" value="%s">';
 		} elseif ( 'file' === $type ) {
 			$field = '<input type="file" id="%s" name="%s">';
 		} elseif ( 'textarea' === $type ) {

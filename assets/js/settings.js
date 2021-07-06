@@ -4,21 +4,20 @@
 
     // storing RegExp strings for decoding the uploaded config file
     var RegExpStrings = {
-      channel_id: /channel_id: [0-9a-zA-Z_-]*/g,
-      key: /key: [0-9a-zA-Z_-]*/g,
-      secret: /secret: [0-9a-zA-Z_-]*/g
+      channel_id: /channel_id: ([0-9a-zA-Z_-]+)/,
+      key: /key: ([0-9a-zA-Z_-]+)/,
+      secret: /secret: ([0-9a-zA-Z_-]+)/
     }
 
     function updateCreds(input) {
-      $( '#api_channel' ).val(
-        input.match(RegExpStrings.channel_id).toString().split(" ")[1]
-      );
-      $( '#api_key' ).val(
-        input.match(RegExpStrings.key).toString().split(" ")[1]
-      );
-      $( '#api_secret' ).val(
-        input.match(RegExpStrings.secret).toString().split(" ")[1]
-      );
+      var channelIdMatch = input.match(RegExpStrings.channel_id).toString().split(" ");
+      $( '#api_channel' ).val(channelIdMatch ? channelIdMatch[1] : '');
+
+      var keyMatch = input.match(RegExpStrings.key).toString().split(" ");
+      $( '#api_key' ).val(keyMatch ? keyMatch[1] : '');
+
+      var secretMatch = input.match(RegExpStrings.secret).toString().split(" ");
+      $( '#api_secret' ).val(secretMatch ? secretMatch[1] : '');
     }
 
     // Hide manual-input textarea for creds on load.
