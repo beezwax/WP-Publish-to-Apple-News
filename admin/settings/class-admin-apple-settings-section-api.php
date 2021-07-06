@@ -33,7 +33,7 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 		// Add the settings.
 		$this->settings = array(
 			'api_config_file'     => array(
-				'label' => __( 'PAPI File Upload', 'apple-news' ),
+				'label' => __( 'Upload channel configuration file:', 'apple-news' ),
 				'type'  => 'file',
 			),
       'api_config_file_input'     => array(
