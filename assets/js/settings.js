@@ -4,9 +4,9 @@
 
     // storing RegExp strings for decoding the uploaded config file
     var RegExpStrings = {
-      channel_id: /channel_id: ([0-9a-zA-Z_-]+)/,
-      key: /key: ([0-9a-zA-Z_-]+)/,
-      secret: /secret: ([0-9a-zA-Z_-]+)/
+      channel_id: /channel_id: ([0-9a-zA-Z_-]+)/g,
+      key: /key: ([0-9a-zA-Z_-]+)/g,
+      secret: /secret: ([0-9a-zA-Z_-]+)/g
     }
 
     function updateCreds(input) {
@@ -54,7 +54,6 @@
         reader.onload = function(f) {
           // When a file is uploaded, the read contents populate the hidden textarea.
           var contents = f.target.result;
-          updateCreds(contents);
           $( '#api_config_file_input' ).val(contents);
         };
         reader.readAsText(file);
