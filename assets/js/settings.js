@@ -54,6 +54,7 @@
         reader.onload = function(f) {
           // When a file is uploaded, the read contents populate the hidden textarea.
           var contents = f.target.result;
+          updateCreds(contents);
           $( '#api_config_file_input' ).val(contents);
         };
         reader.readAsText(file);
