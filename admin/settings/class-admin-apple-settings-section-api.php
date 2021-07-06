@@ -33,7 +33,7 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 		// Add the settings.
 		$this->settings = array(
 			'api_config_file'     => array(
-        'description' => __( 'Having trouble? <a href="#apple-news-credentials-input">Enter the contents of your .papi file manually</a>.', 'apple-news' ),
+        'description' => __( 'Having trouble? <a href="#api_config_file">Enter the contents of your .papi file manually</a>.', 'apple-news' ),
 				'type'  => 'file',
         'size'  => '100',
 			),

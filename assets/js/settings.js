@@ -21,6 +21,20 @@
       );
     }
 
+    // Hide manual-input textarea for creds on load.
+    $( '#api_config_file_input' ).css({
+        'display': 'none',
+        'width': '300px',
+        'height': '250px'
+    });
+
+    $( 'a[href$="#api_config_file"]' ).click(function () {
+      $( '#api_config_file_input' ).css({
+              'display': 'block'
+      });
+    });
+
+
 		// Listen for changes to the debugging settings.
 		$( '#apple_news_enable_debugging' ).on( 'change', function () {
 			var $email = $( '#apple_news_admin_email' );
