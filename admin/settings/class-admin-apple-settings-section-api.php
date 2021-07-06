@@ -35,7 +35,6 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 			'api_config_file'     => array(
         'description' => __( 'Having trouble? <a href="#api_config_file">Enter the contents of your .papi file manually</a>.', 'apple-news' ),
 				'type'  => 'file',
-        'size'  => '100',
 			),
       'api_config_file_input'     => array(
 				'type'  => 'textarea',
