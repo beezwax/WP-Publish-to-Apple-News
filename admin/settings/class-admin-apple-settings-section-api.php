@@ -95,7 +95,7 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 			'<a target="_blank" href="https://developer.apple.com/documentation/apple_news/apple_news_api/getting_ready_to_publish_and_manage_your_articles">',
 			'</a>',
 			'<a target="_blank" href="https://support.apple.com/guide/news-publisher/use-your-cms-with-news-publisher-apd88c8447e6/icloud">',
-			'</a>',
+			'</a>'
 		);
 	}
 
