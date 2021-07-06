@@ -90,12 +90,11 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 	 */
 	public function get_section_info() {
 		return sprintf(
-			'%s <a target="_blank" href="https://developer.apple.com/documentation/apple_news/apple_news_api/getting_ready_to_publish_and_manage_your_articles">%s</a> %s <a target="_blank" href="https://support.apple.com/guide/news-publisher/use-your-cms-with-news-publisher-apd88c8447e6/icloud">%s</a> %s.',
-			__( 'Please upload your Apple News channel configuration file below. Please see', 'apple-news' ),
-			__( 'the Apple News API documentation', 'apple-news' ),
-			__( 'and', 'apple-news' ),
-			__( 'the News Publisher documentation', 'apple-news' ),
-			__( 'for detailed information. For further assistance, please contact your Apple News representative.', 'apple-news' )
+			__( 'Please upload your Apple News channel configuration file below. Please see %sthe Apple News API documentation%s and %sthe News Publisher documentation%s for detailed information. For further assistance, please contact your Apple News representative.', 'apple-news' ),
+			'<a target="_blank" href="https://developer.apple.com/documentation/apple_news/apple_news_api/getting_ready_to_publish_and_manage_your_articles">',
+			'</a>',
+			'<a target="_blank" href="https://support.apple.com/guide/news-publisher/use-your-cms-with-news-publisher-apd88c8447e6/icloud">',
+			'</a>',
 		);
 	}
 
