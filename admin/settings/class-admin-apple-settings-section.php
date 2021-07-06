@@ -108,7 +108,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			'id'       => array(),
 			'size'     => array(),
 		),
-    'textarea' => array(
+		'textarea' => array(
 			'class'    => array(),
 			'name'     => array(),
 			'id'       => array(),

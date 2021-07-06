@@ -33,10 +33,10 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 		// Add the settings.
 		$this->settings = array(
 			'api_config_file'     => array(
-        'description' => __( 'Having trouble? <a href="#api_config_file">Enter the contents of your .papi file manually</a>.', 'apple-news' ),
+				'description' => __( 'Having trouble? <a href="#api_config_file">Enter the contents of your .papi file manually</a>.', 'apple-news' ),
 				'type'  => 'file',
 			),
-      'api_config_file_input'     => array(
+			'api_config_file_input'     => array(
 				'type'  => 'textarea',
 			),
 			'api_channel'         => array(
@@ -71,9 +71,9 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 		$this->groups = array(
 			'apple_news_config_upload' => array(
 				'label'    => __( 'Upload Channel Configuration File:', 'apple-news' ),
-				'settings' => array( 'api_config_file', 'api_config_file_input', 'api_channel', 'api_key', 'api_secret'),
+				'settings' => array( 'api_config_file', 'api_config_file_input', 'api_channel', 'api_key', 'api_secret' ),
 			),
-      'apple_news_options' => array(
+			'apple_news_options' => array(
 				'label'    => __( 'Apple News API Options', 'apple-news' ),
 				'settings' => array( 'api_autosync', 'api_autosync_update', 'api_autosync_delete', 'api_async' ),
 			),
