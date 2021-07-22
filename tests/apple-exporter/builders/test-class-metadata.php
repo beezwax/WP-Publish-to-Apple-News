@@ -15,6 +15,24 @@
 class Metadata_Test extends Apple_News_Testcase {
 
 	/**
+	 * A data provider for the test_video function.
+	 *
+	 * @return array An array of arrays representing function arguments.
+	 */
+	public function data_video() {
+		return [
+			[
+				'https://example.com/wp-content/uploads/2017/02/example-poster.jpg',
+				'https://example.com/wp-content/uploads/2017/02/example-video.mp4',
+			],
+			[
+				'https://example.com/wp-content/uploads/2017/02/example-poster.jpg',
+				'https://example.com/wp-content/uploads/2017/02/example-video.m3u8',
+			],
+		];
+	}
+
+	/**
 	 * Ensures authors are properly added using Co-Authors Plus.
 	 *
 	 * @access public
@@ -90,26 +108,23 @@ class Metadata_Test extends Apple_News_Testcase {
 	/**
 	 * Ensures video metadata is properly added.
 	 *
-	 * @access public
+	 * @param string $poster The URL to the poster image for the video.
+	 * @param string $video  The URL to the video.
+	 *
+	 * @dataProvider data_video
 	 */
-	public function test_video() {
+	public function test_video( $poster, $video ) {
 		// Setup.
 		$post_id  = self::factory()->post->create(
 			[
-				'post_content' => '<figure class="wp-block-video"><video controls="" poster="https://example.com/wp-content/uploads/2017/02/example-poster.jpg" src="https://example.com/wp-content/uploads/2017/02/example-video.mp4"></video></figure>',
+				'post_content' => '<figure class="wp-block-video"><video controls="" poster="' . $poster . '" src="' . $video . '"></video></figure>',
 			]
 		);
 		$result   = $this->get_json_for_post( $post_id );
 		$metadata = $result['metadata'];
 
 		// Assertions.
-		$this->assertEquals(
-			'https://example.com/wp-content/uploads/2017/02/example-poster.jpg',
-			$metadata['thumbnailURL']
-		);
-		$this->assertEquals(
-			'https://example.com/wp-content/uploads/2017/02/example-video.mp4',
-			$metadata['videoURL']
-		);
+		$this->assertEquals( $poster, $metadata['thumbnailURL'] );
+		$this->assertEquals( $video, $metadata['videoURL'] );
 	}
 }
