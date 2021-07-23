@@ -11,11 +11,11 @@ const safeJsonParseArray = (value) => {
   const parsedValue = safeJsonParse(value);
 
   // Make absolutely sure that the parsed value is an array.
-  if (! Array.isArray(parsedValue)) {
+  if (!Array.isArray(parsedValue)) {
     return [];
   }
 
   return parsedValue;
-}
+};
 
 export default safeJsonParseArray;

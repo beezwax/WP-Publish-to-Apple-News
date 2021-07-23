@@ -7,14 +7,14 @@ import {
   Spinner,
   TextareaControl,
 } from '@wordpress/components';
-import { useDispatch } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import {
   PluginSidebar,
   PluginSidebarMoreMenuItem,
 } from '@wordpress/edit-post';
 import { __ } from '@wordpress/i18n';
 import DOMPurify from 'dompurify';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Components.
 import ImagePicker from '../image-picker';
@@ -26,24 +26,61 @@ import usePostMeta from '../../services/hooks/use-post-meta';
 import safeJsonParseArray from '../../../util/safe-json-parse-array';
 
 const Sidebar = () => {
+  const [state, setState] = useState({
+    autoAssignCategories: false,
+    loading: false,
+    modified: 0,
+    publishState: '',
+    sections: [],
+    selectedSectionsPrev: '',
+    settings: {},
+    userCanPublish: false,
+  });
+
+  // Get values for settings.
+  const {
+    settings: {
+      apiAutosync,
+      apiAutosyncDelete,
+      apiAutosyncUpdate,
+      automaticAssignment,
+    } = {},
+  } = state;
+
+  // Get a reference to the dispatch function for notices for use later.
   const dispatchNotice = useDispatch('core/notices');
+
+  // Get the current post ID.
+  const { notices, postId, postStatus } = useSelect((select) => {
+    const editor = select('core/editor');
+    return {
+      notices: editor.getEditedPostAttribute('apple_news_notices'),
+      postId: editor.getCurrentPostId(),
+      postStatus: editor.getEditedPostAttribute('status'),
+    };
+  });
+
+  // Getter/setter for postmeta managed by this PluginSidebar.
   const [{
+    apple_news_api_created_at: dateCreated = '',
+    apple_news_api_id: apiId = '',
+    apple_news_api_modified_at: dateModified = '',
+    apple_news_api_revision: revision = '',
+    apple_news_api_share_url: shareUrl = '',
+    apple_news_coverimage: coverImageId = 0,
+    apple_news_coverimage_caption: coverImageCaption = '',
+    apple_news_is_hidden: isHidden = false,
     apple_news_is_paid: isPaid = false,
     apple_news_is_preview: isPreview = false,
-    apple_news_is_hidden: isHidden = false,
     apple_news_is_sponsored: isSponsored = false,
     apple_news_maturity_rating: maturityRating = '',
     apple_news_pullquote: pullquoteText = '',
     apple_news_pullquote_position: pullquotePosition = '',
     apple_news_sections: selectedSections = '',
-    apple_news_coverimage: coverImageId = 0,
-    apple_news_coverimage_caption: coverImageCaption = '',
-    apple_news_api_id: apiId = '',
-    apple_news_api_created_at: dateCreated = '',
-    apple_news_api_modified_at: dateModified = '',
-    apple_news_api_share_url: shareUrl = '',
-    apple_news_api_revision: revision = '',
   }, setMeta] = usePostMeta();
+
+  // Decode selected sections.
+  const selectedSectionsArray = safeJsonParseArray(selectedSections);
 
   /**
    * A helper function for displaying a notification to the user.
@@ -55,637 +92,370 @@ const Sidebar = () => {
     : dispatchNotice.createErrorNotice(DOMPurify.sanitize(message))
   );
 
-  // TODO: Refactor this into sub-components for each section.
-  /**
-   * Set initial state.
-   * @type {object}
-   */
-  state = {
-    autoAssignCategories: false,
-    loading: false,
-    modified: 0,
-    publishState: '',
-    sections: [],
-    selectedSectionsPrev: '',
-    settings: {},
-    userCanPublish: false,
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.deletePost = this.deletePost.bind(this);
-    this.displayErrors = this.displayErrors.bind(this);
-    this.publishPost = this.publishPost.bind(this);
-    this.updatePost = this.updatePost.bind(this);
-    this.updateSelectedSections = this.updateSelectedSections.bind(this);
-  }
-
-  /**
-   * Actions to be taken after the component has mounted.
-   */
-  componentDidMount() {
-    this.fetchPublishState();
-    this.fetchSections();
-    this.fetchSettings();
-    this.fetchUserCanPublish();
-  }
-
-  /**
-   * Actions to be taken after the component updated.
-   * @param {object} prevProps - Previous props before the update.
-   */
-  componentDidUpdate(prevProps) {
-    const {
-      appleNewsNotices = [],
-      displayNotification,
-    } = this.props;
-    const {
-      appleNewsNotices: appleNewsNoticesOld = [],
-    } = prevProps;
-
-    // Compare old notices to new notices in a simple way.
-    if (JSON.stringify(appleNewsNotices) !== JSON.stringify(appleNewsNoticesOld)) {
-      appleNewsNotices.forEach(displayNotification);
-    }
-  }
-
-  /**
-   * Sends a request to the REST API to delete the post.
-   */
-  deletePost() {
-    const {
-      post: {
-        id = 0,
-      } = {},
-    } = this.props;
-
-    this.modifyPost(id, 'delete');
-  }
-
-  /**
-   * A helper function for displaying errors using Gutenberg error notices.
-   * @param {Error} error - The error object.
-   */
-  displayErrors(error) {
-    const {
-      displayNotification,
-    } = this.props;
-
-    displayNotification({
-      dismissed: false,
-      dismissible: false,
-      message: error.message,
-      timestamp: Math.ceil(Date.now() / 1000),
-      type: 'error',
-    })
-  }
-
-  /**
-   * Fetch published state.
-   */
-  fetchPublishState() {
-    const {
-      post,
-    } = this.props;
-    const path = `/apple-news/v1/get-published-state/${post.id}`;
-
-    apiFetch({ path })
-      .then(({ publishState }) => (this.setState({ publishState })))
-      .catch(this.displayErrors);
-  }
-
-  /**
-   * Fetch Apple News Sections
-   */
-  fetchSections() {
-    const path = '/apple-news/v1/sections';
-
-    apiFetch({ path })
-      .then((sections) => (this.setState({ sections })))
-      .catch(this.displayErrors);
-  }
-
-  /**
-   * Fetch Apple News Settings
-   */
-  fetchSettings() {
-    const path = '/apple-news/v1/get-settings';
-
-    const {
-      meta: {
-        selectedSections,
-      } = {},
-    } = this.props;
-
-    const parsedSelectedSections = safeJsonParseArray(selectedSections) || [];
-
-    apiFetch({ path })
-      .then((settings) => this.setState({
-        autoAssignCategories: (
-          null === parsedSelectedSections
-          || 0 === parsedSelectedSections.length
-        )
-          && true === settings.automaticAssignment,
-        settings,
-      }))
-      .catch(this.displayErrors);
-  }
-
-  /**
-   * Fetch whether the current user can publish to Apple News.
-   */
-  fetchUserCanPublish() {
-    const {
-      post,
-    } = this.props;
-    const path = `/apple-news/v1/user-can-publish/${post.id}`;
-
-    apiFetch({ path })
-      .then(({ userCanPublish }) => (this.setState({ userCanPublish })))
-      .catch(this.displayErrors);
-  }
-
   /**
    * Sends a request to the REST API to modify the post.
+   * @param {string} operation - One of delete, publish, update.
    */
-  modifyPost(id, operation) {
-    const {
-      displayNotification,
-    } = this.props;
-
-    const path = `/apple-news/v1/${operation}`;
-
-    this.setState({
+  const modifyPost = async (operation) => {
+    setState({
+      ...state,
       loading: true,
     });
 
-    apiFetch({
-      data: {
-        id,
-      },
-      method: 'POST',
-      path,
-    })
-      .then((data) => {
-        const {
-          notifications = [],
-          publishState = '',
-        } = data;
-
-        notifications.forEach(displayNotification);
-
-        this.setState({
-          loading: false,
-          publishState,
-        });
-      })
-      .catch(this.displayErrors)
-      .finally(() => this.setState({
+    try {
+      const {
+        notifications = [],
+        publishState = '',
+      } = await apiFetch({
+        data: {
+          postId,
+        },
+        method: 'POST',
+        path: `/apple-news/v1/${operation}`,
+      });
+      notifications.forEach((notification) => displayNotification(
+        notification.message,
+        notification.type,
+      ));
+      setState({
+        ...state,
         loading: false,
-      }));
-  }
+        publishState,
+      });
+    } catch (error) {
+      displayNotification(error.message, 'error');
+      setState({
+        ...state,
+        loading: false,
+      });
+    }
+  };
 
   /**
-   * Sends a request to the REST API to publish the post.
+   * A helper function to update which sections are selected.
+   * @param {string} name - The name of the section to toggle.
    */
-  publishPost() {
-    const {
-      post: {
-        id = 0,
-      } = {},
-    } = this.props;
+  const toggleSelectedSection = (name) => setMeta('apple_news_sections',
+    selectedSectionsArray.includes(name)
+      ? JSON.stringify(selectedSectionsArray.filter((section) => section !== name))
+      : JSON.stringify([...selectedSectionsArray, name]));
 
-    this.modifyPost(id, 'publish');
-  }
+  // On initial load, fetch info from the API into state.
+  useEffect(() => {
+    (async () => {
+      const fetches = [
+        async () => ({ publishState: await apiFetch({ path: `/apple-news/v1/get-published-state/${postId}` })}),
+        async () => ({ sections: await apiFetch({ path: '/apple-news/v1/sections' })}),
+        async () => ({ settings: await apiFetch({ path: '/apple-news/v1/get-settings' }) }),
+        async () => ({ userCanPublish: await apiFetch({ path: `/apple-news/v1/user-can-publish/${postId}` })}),
+      ];
 
-  /**
-   * Sends a request to the REST API to update the post.
-   */
-  updatePost() {
-    const {
-      post: {
-        id = 0,
-      } = {},
-    } = this.props;
+      // Wait for everything to load, update state, and handle errors.
+      try {
+        const newState = (await Promise.all(fetches)).reduce((acc, item) => ({
+          ...acc,
+          ...item,
+        }), { ...state });
+        newState.autoAssignCategories = (selectedSectionsArray === null
+          || selectedSectionsArray.length === 0)
+            && newState.settings.automaticAssignment === true;
+        setState(newState);
+      } catch (error) {
+        displayNotification(error.message, 'error');
+      }
+    })();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-    this.modifyPost(id, 'update');
-  }
+  // Display notices whenever they change.
+  useEffect(() => {
+    notices.forEach((notice) => displayNotification(notice.message, notice.type));
+  }, [displayNotification, notices]);
 
-  /**
-   * Update which sections are selected.
-   *
-   * @param   {boolean} checked  is selected
-   * @param   {string}  name     name of item selected
-   *
-   * @return void.
-   */
-  updateSelectedSections(checked, name) {
-    const {
-      onUpdate,
-      meta: {
-        selectedSections,
-      } = {},
-    } = this.props;
-    // Need to default to [], else JSON parse fails
-    const selectedSectionsArray = safeJsonParseArray(selectedSections);
-
-    const selectedArrayDefault = Array.isArray(selectedSectionsArray)
-      ? JSON.stringify([...selectedSectionsArray, name]) : '';
-
-    const arrayFilter = selectedSectionsArray.filter(
-      (section) => section !== name
-    );
-
-    const selectedArrayFilter = 0 < arrayFilter.length
-      ? JSON.stringify(arrayFilter) : '';
-
-    onUpdate(
-      'apple_news_sections',
-      checked
-        ? selectedArrayDefault
-        : selectedArrayFilter
-    );
-  }
-
-  /**
-   * Renders the PluginSidebar.
-   * @returns {object} JSX component markup.
-   */
-  render() {
-    const target = 'publish-to-apple-news';
-    const label = __('Apple News Options', 'apple-news');
-
-    const {
-      onUpdate,
-      meta: {
-        isPaid = false,
-        isPreview = false,
-        isHidden = false,
-        isSponsored = false,
-        maturityRating = '',
-        pullquoteText = '',
-        pullquotePosition = '',
-        selectedSections = '',
-        coverImageId = 0,
-        coverImageCaption = '',
-        apiId = '',
-        dateCreated = '',
-        dateModified = '',
-        shareUrl = '',
-        revision = '',
-      } = {},
-      postIsDirty,
-      post: {
-        status = '',
-      } = {},
-    } = this.props;
-
-    const {
-      autoAssignCategories,
-      loading,
-      publishState,
-      sections,
-      settings: {
-        apiAutosync,
-        apiAutosyncDelete,
-        apiAutosyncUpdate,
-        automaticAssignment,
-      } = {},
-      selectedSectionsPrev,
-      userCanPublish,
-    } = this.state;
-
-    const selectedSectionsArray = safeJsonParseArray(selectedSections);
-
-    return (
-      <Fragment>
-        <PluginSidebarMoreMenuItem target={target}>
-          {label}
-        </PluginSidebarMoreMenuItem>
-        <PluginSidebar
-          name={target}
-          title={__('Publish to Apple News Options', 'apple-news')}
+  return (
+    <>
+      <PluginSidebarMoreMenuItem target="publish-to-apple-news">
+        {__('Apple News Options', 'apple-news')}
+      </PluginSidebarMoreMenuItem>
+      <PluginSidebar
+        name="publish-to-apple-news"
+        title={__('Publish to Apple News Options', 'apple-news')}
+      >
+        <div
+          className="components-panel__body is-opened"
+          id="apple-news-publish"
         >
-          <div
-            className="components-panel__body is-opened"
-            id="apple-news-publish"
-          >
-            <h3>{__('Sections', 'apple-news')}</h3>
-            {automaticAssignment && [
-              <CheckboxControl
-                label={__('Assign sections by category', 'apple-news')}
-                checked={autoAssignCategories}
-                onChange={
-                  (checked) => {
+          <h3>{__('Sections', 'apple-news')}</h3>
+          {automaticAssignment && [
+            <CheckboxControl
+              label={__('Assign sections by category', 'apple-news')}
+              checked={autoAssignCategories}
+              onChange={
+                (checked) => {
+                  this.setState({
+                    autoAssignCategories: checked,
+                  });
+                  if (checked) {
                     this.setState({
-                      autoAssignCategories: checked,
+                      selectedSectionsPrev: selectedSections || [],
                     });
-                    if (checked) {
-                      this.setState({
-                        selectedSectionsPrev: selectedSections || [],
-                      });
-                      onUpdate(
-                        'apple_news_sections',
-                        ''
-                      );
-                    } else {
-                      onUpdate(
-                        'apple_news_sections',
-                        selectedSectionsPrev
-                      );
-                      this.setState({
-                        selectedSectionsPrev: [],
-                      });
-                    }
+                    onUpdate(
+                      'apple_news_sections',
+                      ''
+                    );
+                  } else {
+                    onUpdate(
+                      'apple_news_sections',
+                      selectedSectionsPrev
+                    );
+                    this.setState({
+                      selectedSectionsPrev: [],
+                    });
                   }
                 }
-              />,
-              <hr />,
+              }
+            />,
+            <hr />,
+          ]}
+          {(! autoAssignCategories || ! automaticAssignment) && (
+            sections && 0 < sections.length && (
+              <>
+                <h4>Manual Section Selection</h4>
+                {Array.isArray(sections) && (
+                  <ul className="apple-news-sections">
+                    {sections.map(({ id, name }) => (
+                      <li key={id}>
+                        <CheckboxControl
+                          label={name}
+                          checked={- 1 !== selectedSectionsArray.indexOf(id)}
+                          onChange={
+                            (checked) => this.updateSelectedSections(checked, id) // eslint-disable-line max-len
+                          }
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <p>
+                  <em>
+                    {
+                      // eslint-disable-next-line max-len
+                      __('Select the sections in which to publish this article. If none are selected, it will be published to the default section.', 'apple-news')
+                    }
+                  </em>
+                </p>
+              </>
+            )
+          )}
+          <h3>{__('Paid Article', 'apple-news')}</h3>
+          <CheckboxControl
+            // eslint-disable-next-line max-len
+            label={__('Check this to indicate that viewing the article requires a paid subscription. Note that Apple must approve your channel for paid content before using this feature.', 'apple-news')}
+            onChange={(value) => onUpdate(
+              'apple_news_is_paid',
+              value
+            )}
+            checked={isPaid}
+          />
+          <h3>{__('Preview Article', 'apple-news')}</h3>
+          <CheckboxControl
+            // eslint-disable-next-line max-len
+            label={__('Check this to publish the article as a draft.', 'apple-news')}
+            onChange={(value) => onUpdate(
+              'apple_news_is_preview',
+              value
+            )}
+            checked={isPreview}
+          />
+          <h3>Hidden Article</h3>
+          <CheckboxControl
+            // eslint-disable-next-line max-len
+            label={__('Hidden articles are visible to users who have a link to the article, but do not appear in feeds.', 'apple-news')}
+            onChange={(value) => onUpdate(
+              'apple_news_is_hidden',
+              value
+            )}
+            checked={isHidden}
+          />
+          <h3>Sponsored Article</h3>
+          <CheckboxControl
+            // eslint-disable-next-line max-len
+            label={__('Check this to indicate this article is sponsored content.', 'apple-news')}
+            onChange={(value) => onUpdate(
+              'apple_news_is_sponsored',
+              value
+            )}
+            checked={isSponsored}
+          />
+        </div>
+        <PanelBody
+          initialOpen={false}
+          title={__('Maturity Rating', 'apple-news')}
+        >
+          <SelectControl
+            label={__('Select Maturity Rating', 'apple-news')}
+            value={maturityRating}
+            options={[
+              { label: '', value: '' },
+              { label: __('Kids', 'apple-news'), value: 'KIDS' },
+              { label: __('Mature', 'apple-news'), value: 'MATURE' },
+              { label: __('General', 'apple-news'), value: 'GENERAL' },
             ]}
-            {(! autoAssignCategories || ! automaticAssignment) && (
-              sections && 0 < sections.length && (
-                <>
-                  <h4>Manual Section Selection</h4>
-                  {Array.isArray(sections) && (
-                    <ul className="apple-news-sections">
-                      {sections.map(({ id, name }) => (
-                        <li key={id}>
-                          <CheckboxControl
-                            label={name}
-                            checked={- 1 !== selectedSectionsArray.indexOf(id)}
-                            onChange={
-                              (checked) => this.updateSelectedSections(checked, id) // eslint-disable-line max-len
-                            }
-                          />
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                  <p>
-                    <em>
-                      {
-                        // eslint-disable-next-line max-len
-                        __('Select the sections in which to publish this article. If none are selected, it will be published to the default section.', 'apple-news')
-                      }
-                    </em>
-                  </p>
-                </>
-              )
+            onChange={(value) => onUpdate(
+              'apple_news_maturity_rating',
+              value
             )}
-            <h3>{__('Paid Article', 'apple-news')}</h3>
-            <CheckboxControl
-              // eslint-disable-next-line max-len
-              label={__('Check this to indicate that viewing the article requires a paid subscription. Note that Apple must approve your channel for paid content before using this feature.', 'apple-news')}
-              onChange={(value) => onUpdate(
-                'apple_news_is_paid',
-                value
-              )}
-              checked={isPaid}
-            />
-            <h3>{__('Preview Article', 'apple-news')}</h3>
-            <CheckboxControl
-              // eslint-disable-next-line max-len
-              label={__('Check this to publish the article as a draft.', 'apple-news')}
-              onChange={(value) => onUpdate(
-                'apple_news_is_preview',
-                value
-              )}
-              checked={isPreview}
-            />
-            <h3>Hidden Article</h3>
-            <CheckboxControl
-              // eslint-disable-next-line max-len
-              label={__('Hidden articles are visible to users who have a link to the article, but do not appear in feeds.', 'apple-news')}
-              onChange={(value) => onUpdate(
-                'apple_news_is_hidden',
-                value
-              )}
-              checked={isHidden}
-            />
-            <h3>Sponsored Article</h3>
-            <CheckboxControl
-              // eslint-disable-next-line max-len
-              label={__('Check this to indicate this article is sponsored content.', 'apple-news')}
-              onChange={(value) => onUpdate(
-                'apple_news_is_sponsored',
-                value
-              )}
-              checked={isSponsored}
-            />
-          </div>
-          <PanelBody
-            initialOpen={false}
-            title={__('Maturity Rating', 'apple-news')}
-          >
-            <SelectControl
-              label={__('Select Maturity Rating', 'apple-news')}
-              value={maturityRating}
-              options={[
-                { label: '', value: '' },
-                { label: __('Kids', 'apple-news'), value: 'KIDS' },
-                { label: __('Mature', 'apple-news'), value: 'MATURE' },
-                { label: __('General', 'apple-news'), value: 'GENERAL' },
-              ]}
-              onChange={(value) => onUpdate(
-                'apple_news_maturity_rating',
-                value
-              )}
-            />
-            <p>
-              <em>
-                Select the optional maturity rating for this post.
-              </em>
-            </p>
-          </PanelBody>
-          <PanelBody
-            initialOpen={false}
-            title={__('Pull Quote', 'apple_news')}
-          >
-            <TextareaControl
-              label={__('Description', 'apple_news')}
-              value={pullquoteText}
-              onChange={(value) => onUpdate(
-                'apple_news_pullquote',
-                value
-              )}
-              // eslint-disable-next-line max-len
-              placeholder="A pull quote is a key phrase, quotation, or excerpt that has been pulled from an article and used as a graphic element, serving to entice readers into the article or to highlight a key topic."
-            />
-            <p>
-              <em>
-                This is optional and can be left blank.
-              </em>
-            </p>
-            <SelectControl
-              label={__('Pull Quote Position', 'apple-news')}
-              value={pullquotePosition || 'middle'}
-              options={[
-                { label: __('top', 'apple-news'), value: 'top' },
-                { label: __('middle', 'apple-news'), value: 'middle' },
-                { label: __('bottom', 'apple-news'), value: 'bottom' },
-              ]}
-              onChange={(value) => onUpdate(
-                'apple_news_pullquote_position',
-                value
-              )}
-            />
-            <p>
-              <em>
-                {
-                  // eslint-disable-next-line max-len
-                  __('The position in the article where the pull quote will appear.', 'apple-news')
-                }
-              </em>
-            </p>
-          </PanelBody>
-          <PanelBody
-            initialOpen={false}
-            title={__('Cover Image', 'apple_news')}
-          >
-            <ImagePicker
-              metaKey='apple_news_coverimage'
-              onUpdate={onUpdate}
-              value={coverImageId}
-            />
-            <TextareaControl
-              label={__('Caption', 'apple_news')}
-              value={coverImageCaption}
-              onChange={(value) => onUpdate(
-                'apple_news_coverimage_caption',
-                value
-              )}
-              placeholder="Add an image caption here."
-            />
-            <p>
-              <em>
-                This is optional and can be left blank.
-              </em>
-            </p>
-          </PanelBody>
-          <PanelBody
-            initialOpen={false}
-            title={__('Apple News Publish Information', 'apple-news')}
-          >
-            {'' !== publishState && 'N/A' !== publishState && (
-              <Fragment>
-                <h4>{__('API Id', 'apple-news')}</h4>
-                <p>{apiId}</p>
-                <h4>{__('Created On', 'apple-news')}</h4>
-                <p>{dateCreated}</p>
-                <h4>{__('Last Updated On', 'apple-news')}</h4>
-                <p>{dateModified}</p>
-                <h4>{__('Share URL', 'apple-news')}</h4>
-                <p>{shareUrl}</p>
-                <h4>{__('Revision', 'apple-news')}</h4>
-                <p>{revision}</p>
-                <h4>{__('Publish State', 'apple-news')}</h4>
-                <p>{publishState}</p>
-              </Fragment>
+          />
+          <p>
+            <em>
+              Select the optional maturity rating for this post.
+            </em>
+          </p>
+        </PanelBody>
+        <PanelBody
+          initialOpen={false}
+          title={__('Pull Quote', 'apple_news')}
+        >
+          <TextareaControl
+            label={__('Description', 'apple_news')}
+            value={pullquoteText}
+            onChange={(value) => onUpdate(
+              'apple_news_pullquote',
+              value
             )}
-          </PanelBody>
-          {'publish' === status && userCanPublish && (
+            // eslint-disable-next-line max-len
+            placeholder="A pull quote is a key phrase, quotation, or excerpt that has been pulled from an article and used as a graphic element, serving to entice readers into the article or to highlight a key topic."
+          />
+          <p>
+            <em>
+              This is optional and can be left blank.
+            </em>
+          </p>
+          <SelectControl
+            label={__('Pull Quote Position', 'apple-news')}
+            value={pullquotePosition || 'middle'}
+            options={[
+              { label: __('top', 'apple-news'), value: 'top' },
+              { label: __('middle', 'apple-news'), value: 'middle' },
+              { label: __('bottom', 'apple-news'), value: 'bottom' },
+            ]}
+            onChange={(value) => onUpdate(
+              'apple_news_pullquote_position',
+              value
+            )}
+          />
+          <p>
+            <em>
+              {
+                // eslint-disable-next-line max-len
+                __('The position in the article where the pull quote will appear.', 'apple-news')
+              }
+            </em>
+          </p>
+        </PanelBody>
+        <PanelBody
+          initialOpen={false}
+          title={__('Cover Image', 'apple_news')}
+        >
+          <ImagePicker
+            metaKey='apple_news_coverimage'
+            onUpdate={onUpdate}
+            value={coverImageId}
+          />
+          <TextareaControl
+            label={__('Caption', 'apple_news')}
+            value={coverImageCaption}
+            onChange={(value) => onUpdate(
+              'apple_news_coverimage_caption',
+              value
+            )}
+            placeholder="Add an image caption here."
+          />
+          <p>
+            <em>
+              This is optional and can be left blank.
+            </em>
+          </p>
+        </PanelBody>
+        <PanelBody
+          initialOpen={false}
+          title={__('Apple News Publish Information', 'apple-news')}
+        >
+          {'' !== publishState && 'N/A' !== publishState && (
             <Fragment>
-              {loading ? (
-                <Spinner />
-              ) : (
-                <Fragment>
-                  {'' !== publishState && 'N/A' !== publishState ? (
-                    <Fragment>
-                      {! apiAutosyncUpdate && (
-                        <Button
-                          isPrimary
-                          onClick={this.updatePost}
-                          style={{ margin: '1em' }}
-                        >
-                          {__('Update', 'apple-news')}
-                        </Button>
-                      )}
-                      {! apiAutosyncDelete && (
-                        <Button
-                          isDefault
-                          onClick={this.deletePost}
-                          style={{ margin: '1em' }}
-                        >
-                          {__('Delete', 'apple-news')}
-                        </Button>
-                      )}
-                    </Fragment>
-                  ) : (
-                    <Fragment>
-                      {
-                        postIsDirty && (
-                          <div className="components-notice is-warning">
-                            <strong>
-                              {__(
-                                'Please click the Update button above to ensure that all changes are saved before publishing to Apple News.',
-                                'apple-news'
-                              )}
-                            </strong>
-                          </div>
-                        )
-                      }
-                      {! apiAutosync && (
-                        <Button
-                          isPrimary
-                          onClick={this.publishPost}
-                          style={{ margin: '1em' }}
-                        >
-                          {__('Publish', 'apple-news')}
-                        </Button>
-                      )}
-                    </Fragment>
-                  )}
-                </Fragment>
-              )}
+              <h4>{__('API Id', 'apple-news')}</h4>
+              <p>{apiId}</p>
+              <h4>{__('Created On', 'apple-news')}</h4>
+              <p>{dateCreated}</p>
+              <h4>{__('Last Updated On', 'apple-news')}</h4>
+              <p>{dateModified}</p>
+              <h4>{__('Share URL', 'apple-news')}</h4>
+              <p>{shareUrl}</p>
+              <h4>{__('Revision', 'apple-news')}</h4>
+              <p>{revision}</p>
+              <h4>{__('Publish State', 'apple-news')}</h4>
+              <p>{publishState}</p>
             </Fragment>
           )}
-        </PluginSidebar>
-      </Fragment>
-    );
-  }
-}
+        </PanelBody>
+        {'publish' === status && userCanPublish && (
+          <Fragment>
+            {loading ? (
+              <Spinner />
+            ) : (
+              <Fragment>
+                {'' !== publishState && 'N/A' !== publishState ? (
+                  <Fragment>
+                    {! apiAutosyncUpdate && (
+                      <Button
+                        isPrimary
+                        onClick={this.updatePost}
+                        style={{ margin: '1em' }}
+                      >
+                        {__('Update', 'apple-news')}
+                      </Button>
+                    )}
+                    {! apiAutosyncDelete && (
+                      <Button
+                        isDefault
+                        onClick={this.deletePost}
+                        style={{ margin: '1em' }}
+                      >
+                        {__('Delete', 'apple-news')}
+                      </Button>
+                    )}
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    {
+                      postIsDirty && (
+                        <div className="components-notice is-warning">
+                          <strong>
+                            {__(
+                              'Please click the Update button above to ensure that all changes are saved before publishing to Apple News.',
+                              'apple-news'
+                            )}
+                          </strong>
+                        </div>
+                      )
+                    }
+                    {! apiAutosync && (
+                      <Button
+                        isPrimary
+                        onClick={this.publishPost}
+                        style={{ margin: '1em' }}
+                      >
+                        {__('Publish', 'apple-news')}
+                      </Button>
+                    )}
+                  </Fragment>
+                )}
+              </Fragment>
+            )}
+          </Fragment>
+        )}
+      </PluginSidebar>
+    </>
+  );
+};
 
-/*
- compose([
-  withSelect((selector) => {
-    const editor = selector('core/editor');
-    const postIsDirty = editor.isEditedPostDirty();
-    const meta = editor && editor.getEditedPostAttribute
-      ? editor.getEditedPostAttribute('meta') || {}
-      : {};
-    const  = meta;
-    const appleNewsNotices = editor && editor.getEditedPostAttribute
-      ? editor.getEditedPostAttribute('apple_news_notices') || []
-      : [];
-
-    const postId = editor && editor.getCurrentPostId
-      ? editor.getCurrentPostId()
-      : 0;
-
-    return {
-      meta: {
-        isPaid,
-        isPreview,
-        isHidden,
-        isSponsored,
-        maturityRating,
-        pullquoteText,
-        pullquotePosition,
-        selectedSections,
-        coverImageId,
-        coverImageCaption,
-        apiId,
-        dateCreated,
-        dateModified,
-        shareUrl,
-        revision,
-        postId,
-      },
-      appleNewsNotices,
-      postIsDirty,
-      post: editor && editor.getCurrentPost ? editor.getCurrentPost() : {},
-    };
-  }),
-])(Sidebar);
- */
+export default Sidebar;

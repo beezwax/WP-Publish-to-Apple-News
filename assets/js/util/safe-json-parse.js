@@ -10,6 +10,6 @@ const safeJsonParse = (value) => {
   } catch (e) {
     return null;
   }
-}
+};
 
 export default safeJsonParse;

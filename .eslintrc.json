@@ -6,6 +6,14 @@
     "node": true
   },
   "extends": ["airbnb", "airbnb/hooks"],
+  "ignorePatterns": [
+    "!assets/js",
+    "assets/js/*",
+    "!assets/js/pluginsidebar",
+    "!assets/js/util",
+    "build",
+    "vendor"
+  ],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaFeatures": {
