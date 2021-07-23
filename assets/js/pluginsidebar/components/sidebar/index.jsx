@@ -1,80 +1,61 @@
-/* global React, wp */
-
-import PropTypes from 'prop-types';
+import apiFetch from '@wordpress/api-fetch';
+import {
+  Button,
+  CheckboxControl,
+  PanelBody,
+  SelectControl,
+  Spinner,
+  TextareaControl,
+} from '@wordpress/components';
+import { useDispatch } from '@wordpress/data';
+import {
+  PluginSidebar,
+  PluginSidebarMoreMenuItem,
+} from '@wordpress/edit-post';
+import { __ } from '@wordpress/i18n';
+import DOMPurify from 'dompurify';
+import React from 'react';
 
 // Components.
-import ImagePicker from '../imagePicker';
+import ImagePicker from '../image-picker';
 
-// Services.
-import dispatchNotification from '../../services/dispatchNotification';
+// Hooks.
+import usePostMeta from '../../services/hooks/use-post-meta';
 
 // Utils.
-import safeJsonParseArray from '../../../util/safeJsonParseArray';
+import safeJsonParseArray from '../../../util/safe-json-parse-array';
 
-const {
-  apiFetch,
-  compose: {
-    compose,
-  } = {},
-  components: {
-    Button,
-    CheckboxControl,
-    PanelBody,
-    SelectControl,
-    Spinner,
-    TextareaControl,
-  } = {},
-  data: {
-    withDispatch,
-    withSelect,
-  } = {},
-  editPost: {
-    PluginSidebar,
-    PluginSidebarMoreMenuItem,
-  } = {},
-  element: {
-    Fragment,
-  } = {},
-  i18n: {
-    __,
-  } = {},
-} = wp;
+const Sidebar = () => {
+  const dispatchNotice = useDispatch('core/notices');
+  const [{
+    apple_news_is_paid: isPaid = false,
+    apple_news_is_preview: isPreview = false,
+    apple_news_is_hidden: isHidden = false,
+    apple_news_is_sponsored: isSponsored = false,
+    apple_news_maturity_rating: maturityRating = '',
+    apple_news_pullquote: pullquoteText = '',
+    apple_news_pullquote_position: pullquotePosition = '',
+    apple_news_sections: selectedSections = '',
+    apple_news_coverimage: coverImageId = 0,
+    apple_news_coverimage_caption: coverImageCaption = '',
+    apple_news_api_id: apiId = '',
+    apple_news_api_created_at: dateCreated = '',
+    apple_news_api_modified_at: dateModified = '',
+    apple_news_api_share_url: shareUrl = '',
+    apple_news_api_revision: revision = '',
+  }, setMeta] = usePostMeta();
 
-/**
- * A component to render a PluginSidebar for the WP Starter Plugin site.
- */
-class Sidebar extends React.PureComponent {
-  // Define PropTypes for this component.
-  static propTypes = {
-    appleNewsNotices: PropTypes.arrayOf(PropTypes.shape({
-      dismissed: PropTypes.bool,
-      dismissible: PropTypes.bool,
-      message: PropTypes.string,
-      timestamp: PropTypes.number,
-      type: PropTypes.string,
-    })).isRequired,
-    displayNotification: PropTypes.func.isRequired,
-    meta: PropTypes.shape({
-      isPaid: PropTypes.bool,
-      isPreview: PropTypes.bool,
-      isHidden: PropTypes.bool,
-      isSponsored: PropTypes.bool,
-      maturityRating: PropTypes.string,
-      pullquoteText: PropTypes.string,
-      pullquotePosition: PropTypes.string,
-      selectedSections: PropTypes.string,
-      coverImageId: PropTypes.number,
-      coverImageCaption: PropTypes.string,
-      apiId: PropTypes.string,
-      dateCreated: PropTypes.string,
-      dateModified: PropTypes.string,
-      shareUrl: PropTypes.string,
-      revision: PropTypes.string,
-    }).isRequired,
-    onUpdate: PropTypes.func.isRequired,
-    post: PropTypes.shape({}).isRequired,
-  };
+  /**
+   * A helper function for displaying a notification to the user.
+   * @param {string} message - The notification message displayed to the user.
+   * @param {string} type - Optional. The type of message to display. Defaults to success.
+   */
+  const displayNotification = (message, type = 'success') => (type === 'success'
+    ? dispatchNotice.createInfoNotice(DOMPurify.sanitize(message), { type: 'snackbar' })
+    : dispatchNotice.createErrorNotice(DOMPurify.sanitize(message))
+  );
 
+  // TODO: Refactor this into sub-components for each section.
   /**
    * Set initial state.
    * @type {object}
@@ -665,30 +646,15 @@ class Sidebar extends React.PureComponent {
   }
 }
 
-export default compose([
+/*
+ compose([
   withSelect((selector) => {
     const editor = selector('core/editor');
     const postIsDirty = editor.isEditedPostDirty();
     const meta = editor && editor.getEditedPostAttribute
       ? editor.getEditedPostAttribute('meta') || {}
       : {};
-    const {
-      apple_news_is_paid: isPaid = false,
-      apple_news_is_preview: isPreview = false,
-      apple_news_is_hidden: isHidden = false,
-      apple_news_is_sponsored: isSponsored = false,
-      apple_news_maturity_rating: maturityRating = '',
-      apple_news_pullquote: pullquoteText = '',
-      apple_news_pullquote_position: pullquotePosition = '',
-      apple_news_sections: selectedSections = '',
-      apple_news_coverimage: coverImageId = 0,
-      apple_news_coverimage_caption: coverImageCaption = '',
-      apple_news_api_id: apiId = '',
-      apple_news_api_created_at: dateCreated = '',
-      apple_news_api_modified_at: dateModified = '',
-      apple_news_api_share_url: shareUrl = '',
-      apple_news_api_revision: revision = '',
-    } = meta;
+    const  = meta;
     const appleNewsNotices = editor && editor.getEditedPostAttribute
       ? editor.getEditedPostAttribute('apple_news_notices') || []
       : [];
@@ -721,14 +687,5 @@ export default compose([
       post: editor && editor.getCurrentPost ? editor.getCurrentPost() : {},
     };
   }),
-  withDispatch((dispatch) => ({
-    displayNotification: (notification) => dispatchNotification(dispatch, notification),
-    onUpdate: (metaKey, metaValue) => {
-      dispatch('core/editor').editPost({
-        meta: {
-          [metaKey]: metaValue,
-        },
-      });
-    },
-  })),
 ])(Sidebar);
+ */

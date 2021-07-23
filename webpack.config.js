@@ -13,7 +13,7 @@ module.exports = (env, { mode }) => ({
 
   // We only have one entry point - the pluginsidebar.
   entry: {
-    pluginSidebar: './assets/js/pluginsidebar/index.js',
+    pluginSidebar: './assets/js/pluginsidebar/index.jsx',
   },
 
   // Configure loaders based on extension.

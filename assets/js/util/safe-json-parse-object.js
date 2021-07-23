@@ -1,4 +1,4 @@
-import safeJsonParse from './safeJsonParse';
+import safeJsonParse from './safe-json-parse';
 
 /**
  * Given a value, run JSON.parse on it, but if parsing fails, or if
@@ -7,7 +7,7 @@ import safeJsonParse from './safeJsonParse';
  * @param {*} value - The value to attempt to parse.
  * @returns {object} - The parsed value, or an empty object on failure.
  */
-export default function safeJsonParseObject(value) {
+const safeJsonParseObject = (value) => {
   const parsedValue = safeJsonParse(value);
 
   // Make absolutely sure that the object is a standard object.
@@ -21,3 +21,5 @@ export default function safeJsonParseObject(value) {
 
   return parsedValue;
 }
+
+export default safeJsonParseObject;

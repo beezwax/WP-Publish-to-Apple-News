@@ -1,4 +1,3 @@
-import DOMPurify from 'dompurify';
 
 /**
  * Given a `dispatch` object and a notification object, dispatches a notification.

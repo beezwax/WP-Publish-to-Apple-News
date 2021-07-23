@@ -1,9 +1,9 @@
 === Publish To Apple News ===
-Contributors: potatomaster, kevinfodness, jomurgel, danbowles, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brianschick
+Contributors: potatomaster, kevinfodness, jomurgel, tylermachado, benpbolton, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brianschick
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 5.7.2
+Tested up to: 5.8
 Requires PHP: 5.6
 Stable tag: 2.1.4
 License: GPLv3 or later

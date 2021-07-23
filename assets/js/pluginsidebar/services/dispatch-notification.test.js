@@ -1,5 +1,5 @@
-import dispatchNotification from './dispatchNotification';
 import DOMPurify from 'dompurify';
+import dispatchNotification from './dispatch-notification';
 
 // DOMPurify only works in the browser, so we have to mock its implementation here.
 jest.mock('dompurify');
