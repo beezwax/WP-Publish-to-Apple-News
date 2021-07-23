@@ -1,4 +1,9 @@
 import dispatchNotification from './dispatchNotification';
+import DOMPurify from 'dompurify';
+
+// DOMPurify only works in the browser, so we have to mock its implementation here.
+jest.mock('dompurify');
+DOMPurify.sanitize = jest.fn((value) => value);
 
 // Mock dispatch.
 const dispatch = (type) => {
