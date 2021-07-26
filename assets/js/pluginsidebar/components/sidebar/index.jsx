@@ -1,7 +1,6 @@
 import apiFetch from '@wordpress/api-fetch';
 import {
   Button,
-  CheckboxControl,
   PanelBody,
   SelectControl,
   Spinner,
@@ -17,10 +16,13 @@ import DOMPurify from 'dompurify';
 import React, { useEffect, useState } from 'react';
 
 // Components.
-import ImagePicker from '../image-picker';
+import ImagePicker from '../../../components/image-picker';
 
 // Hooks.
-import usePostMeta from '../../services/hooks/use-post-meta';
+import usePostMeta from '../../../services/hooks/use-post-meta';
+
+// Panels.
+import ArticleOptions from '../article-options';
 
 // Utils.
 import safeJsonParseArray from '../../../util/safe-json-parse-array';
@@ -32,19 +34,29 @@ const Sidebar = () => {
     modified: 0,
     publishState: '',
     sections: [],
-    selectedSectionsPrev: '',
-    settings: {},
+    settings: {
+      apiAutosync: false,
+      apiAutosyncDelete: false,
+      apiAutosyncUpdate: false,
+      automaticAssignment: false,
+    },
     userCanPublish: false,
   });
 
-  // Get values for settings.
+  // Destructure values out of state for easier access.
   const {
+    autoAssignCategories,
+    loading,
+    modified,
+    publishState,
+    sections,
     settings: {
       apiAutosync,
       apiAutosyncDelete,
       apiAutosyncUpdate,
       automaticAssignment,
-    } = {},
+    },
+    userCanPublish,
   } = state;
 
   // Get a reference to the dispatch function for notices for use later.
@@ -76,11 +88,11 @@ const Sidebar = () => {
     apple_news_maturity_rating: maturityRating = '',
     apple_news_pullquote: pullquoteText = '',
     apple_news_pullquote_position: pullquotePosition = '',
-    apple_news_sections: selectedSections = '',
+    apple_news_sections: selectedSectionsRaw = '',
   }, setMeta] = usePostMeta();
 
   // Decode selected sections.
-  const selectedSectionsArray = safeJsonParseArray(selectedSections);
+  const selectedSections = safeJsonParseArray(selectedSectionsRaw);
 
   /**
    * A helper function for displaying a notification to the user.
@@ -136,18 +148,18 @@ const Sidebar = () => {
    * @param {string} name - The name of the section to toggle.
    */
   const toggleSelectedSection = (name) => setMeta('apple_news_sections',
-    selectedSectionsArray.includes(name)
-      ? JSON.stringify(selectedSectionsArray.filter((section) => section !== name))
-      : JSON.stringify([...selectedSectionsArray, name]));
+    selectedSections.includes(name)
+      ? JSON.stringify(selectedSections.filter((section) => section !== name))
+      : JSON.stringify([...selectedSections, name]));
 
   // On initial load, fetch info from the API into state.
   useEffect(() => {
     (async () => {
       const fetches = [
-        async () => ({ publishState: await apiFetch({ path: `/apple-news/v1/get-published-state/${postId}` })}),
-        async () => ({ sections: await apiFetch({ path: '/apple-news/v1/sections' })}),
+        async () => ({ publishState: await apiFetch({ path: `/apple-news/v1/get-published-state/${postId}` }) }),
+        async () => ({ sections: await apiFetch({ path: '/apple-news/v1/sections' }) }),
         async () => ({ settings: await apiFetch({ path: '/apple-news/v1/get-settings' }) }),
-        async () => ({ userCanPublish: await apiFetch({ path: `/apple-news/v1/user-can-publish/${postId}` })}),
+        async () => ({ userCanPublish: await apiFetch({ path: `/apple-news/v1/user-can-publish/${postId}` }) }),
       ];
 
       // Wait for everything to load, update state, and handle errors.
@@ -156,8 +168,8 @@ const Sidebar = () => {
           ...acc,
           ...item,
         }), { ...state });
-        newState.autoAssignCategories = (selectedSectionsArray === null
-          || selectedSectionsArray.length === 0)
+        newState.autoAssignCategories = (selectedSections === null
+          || selectedSections.length === 0)
             && newState.settings.automaticAssignment === true;
         setState(newState);
       } catch (error) {
@@ -180,113 +192,28 @@ const Sidebar = () => {
         name="publish-to-apple-news"
         title={__('Publish to Apple News Options', 'apple-news')}
       >
-        <div
-          className="components-panel__body is-opened"
-          id="apple-news-publish"
-        >
-          <h3>{__('Sections', 'apple-news')}</h3>
-          {automaticAssignment && [
-            <CheckboxControl
-              label={__('Assign sections by category', 'apple-news')}
-              checked={autoAssignCategories}
-              onChange={
-                (checked) => {
-                  this.setState({
-                    autoAssignCategories: checked,
-                  });
-                  if (checked) {
-                    this.setState({
-                      selectedSectionsPrev: selectedSections || [],
-                    });
-                    onUpdate(
-                      'apple_news_sections',
-                      ''
-                    );
-                  } else {
-                    onUpdate(
-                      'apple_news_sections',
-                      selectedSectionsPrev
-                    );
-                    this.setState({
-                      selectedSectionsPrev: [],
-                    });
-                  }
-                }
-              }
-            />,
-            <hr />,
-          ]}
-          {(! autoAssignCategories || ! automaticAssignment) && (
-            sections && 0 < sections.length && (
-              <>
-                <h4>Manual Section Selection</h4>
-                {Array.isArray(sections) && (
-                  <ul className="apple-news-sections">
-                    {sections.map(({ id, name }) => (
-                      <li key={id}>
-                        <CheckboxControl
-                          label={name}
-                          checked={- 1 !== selectedSectionsArray.indexOf(id)}
-                          onChange={
-                            (checked) => this.updateSelectedSections(checked, id) // eslint-disable-line max-len
-                          }
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                )}
-                <p>
-                  <em>
-                    {
-                      // eslint-disable-next-line max-len
-                      __('Select the sections in which to publish this article. If none are selected, it will be published to the default section.', 'apple-news')
-                    }
-                  </em>
-                </p>
-              </>
-            )
-          )}
-          <h3>{__('Paid Article', 'apple-news')}</h3>
-          <CheckboxControl
-            // eslint-disable-next-line max-len
-            label={__('Check this to indicate that viewing the article requires a paid subscription. Note that Apple must approve your channel for paid content before using this feature.', 'apple-news')}
-            onChange={(value) => onUpdate(
-              'apple_news_is_paid',
-              value
-            )}
-            checked={isPaid}
-          />
-          <h3>{__('Preview Article', 'apple-news')}</h3>
-          <CheckboxControl
-            // eslint-disable-next-line max-len
-            label={__('Check this to publish the article as a draft.', 'apple-news')}
-            onChange={(value) => onUpdate(
-              'apple_news_is_preview',
-              value
-            )}
-            checked={isPreview}
-          />
-          <h3>Hidden Article</h3>
-          <CheckboxControl
-            // eslint-disable-next-line max-len
-            label={__('Hidden articles are visible to users who have a link to the article, but do not appear in feeds.', 'apple-news')}
-            onChange={(value) => onUpdate(
-              'apple_news_is_hidden',
-              value
-            )}
-            checked={isHidden}
-          />
-          <h3>Sponsored Article</h3>
-          <CheckboxControl
-            // eslint-disable-next-line max-len
-            label={__('Check this to indicate this article is sponsored content.', 'apple-news')}
-            onChange={(value) => onUpdate(
-              'apple_news_is_sponsored',
-              value
-            )}
-            checked={isSponsored}
-          />
-        </div>
+        <ArticleOptions
+          autoAssignCategories={autoAssignCategories}
+          automaticAssignment={automaticAssignment}
+          isHidden={isHidden}
+          isPaid={isPaid}
+          isPreview={isPreview}
+          isSponsored={isSponsored}
+          onChangeAutoAssignCategories={(next) => {
+            setState({
+              ...state,
+              autoAssignCategories: next,
+            });
+            setMeta('apple_news_sections', '');
+          }}
+          onChangeIsHidden={(next) => setMeta('apple_news_is_hidden', next)}
+          onChangeIsPaid={(next) => setMeta('apple_news_is_paid', next)}
+          onChangeIsPreview={(next) => setMeta('apple_news_is_preview', next)}
+          onChangeIsSponsored={(next) => setMeta('apple_news_is_sponsored', next)}
+          onChangeSelectedSections={toggleSelectedSection}
+          sections={sections}
+          selectedSections={selectedSections}
+        />
         <PanelBody
           initialOpen={false}
           title={__('Maturity Rating', 'apple-news')}

@@ -9,7 +9,10 @@
   "ignorePatterns": [
     "!assets/js",
     "assets/js/*",
+    "!assets/js/components",
+    "!assets/js/config",
     "!assets/js/pluginsidebar",
+    "!assets/js/services",
     "!assets/js/util",
     "build",
     "vendor"
