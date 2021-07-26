@@ -2,9 +2,7 @@ import apiFetch from '@wordpress/api-fetch';
 import {
   Button,
   PanelBody,
-  SelectControl,
   Spinner,
-  TextareaControl,
 } from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import {
@@ -15,14 +13,12 @@ import { __ } from '@wordpress/i18n';
 import DOMPurify from 'dompurify';
 import React, { useCallback, useEffect, useState } from 'react';
 
-// Components.
-import ImagePicker from '../../../components/image-picker';
-
 // Hooks.
 import usePostMeta from '../../../services/hooks/use-post-meta';
 
 // Panels.
 import ArticleOptions from '../article-options';
+import CoverImage from '../cover-image';
 import MaturityRating from '../maturity-rating';
 import PullQuote from '../pull-quote';
 
@@ -230,30 +226,12 @@ const Sidebar = () => {
           pullquotePosition={pullquotePosition}
           pullquoteText={pullquoteText}
         />
-        <PanelBody
-          initialOpen={false}
-          title={__('Cover Image', 'apple_news')}
-        >
-          <ImagePicker
-            metaKey='apple_news_coverimage'
-            onUpdate={onUpdate}
-            value={coverImageId}
-          />
-          <TextareaControl
-            label={__('Caption', 'apple_news')}
-            value={coverImageCaption}
-            onChange={(value) => onUpdate(
-              'apple_news_coverimage_caption',
-              value
-            )}
-            placeholder="Add an image caption here."
-          />
-          <p>
-            <em>
-              This is optional and can be left blank.
-            </em>
-          </p>
-        </PanelBody>
+        <CoverImage
+          coverImageCaption={coverImageCaption}
+          coverImageId={coverImageId}
+          onUpdateCoverImageCaption={(next) => setMeta('apple_news_coverimage_caption', next)}
+          onUpdateCoverImageId={(next) => setMeta('apple_news_coverimage', next)}
+        />
         <PanelBody
           initialOpen={false}
           title={__('Apple News Publish Information', 'apple-news')}
