@@ -30,8 +30,8 @@ const ArticleOptions = ({
     {automaticAssignment ? (
       <>
         <CheckboxControl
-          label={__('Assign sections by category', 'apple-news')}
           checked={autoAssignCategories}
+          label={__('Assign sections by category', 'apple-news')}
           onChange={onChangeAutoAssignCategories}
         />
         <hr />
@@ -60,27 +60,27 @@ const ArticleOptions = ({
     ) : null}
     <h3>{__('Paid Article', 'apple-news')}</h3>
     <CheckboxControl
+      checked={isPaid}
       label={__('Check this to indicate that viewing the article requires a paid subscription. Note that Apple must approve your channel for paid content before using this feature.', 'apple-news')}
       onChange={onChangeIsPaid}
-      checked={isPaid}
     />
     <h3>{__('Preview Article', 'apple-news')}</h3>
     <CheckboxControl
+      checked={isPreview}
       label={__('Check this to publish the article as a draft.', 'apple-news')}
       onChange={onChangeIsPreview}
-      checked={isPreview}
     />
     <h3>Hidden Article</h3>
     <CheckboxControl
+      checked={isHidden}
       label={__('Hidden articles are visible to users who have a link to the article, but do not appear in feeds.', 'apple-news')}
       onChange={onChangeIsHidden}
-      checked={isHidden}
     />
     <h3>Sponsored Article</h3>
     <CheckboxControl
+      checked={isSponsored}
       label={__('Check this to indicate this article is sponsored content.', 'apple-news')}
       onChange={onChangeIsSponsored}
-      checked={isSponsored}
     />
   </PanelBody>
 );

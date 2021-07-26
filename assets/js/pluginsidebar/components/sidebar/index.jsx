@@ -13,7 +13,7 @@ import {
 } from '@wordpress/edit-post';
 import { __ } from '@wordpress/i18n';
 import DOMPurify from 'dompurify';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 // Components.
 import ImagePicker from '../../../components/image-picker';
@@ -23,6 +23,8 @@ import usePostMeta from '../../../services/hooks/use-post-meta';
 
 // Panels.
 import ArticleOptions from '../article-options';
+import MaturityRating from '../maturity-rating';
+import PullQuote from '../pull-quote';
 
 // Utils.
 import safeJsonParseArray from '../../../util/safe-json-parse-array';
@@ -31,7 +33,6 @@ const Sidebar = () => {
   const [state, setState] = useState({
     autoAssignCategories: false,
     loading: false,
-    modified: 0,
     publishState: '',
     sections: [],
     settings: {
@@ -47,7 +48,6 @@ const Sidebar = () => {
   const {
     autoAssignCategories,
     loading,
-    modified,
     publishState,
     sections,
     settings: {
@@ -63,11 +63,17 @@ const Sidebar = () => {
   const dispatchNotice = useDispatch('core/notices');
 
   // Get the current post ID.
-  const { notices, postId, postStatus } = useSelect((select) => {
+  const {
+    notices,
+    postId,
+    postIsDirty,
+    postStatus,
+  } = useSelect((select) => {
     const editor = select('core/editor');
     return {
       notices: editor.getEditedPostAttribute('apple_news_notices'),
       postId: editor.getCurrentPostId(),
+      postIsDirty: editor.isEditedPostDirty(),
       postStatus: editor.getEditedPostAttribute('status'),
     };
   });
@@ -99,10 +105,10 @@ const Sidebar = () => {
    * @param {string} message - The notification message displayed to the user.
    * @param {string} type - Optional. The type of message to display. Defaults to success.
    */
-  const displayNotification = (message, type = 'success') => (type === 'success'
+  const displayNotification = useCallback((message, type = 'success') => (type === 'success'
     ? dispatchNotice.createInfoNotice(DOMPurify.sanitize(message), { type: 'snackbar' })
     : dispatchNotice.createErrorNotice(DOMPurify.sanitize(message))
-  );
+  ), [dispatchNotice]);
 
   /**
    * Sends a request to the REST API to modify the post.
@@ -117,7 +123,7 @@ const Sidebar = () => {
     try {
       const {
         notifications = [],
-        publishState = '',
+        publishState: nextPublishState = '',
       } = await apiFetch({
         data: {
           postId,
@@ -132,7 +138,7 @@ const Sidebar = () => {
       setState({
         ...state,
         loading: false,
-        publishState,
+        publishState: nextPublishState,
       });
     } catch (error) {
       displayNotification(error.message, 'error');
@@ -214,71 +220,16 @@ const Sidebar = () => {
           sections={sections}
           selectedSections={selectedSections}
         />
-        <PanelBody
-          initialOpen={false}
-          title={__('Maturity Rating', 'apple-news')}
-        >
-          <SelectControl
-            label={__('Select Maturity Rating', 'apple-news')}
-            value={maturityRating}
-            options={[
-              { label: '', value: '' },
-              { label: __('Kids', 'apple-news'), value: 'KIDS' },
-              { label: __('Mature', 'apple-news'), value: 'MATURE' },
-              { label: __('General', 'apple-news'), value: 'GENERAL' },
-            ]}
-            onChange={(value) => onUpdate(
-              'apple_news_maturity_rating',
-              value
-            )}
-          />
-          <p>
-            <em>
-              Select the optional maturity rating for this post.
-            </em>
-          </p>
-        </PanelBody>
-        <PanelBody
-          initialOpen={false}
-          title={__('Pull Quote', 'apple_news')}
-        >
-          <TextareaControl
-            label={__('Description', 'apple_news')}
-            value={pullquoteText}
-            onChange={(value) => onUpdate(
-              'apple_news_pullquote',
-              value
-            )}
-            // eslint-disable-next-line max-len
-            placeholder="A pull quote is a key phrase, quotation, or excerpt that has been pulled from an article and used as a graphic element, serving to entice readers into the article or to highlight a key topic."
-          />
-          <p>
-            <em>
-              This is optional and can be left blank.
-            </em>
-          </p>
-          <SelectControl
-            label={__('Pull Quote Position', 'apple-news')}
-            value={pullquotePosition || 'middle'}
-            options={[
-              { label: __('top', 'apple-news'), value: 'top' },
-              { label: __('middle', 'apple-news'), value: 'middle' },
-              { label: __('bottom', 'apple-news'), value: 'bottom' },
-            ]}
-            onChange={(value) => onUpdate(
-              'apple_news_pullquote_position',
-              value
-            )}
-          />
-          <p>
-            <em>
-              {
-                // eslint-disable-next-line max-len
-                __('The position in the article where the pull quote will appear.', 'apple-news')
-              }
-            </em>
-          </p>
-        </PanelBody>
+        <MaturityRating
+          maturityRating={maturityRating}
+          onChangeMaturityRating={(next) => setMeta('apple_news_maturity_rating', next)}
+        />
+        <PullQuote
+          onUpdatePullquotePosition={(next) => setMeta('apple_news_pullquote_position', next)}
+          onUpdatePullquoteText={(next) => setMeta('apple_news_pullquote', next)}
+          pullquotePosition={pullquotePosition}
+          pullquoteText={pullquoteText}
+        />
         <PanelBody
           initialOpen={false}
           title={__('Cover Image', 'apple_news')}
@@ -324,7 +275,7 @@ const Sidebar = () => {
             </Fragment>
           )}
         </PanelBody>
-        {'publish' === status && userCanPublish && (
+        {'publish' === postStatus && userCanPublish && (
           <Fragment>
             {loading ? (
               <Spinner />
