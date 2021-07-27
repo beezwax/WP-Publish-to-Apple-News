@@ -9,18 +9,18 @@ import DOMPurify from 'dompurify';
 import React, { useCallback, useEffect, useState } from 'react';
 
 // Hooks.
-import usePostMeta from '../../../services/hooks/use-post-meta';
+import usePostMeta from '../services/hooks/use-post-meta';
 
 // Panels.
-import ArticleOptions from '../article-options';
-import CoverImage from '../cover-image';
-import MaturityRating from '../maturity-rating';
-import PublishControls from '../publish-controls';
-import PublishInfo from '../publish-info';
-import PullQuote from '../pull-quote';
+import CoverImage from './panels/cover-image';
+import MaturityRating from './panels/maturity-rating';
+import PublishControls from './panels/publish-controls';
+import PublishInfo from './panels/publish-info';
+import PullQuote from './panels/pull-quote';
+import Sections from './panels/sections';
 
 // Utils.
-import safeJsonParseArray from '../../../util/safe-json-parse-array';
+import safeJsonParseArray from '../util/safe-json-parse-array';
 
 const Sidebar = () => {
   const [state, setState] = useState({
@@ -193,7 +193,7 @@ const Sidebar = () => {
         name="publish-to-apple-news"
         title={__('Publish to Apple News Options', 'apple-news')}
       >
-        <ArticleOptions
+        <Sections
           autoAssignCategories={autoAssignCategories}
           automaticAssignment={automaticAssignment}
           isHidden={isHidden}

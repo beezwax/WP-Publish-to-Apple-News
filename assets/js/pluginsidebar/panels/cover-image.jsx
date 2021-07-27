@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 // Components.
-import ImagePicker from '../../../components/image-picker';
+import ImagePicker from '../../components/image-picker';
 
 const CoverImage = ({
   coverImageCaption,
