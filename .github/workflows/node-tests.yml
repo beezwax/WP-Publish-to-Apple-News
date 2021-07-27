@@ -26,6 +26,8 @@ jobs:
         run: npm i -g npm@7
       - name: Install node dependencies (npm ci)
         run: npm ci
+      - name: Run npm lint
+        run: npm run lint
       - name: Run npm test
         run: npm run test
       - name: Run npm build
