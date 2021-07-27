@@ -21,7 +21,9 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 12
+          node-version: 14
+      - name: Install npm 7
+        run: npm i -g npm@7
       - name: Install node dependencies (npm ci)
         run: npm ci
       - name: Run npm test
