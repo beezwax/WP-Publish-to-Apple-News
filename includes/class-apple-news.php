@@ -345,12 +345,25 @@ class Apple_News {
 			return;
 		}
 
+		// Get the path to the PHP file containing the dependencies.
+		$dependency_file = dirname( __DIR__ ) . '/build/pluginSidebar.asset.php';
+		if ( ! file_exists( $dependency_file ) || 0 !== validate_file( $dependency_file ) ) {
+			return;
+		}
+
+		// Try to load the dependencies.
+		// phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+		$dependencies = require $dependency_file;
+		if ( empty( $dependencies['dependencies'] ) || ! is_array( $dependencies['dependencies'] ) ) {
+			return;
+		}
+
 		// Add the PluginSidebar.
 		wp_enqueue_script(
 			'publish-to-apple-news-plugin-sidebar',
 			plugins_url( 'build/pluginSidebar.js', __DIR__ ),
-			[ 'wp-i18n', 'wp-edit-post' ],
-			self::$version,
+			$dependencies['dependencies'],
+			$dependencies['version'],
 			true
 		);
 		$this->inline_locale_data( 'apple-news-plugin-sidebar' );

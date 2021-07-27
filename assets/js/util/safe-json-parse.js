@@ -4,10 +4,12 @@
  * @param {*} value - The value to attempt to parse.
  * @returns {*} - The parsed value, or null on failure.
  */
-export default function safeJsonParse(value) {
+const safeJsonParse = (value) => {
   try {
     return JSON.parse(value);
   } catch (e) {
     return null;
   }
-}
+};
+
+export default safeJsonParse;
