@@ -1,9 +1,4 @@
 import apiFetch from '@wordpress/api-fetch';
-import {
-  Button,
-  PanelBody,
-  Spinner,
-} from '@wordpress/components';
 import { useDispatch, useSelect } from '@wordpress/data';
 import {
   PluginSidebar,
@@ -20,6 +15,8 @@ import usePostMeta from '../../../services/hooks/use-post-meta';
 import ArticleOptions from '../article-options';
 import CoverImage from '../cover-image';
 import MaturityRating from '../maturity-rating';
+import PublishControls from '../publish-controls';
+import PublishInfo from '../publish-info';
 import PullQuote from '../pull-quote';
 
 // Utils.
@@ -232,83 +229,27 @@ const Sidebar = () => {
           onUpdateCoverImageCaption={(next) => setMeta('apple_news_coverimage_caption', next)}
           onUpdateCoverImageId={(next) => setMeta('apple_news_coverimage', next)}
         />
-        <PanelBody
-          initialOpen={false}
-          title={__('Apple News Publish Information', 'apple-news')}
-        >
-          {'' !== publishState && 'N/A' !== publishState && (
-            <Fragment>
-              <h4>{__('API Id', 'apple-news')}</h4>
-              <p>{apiId}</p>
-              <h4>{__('Created On', 'apple-news')}</h4>
-              <p>{dateCreated}</p>
-              <h4>{__('Last Updated On', 'apple-news')}</h4>
-              <p>{dateModified}</p>
-              <h4>{__('Share URL', 'apple-news')}</h4>
-              <p>{shareUrl}</p>
-              <h4>{__('Revision', 'apple-news')}</h4>
-              <p>{revision}</p>
-              <h4>{__('Publish State', 'apple-news')}</h4>
-              <p>{publishState}</p>
-            </Fragment>
-          )}
-        </PanelBody>
-        {'publish' === postStatus && userCanPublish && (
-          <Fragment>
-            {loading ? (
-              <Spinner />
-            ) : (
-              <Fragment>
-                {'' !== publishState && 'N/A' !== publishState ? (
-                  <Fragment>
-                    {! apiAutosyncUpdate && (
-                      <Button
-                        isPrimary
-                        onClick={this.updatePost}
-                        style={{ margin: '1em' }}
-                      >
-                        {__('Update', 'apple-news')}
-                      </Button>
-                    )}
-                    {! apiAutosyncDelete && (
-                      <Button
-                        isDefault
-                        onClick={this.deletePost}
-                        style={{ margin: '1em' }}
-                      >
-                        {__('Delete', 'apple-news')}
-                      </Button>
-                    )}
-                  </Fragment>
-                ) : (
-                  <Fragment>
-                    {
-                      postIsDirty && (
-                        <div className="components-notice is-warning">
-                          <strong>
-                            {__(
-                              'Please click the Update button above to ensure that all changes are saved before publishing to Apple News.',
-                              'apple-news'
-                            )}
-                          </strong>
-                        </div>
-                      )
-                    }
-                    {! apiAutosync && (
-                      <Button
-                        isPrimary
-                        onClick={this.publishPost}
-                        style={{ margin: '1em' }}
-                      >
-                        {__('Publish', 'apple-news')}
-                      </Button>
-                    )}
-                  </Fragment>
-                )}
-              </Fragment>
-            )}
-          </Fragment>
-        )}
+        <PublishInfo
+          apiId={apiId}
+          dateCreated={dateCreated}
+          dateModified={dateModified}
+          publishState={publishState}
+          revision={revision}
+          shareUrl={shareUrl}
+        />
+        <PublishControls
+          apiAutosync={apiAutosync}
+          apiAutosyncDelete={apiAutosyncDelete}
+          apiAutosyncUpdate={apiAutosyncUpdate}
+          deletePost={() => modifyPost('delete')}
+          loading={loading}
+          postIsDirty={postIsDirty}
+          postStatus={postStatus}
+          publishPost={() => modifyPost('publish')}
+          publishState={publishState}
+          updatePost={() => modifyPost('update')}
+          userCanPublish={userCanPublish}
+        />
       </PluginSidebar>
     </>
   );
