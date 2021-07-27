@@ -1,6 +1,7 @@
 .DS_Store
 *.zip
 tags
+composer.lock
 vendor
 node_modules
 npm-debug.log
