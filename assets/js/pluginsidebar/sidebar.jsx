@@ -14,6 +14,7 @@ import usePostMeta from '../services/hooks/use-post-meta';
 // Panels.
 import CoverImage from './panels/cover-image';
 import MaturityRating from './panels/maturity-rating';
+import Metadata from './panels/metadata';
 import PublishControls from './panels/publish-controls';
 import PublishInfo from './panels/publish-info';
 import PullQuote from './panels/pull-quote';
@@ -196,10 +197,6 @@ const Sidebar = () => {
         <Sections
           autoAssignCategories={autoAssignCategories}
           automaticAssignment={automaticAssignment}
-          isHidden={isHidden}
-          isPaid={isPaid}
-          isPreview={isPreview}
-          isSponsored={isSponsored}
           onChangeAutoAssignCategories={(next) => {
             setState({
               ...state,
@@ -207,13 +204,19 @@ const Sidebar = () => {
             });
             setMeta('apple_news_sections', '');
           }}
+          onChangeSelectedSections={toggleSelectedSection}
+          sections={sections}
+          selectedSections={selectedSections}
+        />
+        <Metadata
+          isHidden={isHidden}
+          isPaid={isPaid}
+          isPreview={isPreview}
+          isSponsored={isSponsored}
           onChangeIsHidden={(next) => setMeta('apple_news_is_hidden', next)}
           onChangeIsPaid={(next) => setMeta('apple_news_is_paid', next)}
           onChangeIsPreview={(next) => setMeta('apple_news_is_preview', next)}
           onChangeIsSponsored={(next) => setMeta('apple_news_is_sponsored', next)}
-          onChangeSelectedSections={toggleSelectedSection}
-          sections={sections}
-          selectedSections={selectedSections}
         />
         <MaturityRating
           maturityRating={maturityRating}

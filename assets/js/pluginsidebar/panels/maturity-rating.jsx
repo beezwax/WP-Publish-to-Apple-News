@@ -12,6 +12,7 @@ const MaturityRating = ({
     title={__('Maturity Rating', 'apple-news')}
   >
     <SelectControl
+      help={__('Select the optional maturity rating for this post.', 'apple-news')}
       label={__('Select Maturity Rating', 'apple-news')}
       onChange={onChangeMaturityRating}
       options={[
@@ -22,11 +23,6 @@ const MaturityRating = ({
       ]}
       value={maturityRating}
     />
-    <p>
-      <em>
-        {__('Select the optional maturity rating for this post.', 'apple-news')}
-      </em>
-    </p>
   </PanelBody>
 );
 

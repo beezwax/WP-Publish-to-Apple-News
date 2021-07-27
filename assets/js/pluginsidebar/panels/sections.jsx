@@ -1,4 +1,4 @@
-import { CheckboxControl, PanelBody } from '@wordpress/components';
+import { BaseControl, CheckboxControl, PanelBody, Spinner } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -14,38 +14,38 @@ const Sections = ({
   sections,
   selectedSections,
 }) => (
-  <PanelBody title={__('Sections', 'apple-news')}>
-    {automaticAssignment ? (
+  <PanelBody
+    initialOpen={false}
+    title={__('Sections', 'apple-news')}
+  >
+    {!Array.isArray(sections) || sections.length === 0 ? (
+      <Spinner />
+    ) : (
       <>
-        <CheckboxControl
-          checked={autoAssignCategories}
-          label={__('Assign sections by category', 'apple-news')}
-          onChange={onChangeAutoAssignCategories}
-        />
-        <hr />
-      </>
-    ) : null}
-    {(!autoAssignCategories || !automaticAssignment) && sections && sections.length > 0 ? (
-      <>
-        <h4>{__('Manual Section Selection', 'apple-news')}</h4>
-        <ul className="apple-news-sections">
-          {sections.map(({ id, name }) => (
-            <li key={id}>
+        {automaticAssignment ? (
+          <CheckboxControl
+            checked={autoAssignCategories}
+            label={__('Assign sections by category', 'apple-news')}
+            onChange={onChangeAutoAssignCategories}
+          />
+        ) : null}
+        {automaticAssignment && !autoAssignCategories ? <hr /> : null}
+        {(!automaticAssignment || !autoAssignCategories) ? (
+          <BaseControl
+            help={__('Select the sections in which to publish this article. If none are selected, it will be published to the default section.', 'apple-news')}
+          >
+            {sections.map(({ id, name }) => (
               <CheckboxControl
                 checked={selectedSections.includes(id)}
+                key={id}
                 label={name}
                 onChange={() => onChangeSelectedSections(id)}
               />
-            </li>
-          ))}
-        </ul>
-        <p>
-          <em>
-            {__('Select the sections in which to publish this article. If none are selected, it will be published to the default section.', 'apple-news')}
-          </em>
-        </p>
+            ))}
+          </BaseControl>
+        ) : null}
       </>
-    ) : null}
+    )}
   </PanelBody>
 );
 

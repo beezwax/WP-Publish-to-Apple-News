@@ -13,29 +13,32 @@ const Metadata = ({
   onChangeIsPreview,
   onChangeIsSponsored,
 }) => (
-  <PanelBody title={__('Metadata', 'apple-news')}>
-    <h3>{__('Paid Article', 'apple-news')}</h3>
+  <PanelBody
+    initialOpen={false}
+    title={__('Metadata', 'apple-news')}
+  >
     <CheckboxControl
       checked={isPaid}
-      label={__('Check this to indicate that viewing the article requires a paid subscription. Note that Apple must approve your channel for paid content before using this feature.', 'apple-news')}
+      help={__('Check this to indicate that viewing the article requires a paid subscription. Note that Apple must approve your channel for paid content before using this feature.', 'apple-news')}
+      label={__('Paid Article', 'apple-news')}
       onChange={onChangeIsPaid}
     />
-    <h3>{__('Preview Article', 'apple-news')}</h3>
     <CheckboxControl
       checked={isPreview}
-      label={__('Check this to publish the article as a draft.', 'apple-news')}
+      help={__('Check this to publish the article as a draft.', 'apple-news')}
+      label={__('Preview Article', 'apple-news')}
       onChange={onChangeIsPreview}
     />
-    <h3>{__('Hidden Article', 'apple-news')}</h3>
     <CheckboxControl
       checked={isHidden}
-      label={__('Hidden articles are visible to users who have a link to the article, but do not appear in feeds.', 'apple-news')}
+      help={__('Check this to publish the article as a hidden article. Hidden articles are visible to users who have a link to the article, but do not appear in feeds.', 'apple-news')}
+      label={__('Hidden Article', 'apple-news')}
       onChange={onChangeIsHidden}
     />
-    <h3>{__('Sponsored Article', 'apple-news')}</h3>
     <CheckboxControl
       checked={isSponsored}
-      label={__('Check this to indicate this article is sponsored content.', 'apple-news')}
+      help={__('Check this to indicate this article is sponsored content.', 'apple-news')}
+      label={__('Sponsored Article', 'apple-news')}
       onChange={onChangeIsSponsored}
     />
   </PanelBody>
