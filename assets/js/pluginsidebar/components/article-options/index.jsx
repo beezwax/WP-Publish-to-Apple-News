@@ -43,7 +43,7 @@ const ArticleOptions = ({
               <CheckboxControl
                 checked={selectedSections.includes(id)}
                 label={name}
-                onChange={onChangeSelectedSections}
+                onChange={() => onChangeSelectedSections(id)}
               />
             </li>
           ))}

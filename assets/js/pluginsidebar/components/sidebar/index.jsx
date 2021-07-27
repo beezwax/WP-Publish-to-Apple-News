@@ -119,7 +119,7 @@ const Sidebar = () => {
         publishState: nextPublishState = '',
       } = await apiFetch({
         data: {
-          postId,
+          id: postId,
         },
         method: 'POST',
         path: `/apple-news/v1/${operation}`,
@@ -144,12 +144,12 @@ const Sidebar = () => {
 
   /**
    * A helper function to update which sections are selected.
-   * @param {string} name - The name of the section to toggle.
+   * @param {string} id - The id of the section to toggle.
    */
-  const toggleSelectedSection = (name) => setMeta('apple_news_sections',
-    selectedSections.includes(name)
-      ? JSON.stringify(selectedSections.filter((section) => section !== name))
-      : JSON.stringify([...selectedSections, name]));
+  const toggleSelectedSection = (id) => setMeta('apple_news_sections',
+    selectedSections.includes(id)
+      ? JSON.stringify(selectedSections.filter((section) => section !== id))
+      : JSON.stringify([...selectedSections, id]));
 
   // On initial load, fetch info from the API into state.
   useEffect(() => {
