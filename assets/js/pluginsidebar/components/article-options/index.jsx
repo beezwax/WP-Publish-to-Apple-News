@@ -22,10 +22,7 @@ const ArticleOptions = ({
   sections,
   selectedSections,
 }) => (
-  <PanelBody
-    opened
-    title={__('General Settings', 'apple-news')}
-  >
+  <PanelBody title={__('General Settings', 'apple-news')}>
     <h3>{__('Sections', 'apple-news')}</h3>
     {automaticAssignment ? (
       <>

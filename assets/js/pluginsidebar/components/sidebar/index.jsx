@@ -26,7 +26,7 @@ const Sidebar = () => {
   const [state, setState] = useState({
     autoAssignCategories: false,
     loading: false,
-    publishState: '',
+    publishState: 'N/A',
     sections: [],
     settings: {
       apiAutosync: false,
@@ -155,22 +155,24 @@ const Sidebar = () => {
   useEffect(() => {
     (async () => {
       const fetches = [
-        async () => ({ publishState: await apiFetch({ path: `/apple-news/v1/get-published-state/${postId}` }) }),
-        async () => ({ sections: await apiFetch({ path: '/apple-news/v1/sections' }) }),
-        async () => ({ settings: await apiFetch({ path: '/apple-news/v1/get-settings' }) }),
-        async () => ({ userCanPublish: await apiFetch({ path: `/apple-news/v1/user-can-publish/${postId}` }) }),
+        await apiFetch({ path: `/apple-news/v1/get-published-state/${postId}` }),
+        await apiFetch({ path: '/apple-news/v1/sections' }),
+        await apiFetch({ path: '/apple-news/v1/get-settings' }),
+        await apiFetch({ path: `/apple-news/v1/user-can-publish/${postId}` }),
       ];
 
       // Wait for everything to load, update state, and handle errors.
       try {
-        const newState = (await Promise.all(fetches)).reduce((acc, item) => ({
-          ...acc,
-          ...item,
-        }), { ...state });
-        newState.autoAssignCategories = (selectedSections === null
-          || selectedSections.length === 0)
-            && newState.settings.automaticAssignment === true;
-        setState(newState);
+        const data = await Promise.all(fetches);
+        setState({
+          ...state,
+          autoAssignCategories: (selectedSections === null || selectedSections.length === 0)
+            && data[2].automaticAssignment === true,
+          ...data[0],
+          sections: data[1],
+          settings: data[2],
+          ...data[3],
+        });
       } catch (error) {
         displayNotification(error.message, 'error');
       }
@@ -229,14 +231,16 @@ const Sidebar = () => {
           onUpdateCoverImageCaption={(next) => setMeta('apple_news_coverimage_caption', next)}
           onUpdateCoverImageId={(next) => setMeta('apple_news_coverimage', next)}
         />
-        <PublishInfo
-          apiId={apiId}
-          dateCreated={dateCreated}
-          dateModified={dateModified}
-          publishState={publishState}
-          revision={revision}
-          shareUrl={shareUrl}
-        />
+        {publishState !== 'N/A' ? (
+          <PublishInfo
+            apiId={apiId}
+            dateCreated={dateCreated}
+            dateModified={dateModified}
+            publishState={publishState}
+            revision={revision}
+            shareUrl={shareUrl}
+          />
+        ) : null}
         <PublishControls
           apiAutosync={apiAutosync}
           apiAutosyncDelete={apiAutosyncDelete}
