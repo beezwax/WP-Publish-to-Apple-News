@@ -79,7 +79,7 @@ const Metadata = ({
         {type === 'boolean' ? (
           <SelectControl
             label={__('Value', 'apple-news')}
-            onChange={(next) => onChangeMetadata(updateValueAtIndex(metadata, 'value', next, index))}
+            onChange={(next) => onChangeMetadata(updateValueAtIndex(metadata, 'value', next === 'true', index))}
             options={[
               { label: __('true', 'apple-news'), value: 'true' },
               { label: __('false', 'apple-news'), value: 'false' },
@@ -89,7 +89,7 @@ const Metadata = ({
         ) : (
           <TextControl
             label={__('Value', 'apple-news')}
-            onChange={(next) => onChangeMetadata(updateValueAtIndex(metadata, 'value', next, index))}
+            onChange={(next) => onChangeMetadata(updateValueAtIndex(metadata, 'value', type === 'number' ? parseFloat(next) : next, index))}
             type={type === 'number' ? 'number' : 'text'}
             value={value}
           />
