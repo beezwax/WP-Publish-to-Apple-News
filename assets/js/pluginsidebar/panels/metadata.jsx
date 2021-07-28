@@ -81,6 +81,7 @@ const Metadata = ({
             label={__('Value', 'apple-news')}
             onChange={(next) => onChangeMetadata(updateValueAtIndex(metadata, 'value', next === 'true', index))}
             options={[
+              { label: __('', 'apple-news'), value: '' },
               { label: __('true', 'apple-news'), value: 'true' },
               { label: __('false', 'apple-news'), value: 'false' },
             ]}
