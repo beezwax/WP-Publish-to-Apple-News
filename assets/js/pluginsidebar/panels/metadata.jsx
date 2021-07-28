@@ -1,17 +1,32 @@
-import { CheckboxControl, PanelBody } from '@wordpress/components';
+import {
+  Button,
+  CheckboxControl,
+  PanelBody,
+  SelectControl,
+  TextControl,
+} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 import React from 'react';
+
+// Config.
+import { METADATA_SHAPE } from '../../config/prop-types';
+
+// Util.
+import deleteAtIndex from '../../util/delete-at-index';
+import updateValueAtIndex from '../../util/update-value-at-index';
 
 const Metadata = ({
   isHidden,
   isPaid,
   isPreview,
   isSponsored,
+  metadata,
   onChangeIsHidden,
   onChangeIsPaid,
   onChangeIsPreview,
   onChangeIsSponsored,
+  onChangeMetadata,
 }) => (
   <PanelBody
     initialOpen={false}
@@ -41,6 +56,59 @@ const Metadata = ({
       label={__('Sponsored Article', 'apple-news')}
       onChange={onChangeIsSponsored}
     />
+    <h3>{__('Custom Metadata', 'apple-news')}</h3>
+    {metadata.map(({ key, type, value }, index) => (
+      // eslint-disable-next-line react/no-array-index-key
+      <div key={index}>
+        <TextControl
+          label={__('Key', 'apple-news')}
+          onChange={(next) => onChangeMetadata(updateValueAtIndex(metadata, 'key', next, index))}
+          value={key}
+        />
+        <SelectControl
+          label={__('Type', 'apple-news')}
+          onChange={(next) => onChangeMetadata(updateValueAtIndex(metadata, 'type', next, index))}
+          options={[
+            { label: __('string', 'apple-news'), value: 'string' },
+            { label: __('boolean', 'apple-news'), value: 'boolean' },
+            { label: __('number', 'apple-news'), value: 'number' },
+            { label: __('array', 'apple-news'), value: 'array' },
+          ]}
+          value={type}
+        />
+        {type === 'boolean' ? (
+          <SelectControl
+            label={__('Value', 'apple-news')}
+            onChange={(next) => onChangeMetadata(updateValueAtIndex(metadata, 'value', next, index))}
+            options={[
+              { label: __('true', 'apple-news'), value: 'true' },
+              { label: __('false', 'apple-news'), value: 'false' },
+            ]}
+            value={value}
+          />
+        ) : (
+          <TextControl
+            label={__('Value', 'apple-news')}
+            onChange={(next) => onChangeMetadata(updateValueAtIndex(metadata, 'value', next, index))}
+            type={type === 'number' ? 'number' : 'text'}
+            value={value}
+          />
+        )}
+        <Button
+          isDestructive
+          onClick={() => onChangeMetadata(deleteAtIndex(metadata, index))}
+          style={{ marginBottom: '1em' }}
+        >
+          {__('Remove', 'apple-news')}
+        </Button>
+      </div>
+    ))}
+    <Button
+      isPrimary
+      onClick={() => onChangeMetadata([...metadata, { key: '', type: 'string', value: '' }])}
+    >
+      {__('Add Metadata', 'apple-news')}
+    </Button>
   </PanelBody>
 );
 
@@ -49,10 +117,12 @@ Metadata.propTypes = {
   isPaid: PropTypes.bool.isRequired,
   isPreview: PropTypes.bool.isRequired,
   isSponsored: PropTypes.bool.isRequired,
+  metadata: PropTypes.arrayOf(PropTypes.shape(METADATA_SHAPE)).isRequired,
   onChangeIsHidden: PropTypes.func.isRequired,
   onChangeIsPaid: PropTypes.func.isRequired,
   onChangeIsPreview: PropTypes.func.isRequired,
   onChangeIsSponsored: PropTypes.func.isRequired,
+  onChangeMetadata: PropTypes.func.isRequired,
 };
 
 export default Metadata;

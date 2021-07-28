@@ -117,6 +117,7 @@ class Admin_Apple_News extends Apple_News {
 					'type' => 'boolean',
 				],
 				'apple_news_maturity_rating'    => [],
+				'apple_news_metadata'           => [],
 				'apple_news_pullquote'          => [],
 				'apple_news_pullquote_position' => [],
 				'apple_news_sections'           => [

@@ -86,12 +86,14 @@ const Sidebar = () => {
     apple_news_is_preview: isPreview = false,
     apple_news_is_sponsored: isSponsored = false,
     apple_news_maturity_rating: maturityRating = '',
+    apple_news_metadata: metadataRaw = '',
     apple_news_pullquote: pullquoteText = '',
     apple_news_pullquote_position: pullquotePosition = '',
     apple_news_sections: selectedSectionsRaw = '',
   }, setMeta] = usePostMeta();
 
   // Decode selected sections.
+  const metadata = safeJsonParseArray(metadataRaw);
   const selectedSections = safeJsonParseArray(selectedSectionsRaw);
 
   /**
@@ -213,10 +215,12 @@ const Sidebar = () => {
           isPaid={isPaid}
           isPreview={isPreview}
           isSponsored={isSponsored}
+          metadata={metadata}
           onChangeIsHidden={(next) => setMeta('apple_news_is_hidden', next)}
           onChangeIsPaid={(next) => setMeta('apple_news_is_paid', next)}
           onChangeIsPreview={(next) => setMeta('apple_news_is_preview', next)}
           onChangeIsSponsored={(next) => setMeta('apple_news_is_sponsored', next)}
+          onChangeMetadata={(next) => setMeta('apple_news_metadata', JSON.stringify(next))}
         />
         <MaturityRating
           maturityRating={maturityRating}
