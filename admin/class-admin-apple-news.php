@@ -119,7 +119,7 @@ class Admin_Apple_News extends Apple_News {
 				'apple_news_maturity_rating'    => [],
 				'apple_news_metadata'           => [
 					'sanitize_callback' => function ( $value ) {
-						return json_decode( $value, true );
+						return is_string( $value ) ? json_decode( $value, true ) : $value;
 					},
 					'show_in_rest'      => [
 						'prepare_callback' => 'apple_news_json_encode',
