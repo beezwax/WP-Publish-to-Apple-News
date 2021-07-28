@@ -108,6 +108,31 @@ class Metadata extends Builder {
 			}
 		}
 
+		// Add custom metadata fields.
+		$custom_meta = get_post_meta( $this->content_id(), 'apple_news_metadata', true );
+		if ( ! empty( $custom_meta ) && is_array( $custom_meta ) ) {
+			foreach ( $custom_meta as $metadata ) {
+				// Ensure required fields are set.
+				if ( empty( $metadata['key'] ) || empty( $metadata['type'] ) || ! isset( $metadata['value'] ) ) {
+					continue;
+				}
+
+				// If the value is an array, we have to decode it from JSON.
+				$value = $metadata['value'];
+				if ( 'array' === $metadata['type'] ) {
+					$value = json_decode( $metadata['value'] );
+
+					// If the user entered a bad value for the array, bail out without adding it.
+					if ( empty( $value ) || ! is_array( $value ) ) {
+						continue;
+					}
+				}
+
+				// Add the custom metadata field to the article metadata.
+				$meta[ $metadata['key'] ] = $value;
+			}
+		}
+
 		/**
 		 * Modifies the metadata for a post.
 		 *
