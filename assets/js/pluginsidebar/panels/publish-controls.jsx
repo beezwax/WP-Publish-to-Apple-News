@@ -28,6 +28,13 @@ const PublishControls = ({
 
   return (
     <>
+      {postIsDirty ? (
+        <div className="components-notice is-warning">
+          <strong>
+            {__('Please click the Update button above to ensure that all changes are saved before publishing to Apple News.', 'apple-news')}
+          </strong>
+        </div>
+      ) : null}
       {publishState !== 'N/A' && !apiAutosyncUpdate ? (
         <Button
           isPrimary
@@ -39,7 +46,7 @@ const PublishControls = ({
       ) : null}
       {publishState !== 'N/A' && !apiAutosyncDelete ? (
         <Button
-          isDefault
+          isSecondary
           onClick={deletePost}
           style={{ margin: '1em' }}
         >
@@ -54,13 +61,6 @@ const PublishControls = ({
         >
           {__('Publish', 'apple-news')}
         </Button>
-      ) : null}
-      {postIsDirty ? (
-        <div className="components-notice is-warning">
-          <strong>
-            {__('Please click the Update button above to ensure that all changes are saved before publishing to Apple News.', 'apple-news')}
-          </strong>
-        </div>
       ) : null}
     </>
   );
