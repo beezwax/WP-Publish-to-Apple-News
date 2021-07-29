@@ -68,7 +68,7 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 		<p><?php esc_html_e( 'Check this to indicate this article is sponsored content.', 'apple-news' ); ?></p>
 		<h4><?php esc_html_e( 'Custom Metadata', 'apple-news' ); ?></h4>
 		<?php Admin_Apple_Meta_Boxes::build_metadata( $post->ID ); ?>
-		<button class="button-primary">
+		<button class="button-primary apple-news-metadata-add">
 			<?php esc_html_e( 'Add Metadata', 'apple-news' ); ?>
 		</button>
 	</div>

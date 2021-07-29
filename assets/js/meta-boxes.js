@@ -53,4 +53,49 @@
 			.addClass( 'apple-news-metabox-section-collapsed' )
 			.removeClass( 'apple-news-metabox-section-visible' );
 	} );
+
+	// Metadata.
+  var $metadata = $( '#apple-news-metabox-metadata' );
+
+	// Set up listener for clicks on the Remove metadata button.
+  $metadata.on( 'click', '.apple-news-metadata-remove', function ( event ) {
+    event.preventDefault();
+    $( this ).parent().remove();
+  } );
+
+  // Set up listener for clicks on the Add Metadata button.
+  $metadata.on( 'click', '.apple-news-metadata-add', function ( event ) {
+    event.preventDefault();
+    var $keys = $( '[name="apple_news_metadata_keys[]"]' );
+    var index = 0;
+    if ( $keys.length ) {
+      var matches = $keys[ $keys.length - 1 ].id.match( /[0-9]+/ );
+      if ( matches[0] ) {
+        index = parseInt( matches[0], 10 ) + 1;
+      }
+    }
+    /* phpcs:disable WordPressVIPMinimum.JS.StringConcat.Found, WordPressVIPMinimum.JS.HTMLExecutingFunctions.insertBefore */
+    $(
+      "<div>" +
+      "<label for=\"apple-news-metadata-key-" + index + "\">Key<br />" +
+      "<input id=\"apple-news-metadata-key-" + index + "\" name=\"apple_news_metadata_keys[]\" type=\"text\" value=\"\" />" +
+      "</label>" +
+      "<label for=\"apple-news-metadata-type-" + index + "\">Type<br />" +
+      "<select id=\"apple-news-metadata-type-" + index + "\" name=\"apple_news_metadata_types[]\">" +
+      "<option value=\"\"></option>" +
+      "<option value=\"string\">string</option>" +
+      "<option value=\"boolean\">boolean</option>" +
+      "<option value=\"number\">number</option>" +
+      "<option value=\"array\">array</option>" +
+      "</select>" +
+      "</label>" +
+      "<label for=\"apple-news-metadata-value-" + index + "\">Value<br />" +
+      "<input id=\"apple-news-metadata-value-" + index + "\" name=\"apple_news_metadata_values[]\" type=\"text\" value=\"\" />" +
+      "</label>" +
+      "<button class=\"button-secondary apple-news-metadata-remove\">Remove</button>" +
+			"</div>" +
+      "</div>"
+    ).insertBefore( $( this ) );
+    /* phpcs:enable */
+  } );
 })( jQuery, window );

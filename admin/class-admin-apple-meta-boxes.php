@@ -130,7 +130,10 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	 *
 	 * @return array An array of sanitized values.
 	 */
-	public static function sanitize_metadata_array( $key ) {
+	private static function sanitize_metadata_array( $key ) {
+		// Nonce verification happens in save_post_meta, which calls this function.
+		/* phpcs:disable WordPress.Security.NonceVerification.Missing */
+
 		// If the given key doesn't exist in POST data, bail.
 		if ( empty( $_POST[ $key ] ) || ! is_array( $_POST[ $key ] ) ) {
 			return [];
@@ -140,8 +143,12 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			function ( $value ) {
 				return sanitize_text_field( wp_unslash( $value ) );
 			},
+			// phpcs is going to yell about this, because it doesn't understand sanitizing via array_map.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 			$_POST[ $key ]
 		);
+
+		/* phpcs:enable */
 	}
 
 	/**
@@ -391,39 +398,41 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		// Loop over metadata and print edit interface for each.
 		foreach ( $metadata as $index => $field ) {
 			?>
-			<label for="apple-news-metadata-key-<?php echo absint( $index ); ?>">
-				<?php esc_html_e( 'Key', 'apple-news' ); ?>
-				<br />
-				<input id="apple-news-metadata-key-<?php echo absint( $index ); ?>" name="apple_news_metadata_keys[]" type="text" value="<?php echo esc_attr( $field['key'] ); ?>" />
-			</label>
-			<label for="apple-news-metadata-type-<?php echo absint( $index ); ?>">
-				<?php esc_html_e( 'Type', 'apple-news' ); ?>
-				<br />
-				<select id="apple-news-metadata-type-<?php echo absint( $index ); ?>" name="apple_news_metadata_types[]">
-					<option <?php selected( empty( $field['type'] ) ); ?> value=""></option>
-					<option <?php selected( 'string' === $field['type'] ); ?> value="string"><?php esc_html_e( 'string', 'apple-news' ); ?></option>
-					<option <?php selected( 'boolean' === $field['type'] ); ?> value="boolean"><?php esc_html_e( 'boolean', 'apple-news' ); ?></option>
-					<option <?php selected( 'number' === $field['type'] ); ?> value="number"><?php esc_html_e( 'number', 'apple-news' ); ?></option>
-					<option <?php selected( 'array' === $field['type'] ); ?> value="array"><?php esc_html_e( 'array', 'apple-news' ); ?></option>
-				</select>
-			</label>
-			<label for="apple-news-metadata-value-<?php echo absint( $index ); ?>">
-				<?php esc_html_e( 'Value', 'apple-news' ); ?>
-				<br />
-				<input
-					id="apple-news-metadata-value-<?php echo absint( $index ); ?>"
-					name="apple_news_metadata_values[]"
-					type="text"
-					<?php if ( 'boolean' === $field['type'] ) : ?>
-						value="<?php echo ! empty( $field['value'] ) ? 'true' : 'false'; ?>"
-					<?php else : ?>
-						value="<?php echo esc_attr( $field['value'] ); ?>"
-					<?php endif; ?>
-				/>
-			</label>
-			<button class="button-secondary">
-				<?php esc_html_e( 'Remove', 'apple-news' ); ?>
-			</button>
+			<div>
+				<label for="apple-news-metadata-key-<?php echo absint( $index ); ?>">
+					<?php esc_html_e( 'Key', 'apple-news' ); ?>
+					<br />
+					<input id="apple-news-metadata-key-<?php echo absint( $index ); ?>" name="apple_news_metadata_keys[]" type="text" value="<?php echo esc_attr( $field['key'] ); ?>" />
+				</label>
+				<label for="apple-news-metadata-type-<?php echo absint( $index ); ?>">
+					<?php esc_html_e( 'Type', 'apple-news' ); ?>
+					<br />
+					<select id="apple-news-metadata-type-<?php echo absint( $index ); ?>" name="apple_news_metadata_types[]">
+						<option <?php selected( empty( $field['type'] ) ); ?> value=""></option>
+						<option <?php selected( 'string' === $field['type'] ); ?> value="string"><?php esc_html_e( 'string', 'apple-news' ); ?></option>
+						<option <?php selected( 'boolean' === $field['type'] ); ?> value="boolean"><?php esc_html_e( 'boolean', 'apple-news' ); ?></option>
+						<option <?php selected( 'number' === $field['type'] ); ?> value="number"><?php esc_html_e( 'number', 'apple-news' ); ?></option>
+						<option <?php selected( 'array' === $field['type'] ); ?> value="array"><?php esc_html_e( 'array', 'apple-news' ); ?></option>
+					</select>
+				</label>
+				<label for="apple-news-metadata-value-<?php echo absint( $index ); ?>">
+					<?php esc_html_e( 'Value', 'apple-news' ); ?>
+					<br />
+					<input
+						id="apple-news-metadata-value-<?php echo absint( $index ); ?>"
+						name="apple_news_metadata_values[]"
+						type="text"
+						<?php if ( 'boolean' === $field['type'] ) : ?>
+							value="<?php echo ! empty( $field['value'] ) ? 'true' : 'false'; ?>"
+						<?php else : ?>
+							value="<?php echo esc_attr( $field['value'] ); ?>"
+						<?php endif; ?>
+					/>
+				</label>
+				<button class="button-secondary apple-news-metadata-remove">
+					<?php esc_html_e( 'Remove', 'apple-news' ); ?>
+				</button>
+			</div>
 			<?php
 		}
 	}
