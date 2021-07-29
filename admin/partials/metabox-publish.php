@@ -67,7 +67,10 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 		</label>
 		<p><?php esc_html_e( 'Check this to indicate this article is sponsored content.', 'apple-news' ); ?></p>
 		<h4><?php esc_html_e( 'Custom Metadata', 'apple-news' ); ?></h4>
-		To come
+		<?php Admin_Apple_Meta_Boxes::build_metadata( $post->ID ); ?>
+		<button class="button-primary">
+			<?php esc_html_e( 'Add Metadata', 'apple-news' ); ?>
+		</button>
 	</div>
 	<div id="apple-news-metabox-maturity-rating" class="apple-news-metabox-section apple-news-metabox-section-collapsable">
 		<h3><?php esc_html_e( 'Maturity Rating', 'apple-news' ); ?></h3>
