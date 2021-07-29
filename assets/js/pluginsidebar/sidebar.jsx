@@ -9,18 +9,19 @@ import DOMPurify from 'dompurify';
 import React, { useCallback, useEffect, useState } from 'react';
 
 // Hooks.
-import usePostMeta from '../../../services/hooks/use-post-meta';
+import usePostMeta from '../services/hooks/use-post-meta';
 
 // Panels.
-import ArticleOptions from '../article-options';
-import CoverImage from '../cover-image';
-import MaturityRating from '../maturity-rating';
-import PublishControls from '../publish-controls';
-import PublishInfo from '../publish-info';
-import PullQuote from '../pull-quote';
+import CoverImage from './panels/cover-image';
+import MaturityRating from './panels/maturity-rating';
+import Metadata from './panels/metadata';
+import PublishControls from './panels/publish-controls';
+import PublishInfo from './panels/publish-info';
+import PullQuote from './panels/pull-quote';
+import Sections from './panels/sections';
 
 // Utils.
-import safeJsonParseArray from '../../../util/safe-json-parse-array';
+import safeJsonParseArray from '../util/safe-json-parse-array';
 
 const Sidebar = () => {
   const [state, setState] = useState({
@@ -85,12 +86,14 @@ const Sidebar = () => {
     apple_news_is_preview: isPreview = false,
     apple_news_is_sponsored: isSponsored = false,
     apple_news_maturity_rating: maturityRating = '',
+    apple_news_metadata: metadataRaw = '',
     apple_news_pullquote: pullquoteText = '',
     apple_news_pullquote_position: pullquotePosition = '',
     apple_news_sections: selectedSectionsRaw = '',
   }, setMeta] = usePostMeta();
 
   // Decode selected sections.
+  const metadata = safeJsonParseArray(metadataRaw);
   const selectedSections = safeJsonParseArray(selectedSectionsRaw);
 
   /**
@@ -193,13 +196,9 @@ const Sidebar = () => {
         name="publish-to-apple-news"
         title={__('Publish to Apple News Options', 'apple-news')}
       >
-        <ArticleOptions
+        <Sections
           autoAssignCategories={autoAssignCategories}
           automaticAssignment={automaticAssignment}
-          isHidden={isHidden}
-          isPaid={isPaid}
-          isPreview={isPreview}
-          isSponsored={isSponsored}
           onChangeAutoAssignCategories={(next) => {
             setState({
               ...state,
@@ -207,13 +206,21 @@ const Sidebar = () => {
             });
             setMeta('apple_news_sections', '');
           }}
+          onChangeSelectedSections={toggleSelectedSection}
+          sections={sections}
+          selectedSections={selectedSections}
+        />
+        <Metadata
+          isHidden={isHidden}
+          isPaid={isPaid}
+          isPreview={isPreview}
+          isSponsored={isSponsored}
+          metadata={metadata}
           onChangeIsHidden={(next) => setMeta('apple_news_is_hidden', next)}
           onChangeIsPaid={(next) => setMeta('apple_news_is_paid', next)}
           onChangeIsPreview={(next) => setMeta('apple_news_is_preview', next)}
           onChangeIsSponsored={(next) => setMeta('apple_news_is_sponsored', next)}
-          onChangeSelectedSections={toggleSelectedSection}
-          sections={sections}
-          selectedSections={selectedSections}
+          onChangeMetadata={(next) => setMeta('apple_news_metadata', JSON.stringify(next))}
         />
         <MaturityRating
           maturityRating={maturityRating}

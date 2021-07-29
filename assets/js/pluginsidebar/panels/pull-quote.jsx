@@ -18,17 +18,13 @@ const PullQuote = ({
     title={__('Pull Quote', 'apple-news')}
   >
     <TextareaControl
-      help={__('A pull quote is a key phrase, quotation, or excerpt that has been pulled from an article and used as a graphic element, serving to entice readers into the article or to highlight a key topic.', 'apple-news')}
+      help={__('A pull quote is a key phrase, quotation, or excerpt that has been pulled from an article and used as a graphic element, serving to entice readers into the article or to highlight a key topic. This is optional and can be left blank.', 'apple-news')}
       label={__('Pull Quote Text', 'apple-news')}
       onChange={onUpdatePullquoteText}
       value={pullquoteText}
     />
-    <p>
-      <em>
-        {__('This is optional and can be left blank.', 'apple-news')}
-      </em>
-    </p>
     <SelectControl
+      help={__('The position in the article where the pull quote will appear.', 'apple-news')}
       label={__('Pull Quote Position', 'apple-news')}
       onChange={onUpdatePullquotePosition}
       options={[
@@ -38,11 +34,6 @@ const PullQuote = ({
       ]}
       value={pullquotePosition || 'middle'}
     />
-    <p>
-      <em>
-        {__('The position in the article where the pull quote will appear.', 'apple-news')}
-      </em>
-    </p>
   </PanelBody>
 );
 

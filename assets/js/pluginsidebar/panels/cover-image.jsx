@@ -1,10 +1,10 @@
-import { PanelBody, TextareaControl } from '@wordpress/components';
+import { BaseControl, PanelBody, TextareaControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 import React from 'react';
 
 // Components.
-import ImagePicker from '../../../components/image-picker';
+import ImagePicker from '../../components/image-picker';
 
 const CoverImage = ({
   coverImageCaption,
@@ -16,22 +16,20 @@ const CoverImage = ({
     initialOpen={false}
     title={__('Cover Image', 'apple-news')}
   >
-    <ImagePicker
-      onReset={() => onUpdateCoverImageId(0)}
-      onUpdate={({ id }) => onUpdateCoverImageId(id)}
-      value={coverImageId}
-    />
+    <BaseControl>
+      <ImagePicker
+        onReset={() => onUpdateCoverImageId(0)}
+        onUpdate={({ id }) => onUpdateCoverImageId(id)}
+        value={coverImageId}
+      />
+    </BaseControl>
     <TextareaControl
+      help={__('This is optional and can be left blank.', 'apple-news')}
       label={__('Caption', 'apple-news')}
       onChange={onUpdateCoverImageCaption}
       placeholder={__('Add an image caption here.', 'apple-news')}
       value={coverImageCaption}
     />
-    <p>
-      <em>
-        {__('This is optional and can be left blank.', 'apple-news')}
-      </em>
-    </p>
   </PanelBody>
 );
 

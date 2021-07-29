@@ -5,7 +5,7 @@ Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.1.4
+Stable tag: 2.2.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -46,8 +46,9 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 
 == Changelog ==
 
-= 2.1.4 =
+= 2.2.0 =
 * Enhancement: Added support for HLS video (.m3u8) in thumbnails.
+* Enhancement: Added support for custom article metadata.
 
 = 2.1.3 =
 * Enhancement: Added article authors to the `metadata.authors` property so they display in the article listing view on Apple News.

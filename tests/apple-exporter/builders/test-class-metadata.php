@@ -75,6 +75,29 @@ class Metadata_Test extends Apple_News_Testcase {
 		);
 		$image   = $this->get_new_attachment( $post_id );
 		set_post_thumbnail( $post_id, $image );
+		$metadata = [
+			[
+				'key'   => 'isBoolean',
+				'type'  => 'boolean',
+				'value' => true,
+			],
+			[
+				'key'   => 'isNumber',
+				'type'  => 'number',
+				'value' => 3,
+			],
+			[
+				'key'   => 'isString',
+				'type'  => 'string',
+				'value' => 'Test String Value',
+			],
+			[
+				'key'   => 'isArray',
+				'type'  => 'array',
+				'value' => '["a", "b", "c"]',
+			],
+		];
+		add_post_meta( $post_id, 'apple_news_metadata', $metadata );
 		$result   = $this->get_json_for_post( $post_id );
 		$metadata = $result['metadata'];
 
@@ -102,6 +125,22 @@ class Metadata_Test extends Apple_News_Testcase {
 		$this->assertEquals(
 			wp_get_attachment_url( $image ),
 			$metadata['thumbnailURL']
+		);
+		$this->assertEquals(
+			true,
+			$metadata['isBoolean']
+		);
+		$this->assertEquals(
+			3,
+			$metadata['isNumber']
+		);
+		$this->assertEquals(
+			'Test String Value',
+			$metadata['isString']
+		);
+		$this->assertEquals(
+			['a', 'b', 'c'],
+			$metadata['isArray']
 		);
 	}
 
