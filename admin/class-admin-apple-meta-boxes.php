@@ -124,6 +124,27 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	}
 
 	/**
+	 * Given a $_POST key, safely extract metadata values and sanitize them.
+	 *
+	 * @param string $key The $_POST key to process.
+	 *
+	 * @return array An array of sanitized values.
+	 */
+	public static function sanitize_metadata_array( $key ) {
+		// If the given key doesn't exist in POST data, bail.
+		if ( empty( $_POST[ $key ] ) || ! is_array( $_POST[ $key ] ) ) {
+			return [];
+		}
+
+		return array_map(
+			function ( $value ) {
+				return sanitize_text_field( wp_unslash( $value ) );
+			},
+			$_POST[ $key ]
+		);
+	}
+
+	/**
 	 * Saves the Apple News meta fields associated with a post
 	 *
 	 * @param int $post_id The ID of the post being saved.
@@ -223,6 +244,40 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			$cover_image_caption = '';
 		}
 		update_post_meta( $post_id, 'apple_news_coverimage_caption', $cover_image_caption );
+
+		// Compile custom metadata and save to postmeta.
+		$metadata_keys   = self::sanitize_metadata_array( 'apple_news_metadata_keys' );
+		$metadata_types  = self::sanitize_metadata_array( 'apple_news_metadata_types' );
+		$metadata_values = self::sanitize_metadata_array( 'apple_news_metadata_values' );
+		if ( ! empty( $metadata_keys ) && ! empty( $metadata_types ) && ! empty( $metadata_values ) ) {
+			$metadata = [];
+			foreach ( $metadata_keys as $index => $key ) {
+				if ( ! isset( $metadata_types[ $index ] ) || ! isset( $metadata_values[ $index ] ) ) {
+					continue;
+				}
+
+				// Juggle value cast.
+				$type  = $metadata_types[ $index ];
+				$value = $metadata_values[ $index ];
+				if ( 'boolean' === $type ) {
+					$value = ( 'true' === $metadata_values[ $index ] || '1' === $metadata_values[ $index ] );
+				} elseif ( 'number' === $type ) {
+					if ( false === strpos( $value, '.' ) ) {
+						$value = (int) $metadata_values[ $index ];
+					} else {
+						$value = (float) $metadata_values[ $index ];
+					}
+				}
+
+				// Add the metadata object to the array.
+				$metadata[] = [
+					'key'   => $key,
+					'type'  => $type,
+					'value' => $value,
+				];
+			}
+			update_post_meta( $post_id, 'apple_news_metadata', $metadata );
+		}
 	}
 
 	/**
@@ -339,7 +394,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			<label for="apple-news-metadata-key-<?php echo absint( $index ); ?>">
 				<?php esc_html_e( 'Key', 'apple-news' ); ?>
 				<br />
-				<input id="apple-news-metadata-key-<?php echo absint( $index ); ?>" name="apple_news_metadata_keys[]" type="text" value="<?php echo esc_attr( $field['key'] ); ?>"
+				<input id="apple-news-metadata-key-<?php echo absint( $index ); ?>" name="apple_news_metadata_keys[]" type="text" value="<?php echo esc_attr( $field['key'] ); ?>" />
 			</label>
 			<label for="apple-news-metadata-type-<?php echo absint( $index ); ?>">
 				<?php esc_html_e( 'Type', 'apple-news' ); ?>
@@ -355,7 +410,16 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			<label for="apple-news-metadata-value-<?php echo absint( $index ); ?>">
 				<?php esc_html_e( 'Value', 'apple-news' ); ?>
 				<br />
-				<input id="apple-news-metadata-value-<?php echo absint( $index ); ?>" name="apple_news_metadata_values[]" type="text" value="<?php echo esc_attr( $field['value'] ); ?>"
+				<input
+					id="apple-news-metadata-value-<?php echo absint( $index ); ?>"
+					name="apple_news_metadata_values[]"
+					type="text"
+					<?php if ( 'boolean' === $field['type'] ) : ?>
+						value="<?php echo ! empty( $field['value'] ) ? 'true' : 'false'; ?>"
+					<?php else : ?>
+						value="<?php echo esc_attr( $field['value'] ); ?>"
+					<?php endif; ?>
+				/>
 			</label>
 			<button class="button-secondary">
 				<?php esc_html_e( 'Remove', 'apple-news' ); ?>

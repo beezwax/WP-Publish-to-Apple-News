@@ -13,7 +13,7 @@
 }
 
 #apple-news-publish button {
-  display: block;
+  display: block !important;
   margin: 0.5em 0;
 }
 
