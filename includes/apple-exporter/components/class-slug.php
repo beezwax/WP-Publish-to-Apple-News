@@ -2,16 +2,17 @@
 /**
  * Publish to Apple News: \Apple_Exporter\Components\Slug class
  *
- * @package Apple_Exporter
+ * @package Apple_News
+ * @subpackage Apple_Exporter\Components
  */
 
-/**
- * A slug.
- *
- * @since 0.2.0
- */
 namespace Apple_Exporter\Components;
 
+/**
+ * Represents an article slug (a word or phrase that appears near the article title).
+ *
+ * @since 2.2.0
+ */
 class Slug extends Component {
 
 	/**

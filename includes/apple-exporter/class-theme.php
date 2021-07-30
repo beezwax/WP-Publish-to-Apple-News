@@ -1997,9 +1997,9 @@ class Theme {
 				'settings'    => array( 'layout_margin', 'layout_gutter' ),
 			),
 			'slug'            => array(
-				'label'    => __( 'Slug', 'apple-news' ),
+				'label'       => __( 'Slug', 'apple-news' ),
 				'description' => __( "The slug displays the article's section or topic", 'apple-news' ),
-				'settings' => array(
+				'settings'    => array(
 					'slug_font',
 					'slug_size',
 					'slug_line_height',
