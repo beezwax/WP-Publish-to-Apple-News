@@ -13,6 +13,7 @@
 }
 
 #apple-news-publish button {
+  /* We are overriding a much more specific CSS selector from WP Core here. */
   display: block !important;
   margin: 0.5em 0;
 }
