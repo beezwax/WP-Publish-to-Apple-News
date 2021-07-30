@@ -259,7 +259,7 @@ class Export extends Action {
 			$post->ID,
 			$title,
 			$content,
-            $slug,
+			$slug,
 			$excerpt,
 			$post_thumb,
 			$byline,

@@ -118,7 +118,7 @@ class Component_Tests extends Apple_News_Testcase {
 			1,
 			'My Title',
 			'<p>Hello, World!</p>',
-            '',
+			'',
 			null,
 			wp_get_attachment_url( $this->cover ),
 			'Author Name'

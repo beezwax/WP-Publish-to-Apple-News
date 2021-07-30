@@ -61,11 +61,11 @@ class Slug extends Component {
 			__( 'Style', 'apple-news' ),
 			array(
 				'textAlignment' => '#text_alignment#',
-				'fontName' => '#slug_font#',
-				'fontSize' => '#slug_size#',
-				'lineHeight' => '#slug_line_height#',
-				'tracking' => '#slug_tracking#',
-				'textColor' => '#slug_color#',
+				'fontName'      => '#slug_font#',
+				'fontSize'      => '#slug_size#',
+				'lineHeight'    => '#slug_line_height#',
+				'tracking'      => '#slug_tracking#',
+				'textColor'     => '#slug_color#',
 			)
 		);
 
@@ -74,7 +74,7 @@ class Slug extends Component {
 			__( 'Layout', 'apple-news' ),
 			array(
 				'margin' => array(
-					'top' => 30,
+					'top'    => 30,
 					'bottom' => 0,
 				),
 			)
@@ -119,12 +119,12 @@ class Slug extends Component {
 			'default-slug',
 			'default-slug',
 			array(
-				'#text_alignment#' => $this->find_text_alignment(),
-				'#slug_font#' => $theme->get_value( 'slug_font' ),
-				'#slug_size#' => intval( $theme->get_value( 'slug_size' ) ),
+				'#text_alignment#'   => $this->find_text_alignment(),
+				'#slug_font#'        => $theme->get_value( 'slug_font' ),
+				'#slug_size#'        => intval( $theme->get_value( 'slug_size' ) ),
 				'#slug_line_height#' => intval( $theme->get_value( 'slug_line_height' ) ),
-				'#slug_tracking#' => intval( $theme->get_value( 'slug_tracking' ) ) / 100,
-				'#slug_color#' => $theme->get_value( 'slug_color' ),
+				'#slug_tracking#'    => intval( $theme->get_value( 'slug_tracking' ) ) / 100,
+				'#slug_color#'       => $theme->get_value( 'slug_color' ),
 			),
 			'textStyle'
 		);
