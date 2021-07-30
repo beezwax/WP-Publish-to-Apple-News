@@ -67,7 +67,11 @@ class Component_Styles extends Builder {
 	 * @access protected
 	 */
 	protected function build() {
+		/**
+		 * Modifies available component styles.
+		 *
+		 * @param array $styles Component styles.
+		 */
 		return apply_filters( 'apple_news_component_styles', $this->styles );
 	}
-
 }

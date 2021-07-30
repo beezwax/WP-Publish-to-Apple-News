@@ -1,15 +1,15 @@
 === Publish To Apple News ===
-Contributors: potatomaster, kevinfodness, jomurgel, danbowles, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brianschick
+Contributors: potatomaster, kevinfodness, jomurgel, tylermachado, benpbolton, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brianschick
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 5.4.0
+Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.0.7
+Stable tag: 2.2.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
-Enable your WordPress blog content to be published to your Apple News channel.
+The 'Publish to Apple News' plugin enables WordPress sites with approved Apple News channels to publish content directly on Apple News. Note that Apple News is a distribution platform for professional publications of a journalistic nature, and not all applications will be accepted.
 
 == Description ==
 
@@ -45,6 +45,60 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.2.0 =
+* Enhancement: Added support for HLS video (.m3u8) in thumbnails.
+* Enhancement: Added support for custom article metadata.
+
+= 2.1.3 =
+* Enhancement: Added article authors to the `metadata.authors` property so they display in the article listing view on Apple News.
+* Enhancement: Added a new filter for whether to enable Co-Authors Plus support, which defaults to `true` if the `coauthors` function is defined (the same as the previous behavior, but now the setting is filterable).
+* Enhancement: Updated the plugin description to more clearly articulate its purpose and intended users.
+* Bugfix: Fixed a bug with applying automatic section mappings based on taxonomy in a Gutenberg context.
+* Bugfix: Fixed a bug with video metadata parsing related to having a `video` element with a `src` attribute rather than `source` inner elements.
+
+= 2.1.2 =
+* Bugfix: Fixed an error that would occur if sections could not be fetched from the API, where the function being called to handle the error didn't exist.
+* Bugfix: Removed unnecessary argument to `libxml_clear_errors` which was causing an error in PHP 8.
+
+= 2.1.1 =
+* Enhancement: Clarifies source of admin messages coming from the plugin to ensure that they say "Apple News."
+* Enhancement: Adds checks for plugin initialization before making REST responses.
+* Enhancement: Adds documentation to all hooks, which has been synchronized with the wiki.
+* Bugfix: Resolves an issue where API information (e.g., article ID) were removed upon save when using the Gutenberg editor, which would cause articles in WordPress to become unlinked from articles in Apple News, and would result in a duplicate article error if publishing again was attempted.
+* Bugfix: Uses new `wp_after_insert_post` hook, if available (was added in WP 5.6) to ensure that postmeta and terms are saved before running an autosync to Apple.
+* Bugfix: Pullquote styles are now being included properly if alignments other than the default are used.
+* Bugfix: Stops using `get_user_attribute` on VIP Go, preferring `get_user_meta` instead.
+* Bugfix: Resolves an error when using theme preview related to a bad script localization reference.
+* Bugfix: Ensures that notices are available via the REST API for custom post types.
+* Bugfix: Replaces admin sections error display function.
+* Bugfix: Updates `pluginSidebar` sections default values to prevent save errors in some cases.
+* Bugfix: Outdated links to Apple News docs have been replaced with their modern equivalents.
+
+= 2.1.0 =
+* Enhancement: Adds support for Dark Mode, including the ability to customize Dark Mode colors in a theme.
+* Enhancement: The cover component now supports captions. If a featured image is used for the cover, the caption will come from the attachment itself in the database. If the first image from the content is used, the caption will be read from the HTML. There is also a new filter, apple_news_exporter_cover_caption, which allows for filtering of the caption text.
+* Enhancement: Adds a new End of Article module, available via the Customize JSON feature, to allow publishers to insert content at the end of every article, customized per theme.
+* Enhancement: HTML is now allowed in lightbox image captions.
+* Enhancement: Allows configuration of cover images in the sidebar / metabox explicitly, rather than pulling them out of the featured image or main content.
+* Enhancement: Adds support for Brightcove videos via the Brightcove Video Connect plugin for videos added via either the Gutenberg block or the shortcode. Note that this feature will only work if you contact Apple support to link your Brightcove account with your Apple News channel.
+* Enhancement: Replaces usage of the deprecated `advertisingSettings` object with the new `autoplacement.advertising` object. Bumps default advertisement frequency from 1 to 5 (out of 10).
+* Enhancement: Adds an error to the notice bar if the `DATE_NOT_RECENT` API error is encountered advising the user to synchronize the time on their server to restore API connectivity.
+* Enhancement: Adds padding above and below `EmbedWebVideo` components.
+* Enhancement: Converts notices in a block editor context to native block editor notice components, rather than the previous custom implementation.
+* Enhancement: In the block editor, warns when the post has unsaved changes, and publishing to Apple News would result in unsaved changes not being published.
+* Bugfix: Removes Cover Art configuration, as Cover Art is no longer used by Apple.
+* Bugfix: Fixes the logic in the default theme checker to properly check the configured values against the defaults and prompt the user if they are using the default theme that ships with Apple News without modification.
+* Bugfix: Fixes a bug where renaming a theme would not carry over any changes made to the theme, and renaming the active theme would make it no longer active.
+* Bugfix: If the same image is used for the featured image and the first image embedded into the post, it no longer shows up twice.
+* Bugfix: Removed extra space between an image and its caption.
+* Bugfix: If a custom excerpt is used, but the custom excerpt repeats text in its entirety from elsewhere in the article (e.g., the first paragraph), then the Intro component will be skipped. This prevents an issue where Apple will flag articles that contain repeated text due to the Intro component using a custom excerpt suitable in a WordPress context but not an Apple News context.
+* Bugfix: Select menus are no longer oversized on the settings page.
+* Updated filter name for `get_sections_for_post` to `apple_news_get_sections_for_post`.
+
+= 2.0.8 =
+* Enhancement: Adds styles for Button elements that are links which are added by the Gutenberg editor.
+* Enhancement: Bumps the Apple News Format version from 1.7 to 1.11 to make support for new features possible, like LinkButton.
 
 = 2.0.7 =
 * Fixes a bug where sections by category is not checked by default for new posts.
@@ -280,7 +334,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Added ability to publish preview articles
 
 = 1.0.8 =
-* Added support for date metadata (https://developer.apple.com/library/ios/documentation/General/Conceptual/Apple_News_Format_Ref/Metadata.html#//apple_ref/doc/uid/TP40015408-CH3-SW1)
+* Added support for date metadata (https://developer.apple.com/documentation/apple_news/metadata)
 * Fixed issue with shortcodes appearing in excerpt metadata
 * Added the ability to alter a component's style property via a filter
 * Refactored plugin settings to save as a single option value

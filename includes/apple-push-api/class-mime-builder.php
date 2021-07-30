@@ -135,12 +135,14 @@ class MIME_Builder {
 		if ( defined( 'WPCOM_IS_VIP_ENV' ) && WPCOM_IS_VIP_ENV ) {
 			$request = vip_safe_wp_remote_get( $filepath );
 		} else {
-			$request = wp_remote_get( $filepath );
+			$request = wp_remote_get( $filepath ); // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.wp_remote_get_wp_remote_get
 		}
 
 		if ( is_wp_error( $request ) ) {
-			// Try file_get_contents instead. This could be a local path.
-			$contents = file_get_contents( $filepath ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			// Try file_get_contents if this is a local path.
+			if ( 0 === validate_file( $filepath ) && file_exists( $filepath ) ) {
+				$contents = file_get_contents( $filepath ); // phpcs:ignore WordPressVIPMinimum.Performance.FetchingRemoteData.FileGetContentsUnknown
+			}
 		} else {
 			$contents = wp_remote_retrieve_body( $request );
 		}
@@ -173,7 +175,7 @@ class MIME_Builder {
 			$name,
 			$filename,
 			$contents,
-			$this->get_mime_type_for( $filepath ),
+			'application/octet-stream',
 			$size
 		);
 	}
@@ -242,19 +244,6 @@ class MIME_Builder {
 		}
 
 		return $attachment;
-	}
-
-	/**
-	 * Get the MIME type for a file.
-	 *
-	 * @todo replace with the proper WordPress function.
-	 * @param string $filepath The filepath to get the MIME type for.
-	 * @access private
-	 * @return string The MIME type for the filepath.
-	 */
-	private function get_mime_type_for( $filepath ) {
-		// TODO: rethink this for better integration with WordPress.
-		return 'application/octet-stream';
 	}
 
 	/**

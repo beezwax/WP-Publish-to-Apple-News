@@ -8,6 +8,8 @@
 
 namespace Apple_Exporter\Components;
 
+use Apple_Exporter\Theme;
+
 /**
  * A cover is optional and displayed at the very top of the article. It's
  * loaded from the Exporter_Content's cover attribute, if present.
@@ -26,6 +28,7 @@ class Cover extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
+		$theme = \Apple_Exporter\Theme::get_used();
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
@@ -46,6 +49,62 @@ class Cover extends Component {
 			)
 		);
 
+		$conditional = array();
+		if ( ! empty( $theme->get_value( 'caption_color_dark' ) ) ) {
+			$conditional = array(
+				'conditional' => array(
+					'textColor'  => '#caption_color_dark#',
+					'conditions' => array(
+						'minSpecVersion'       => '1.14',
+						'preferredColorScheme' => 'dark',
+					),
+				),
+			);
+		}
+
+		$this->register_spec(
+			'jsonWithCaption',
+			__( 'JSON with Caption', 'apple-news' ),
+			array(
+				'role'       => 'header',
+				'layout'     => 'headerPhotoLayout',
+				'components' => array(
+					array(
+						'role'    => 'photo',
+						'layout'  => 'headerPhotoLayoutWithCaption',
+						'URL'     => '#url#',
+						'caption' => array(
+							'format'    => 'html',
+							'text'      => '#caption#',
+							'textStyle' => array(
+								'fontName' => '#caption_font#',
+							),
+						),
+					),
+					array(
+						'role'      => 'caption',
+						'text'      => '#caption#',
+						'format'    => 'html',
+						'textStyle' => array_merge(
+							array(
+								'textAlignment' => '#text_alignment#',
+								'fontName'      => '#caption_font#',
+								'fontSize'      => '#caption_size#',
+								'tracking'      => '#caption_tracking#',
+								'lineHeight'    => '#caption_line_height#',
+								'textColor'     => '#caption_color#',
+							),
+							$conditional
+						),
+					),
+				),
+				'behavior'   => array(
+					'type'   => 'parallax',
+					'factor' => 0.8,
+				),
+			)
+		);
+
 		$this->register_spec(
 			'headerPhotoLayout',
 			__( 'Layout', 'apple-news' ),
@@ -53,6 +112,19 @@ class Cover extends Component {
 				'ignoreDocumentMargin' => true,
 				'columnStart'          => 0,
 				'columnSpan'           => '#layout_columns#',
+			)
+		);
+
+		$this->register_spec(
+			'headerPhotoLayoutWithCaption',
+			__( 'Layout with Caption', 'apple-news' ),
+			array(
+				'ignoreDocumentMargin' => true,
+				'columnStart'          => 0,
+				'columnSpan'           => '#layout_columns#',
+				'margin'               => array(
+					'bottom' => '#caption_line_height#',
+				),
 			)
 		);
 
@@ -74,24 +146,52 @@ class Cover extends Component {
 	/**
 	 * Build the component.
 	 *
-	 * @param string $url The URL for the cover image.
+	 * @param array|string $options {
+	 *    The options for the component. If a string is provided, assume it is a URL.
+	 *
+	 *    @type string $caption The caption for the image.
+	 *    @type string $url     The URL to the featured image.
+	 * }
 	 * @access protected
 	 */
-	protected function build( $url ) {
+	protected function build( $options ) {
+
+		$theme = Theme::get_used();
+
+		// Handle case where options is a URL.
+		if ( ! is_array( $options ) ) {
+			$options = [
+				'url' => $options,
+			];
+		}
 
 		// If we can't get a valid URL, bail.
-		$url   = $this->maybe_bundle_source( $url );
+		$url   = $this->maybe_bundle_source( $options['url'] );
 		$check = trim( $url );
 		if ( empty( $check ) ) {
 			return;
 		}
 
-		$this->register_json(
-			'json',
-			array(
-				'#url#' => $url,
-			)
-		);
+		// Fork for caption vs. not.
+		if ( ! empty( $options['caption'] )
+			&& true === $theme->get_value( 'cover_caption' )
+		) {
+			$this->register_json(
+				'jsonWithCaption',
+				array(
+					'#caption#'          => $options['caption'],
+					'#url#'              => $url,
+					'#caption_tracking#' => intval( $theme->get_value( 'caption_tracking' ) ) / 100,
+				)
+			);
+		} else {
+			$this->register_json(
+				'json',
+				array(
+					'#url#' => $url,
+				)
+			);
+		}
 
 		$this->set_default_layout();
 	}
@@ -115,6 +215,15 @@ class Cover extends Component {
 		);
 
 		$this->register_layout(
+			'headerPhotoLayoutWithCaption',
+			'headerPhotoLayoutWithCaption',
+			array(
+				'#caption_line_height#' => $theme->get_value( 'caption_line_height' ),
+				'#layout_columns#'      => $theme->get_layout_columns(),
+			)
+		);
+
+		$this->register_layout(
 			'headerBelowTextPhotoLayout',
 			'headerBelowTextPhotoLayout',
 			array(
@@ -122,6 +231,4 @@ class Cover extends Component {
 			)
 		);
 	}
-
 }
-

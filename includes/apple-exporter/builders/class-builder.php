@@ -87,7 +87,7 @@ abstract class Builder {
 	 * Gets the content cover.
 	 *
 	 * @access protected
-	 * @return string The URL for the cover image from the content object.
+	 * @return string|array The URL for the cover image from the content object, or an array specifying a 'url' and a 'caption'.
 	 */
 	protected function content_cover() {
 		return $this->content->cover();

@@ -33,6 +33,28 @@ class Exporter_Content_Test extends WP_UnitTestCase {
 	}
 
 	/**
+	 * Tests the ability to set a cover using an array configuration.
+	 */
+	public function testCompleteContentWithCoverConfig() {
+		$cover = [
+			'caption' => 'Test Caption',
+			'url'     => 'https://example.org/wp-content/uploads/2020/07/test-image.jpg',
+		];
+		$content  = new \Apple_Exporter\Exporter_Content(
+			3,
+			'Title',
+			'<p>Example content</p>',
+			'some intro',
+			$cover
+		);
+		$this->assertEquals( '3', $content->id() );
+		$this->assertEquals( 'Title', $content->title() );
+		$this->assertEquals( '<p>Example content</p>', $content->content() );
+		$this->assertEquals( 'some intro', $content->intro() );
+		$this->assertEquals( $cover, $content->cover() );
+	}
+
+	/**
 	 * Ensure we decode the HTML entities in URLs extracted from HTML attributes.[type]
 	 */
 	public function test_format_src_url() {

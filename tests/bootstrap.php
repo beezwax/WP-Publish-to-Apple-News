@@ -14,11 +14,34 @@ require_once dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php';
  * Manually load the plugin for tests.
  */
 function _manually_load_plugin() {
+	// Disable VIP cache manager when testing against VIP Go integration.
+	if ( method_exists( 'WPCOM_VIP_Cache_Manager', 'instance' ) ) {
+		remove_action( 'init', [ WPCOM_VIP_Cache_Manager::instance(), 'init' ] );
+	}
+
+	// Set the permalink structure.
+	update_option( 'permalink_structure', '/%postname%' );
+
+	// Load mocks for integration tests.
+	require_once __DIR__ . '/mocks/class-bc-setup.php';
+	if ( ! function_exists( 'coauthors' ) ) {
+		require_once __DIR__ . '/mocks/function-coauthors.php';
+	}
+
+	// Activate mocked Brightcove functionality.
+	$bc_setup = new BC_Setup();
+	$bc_setup->action_init();
+
+	// Load the plugin.
 	require dirname( dirname( __FILE__ ) ) . '/apple-news.php';
 }
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
-// Turn off Gutenberg for tests, at least for now.
-tests_add_filter( 'apple_news_block_editor_is_active', '__return_false' );
+// Disable CAP by default - make it opt-in in tests.
+tests_add_filter( 'apple_news_use_coauthors', '__return_false' );
 
 require $_tests_dir . '/includes/bootstrap.php';
+
+require_once __DIR__ . '/class-apple-news-testcase.php';
+
+require_once __DIR__ . '/apple-exporter/components/class-component-testcase.php';

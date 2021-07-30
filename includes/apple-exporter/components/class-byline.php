@@ -21,6 +21,8 @@ class Byline extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
+		$theme = \Apple_Exporter\Theme::get_used();
+
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
@@ -33,13 +35,27 @@ class Byline extends Component {
 		$this->register_spec(
 			'default-byline',
 			__( 'Style', 'apple-news' ),
-			array(
-				'textAlignment' => '#text_alignment#',
-				'fontName'      => '#byline_font#',
-				'fontSize'      => '#byline_size#',
-				'lineHeight'    => '#byline_line_height#',
-				'tracking'      => '#byline_tracking#',
-				'textColor'     => '#byline_color#',
+			(
+				array(
+					'textAlignment' => '#text_alignment#',
+					'fontName'      => '#byline_font#',
+					'fontSize'      => '#byline_size#',
+					'lineHeight'    => '#byline_line_height#',
+					'tracking'      => '#byline_tracking#',
+					'textColor'     => '#byline_color#',
+				) + (
+					! empty( $theme->get_value( 'byline_color_dark' ) )
+						? array(
+							'conditional' => array(
+								'textColor'  => '#byline_color_dark#',
+								'conditions' => array(
+									'minSpecVersion'       => '1.14',
+									'preferredColorScheme' => 'dark',
+								),
+							),
+						)
+						: array()
+				)
 			)
 		);
 
@@ -93,13 +109,19 @@ class Byline extends Component {
 		$this->register_style(
 			'default-byline',
 			'default-byline',
-			array(
-				'#text_alignment#'     => $this->find_text_alignment(),
-				'#byline_font#'        => $theme->get_value( 'byline_font' ),
-				'#byline_size#'        => intval( $theme->get_value( 'byline_size' ) ),
-				'#byline_line_height#' => intval( $theme->get_value( 'byline_line_height' ) ),
-				'#byline_tracking#'    => intval( $theme->get_value( 'byline_tracking' ) ) / 100,
-				'#byline_color#'       => $theme->get_value( 'byline_color' ),
+			(
+				array(
+					'#text_alignment#'     => $this->find_text_alignment(),
+					'#byline_font#'        => $theme->get_value( 'byline_font' ),
+					'#byline_size#'        => intval( $theme->get_value( 'byline_size' ) ),
+					'#byline_line_height#' => intval( $theme->get_value( 'byline_line_height' ) ),
+					'#byline_tracking#'    => intval( $theme->get_value( 'byline_tracking' ) ) / 100,
+					'#byline_color#'       => $theme->get_value( 'byline_color' ),
+				) + (
+					! empty( $theme->get_value( 'byline_color_dark' ) )
+						? array( '#byline_color_dark' => $theme->get_value( 'byline_color_dark' ) )
+						: array()
+				)
 			),
 			'textStyle'
 		);

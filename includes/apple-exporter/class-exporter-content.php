@@ -127,7 +127,7 @@ class Exporter_Content {
 	 * @param string                   $content  The content of the post to be exported.
      * @param string                   $slug     Optional. The slug of the post to be exported.
 	 * @param string                   $intro    Optional. The intro of the post to be exported.
-	 * @param string                   $cover    Optional. The cover of the post to be exported.
+	 * @param string|array             $cover    Optional. The cover of the post to be exported. If string, just the URL. If array, properties are 'url' and 'caption'.
 	 * @param string                   $byline   Optional. The byline of the post to be exported.
 	 * @param \Apple_Exporter\Settings $settings Optional. Settings for the exporter.
 	 * @access public
@@ -140,7 +140,7 @@ class Exporter_Content {
 		$this->intro    = $intro;
 		$this->cover    = $cover;
 		$this->byline   = $byline;
-		$this->settings = $settings ?: new Exporter_Content_Settings();
+		$this->settings = ! empty( $settings ) ? $settings : new Exporter_Content_Settings();
 	}
 
 	/**
@@ -248,7 +248,7 @@ class Exporter_Content {
 		$dom = new \DOMDocument();
 		libxml_use_internal_errors( true );
 		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $this->content() );
-		libxml_clear_errors( true );
+		libxml_clear_errors();
 
 		// Find the first-level nodes of the body tag.
 		return $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes;

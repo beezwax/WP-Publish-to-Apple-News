@@ -149,6 +149,7 @@ class Admin_Apple_JSON extends Apple_News {
 			'apple_news_index',
 			__( 'Customize Apple News JSON', 'apple-news' ),
 			__( 'Customize JSON', 'apple-news' ),
+			/** This filter is documented in admin/class-admin-apple-settings.php */
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->json_page_name,
 			array( $this, 'page_json_render' )
@@ -161,9 +162,12 @@ class Admin_Apple_JSON extends Apple_News {
 	 * @access public
 	 */
 	public function page_json_render() {
+		/** This filter is documented in admin/class-admin-apple-settings.php */
 		if ( ! current_user_can( apply_filters( 'apple_news_settings_capability', 'manage_options' ) ) ) {
 			wp_die( esc_html__( 'You do not have permissions to access this page.', 'apple-news' ) );
 		}
+
+		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
 
 		// Get components for the dropdown.
 		$components = $this->list_components();
@@ -185,6 +189,8 @@ class Admin_Apple_JSON extends Apple_News {
 		$specs = ( ! empty( $selected_component ) )
 			? $this->get_specs( $selected_component )
 			: array();
+
+		/* phpcs:enable */
 
 		// Load the template.
 		include plugin_dir_path( __FILE__ ) . 'partials/page-json.php';

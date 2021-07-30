@@ -2,6 +2,16 @@
 /**
  * Publish to Apple News partials: Sections page template
  *
+ * phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
+ *
+ * @global array       $priority_mappings
+ * @global array       $sections
+ * @global WP_Taxonomy $taxonomy
+ * @global array       $taxonomy_mappings
+ * @global string      $theme_admin_url
+ * @global array       $theme_mappings
+ * @global array       $themes
+ *
  * @package Apple_News
  */
 
@@ -25,12 +35,20 @@
 	echo wp_kses_post(
 		sprintf(
 			// translators: first argument is an opening <a> tag, second argument is </a>.
-			__( 'You can also map a theme to automatically be used for posts with a specific Apple News section, if you want to use something other than the %1$sactive theme%2$s. This will only work for posts with precisely one Apple News section to avoid conflicts.', 'apple-news' ),
+			__( 'You can also map a theme to automatically be used for posts with a specific Apple News section, if you want to use something other than the %1$sactive theme%2$s.', 'apple-news' ),
 			'<a href="' . esc_url( $theme_admin_url ) . '">',
 			'</a>'
 		)
 	);
 	?>
+	</p>
+	<p>
+		<?php
+			esc_html_e(
+				'Additionally, you can assign a priority to each section. If a post will be published to more than one section, the priority determines which theme is used for the post. The section with the higher priority number will take precedence. The theme assigned to the section with the highest priority that is assigned to the post will be used as the selected theme for the post.',
+				'apple-news'
+			);
+			?>
 	</p>
 	<form method="post" action="" id="apple-news-section-form" enctype="multipart/form-data">
 		<?php wp_nonce_field( 'apple_news_sections' ); ?>
@@ -44,41 +62,51 @@
 			<thead>
 			<tr>
 				<th scope="col" id="apple_news_section_name" class="manage-column column-apple-news-section-name column-primary"><?php esc_html_e( 'Section', 'apple-news' ); ?></th>
+				<th scope="col" id="apple_news_section_priority" class="manage-column column-apple-news-section-priority"><?php esc_html_e( 'Priority', 'apple-news' ); ?></th>
 				<th scope="col" id="apple_news_section_taxonomy_mapping" class="manage-column column-apple-news-section-taxonomy-mapping"><?php echo esc_html( $taxonomy->label ); ?></th>
 				<th scope="col" id="apple_news_section_theme_mapping" class="manage-column column-apple-news-section-theme-mapping column-primary"><?php esc_html_e( 'Theme', 'apple-news' ); ?></th>
 			</tr>
 			</thead>
 			<tbody id="apple-news-sections-list">
-			<?php $count = 0; ?>
-			<?php foreach ( $sections as $section_id => $section_name ) : ?>
-				<tr id="apple-news-section-<?php echo esc_attr( $section_id ); ?>">
-					<td><?php echo esc_html( $section_name ); ?></td>
+			<?php $apple_count = 0; ?>
+			<?php foreach ( $sections as $apple_section_id => $apple_section_name ) : ?>
+				<tr id="apple-news-section-<?php echo esc_attr( $apple_section_id ); ?>">
+					<td><?php echo esc_html( $apple_section_name ); ?></td>
+					<td>
+						<input
+							aria-labelledby="apple_news_section_priority"
+							name="priority-mapping-<?php echo esc_attr( $apple_section_id ); ?>"
+							type="number"
+							step="1"
+							value="<?php echo esc_attr( isset( $priority_mappings[ $apple_section_id ] ) ? (int) $priority_mappings[ $apple_section_id ] : 1 ); ?>"
+						/>
+					</td>
 					<td>
 						<ul class="apple-news-section-taxonomy-mapping-list">
-						<?php if ( ! empty( $taxonomy_mappings[ $section_id ] ) ) : ?>
-							<?php foreach ( $taxonomy_mappings[ $section_id ] as $term ) : ?>
-								<?php $taxonomy_id = 'apple-news-section-mapping-' . ( ++ $count ); ?>
+						<?php if ( ! empty( $taxonomy_mappings[ $apple_section_id ] ) ) : ?>
+							<?php foreach ( $taxonomy_mappings[ $apple_section_id ] as $apple_taxonomy_term ) : ?>
+								<?php $apple_taxonomy_id = 'apple-news-section-mapping-' . ( ++ $apple_count ); ?>
 								<li>
-									<label for="<?php echo esc_attr( $taxonomy_id ); ?>" class="screen-reader-text"><?php echo esc_html( $taxonomy->labels->singular_name ); ?></label>
-									<input name="taxonomy-mapping-<?php echo esc_attr( $section_id ); ?>[]" id="<?php echo esc_attr( $taxonomy_id ); ?>" type="text" class="apple-news-section-taxonomy-autocomplete" value="<?php echo esc_attr( $term ); ?>" />
+									<label for="<?php echo esc_attr( $apple_taxonomy_id ); ?>" class="screen-reader-text"><?php echo esc_html( $taxonomy->labels->singular_name ); ?></label>
+									<input name="taxonomy-mapping-<?php echo esc_attr( $apple_section_id ); ?>[]" id="<?php echo esc_attr( $apple_taxonomy_id ); ?>" type="text" class="apple-news-section-taxonomy-autocomplete" value="<?php echo esc_attr( $apple_taxonomy_term ); ?>" />
 									<button type="button" class="apple-news-section-taxonomy-remove"><span class="apple-news-section-taxonomy-remove-icon" aria-hidden="true"></span><span class="screen-reader-text"><?php esc_html_e( 'Remove mapping', 'apple-news' ); ?></span></button>
 								</li>
 							<?php endforeach; ?>
 						<?php endif; ?>
 						</ul>
-						<button type="button" class="apple-news-add-section-taxonomy-mapping" data-section-id="<?php echo esc_attr( $section_id ); ?>"><?php esc_html_e( 'Add', 'apple-news' ); ?> <?php echo esc_html( $taxonomy->labels->singular_name ); ?></button>
+						<button type="button" class="apple-news-add-section-taxonomy-mapping" data-section-id="<?php echo esc_attr( $apple_section_id ); ?>"><?php esc_html_e( 'Add', 'apple-news' ); ?> <?php echo esc_html( $taxonomy->labels->singular_name ); ?></button>
 					</td>
 					<td>
 						<?php
-							$theme_id       = 'apple-news-theme-mapping-' . ( ++ $count );
-							$selected_theme = ( isset( $theme_mappings[ $section_id ] ) ) ? $theme_mappings[ $section_id ] : '';
+							$apple_theme_id       = 'apple-news-theme-mapping-' . ( ++ $apple_count );
+							$apple_selected_theme = ( isset( $theme_mappings[ $apple_section_id ] ) ) ? $theme_mappings[ $apple_section_id ] : '';
 						?>
-						<select name="theme-mapping-<?php echo esc_attr( $section_id ); ?>" id="<?php echo esc_attr( $theme_id ); ?>">
+						<select name="theme-mapping-<?php echo esc_attr( $apple_section_id ); ?>" id="<?php echo esc_attr( $apple_theme_id ); ?>">
 							<option value=""></option>
 							<?php
-							foreach ( $themes as $theme ) :
+							foreach ( $themes as $apple_theme ) :
 								?>
-								<option value="<?php echo esc_attr( $theme ); ?>" <?php selected( $theme, $selected_theme ); ?>><?php echo esc_html( $theme ); ?></option>
+								<option value="<?php echo esc_attr( $apple_theme ); ?>" <?php selected( $apple_theme, $apple_selected_theme ); ?>><?php echo esc_html( $apple_theme ); ?></option>
 									<?php
 								endforeach;
 							?>

@@ -8,22 +8,12 @@
  * @subpackage Tests
  */
 
-use \Apple_Exporter\Settings;
-
 /**
  * A class which is used to test the Apple_News class.
+ *
+ * @package Apple_News
  */
-class Apple_News_Test extends WP_UnitTestCase {
-
-	/**
-	 * A function containing operations to be run before each test function.
-	 *
-	 * @access public
-	 */
-	public function setUp() {
-		parent::setup();
-		$this->settings = new Settings();
-	}
+class Apple_News_Test extends Apple_News_Testcase {
 
 	/**
 	 * Ensures that the get_filename function properly returns an image filename.
@@ -36,6 +26,36 @@ class Apple_News_Test extends WP_UnitTestCase {
 		$url = 'http://someurl.com/image.jpg?w=150&h=150';
 		$filename = Apple_News::get_filename( $url );
 		$this->assertEquals( 'image.jpg', $filename );
+	}
+
+	/**
+	 * Tests the functionality of Apple_News::is_default_theme.
+	 */
+	public function testIsDefaultTheme() {
+		// Absent any customizations, the check for the default theme should return true.
+		$this->assertTrue( Apple_News::is_default_theme() );
+
+		// Load the default theme and change its name but not its settings.
+		$theme = new \Apple_Exporter\Theme();
+		$theme->set_name( 'Default' );
+		$theme->load();
+		$theme->rename( 'Not Default' );
+
+		// The check for the default theme should now return false, since the name was changed.
+		$this->assertFalse( Apple_News::is_default_theme() );
+
+		// If we change the name back to Default, the check should go back to being true.
+		$theme->rename( 'Default' );
+		$this->assertTrue( Apple_News::is_default_theme() );
+
+		// If we leave the name as Default but change one of the theme options, the check should return false.
+		$theme->set_value( 'body_size', 72 );
+		$theme->save();
+		$this->assertFalse( Apple_News::is_default_theme() );
+
+		// If we also rename the theme, the check should return false.
+		$theme->rename( 'Not Default' );
+		$this->assertFalse( Apple_News::is_default_theme() );
 	}
 
 	/**

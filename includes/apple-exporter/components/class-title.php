@@ -22,6 +22,7 @@ class Title extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
+		$theme = \Apple_Exporter\Theme::get_used();
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
@@ -32,16 +33,32 @@ class Title extends Component {
 			)
 		);
 
+		$conditional = array();
+		if ( ! empty( $theme->get_value( 'header1_color_dark' ) ) ) {
+			$conditional = array(
+				'conditional' => array(
+					'textColor'  => '#header1_color_dark#',
+					'conditions' => array(
+						'minSpecVersion'       => '1.14',
+						'preferredColorScheme' => 'dark',
+					),
+				),
+			);
+		}
+
 		$this->register_spec(
 			'default-title',
 			__( 'Style', 'apple-news' ),
-			array(
-				'fontName'      => '#header1_font#',
-				'fontSize'      => '#header1_size#',
-				'lineHeight'    => '#header1_line_height#',
-				'tracking'      => '#header1_tracking#',
-				'textColor'     => '#header1_color#',
-				'textAlignment' => '#text_alignment#',
+			array_merge(
+				array(
+					'fontName'      => '#header1_font#',
+					'fontSize'      => '#header1_size#',
+					'lineHeight'    => '#header1_line_height#',
+					'tracking'      => '#header1_tracking#',
+					'textColor'     => '#header1_color#',
+					'textAlignment' => '#text_alignment#',
+				),
+				$conditional
 			)
 		);
 
@@ -101,6 +118,7 @@ class Title extends Component {
 				'#header1_line_height#' => intval( $theme->get_value( 'header1_line_height' ) ),
 				'#header1_tracking#'    => intval( $theme->get_value( 'header1_tracking' ) ) / 100,
 				'#header1_color#'       => $theme->get_value( 'header1_color' ),
+				'#header1_color_dark#'  => $theme->get_value( 'header1_color_dark' ),
 				'#text_alignment#'      => $this->find_text_alignment(),
 			),
 			'textStyle'

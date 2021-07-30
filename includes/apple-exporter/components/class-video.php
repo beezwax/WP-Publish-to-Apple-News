@@ -30,13 +30,13 @@ class Video extends Component {
 
 		if (
 			// Is this a gutenberg video block?
-			(
-				self::node_has_class( $node, 'wp-block-video' ) &&
-				$node->hasChildNodes() &&
-				'video' === $node->firstChild->nodeName && self::remote_file_exists( $node->firstChild )
-			) ||
-			// Or is this a stand-along video tag?
-			'video' === $node->nodeName && self::remote_file_exists( $node ) ) {
+			( self::node_has_class( $node, 'wp-block-video' )
+				&& $node->hasChildNodes()
+				&& 'video' === $node->firstChild->nodeName
+			)
+			// Or is this a stand-alone video tag?
+			|| 'video' === $node->nodeName
+		) {
 			return $node;
 		}
 
@@ -51,18 +51,18 @@ class Video extends Component {
 	public function register_specs() {
 		$this->register_spec(
 			'json-with-caption-text',
-			__('JSON With Caption Text', 'apple-news'),
+			__( 'JSON With Caption Text', 'apple-news' ),
 			array(
-				'role' => 'container',
+				'role'       => 'container',
 				'components' => array(
 					array(
-						'role' => 'video',
-						'URL' => '#url#',
+						'role'     => 'video',
+						'URL'      => '#url#',
 						'stillURL' => '#still_url#',
 					),
 					array(
-						'role' => 'caption',
-						'text' => '#caption_text#',
+						'role'   => 'caption',
+						'text'   => '#caption_text#',
 						'format' => 'html',
 					),
 				),
@@ -99,14 +99,14 @@ class Video extends Component {
 			return;
 		}
 
-		$video_spec = 'json';
+		$video_spec    = 'json';
 		$video_caption = '';
 		if ( preg_match( '/<figcaption>(.*?)<\/figcaption>/', $html, $caption_match ) ) {
 			$video_caption = $caption_match[1];
-			$video_spec = 'json-with-caption-text';
+			$video_spec    = 'json-with-caption-text';
 		}
 		$values = array(
-			'#url#' => esc_url_raw( $url ),
+			'#url#'          => esc_url_raw( $url ),
 			'#caption_text#' => $video_caption,
 		);
 

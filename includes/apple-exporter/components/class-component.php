@@ -270,7 +270,7 @@ abstract class Component {
 	 * @access public
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
-	public static function node_matches( $node ) {
+	public static function node_matches( $node ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		return null;
 	}
 
@@ -287,7 +287,7 @@ abstract class Component {
 		$dom = new \DOMDocument();
 		libxml_use_internal_errors( true );
 		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $html );
-		libxml_clear_errors( true );
+		libxml_clear_errors();
 
 		// Find the first-level nodes of the body tag.
 		$element = $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes->item( 0 );
@@ -308,6 +308,11 @@ abstract class Component {
 			$this->json['text'] = wp_kses( $this->json['text'], $this->allowed_html );
 		}
 
+		/**
+		 * Filters the final JSON for a specific component.
+		 *
+		 * @param array $json A PHP array representation of the JSON for this component.
+		 */
 		return apply_filters( 'apple_news_' . $this->get_component_name() . '_json', $this->json );
 	}
 
@@ -728,26 +733,6 @@ abstract class Component {
 		$class_name_path         = explode( '\\', $class_name );
 		$class_name_no_namespace = end( $class_name_path );
 		return strtolower( $class_name_no_namespace );
-	}
-
-	/**
-	 * Check if the remote file's headers return HTTP 200
-	 *
-	 * @param \DOMElement $node The node to examine for matches.
-	 * @return boolean
-	 * @access protected
-	 */
-	protected static function remote_file_exists( $node ) {
-
-		// Try to get a URL from the src attribute of the HTML.
-		$html = $node->ownerDocument->saveXML( $node );
-		$path = self::url_from_src( $html );
-		if ( empty( $path ) ) {
-			return false;
-		}
-
-		$headers = get_headers( $path );
-		return ! empty( $headers[0] ) && false !== stripos( $headers[0], '200 OK' );
 	}
 
 	/**

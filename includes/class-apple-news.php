@@ -39,7 +39,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $version = '2.0.7';
+	public static $version = '2.2.0';
 
 	/**
 	 * Link to support for the plugin on WordPress.org.
@@ -92,6 +92,45 @@ class Apple_News {
 	 * @access public
 	 */
 	public static $maturity_ratings = array( 'KIDS', 'MATURE', 'GENERAL' );
+
+	/**
+	 * A helper function for getting authors for a post, which supports native
+	 * WordPress authors as well as Co-Authors Plus. Like the coauthors function,
+	 * must be used in the loop.
+	 *
+	 * @param ?string $between      Delimiter that should appear between the co-authors.
+	 * @param ?string $between_last Delimiter that should appear between the last two co-authors.
+	 * @param ?string $before       What should appear before the presentation of co-authors.
+	 * @param ?string $after        What should appear after the presentation of co-authors.
+	 *
+	 * @return string The author list, formatted according to the given options.
+	 */
+	public static function get_authors( $between = null, $between_last = null, $before = null, $after = null ) {
+		global $post;
+
+		// Bail out if we don't have a post.
+		if ( empty( $post ) ) {
+			return '';
+		}
+
+		/**
+		 * Allows for changing the option to use Co-Authors Plus for authorship.
+		 * Defaults to using Co-Authors Plus if the `coauthors` function is defined.
+		 *
+		 * @since 2.1.3
+		 *
+		 * @param bool $use_cap Whether to use Co-Authors Plus for authors.
+		 * @param int  $post_id The post ID being processed.
+		 */
+		$use_cap = apply_filters( 'apple_news_use_coauthors', function_exists( 'coauthors' ), get_the_ID() );
+
+		// Handle CAP authorship.
+		if ( $use_cap ) {
+			return coauthors( $between, $between_last, $before, $after, false );
+		}
+
+		return ucfirst( get_the_author_meta( 'display_name', $post->post_author ) );
+	}
 
 	/**
 	 * Maps a capability to a specific post type, with support for
@@ -174,6 +213,31 @@ class Apple_News {
 	}
 
 	/**
+	 * Determines whether the currently selected theme is the default theme that
+	 * ships with the plugin or not.
+	 *
+	 * Returns true only if the name of the theme is "Default" and the config
+	 * options for the theme match the default theme from the plugin's source
+	 * files.
+	 *
+	 * @return bool True if the default theme is the current active theme, false otherwise.
+	 */
+	public static function is_default_theme() {
+		// If the theme is not named "Default", then it is customized, and is not the default theme.
+		$active_theme = \Apple_Exporter\Theme::get_active_theme_name();
+		if ( __( 'Default', 'apple-news' ) !== $active_theme ) {
+			return false;
+		}
+
+		// If the theme _is_ named "Default", check its configuration against the default.
+		$theme = new \Apple_Exporter\Theme();
+		$theme->set_name( $active_theme );
+		$theme->load();
+
+		return $theme->is_default();
+	}
+
+	/**
 	 * Determines whether the plugin is initialized with the minimum settings.
 	 *
 	 * @access public
@@ -191,6 +255,24 @@ class Apple_News {
 		}
 
 		return self::$is_initialized;
+	}
+
+	/**
+	 * Returns new WP_Error if uninitialized.
+	 *
+	 * @access public
+	 * @return WP_Error error if uninitialized.
+	 */
+	public static function has_uninitialized_error() {
+		if ( ! self::is_initialized() ) {
+			return new WP_Error(
+				'apple_news_bad_operation',
+				__( 'You must enter your API information on the settings page before using Publish to Apple News.', 'apple-news' ),
+				[
+					'status' => 400,
+				]
+			);
+		}
 	}
 
 	/**
@@ -235,33 +317,13 @@ class Apple_News {
 		// Ensure media modal assets are enqueued.
 		wp_enqueue_media();
 
-		// Enqueue styles.
-		wp_enqueue_style(
-			$this->plugin_slug . '_cover_art_css',
-			plugin_dir_url( __FILE__ ) . '../assets/css/cover-art.css',
-			array(),
-			self::$version
-		);
-
-		// Enqueue scripts.
+		// Enqueue the script for cover images in the classic editor.
 		wp_enqueue_script(
-			$this->plugin_slug . '_cover_art_js',
-			plugin_dir_url( __FILE__ ) . '../assets/js/cover-art.js',
+			$this->plugin_slug . '_cover_image_js',
+			plugin_dir_url( __FILE__ ) . '../assets/js/cover-image.js',
 			array( 'jquery' ),
 			self::$version,
 			true
-		);
-
-		// Localize scripts.
-		wp_localize_script(
-			$this->plugin_slug . '_cover_art_js',
-			'apple_news_cover_art',
-			array(
-				'image_sizes'        => Admin_Apple_News::get_image_sizes(),
-				'image_too_small'    => esc_html__( 'You must select an image that is at least the height and width specified above.', 'apple-news' ),
-				'media_modal_button' => esc_html__( 'Select image', 'apple-news' ),
-				'media_modal_title'  => esc_html__( 'Choose an image', 'apple-news' ),
-			)
 		);
 	}
 
@@ -283,12 +345,25 @@ class Apple_News {
 			return;
 		}
 
+		// Get the path to the PHP file containing the dependencies.
+		$dependency_file = dirname( __DIR__ ) . '/build/pluginSidebar.asset.php';
+		if ( ! file_exists( $dependency_file ) || 0 !== validate_file( $dependency_file ) ) {
+			return;
+		}
+
+		// Try to load the dependencies.
+		// phpcs:ignore WordPressVIPMinimum.Files.IncludingFile.UsingVariable
+		$dependencies = require $dependency_file;
+		if ( empty( $dependencies['dependencies'] ) || ! is_array( $dependencies['dependencies'] ) ) {
+			return;
+		}
+
 		// Add the PluginSidebar.
 		wp_enqueue_script(
 			'publish-to-apple-news-plugin-sidebar',
 			plugins_url( 'build/pluginSidebar.js', __DIR__ ),
-			[ 'wp-i18n', 'wp-edit-post' ],
-			self::$version,
+			$dependencies['dependencies'],
+			$dependencies['version'],
 			true
 		);
 		$this->inline_locale_data( 'apple-news-plugin-sidebar' );
@@ -347,7 +422,7 @@ class Apple_News {
 		$options        = \Apple_Exporter\Theme::get_options();
 		$wp_settings    = get_option( self::$option_name, array() );
 		$theme_settings = array();
-		foreach ( $options as $option_key => $option ) {
+		foreach ( array_keys( $options ) as $option_key ) {
 			if ( isset( $wp_settings[ $option_key ] ) ) {
 				$theme_settings[ $option_key ] = $wp_settings[ $option_key ];
 			}
@@ -808,11 +883,6 @@ class Apple_News {
 				$this->migrate_table_settings( $theme );
 			}
 		}
-
-		// Default cover art to on for existing installations.
-		$wp_settings                     = get_option( self::$option_name );
-		$wp_settings['enable_cover_art'] = 'yes';
-		update_option( self::$option_name, $wp_settings, 'no' );
 	}
 
 	/**
@@ -843,8 +913,7 @@ class Apple_News {
 			}
 
 			// Load the theme data from the JSON configuration file.
-			$filename = dirname( __DIR__ ) . '/assets/themes/' . $slug . '.json';
-			$options  = json_decode( file_get_contents( $filename ), true ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+			$options = json_decode( file_get_contents( dirname( __DIR__ ) . '/assets/themes/' . $slug . '.json' ), true ); // phpcs:ignore
 
 			// Negotiate screenshot URL.
 			$options['screenshot_url'] = plugins_url(
