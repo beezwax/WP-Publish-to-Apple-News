@@ -9,11 +9,11 @@ Stable tag: 2.2.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
-The 'Publish to Apple News' plugin enables WordPress sites with approved Apple News channels to publish content directly on Apple News. Note that Apple News is a distribution platform for professional publications of a journalistic nature, and not all applications will be accepted.
+Enables journalistic outlets already approved by Apple News to send content directly to the app.
 
 == Description ==
 
-The Publish to Apple News plugin enables your WordPress blog content to be published to your Apple News channel.
+The 'Publish to Apple News' plugin enables WordPress sites with approved Apple News channels to publish content directly on Apple News. Note that Apple News is a distribution platform for professional publications of a journalistic nature, and not all applications will be accepted.
 
 **Features include:**
 
@@ -49,6 +49,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 = 2.2.0 =
 * Enhancement: Added support for HLS video (.m3u8) in thumbnails.
 * Enhancement: Added support for custom article metadata.
+* Enhancement: Added a slug component (props to @hughiemolloy for the initial work).
 
 = 2.1.3 =
 * Enhancement: Added article authors to the `metadata.authors` property so they display in the article listing view on Apple News.
