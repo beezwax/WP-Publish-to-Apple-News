@@ -8,6 +8,16 @@
 	vertical-align: middle;
 }
 
+#apple-news-publish a {
+  word-wrap: break-word;
+}
+
+#apple-news-publish button {
+  /* We are overriding a much more specific CSS selector from WP Core here. */
+  display: block !important;
+  margin: 0.5em 0;
+}
+
 #apple-news-publish h3 {
 	display: block;
 	font-size: 1.1em;
@@ -22,8 +32,8 @@
 	margin-top: .5em;
 }
 
-#apple-news-publish a {
-	word-wrap: break-word;
+#apple-news-publish label {
+  display: block;
 }
 
 #apple-news-publish .apple-news-metabox-section-collapsable.apple-news-metabox-section-visible {

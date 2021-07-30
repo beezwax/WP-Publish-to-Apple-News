@@ -124,6 +124,34 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	}
 
 	/**
+	 * Given a $_POST key, safely extract metadata values and sanitize them.
+	 *
+	 * @param string $key The $_POST key to process.
+	 *
+	 * @return array An array of sanitized values.
+	 */
+	private static function sanitize_metadata_array( $key ) {
+		// Nonce verification happens in save_post_meta, which calls this function.
+		/* phpcs:disable WordPress.Security.NonceVerification.Missing */
+
+		// If the given key doesn't exist in POST data, bail.
+		if ( empty( $_POST[ $key ] ) || ! is_array( $_POST[ $key ] ) ) {
+			return [];
+		}
+
+		return array_map(
+			function ( $value ) {
+				return sanitize_text_field( wp_unslash( $value ) );
+			},
+			// phpcs is going to yell about this, because it doesn't understand sanitizing via array_map.
+			// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			$_POST[ $key ]
+		);
+
+		/* phpcs:enable */
+	}
+
+	/**
 	 * Saves the Apple News meta fields associated with a post
 	 *
 	 * @param int $post_id The ID of the post being saved.
@@ -223,6 +251,40 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			$cover_image_caption = '';
 		}
 		update_post_meta( $post_id, 'apple_news_coverimage_caption', $cover_image_caption );
+
+		// Compile custom metadata and save to postmeta.
+		$metadata_keys   = self::sanitize_metadata_array( 'apple_news_metadata_keys' );
+		$metadata_types  = self::sanitize_metadata_array( 'apple_news_metadata_types' );
+		$metadata_values = self::sanitize_metadata_array( 'apple_news_metadata_values' );
+		if ( ! empty( $metadata_keys ) && ! empty( $metadata_types ) && ! empty( $metadata_values ) ) {
+			$metadata = [];
+			foreach ( $metadata_keys as $index => $key ) {
+				if ( ! isset( $metadata_types[ $index ] ) || ! isset( $metadata_values[ $index ] ) ) {
+					continue;
+				}
+
+				// Juggle value cast.
+				$type  = $metadata_types[ $index ];
+				$value = $metadata_values[ $index ];
+				if ( 'boolean' === $type ) {
+					$value = ( 'true' === $metadata_values[ $index ] || '1' === $metadata_values[ $index ] );
+				} elseif ( 'number' === $type ) {
+					if ( false === strpos( $value, '.' ) ) {
+						$value = (int) $metadata_values[ $index ];
+					} else {
+						$value = (float) $metadata_values[ $index ];
+					}
+				}
+
+				// Add the metadata object to the array.
+				$metadata[] = [
+					'key'   => $key,
+					'type'  => $type,
+					'value' => $value,
+				];
+			}
+			update_post_meta( $post_id, 'apple_news_metadata', $metadata );
+		}
 	}
 
 	/**
@@ -320,6 +382,62 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	}
 
 	/**
+	 * Builds the custom metadata list from what is saved in postmeta.
+	 *
+	 * @param int $post_id The psot ID to query metadata for.
+	 *
+	 * @access public
+	 */
+	public static function build_metadata( $post_id ) {
+		// Ensure metadata exists for this post.
+		$metadata = get_post_meta( $post_id, 'apple_news_metadata', true );
+		if ( empty( $metadata ) || ! is_array( $metadata ) ) {
+			return;
+		}
+
+		// Loop over metadata and print edit interface for each.
+		foreach ( $metadata as $index => $field ) {
+			?>
+			<div>
+				<label for="apple-news-metadata-key-<?php echo absint( $index ); ?>">
+					<?php esc_html_e( 'Key', 'apple-news' ); ?>
+					<br />
+					<input id="apple-news-metadata-key-<?php echo absint( $index ); ?>" name="apple_news_metadata_keys[]" type="text" value="<?php echo esc_attr( $field['key'] ); ?>" />
+				</label>
+				<label for="apple-news-metadata-type-<?php echo absint( $index ); ?>">
+					<?php esc_html_e( 'Type', 'apple-news' ); ?>
+					<br />
+					<select id="apple-news-metadata-type-<?php echo absint( $index ); ?>" name="apple_news_metadata_types[]">
+						<option <?php selected( empty( $field['type'] ) ); ?> value=""></option>
+						<option <?php selected( 'string' === $field['type'] ); ?> value="string"><?php esc_html_e( 'string', 'apple-news' ); ?></option>
+						<option <?php selected( 'boolean' === $field['type'] ); ?> value="boolean"><?php esc_html_e( 'boolean', 'apple-news' ); ?></option>
+						<option <?php selected( 'number' === $field['type'] ); ?> value="number"><?php esc_html_e( 'number', 'apple-news' ); ?></option>
+						<option <?php selected( 'array' === $field['type'] ); ?> value="array"><?php esc_html_e( 'array', 'apple-news' ); ?></option>
+					</select>
+				</label>
+				<label for="apple-news-metadata-value-<?php echo absint( $index ); ?>">
+					<?php esc_html_e( 'Value', 'apple-news' ); ?>
+					<br />
+					<input
+						id="apple-news-metadata-value-<?php echo absint( $index ); ?>"
+						name="apple_news_metadata_values[]"
+						type="text"
+						<?php if ( 'boolean' === $field['type'] ) : ?>
+							value="<?php echo ! empty( $field['value'] ) ? 'true' : 'false'; ?>"
+						<?php else : ?>
+							value="<?php echo esc_attr( $field['value'] ); ?>"
+						<?php endif; ?>
+					/>
+				</label>
+				<button class="button-secondary apple-news-metadata-remove">
+					<?php esc_html_e( 'Remove', 'apple-news' ); ?>
+				</button>
+			</div>
+			<?php
+		}
+	}
+
+	/**
 	 * Builds the sections checkboxes.
 	 *
 	 * @param int $post_id The post ID to query sections for.
@@ -348,8 +466,10 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		foreach ( $sections as $section ) {
 			?>
 			<div class="section">
-				<input id="apple-news-section-<?php echo esc_attr( $section->id ); ?>" name="apple_news_sections[]" type="checkbox" value="<?php echo esc_attr( $section->links->self ); ?>" <?php checked( self::section_is_checked( $apple_news_sections, $section->links->self, $section->isDefault ) ); ?>>
-				<label for="apple-news-section-<?php echo esc_attr( $section->id ); ?>"><?php echo esc_html( $section->name ); ?></label>
+				<label for="apple-news-section-<?php echo esc_attr( $section->id ); ?>">
+					<input id="apple-news-section-<?php echo esc_attr( $section->id ); ?>" name="apple_news_sections[]" type="checkbox" value="<?php echo esc_attr( $section->links->self ); ?>" <?php checked( self::section_is_checked( $apple_news_sections, $section->links->self, $section->isDefault ) ); ?>>
+					<?php echo esc_html( $section->name ); ?>
+				</label>
 			</div>
 			<?php
 		}
