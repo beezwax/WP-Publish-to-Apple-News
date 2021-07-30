@@ -137,11 +137,9 @@ class Component_Tests extends Apple_News_Testcase {
 	public function testFeaturedImageDeduping() {
 		$this->set_theme_settings( [ 'cover_caption' => true ] );
 
-		// Get image URLs for the two attachment images created during setUp.
-		$image1           = wp_get_attachment_url( $this->cover );
-		$image2           = wp_get_attachment_url( $this->image2 );
-		$image1_thumbnail = wp_get_attachment_image_url( $this->cover );
-		$image2_thumbnail = wp_get_attachment_image_url( $this->image2 );
+		// Get two images.
+		$image_1 = $this->get_new_attachment();
+		$image_2 = $this->get_new_attachment();
 
 		/*
 		 * Scenario 1:
@@ -149,17 +147,9 @@ class Component_Tests extends Apple_News_Testcase {
 		 * - No images in the content.
 		 * Expected: No cover image is set.
 		 */
-		$content = new Exporter_Content(
-			1,
-			'My Title',
-			'<p>Hello, World!</p>',
-			null,
-			null,
-			'Author Name'
-		);
-		$builder = new Components( $content, $this->settings );
-		$result = $builder->to_array();
-		$this->assertNotEquals( 'headerPhotoLayout', $result[0]['layout'] );
+		$post_1 = self::factory()->post->create();
+		$json_1 = $this->get_json_for_post( $post_1 );
+		$this->assertNotEquals( 'headerPhotoLayout', $json_1['components'][0]['layout'] );
 
 		/*
 		 * Scenario 2:
@@ -167,45 +157,31 @@ class Component_Tests extends Apple_News_Testcase {
 		 * - No images in the content.
 		 * Expected: The featured image is set as the cover image.
 		 */
-		$content = new Exporter_Content(
-			1,
-			'My Title',
-			'<p>Hello, World!</p>',
-			null,
-			$image1,
-			'Author Name'
-		);
-		$builder = new Components( $content, $this->settings );
-		$result = $builder->to_array();
-		$this->assertEquals( 'header', $result[0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
-		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
-		$this->assertEquals( $image1, $result[0]['components'][0]['URL'] );
+		$post_2 = self::factory()->post->create();
+		set_post_thumbnail( $post_2, $image_1 );
+		$json_2 = $this->get_json_for_post( $post_2 );
+		$this->assertEquals( 'header', $json_2['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_2['components'][0]['layout'] );
+		$this->assertEquals( 'photo', $json_2['components'][0]['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_2['components'][0]['components'][0]['layout'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_1, 'full' ), $json_2['components'][0]['components'][0]['URL'] );
 
 		/*
 		 * Scenario 3:
 		 * - A featured image is set.
-		 * - Images in the content, but not the same ones as the featured image.
+		 * - Image in the content, but not the same one as the featured image.
 		 * Expected: The featured image is set as the cover image and the body image is still in the body.
 		 */
-		$content = new Exporter_Content(
-			1,
-			'My Title',
-			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->image2 ),
-			null,
-			$image1,
-			'Author Name'
-		);
-		$builder = new Components( $content, $this->settings );
-		$result = $builder->to_array();
-		$this->assertEquals( 'header', $result[0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
-		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
-		$this->assertEquals( $image1, $result[0]['components'][0]['URL'] );
-		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( $image2_thumbnail, $result[1]['components'][3]['URL'] );
+		$post_3 = self::factory()->post->create( [ 'post_content' => wp_get_attachment_image( $image_2, 'full' ) ] );
+		set_post_thumbnail( $post_3, $image_1 );
+		$json_3 = $this->get_json_for_post( $post_3 );
+		$this->assertEquals( 'header', $json_3['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_3['components'][0]['layout'] );
+		$this->assertEquals( 'photo', $json_3['components'][0]['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_3['components'][0]['components'][0]['layout'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_1, 'full' ), $json_3['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'photo', $json_3['components'][1]['components'][2]['role'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_2, 'full' ), $json_3['components'][1]['components'][2]['URL'] );
 
 		/*
 		 * Scenario 4:
@@ -213,25 +189,18 @@ class Component_Tests extends Apple_News_Testcase {
 		 * - Images in the content, including the same one as the featured image, but the featured image is not first.
 		 * Expected: The featured image is set as the cover image and the body image is still in the body.
 		 */
-		$content = new Exporter_Content(
-			1,
-			'My Title',
-			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->image2 ) . wp_get_attachment_image( $this->cover ),
-			null,
-			$image1,
-			'Author Name'
-		);
-		$builder = new Components( $content, $this->settings );
-		$result = $builder->to_array();
-		$this->assertEquals( 'header', $result[0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
-		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
-		$this->assertEquals( $image1, $result[0]['components'][0]['URL'] );
-		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( $image2_thumbnail, $result[1]['components'][3]['URL'] );
-		$this->assertEquals( 'photo', $result[1]['components'][4]['role'] );
-		$this->assertEquals( $image1_thumbnail, $result[1]['components'][4]['URL'] );
+		$post_4 = self::factory()->post->create( [ 'post_content' => wp_get_attachment_image( $image_2, 'full' ) . wp_get_attachment_image( $image_1, 'full' ) ] );
+		set_post_thumbnail( $post_4, $image_1 );
+		$json_4 = $this->get_json_for_post( $post_4 );
+		$this->assertEquals( 'header', $json_4['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_4['components'][0]['layout'] );
+		$this->assertEquals( 'photo', $json_4['components'][0]['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_4['components'][0]['components'][0]['layout'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_1, 'full' ), $json_4['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'photo', $json_4['components'][1]['components'][2]['role'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_2, 'full' ), $json_4['components'][1]['components'][2]['URL'] );
+		$this->assertEquals( 'photo', $json_4['components'][1]['components'][3]['role'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_1, 'full' ), $json_4['components'][1]['components'][3]['URL'] );
 
 		/*
 		 * Scenario 5:
@@ -239,24 +208,17 @@ class Component_Tests extends Apple_News_Testcase {
 		 * - Images in the content, including the same one as the featured image, and the featured image is first.
 		 * Expected: The first image from the content is set as the cover image and the first image from the content has been removed. The featured image is ignored.
 		 */
-		$content = new Exporter_Content(
-			1,
-			'My Title',
-			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->cover ) . wp_get_attachment_image( $this->image2 ),
-			null,
-			$image1,
-			'Author Name'
-		);
-		$builder = new Components( $content, $this->settings );
-		$result = $builder->to_array();
-		$this->assertEquals( 'header', $result[0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
-		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
-		$this->assertEquals( $image1_thumbnail, $result[0]['components'][0]['URL'] );
-		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( $image2_thumbnail, $result[1]['components'][3]['URL'] );
-		$this->assertEquals( 4, count( $result[1]['components'] ) );
+		$post_5 = self::factory()->post->create( [ 'post_content' => wp_get_attachment_image( $image_1, 'full' ) . wp_get_attachment_image( $image_2, 'full' ) ] );
+		set_post_thumbnail( $post_5, $image_1 );
+		$json_5 = $this->get_json_for_post( $post_5 );
+		$this->assertEquals( 'header', $json_5['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_5['components'][0]['layout'] );
+		$this->assertEquals( 'photo', $json_5['components'][0]['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_5['components'][0]['components'][0]['layout'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_1, 'full' ), $json_5['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'photo', $json_5['components'][1]['components'][2]['role'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_2, 'full' ), $json_5['components'][1]['components'][2]['URL'] );
+		$this->assertEquals( 3, count( $json_5['components'][1]['components'] ) );
 
 		/*
 		 * Scenario 6:
@@ -264,54 +226,16 @@ class Component_Tests extends Apple_News_Testcase {
 		 * - Images in the content.
 		 * Expected: The first image from the content is set as the cover image and the first image from the content has been removed.
 		 */
-		$content = new Exporter_Content(
-			1,
-			'My Title',
-			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->cover ) . wp_get_attachment_image( $this->image2 ),
-			null,
-			null,
-			'Author Name'
-		);
-		$builder = new Components( $content, $this->settings );
-		$result = $builder->to_array();
-		$this->assertEquals( 'header', $result[0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
-		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['components'][0]['layout'] );
-		$this->assertEquals( $image1_thumbnail, $result[0]['components'][0]['URL'] );
-		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( $image2_thumbnail, $result[1]['components'][3]['URL'] );
-		$this->assertEquals( 4, count( $result[1]['components'] ) );
-
-		/*
-		 * Scenario 7:
-		 * - No featured image is set.
-		 * - Images in the content.
-		 * - Caption set via postmeta.
-		 * Expected: The first image from the content is set as the cover image and the first image from the content has been removed, but the caption from postmeta is used.
-		 */
-		$content = new Exporter_Content(
-			1,
-			'My Title',
-			'<p>Hello, World!</p>' . wp_get_attachment_image( $this->cover ) . wp_get_attachment_image( $this->image2 ),
-			null,
-			[
-				'caption' => 'Test caption from postmeta',
-				'url'     => '',
-			],
-			'Author Name'
-		);
-		$builder = new Components( $content, $this->settings );
-		$result = $builder->to_array();
-		$this->assertEquals( 'header', $result[0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
-		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
-		$this->assertEquals( 'Test caption from postmeta', $result[0]['components'][0]['caption']['text'] );
-		$this->assertEquals( 'headerPhotoLayoutWithCaption', $result[0]['components'][0]['layout'] );
-		$this->assertEquals( $image1_thumbnail, $result[0]['components'][0]['URL'] );
-		$this->assertEquals( 'photo', $result[1]['components'][3]['role'] );
-		$this->assertEquals( $image2_thumbnail, $result[1]['components'][3]['URL'] );
-		$this->assertEquals( 4, count( $result[1]['components'] ) );
+		$post_6 = self::factory()->post->create( [ 'post_content' => wp_get_attachment_image( $image_1, 'full' ) . wp_get_attachment_image( $image_2, 'full' ) ] );
+		$json_6 = $this->get_json_for_post( $post_6 );
+		$this->assertEquals( 'header', $json_6['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_6['components'][0]['layout'] );
+		$this->assertEquals( 'photo', $json_6['components'][0]['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_6['components'][0]['components'][0]['layout'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_1, 'full' ), $json_6['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'photo', $json_6['components'][1]['components'][2]['role'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_2, 'full' ), $json_6['components'][1]['components'][2]['URL'] );
+		$this->assertEquals( 3, count( $json_6['components'][1]['components'] ) );
 	}
 
 	/**
@@ -328,7 +252,7 @@ class Component_Tests extends Apple_News_Testcase {
 		$class  = new ReflectionClass( 'Apple_Exporter\Builders\Components' );
 		$method = $class->getMethod( 'get_image_full_size_url' );
 		$method->setAccessible( true );
-		$builder = new Components( $this->content, $this->settings );
+		$builder = new Components( $this->content, $this->content_settings );
 		$this->assertEquals( $expected, $method->invokeArgs( $builder, [ $original ] ) );
 	}
 
