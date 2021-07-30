@@ -8,13 +8,8 @@
  * @subpackage Tests
  */
 
-use \Apple_Exporter\Component_Factory;
 use \Apple_Exporter\Exporter_Content;
-use \Apple_Exporter\Settings;
-use \Apple_Exporter\Workspace;
 use \Apple_Exporter\Builders\Components;
-use \Apple_Exporter\Builders\Component_Layouts;
-use \Apple_Exporter\Builders\Component_Text_Styles;
 
 /**
  * A class which is used to test the \Apple_Exporter\Builders\Components class.
@@ -95,100 +90,39 @@ class Component_Tests extends Apple_News_Testcase {
 				array( 'header', 'container' ),
 				array( 'title' ),
 			),
+			// TODO: Add slug component and intro component.
 		);
 	}
 
 	/**
-	 * Actions to be run before each test function.
-	 *
-	 * @access public
+	 * Tests the ability to view captions below cover images.
 	 */
-	public function setup() {
-		parent::setUp();
-
-		// Setup.
-		$themes = new Admin_Apple_Themes;
-		$themes->setup_theme_pages();
-		$file1 = dirname( dirname( __DIR__ ) ) . '/data/test-image.jpg';
-		$file2 = dirname( dirname( __DIR__ ) ) . '/data/test-image.jpg';
-		$this->cover = $this->factory->attachment->create_upload_object( $file1 );
-		$this->image2 = $this->factory->attachment->create_upload_object( $file2 );
-		$this->settings = new Settings;
-		$this->content = new Exporter_Content(
-			1,
-			'My Title',
-			'<p>Hello, World!</p>',
-			'',
-			null,
-			wp_get_attachment_url( $this->cover ),
-			'Author Name'
-		);
-		$this->styles = new Component_Text_Styles( $this->content, $this->settings );
-		$this->layouts = new Component_Layouts( $this->content, $this->settings );
-		Component_Factory::initialize(
-			new Workspace( 1 ),
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-	}
-
-	/**
-	 * Actions to be run after every test.
-	 *
-	 * @access public
-	 */
-	public function tearDown() {
-		$theme = new \Apple_Exporter\Theme;
-		$theme->set_name( \Apple_Exporter\Theme::get_active_theme_name() );
-		$theme->delete();
-	}
-
-	/**
-	 * Tests the ability to provide cover configuration as an array instead of
-	 * a URL, which lets us build cover images with captions.
-	 */
-	public function testCoverImageArrayConfig() {
+	public function testCoverImage() {
+		// Enable the cover caption option in the theme.
 		$this->set_theme_settings( [ 'cover_caption' => true ] );
-		$cover_url = wp_get_attachment_url( $this->cover );
-		$content   = new Exporter_Content(
-			1,
-			'My Title',
-			'<p>Hello, World!</p>',
-			null,
-			[
-				'caption' => 'Test Caption',
-				'url'     => $cover_url,
-			],
-			'Author Name'
-		);
-		$builder = new Components( $content, $this->settings );
-		$result  = $builder->to_array();
-		$this->assertEquals( 'header', $result[0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
-		$this->assertEquals( $cover_url, $result[0]['components'][0]['URL'] );
-		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
-		$this->assertEquals( 'Test Caption', $result[0]['components'][0]['caption']['text'] );
-		$this->assertEquals( 'caption', $result[0]['components'][1]['role'] );
-		$this->assertEquals( 'Test Caption', $result[0]['components'][1]['text'] );
 
-		// Test setting the caption from within the content rather than as part of the Exporter_Content config (featured image).
-		$content = new Exporter_Content(
-			1,
-			'My Title',
-			'<p>Hello, World!</p><figure class="wp-block-image size-full"><img src="' . $cover_url . '" alt="" class="wp-image-' . $this->cover . '"/><figcaption>Test caption!</figcaption></figure>',
-			null,
-			null,
-			'Author Name'
+		// Create a new post and set an image with a caption as the featured image.
+		$post_id = self::factory()->post->create();
+		$image   = $this->get_new_attachment( $post_id, 'Test Caption', 'Test alt text' );
+		set_post_thumbnail( $post_id, $image );
+
+		// Ensure that the caption carries through to the export.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][1]['text'] );
+
+		// Create a new post with an image with a caption in the content.
+		$image_2   = $this->get_new_attachment( 0, 'Test Caption 2', 'Test alt text 2' );
+		$post_id_2 = self::factory()->post->create(
+			[
+				'post_content' => '[caption id="attachment_' . $image_2 . '" align="alignright" width="300"]' . wp_get_attachment_image( $image_2 ) . ' Test Caption 2[/caption]',
+			]
 		);
-		$builder = new Components( $content, $this->settings );
-		$result = $builder->to_array();
-		$this->assertEquals( 'header', $result[0]['role'] );
-		$this->assertEquals( 'headerPhotoLayout', $result[0]['layout'] );
-		$this->assertEquals( 'photo', $result[0]['components'][0]['role'] );
-		$this->assertEquals( 'headerPhotoLayoutWithCaption', $result[0]['components'][0]['layout'] );
-		$this->assertEquals( $cover_url, $result[0]['components'][0]['URL'] );
-		$this->assertEquals( 'Test caption!', $result[0]['components'][0]['caption']['text'] );
+
+		// Ensure that the caption carries through to the export.
+		$json_2 = $this->get_json_for_post( $post_id_2 );
+		$this->assertEquals( 'caption', $json_2['components'][0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Caption 2', $json_2['components'][0]['components'][1]['text'] );
 	}
 
 	/**
