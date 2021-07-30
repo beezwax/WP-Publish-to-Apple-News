@@ -90,7 +90,6 @@ class Component_Tests extends Apple_News_Testcase {
 				array( 'header', 'container' ),
 				array( 'title' ),
 			),
-			// TODO: Add slug component and intro component.
 		);
 	}
 
@@ -268,25 +267,27 @@ class Component_Tests extends Apple_News_Testcase {
 	 * @access public
 	 */
 	public function testMetaComponentOrdering( $order, $expected, $components ) {
+		$this->set_theme_settings(
+			[
+				'enable_advertisement' => 'no',
+				'meta_component_order' => $order,
+			]
+		);
 
-		// Setup.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$settings = $theme->all_settings();
-		$settings['enable_advertisement'] = 'no';
-		$settings['meta_component_order'] = $order;
-		$theme->load( $settings );
-		$this->assertTrue( $theme->save() );
-		$builder = new Components( $this->content, $this->settings );
-		$result = $builder->to_array();
+		// Make a post with a featured image and get the JSON for it.
+		$post_id = self::factory()->post->create();
+		$image   = $this->get_new_attachment( $post_id );
+		set_post_thumbnail( $post_id, $image );
+		$json = $this->get_json_for_post( $post_id );
 
 		// Test.
 		for ( $i = 0; $i < count( $expected ); $i ++ ) {
-			$this->assertEquals( $expected[ $i ], $result[ $i ]['role'] );
-			if ( 'container' === $result[ $i ]['role'] ) {
+			$this->assertEquals( $expected[ $i ], $json['components'][ $i ]['role'] );
+			if ( 'container' === $json['components'][ $i ]['role'] ) {
 				for ( $j = 0; $j < count( $components ); $j ++ ) {
 					$this->assertEquals(
 						$components[ $j ],
-						$result[ $i ]['components'][ $j ]['role']
+						$json['components'][ $i ]['components'][ $j ]['role']
 					);
 				}
 			}
