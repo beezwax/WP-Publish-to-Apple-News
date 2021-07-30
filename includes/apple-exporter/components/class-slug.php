@@ -28,7 +28,7 @@ class Slug extends Component {
 	/**
 	 * Get a spec to use for creating component JSON.
 	 *
-	 * @since 1.2.4
+	 * @since 2.2.0
 	 * @param string $spec_name The name of the spec to fetch.
 	 * @access protected
 	 * @return array The spec definition.
@@ -47,7 +47,8 @@ class Slug extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
-		
+		$theme = \Apple_Exporter\Theme::get_used();
+
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
@@ -60,13 +61,27 @@ class Slug extends Component {
 		$this->register_spec(
 			'default-slug',
 			__( 'Style', 'apple-news' ),
-			array(
-				'textAlignment' => '#text_alignment#',
-				'fontName'      => '#slug_font#',
-				'fontSize'      => '#slug_size#',
-				'lineHeight'    => '#slug_line_height#',
-				'tracking'      => '#slug_tracking#',
-				'textColor'     => '#slug_color#',
+			(
+				array(
+					'textAlignment' => '#text_alignment#',
+					'fontName'      => '#slug_font#',
+					'fontSize'      => '#slug_size#',
+					'lineHeight'    => '#slug_line_height#',
+					'tracking'      => '#slug_tracking#',
+					'textColor'     => '#slug_color#',
+				) + (
+				! empty( $theme->get_value( 'slug_color_dark' ) )
+					? array(
+						'conditional' => array(
+							'textColor'  => '#slug_color_dark#',
+							'conditions' => array(
+								'minSpecVersion'       => '1.14',
+								'preferredColorScheme' => 'dark',
+							),
+						),
+					)
+					: array()
+				)
 			)
 		);
 
