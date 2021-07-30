@@ -77,19 +77,6 @@ class Byline_Test extends Component_TestCase {
 	 * @access public
 	 */
 	public function testSettings() {
-
-		// Setup.
-		$content = new Exporter_Content(
-			1,
-			__( 'My Title', 'apple-news' ),
-			'<p>' . __( 'Hello, World!', 'apple-news' ) . '</p>',
-			null,
-			null,
-			null,
-			'Test byline'
-		);
-
-		// Set byline settings.
 		$this->set_theme_settings(
 			[
 				'byline_font'        => 'AmericanTypewriter',
@@ -100,11 +87,9 @@ class Byline_Test extends Component_TestCase {
 			]
 		);
 
-		// Run the export.
-		$exporter = new Exporter( $content, $this->workspace, $this->settings );
-		$json = $exporter->export();
-		$this->ensure_tokens_replaced( $json );
-		$json = json_decode( $json, true );
+		// Create a test post and get JSON for it.
+		$post_id = self::factory()->post->create();
+		$json    = $this->get_json_for_post( $post_id );
 
 		// Validate byline settings in generated JSON.
 		$this->assertEquals(

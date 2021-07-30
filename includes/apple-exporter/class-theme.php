@@ -1162,7 +1162,7 @@ class Theme {
 				'type'    => 'font',
 			),
 			'slug_line_height'                   => array(
-				'default' => 26,
+				'default' => 26.0,
 				'label'   => __( 'Slug line height', 'apple-news' ),
 				'type'    => 'float',
 			),

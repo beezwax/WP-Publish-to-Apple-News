@@ -127,6 +127,7 @@ class Admin_Apple_News extends Apple_News {
 				],
 				'apple_news_pullquote'          => [],
 				'apple_news_pullquote_position' => [],
+				'apple_news_slug'               => [],
 				'apple_news_sections'           => [
 					'sanitize_callback' => 'apple_news_sanitize_selected_sections',
 					'show_in_rest'      => [
