@@ -7,8 +7,7 @@
  */
 
 /**
- * A class to test the behavior of the
- * Apple_Exporter\Components\Slug class.
+ * A class to test the behavior of the Apple_Exporter\Components\Slug class.
  *
  * @package Apple_News
  * @subpackage Tests
@@ -20,7 +19,6 @@ class Slug_Test extends Apple_News_Testcase {
 	 *
 	 * @param array $json The JSON array to modify.
 	 *
-	 * @access public
 	 * @return array The modified JSON.
 	 */
 	public function filter_apple_news_slug_json( $json ) {
@@ -31,19 +29,19 @@ class Slug_Test extends Apple_News_Testcase {
 
 	/**
 	 * Test the `apple_news_slug_json` filter.
-	 *
-	 * @access public
 	 */
 	public function test_filter() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'slug' ] ] );
 		add_filter( 'apple_news_slug_json', [ $this, 'filter_apple_news_slug_json' ] );
 
 		// Create a test post and get JSON for it.
 		$post_id = self::factory()->post->create();
 		add_post_meta( $post_id, 'apple_news_slug', 'Test Slug' );
 		$json = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'fancy-layout', $json['components']['0']['layout'] );
+		$this->assertEquals( 'heading', $json['components'][0]['role'] );
+		$this->assertEquals( 'fancy-layout', $json['components'][0]['layout'] );
 
-		// Clean up.
+		// Teardown.
 		remove_filter( 'apple_news_slug_json', [ $this, 'filter_apple_news_slug_json' ] );
 	}
 
@@ -57,13 +55,12 @@ class Slug_Test extends Apple_News_Testcase {
 		$post_id = self::factory()->post->create();
 		add_post_meta( $post_id, 'apple_news_slug', 'Test Slug' );
 		$json = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'Test Slug', $json['components']['0']['text'] );
+		$this->assertEquals( 'heading', $json['components'][0]['role'] );
+		$this->assertEquals( 'Test Slug', $json['components'][0]['text'] );
 	}
 
 	/**
 	 * Tests slug settings.
-	 *
-	 * @access public
 	 */
 	public function test_settings() {
 		$this->set_theme_settings(
