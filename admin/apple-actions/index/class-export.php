@@ -207,13 +207,13 @@ class Export extends Action {
 		 * Filters the slug of an article before it is sent to Apple News.
 		 *
 		 * The slug is used for the Slug component, if it is active.
-     *
-     * @todo Implement this in postmeta so there is a default value managed by the plugin.
+		 *
+		 * @todo Implement this in postmeta so there is a default value managed by the plugin.
 		 *
 		 * @param string $slug    The slug for the post.
 		 * @param int    $post_id The ID of the post.
 		 */
-    $slug = apply_filters( 'apple_news_exporter_slug', '', $post->ID );
+		$slug = apply_filters( 'apple_news_exporter_slug', '', $post->ID );
 
 		/**
 		 * Filters the HTML of a post after `the_content` filter is called, but
