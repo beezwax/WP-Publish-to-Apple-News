@@ -249,6 +249,7 @@
     "layout_margin": 100,
     "layout_width": 1024,
     "meta_component_order": [
+        "slug",
         "cover",
         "title",
         "byline"

@@ -241,6 +241,7 @@
     "layout_width": 1024,
     "meta_component_order": [
         "title",
+        "slug",
         "byline",
         "cover"
     ],
