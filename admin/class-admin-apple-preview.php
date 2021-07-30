@@ -61,6 +61,11 @@ class Admin_Apple_Preview extends Apple_News {
 				__( 'Cover', 'apple-news' )
 			);
 
+			$slug = sprintf(
+				'<div class="apple-news-slug apple-news-component apple-news-meta-component">%s</div>',
+				__( 'Slug', 'apple-news' )
+			);
+
 			// Build the byline.
 			$author = __( 'John Doe', 'apple-news' );
 			$date   = apple_news_date( 'M j, Y g:i A' );

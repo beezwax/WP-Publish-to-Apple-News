@@ -85,6 +85,7 @@ class Byline_Test extends Component_TestCase {
 			'<p>' . __( 'Hello, World!', 'apple-news' ) . '</p>',
 			null,
 			null,
+			null,
 			'Test byline'
 		);
 

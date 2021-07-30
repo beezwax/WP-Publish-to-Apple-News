@@ -1044,8 +1044,8 @@ class Theme {
 				'type'    => 'integer',
 			),
 			'meta_component_order'               => array(
-				'default'     => array( 'cover', 'title', 'byline' ),
-				'all_options' => array( 'cover', 'title', 'byline', 'intro' ),
+				'default'     => array( 'cover', 'slug', 'title', 'byline' ),
+				'all_options' => array( 'cover', 'title', 'slug', 'byline', 'intro' ),
 				'callback'    => array( get_called_class(), 'render_meta_component_order' ),
 				'type'        => 'array',
 			),
@@ -1150,6 +1150,32 @@ class Theme {
 				'description' => __( 'An optional URL to a screenshot of this theme. Should be a 1200x900 PNG.', 'apple-news' ),
 				'label'       => __( 'Screenshot URL', 'apple-news' ),
 				'type'        => 'text',
+			),
+			'slug_color'                         => array(
+				'default' => '#4f4f4f',
+				'label'   => __( 'Slug font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'slug_font'                          => array(
+				'default' => 'AvenirNext-Medium',
+				'label'   => __( 'Slug font', 'apple-news' ),
+				'type'    => 'font',
+			),
+			'slug_line_height'                   => array(
+				'default' => 26,
+				'label'   => __( 'Slug line height', 'apple-news' ),
+				'type'    => 'float',
+			),
+			'slug_size'                          => array(
+				'default' => 20,
+				'label'   => __( 'Slug font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'slug_tracking'                      => array(
+				'default'     => 0,
+				'description' => __( '(Percentage of font size)', 'apple-news' ),
+				'label'       => __( 'Slug tracking', 'apple-news' ),
+				'type'        => 'integer',
 			),
 			'table_body_background_color'        => array(
 				'default' => '#fafafa',
@@ -1969,6 +1995,17 @@ class Theme {
 				'label'       => __( 'Layout Spacing', 'apple-news' ),
 				'description' => __( 'The spacing for the base layout of the exported articles', 'apple-news' ),
 				'settings'    => array( 'layout_margin', 'layout_gutter' ),
+			),
+			'slug'            => array(
+				'label'       => __( 'Slug', 'apple-news' ),
+				'description' => __( "The slug displays the article's section or topic", 'apple-news' ),
+				'settings'    => array(
+					'slug_font',
+					'slug_size',
+					'slug_line_height',
+					'slug_tracking',
+					'slug_color',
+				),
 			),
 			'body'            => array(
 				'label'    => __( 'Body', 'apple-news' ),
