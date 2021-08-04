@@ -19,6 +19,7 @@ import PublishControls from './panels/publish-controls';
 import PublishInfo from './panels/publish-info';
 import PullQuote from './panels/pull-quote';
 import Sections from './panels/sections';
+import Slug from './panels/slug';
 
 // Utils.
 import safeJsonParseArray from '../util/safe-json-parse-array';
@@ -90,6 +91,7 @@ const Sidebar = () => {
     apple_news_pullquote: pullquoteText = '',
     apple_news_pullquote_position: pullquotePosition = '',
     apple_news_sections: selectedSectionsRaw = '',
+    apple_news_slug: slug = '',
   }, setMeta] = usePostMeta();
 
   // Decode selected sections.
@@ -226,17 +228,21 @@ const Sidebar = () => {
           maturityRating={maturityRating}
           onChangeMaturityRating={(next) => setMeta('apple_news_maturity_rating', next)}
         />
+        <Slug
+          onChangeSlug={(next) => setMeta('apple_news_slug', next)}
+          slug={slug}
+        />
         <PullQuote
-          onUpdatePullquotePosition={(next) => setMeta('apple_news_pullquote_position', next)}
-          onUpdatePullquoteText={(next) => setMeta('apple_news_pullquote', next)}
+          onChangePullquotePosition={(next) => setMeta('apple_news_pullquote_position', next)}
+          onChangePullquoteText={(next) => setMeta('apple_news_pullquote', next)}
           pullquotePosition={pullquotePosition}
           pullquoteText={pullquoteText}
         />
         <CoverImage
           coverImageCaption={coverImageCaption}
           coverImageId={coverImageId}
-          onUpdateCoverImageCaption={(next) => setMeta('apple_news_coverimage_caption', next)}
-          onUpdateCoverImageId={(next) => setMeta('apple_news_coverimage', next)}
+          onChangeCoverImageCaption={(next) => setMeta('apple_news_coverimage_caption', next)}
+          onChangeCoverImageId={(next) => setMeta('apple_news_coverimage', next)}
         />
         {publishState !== 'N/A' ? (
           <PublishInfo

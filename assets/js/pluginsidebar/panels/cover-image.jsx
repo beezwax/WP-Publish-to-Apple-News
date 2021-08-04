@@ -9,8 +9,8 @@ import ImagePicker from '../../components/image-picker';
 const CoverImage = ({
   coverImageCaption,
   coverImageId,
-  onUpdateCoverImageCaption,
-  onUpdateCoverImageId,
+  onChangeCoverImageCaption,
+  onChangeCoverImageId,
 }) => (
   <PanelBody
     initialOpen={false}
@@ -18,15 +18,15 @@ const CoverImage = ({
   >
     <BaseControl>
       <ImagePicker
-        onReset={() => onUpdateCoverImageId(0)}
-        onUpdate={({ id }) => onUpdateCoverImageId(id)}
+        onReset={() => onChangeCoverImageId(0)}
+        onUpdate={({ id }) => onChangeCoverImageId(id)}
         value={coverImageId}
       />
     </BaseControl>
     <TextareaControl
       help={__('This is optional and can be left blank.', 'apple-news')}
       label={__('Caption', 'apple-news')}
-      onChange={onUpdateCoverImageCaption}
+      onChange={onChangeCoverImageCaption}
       placeholder={__('Add an image caption here.', 'apple-news')}
       value={coverImageCaption}
     />
@@ -36,8 +36,8 @@ const CoverImage = ({
 CoverImage.propTypes = {
   coverImageCaption: PropTypes.string.isRequired,
   coverImageId: PropTypes.number.isRequired,
-  onUpdateCoverImageCaption: PropTypes.func.isRequired,
-  onUpdateCoverImageId: PropTypes.func.isRequired,
+  onChangeCoverImageCaption: PropTypes.func.isRequired,
+  onChangeCoverImageId: PropTypes.func.isRequired,
 };
 
 export default CoverImage;

@@ -167,6 +167,36 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		// Check the nonce.
 		check_admin_referer( self::PUBLISH_ACTION, 'apple_news_nonce' );
 
+		// Save straightforward fields.
+		$fields = [
+			'apple_news_coverimage'         => 'integer',
+			'apple_news_coverimage_caption' => 'textarea',
+			'apple_news_is_hidden'          => 'boolean',
+			'apple_news_is_paid'            => 'boolean',
+			'apple_news_is_preview'         => 'boolean',
+			'apple_news_is_sponsored'       => 'boolean',
+			'apple_news_pullquote'          => 'string',
+			'apple_news_pullquote_position' => 'string',
+			'apple_news_slug'               => 'string',
+		];
+		foreach ( $fields as $meta_key => $type ) {
+			switch ( $type ) {
+				case 'boolean':
+					$value = isset( $_POST[ $meta_key ] ) && 1 === intval( $_POST[ $meta_key ] );
+					break;
+				case 'integer':
+					$value = isset( $_POST[ $meta_key ] ) ? (int) $_POST[ $meta_key ] : 0;
+					break;
+				case 'textarea':
+					$value = isset( $_POST[ $meta_key ] ) ? sanitize_textarea_field( wp_unslash( $_POST[ $meta_key ] ) ) : '';
+					break;
+				default:
+					$value = isset( $_POST[ $meta_key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $meta_key ] ) ) : '';
+					break;
+			}
+			update_post_meta( $post_id, $meta_key, $value );
+		}
+
 		// Determine whether to save sections.
 		if ( empty( $_POST['apple_news_sections_by_taxonomy'] ) ) {
 			$sections = array();
@@ -186,34 +216,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			delete_post_meta( $post_id, 'apple_news_sections' );
 		}
 
-		if ( ! empty( $_POST['apple_news_is_paid'] ) && 1 === intval( $_POST['apple_news_is_paid'] ) ) {
-			$is_paid = true;
-		} else {
-			$is_paid = false;
-		}
-		update_post_meta( $post_id, 'apple_news_is_paid', $is_paid );
-
-		if ( ! empty( $_POST['apple_news_is_preview'] ) && 1 === intval( $_POST['apple_news_is_preview'] ) ) {
-			$is_preview = true;
-		} else {
-			$is_preview = false;
-		}
-		update_post_meta( $post_id, 'apple_news_is_preview', $is_preview );
-
-		if ( ! empty( $_POST['apple_news_is_hidden'] ) && 1 === intval( $_POST['apple_news_is_hidden'] ) ) {
-			$is_hidden = true;
-		} else {
-			$is_hidden = false;
-		}
-		update_post_meta( $post_id, 'apple_news_is_hidden', $is_hidden );
-
-		if ( ! empty( $_POST['apple_news_is_sponsored'] ) && 1 === intval( $_POST['apple_news_is_sponsored'] ) ) {
-			$is_sponsored = true;
-		} else {
-			$is_sponsored = false;
-		}
-		update_post_meta( $post_id, 'apple_news_is_sponsored', $is_sponsored );
-
+		// Handle maturity rating, ensuring the value is one of the allowed values for the field.
 		if ( ! empty( $_POST['apple_news_maturity_rating'] ) ) {
 			$maturity_rating = sanitize_text_field( wp_unslash( $_POST['apple_news_maturity_rating'] ) );
 			if ( ! in_array( $maturity_rating, self::$maturity_ratings, true ) ) {
@@ -223,34 +226,6 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		if ( ! empty( $maturity_rating ) ) {
 			update_post_meta( $post_id, 'apple_news_maturity_rating', $maturity_rating );
 		}
-
-		if ( ! empty( $_POST['apple_news_pullquote'] ) ) {
-			$pullquote = sanitize_text_field( wp_unslash( $_POST['apple_news_pullquote'] ) );
-		} else {
-			$pullquote = '';
-		}
-		update_post_meta( $post_id, 'apple_news_pullquote', $pullquote );
-
-		if ( ! empty( $_POST['apple_news_pullquote_position'] ) ) {
-			$pullquote_position = sanitize_text_field( wp_unslash( $_POST['apple_news_pullquote_position'] ) );
-		} else {
-			$pullquote_position = 'middle';
-		}
-		update_post_meta( $post_id, 'apple_news_pullquote_position', $pullquote_position );
-
-		if ( ! empty( $_POST['apple_news_coverimage'] ) ) {
-			$cover_image = ! empty( (int) $_POST['apple_news_coverimage'] ) ? (int) $_POST['apple_news_coverimage'] : '';
-		} else {
-			$cover_image = '';
-		}
-		update_post_meta( $post_id, 'apple_news_coverimage', $cover_image );
-
-		if ( ! empty( $_POST['apple_news_coverimage_caption'] ) ) {
-			$cover_image_caption = sanitize_textarea_field( wp_unslash( $_POST['apple_news_coverimage_caption'] ) );
-		} else {
-			$cover_image_caption = '';
-		}
-		update_post_meta( $post_id, 'apple_news_coverimage_caption', $cover_image_caption );
 
 		// Compile custom metadata and save to postmeta.
 		$metadata_keys   = self::sanitize_metadata_array( 'apple_news_metadata_keys' );
@@ -367,6 +342,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		$is_sponsored       = get_post_meta( $post->ID, 'apple_news_is_sponsored', true );
 		$pullquote          = get_post_meta( $post->ID, 'apple_news_pullquote', true );
 		$pullquote_position = get_post_meta( $post->ID, 'apple_news_pullquote_position', true );
+		$slug               = get_post_meta( $post->ID, 'apple_news_slug', true );
 
 		// Set default values.
 		if ( empty( $pullquote_position ) ) {

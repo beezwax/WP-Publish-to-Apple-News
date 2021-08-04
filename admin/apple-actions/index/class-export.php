@@ -150,6 +150,9 @@ class Export extends Action {
 		// Get the content.
 		$content = $this->get_content( $post );
 
+		// Get the slug.
+		$slug = get_post_meta( $post->ID, 'apple_news_slug', true );
+
 		/*
 		 * If the excerpt looks too similar to the content, remove it.
 		 * We do this before the filter, to allow overrides for the final value.
@@ -208,12 +211,12 @@ class Export extends Action {
 		 *
 		 * The slug is used for the Slug component, if it is active.
 		 *
-		 * @todo Implement this in postmeta so there is a default value managed by the plugin.
+		 * @since 2.2.0
 		 *
 		 * @param string $slug    The slug for the post.
 		 * @param int    $post_id The ID of the post.
 		 */
-		$slug = apply_filters( 'apple_news_exporter_slug', '', $post->ID );
+		$slug = apply_filters( 'apple_news_exporter_slug', $slug, $post->ID );
 
 		/**
 		 * Filters the HTML of a post after `the_content` filter is called, but
@@ -259,11 +262,11 @@ class Export extends Action {
 			$post->ID,
 			$title,
 			$content,
-			$slug,
 			$excerpt,
 			$post_thumb,
 			$byline,
-			$this->fetch_content_settings()
+			$this->fetch_content_settings(),
+			$slug
 		);
 
 		return new Exporter( $base_content, null, $this->settings );

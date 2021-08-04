@@ -1156,13 +1156,18 @@ class Theme {
 				'label'   => __( 'Slug font color', 'apple-news' ),
 				'type'    => 'color',
 			),
+			'slug_color_dark'                    => array(
+				'default' => '',
+				'label'   => __( 'Slug font color', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'slug_font'                          => array(
 				'default' => 'AvenirNext-Medium',
 				'label'   => __( 'Slug font', 'apple-news' ),
 				'type'    => 'font',
 			),
 			'slug_line_height'                   => array(
-				'default' => 26,
+				'default' => 26.0,
 				'label'   => __( 'Slug line height', 'apple-news' ),
 				'type'    => 'float',
 			),
@@ -2005,6 +2010,8 @@ class Theme {
 					'slug_line_height',
 					'slug_tracking',
 					'slug_color',
+					'dark_mode_colors_heading',
+					'slug_color_dark',
 				),
 			),
 			'body'            => array(
