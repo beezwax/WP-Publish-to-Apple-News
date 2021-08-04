@@ -259,11 +259,11 @@ class Export extends Action {
 			$post->ID,
 			$title,
 			$content,
-			$slug,
 			$excerpt,
 			$post_thumb,
 			$byline,
-			$this->fetch_content_settings()
+			$this->fetch_content_settings(),
+			$slug
 		);
 
 		return new Exporter( $base_content, null, $this->settings );
