@@ -6,257 +6,65 @@
  * @subpackage Tests
  */
 
-use Apple_Exporter\Components\Cover;
-
 /**
- * A class to test the behavior of the
- * Apple_Exporter\Components\Cover class.
+ * A class to test the behavior of the Apple_Exporter\Components\Cover class.
  *
  * @package Apple_News
  * @subpackage Tests
  */
-class Cover_Test extends Component_TestCase {
+class Cover_Test extends Apple_News_Testcase {
 
 	/**
-	 * Tests the JSON generation for the Cover component when provided with a bare URL and image bundling.
+	 * A filter function to modify the text style in the generated JSON.
+	 *
+	 * @param array $json The JSON array to modify.
+	 *
+	 * @return array The modified JSON.
 	 */
-	public function testGeneratedJSON() {
-		$this->settings->set( 'use_remote_images', 'no' );
+	public function filter_apple_news_cover_json( $json ) {
+		$json['layout'] = 'fancy-layout';
 
-		$this->prophecized_workspace->bundle_source( 'filename.jpg', 'http://someurl.com/filename.jpg' )->shouldBeCalled();
-
-		$component = new Cover(
-			'http://someurl.com/filename.jpg',
-			$this->prophecized_workspace->reveal(),
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		$this->assertEquals(
-			array(
-				'role'       => 'header',
-				'layout'     => 'headerPhotoLayout',
-				'components' => array(
-					array(
-						'role'   => 'photo',
-						'layout' => 'headerPhotoLayout',
-						'URL'    => 'bundle://filename.jpg'
-					)
-				),
-				'behavior'   => array(
-					'type'   => 'parallax',
-					'factor' => 0.8
-				),
-			),
-			$component->to_array()
-		);
+		return $json;
 	}
 
 	/**
-	 * Tests the JSON generation for the Cover component when provided with a bare URL and remote images.
+	 * Test the `apple_news_cover_json` filter.
 	 */
-	public function testGeneratedJSONRemoteImages() {
-		$this->settings->set( 'use_remote_images', 'yes' );
+	public function test_filter() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover' ] ] );
+		add_filter( 'apple_news_cover_json', [ $this, 'filter_apple_news_cover_json' ] );
 
-		$this->prophecized_workspace->bundle_source( 'filename.jpg', 'http://someurl.com/filename.jpg' )->shouldNotBeCalled();
+		// Create a test post and get JSON for it.
+		$post_id  = self::factory()->post->create();
+		$image_id = $this->get_new_attachment( $post_id, 'Test Caption', 'Test alt text.' );
+		set_post_thumbnail( $post_id, $image_id );
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'header', $json['components'][0]['role'] );
+		$this->assertEquals( 'fancy-layout', $json['components'][0]['layout'] );
 
-		$component = new Cover(
-			'http://someurl.com/filename.jpg',
-			$this->prophecized_workspace->reveal(),
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		$this->assertEquals(
-			array(
-				'role'       => 'header',
-				'layout'     => 'headerPhotoLayout',
-				'components' => array(
-					array(
-						'role'   => 'photo',
-						'layout' => 'headerPhotoLayout',
-						'URL'    => 'http://someurl.com/filename.jpg'
-					)
-				),
-				'behavior'   => array(
-					'type'   => 'parallax',
-					'factor' => 0.8
-				),
-			),
-			$component->to_array()
-		);
-	}
-
-	/**
-	 * Tests the JSON generation for the Cover component when provided with image HTML but no caption.
-	 */
-	public function testGeneratedJSONFromHTMLNoCaption() {
-		$this->settings->set( 'use_remote_images', 'yes' );
-
-		// Create dummy post and attachment.
-		$post_id = self::factory()->post->create();
-		$image   = $this->get_new_attachment( $post_id );
-		$this->set_workspace_post_id( $post_id );
-
-		$component = new Cover(
-			wp_get_attachment_url( $image ),
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		$this->assertEquals(
-			array(
-				'role'       => 'header',
-				'layout'     => 'headerPhotoLayout',
-				'components' => array(
-					array(
-						'role'   => 'photo',
-						'layout' => 'headerPhotoLayout',
-						'URL'    => wp_get_attachment_url( $image ),
-					)
-				),
-				'behavior'   => array(
-					'type'   => 'parallax',
-					'factor' => 0.8
-				),
-			),
-			$component->to_array()
-		);
-	}
-
-	/**
-	 * Tests the JSON generation for the Cover component when provided with image HTML and a caption.
-	 */
-	public function testGeneratedJSONFromHTMLWithCaption() {
-		$this->settings->set( 'use_remote_images', 'yes' );
-		$this->set_theme_settings( [ 'cover_caption' => true ] );
-
-		// Create dummy post and attachment.
-		$post_id = self::factory()->post->create();
-		$image   = $this->get_new_attachment( $post_id );
-		$this->set_workspace_post_id( $post_id );
-
-		$component = new Cover(
-			[
-				'caption' => 'Test Caption',
-				'url'     => wp_get_attachment_url( $image ),
-			],
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		$this->assertEquals(
-			array(
-				'role'       => 'header',
-				'layout'     => 'headerPhotoLayout',
-				'components' => array(
-					array(
-						'role'    => 'photo',
-						'URL'     => wp_get_attachment_url( $image ),
-						'layout'  => 'headerPhotoLayoutWithCaption',
-						'caption' => array(
-							'format'    => 'html',
-							'text'      => 'Test Caption',
-							'textStyle' => array(
-								'fontName' => 'AvenirNext-Italic',
-							),
-						),
-					),
-					array(
-						'role'      => 'caption',
-						'text'      => 'Test Caption',
-						'format'    => 'html',
-						'textStyle' => array(
-							'fontName'   => 'AvenirNext-Italic',
-							'fontSize'   => 16,
-							'tracking'   => 0,
-							'lineHeight' => 24.0,
-							'textColor'  => '#4f4f4f',
-						),
-					),
-				),
-				'behavior'   => array(
-					'type'   => 'parallax',
-					'factor' => 0.8
-				),
-			),
-			$component->to_array()
-		);
-	}
-
-	/**
-	 * Tests the behavior of the `apple_news_cover_json` filter.
-	 */
-	public function testFilter() {
-		$this->settings->set( 'use_remote_images', 'no' );
-
-		$this->prophecized_workspace->bundle_source( 'filename.jpg', 'http://someurl.com/filename.jpg' )->shouldBeCalled();
-
-		$component = new Cover(
-			'http://someurl.com/filename.jpg',
-			$this->prophecized_workspace->reveal(),
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		add_filter(
-			'apple_news_cover_json',
-			function ( $json ) {
-				$json['behavior']['type'] = 'background_motion';
-
-				return $json;
-			}
-		);
-
-		$this->assertEquals(
-			array(
-				'role'       => 'header',
-				'layout'     => 'headerPhotoLayout',
-				'components' => array(
-					array(
-						'role'   => 'photo',
-						'layout' => 'headerPhotoLayout',
-						'URL'    => 'bundle://filename.jpg'
-					)
-				),
-				'behavior'   => array(
-					'type'   => 'background_motion',
-					'factor' => 0.8
-				),
-			),
-			$component->to_array()
-		);
+		// Teardown.
+		remove_filter( 'apple_news_cover_json', [ $this, 'filter_apple_news_cover_json' ] );
 	}
 
 	/**
 	 * Ensures that the lightbox font is set to the same font face as the image caption.
 	 */
-	public function testLightboxFont() {
+	public function test_lightbox_font() {
 		$this->set_theme_settings(
 			[
 				'caption_font'  => 'Menlo-Regular',
 				'cover_caption' => true,
+				'meta_component_order' => [ 'cover' ],
 			]
 		);
 
-		// Create an image and give it a caption.
-		$image_id = $this->get_new_attachment( 0, 'Test Caption!' );
-
-		// Create a test post.
-		$post_id = self::factory()->post->create();
-
-		// Set the featured image for the post.
+		// Create a new post and set the featured image with a caption.
+		$post_id  = self::factory()->post->create();
+		$image_id = $this->get_new_attachment( $post_id, 'Test Caption', 'Test alt text.' );
 		set_post_thumbnail( $post_id, $image_id );
+		$json = $this->get_json_for_post( $post_id );
 
 		// Ensure that the font set on the lightbox is the same as the font set on the caption above.
-		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
 			'Menlo-Regular',
 			$json['components'][0]['components'][0]['caption']['textStyle']['fontName']
@@ -264,31 +72,59 @@ class Cover_Test extends Component_TestCase {
 	}
 
 	/**
-	 * Ensures that the cover caption is not enabled by default, but can be
-	 * enabled via a setting.
+	 * Tests the render method for the component.
 	 */
-	public function testCaptionSetting() {
-		// Create an image and give it a caption.
-		$image_id = $this->get_new_attachment( 0, 'Test Caption!' );
+	public function test_render() {
+		$this->set_theme_settings(
+			[
+				'cover_caption'        => true,
+				'meta_component_order' => [ 'cover' ],
+			]
+		);
 
-		// Create a test post.
-		$post_id = self::factory()->post->create();
-
-		// Set the featured image for the post.
-		set_post_thumbnail( $post_id, $image_id );
-
-		// Ensure that the caption is not set on the Cover component by default.
+		// Create a test post with an image in the content and get the JSON for it.
+		// The image from the content should be the cover image, and the image should be removed from the content.
+		$image_id = $this->get_new_attachment( 0, 'Test Caption', 'Test alt text.' );
+		$post_id  = self::factory()->post->create( [ 'post_content' => $this->get_image_with_caption( $image_id ) ] );
 		$json = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 1, count( $json['components'][0]['components'] ) );
-		$this->assertEquals( 'headerPhotoLayout', $json['components'][0]['components'][0]['layout'] );
-
-		// Enable support for the cover caption.
-		$this->set_theme_settings( [ 'cover_caption' => true ] );
-
-		// Ensure that the caption is set on the Cover component.
-		$json = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 2, count( $json['components'][0]['components'] ) );
-		$this->assertEquals( 'headerPhotoLayoutWithCaption', $json['components'][0]['components'][0]['layout'] );
+		$this->assertEquals( 'header', $json['components'][0]['role'] );
+		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_id, 'full' ), $json['components'][0]['components'][0]['URL'] );
 		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Caption', $json['components'][0]['components'][1]['text'] );
+		$this->assertEquals( 1, count( $json['components'] ) );
+
+		// Create an image and attach it as the featured image to the previously created test post.
+		// The featured image should be used as the cover, and the original image should not be removed from the content.
+		$featured_image_id = $this->get_new_attachment( $post_id, 'Test Featured Image Caption', 'Test featured image alt text.' );
+		set_post_thumbnail( $post_id, $featured_image_id );
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'header', $json['components'][0]['role'] );
+		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
+		$this->assertEquals( wp_get_attachment_image_url( $featured_image_id, 'full' ), $json['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Featured Image Caption', $json['components'][0]['components'][1]['text'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_id, 'full' ), $json['components'][1]['components'][0]['components'][0]['URL'] );
+
+		// Create an image and set it as the cover in postmeta.
+		// The custom cover image should be used as the cover, and the original image should not be removed from the content.
+		$cover_image_id = $this->get_new_attachment( $post_id, 'Test Cover Image Caption', 'Test cover image alt text.' );
+		add_post_meta( $post_id, 'apple_news_coverimage', $cover_image_id );
+		add_post_meta( $post_id, 'apple_news_coverimage_caption', 'Test Cover Image Postmeta Caption' );
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'header', $json['components'][0]['role'] );
+		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
+		$this->assertEquals( wp_get_attachment_image_url( $cover_image_id, 'full' ), $json['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'caption', $json['components'][0]['components'][1]['role'] );
+		$this->assertEquals( 'Test Cover Image Postmeta Caption', $json['components'][0]['components'][1]['text'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_id, 'full' ), $json['components'][1]['components'][0]['components'][0]['URL'] );
+
+		// Turn off the cover caption feature and ensure that the caption is removed.
+		$this->set_theme_settings( [ 'cover_caption' => false ] );
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'header', $json['components'][0]['role'] );
+		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
+		$this->assertEquals( wp_get_attachment_image_url( $cover_image_id, 'full' ), $json['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 1, count( $json['components'][0]['components'] ) );
 	}
 }

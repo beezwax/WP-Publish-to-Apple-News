@@ -8,7 +8,6 @@
  * @subpackage Tests
  */
 
-use \Apple_Exporter\Exporter_Content;
 use \Apple_Exporter\Builders\Components;
 
 /**
@@ -112,11 +111,7 @@ class Component_Tests extends Apple_News_Testcase {
 
 		// Create a new post with an image with a caption in the content.
 		$image_2   = $this->get_new_attachment( 0, 'Test Caption 2', 'Test alt text 2' );
-		$post_id_2 = self::factory()->post->create(
-			[
-				'post_content' => '[caption id="attachment_' . $image_2 . '" align="alignright" width="300"]' . wp_get_attachment_image( $image_2 ) . ' Test Caption 2[/caption]',
-			]
-		);
+		$post_id_2 = self::factory()->post->create( [ 'post_content' => $this->get_image_with_caption( $image_2 ) ] );
 
 		// Ensure that the caption carries through to the export.
 		$json_2 = $this->get_json_for_post( $post_id_2 );
