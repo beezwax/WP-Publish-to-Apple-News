@@ -50,6 +50,8 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Enhancement: Added support for HLS video (.m3u8) in thumbnails.
 * Enhancement: Added support for custom article metadata.
 * Enhancement: Added a slug component (props to @hughiemolloy for the initial work).
+* Enhancement: Added support for HTML in headings.
+* Enhancement: Added support for uploading .papi files to configure channel credentials.
 
 = 2.1.3 =
 * Enhancement: Added article authors to the `metadata.authors` property so they display in the article listing view on Apple News.
