@@ -60,7 +60,7 @@ class Intro extends Component {
 		$this->register_json(
 			'json',
 			array(
-				'#text#' => $html . "\n",
+				'#text#' => $html,
 			)
 		);
 

@@ -52,8 +52,8 @@ class Cover_Test extends Apple_News_Testcase {
 	public function test_lightbox_font() {
 		$this->set_theme_settings(
 			[
-				'caption_font'  => 'Menlo-Regular',
-				'cover_caption' => true,
+				'caption_font'         => 'Menlo-Regular',
+				'cover_caption'        => true,
 				'meta_component_order' => [ 'cover' ],
 			]
 		);
