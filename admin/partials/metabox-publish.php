@@ -17,6 +17,7 @@
  * @global string  $pullquote_position
  * @global WP_Post $post
  * @global string  $publish_action
+ * @global string  $slug
  *
  * @package Apple_News
  */
@@ -84,6 +85,14 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 			</select>
 			<p class="description"><?php esc_html_e( 'Select the optional maturity rating for this post.', 'apple-news' ); ?></p>
 		</label>
+	</div>
+	<div id="apple-news-metabox-slug" class="apple-news-metabox-section apple-news-metabox-section-collapsable">
+		<h3><?php esc_html_e( 'Slug', 'apple-news' ); ?></h3>
+		<label for="apple-news-slug">
+			<?php esc_html_e( 'Slug Text', 'apple-news' ); ?>
+			<input id="apple-news-slug" name="apple_news_slug" type="text" value="<?php echo esc_attr( $slug ); ?>" />
+		</label>
+		<p class="description"><?php esc_html_e( 'A word or phrase that will appear near the title, if the Slug component is enabled in theme settings. This is optional and can be left blank.', 'apple-news' ); ?></p>
 	</div>
 	<div id="apple-news-metabox-pullquote" class="apple-news-metabox-section apple-news-metabox-section-collapsable">
 		<h3><?php esc_html_e( 'Pull quote', 'apple-news' ); ?></h3>
