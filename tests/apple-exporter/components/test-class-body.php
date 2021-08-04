@@ -6,20 +6,13 @@
  * @subpackage Tests
  */
 
-require_once __DIR__ . '/class-component-testcase.php';
-
-use Apple_Exporter\Components\Body;
-use Apple_Exporter\Exporter;
-use Apple_Exporter\Exporter_Content;
-
 /**
- * A class to test the behavior of the
- * Apple_Exporter\Components\Body class.
+ * A class to test the behavior of the Apple_Exporter\Components\Body class.
  *
  * @package Apple_News
  * @subpackage Tests
  */
-class Body_Test extends Component_TestCase {
+class Body_Test extends Apple_News_Testcase {
 
 	/**
 	 * A data provider that supplies empty HTML signatures to ensure that they
@@ -174,6 +167,23 @@ HTML
 <!-- /wp:paragraph -->
 HTML
 			],
+
+			// Test Gutenberg editor, extra paragraph at the end containing a non-breaking space surrounded by a link tag.
+			[
+				<<<HTML
+<!-- wp:paragraph -->
+<p>A</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p>B</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph -->
+<p><a href="https://www.apple.com/">&nbsp;</a></p>
+<!-- /wp:paragraph -->
+HTML
+			],
 		];
 	}
 
@@ -182,7 +192,6 @@ HTML
 	 *
 	 * @param array $json The JSON array to modify.
 	 *
-	 * @access public
 	 * @return array The modified JSON.
 	 */
 	public function filter_apple_news_body_json( $json ) {
@@ -196,7 +205,6 @@ HTML
 	 *
 	 * @param bool $enabled Whether HTML support is enabled for this component.
 	 *
-	 * @access public
 	 * @return bool Whether HTML support is enabled for this component.
 	 */
 	public function filter_apple_news_body_html_enabled( $enabled ) {
@@ -204,27 +212,33 @@ HTML
 	}
 
 	/**
-	 * Tests handling for empty content.
-	 *
-	 * @access public
+	 * Tests code formatting.
 	 */
-	public function test_empty_content() {
+	public function test_code_formatting() {
+		$content = <<<HTML
+<!-- wp:paragraph -->
+<p>Lorem ipsum. <a href="https://www.wordpress.org">Dolor sit amet.</a></p>
+<!-- /wp:paragraph -->
 
-		// Setup.
-		$html = '<p><a href="https://www.apple.com/">&nbsp;</a></p>';
-		$component = new Body(
-			$html,
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
+<!-- wp:preformatted -->
+<pre class="wp-block-preformatted">Preformatted text.</pre>
+<!-- /wp:preformatted -->
 
-		// Test.
-		$this->assertEquals(
-			array(),
-			$component->to_array()
-		);
+<!-- wp:paragraph -->
+<p>Testing a <code>code sample</code>.</p>
+<!-- /wp:paragraph -->
+HTML;
+		$post_id = self::factory()->post->create( [ 'post_content' => $content ] );
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'body', $json['components'][2]['role'] );
+		$this->assertEquals( 'html', $json['components'][2]['format'] );
+		$this->assertEquals( '<p>Lorem ipsum. <a href="https://www.wordpress.org">Dolor sit amet.</a></p>', $json['components'][2]['text'] );
+		$this->assertEquals( 'body', $json['components'][3]['role'] );
+		$this->assertEquals( 'html', $json['components'][3]['format'] );
+		$this->assertEquals( '<pre>Preformatted text.</pre>', $json['components'][3]['text'] );
+		$this->assertEquals( 'body', $json['components'][4]['role'] );
+		$this->assertEquals( 'html', $json['components'][4]['format'] );
+		$this->assertEquals( '<p>Testing a <code>code sample</code>.</p>', $json['components'][4]['text'] );
 	}
 
 	/**
@@ -246,275 +260,59 @@ HTML
 
 	/**
 	 * Test the `apple_news_body_json` filter.
-	 *
-	 * @access public
 	 */
-	public function testFilter() {
+	public function test_filter() {
+		add_filter( 'apple_news_body_json', [ $this, 'filter_apple_news_body_json' ] );
 
-		// Setup.
-		$this->settings->html_support = 'no';
-		$this->set_theme_settings( [ 'initial_dropcap' => 'no' ] );
-		$component = new Body(
-			'<p>my text</p>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-		add_filter(
-			'apple_news_body_json',
-			array( $this, 'filter_apple_news_body_json' )
-		);
-
-		// Test.
-		$result = $component->to_array();
-		$this->assertEquals( 'fancy-body', $result['textStyle'] );
+		// Create a test post and get JSON for it.
+		$post_id = self::factory()->post->create();
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'body', $json['components'][2]['role'] );
+		$this->assertEquals( 'fancy-body', $json['components'][2]['textStyle'] );
 
 		// Teardown.
-		remove_filter(
-			'apple_news_body_json',
-			array( $this, 'filter_apple_news_body_json' )
-		);
-		$this->settings->html_support = 'yes';
+		remove_filter( 'apple_news_body_json', [ $this, 'filter_apple_news_body_json' ] );
 	}
 
 	/**
 	 * Test the `apple_news_body_html_enabled` filter.
-	 *
-	 * @access public
 	 */
-	public function testFilterHTML() {
-
+	public function test_filter_html() {
 		// Test before filter.
-		$component = new Body(
-			'<p>my text</p>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-		$this->assertEquals(
-			array(
-				'role'      => 'body',
-				'text'      => '<p>my text</p>',
-				'format'    => 'html',
-				'textStyle' => 'dropcapBodyStyle',
-				'layout'    => 'body-layout',
-			),
-			$component->to_array()
-		);
+		$post_id = self::factory()->post->create( [ 'post_content' => 'Test content.' ] );
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'body', $json['components'][2]['role'] );
+		$this->assertEquals( 'html', $json['components'][2]['format'] );
+		$this->assertEquals( '<p>Test content.</p>', $json['components'][2]['text'] );
 
-		// Test after filter.
-		add_filter(
-			'apple_news_body_html_enabled',
-			array( $this, 'filter_apple_news_body_html_enabled' )
-		);
-		$component = new Body(
-			'<p>my text</p>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-		$this->assertEquals(
-			array(
-				'role'      => 'body',
-				'text'      => 'my text' . "\n\n",
-				'format'    => 'markdown',
-				'textStyle' => 'default-body',
-				'layout'    => 'body-layout',
-			),
-			$component->to_array()
-		);
 
-		// Teardown.
-		remove_filter(
-			'apple_news_body_html_enabled',
-			array( $this, 'filter_apple_news_body_html_enabled' )
-		);
-	}
-
-	/**
-	 * Tests HTML formatting.
-	 *
-	 * @access public
-	 */
-	public function testHTML() {
-
-		// Setup.
-		$html = <<<HTML
-<p>Lorem ipsum. <a href="https://wordpress.org">Dolor sit amet</a>.</p>
-<pre>
-	Preformatted text.
-</pre>
-<p>Testing a <code>code sample</code>.</p>
-HTML;
-		$component = new Body(
-			$html,
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		// Test.
-		$this->assertEquals(
-			array(
-				'text' => $html,
-				'role' => 'body',
-				'format' => 'html',
-				'textStyle' => 'dropcapBodyStyle',
-				'layout' => 'body-layout',
-			),
-			$component->to_array()
-		);
-	}
-
-	/**
-	 * Tests the removal of script tags.
-	 *
-	 * @access public
-	 */
-	public function testRemoveScriptTags() {
-
-		// Setup.
-		$html = <<<HTML
-<p><strong>Lorem ipsum dolor sit amet<script>if (1 > 0) { console.log('something'); }</script></strong></p>
-HTML;
-		$component = new Body(
-			$html,
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		// Test.
-		$this->assertEquals(
-			array(
-				'text'      => '<p><strong>Lorem ipsum dolor sit amet</strong></p>',
-				'role'      => 'body',
-				'format'    => 'html',
-				'textStyle' => 'dropcapBodyStyle',
-				'layout'    => 'body-layout',
-			),
-			$component->to_array()
-		);
-	}
-
-	/**
-	 * Tests the transformation process for an HTML entity (e.g., &amp;).
-	 *
-	 * @access public
-	 */
-	public function testTransformHtmlEntities() {
-
-		// Setup.
-		$this->settings->html_support = 'no';
-		$body_component = new Body(
-			'<p>my &amp; text</p>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		// Test.
-		$this->assertEquals(
-			array(
-				'text' => "my & text\n\n",
-				'role' => 'body',
-				'format' => 'markdown',
-				'textStyle' => 'dropcapBodyStyle',
-				'layout' => 'body-layout',
-			),
-			$body_component->to_array()
-		);
-
-		// Teardown.
-		$this->settings->html_support = 'yes';
-	}
-
-	/**
-	 * Tests transformation of lists with nested images.
-	 *
-	 * @access public
-	 */
-	public function testLists() {
-
-		// Setup.
-		$this->settings->html_support = 'no';
-		$content = <<<HTML
-<ul>
-<li>item 1</li>
-<li><img src="http://someurl.com/filename.jpg"><br />item 2</li>
-<li>item 3</li>
-</ul>
-HTML;
-		$cover = $this->get_new_attachment();
-		$content = new Exporter_Content( 3, 'Title', $content, null, $cover );
-
-		// Run the export.
-		$exporter = new Exporter( $content, $this->workspace, $this->settings );
-		$json = $exporter->export();
-		$this->ensure_tokens_replaced( $json );
-		$json = json_decode( $json, true );
-
-		// Validate list split in generated JSON.
-		$this->assertEquals(
-			'body',
-			$json['components'][1]['components'][1]['role']
-		);
-		$this->assertEquals(
-			'- item 1',
-			$json['components'][1]['components'][1]['text']
-		);
-		$this->assertEquals(
-			'photo',
-			$json['components'][1]['components'][2]['role']
-		);
-		$this->assertEquals(
-			'http://someurl.com/filename.jpg',
-			$json['components'][1]['components'][2]['URL']
-		);
-		$this->assertEquals(
-			'body',
-			$json['components'][1]['components'][3]['role']
-		);
-		$this->assertEquals(
-			'- item 2' . "\n" . '- item 3',
-			$json['components'][1]['components'][3]['text']
-		);
-
-		// Teardown.
-		$this->settings->html_support = 'yes';
+		// Add filter and test to ensure HTML mode is not used.
+		add_filter( 'apple_news_body_html_enabled', [ $this, 'filter_apple_news_body_html_enabled' ] );
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'body', $json['components'][2]['role'] );
+		$this->assertEquals( 'markdown', $json['components'][2]['format'] );
+		$this->assertEquals( 'Test content.', $json['components'][2]['text'] );
+		remove_filter( 'apple_news_body_html_enabled', [ $this, 'filter_apple_news_body_html_enabled' ] );
 	}
 
 	/**
 	 * Tests body settings.
-	 *
-	 * @access public
 	 */
-	public function testSettings() {
-
-		// Setup.
-		$content = new Exporter_Content(
-			3,
-			'Title',
-			'<p>Lorem ipsum.</p><p>Dolor sit amet.</p>'
-		);
-
-		// Set body settings.
+	public function test_settings() {
 		$this->set_theme_settings(
 			[
 				'body_font'                      => 'AmericanTypewriter',
 				'body_size'                      => 20,
 				'body_color'                     => '#abcdef',
+				'body_color_dark'                => '#bcdef0',
 				'body_link_color'                => '#fedcba',
+				'body_link_color_dark'           => '#edcba0',
 				'body_line_height'               => 28,
 				'body_tracking'                  => 50,
 				'dropcap_background_color'       => '#abcabc',
+				'dropcap_background_color_dark'  => '#bcabc0',
 				'dropcap_color'                  => '#defdef',
+				'dropcap_color_dark'             => '#efdef0',
 				'dropcap_font'                   => 'AmericanTypewriter-Bold',
 				'dropcap_number_of_characters'   => 15,
 				'dropcap_number_of_lines'        => 10,
@@ -522,202 +320,78 @@ HTML;
 				'dropcap_padding'                => 20,
 			]
 		);
+		$content = <<<HTML
+<!-- wp:paragraph -->
+<p>Paragraph 1.</p>
+<!-- /wp:paragraph -->
 
-		// Run the export.
-		$exporter = new Exporter( $content, $this->workspace, $this->settings );
-		$json = $exporter->export();
-		$this->ensure_tokens_replaced( $json );
-		$json = json_decode( $json, true );
+<!-- wp:paragraph -->
+<p>Paragraph 2.</p>
+<!-- /wp:paragraph -->
+HTML;
+		$post_id = self::factory()->post->create( [ 'post_content' => $content ] );
+		$json    = $this->get_json_for_post( $post_id );
 
 		// Validate body settings in generated JSON.
-		$this->assertEquals(
-			'AmericanTypewriter',
-			$json['componentTextStyles']['default-body']['fontName']
-		);
-		$this->assertEquals(
-			20,
-			$json['componentTextStyles']['default-body']['fontSize']
-		);
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentTextStyles']['default-body']['textColor']
-		);
-		$this->assertEquals(
-			'#fedcba',
-			$json['componentTextStyles']['default-body']['linkStyle']['textColor']
-		);
-		$this->assertEquals(
-			28,
-			$json['componentTextStyles']['default-body']['lineHeight']
-		);
-		$this->assertEquals(
-			0.5,
-			$json['componentTextStyles']['default-body']['tracking']
-		);
-		$this->assertFalse(
-			isset( $json['componentTextStyles']['default-body']['conditional'] )
-		);
-		$this->assertEquals(
-			'#abcabc',
-			$json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['backgroundColor']
-		);
-		$this->assertEquals(
-			'#defdef',
-			$json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['textColor']
-		);
-		$this->assertEquals(
-			'AmericanTypewriter-Bold',
-			$json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['fontName']
-		);
-		$this->assertEquals(
-			15,
-			$json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['numberOfCharacters']
-		);
-		$this->assertEquals(
-			10,
-			$json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['numberOfLines']
-		);
-		$this->assertEquals(
-			5,
-			$json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['numberOfRaisedLines']
-		);
-		$this->assertEquals(
-			20,
-			$json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['padding']
-		);
-		$this->assertFalse(
-			isset( $json['componentTextStyles']['dropCapStyle']['conditional'] )
-		);
-	}
-
-	public function testDarkColorSettings() {
-		// Setup.
-		$this->set_theme_settings(
-			[
-				'body_color_dark'                     => '#abcdef',
-				'body_link_color_dark'                => '#fedcba',
-				'dropcap_background_color_dark'       => '#abcabc',
-				'dropcap_color_dark'                  => '#defdef',
-			]
-		);
-
-		$post_id = $this->factory->post->create( array(
-			'post_content' => '<p>Lorem ipsum.</p><p>Dolor sit amet.</p>',
-		) );
-
-		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentTextStyles']['default-body']['conditional']['textColor']
-		);
-		$this->assertEquals(
-			'#fedcba',
-			$json['componentTextStyles']['default-body']['conditional']['linkStyle']['textColor']
-		);
-		$this->assertEquals(
-			'#abcabc',
-			$json['componentTextStyles']['dropcapBodyStyle']['conditional']['dropCapStyle']['backgroundColor']
-		);
-		$this->assertEquals(
-			'#defdef',
-			$json['componentTextStyles']['dropcapBodyStyle']['conditional']['dropCapStyle']['textColor']
-		);
+		$this->assertEquals( 'AmericanTypewriter', $json['componentTextStyles']['default-body']['fontName'] );
+		$this->assertEquals( 20, $json['componentTextStyles']['default-body']['fontSize'] );
+		$this->assertEquals( '#abcdef', $json['componentTextStyles']['default-body']['textColor'] );
+		$this->assertEquals( '#fedcba', $json['componentTextStyles']['default-body']['linkStyle']['textColor'] );
+		$this->assertEquals( 28, $json['componentTextStyles']['default-body']['lineHeight'] );
+		$this->assertEquals( 0.5, $json['componentTextStyles']['default-body']['tracking'] );
+		$this->assertEquals( '#bcdef0', $json['componentTextStyles']['default-body']['conditional']['textColor'] );
+		$this->assertEquals( '#edcba0', $json['componentTextStyles']['default-body']['conditional']['linkStyle']['textColor'] );
+		$this->assertEquals( '#abcabc', $json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['backgroundColor'] );
+		$this->assertEquals( '#defdef', $json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['textColor'] );
+		$this->assertEquals( 'AmericanTypewriter-Bold', $json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['fontName'] );
+		$this->assertEquals( 15, $json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['numberOfCharacters'] );
+		$this->assertEquals( 10, $json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['numberOfLines'] );
+		$this->assertEquals( 5, $json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['numberOfRaisedLines'] );
+		$this->assertEquals( 20, $json['componentTextStyles']['dropcapBodyStyle']['dropCapStyle']['padding'] );
+		$this->assertEquals( '#bcabc0', $json['componentTextStyles']['dropcapBodyStyle']['conditional']['dropCapStyle']['backgroundColor'] );
+		$this->assertEquals( '#efdef0', $json['componentTextStyles']['dropcapBodyStyle']['conditional']['dropCapStyle']['textColor'] );
+		$this->assertEquals( '#bcdef0', $json['componentTextStyles']['dropcapBodyStyle']['conditional']['textColor'] );
+		$this->assertEquals( '#edcba0', $json['componentTextStyles']['dropcapBodyStyle']['conditional']['linkStyle']['textColor'] );
 	}
 
 	/**
 	 * Tests 0 values in tokens.
-	 *
-	 * @access public
 	 */
-	public function testSettingsZeroValueInToken() {
-
-		// Setup.
-		$content = new Exporter_Content(
-			3,
-			'Title',
-			'<p>Lorem ipsum.</p><p>Dolor sit amet.</p>'
-		);
-
-		// Set body settings.
+	public function test_settings_zero_value_in_token() {
 		$this->set_theme_settings( [ 'body_line_height' => 0 ] );
+		$content = <<<HTML
+<!-- wp:paragraph -->
+<p>Paragraph 1.</p>
+<!-- /wp:paragraph -->
 
-		// Run the export.
-		$exporter = new Exporter( $content, $this->workspace, $this->settings );
-		$json = $exporter->export();
-		$this->ensure_tokens_replaced( $json );
-		$json = json_decode( $json, true );
-
-		// Validate body settings in generated JSON.
-		$this->assertEquals(
-			0,
-			$json['componentTextStyles']['default-body']['lineHeight']
-		);
-	}
-
-	/**
-	 * Tests the transformation process from a paragraph to a Body component.
-	 *
-	 * @access public
-	 */
-	public function testTransform() {
-
-		// Setup.
-		$this->settings->html_support = 'no';
-		$component = new Body(
-			'<p>my text</p>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		// Test.
-		$this->assertEquals(
-			array(
-				'text' => "my text\n\n",
-				'role' => 'body',
-				'format' => 'markdown',
-				'textStyle' => 'dropcapBodyStyle',
-				'layout' => 'body-layout',
-			),
-			$component->to_array()
-		);
-
-		// Teardown.
-		$this->settings->html_support = 'yes';
+<!-- wp:paragraph -->
+<p>Paragraph 2.</p>
+<!-- /wp:paragraph -->
+HTML;
+		$post_id = self::factory()->post->create( [ 'post_content' => $content ] );
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 0, $json['componentTextStyles']['default-body']['lineHeight'] );
 	}
 
 	/**
 	 * Test the setting to disable the initial dropcap.
-	 *
-	 * @access public
 	 */
-	public function testWithoutDropcap() {
-
-		// Setup.
-		$this->settings->html_support = 'no';
+	public function test_without_dropcap() {
 		$this->set_theme_settings( [ 'initial_dropcap' => 'no' ] );
-		$body_component = new Body(
-			'<p>my text</p>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
+		$content = <<<HTML
+<!-- wp:paragraph -->
+<p>Paragraph 1.</p>
+<!-- /wp:paragraph -->
 
-		// Test.
-		$this->assertEquals(
-			array(
-				'text' => "my text\n\n",
-				'role' => 'body',
-				'format' => 'markdown',
-				'textStyle' => 'default-body',
-				'layout' => 'body-layout',
-			),
-			$body_component->to_array()
-		);
-
-		// Teardown.
-		$this->settings->html_support = 'yes';
+<!-- wp:paragraph -->
+<p>Paragraph 2.</p>
+<!-- /wp:paragraph -->
+HTML;
+		$post_id = self::factory()->post->create( [ 'post_content' => $content ] );
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals( '<p>Paragraph 1.</p>', $json['components'][2]['text'] );
+		$this->assertEquals( 'default-body', $json['components'][2]['textStyle'] );
+		$this->assertEquals( '<p>Paragraph 2.</p>', $json['components'][3]['text'] );
+		$this->assertEquals( 'default-body', $json['components'][3]['textStyle'] );
 	}
 }
