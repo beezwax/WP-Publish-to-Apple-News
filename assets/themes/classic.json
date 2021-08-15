@@ -94,7 +94,7 @@
                         "text": "#text#",
                         "format": "#format#",
                         "layout": "pullquote-layout",
-                        "textStyle": "default-pullquote"
+                        "textStyle": "#default_pullquote#"
                     }
                 ],
                 "anchor": {
