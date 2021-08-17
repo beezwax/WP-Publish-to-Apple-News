@@ -5,7 +5,7 @@ Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.2.0
+Stable tag: 2.2.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,9 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.2.1 =
+* Bugfix: Fixed a bug with .papi file upload that occurred when any of the three fields (channel_id, key, secret) contained a character that was not alphanumeric or a hyphen (e.g., /), which would cause the field to get cut short, thereby causing API requests to fail.
 
 = 2.2.0 =
 * Enhancement: Added support for HLS video (.m3u8) in thumbnails.
