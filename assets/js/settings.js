@@ -4,9 +4,9 @@
 
     // storing RegExp strings for decoding the uploaded config file
     var RegExpStrings = {
-      channel_id: /channel_id: ([0-9a-zA-Z_-]+)/g,
-      key: /key: ([0-9a-zA-Z_-]+)/g,
-      secret: /secret: ([0-9a-zA-Z_-]+)/g
+      channel_id: /channel_id: ([^\s]+)/g,
+      key: /key: ([^\s]+)/g,
+      secret: /secret: ([^\s]+)/g
     }
 
     function updateCreds(input) {
