@@ -12,6 +12,11 @@
 ?>
 <div class="wrap apple-news-settings">
 	<h1><?php esc_html_e( 'Manage Settings', 'apple-news' ); ?></h1>
+	<?php if ( Apple_News::is_initialized() ) : ?>
+		<div class="notice notice-success">
+			<p><?php esc_html_e( 'The Apple News channel config has been successfully added.', 'apple-news' ); ?></p>
+		</div>
+	<?php endif; ?>
 	<form method="post" action="" id="apple-news-settings-form">
 		<?php wp_nonce_field( 'apple_news_options' ); ?>
 		<input type="hidden" name="action" value="apple_news_options" />
