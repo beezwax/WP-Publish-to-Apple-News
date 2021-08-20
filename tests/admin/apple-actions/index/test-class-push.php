@@ -1,56 +1,38 @@
 <?php
+/**
+ * Publish to Apple News Tests: Admin_Action_Index_Push_Test class
+ *
+ * Contains a class to test the functionality of the Apple_Actions\Index\Push class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
 
-use \Apple_Actions\Action_Exception;
-use \Apple_Actions\Index\Push as Push;
-use \Prophecy\Argument as Argument;
+use Apple_Actions\Action_Exception;
 
+// TODO: REMOVE THESE
+use Apple_Actions\Index\Push as Push;
+use Prophecy\Argument as Argument;
+
+/**
+ * A class used to test the functionality of the Apple_Actions\Index\Push class.
+ */
 class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 
-	private $original_user_id;
-
-	public function setup() {
-		parent::setup();
-		$this->original_user_id = get_current_user_id();
-	}
-
-	public function tearDown() {
-		wp_set_current_user( $this->original_user_id );
-	}
-
-	protected function dummy_response() {
-		$response = new stdClass;
-		$response->data = new stdClass;
-		$response->data->id = uniqid();
-		$response->data->createdAt = time();
-		$response->data->modifiedAt = time();
-		$response->data->shareUrl = 'http://test.url/some-path';
-		$response->data->revision = uniqid();
-		return $response;
-	}
-
-	protected function set_admin() {
-		$user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
-		if ( function_exists( 'grant_super_admin' ) ) {
-			grant_super_admin( $user_id );
-		}
-		wp_set_current_user( $user_id );
-		return $user_id;
-	}
-
 	/**
-	 * A filter callback to simulate a JSON error.
-	 *
-	 * @access public
-	 * @return array An array containing a JSON error.
+	 * Ensures that postmeta will be properly set after creating an article via
+	 * the API.
 	 */
-	public function filterAppleNewsGetErrors() {
-		return array(
-			array(
-				'json_errors' => array(
-					'Test JSON error.',
-				),
-			),
-		);
+	public function test_create() {
+		$post_id = self::factory()->post->create();
+		$this->get_request_for_post( $post_id );
+
+		// Values in the assertions here are added in the get_request_for_post function call above.
+		$this->assertEquals( 'abcd1234-ef56-ab78-cd90-efabcdef123456', get_post_meta( $post_id, 'apple_news_api_id', true ) );
+		$this->assertEquals( '2020-01-02T03:04:05Z', get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
+		$this->assertEquals( '2020-01-02T03:04:05Z', get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
+		$this->assertEquals( 'https://apple.news/ABCDEFGHIJKLMNOPQRSTUVW', get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
+		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
 	}
 
 	/**
@@ -91,25 +73,22 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		$this->assertEquals( ['a', 'b', 'c'], $metadata['data']['isArray'] );
 	}
 
-	public function testCreate() {
-		$response = $this->dummy_response();
-		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
-		$api->post_article_to_channel( Argument::cetera() )
-			->willReturn( $response )
-			->shouldBeCalled();
+	// TODO: REFACTOR LINE.
 
-		// Create post
-		$post_id = $this->factory->post->create();
-
-		$action = new Push( $this->settings, $post_id );
-		$action->set_api( $api->reveal() );
-		$action->perform();
-
-		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
-		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
-		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
-		$this->assertEquals( $response->data->shareUrl, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
-		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
+	/**
+	 * A filter callback to simulate a JSON error.
+	 *
+	 * @access public
+	 * @return array An array containing a JSON error.
+	 */
+	public function filterAppleNewsGetErrors() {
+		return array(
+			array(
+				'json_errors' => array(
+					'Test JSON error.',
+				),
+			),
+		);
 	}
 
 	public function testCreateWithSections() {
@@ -398,8 +377,8 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 			->willReturn( $response )
 			->shouldBeCalled();
 
-		// We need to create an iframe, so run as administrator
-		$user_id = $this->set_admin();
+		// We need to create an iframe, so run as administrator.
+		$this->become_admin();
 
 		// Create post
 		$post_id = $this->factory->post->create( array(

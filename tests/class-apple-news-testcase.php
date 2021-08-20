@@ -198,6 +198,7 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		$this->prophet->checkPredictions();
 		remove_filter( 'apple_news_post_args', [ $this, 'filter_apple_news_post_args' ] );
 		remove_filter( 'pre_http_request', [ $this, 'filter_pre_http_request' ] );
+		wp_set_current_user( 0 );
 	}
 
 	/**
@@ -217,6 +218,19 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 			'headers'  => new Requests_Utility_CaseInsensitiveDictionary( $headers ),
 			'response' => $response,
 		];
+	}
+
+	/**
+	 * Creates a new admin (or super admin, on multisite) and sets the current
+	 * user ID to the new user. Useful when testing functionality that requires
+	 * an administrator's credentials, such as adding unfiltered HTML to a post.
+	 */
+	protected function become_admin() {
+		$user_id = self::factory()->user->create( [ 'role' => 'administrator' ] );
+		if ( function_exists( 'grant_super_admin' ) ) {
+			grant_super_admin( $user_id );
+		}
+		wp_set_current_user( $user_id );
 	}
 
 	/**
