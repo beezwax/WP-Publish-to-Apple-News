@@ -6,6 +6,8 @@
  * @subpackage Tests
  */
 
+use Apple_Actions\Action_Exception;
+
 /**
  * A base class for Apple News tests.
  *
@@ -399,10 +401,11 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 * A helper function that performs a sample push operation for a given post ID
 	 * and returns the request data that would be sent to Apple.
 	 *
-	 * @param int   $post_id The post ID for which to perform the push.
-	 * @param array $data    Optional. Overrides for default faked values in the data.
+	 * @param int $post_id The post ID for which to perform the push.
+	 * @param array $data Optional. Overrides for default faked values in the data.
 	 *
 	 * @return array The request data for the post.
+	 * @throws Action_Exception
 	 */
 	protected function get_request_for_post( $post_id, $data = [] ) {
 		// Fake the API response.
@@ -439,10 +442,11 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 * A helper function that performs a sample update operation for a given post
 	 * ID and returns the request data that would be sent to Apple.
 	 *
-	 * @param int   $post_id The post ID for which to perform the update.
-	 * @param array $data    Optional. Overrides for default faked values in the data.
+	 * @param int $post_id The post ID for which to perform the update.
+	 * @param array $data Optional. Overrides for default faked values in the data.
 	 *
 	 * @return array The request data for the post.
+	 * @throws Action_Exception
 	 */
 	protected function get_request_for_update( $post_id, $data = [] ) {
 		$article_id = isset( $data['id'] ) ? $data['id'] : 'abcd1234-ef56-ab78-cd90-efabcdef123456';

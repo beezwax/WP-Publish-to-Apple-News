@@ -48,6 +48,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 
 = 2.2.2 =
 * Bugfix: Moved custom metadata fields to the request level rather than the article level to align them with existing metadata properties like isPaid and isHidden.
+* Bugfix: Removed JSON alerts setting, as it no longer does anything.
 * Enhancement: Shows a confirmation message to the user when channel credentials are successfully saved, since the channel ID, key, and secret fields are no longer visible following the update to using .papi files to configure credentials.
 
 = 2.2.1 =

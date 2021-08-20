@@ -29,6 +29,51 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 	}
 
 	/**
+	 * Tests the behavior of the component errors setting (none, warn, fail).
+	 */
+	public function test_component_errors() {
+		// Set up a post with an invalid element (div).
+		$this->become_admin();
+		$user_id = wp_get_current_user()->ID;
+		$post_id_1 = self::factory()->post->create( [ 'post_author' => $user_id, 'post_content' => '<div>Test Content</div>' ] );
+
+		// Test the default behavior, which is no warning or error.
+		$this->get_request_for_post( $post_id_1 );
+		$notices = get_user_meta( $user_id, 'apple_news_notice', true );
+		$this->assertEquals( 2, count( $notices ) );
+		$this->assertEquals( 'error', $notices[0]['type'] );
+		$this->assertEquals( 'Your Apple News API settings seem to be empty. Please fill in the API key, API secret and API channel fields in the plugin configuration page.', $notices[0]['message'] );
+		$this->assertEquals( 'success', $notices[1]['type'] );
+		$this->assertEquals( 'abcd1234-ef56-ab78-cd90-efabcdef123456', get_post_meta( $post_id_1, 'apple_news_api_id', true ) );
+
+		// Test the behavior of component warnings.
+		$this->settings->component_alerts = 'warn';
+		$post_id_2 = self::factory()->post->create( [ 'post_author' => $user_id, 'post_content' => '<div>Test Content</div>' ] );
+		$this->get_request_for_post( $post_id_2 );
+		$notices = get_user_meta( $user_id, 'apple_news_notice', true );
+		$this->assertEquals( 4, count( $notices ) );
+		$this->assertEquals( 'error', $notices[2]['type'] );
+		$this->assertEquals( 'The following components are unsupported by Apple News and were removed: div', $notices[2]['message'] );
+		$this->assertEquals( 'success', $notices[3]['type'] );
+		$this->assertEquals( 'abcd1234-ef56-ab78-cd90-efabcdef123456', get_post_meta( $post_id_1, 'apple_news_api_id', true ) );
+
+		// Test the behavior of component errors.
+		$this->settings->component_alerts = 'fail';
+		$post_id_3 = self::factory()->post->create( [ 'post_author' => $user_id, 'post_content' => '<div>Test Content</div>' ] );
+		$exception = false;
+		try {
+			$this->get_request_for_post( $post_id_3 );
+		} catch ( Action_Exception $e ) {
+			$exception = $e;
+		}
+		$this->assertEquals( 'The following components are unsupported by Apple News and prevented publishing: div', $exception->getMessage() );
+		$this->assertEquals( null, get_post_meta( $post_id_3, 'apple_news_api_id', true ) );
+
+		// Clean up after ourselves.
+		$this->settings->component_alerts = 'none';
+	}
+
+	/**
 	 * Ensures that postmeta will be properly set after creating an article via
 	 * the API.
 	 */
@@ -160,229 +205,5 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		$request = $this->get_request_for_update( $post->ID );
 		$body    = $this->get_body_from_request( $request );
 		$this->assertEquals( 'Test New Title', $body['title'] );
-	}
-
-	// TODO: REFACTOR LINE.
-
-	/**
-	 * A filter callback to simulate a JSON error.
-	 *
-	 * @access public
-	 * @return array An array containing a JSON error.
-	 */
-	public function filterAppleNewsGetErrors() {
-		return array(
-			array(
-				'json_errors' => array(
-					'Test JSON error.',
-				),
-			),
-		);
-	}
-
-	public function testComponentErrorsNone() {
-		$this->settings->set( 'component_alerts', 'none' );
-
-		$response = $this->dummy_response();
-		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
-		$api->post_article_to_channel( Argument::cetera() )
-			->willReturn( $response )
-			->shouldBeCalled();
-
-		// We need to create an iframe, so run as administrator.
-		$this->become_admin();
-
-		// Create post
-		$post_id = $this->factory->post->create( array(
-			'post_content' => '<p><iframe width="460" height="460" src="http://unsupportedservice.com/embed.html?video=1232345&autoplay=0" frameborder="0" allowfullscreen></iframe></p>',
-		) );
-
-		$action = new Push( $this->settings, $post_id );
-		$action->set_api( $api->reveal() );
-		$action->perform();
-
-		// The post was still quietly sent to Apple News despite the removal of the iframe
-		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
-		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
-		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
-		$this->assertEquals( $response->data->shareUrl, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
-		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
-	}
-
-	public function testComponentErrorsWarn() {
-		$this->settings->set( 'component_alerts', 'warn' );
-		$this->settings->set( 'json_alerts', 'none' );
-
-		$response = $this->dummy_response();
-		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
-		$api->post_article_to_channel( Argument::cetera() )
-			->willReturn( $response )
-			->shouldBeCalled();
-
-		// We need to create a nonsense HTML element, so run as administrator.
-		$user_id = $this->set_admin();
-
-		// Create post
-		$post_id = $this->factory->post->create( array(
-			'post_content' => '<p><invalidelement src="http://unsupportedservice.com/embed.html?video=1232345&autoplay=0"></invalidelement></p>',
-		) );
-
-		$action = new Push( $this->settings, $post_id );
-		$action->set_api( $api->reveal() );
-		$action->perform();
-
-		// An admin error notice was created
-		$notices = get_user_meta( $user_id, 'apple_news_notice', true );
-		$this->assertNotEmpty( $notices );
-
-		array_pop( $notices );
-		$component_notice = end( $notices );
-		$this->assertEquals( 'The following components are unsupported by Apple News and were removed: invalidelement', $component_notice['message'] );
-
-		// The post was still sent to Apple News
-		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
-		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
-		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
-		$this->assertEquals( $response->data->shareUrl, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
-		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
-	}
-
-	public function testComponentErrorsFail() {
-		$this->settings->set( 'component_alerts', 'fail' );
-		$this->settings->set( 'json_alerts', 'none' );
-
-		$response = $this->dummy_response();
-		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
-		$api->post_article_to_channel( Argument::cetera() )
-			->willReturn( $response )
-			->shouldNotBeCalled();
-
-		// We need to create a nonsense HTML element, so run as administrator.
-		$user_id = $this->set_admin();
-
-		// Create post
-		$post_id = $this->factory->post->create( array(
-			'post_content' => '<p><invalidelement src="http://unsupportedservice.com/embed.html?video=1232345&autoplay=0"></invalidelement></p>',
-		) );
-
-		$action = new Push( $this->settings, $post_id );
-		$action->set_api( $api->reveal() );
-
-		try {
-			$action->perform();
-		} catch ( Action_Exception $e ) {
-
-			// An admin error notice was created
-			$notices = get_user_meta( $user_id, 'apple_news_notice', true );
-			$this->assertNotEmpty( $notices );
-
-			$component_notice = end( $notices );
-			$this->assertEquals( 'The following components are unsupported by Apple News and prevented publishing: invalidelement', $e->getMessage() );
-
-			// The post was not sent to Apple News
-			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_id', true ) );
-			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
-			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
-			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
-			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
-		}
-	}
-
-	public function testJSONErrorsWarn() {
-		$this->settings->set( 'component_alerts', 'none' );
-		$this->settings->set( 'json_alerts', 'warn' );
-
-		$response = $this->dummy_response();
-		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
-		$api->post_article_to_channel( Argument::cetera() )
-			->willReturn( $response )
-			->shouldBeCalled();
-
-		// We need to create an iframe, so run as administrator
-		$user_id = $this->set_admin();
-
-		// Create post
-		$post_id = $this->factory->post->create( array(
-			'post_content' => 'Test post content',
-		) );
-
-		// Manually add a JSON error to the postmeta via a filter.
-		add_filter(
-			'apple_news_get_errors',
-			array( $this, 'filterAppleNewsGetErrors' )
-		);
-
-		$action = new Push( $this->settings, $post_id );
-		$action->set_api( $api->reveal() );
-		$action->perform();
-
-		// An admin error notice was created
-		$notices = get_user_meta( $user_id, 'apple_news_notice', true );
-		$notice_messages = wp_list_pluck( $notices, 'message' );
-		$this->assertTrue( in_array(
-			'The following JSON errors were detected when publishing to Apple News: Test JSON error.',
-			$notice_messages,
-			true
-		) );
-
-		// The post was still sent to Apple News
-		$this->assertEquals( $response->data->id, get_post_meta( $post_id, 'apple_news_api_id', true ) );
-		$this->assertEquals( $response->data->createdAt, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
-		$this->assertEquals( $response->data->modifiedAt, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
-		$this->assertEquals( $response->data->shareUrl, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
-		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
-
-		// Remove the filter.
-		remove_filter(
-			'apple_news_get_errors',
-			array( $this, 'filterAppleNewsGetErrors' )
-		);
-	}
-
-	public function testJSONErrorsFail() {
-		$this->settings->set( 'component_alerts', 'none' );
-		$this->settings->set( 'json_alerts', 'fail' );
-
-		$response = $this->dummy_response();
-		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
-		$api->post_article_to_channel( Argument::cetera() )
-			->willReturn( $response )
-			->shouldNotBeCalled();
-
-		// We need to create an iframe, so run as administrator
-		$user_id = $this->set_admin();
-
-		// Create post
-		$post_id = $this->factory->post->create( array(
-			'post_content' => 'Test post content.',
-		) );
-
-		// Manually add a JSON error to the postmeta via a filter.
-		add_filter(
-			'apple_news_get_errors',
-			array( $this, 'filterAppleNewsGetErrors' )
-		);
-
-		$action = new Push( $this->settings, $post_id );
-		$action->set_api( $api->reveal() );
-
-		try {
-			$action->perform();
-		} catch ( Action_Exception $e ) {
-			$this->assertEquals( 'The following JSON errors were detected and prevented publishing to Apple News: Test JSON error.', $e->getMessage() );
-
-			// The post was not sent to Apple News
-			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_id', true ) );
-			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_created_at', true ) );
-			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_modified_at', true ) );
-			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_share_url', true ) );
-			$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
-		}
-
-		// Remove the filter.
-		remove_filter(
-			'apple_news_get_errors',
-			array( $this, 'filterAppleNewsGetErrors' )
-		);
 	}
 }
