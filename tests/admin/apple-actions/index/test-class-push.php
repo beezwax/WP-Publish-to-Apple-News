@@ -10,10 +10,6 @@
 
 use Apple_Actions\Action_Exception;
 
-// TODO: REMOVE THESE
-use Apple_Actions\Index\Push as Push;
-use Prophecy\Argument as Argument;
-
 /**
  * A class used to test the functionality of the Apple_Actions\Index\Push class.
  */
@@ -34,7 +30,7 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 	public function test_component_errors() {
 		// Set up a post with an invalid element (div).
 		$this->become_admin();
-		$user_id = wp_get_current_user()->ID;
+		$user_id   = wp_get_current_user()->ID;
 		$post_id_1 = self::factory()->post->create( [ 'post_author' => $user_id, 'post_content' => '<div>Test Content</div>' ] );
 
 		// Test the default behavior, which is no warning or error.
