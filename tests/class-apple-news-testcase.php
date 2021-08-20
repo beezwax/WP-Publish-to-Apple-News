@@ -248,28 +248,76 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Runs create_upload_object using a test image and returns the image ID.
+	 * Creates a fake article response from the API given optional overrides for
+	 * data properties.
 	 *
-	 * @param int    $parent  Optional. The parent post ID. Defaults to no parent.
-	 * @param string $caption Optional. The caption to set on the image.
-	 * @param string $alt     Optional. The alt text to set on the image.
+	 * @param array $data Optional. Overrides for data properties.
 	 *
-	 * @return int The post ID of the attachment image that was created.
+	 * @return array The fake API response.
 	 */
-	protected function get_new_attachment( $parent = 0, $caption = '', $alt = '' ) {
-		$image_id = self::factory()->attachment->create_upload_object( __DIR__ . '/data/test-image.jpg', $parent );
+	protected function fake_article_response( $data = [] ) {
+		// Build the basic response.
+		$response = [
+			'data' => wp_parse_args(
+				$data,
+				[
+					'createdAt'                   => '2020-01-02T03:04:05Z',
+					'modifiedAt'                  => '2020-01-02T03:04:05Z',
+					'id'                          => 'abcd1234-ef56-ab78-cd90-efabcdef123456',
+					'type'                        => 'article',
+					'shareUrl'                    => 'https://apple.news/ABCDEFGHIJKLMNOPQRSTUVW',
+					'links'                       => [
+						'channel'  => 'https://news-api.apple.com/channels/' . $this->settings->api_channel,
+						'self'     => 'https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456',
+						'sections' => [
+							'https://news-api.apple.com/sections/abcd1234-ef56-ab78-cd90-efabcdef1234',
+						],
+					],
+					'document'                    => [],
+					'revision'                    => 'AAAAAAAAAAAAAAAAAAAAAAAA',
+					'state'                       => 'PROCESSING',
+					'accessoryText'               => null,
+					'title'                       => 'Test Article',
+					'maturityRating'              => null,
+					'warnings'                    => [],
+					'targetTerritoryCountryCodes' => ['US'],
+					'isCandidateToBeFeatured'     => false,
+					'isSponsored'                 => false,
+					'isPreview'                   => false,
+					'isDevelopingStory'           => false,
+					'isHidden'                    => false,
+				]
+			),
+			'meta' => [
+				'throttling' => [
+					'isThrottled'             => false,
+					'queueSize'               => 0,
+					'estimatedDelayInSeconds' => 0,
+					'quotaAvailable'          => 200,
+				],
+			],
+		];
 
-		if ( ! empty( $caption ) ) {
-			$image = get_post( $image_id );
-			$image->post_excerpt = $caption;
-			wp_update_post( $image );
+		// Apply targeted overrides to links, since wp_parse_args only works on one level.
+		if ( isset( $data['links'] ) ) {
+			$response['data']['links'] = wp_parse_args( $data['links'], $response['data']['links'] );
 		}
 
-		if ( ! empty( $alt ) ) {
-			update_post_meta( $image_id, '_wp_attachment_image_alt', $alt );
-		}
+		return $response;
+	}
 
-		return $image_id;
+	/**
+	 * Given a request body from a POST request for an article to the Apple News
+	 * API, parses and extracts the article body portion of the request and
+	 * returns it as a JSON-decoded associative array.
+	 *
+	 * @param array $request The request to analyze.
+	 *
+	 * @return array An associative array representing the article body.
+	 */
+	protected function get_body_from_request( $request ) {
+		preg_match( '/Content-Disposition: form-data; name=my_article; filename=article.json; size=[0-9]+\s+(\{[^\r\n]+)/', $request['body'], $matches );
+		return ! empty( $matches[1] ) ? json_decode( $matches[1], true ) : [];
 	}
 
 	/**
@@ -313,74 +361,124 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 * API, parses and extracts the metadata portion of the request and returns it
 	 * as a JSON-decoded associative array.
 	 *
-	 * @param string $request The request to analyze.
+	 * @param array $request The request to analyze.
 	 *
 	 * @return array An associative array representing the article metadata.
 	 */
-	public function get_metadata_from_request( $request ) {
-		preg_match( '/Content-Disposition: form-data; name=metadata\s+(\{[^\r\n]+)/', $request, $matches );
+	protected function get_metadata_from_request( $request ) {
+		preg_match( '/Content-Disposition: form-data; name=metadata\s+(\{[^\r\n]+)/', $request['body'], $matches );
 		return ! empty( $matches[1] ) ? json_decode( $matches[1], true ) : [];
+	}
+
+	/**
+	 * Runs create_upload_object using a test image and returns the image ID.
+	 *
+	 * @param int    $parent  Optional. The parent post ID. Defaults to no parent.
+	 * @param string $caption Optional. The caption to set on the image.
+	 * @param string $alt     Optional. The alt text to set on the image.
+	 *
+	 * @return int The post ID of the attachment image that was created.
+	 */
+	protected function get_new_attachment( $parent = 0, $caption = '', $alt = '' ) {
+		$image_id = self::factory()->attachment->create_upload_object( __DIR__ . '/data/test-image.jpg', $parent );
+
+		if ( ! empty( $caption ) ) {
+			$image = get_post( $image_id );
+			$image->post_excerpt = $caption;
+			wp_update_post( $image );
+		}
+
+		if ( ! empty( $alt ) ) {
+			update_post_meta( $image_id, '_wp_attachment_image_alt', $alt );
+		}
+
+		return $image_id;
 	}
 
 	/**
 	 * A helper function that performs a sample push operation for a given post ID
 	 * and returns the request data that would be sent to Apple.
 	 *
-	 * @param int $post_id The post ID for which to perform the export.
+	 * @param int   $post_id The post ID for which to perform the push.
+	 * @param array $data    Optional. Overrides for default faked values in the data.
 	 *
 	 * @return array The request data for the post.
 	 */
-	protected function get_request_for_post( $post_id ) {
+	protected function get_request_for_post( $post_id, $data = [] ) {
 		// Fake the API response.
-		// Currently, doesn't take into account metadata, but could be refactored to do so.
-		$document = $this->get_json_for_post( $post_id );
 		$this->add_http_response(
 			'POST',
 			'https://news-api.apple.com/channels/' . $this->settings->api_channel . '/articles',
 			wp_json_encode(
-				[
-					'data' => [
-						'createdAt'                   => '2020-01-02T03:04:05Z',
-						'modifiedAt'                  => '2020-01-02T03:04:05Z',
-						'id'                          => 'abcd1234-ef56-ab78-cd90-efabcdef123456',
-						'type'                        => 'article',
-						'shareUrl'                    => 'https://apple.news/ABCDEFGHIJKLMNOPQRSTUVW',
-						'links'                       => [
-							'channel'  => 'https://news-api.apple.com/channels/' . $this->settings->api_channel,
-							'self'     => 'https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456',
-							'sections' => [
-								'https://news-api.apple.com/sections/abcd1234-ef56-ab78-cd90-efabcdef1234',
-							],
-						],
-						'document'                    => $document,
-						'revision'                    => 'AAAAAAAAAAAAAAAAAAAAAAAA',
-						'state'                       => 'PROCESSING',
-						'accessoryText'               => null,
-						'title'                       => get_the_title( $post_id ),
-						'maturityRating'              => null,
-						'warnings'                    => [],
-						'targetTerritoryCountryCodes' => ['US'],
-						'isCandidateToBeFeatured'     => false,
-						'isSponsored'                 => false,
-						'isPreview'                   => false,
-						'isDevelopingStory'           => false,
-						'isHidden'                    => false,
-					],
-					'meta' => [
-						'throttling' => [
-							'isThrottled'             => false,
-							'queueSize'               => 0,
-							'estimatedDelayInSeconds' => 0,
-							'quotaAvailable'          => 200,
-						],
-					],
-				]
+				$this->fake_article_response(
+					wp_parse_args(
+						$data,
+						[
+							'document' => $this->get_json_for_post( $post_id ),
+							'title'    => get_the_title( $post_id ),
+						]
+					)
+				)
 			),
 			[],
 			[
 				'code'    => 201,
 				'message' => 'Created',
 			]
+		);
+
+		// Perform the push.
+		$action = new Apple_Actions\Index\Push( $this->settings, $post_id );
+		$action->perform();
+
+		// Return the request arguments sent with the push.
+		return ! empty( $this->post_args ) ? array_pop( $this->post_args ) : [];
+	}
+
+	/**
+	 * A helper function that performs a sample update operation for a given post
+	 * ID and returns the request data that would be sent to Apple.
+	 *
+	 * @param int   $post_id The post ID for which to perform the update.
+	 * @param array $data    Optional. Overrides for default faked values in the data.
+	 *
+	 * @return array The request data for the post.
+	 */
+	protected function get_request_for_update( $post_id, $data = [] ) {
+		$article_id = isset( $data['id'] ) ? $data['id'] : 'abcd1234-ef56-ab78-cd90-efabcdef123456';
+
+		// Fake the API response for the GET request that is performed for article data before the update.
+		$this->add_http_response(
+			'GET',
+			'https://news-api.apple.com/articles/' . $article_id,
+			wp_json_encode(
+				$this->fake_article_response(
+					wp_parse_args(
+						$data,
+						[
+							'document' => $this->get_json_for_post( $post_id ),
+							'title'    => get_the_title( $post_id ),
+						]
+					)
+				)
+			)
+		);
+
+		// Fake the API response.
+		$this->add_http_response(
+			'POST',
+			'https://news-api.apple.com/articles/' . $article_id,
+			wp_json_encode(
+				$this->fake_article_response(
+					wp_parse_args(
+						$data,
+						[
+							'document' => $this->get_json_for_post( $post_id ),
+							'title'    => get_the_title( $post_id ),
+						]
+					)
+				)
+			)
 		);
 
 		// Perform the push.
