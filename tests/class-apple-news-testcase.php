@@ -35,11 +35,25 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	protected $content_settings;
 
 	/**
+	 * Contains an array of key-value pairs for responses for given verbs and URLs.
+	 *
+	 * @var array
+	 */
+	protected $http_responses = [];
+
+	/**
 	 * Contains an instance of the Apple_Exporter\Builders\Component_Layouts class for use in tests.
 	 *
 	 * @var Apple_Exporter\Builders\Component_Layouts
 	 */
 	protected $layouts;
+
+	/**
+	 * Stores a record of POST arguments sent to the Apple News API for examination in tests.
+	 *
+	 * @var array
+	 */
+	protected $post_args = [];
 
 	/**
 	 * Contains a Prophecy-wrapped instance of the Apple_Exporter\Workspace class.
@@ -84,12 +98,48 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	protected $workspace;
 
 	/**
+	 * Intercepts and captures arguments for a POST request to the Apple News API.
+	 *
+	 * @param array $args Arguments to be filtered.
+	 *
+	 * @return array The args, unmodified.
+	 */
+	public function filter_apple_news_post_args( $args ) {
+		$this->post_args[] = $args;
+		return $args;
+	}
+
+	/**
+	 * Preempts external HTTP requests in a unit test context.
+	 *
+	 * @param false|array|WP_Error $preempt     A preemptive return value of an HTTP request. Default false.
+	 * @param array                $parsed_args HTTP request arguments.
+	 * @param string               $url         The request URL.
+	 *
+	 * @return array|WP_Error An array containing 'headers', 'body', 'response', 'cookies', and 'filename' elements on success, or WP_Error on failure.
+	 */
+	public function filter_pre_http_request( $preempt, $parsed_args, $url ) {
+		$verb = ! empty( $parsed_args['method'] ) ? $parsed_args['method'] : 'GET';
+		if ( ! empty( $this->http_responses[ $verb ][ $url ] ) ) {
+			return array_shift( $this->http_responses[ $verb ][ $url ] );
+		}
+
+		return new WP_Error( __( 'Invalid API request.', 'apple-news' ) );
+	}
+
+	/**
 	 * A function containing operations to be run before each test function.
 	 *
 	 * @access public
 	 */
 	public function setUp() {
 		parent::setUp();
+
+		// Capture arguments sent to the Apple News API in POST requests.
+		add_filter( 'apple_news_post_args', [ $this, 'filter_apple_news_post_args' ] );
+
+		// Prevent external HTTP calls from being made in a test context.
+		add_filter( 'pre_http_request', [ $this, 'filter_pre_http_request' ], 10, 3 );
 
 		// Ensure HTML5 image captions are supported.
 		add_theme_support( 'html5', ['caption'] );
@@ -102,7 +152,10 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		);
 
 		// Create a new instance of the Settings object and save it for future use.
-		$this->settings = new Apple_Exporter\Settings();
+		$this->settings              = new Apple_Exporter\Settings();
+		$this->settings->api_channel = 'foo';
+		$this->settings->api_key     = 'bar';
+		$this->settings->api_secret  = 'baz';
 
 		// Create a new instance of the Exporter_Content_Settings object and save it for future use.
 		$this->content_settings = new Apple_Exporter\Exporter_Content_Settings();
@@ -143,6 +196,27 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 */
 	public function tearDown() {
 		$this->prophet->checkPredictions();
+		remove_filter( 'apple_news_post_args', [ $this, 'filter_apple_news_post_args' ] );
+		remove_filter( 'pre_http_request', [ $this, 'filter_pre_http_request' ] );
+	}
+
+	/**
+	 * Given an endpoint URL and a response object, adds the response object to
+	 * the queue for that URL. Used to fake HTTP responses from the Apple News
+	 * API.
+	 *
+	 * @param string $verb The HTTP verb to respond to.
+	 * @param string $url  The API endpoint to fake the response for.
+	 * @param string $body The faked response body.
+	 */
+	protected function add_http_response( $verb, $url, $body, $headers = [], $response = [ 'code' => 200, 'message' => 'OK' ], $cookies = [], $filename = null ) {
+		$this->http_responses[ $verb ][ $url ][] = [
+			'body'     => $body,
+			'cookies'  => $cookies,
+			'filename' => $filename,
+			'headers'  => new Requests_Utility_CaseInsensitiveDictionary( $headers ),
+			'response' => $response,
+		];
 	}
 
 	/**
@@ -206,7 +280,7 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	/**
 	 * A helper function that generates JSON for a given post ID.
 	 *
-	 * @param int $post_id The for which to perform the export.
+	 * @param int $post_id The post ID for which to perform the export.
 	 *
 	 * @return array The JSON for the post, converted to an associative array.
 	 */
@@ -218,6 +292,89 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		);
 
 		return json_decode( $export->perform(), true );
+	}
+
+	/**
+	 * Given a request body from a POST request for an article to the Apple News
+	 * API, parses and extracts the metadata portion of the request and returns it
+	 * as a JSON-decoded associative array.
+	 *
+	 * @param string $request The request to analyze.
+	 *
+	 * @return array An associative array representing the article metadata.
+	 */
+	public function get_metadata_from_request( $request ) {
+		preg_match( '/Content-Disposition: form-data; name=metadata\s+(\{[^\r\n]+)/', $request, $matches );
+		return ! empty( $matches[1] ) ? json_decode( $matches[1], true ) : [];
+	}
+
+	/**
+	 * A helper function that performs a sample push operation for a given post ID
+	 * and returns the request data that would be sent to Apple.
+	 *
+	 * @param int $post_id The post ID for which to perform the export.
+	 *
+	 * @return array The request data for the post.
+	 */
+	protected function get_request_for_post( $post_id ) {
+		// Fake the API response.
+		// Currently, doesn't take into account metadata, but could be refactored to do so.
+		$document = $this->get_json_for_post( $post_id );
+		$this->add_http_response(
+			'POST',
+			'https://news-api.apple.com/channels/' . $this->settings->api_channel . '/articles',
+			wp_json_encode(
+				[
+					'data' => [
+						'createdAt'                   => '2020-01-02T03:04:05Z',
+						'modifiedAt'                  => '2020-01-02T03:04:05Z',
+						'id'                          => 'abcd1234-ef56-ab78-cd90-efabcdef123456',
+						'type'                        => 'article',
+						'shareUrl'                    => 'https://apple.news/ABCDEFGHIJKLMNOPQRSTUVW',
+						'links'                       => [
+							'channel'  => 'https://news-api.apple.com/channels/' . $this->settings->api_channel,
+							'self'     => 'https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456',
+							'sections' => [
+								'https://news-api.apple.com/sections/abcd1234-ef56-ab78-cd90-efabcdef1234',
+							],
+						],
+						'document'                    => $document,
+						'revision'                    => 'AAAAAAAAAAAAAAAAAAAAAAAA',
+						'state'                       => 'PROCESSING',
+						'accessoryText'               => null,
+						'title'                       => get_the_title( $post_id ),
+						'maturityRating'              => null,
+						'warnings'                    => [],
+						'targetTerritoryCountryCodes' => ['US'],
+						'isCandidateToBeFeatured'     => false,
+						'isSponsored'                 => false,
+						'isPreview'                   => false,
+						'isDevelopingStory'           => false,
+						'isHidden'                    => false,
+					],
+					'meta' => [
+						'throttling' => [
+							'isThrottled'             => false,
+							'queueSize'               => 0,
+							'estimatedDelayInSeconds' => 0,
+							'quotaAvailable'          => 200,
+						],
+					],
+				]
+			),
+			[],
+			[
+				'code'    => 201,
+				'message' => 'Created',
+			]
+		);
+
+		// Perform the push.
+		$action = new Apple_Actions\Index\Push( $this->settings, $post_id );
+		$action->perform();
+
+		// Return the request arguments sent with the push.
+		return ! empty( $this->post_args ) ? array_pop( $this->post_args ) : [];
 	}
 
 	/**
@@ -239,7 +396,7 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		);
 
 		// Create a new instance of the Theme class and set the theme name.
-		$this->theme = new \Apple_Exporter\Theme();
+		$this->theme = new Apple_Exporter\Theme();
 		$this->theme->set_name( $options['theme_name'] );
 
 		// Save the theme.

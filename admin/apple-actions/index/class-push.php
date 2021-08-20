@@ -302,6 +302,31 @@ class Push extends API_Action {
 			$meta['data']['maturityRating'] = $maturity_rating;
 		}
 
+		// Add custom metadata fields.
+		$custom_meta = get_post_meta( $this->id, 'apple_news_metadata', true );
+		if ( ! empty( $custom_meta ) && is_array( $custom_meta ) ) {
+			foreach ( $custom_meta as $metadata ) {
+				// Ensure required fields are set.
+				if ( empty( $metadata['key'] ) || empty( $metadata['type'] ) || ! isset( $metadata['value'] ) ) {
+					continue;
+				}
+
+				// If the value is an array, we have to decode it from JSON.
+				$value = $metadata['value'];
+				if ( 'array' === $metadata['type'] ) {
+					$value = json_decode( $metadata['value'] );
+
+					// If the user entered a bad value for the array, bail out without adding it.
+					if ( empty( $value ) || ! is_array( $value ) ) {
+						continue;
+					}
+				}
+
+				// Add the custom metadata field to the article metadata.
+				$meta['data'][ $metadata['key'] ] = $value;
+			}
+		}
+
 		// Ignore if the post is already in sync.
 		if ( $this->is_post_in_sync( $json, $meta, $bundles ) ) {
 			throw new \Apple_Actions\Action_Exception(

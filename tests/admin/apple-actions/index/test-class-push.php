@@ -2,30 +2,19 @@
 
 use \Apple_Actions\Action_Exception;
 use \Apple_Actions\Index\Push as Push;
-use \Apple_Exporter\Settings as Settings;
 use \Prophecy\Argument as Argument;
 
-class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
-
-	private $prophet;
+class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 
 	private $original_user_id;
 
 	public function setup() {
 		parent::setup();
-
-		$this->prophet = new \Prophecy\Prophet;
-		$this->settings = new Settings();
-		$this->settings->set( 'api_key', 'foo' );
-		$this->settings->set( 'api_secret', 'bar' );
-		$this->settings->set( 'api_channel', 'baz' );
-
 		$this->original_user_id = get_current_user_id();
 	}
 
 	public function tearDown() {
 		wp_set_current_user( $this->original_user_id );
-		$this->prophet->checkPredictions();
 	}
 
 	protected function dummy_response() {
@@ -62,6 +51,44 @@ class Admin_Action_Index_Push_Test extends WP_UnitTestCase {
 				),
 			),
 		);
+	}
+
+	/**
+	 * Ensures that custom metadata is properly set.
+	 */
+	public function test_custom_metadata() {
+		$post_id  = self::factory()->post->create();
+		$metadata = [
+			[
+				'key'   => 'isBoolean',
+				'type'  => 'boolean',
+				'value' => true,
+			],
+			[
+				'key'   => 'isNumber',
+				'type'  => 'number',
+				'value' => 3,
+			],
+			[
+				'key'   => 'isString',
+				'type'  => 'string',
+				'value' => 'Test String Value',
+			],
+			[
+				'key'   => 'isArray',
+				'type'  => 'array',
+				'value' => '["a", "b", "c"]',
+			],
+		];
+		add_post_meta( $post_id, 'apple_news_metadata', $metadata );
+		$request  = $this->get_request_for_post( $post_id );
+		$metadata = $this->get_metadata_from_request( $request['body'] );
+
+		// Ensure metadata was properly compiled into the request.
+		$this->assertEquals( true, $metadata['data']['isBoolean'] );
+		$this->assertEquals( 3, $metadata['data']['isNumber'] );
+		$this->assertEquals( 'Test String Value', $metadata['data']['isString'] );
+		$this->assertEquals( ['a', 'b', 'c'], $metadata['data']['isArray'] );
 	}
 
 	public function testCreate() {
