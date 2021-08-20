@@ -245,6 +245,11 @@ class Apple_News_Test extends Apple_News_Testcase {
 		$default_settings = $this->settings->all();
 		$apple_news->migrate_settings();
 
+		// Reset API info.
+		$default_settings['api_channel'] = '';
+		$default_settings['api_key']     = '';
+		$default_settings['api_secret']  = '';
+
 		// Ensure the defaults did not overwrite the migrated legacy data.
 		$migrated_settings = get_option( $apple_news::$option_name );
 		$this->assertNotEquals( $default_settings, $migrated_settings );

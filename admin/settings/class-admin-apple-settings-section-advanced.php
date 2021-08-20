@@ -37,11 +37,6 @@ class Admin_Apple_Settings_Section_Advanced extends Admin_Apple_Settings_Section
 				'type'        => array( 'none', 'warn', 'fail' ),
 				'description' => __( 'If a post has a component that is unsupported by Apple News, choose "none" to generate no alert, "warn" to provide an admin warning notice, or "fail" to generate a notice and stop publishing.', 'apple-news' ),
 			),
-			'json_alerts'       => array(
-				'label'       => __( 'JSON Alerts', 'apple-news' ),
-				'type'        => array( 'none', 'warn', 'fail' ),
-				'description' => __( 'If a post has invalid JSON that may cause display issues in Apple News, choose "none" to generate no alert, "warn" to provide an admin warning notice, or "fail" to generate a notice and stop publishing.', 'apple-news' ),
-			),
 			'use_remote_images' => array(
 				'label'       => __( 'Use Remote Images?', 'apple-news' ),
 				'type'        => array( 'yes', 'no' ),
@@ -68,7 +63,7 @@ class Admin_Apple_Settings_Section_Advanced extends Admin_Apple_Settings_Section
 		$this->groups = array(
 			'alerts' => array(
 				'label'    => __( 'Alerts', 'apple-news' ),
-				'settings' => array( 'component_alerts', 'json_alerts' ),
+				'settings' => array( 'component_alerts' ),
 			),
 			'images' => array(
 				'label'    => __( 'Image Settings', 'apple-news' ),

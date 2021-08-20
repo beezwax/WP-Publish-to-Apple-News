@@ -42,7 +42,6 @@ class Settings {
 		'component_alerts'            => 'none',
 		'full_bleed_images'           => 'no',
 		'html_support'                => 'yes',
-		'json_alerts'                 => 'warn',
 		'post_types'                  => array( 'post' ),
 		'show_metabox'                => 'yes',
 		'use_remote_images'           => 'yes',

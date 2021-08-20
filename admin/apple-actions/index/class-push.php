@@ -302,6 +302,31 @@ class Push extends API_Action {
 			$meta['data']['maturityRating'] = $maturity_rating;
 		}
 
+		// Add custom metadata fields.
+		$custom_meta = get_post_meta( $this->id, 'apple_news_metadata', true );
+		if ( ! empty( $custom_meta ) && is_array( $custom_meta ) ) {
+			foreach ( $custom_meta as $metadata ) {
+				// Ensure required fields are set.
+				if ( empty( $metadata['key'] ) || empty( $metadata['type'] ) || ! isset( $metadata['value'] ) ) {
+					continue;
+				}
+
+				// If the value is an array, we have to decode it from JSON.
+				$value = $metadata['value'];
+				if ( 'array' === $metadata['type'] ) {
+					$value = json_decode( $metadata['value'] );
+
+					// If the user entered a bad value for the array, bail out without adding it.
+					if ( empty( $value ) || ! is_array( $value ) ) {
+						continue;
+					}
+				}
+
+				// Add the custom metadata field to the article metadata.
+				$meta['data'][ $metadata['key'] ] = $value;
+			}
+		}
+
 		// Ignore if the post is already in sync.
 		if ( $this->is_post_in_sync( $json, $meta, $bundles ) ) {
 			throw new \Apple_Actions\Action_Exception(
@@ -406,7 +431,6 @@ class Push extends API_Action {
 	private function process_errors( $errors ) {
 		// Get the current alert settings.
 		$component_alerts = $this->get_setting( 'component_alerts' );
-		$json_alerts      = $this->get_setting( 'json_alerts' );
 
 		// Initialize the alert message.
 		$alert_message = '';
@@ -434,39 +458,13 @@ class Push extends API_Action {
 			}
 		}
 
-		// Check for JSON errors.
-		if ( ! empty( $errors[0]['json_errors'] ) ) {
-			if ( ! empty( $alert_message ) ) {
-				$alert_message .= '|';
-			}
-
-			// Merge all errors into a single message.
-			$json_errors = implode( ', ', $errors[0]['json_errors'] );
-
-			// Add these to the message.
-			if ( 'warn' === $json_alerts ) {
-				$alert_message .= sprintf(
-					// translators: token is a list of errors.
-					__( 'The following JSON errors were detected when publishing to Apple News: %s', 'apple-news' ),
-					$json_errors
-				);
-			} elseif ( 'fail' === $json_alerts ) {
-				$alert_message .= sprintf(
-					// translators: token is a list of errors.
-					__( 'The following JSON errors were detected and prevented publishing to Apple News: %s', 'apple-news' ),
-					$json_errors
-				);
-			}
-		}
-
 		// See if we found any errors.
 		if ( empty( $alert_message ) ) {
 			return;
 		}
 
 		// Proceed based on component alert settings.
-		if ( ( 'fail' === $component_alerts && ! empty( $errors[0]['component_errors'] ) )
-			|| ( 'fail' === $json_alerts && ! empty( $errors[0]['json_errors'] ) ) ) {
+		if ( 'fail' === $component_alerts && ! empty( $errors[0]['component_errors'] ) ) {
 			// Remove the pending designation if it exists.
 			delete_post_meta( $this->id, 'apple_news_api_pending' );
 
@@ -478,8 +476,7 @@ class Push extends API_Action {
 
 			// Throw an exception.
 			throw new \Apple_Actions\Action_Exception( $alert_message );
-		} elseif ( ( 'warn' === $component_alerts && ! empty( $errors[0]['component_errors'] ) )
-			|| ( 'warn' === $json_alerts && ! empty( $errors[0]['json_errors'] ) ) ) {
+		} elseif ( 'warn' === $component_alerts && ! empty( $errors[0]['component_errors'] ) ) {
 				\Admin_Apple_Notice::error( $alert_message, $user_id );
 		}
 	}

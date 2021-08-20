@@ -5,7 +5,7 @@ Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.2.1
+Stable tag: 2.2.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -25,7 +25,7 @@ The 'Publish to Apple News' plugin enables WordPress sites with approved Apple N
 * Handles image galleries and popular embeds like YouTube and Vimeo that are supported by Apple News.
 * Automatically adjust advertisement settings.
 
-To enable content from your WordPress blog to be published to your Apple News channel, you must obtain and enter Apple News API credentials from Apple.
+To enable content from your WordPress site to be published to your Apple News channel, you must obtain and enter Apple News API credentials from Apple.
 
 Please see the [Apple Developer](https://developer.apple.com/) and [Apple News Publisher documentation](https://developer.apple.com/news-publisher/) and terms on Apple's website for complete information.
 
@@ -45,6 +45,11 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.2.2 =
+* Bugfix: Moved custom metadata fields to the request level rather than the article level to align them with existing metadata properties like isPaid and isHidden.
+* Bugfix: Removed JSON alerts setting, as it no longer does anything.
+* Enhancement: Shows a confirmation message to the user when channel credentials are successfully saved, since the channel ID, key, and secret fields are no longer visible following the update to using .papi files to configure credentials.
 
 = 2.2.1 =
 * Bugfix: Fixed a bug with .papi file upload that occurred when any of the three fields (channel_id, key, secret) contained a character that was not alphanumeric or a hyphen (e.g., /), which would cause the field to get cut short, thereby causing API requests to fail.
