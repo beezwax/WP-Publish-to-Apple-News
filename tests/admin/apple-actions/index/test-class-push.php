@@ -169,6 +169,12 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		$this->assertEquals( $isSponsored, $metadata['data']['isSponsored'] );
 	}
 
+	/**
+	 * Tests skipping publish of a post by filters or by taxonomy term.
+	 */
+	public function test_skip() {
+		// TODO: Build this out. Test apple_news_skip_push filter, new filter for skipping by term ID, and option for skipping by term ID.
+	}
 
 	/**
 	 * Tests the update workflow to ensure that posts are only updated when

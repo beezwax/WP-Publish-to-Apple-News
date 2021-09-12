@@ -5,7 +5,7 @@ Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.2.2
+Stable tag: 2.3.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,11 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.3.0 =
+* Bugfix: Fixes an issue where a custom filter is used to make all image URLs root-relative when using featured images to populate the Cover component, which was leading to an INVALID_DOCUMENT error from the News API due to the root-relative URL (e.g., /path/to/my/image.jpg instead of https://example.org/path/to/my/image.jpg).
+* Enhancement: Added support for mailto:, music://, musics://, stocks:// and webcal:// links.
+* Enhancement: Added an option and a filter for skipping auto-push of posts with certain taxonomy terms.
 
 = 2.2.2 =
 * Bugfix: Moved custom metadata fields to the request level rather than the article level to align them with existing metadata properties like isPaid and isHidden.
