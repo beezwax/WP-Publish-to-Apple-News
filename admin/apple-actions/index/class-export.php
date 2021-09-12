@@ -129,6 +129,12 @@ class Export extends Action {
 				$cover_caption = wp_get_attachment_caption( $thumb_id );
 			}
 			if ( ! empty( $post_thumb_url ) ) {
+				// If the post thumb URL is root-relative, convert it to fully-qualified.
+				if ( 0 === strpos( $post_thumb_url, '/' ) ) {
+					$post_thumb_url = site_url( $post_thumb_url );
+				}
+
+				// Compile the post_thumb object using the URL and caption from the featured image.
 				$post_thumb = [
 					'caption' => ! empty( $cover_caption ) ? $cover_caption : '',
 					'url'     => $post_thumb_url,

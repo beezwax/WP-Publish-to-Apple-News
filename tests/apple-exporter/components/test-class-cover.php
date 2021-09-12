@@ -28,6 +28,17 @@ class Cover_Test extends Apple_News_Testcase {
 	}
 
 	/**
+	 * Filters the attachment URL to remove the domain name and make the path root-relative.
+	 *
+	 * @param string $url The URL to filter.
+	 *
+	 * @return string The filtered URL, made root-relative.
+	 */
+	public function filter_wp_get_attachment_url( $url ) {
+		return str_replace( site_url(), '', $url );
+	}
+
+	/**
 	 * Test the `apple_news_cover_json` filter.
 	 */
 	public function test_filter() {
@@ -69,6 +80,34 @@ class Cover_Test extends Apple_News_Testcase {
 			'Menlo-Regular',
 			$json['components'][0]['components'][0]['caption']['textStyle']['fontName']
 		);
+	}
+
+	/**
+	 * Tests the behavior of root-relative URLs on the Cover component, to ensure
+	 * that they are properly converted to full URLs on export.
+	 */
+	public function test_relative_url() {
+		$this->set_theme_settings(
+			[
+				'meta_component_order' => [ 'cover' ],
+			]
+		);
+
+		// Create a post with an image with a root-relative src property and ensure its URL is expanded fully when converted to a Cover component.
+		$image_id_1 = $this->get_new_attachment( 0, 'Test Caption', 'Test alt text.' );
+		$post_id_1  = self::factory()->post->create( [ 'post_content' => str_replace( site_url(), '', $this->get_image_with_caption( $image_id_1 ) ) ] );
+		$json_1     = $this->get_json_for_post( $post_id_1 );
+		$this->assertEquals( wp_get_attachment_image_url( $image_id_1, 'full' ), $json_1['components'][0]['components'][0]['URL'] );
+
+		// Create a post with an image set as the featured image, and add a filter to set the asset URL to root-relative, and ensure its URL is expanded fully when converted to a Cover component.
+		$image_id_2 = $this->get_new_attachment( 0, 'Test Caption', 'Test alt text.' );
+		$post_id_2  = self::factory()->post->create();
+		set_post_thumbnail( $post_id_2, $image_id_2 );
+		$image_url = wp_get_attachment_image_url( $image_id_2, 'full' );
+		add_filter( 'wp_get_attachment_url', [ $this, 'filter_wp_get_attachment_url' ] );
+		$json_2 = $this->get_json_for_post( $post_id_2 );
+		remove_filter( 'wp_get_attachment_url', [ $this, 'filter_wp_get_attachment_url' ] );
+		$this->assertEquals( $image_url, $json_2['components'][0]['components'][0]['URL'] );
 	}
 
 	/**
