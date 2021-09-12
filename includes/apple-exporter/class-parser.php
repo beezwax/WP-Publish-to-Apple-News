@@ -196,8 +196,8 @@ class Parser {
 				continue;
 			}
 
-			// Ensure that the resulting URL is fully-formed.
-			if ( ! preg_match( '/^https?:\/\/[^.]+\.[^.]+/', $href ) ) {
+			// Ensure that the resulting URL uses a supported protocol. Leave it up to the content creator to ensure the URL is otherwise valid.
+			if ( ! preg_match( '/^(https?:\/\/|mailto:|musics?:\/\/|stocks:\/\/|webcal:\/\/)/', $href ) ) {
 				$html = str_replace( $a_tag, $content, $html );
 				continue;
 			}

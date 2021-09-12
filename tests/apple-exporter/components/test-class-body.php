@@ -202,6 +202,12 @@ HTML
 			// Standard link, https.
 			[ 'https://example.com', true ],
 
+			// Root-relative URL. Should be permitted, but auto-converted to a fully qualified URL.
+			[ '/test', true ],
+
+			// Hash-based URL. Should be permitted, but auto-converted to a hash link against the test post's permalink.
+			[ '#test', true ],
+
 			// Apple News article URL.
 			[ 'https://apple.news/A5vHgPPmQSvuIxPjeXLTdGQ', true ],
 
@@ -355,6 +361,13 @@ HTML;
 HTML;
 		$post_id  = self::factory()->post->create( [ 'post_content' => $content ] );
 		$json     = $this->get_json_for_post( $post_id );
+
+		// Negotiate expected value and test.
+		if ( 0 === strpos( $link, '/' ) ) {
+			$link = 'http://example.org' . $link;
+		} elseif ( 0 === strpos( $link, '#' ) ) {
+			$link = get_permalink( $post_id ) . $link;
+		}
 		$expected = $should_work
 			? sprintf( '<p>Lorem ipsum <a href="%s">dolor sit amet</a>.</p>', $link )
 			: '<p>Lorem ipsum dolor sit amet.</p>';
