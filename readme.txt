@@ -47,7 +47,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 == Changelog ==
 
 = 2.3.0 =
-* Enhancement: Added support for mailto: links.
+* Enhancement: Added support for mailto:, music://, musics://, stocks:// and webcal:// links.
 
 = 2.2.2 =
 * Bugfix: Moved custom metadata fields to the request level rather than the article level to align them with existing metadata properties like isPaid and isHidden.
