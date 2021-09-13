@@ -67,7 +67,8 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 				'description' => $this->get_async_description(),
 			],
 			'api_autosync_skip'     => [
-				'label' => __( 'Skip auto-publishing for posts with the following taxonomy terms', 'apple-news' ),
+				'label'    => __( 'Skip auto-publishing for posts that have any of the following term IDs:', 'apple-news' ),
+				'required' => false,
 			],
 		];
 
