@@ -188,6 +188,53 @@ HTML
 	}
 
 	/**
+	 * A data provider for the test_link_types function.
+	 *
+	 * @see https://developer.apple.com/documentation/apple_news/supportedurls
+	 *
+	 * @return array An array of arrays representing function arguments.
+	 */
+	public function data_link_types() {
+		return [
+			// Standard link, non-https.
+			[ 'http://example.com', true ],
+
+			// Standard link, https.
+			[ 'https://example.com', true ],
+
+			// Root-relative URL. Should be permitted, but auto-converted to a fully qualified URL.
+			[ '/test', true ],
+
+			// Hash-based URL. Should be permitted, but auto-converted to a hash link against the test post's permalink.
+			[ '#test', true ],
+
+			// Apple News article URL.
+			[ 'https://apple.news/A5vHgPPmQSvuIxPjeXLTdGQ', true ],
+
+			// Apple News article URL with a hash reference.
+			[ 'https://apple.news/A5vHgPPmQSvuIxPjeXLTdGQ#TextComponent-1', true ],
+
+			// A Stocks app URL.
+			[ 'stocks://?symbol=AAPL', true ],
+
+			// An Apple Music URL, non-https.
+			[ 'music://abc123', true ],
+
+			// An Apple Music URL, https.
+			[ 'musics://abc123', true ],
+
+			// A mailto link.
+			[ 'mailto:example@example.com', true ],
+
+			// A hosted calendar.
+			[ 'webcal://abc123', true ],
+
+			// An unsupported protocol.
+			[ 'badprotocol://abc123', false ],
+		];
+	}
+
+	/**
 	 * A filter function to modify the text style in the generated JSON.
 	 *
 	 * @param array $json The JSON array to modify.
@@ -293,6 +340,38 @@ HTML;
 		$this->assertEquals( 'markdown', $json['components'][2]['format'] );
 		$this->assertEquals( 'Test content.', $json['components'][2]['text'] );
 		remove_filter( 'apple_news_body_html_enabled', [ $this, 'filter_apple_news_body_html_enabled' ] );
+	}
+
+	/**
+	 * Given an expected result and an actual link, verifies that the link URL is
+	 * correctly processed. Used to ensure that valid link types (not just http/s,
+	 * but also mailto, webcal, stocks, etc) are supported, and that unsupported
+	 * types are stripped out.
+	 *
+	 * @dataProvider data_link_types
+	 *
+	 * @param string $link        The link, which will be added as the href parameter in an anchor tag in the test post that the test creates.
+	 * @param bool   $should_work Whether the link is expected to work in Apple News Format or not.
+	 */
+	public function test_link_types( $link, $should_work ) {
+		$content  = <<<HTML
+<!-- wp:paragraph -->
+<p>Lorem ipsum <a href="{$link}">dolor sit amet</a>.</p>
+<!-- /wp:paragraph -->
+HTML;
+		$post_id  = self::factory()->post->create( [ 'post_content' => $content ] );
+		$json     = $this->get_json_for_post( $post_id );
+
+		// Negotiate expected value and test.
+		if ( 0 === strpos( $link, '/' ) ) {
+			$link = 'http://example.org' . $link;
+		} elseif ( 0 === strpos( $link, '#' ) ) {
+			$link = get_permalink( $post_id ) . $link;
+		}
+		$expected = $should_work
+			? sprintf( '<p>Lorem ipsum <a href="%s">dolor sit amet</a>.</p>', $link )
+			: '<p>Lorem ipsum dolor sit amet.</p>';
+		$this->assertEquals( $expected, $json['components'][2]['text'] );
 	}
 
 	/**

@@ -40,6 +40,21 @@ tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 // Disable CAP by default - make it opt-in in tests.
 tests_add_filter( 'apple_news_use_coauthors', '__return_false' );
 
+// Filter the list of allowed protocols to allow Apple News-specific ones.
+tests_add_filter(
+	'kses_allowed_protocols',
+	function ( $protocols ) {
+		return array_merge(
+			(array) $protocols,
+			[
+				'music',
+				'musics',
+				'stocks',
+			]
+		);
+	}
+);
+
 require $_tests_dir . '/includes/bootstrap.php';
 
 require_once __DIR__ . '/class-apple-news-testcase.php';
