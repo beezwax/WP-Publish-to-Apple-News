@@ -233,6 +233,57 @@ class Push extends API_Action {
 			);
 		}
 
+		// Special logic only if autosync push is enabled.
+		if ( $this->settings->api_autosync ) {
+			// Get the list of term IDs that should trigger a skip push from plugin settings.
+			$skip_term_ids = json_decode( $this->settings->api_autosync_skip );
+			if ( ! is_array( $skip_term_ids ) ) {
+				$skip_term_ids = [];
+			}
+
+			/**
+			 * Filters whether the post should be skipped and not pushed to Apple News
+			 * based on taxonomy term IDs that are associated with the post.
+			 *
+			 * Allows you to stop publication of a post to Apple News based on whether a
+			 * certain taxonomy term ID is applied to the post. A common use case is to
+			 * not publish posts with a certain category or tag. The default value for
+			 * this filter is the value of the skip push term IDs from the API settings
+			 * for the plugin, but the list can be modified for individual posts via
+			 * this filter.
+			 *
+			 * @since 2.3.0
+			 *
+			 * @param int[] $term_ids The list of term IDs that should trigger a skipped push. Defaults to the term IDs set in plugin options.
+			 * @param int   $post_id  The ID of the post being exported.
+			 */
+			$skip_term_ids = apply_filters( 'apple_news_skip_push_term_ids', $skip_term_ids, $this->id );
+
+			// Compile a list of term IDs for the current post across all supported taxonomies for the post type.
+			$term_ids   = [];
+			$taxonomies = get_object_taxonomies( get_post_type( $this->id ) );
+			foreach ( $taxonomies as $taxonomy ) {
+				$term_ids_for_taxonomy = get_the_terms( $this->id, $taxonomy );
+				if ( is_array( $term_ids_for_taxonomy ) ) {
+					$term_ids = array_merge(
+						$term_ids,
+						wp_list_pluck( $term_ids_for_taxonomy, 'term_id' )
+					);
+				}
+			}
+
+			// If any of the terms for the current post are in the list of term IDs that should be skipped, bail out.
+			if ( array_intersect( $term_ids, $skip_term_ids ) ) {
+				throw new \Apple_Actions\Action_Exception(
+					sprintf(
+						// Translators: Placeholder is a post ID.
+						__( 'Skipped push of article %d due to the presence of a skip push taxonomy term.', 'apple-news' ),
+						$this->id
+					)
+				);
+			}
+		}
+
 		/**
 		 * The generate_article function uses Exporter->generate, so we MUST
 		 * clean the workspace before and after its usage.

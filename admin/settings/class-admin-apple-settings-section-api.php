@@ -31,53 +31,58 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 		$this->name = __( 'API Settings', 'apple-news' );
 
 		// Add the settings.
-		$this->settings = array(
-			'api_config_file'       => array(
-				'description' => __( 'Having trouble? <a href="#api_config_file">Enter the contents of your .papi file manually</a>.', 'apple-news' ),
+		$this->settings = [
+			'api_config_file'       => [
+				// translators: tokens fill in <a> tags.
+				'description' => sprintf( __( 'Having trouble? %1$sEnter the contents of your .papi file manually%2$s.', 'apple-news' ), '<a href="#api_config_file">', '</a>' ),
 				'type'        => 'file',
-			),
-			'api_config_file_input' => array(
+			],
+			'api_config_file_input' => [
 				'type' => 'textarea',
-			),
-			'api_channel'           => array(
+			],
+			'api_channel'           => [
 				'type' => 'hidden',
-			),
-			'api_key'               => array(
+			],
+			'api_key'               => [
 				'type' => 'hidden',
-			),
-			'api_secret'            => array(
+			],
+			'api_secret'            => [
 				'type' => 'hidden',
-			),
-			'api_autosync'          => array(
+			],
+			'api_autosync'          => [
 				'label' => __( 'Automatically publish to Apple News when published in WordPress', 'apple-news' ),
-				'type'  => array( 'yes', 'no' ),
-			),
-			'api_autosync_update'   => array(
+				'type'  => [ 'yes', 'no' ],
+			],
+			'api_autosync_update'   => [
 				'label' => __( 'Automatically update in Apple News when updated in WordPress', 'apple-news' ),
-				'type'  => array( 'yes', 'no' ),
-			),
-			'api_autosync_delete'   => array(
+				'type'  => [ 'yes', 'no' ],
+			],
+			'api_autosync_delete'   => [
 				'label' => __( 'Automatically delete from Apple News when deleted in WordPress', 'apple-news' ),
-				'type'  => array( 'yes', 'no' ),
-			),
-			'api_async'             => array(
+				'type'  => [ 'yes', 'no' ],
+			],
+			'api_async'             => [
 				'label'       => __( 'Asynchronously publish to Apple News', 'apple-news' ),
-				'type'        => array( 'yes', 'no' ),
+				'type'        => [ 'yes', 'no' ],
 				'description' => $this->get_async_description(),
-			),
-		);
+			],
+			'api_autosync_skip'     => [
+				'label'    => __( 'Skip auto-publishing for posts that have any of the following term IDs:', 'apple-news' ),
+				'required' => false,
+			],
+		];
 
 		// Add the groups.
-		$this->groups = array(
-			'apple_news_config_upload' => array(
+		$this->groups = [
+			'apple_news_config_upload' => [
 				'label'    => __( 'Upload Channel Configuration File:', 'apple-news' ),
-				'settings' => array( 'api_config_file', 'api_config_file_input', 'api_channel', 'api_key', 'api_secret' ),
-			),
-			'apple_news_options'       => array(
+				'settings' => [ 'api_config_file', 'api_config_file_input', 'api_channel', 'api_key', 'api_secret' ],
+			],
+			'apple_news_options'       => [
 				'label'    => __( 'Apple News API Options', 'apple-news' ),
-				'settings' => array( 'api_autosync', 'api_autosync_update', 'api_autosync_delete', 'api_async' ),
-			),
-		);
+				'settings' => [ 'api_autosync', 'api_autosync_update', 'api_autosync_delete', 'api_async', 'api_autosync_skip' ],
+			],
+		];
 
 		parent::__construct( $page );
 	}

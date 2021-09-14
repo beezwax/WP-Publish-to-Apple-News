@@ -169,6 +169,50 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		$this->assertEquals( $isSponsored, $metadata['data']['isSponsored'] );
 	}
 
+	/**
+	 * Tests skipping publish of a post by filters or by taxonomy term.
+	 */
+	public function test_skip() {
+		$post_id = self::factory()->post->create();
+
+		// Test the apple_news_skip_push filter.
+		add_filter( 'apple_news_skip_push', '__return_true' );
+		$exception = false;
+		try {
+			$this->get_request_for_post( $post_id );
+		} catch ( Action_Exception $e ) {
+			$exception = $e;
+		}
+		$this->assertEquals( sprintf( 'Skipped push of article %d due to the apple_news_skip_push filter.', $post_id ), $exception->getMessage() );
+		remove_filter( 'apple_news_skip_push', '__return_true' );
+
+		// Test the new filter for skipping by term ID.
+		$term_id = self::factory()->term->create( [ 'taxonomy' => 'category' ] );
+		wp_set_object_terms( $post_id, $term_id, 'category' );
+		$skip_filter = function () use ( $term_id ) {
+			return [ $term_id ];
+		};
+		add_filter( 'apple_news_skip_push_term_ids', $skip_filter );
+		$exception = false;
+		try {
+			$this->get_request_for_post( $post_id );
+		} catch ( Action_Exception $e ) {
+			$exception = $e;
+		}
+		$this->assertEquals( sprintf( 'Skipped push of article %d due to the presence of a skip push taxonomy term.', $post_id ), $exception->getMessage() );
+		remove_filter( 'apple_news_skip_push_term_ids', $skip_filter );
+
+		// Test skip by setting the option for skipping by term ID.
+		$this->settings->api_autosync_skip = wp_json_encode( [ $term_id ] );
+		$exception = false;
+		try {
+			$this->get_request_for_post( $post_id );
+		} catch ( Action_Exception $e ) {
+			$exception = $e;
+		}
+		$this->assertEquals( sprintf( 'Skipped push of article %d due to the presence of a skip push taxonomy term.', $post_id ), $exception->getMessage() );
+		$this->settings->api_autosync_skip = '';
+	}
 
 	/**
 	 * Tests the update workflow to ensure that posts are only updated when
