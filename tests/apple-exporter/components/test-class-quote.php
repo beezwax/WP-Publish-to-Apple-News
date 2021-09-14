@@ -191,6 +191,7 @@ HTML;
 		$post_id_right = self::factory()->post->create( [ 'post_content' => $content_right ] );
 		$json_right    = $this->get_json_for_post( $post_id_right );
 		$this->assertEquals( 'default-blockquote-right', $json_right['components'][2]['components'][0]['textStyle'] );
+		$this->assertEquals( 'right', $json_right['componentTextStyles']['default-blockquote-right']['textAlignment'] );
 
 		// Test center alignment.
 		$content_center = <<<HTML
@@ -201,6 +202,30 @@ HTML;
 		$post_id_center = self::factory()->post->create( [ 'post_content' => $content_center ] );
 		$json_center    = $this->get_json_for_post( $post_id_center );
 		$this->assertEquals( 'default-blockquote-center', $json_center['components'][2]['components'][0]['textStyle'] );
+		$this->assertEquals( 'center', $json_center['componentTextStyles']['default-blockquote-center']['textAlignment'] );
+
+		// Test all three.
+		$content_all = <<<HTML
+<!-- wp:quote -->
+<blockquote class="wp-block-quote"><p>Test blockquote left.</p></blockquote>
+<!-- /wp:quote -->
+
+<!-- wp:quote -->
+<blockquote class="wp-block-quote has-text-align-right"><p>Test blockquote right.</p></blockquote>
+<!-- /wp:quote -->
+
+<!-- wp:quote -->
+<blockquote class="wp-block-quote has-text-align-center"><p>Test blockquote center.</p></blockquote>
+<!-- /wp:quote -->
+HTML;
+		$post_id_all = self::factory()->post->create( [ 'post_content' => $content_all ] );
+		$json_all    = $this->get_json_for_post( $post_id_all );
+		$this->assertEquals( 'default-blockquote-left', $json_all['components'][2]['components'][0]['textStyle'] );
+		$this->assertEquals( 'default-blockquote-right', $json_all['components'][3]['components'][0]['textStyle'] );
+		$this->assertEquals( 'default-blockquote-center', $json_all['components'][4]['components'][0]['textStyle'] );
+		$this->assertEquals( 'left', $json_all['componentTextStyles']['default-blockquote-left']['textAlignment'] );
+		$this->assertEquals( 'right', $json_all['componentTextStyles']['default-blockquote-right']['textAlignment'] );
+		$this->assertEquals( 'center', $json_all['componentTextStyles']['default-blockquote-center']['textAlignment'] );
 	}
 
 	/**
