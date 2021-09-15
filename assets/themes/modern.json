@@ -90,7 +90,7 @@
                         "text": "#text#",
                         "format": "#format#",
                         "layout": "pullquote-layout",
-                        "textStyle": "default-pullquote"
+                        "textStyle": "#default_pullquote#"
                     }
                 ],
                 "layout": "pullquote-layout"
@@ -100,7 +100,7 @@
                 "text": "#text#",
                 "format": "#format#",
                 "layout": "pullquote-layout",
-                "textStyle": "default-pullquote"
+                "textStyle": "#default_pullquote#"
             }
         },
         "title": {
