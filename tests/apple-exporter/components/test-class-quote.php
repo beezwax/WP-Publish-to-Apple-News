@@ -6,10 +6,6 @@
  * @subpackage Tests
  */
 
-use Apple_Exporter\Components\Quote;
-use Apple_Exporter\Exporter;
-use Apple_Exporter\Exporter_Content;
-
 /**
  * A class to test the behavior of the
  * Apple_Exporter\Components\Quote class.
@@ -17,36 +13,74 @@ use Apple_Exporter\Exporter_Content;
  * @package Apple_News
  * @subpackage Tests
  */
-class Quote_Test extends Component_TestCase {
+class Quote_Test extends Apple_News_Testcase {
 
 	/**
-	 * A data provider for the testTransformPullquote function.
+	 * Creates a post containing a blockquote and returns the post ID.
 	 *
-	 * @see self::testTransformPullquote()
-	 *
-	 * @access public
-	 * @return array Parameters to use when calling testTransformPullquote.
+	 * @return int The post ID of the post containing the blockquote.
 	 */
-	public function dataTransformPullquote() {
-		return array(
-			array( 'my text', '<p>my text</p>', 'no' ),
-			array( 'my text', '<p>“my text”</p>', 'yes' ),
-			array( '"my text"', '<p>“my text”</p>', 'yes' ),
-			array( '“my text”', '<p>“my text”</p>', 'yes' ),
-		);
+	private function get_blockquote() {
+		$content = <<<HTML
+<!-- wp:quote -->
+<blockquote class="wp-block-quote"><p>Test blockquote.</p></blockquote>
+<!-- /wp:quote -->
+HTML;
+		return self::factory()->post->create( [ 'post_content' => $content ] );
+	}
+
+	/**
+	 * Creates a post containing a pullquote and returns the post ID.
+	 *
+	 * @return int The post ID of the post containing the pullquote.
+	 */
+	private function get_pullquote() {
+		$content = <<<HTML
+<!-- wp:pullquote -->
+<figure class="wp-block-pullquote"><blockquote><p>Test pullquote.</p></blockquote></figure>
+<!-- /wp:pullquote -->
+HTML;
+		return self::factory()->post->create( [ 'post_content' => $content ] );
+	}
+
+	/**
+	 * A data provider for the test_transform_pullquote function.
+	 *
+	 * @return array An array of arrays representing function arguments.
+	 */
+	public function data_transform_pullquote() {
+		return [
+			[ 'my text', '<p>my text</p>', 'no' ],
+			[ 'my text', '<p>“my text”</p>', 'yes' ],
+			[ '"my text"', '<p>“my text”</p>', 'yes' ],
+			[ '“my text”', '<p>“my text”</p>', 'yes' ],
+		];
+	}
+
+	/**
+	 * A data provider for the test_transform_pullquote_for_theme function.
+	 *
+	 * @return array An array of arrays representing function arguments.
+	 */
+	public function data_transform_pullquote_for_theme() {
+		return [
+			[ 'classic' ],
+			[ 'dark' ],
+			[ 'modern' ],
+			[ 'pastel' ],
+		];
 	}
 
 	/**
 	 * A filter function to modify the hanging punctuation text.
 	 *
 	 * @param string $modified_text The modified text to be filtered.
-	 * @param string $text The original text for the quote.
+	 * @param string $text          The original text for the quote.
 	 *
-	 * @access public
 	 * @return string The modified text.
 	 */
 	public function filter_apple_news_apply_hanging_punctuation( $modified_text, $text ) {
-		return '«' . trim( $modified_text, '“”' ) . '»';
+		return '«' . $text . '»';
 	}
 
 	/**
@@ -54,7 +88,6 @@ class Quote_Test extends Component_TestCase {
 	 *
 	 * @param array $json The JSON array to modify.
 	 *
-	 * @access public
 	 * @return array The modified JSON.
 	 */
 	public function filter_apple_news_quote_json( $json ) {
@@ -65,542 +98,187 @@ class Quote_Test extends Component_TestCase {
 
 	/**
 	 * Test the `apple_news_apply_hanging_punctuation` filter.
-	 *
-	 * @access public
 	 */
-	public function testFilterHangingPunctuation() {
-
-		// Setup.
+	public function test_filter_hanging_punctuation() {
 		$this->set_theme_settings( [ 'pullquote_hanging_punctuation' => 'yes' ] );
-		add_filter(
-			'apple_news_apply_hanging_punctuation',
-			array( $this, 'filter_apple_news_apply_hanging_punctuation' ),
-			10,
-			2
-		);
-		$component = new Quote(
-			'<blockquote class="apple-news-pullquote"><p>my quote</p></blockquote>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		// Test.
-		$result = $component->to_array();
-		$this->assertEquals(
-			'<p>«my quote»</p>',
-			$result['components'][0]['text']
-		);
-
-		// Teardown.
-		remove_filter(
-			'apple_news_apply_hanging_punctuation',
-			array( $this, 'filter_apple_news_apply_hanging_punctuation' )
-		);
+		add_filter( 'apple_news_apply_hanging_punctuation', [ $this, 'filter_apple_news_apply_hanging_punctuation' ], 10, 2 );
+		$json    = $this->get_json_for_post( $this->get_pullquote() );
+		$this->assertEquals( '<p>«Test pullquote.»</p>', $json['components'][2]['components'][0]['text'] );
+		remove_filter( 'apple_news_apply_hanging_punctuation', [ $this, 'filter_apple_news_apply_hanging_punctuation' ] );
 	}
 
 	/**
 	 * Test the `apple_news_quote_json` filter.
-	 *
-	 * @access public
 	 */
-	public function testFilterJSON() {
-
-		// Setup.
-		$component = new Quote(
-			'<blockquote><p>my quote</p></blockquote>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-		add_filter(
-			'apple_news_quote_json',
-			array( $this, 'filter_apple_news_quote_json' )
-		);
-
-		// Test.
-		$result = $component->to_array();
-		$this->assertEquals( 'fancy-quote', $result['textStyle'] );
-
-		// Teardown.
-		remove_filter(
-			'apple_news_quote_json',
-			array( $this, 'filter_apple_news_quote_json' )
-		);
+	public function test_filter_json() {
+		add_filter( 'apple_news_quote_json', [ $this, 'filter_apple_news_quote_json' ] );
+		$json    = $this->get_json_for_post( $this->get_blockquote() );
+		$this->assertEquals( 'fancy-quote', $json['components'][2]['textStyle'] );
+		remove_filter( 'apple_news_quote_json', [ $this, 'filter_apple_news_quote_json' ] );
 	}
 
 	/**
 	 * Tests blockquote settings.
-	 *
-	 * @access public
 	 */
-	public function testSettingsBlockquote() {
-
-		// Setup.
-		$content = new Exporter_Content(
-			3,
-			'Title',
-			'<blockquote><p>my quote</p></blockquote>'
-		);
-
-		// Set quote settings.
+	public function test_settings_blockquote() {
 		$this->set_theme_settings(
 			[
-				'blockquote_font'             => 'AmericanTypewriter',
-				'blockquote_size'             => 20,
-				'blockquote_color'            => '#abcdef',
-				'blockquote_line_height'      => 28,
-				'blockquote_tracking'         => 50,
-				'blockquote_background_color' => '#fedcba',
-				'blockquote_border_color'     => '#012345',
-				'blockquote_border_style'     => 'dashed',
-				'blockquote_border_width'     => 10,
+				'blockquote_background_color'      => '#fedcba',
+				'blockquote_background_color_dark' => '#edcbaf',
+				'blockquote_border_color'          => '#012345',
+				'blockquote_border_color_dark'     => '#123456',
+				'blockquote_border_style'          => 'dashed',
+				'blockquote_border_width'          => 10,
+				'blockquote_color'                 => '#abcdef',
+				'blockquote_color_dark'            => '#bcdefa',
+				'blockquote_font'                  => 'AmericanTypewriter',
+				'blockquote_line_height'           => 28,
+				'blockquote_size'                  => 20,
+				'blockquote_tracking'              => 50,
 			]
 		);
-
-		// Run the export.
-		$exporter = new Exporter( $content, $this->workspace, $this->settings );
-		$json = $exporter->export();
-		$this->ensure_tokens_replaced( $json );
-		$json = json_decode( $json, true );
-
-		// Validate body settings in generated JSON.
-		$this->assertEquals(
-			'AmericanTypewriter',
-			$json['componentTextStyles']['default-blockquote-left']['fontName']
-		);
-		$this->assertEquals(
-			20,
-			$json['componentTextStyles']['default-blockquote-left']['fontSize']
-		);
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentTextStyles']['default-blockquote-left']['textColor']
-		);
-		$this->assertEquals(
-			28,
-			$json['componentTextStyles']['default-blockquote-left']['lineHeight']
-		);
-		$this->assertEquals(
-			0.5,
-			$json['componentTextStyles']['default-blockquote-left']['tracking']
-		);
-		$this->assertFalse( isset( $json['componentTextStyles']['default-blockquote-left']['conditional'] ) );
-		$this->assertEquals(
-			'#fedcba',
-			$json['components'][1]['style']['backgroundColor']
-		);
-		$this->assertEquals(
-			'#012345',
-			$json['components'][1]['style']['border']['all']['color']
-		);
-		$this->assertEquals(
-			'dashed',
-			$json['components'][1]['style']['border']['all']['style']
-		);
-		$this->assertEquals(
-			10,
-			$json['components'][1]['style']['border']['all']['width']
-		);
-		$this->assertFalse( isset( $json['components'][1]['style']['conditional'] ) );
-	}
-
-	/**
-	 * Test Dark Color Settings For Blockquote.
-	 *
-	 * @access public
-	 */
-	public function testDarkColorsBlockquote() {
-
-		// Set quote settings.
-		$this->set_theme_settings(
-			[
-				'blockquote_color_dark'							=> '#abcdef',
-				'blockquote_background_color_dark'	=> '#fedcba',
-				'blockquote_border_color_dark'			=> '#012345',
-			]
-		);
-
-		$post_id = self::factory()->post->create(
-			[
-				'post_content' => '<blockquote><p>my quote</p></blockquote>',
-			]
-		);
-		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentTextStyles']['default-blockquote-left']['conditional']['textColor']
-		);
-		$this->assertEquals(
-			'#fedcba',
-			$json['components'][2]['style']['conditional']['backgroundColor']
-		);
-		$this->assertEquals(
-			'#012345',
-			$json['components'][2]['style']['conditional']['border']['all']['color']
-		);
-
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentTextStyles']['default-blockquote-left']['conditional']['textColor']
-		);
-		$this->assertEquals(
-			'#fedcba',
-			$json['components'][2]['style']['conditional']['backgroundColor']
-		);
-		$this->assertEquals(
-			'#012345',
-			$json['components'][2]['style']['conditional']['border']['all']['color']
-		);
-	}
-
-	/**
-	 * Test Dark Color Settings Pullquote
-	 *
-	 * @access public
-	 */
-	public function testDarkColorsPullquote() {
-
-		// Setup.
-		$content = new Exporter_Content(
-			3,
-			'Title',
-			'<blockquote class="apple-news-pullquote"><p>my quote</p></blockquote>'
-		);
-
-		// Set quote settings.
-		$this->set_theme_settings(
-			[
-				'pullquote_color_dark'               => '#abcdef',
-				'pullquote_border_color_dark'        => '#abcdef',
-			]
-		);
-
-		// Run the export.
-		$exporter = new Exporter( $content, $this->workspace, $this->settings );
-		$json = $exporter->export();
-		$this->ensure_tokens_replaced( $json );
-		$json = json_decode( $json, true );
-
-		// Validate body settings in generated JSON.
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentTextStyles']['default-pullquote-left']['conditional']['textColor']
-		);
-		$this->assertEquals(
-			'#abcdef',
-			$json['components'][1]['style']['conditional']['border']['all']['color']
-		);
+		$json = $this->get_json_for_post( $this->get_blockquote() );
+		$this->assertEquals( '#fedcba', $json['components'][2]['style']['backgroundColor'] );
+		$this->assertEquals( '#edcbaf', $json['components'][2]['style']['conditional']['backgroundColor'] );
+		$this->assertEquals( '#012345', $json['components'][2]['style']['border']['all']['color'] );
+		$this->assertEquals( '#123456', $json['components'][2]['style']['conditional']['border']['all']['color'] );
+		$this->assertEquals( 'dashed', $json['components'][2]['style']['border']['all']['style'] );
+		$this->assertEquals( 10, $json['components'][2]['style']['border']['all']['width'] );
+		$this->assertEquals( '#abcdef', $json['componentTextStyles']['default-blockquote-left']['textColor'] );
+		$this->assertEquals( '#bcdefa', $json['componentTextStyles']['default-blockquote-left']['conditional']['textColor'] );
+		$this->assertEquals( 'AmericanTypewriter', $json['componentTextStyles']['default-blockquote-left']['fontName'] );
+		$this->assertEquals( 28, $json['componentTextStyles']['default-blockquote-left']['lineHeight'] );
+		$this->assertEquals( 20, $json['componentTextStyles']['default-blockquote-left']['fontSize'] );
+		$this->assertEquals( 0.5, $json['componentTextStyles']['default-blockquote-left']['tracking'] );
 	}
 
 	/**
 	 * Tests pullquote settings.
-	 *
-	 * @access public
 	 */
-	public function testSettingsPullquote() {
-
-		// Setup.
-		$content = new Exporter_Content(
-			3,
-			'Title',
-			'<blockquote class="apple-news-pullquote"><p>my quote</p></blockquote>'
-		);
-
-		// Set quote settings.
+	public function test_settings_pullquote() {
 		$this->set_theme_settings(
 			[
-				'pullquote_font'                => 'AmericanTypewriter',
-				'pullquote_size'                => 20,
 				'pullquote_color'               => '#abcdef',
+				'pullquote_color_dark'          => '#bcdefa',
+				'pullquote_font'                => 'AmericanTypewriter',
 				'pullquote_hanging_punctuation' => 'yes',
 				'pullquote_line_height'         => 28,
+				'pullquote_size'                => 20,
 				'pullquote_tracking'            => 50,
 				'pullquote_transform'           => 'uppercase',
 			]
 		);
-
-		// Run the export.
-		$exporter = new Exporter( $content, $this->workspace, $this->settings );
-		$json = $exporter->export();
-		$this->ensure_tokens_replaced( $json );
-		$json = json_decode( $json, true );
-
-		// Validate body settings in generated JSON.
-		$this->assertEquals(
-			'AmericanTypewriter',
-			$json['componentTextStyles']['default-pullquote-left']['fontName']
-		);
-		$this->assertEquals(
-			20,
-			$json['componentTextStyles']['default-pullquote-left']['fontSize']
-		);
-		$this->assertTrue(
-			$json['componentTextStyles']['default-pullquote-left']['hangingPunctuation']
-		);
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentTextStyles']['default-pullquote-left']['textColor']
-		);
-		$this->assertEquals(
-			28,
-			$json['componentTextStyles']['default-pullquote-left']['lineHeight']
-		);
-		$this->assertEquals(
-			0.5,
-			$json['componentTextStyles']['default-pullquote-left']['tracking']
-		);
-		$this->assertEquals(
-			'uppercase',
-			$json['componentTextStyles']['default-pullquote-left']['textTransform']
-		);
+		$json = $this->get_json_for_post( $this->get_pullquote() );
+		$this->assertEquals( '#abcdef', $json['componentTextStyles']['default-pullquote-left']['textColor'] );
+		$this->assertEquals( '#bcdefa', $json['componentTextStyles']['default-pullquote-left']['conditional']['textColor'] );
+		$this->assertEquals( 'AmericanTypewriter', $json['componentTextStyles']['default-pullquote-left']['fontName'] );
+		$this->assertTrue( $json['componentTextStyles']['default-pullquote-left']['hangingPunctuation'] );
+		$this->assertEquals( 28, $json['componentTextStyles']['default-pullquote-left']['lineHeight'] );
+		$this->assertEquals( 20, $json['componentTextStyles']['default-pullquote-left']['fontSize'] );
+		$this->assertEquals( 0.5, $json['componentTextStyles']['default-pullquote-left']['tracking'] );
+		$this->assertEquals( 'uppercase', $json['componentTextStyles']['default-pullquote-left']['textTransform'] );
 	}
 
 	/**
 	 * Tests the transformation process from a blockquote to a Quote component.
-	 *
-	 * @access public
 	 */
-	public function testTransformBlockquote() {
-
-		// Setup.
-		$component = new Quote(
-			'<blockquote><p>my quote</p></blockquote>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-		$result_wrapper = $component->to_array();
-		$result = $result_wrapper['components'][0];
-
-		// Test.
-		$this->assertEquals( 'container', $result_wrapper['role'] );
-		$this->assertEquals( 'quote', $result['role'] );
-		$this->assertEquals( '<p>my quote</p>', $result['text'] );
-		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-blockquote-left', $result['textStyle'] );
-		$this->assertEquals( 'blockquote-layout', $result['layout'] );
+	public function test_transform_blockquote() {
+		$json = $this->get_json_for_post( $this->get_blockquote() );
+		$this->assertEquals( 'container', $json['components'][2]['role'] );
+		$this->assertEquals( 'quote', $json['components'][2]['components'][0]['role'] );
+		$this->assertEquals( '<p>Test blockquote.</p>', $json['components'][2]['components'][0]['text'] );
+		$this->assertEquals( 'html', $json['components'][2]['components'][0]['format'] );
+		$this->assertEquals( 'default-blockquote-left', $json['components'][2]['components'][0]['textStyle'] );
+		$this->assertEquals( 'blockquote-layout', $json['components'][2]['components'][0]['layout'] );
 	}
 
 	/**
 	 * Tests the transformation process with text alignment checking.
-	 *
-	 * @access public
 	 */
-	public function testTransformBlockquoteAlignment() {
+	public function test_transform_blockquote_alignment() {
+		// Test right alignment.
+		$content_right = <<<HTML
+<!-- wp:quote -->
+<blockquote class="wp-block-quote has-text-align-right"><p>Test blockquote.</p></blockquote>
+<!-- /wp:quote -->
+HTML;
+		$post_id_right = self::factory()->post->create( [ 'post_content' => $content_right ] );
+		$json_right    = $this->get_json_for_post( $post_id_right );
+		$this->assertEquals( 'default-blockquote-right', $json_right['components'][2]['components'][0]['textStyle'] );
+		$this->assertEquals( 'right', $json_right['componentTextStyles']['default-blockquote-right']['textAlignment'] );
 
-		// Setup.
-		$componentLeft = new Quote(
-			'<blockquote style="text-align:left" class="wp-block-quote"><p>Quote Text</p></blockquote>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
+		// Test center alignment.
+		$content_center = <<<HTML
+<!-- wp:quote -->
+<blockquote class="wp-block-quote has-text-align-center"><p>Test blockquote.</p></blockquote>
+<!-- /wp:quote -->
+HTML;
+		$post_id_center = self::factory()->post->create( [ 'post_content' => $content_center ] );
+		$json_center    = $this->get_json_for_post( $post_id_center );
+		$this->assertEquals( 'default-blockquote-center', $json_center['components'][2]['components'][0]['textStyle'] );
+		$this->assertEquals( 'center', $json_center['componentTextStyles']['default-blockquote-center']['textAlignment'] );
 
-		$componentCenter = new Quote(
-			'<blockquote style="text-align:center" class="wp-block-quote"><p>Quote Text</p></blockquote>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
+		// Test all three.
+		$content_all = <<<HTML
+<!-- wp:quote -->
+<blockquote class="wp-block-quote"><p>Test blockquote left.</p></blockquote>
+<!-- /wp:quote -->
 
-		$componentRight = new Quote(
-			'<blockquote style="text-align:right" class="wp-block-quote"><p>Quote Text</p></blockquote>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
+<!-- wp:quote -->
+<blockquote class="wp-block-quote has-text-align-right"><p>Test blockquote right.</p></blockquote>
+<!-- /wp:quote -->
 
-		$result_wrapper = $componentLeft->to_array();
-		$result = $result_wrapper['components'][0];
-
-		// Test.
-		$this->assertEquals( 'container', $result_wrapper['role'] );
-		$this->assertEquals( 'quote', $result['role'] );
-		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
-		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-blockquote-left', $result['textStyle'] );
-		$this->assertEquals( 'blockquote-layout', $result['layout'] );
-
-		$result_wrapper = $componentCenter->to_array();
-		$result = $result_wrapper['components'][0];
-
-		// Test.
-		$this->assertEquals( 'container', $result_wrapper['role'] );
-		$this->assertEquals( 'quote', $result['role'] );
-		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
-		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-blockquote-center', $result['textStyle'] );
-		$this->assertEquals( 'blockquote-layout', $result['layout'] );
-
-		$result_wrapper = $componentRight->to_array();
-		$result = $result_wrapper['components'][0];
-
-		// Test.
-		$this->assertEquals( 'container', $result_wrapper['role'] );
-		$this->assertEquals( 'quote', $result['role'] );
-		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
-		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-blockquote-right', $result['textStyle'] );
-		$this->assertEquals( 'blockquote-layout', $result['layout'] );
-	}
-
-	/**
-	 * Tests the transformation process when using a gutenberg pullquote with text alignment checking.
-	 *
-	 * @access public
-	 */
-	public function testTransformGutenbergBlockquoteAlignment() {
-
-		// Setup.
-		$componentLeft = new Quote(
-			'<figure class="wp-block-pullquote alignleft"><blockquote><p>Quote Text</p></blockquote></figure>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		$componentCenter = new Quote(
-			'<figure class="wp-block-pullquote alignwide"><blockquote><p>Quote Text</p></blockquote></figure>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		$componentRight = new Quote(
-			'<figure class="wp-block-pullquote alignright"><blockquote><p>Quote Text</p></blockquote></figure>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		$result_wrapper = $componentLeft->to_array();
-		$result = $result_wrapper['components'][0];
-
-		// Test.
-		$this->assertEquals( 'container', $result_wrapper['role'] );
-		$this->assertEquals( 'quote', $result['role'] );
-		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
-		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-pullquote-left', $result['textStyle'] );
-		$this->assertEquals( 'pullquote-layout', $result['layout'] );
-
-		$result_wrapper = $componentCenter->to_array();
-		$result = $result_wrapper['components'][0];
-
-		// Test.
-		$this->assertEquals( 'container', $result_wrapper['role'] );
-		$this->assertEquals( 'quote', $result['role'] );
-		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
-		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-pullquote-center', $result['textStyle'] );
-		$this->assertEquals( 'pullquote-layout', $result['layout'] );
-
-		$result_wrapper = $componentRight->to_array();
-		$result = $result_wrapper['components'][0];
-
-		// Test.
-		$this->assertEquals( 'container', $result_wrapper['role'] );
-		$this->assertEquals( 'quote', $result['role'] );
-		$this->assertEquals( '<p>Quote Text</p>', $result['text'] );
-		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-pullquote-right', $result['textStyle'] );
-		$this->assertEquals( 'pullquote-layout', $result['layout'] );
+<!-- wp:quote -->
+<blockquote class="wp-block-quote has-text-align-center"><p>Test blockquote center.</p></blockquote>
+<!-- /wp:quote -->
+HTML;
+		$post_id_all = self::factory()->post->create( [ 'post_content' => $content_all ] );
+		$json_all    = $this->get_json_for_post( $post_id_all );
+		$this->assertEquals( 'default-blockquote-left', $json_all['components'][2]['components'][0]['textStyle'] );
+		$this->assertEquals( 'default-blockquote-right', $json_all['components'][3]['components'][0]['textStyle'] );
+		$this->assertEquals( 'default-blockquote-center', $json_all['components'][4]['components'][0]['textStyle'] );
+		$this->assertEquals( 'left', $json_all['componentTextStyles']['default-blockquote-left']['textAlignment'] );
+		$this->assertEquals( 'right', $json_all['componentTextStyles']['default-blockquote-right']['textAlignment'] );
+		$this->assertEquals( 'center', $json_all['componentTextStyles']['default-blockquote-center']['textAlignment'] );
 	}
 
 	/**
 	 * Tests the transformation process from a pullquote to a Quote component.
 	 *
-	 * @dataProvider dataTransformPullquote
+	 * @dataProvider data_transform_pullquote
 	 *
-	 * @param string $text The text to use in the blockquote element.
-	 * @param string $expected The expected text node value after compilation.
+	 * @param string $text                The text to use in the blockquote element.
+	 * @param string $expected            The expected text node value after compilation.
 	 * @param string $hanging_punctuation The setting value for hanging punctuation.
-	 *
-	 * @access public
 	 */
-	public function testTransformPullquote( $text, $expected, $hanging_punctuation ) {
-
-		// Setup.
+	public function test_transform_pullquote( $text, $expected, $hanging_punctuation ) {
 		$this->set_theme_settings( [ 'pullquote_hanging_punctuation' => $hanging_punctuation ] );
-		$component = new Quote(
-			'<blockquote class="apple-news-pullquote"><p>' . $text . '</p></blockquote>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-		$result_wrapper = $component->to_array();
-		$result = $result_wrapper['components'][0];
-
-		// Test.
-		$this->assertEquals( 'container', $result_wrapper['role'] );
-		$this->assertEquals( 'quote', $result['role'] );
-		$this->assertEquals( $expected, $result['text'] );
-		$this->assertEquals( 'html', $result['format'] );
-		$this->assertEquals( 'default-pullquote-left', $result['textStyle'] );
-		$this->assertEquals( 'pullquote-layout', $result['layout'] );
+		$content = <<<HTML
+<!-- wp:pullquote -->
+<figure class="wp-block-pullquote"><blockquote><p>{$text}</p></blockquote></figure>
+<!-- /wp:pullquote -->
+HTML;
+		$post_id = self::factory()->post->create( [ 'post_content' => $content ] );
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'container', $json['components'][2]['role'] );
+		$this->assertEquals( 'quote', $json['components'][2]['components'][0]['role'] );
+		$this->assertEquals( $expected, $json['components'][2]['components'][0]['text'] );
+		$this->assertEquals( 'html', $json['components'][2]['components'][0]['format'] );
+		$this->assertEquals( 'default-pullquote-left', $json['components'][2]['components'][0]['textStyle'] );
+		$this->assertEquals( 'pullquote-layout', $json['components'][2]['components'][0]['layout'] );
 	}
 
 	/**
-	 * Tests a full transformation of a post containing a pullquote.
+	 * Ensures the JSON customizations to the pullquote element in the Modern
+	 * example theme do not break the article JSON.
+	 *
+	 * @dataProvider data_transform_pullquote_for_theme
+	 *
+	 * @param string $theme The theme slug to test.
 	 */
-	public function testFullTransform() {
-		// Create a Gutenberg pullquote.
-		$post_content = <<<HTML
-<!-- wp:pullquote {"mainColor":"accent","textColor":"primary","align":"right","className":"has-background has-accent-background-color is-style-solid-color another-class"} -->
-<figure class="wp-block-pullquote alignright has-background has-accent-background-color is-style-solid-color another-class" id="testing-anchor"><blockquote class="has-text-color has-primary-color"><p>Testing pullquote.</p><cite>Testing citation.</cite></blockquote></figure>
-<!-- /wp:pullquote -->
-HTML;
-
-		// Create a post with the pullquote and get the JSON for it.
-		$post_id = self::factory()->post->create( [ 'post_content' => $post_content ] );
-		$json = $this->get_json_for_post( $post_id );
-
-		// Test the component itself.
-		$this->assertEquals(
-			[
-				'format'    => 'html',
-				'layout'    => 'pullquote-layout',
-				'role'      => 'quote',
-				'text'      => '<p>Testing pullquote.</p><cite>Testing citation.</cite>',
-				'textStyle' => 'default-pullquote-right',
-			],
-			$json['components'][2]['components'][0]
-		);
-
-		// Test the component text style.
-		$this->assertEquals(
-			[
-				'fontName'      => 'AvenirNext-Bold',
-				'fontSize'      => 48,
-				'lineHeight'    => 48,
-				'textAlignment' => 'right',
-				'textColor'     => '#53585f',
-				'textTransform' => 'uppercase',
-				'tracking'      => 0,
-			],
-			$json['componentTextStyles']['default-pullquote-right']
-		);
-
-		// Test the component layout.
-		$this->assertEquals(
-			[
-				'margin' => [
-					'bottom' => 12,
-					'top'    => 12,
-				],
-			],
-			$json['componentLayouts']['pullquote-layout']
-		);
+	public function test_transform_pullquote_for_theme( $theme ) {
+		$this->load_example_theme( $theme );
+		$json = $this->get_json_for_post( $this->get_pullquote() );
+		$this->assertEquals( 'default-pullquote-left', $json['components'][2]['components'][1]['textStyle'] );
 	}
 }

@@ -157,19 +157,6 @@
                 }
             }
         },
-        "quote": {
-            "default-pullquote": {
-                "backgroundColor": "#blockquote_background_color#",
-                "fontName": "#pullquote_font#",
-                "fontSize": "#pullquote_size#",
-                "hangingPunctuation": "#pullquote_hanging_punctuation#",
-                "textColor": "#pullquote_color#",
-                "textTransform": "#pullquote_transform#",
-                "lineHeight": "#pullquote_line_height#",
-                "textAlignment": "#text_alignment#",
-                "tracking": "#pullquote_tracking#"
-            }
-        },
         "table": {
             "default-table": {
                 "border": {

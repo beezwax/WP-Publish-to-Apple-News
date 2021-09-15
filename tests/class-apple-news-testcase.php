@@ -521,6 +521,7 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 
 		// Make this theme the active theme.
 		$this->theme->set_active();
+		$this->theme->use_this();
 	}
 
 	/**
