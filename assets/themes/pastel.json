@@ -99,24 +99,6 @@
             }
         },
         "quote": {
-            "default-blockquote": {
-                "fontName": "#blockquote_font#",
-                "fontSize": "#blockquote_size#",
-                "textColor": "#blockquote_color#",
-                "lineHeight": "#blockquote_line_height#",
-                "textAlignment": "left",
-                "tracking": "#blockquote_tracking#"
-            },
-            "default-pullquote": {
-                "fontName": "#pullquote_font#",
-                "fontSize": "#pullquote_size#",
-                "hangingPunctuation": "#pullquote_hanging_punctuation#",
-                "textColor": "#pullquote_color#",
-                "textTransform": "#pullquote_transform#",
-                "lineHeight": "#pullquote_line_height#",
-                "textAlignment": "left",
-                "tracking": "#pullquote_tracking#"
-            },
             "pullquote-with-border-json": {
                 "role": "container",
                 "layout": {

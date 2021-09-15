@@ -58,6 +58,19 @@ HTML;
 	}
 
 	/**
+	 * A data provider for the test_transform_pullquote_for_theme function.
+	 *
+	 * @return array An array of arrays representing function arguments.
+	 */
+	public function data_transform_pullquote_for_theme() {
+		return [
+			[ 'classic' ],
+			[ 'dark' ],
+			[ 'modern' ],
+		];
+	}
+
+	/**
 	 * A filter function to modify the hanging punctuation text.
 	 *
 	 * @param string $modified_text The modified text to be filtered.
@@ -252,5 +265,19 @@ HTML;
 		$this->assertEquals( 'html', $json['components'][2]['components'][0]['format'] );
 		$this->assertEquals( 'default-pullquote-left', $json['components'][2]['components'][0]['textStyle'] );
 		$this->assertEquals( 'pullquote-layout', $json['components'][2]['components'][0]['layout'] );
+	}
+
+	/**
+	 * Ensures the JSON customizations to the pullquote element in the Modern
+	 * example theme do not break the article JSON.
+	 *
+	 * @dataProvider data_transform_pullquote_for_theme
+	 *
+	 * @param string $theme The theme slug to test.
+	 */
+	public function test_transform_pullquote_for_theme( $theme ) {
+		$this->load_example_theme( 'modern' );
+		$json = $this->get_json_for_post( $this->get_pullquote() );
+		$this->assertEquals( 'default-pullquote-left', $json['components'][2]['components'][1]['textStyle'] );
 	}
 }
