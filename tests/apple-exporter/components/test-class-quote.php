@@ -67,6 +67,7 @@ HTML;
 			[ 'classic' ],
 			[ 'dark' ],
 			[ 'modern' ],
+			[ 'pastel' ],
 		];
 	}
 
@@ -276,7 +277,7 @@ HTML;
 	 * @param string $theme The theme slug to test.
 	 */
 	public function test_transform_pullquote_for_theme( $theme ) {
-		$this->load_example_theme( 'modern' );
+		$this->load_example_theme( $theme );
 		$json = $this->get_json_for_post( $this->get_pullquote() );
 		$this->assertEquals( 'default-pullquote-left', $json['components'][2]['components'][1]['textStyle'] );
 	}
