@@ -230,6 +230,25 @@ class Component_Tests extends Apple_News_Testcase {
 		$this->assertEquals( 'photo', $json_6['components'][1]['components'][2]['role'] );
 		$this->assertEquals( wp_get_attachment_image_url( $image_2, 'full' ), $json_6['components'][1]['components'][2]['URL'] );
 		$this->assertEquals( 3, count( $json_6['components'][1]['components'] ) );
+
+		/*
+		 * Scenario 7:
+		 * - No featured image is set.
+		 * - Images in the content.
+		 * - Cover image set via postmeta.
+		 * Expected: The cover image is used from postmeta and the first image from the content is removed.
+		 */
+		$post_7 = self::factory()->post->create( [ 'post_content' => wp_get_attachment_image( $image_1, 'full' ) . wp_get_attachment_image( $image_2, 'full' ) ] );
+		add_post_meta( $post_7, 'apple_news_coverimage', $image_1 );
+		$json_7 = $this->get_json_for_post( $post_7 );
+		$this->assertEquals( 'header', $json_7['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_7['components'][0]['layout'] );
+		$this->assertEquals( 'photo', $json_7['components'][0]['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_7['components'][0]['components'][0]['layout'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_1, 'full' ), $json_7['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'photo', $json_7['components'][1]['components'][2]['role'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_2, 'full' ), $json_7['components'][1]['components'][2]['URL'] );
+		$this->assertEquals( 3, count( $json_7['components'][1]['components'] ) );
 	}
 
 	/**
