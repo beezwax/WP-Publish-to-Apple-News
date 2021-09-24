@@ -716,6 +716,16 @@ class Theme {
 				'label'       => __( 'Byline format', 'apple-news' ),
 				'type'        => 'text',
 			),
+			'byline_link_color'                  => array(
+				'default' => '#7c7c7c',
+				'label'   => __( 'Byline link font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'byline_link_color_dark'             => array(
+				'default' => '',
+				'label'   => __( 'Byline link font color ', 'apple-news' ),
+				'type'    => 'color',
+			),
 			'byline_links'                       => array(
 				'default' => 'no',
 				'label'   => __( 'Byline author links', 'apple-news' ),
@@ -2063,9 +2073,11 @@ class Theme {
 					'byline_line_height',
 					'byline_tracking',
 					'byline_color',
+					'byline_link_color',
 					'byline_format',
 					'dark_mode_colors_heading',
 					'byline_color_dark',
+					'byline_link_color_dark',
 				),
 			),
 			'heading1'        => array(
