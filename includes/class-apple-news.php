@@ -139,8 +139,8 @@ class Apple_News {
 		}
 
 		// Get author from post.
-		$post_author_id  = intval( $post->post_author );
-		$author       = ucfirst( get_the_author_meta( 'display_name', $post_author_id ) );
+		$post_author_id = intval( $post->post_author );
+		$author         = ucfirst( get_the_author_meta( 'display_name', $post_author_id ) );
 
 		// If we have byline links enabled.
 		if ( $use_byline_links ) {
