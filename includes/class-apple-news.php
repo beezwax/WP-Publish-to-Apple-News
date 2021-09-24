@@ -138,13 +138,14 @@ class Apple_News {
 				: coauthors( $between, $between_last, $before, $after, false );
 		}
 
+		// Get author from post.
 		$post_author  = intval( $post->post_author );
 		$author       = ucfirst( get_the_author_meta( 'display_name', $post_author ) );
 
 		// If we have byline links enabled.
 		if ( $use_byline_links ) {
-			$byline_url = apply_filters( 'apple_news_byline_link', $post_author, get_author_posts_url( $post_author ) );
-			return '<a href="' . esc_url( $byline_url ) . '" rel="author"><byline>' . esc_html( $author ) . '</byline></a>';
+			$byline_url = apply_filters( 'apple_news_author_byline_link', $post_author, get_author_posts_url( $post_author ) );
+			return '<a href="' . esc_url( $byline_url ) . '" rel="author">' . esc_html( $author ) . '</a>';
 		}
 
 		return $author;
@@ -318,8 +319,16 @@ class Apple_News {
 			5
 		);
 		add_filter(
+			'author_link',
+			[ $this, 'filter_author_link' ],
+			10,
+			3
+		);
+		add_filter(
 			'the_author',
-			[ $this, 'filter_the_author' ]
+			[ $this, 'filter_the_author' ],
+			10,
+			3
 		);
 	}
 
@@ -494,20 +503,25 @@ class Apple_News {
 	}
 
 	/**
+	 * A filter callback for author_link for coauthors URLs.
+	 *
+	 * @param string $link            The URL to the author's page.
+	 * @param int    $author_id       The author's ID.
+	 * @param string $author_nicename The author's nice name.
+	 * @return string updated $author attribute.
+	 */
+	public function filter_author_link( $link, $author_id, $author_nicename ) {
+		// Add filter to hit this directly in Apple News.
+		return apply_filters( 'apple_news_author_byline_link', $link, $author_id, $author_nicename );
+	}
+
+	/**
 	 * A filter callback for the_author to wrap authors in byline tag if supported.
 	 *
 	 * @param string $author author name.
 	 * @return string updated $author attribute.
 	 */
 	public function filter_the_author( $author ) {
-		// Get information about the currently used theme.
-		$theme = \Apple_Exporter\Theme::get_used();
-
-		// Get theme option for byline links. True if set to yes.
-		if ( $theme->get_value( 'byline_links' ) && 'yes' === $theme->get_value( 'byline_links' ) ) {
-			return '<byline>' . ucfirst( $author ). '</byline>';
-		}
-
 		return ucfirst( $author );
 	}
 
