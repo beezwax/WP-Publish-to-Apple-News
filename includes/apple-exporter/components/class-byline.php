@@ -27,8 +27,14 @@ class Byline extends Component {
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role' => 'byline',
-				'text' => '#text#',
+				'role'   => 'byline',
+				'text'   => '#text#',
+			) + (
+				'yes' === $theme->get_value( 'byline_links' )
+					? array(
+						'format' => 'html',
+					)
+					: array()
 			)
 		);
 
