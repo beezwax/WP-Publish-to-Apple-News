@@ -111,4 +111,35 @@ class Byline_Test extends Apple_News_Testcase {
 		$this->assertEquals( '#ccff00', $json['componentTextStyles']['default-byline']['conditional'][1]['linkStyle']['textColor'] );
 		$this->assertEquals( 'by <a href="' . esc_url( get_author_posts_url( $user_id ) ) . '" rel="author">Test Author</a> | Jan 1, 1970 | 12:00 PM', $json['components'][1]['text'] );
 	}
+
+	/**
+	 * Tests byline settings.
+	 */
+	public function test_coauthors_settings() {
+		$this->set_theme_settings(
+			[
+				'byline_color'           => '#abcdef',
+				'byline_color_dark'      => '#123456',
+				'byline_font'            => 'AmericanTypewriter',
+				'byline_line_height'     => 12,
+				'byline_link_color'      => '#ffcc00',
+				'byline_link_color_dark' => '#ccff00',
+				'byline_links'           => 'yes',
+				'byline_size'            => 34,
+				'byline_tracking'        => 56,
+			]
+		);
+
+		// Create a test post and get JSON for it.
+		$this->enable_coauthors_support();
+		global $apple_news_coauthors;
+		$author_1             = self::factory()->user->create( [ 'display_name' => 'Test Author 1' ] );
+		$author_2             = self::factory()->user->create( [ 'display_name' => 'Test Author 2' ] );
+		$apple_news_coauthors = [ $author_1, $author_2 ];
+		$post_id              = self::factory()->post->create( [ 'post_date_gmt' => '1970-01-01 12:00:00' ] );
+		$json                 = $this->get_json_for_post( $post_id );
+
+		// Validate byline settings in generated JSON.
+		$this->assertEquals( 'by <a href="' . esc_url( get_author_posts_url( $author_1 ) ) . '" rel="author">' . get_the_author_meta( 'display_name', $author_1 ) . '</a> and <a href="' . esc_url( get_author_posts_url( $author_2 ) ) . '" rel="author">' . get_the_author_meta( 'display_name', $author_2 ) . '</a> | Jan 1, 1970 | 12:00 PM', $json['components'][1]['text'] );
+	}
 }
