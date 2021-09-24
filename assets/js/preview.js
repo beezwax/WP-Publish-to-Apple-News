@@ -154,6 +154,7 @@
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_size', 'font-size', 'px', null );
 
 		// Toggle byline link.
+		// phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
 		$( '.apple-news-byline' ).html(function(index, html) {
 			return 'yes' === $( '#byline_links' ).val()
 				? html.replace('John Doe', '<a href="#">John Doe</a>')

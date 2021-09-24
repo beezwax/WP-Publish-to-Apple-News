@@ -27,8 +27,8 @@ class Byline extends Component {
 			'json',
 			__( 'JSON', 'apple-news' ),
 			array(
-				'role'   => 'byline',
-				'text'   => '#text#',
+				'role' => 'byline',
+				'text' => '#text#',
 			) + (
 				'yes' === $theme->get_value( 'byline_links' )
 					? array(
@@ -55,14 +55,14 @@ class Byline extends Component {
 		if ( 'yes' === $theme->get_value( 'byline_links' ) ) {
 			if ( ! empty( $theme->get_value( 'byline_link_color' ) ) ) {
 				$byline_conditional['linkStyle'] = [
-					'textColor'  => '#byline_link_color#',
+					'textColor' => '#byline_link_color#',
 				];
 			}
 
 			if ( ! empty( $theme->get_value( 'byline_link_color_dark' ) ) ) {
 				$byline_conditional['conditional'][] = [
 					'linkStyle'  => [
-						'textColor'  => '#byline_link_color_dark#',
+						'textColor' => '#byline_link_color_dark#',
 					],
 					'conditions' => array(
 						'minSpecVersion'       => '1.14',
@@ -139,7 +139,7 @@ class Byline extends Component {
 
 		if ( ! empty( $theme->get_value( 'byline_color_dark' ) ) ) {
 			$byline_conditional[] = [
-				'#byline_color_dark#' => $theme->get_value( 'byline_color_dark' )
+				'#byline_color_dark#' => $theme->get_value( 'byline_color_dark' ),
 			];
 		}
 
@@ -147,7 +147,7 @@ class Byline extends Component {
 		if ( 'yes' === $theme->get_value( 'byline_links' ) ) {
 			if ( ! empty( $theme->get_value( 'byline_link_color' ) ) ) {
 				$byline_conditional[] = [
-					'#byline_link_color#'      => $theme->get_value( 'byline_link_color' ),
+					'#byline_link_color#' => $theme->get_value( 'byline_link_color' ),
 				];
 			}
 
