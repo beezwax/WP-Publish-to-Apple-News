@@ -716,6 +716,12 @@ class Theme {
 				'label'       => __( 'Byline format', 'apple-news' ),
 				'type'        => 'text',
 			),
+			'byline_links'                       => array(
+				'default' => 'no',
+				'label'   => __( 'Byline author links', 'apple-news' ),
+				'options' => array( 'yes', 'no' ),
+				'type'    => 'select',
+			),
 			'byline_line_height'                 => array(
 				'default' => 24.0,
 				'label'   => __( 'Byline line height', 'apple-news' ),
@@ -2053,6 +2059,7 @@ class Theme {
 				'settings'    => array(
 					'byline_font',
 					'byline_size',
+					'byline_links',
 					'byline_line_height',
 					'byline_tracking',
 					'byline_color',
