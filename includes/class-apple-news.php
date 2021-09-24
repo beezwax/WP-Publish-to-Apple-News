@@ -127,18 +127,24 @@ class Apple_News {
 		 */
 		$use_cap = apply_filters( 'apple_news_use_coauthors', function_exists( 'coauthors' ), get_the_ID() );
 
+		// Get theme option for byline links. True if set to yes.
+		// Ignore html option if setting meta data.
+		$use_byline_links = $theme->get_value( 'byline_links' ) && 'yes' === $theme->get_value( 'byline_links' ) && 'APPLE_NEWS_DELIMITER' !== $between;
+
 		// Handle CAP authorship.
 		if ( $use_cap ) {
-			return coauthors( $between, $between_last, $before, $after, false );
+			return $use_byline_links
+				? coauthors_posts_links( $between, $between_last, $before, $after, false )
+				: coauthors( $between, $between_last, $before, $after, false );
 		}
 
-		$byline_links = $theme->get_value( 'byline_links' );
 		$post_author  = intval( $post->post_author );
 		$author       = ucfirst( get_the_author_meta( 'display_name', $post_author ) );
 
 		// If we have byline links enabled.
-		if ( 'yes' === $byline_links ) {
-			return '<a href="' . esc_url( get_author_posts_url( $post_author ) ) . '" rel="author"><byline>' . esc_html( $author ) . '</byline></a>';
+		if ( $use_byline_links ) {
+			$byline_url = apply_filters( 'apple_news_byline_link', get_author_posts_url( $post_author ) );
+			return '<a href="' . esc_url( $byline_url ) . '" rel="author"><byline>' . esc_html( $author ) . '</byline></a>';
 		}
 
 		return $author;
@@ -310,6 +316,10 @@ class Apple_News {
 			[ $this, 'filter_update_post_metadata' ],
 			10,
 			5
+		);
+		add_filter(
+			'the_author',
+			[ $this, 'filter_the_author' ]
 		);
 	}
 
