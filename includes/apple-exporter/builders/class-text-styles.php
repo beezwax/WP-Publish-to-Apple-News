@@ -153,27 +153,5 @@ class Text_Styles extends Builder {
 				$conditional
 			)
 		);
-
-		// Add style for <byline> custom tag if supported.
-		if ( 'yes' === $theme->get_value( 'byline_links' ) ) {
-			$this->register_style(
-				'default-byline',
-				(
-					array(
-						'fontName'   => $theme->get_value( 'byline_font' ),
-						'fontSize'   => intval( $theme->get_value( 'byline_size' ) ),
-						'lineHeight' => intval( $theme->get_value( 'byline_line_height' ) ),
-						'tracking'   => intval( $theme->get_value( 'byline_tracking' ) ) / 100,
-						'textColor'  => $theme->get_value( 'byline_color' ),
-					) + (
-						! empty( $theme->get_value( 'byline_color_dark' ) )
-							? array(
-								'textColor' => $theme->get_value( 'byline_color_dark' )
-							)
-							: array()
-					)
-				),
-			);
-		}
 	}
 }
