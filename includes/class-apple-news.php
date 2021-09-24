@@ -143,7 +143,7 @@ class Apple_News {
 
 		// If we have byline links enabled.
 		if ( $use_byline_links ) {
-			$byline_url = apply_filters( 'apple_news_byline_link', get_author_posts_url( $post_author ) );
+			$byline_url = apply_filters( 'apple_news_byline_link', $post_author, get_author_posts_url( $post_author ) );
 			return '<a href="' . esc_url( $byline_url ) . '" rel="author"><byline>' . esc_html( $author ) . '</byline></a>';
 		}
 
