@@ -139,12 +139,12 @@ class Apple_News {
 		}
 
 		// Get author from post.
-		$post_author  = intval( $post->post_author );
-		$author       = ucfirst( get_the_author_meta( 'display_name', $post_author ) );
+		$post_author_id  = intval( $post->post_author );
+		$author       = ucfirst( get_the_author_meta( 'display_name', $post_author_id ) );
 
 		// If we have byline links enabled.
 		if ( $use_byline_links ) {
-			$byline_url = apply_filters( 'apple_news_author_byline_link', $post_author, get_author_posts_url( $post_author ) );
+			$byline_url = apply_filters( 'apple_news_author_byline_link', get_author_posts_url( $post_author_id ), $post_author_id );
 			return '<a href="' . esc_url( $byline_url ) . '" rel="author">' . esc_html( $author ) . '</a>';
 		}
 
