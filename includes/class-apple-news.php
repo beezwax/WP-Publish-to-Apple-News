@@ -484,6 +484,24 @@ class Apple_News {
 	}
 
 	/**
+	 * A filter callback for the_author to wrap authors in byline tag if supported.
+	 *
+	 * @param string $author author name.
+	 * @return string updated $author attribute.
+	 */
+	public function filter_the_author( $author ) {
+		// Get information about the currently used theme.
+		$theme = \Apple_Exporter\Theme::get_used();
+
+		// Get theme option for byline links. True if set to yes.
+		if ( $theme->get_value( 'byline_links' ) && 'yes' === $theme->get_value( 'byline_links' ) ) {
+			return '<byline>' . ucfirst( $author ). '</byline>';
+		}
+
+		return ucfirst( $author );
+	}
+
+	/**
 	 * Creates a new Jed instance with specified locale data configuration.
 	 *
 	 * @param string $to_handle The script handle to attach the inline script to.
