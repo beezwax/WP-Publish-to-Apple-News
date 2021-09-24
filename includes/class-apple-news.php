@@ -113,6 +113,9 @@ class Apple_News {
 			return '';
 		}
 
+		// Get information about the currently used theme.
+		$theme = \Apple_Exporter\Theme::get_used();
+
 		/**
 		 * Allows for changing the option to use Co-Authors Plus for authorship.
 		 * Defaults to using Co-Authors Plus if the `coauthors` function is defined.
@@ -129,7 +132,16 @@ class Apple_News {
 			return coauthors( $between, $between_last, $before, $after, false );
 		}
 
-		return ucfirst( get_the_author_meta( 'display_name', $post->post_author ) );
+		$byline_links = $theme->get_value( 'byline_links' );
+		$post_author  = intval( $post->post_author );
+		$author       = ucfirst( get_the_author_meta( 'display_name', $post_author ) );
+
+		// If we have byline links enabled.
+		if ( 'yes' === $byline_links ) {
+			return '<a href="' . esc_url( get_author_posts_url( $post_author ) ) . '" rel="author"><byline>' . esc_html( $author ) . '</byline></a>';
+		}
+
+		return $author;
 	}
 
 	/**
