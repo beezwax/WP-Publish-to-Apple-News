@@ -229,7 +229,8 @@
     "meta_component_order": [
         "title",
         "slug",
-        "byline",
+        "standalone_byline",
+        "publication_date",
         "cover"
     ],
     "monospaced_color": "#000000",

@@ -234,7 +234,8 @@
         "slug",
         "cover",
         "title",
-        "byline"
+        "standalone_byline",
+        "publication_date"
     ],
     "monospaced_color": "#000000",
     "monospaced_font": "Menlo-Regular",
