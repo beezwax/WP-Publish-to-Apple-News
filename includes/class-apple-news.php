@@ -144,7 +144,21 @@ class Apple_News {
 
 		// If we have byline links enabled.
 		if ( $use_byline_links ) {
-			$byline_url = apply_filters( 'apple_news_author_byline_link', get_author_posts_url( $post_author_id ), $post_author_id, get_the_author_meta( 'nicename', $post_author_id ) );
+			/**
+			 * Allows for modification of the byline link used by WordPress authors and CoAuthors Plus.
+			 *
+			 * @since 2.3.0
+			 *
+			 * @param string $link            The author link to be filtered.
+			 * @param int    $author_id       Author id for the URL being modified.
+			 * @param string $author_nicename Author nicename for the URL being modified.
+			 */
+			$byline_url = apply_filters(
+				'apple_news_author_byline_link',
+				get_author_posts_url( $post_author_id ),
+				$post_author_id,
+				get_the_author_meta( 'nicename', $post_author_id )
+			);
 			return '<a href="' . esc_url( $byline_url ) . '" rel="author">' . esc_html( $author ) . '</a>';
 		}
 
@@ -511,7 +525,15 @@ class Apple_News {
 	 * @return string updated $author attribute.
 	 */
 	public function filter_author_link( $link, $author_id, $author_nicename ) {
-		// Add filter to hit this directly in Apple News.
+		/**
+		 * Allows for modification of the byline link used by WordPress authors and CoAuthors Plus.
+		 *
+		 * @since 2.3.0
+		 *
+		 * @param string $link            The author link to be filtered.
+		 * @param int    $author_id       Author id for the URL being modified.
+		 * @param string $author_nicename Author nicename for the URL being modified.
+		 */
 		return apply_filters( 'apple_news_author_byline_link', $link, $author_id, $author_nicename );
 	}
 
