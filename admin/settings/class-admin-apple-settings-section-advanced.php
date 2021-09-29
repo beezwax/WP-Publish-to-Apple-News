@@ -57,6 +57,11 @@ class Admin_Apple_Settings_Section_Advanced extends Admin_Apple_Settings_Section
 					'</a>'
 				),
 			),
+			'use_unified_byline' => array(
+				'label'       => __( 'Use unified byline?', 'apple-news' ),
+				'type'        => array( 'yes', 'no' ),
+				'description' => __( 'Allows use of a unified byline instead of the separated byline and publication date feature.', 'apple-news' ),
+			),
 		);
 
 		// Add the groups.
@@ -72,6 +77,10 @@ class Admin_Apple_Settings_Section_Advanced extends Admin_Apple_Settings_Section
 			'format' => array(
 				'label'    => __( 'Format Settings', 'apple-news' ),
 				'settings' => array( 'html_support' ),
+			),
+			'features' => array(
+				'label'    => __( 'Features', 'apple-news' ),
+				'settings' => array( 'use_unified_byline' ),
 			),
 		);
 
