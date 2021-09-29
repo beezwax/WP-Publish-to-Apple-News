@@ -1044,8 +1044,8 @@ class Theme {
 				'type'    => 'integer',
 			),
 			'meta_component_order'               => array(
-				'default'     => array( 'cover', 'slug', 'title', 'byline' ),
-				'all_options' => array( 'cover', 'title', 'slug', 'byline', 'intro' ),
+				'default'     => array( 'cover', 'slug', 'title', 'standalone_byline', 'publication_date' ),
+				'all_options' => array( 'cover', 'title', 'slug', 'byline', 'standalone_byline', 'publication_date', 'intro' ),
 				'callback'    => array( get_called_class(), 'render_meta_component_order' ),
 				'type'        => 'array',
 			),
