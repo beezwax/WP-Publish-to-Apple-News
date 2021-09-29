@@ -66,7 +66,7 @@ function coauthors_posts_links( $between = null, $betweenLast = null, $before = 
 		// Get author data.
 		$author = get_user_by( 'id', $author );
 
-		$args        = array(
+		$args = [
 			'before_html' => '',
 			'href'        => get_author_posts_url( $author->ID, $author->user_nicename ),
 			'rel'         => 'author',
@@ -74,7 +74,7 @@ function coauthors_posts_links( $between = null, $betweenLast = null, $before = 
 			'class'       => 'author url fn',
 			'text'        => $author->display_name,
 			'after_html'  => '',
-		);
+		];
 
 		$single_link = sprintf(
 			'<a href="%1$s" rel="%2$s">%3$s</a>',
