@@ -50,6 +50,23 @@ class Settings {
 	);
 
 	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		// Check if legacy byline component order exists and set setting.
+		$settings = get_option( 'apple_news_settings' );
+		if ( ! isset( $setting['use_unified_byline'] ) ) {
+			// Get current theme and determine if byline or standalone_byline exists in component order.
+			$theme = \Apple_Exporter\Theme::get_used();
+			$order = $theme->get_value( 'meta_component_order' );
+			$this->__set(
+				'use_unified_byline',
+				is_array( $order ) && in_array( 'byline', $order, true ) ? 'yes' : 'no'
+			);
+		}
+	}
+
+	/**
 	 * Magic method to get a computed or stored settings value.
 	 *
 	 * @param string $name The setting name to retrieve.
