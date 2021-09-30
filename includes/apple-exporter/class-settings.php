@@ -46,6 +46,7 @@ class Settings {
 		'post_types'                  => array( 'post' ),
 		'show_metabox'                => 'yes',
 		'use_remote_images'           => 'yes',
+		'use_unified_byline'          => 'no',
 	);
 
 	/**
