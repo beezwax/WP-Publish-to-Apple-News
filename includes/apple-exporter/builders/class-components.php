@@ -545,6 +545,13 @@ class Components extends Builder {
 		 */
 		$normalized_path = preg_replace( '/-(?:\d+x\d+|scaled|rotated)(\.[^.]+)$/', '$1', $url_parts['path'] );
 
+		// Remove the Jetpack CDN domain.
+		if ( preg_match( '/^i[0-9]\.wp\.com$/', $url_parts['host'] ) ) {
+			$path_parts        = explode( '/', $normalized_path );
+			$url_parts['host'] = array_shift( $path_parts );
+			$normalized_path   = implode( '/', $path_parts );
+		}
+
 		// Put Humpty Dumpty back together again.
 		return sprintf(
 			'%s://%s%s',

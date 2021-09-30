@@ -24,32 +24,32 @@ class Component_Tests extends Apple_News_Testcase {
 		return [
 			// An image without crops should return itself.
 			[
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
 			],
 
 			// An image with a crop should return the original image without the crop.
 			[
-				'http://example.org/wp-content/uploads/2020/07/image-150x150.jpg',
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image-150x150.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
 			],
 
 			// Scaled images should return the un-scaled version.
 			[
-				'http://example.org/wp-content/uploads/2020/07/image-scaled.jpg',
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image-scaled.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
 			],
 
 			// Rotated images should return the un-rotated version.
 			[
-				'http://example.org/wp-content/uploads/2020/07/image-rotated.jpg',
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image-rotated.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
 			],
 
 			// Photon images should return the original.
 			[
-				'http://example.org/wp-content/uploads/2020/07/image.jpg?w=234&crop=0%2C5px%2C100%2C134px&ssl=1',
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://i1.wp.com/example.org/wp-content/uploads/2020/07/image.jpg?w=234&crop=0%2C5px%2C100%2C134px&ssl=1',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
 			],
 		];
 	}
