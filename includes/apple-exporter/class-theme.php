@@ -711,8 +711,8 @@ class Theme {
 				'type'    => 'font',
 			),
 			'byline_format'                      => array(
-				'default'     => 'by #author# | #M j, Y | g:i A#',
-				'description' => __( 'Set the byline format. Two tokens can be present, #author# to denote the location of the author name and a <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string also encapsulated by #. The default format is "by #author# | #M j, Y | g:i A#". Note that byline format updates only preview on save.', 'apple-news' ),
+				'default'     => 'by #author#',
+				'description' => __( 'Set the byline format. #author# denotes the location of the author name. The default format is "by #author#. Note that byline format updates only preview on save.', 'apple-news' ),
 				'label'       => __( 'Byline format', 'apple-news' ),
 				'type'        => 'text',
 			),
@@ -1080,6 +1080,43 @@ class Theme {
 				'label'       => __( 'Monospaced tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
+			'publication_date_color'             => array(
+				'default' => '#7c7c7c',
+				'label'   => __( 'Publication date font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'publication_date_color_dark'        => array(
+				'default' => '',
+				'label'   => __( 'Publication date font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'publication_date_font'              => array(
+				'default' => 'AvenirNext-Medium',
+				'label'   => __( 'Publication date font face', 'apple-news' ),
+				'type'    => 'font',
+			),
+			'publication_date_format'            => array(
+				'default'     => 'by #author# | #M j, Y | g:i A#',
+				'description' => __( 'Set the publication date format. <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string is encapsulated by #. The default format is "#M j, Y | g:i A#". Note that publication date format updates only preview on save.', 'apple-news' ),
+				'label'       => __( 'Publication date format', 'apple-news' ),
+				'type'        => 'text',
+			),
+			'publication_date_line_height'       => array(
+				'default' => 24.0,
+				'label'   => __( 'Publication date line height', 'apple-news' ),
+				'type'    => 'float',
+			),
+			'publication_date_size'              => array(
+				'default' => 13,
+				'label'   => __( 'Publication date font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'publication_date_tracking'          => array(
+				'default'     => 0,
+				'description' => __( '(Percentage of font size)', 'apple-news' ),
+				'label'       => __( 'Publication date tracking', 'apple-news' ),
+				'type'        => 'integer',
+			),
 			'pullquote_border_color'             => array(
 				'default' => '#53585f',
 				'label'   => __( 'Pull quote border color', 'apple-news' ),
@@ -1318,6 +1355,43 @@ class Theme {
 				'label'   => __( 'Table header vertical alignment', 'apple-news' ),
 				'options' => array( 'top', 'center', 'bottom' ),
 				'type'    => 'select',
+			),
+			'unified_byline_color'               => array(
+				'default' => '#7c7c7c',
+				'label'   => __( 'Unified Byline font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'unified_byline_color_dark'          => array(
+				'default' => '',
+				'label'   => __( 'Unified Byline font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'unified_byline_font'                => array(
+				'default' => 'AvenirNext-Medium',
+				'label'   => __( 'Unified Byline font face', 'apple-news' ),
+				'type'    => 'font',
+			),
+			'unified_byline_format'              => array(
+				'default'     => 'by #author# | #M j, Y | g:i A#',
+				'description' => __( 'Set the byline format. Two tokens can be present, #author# to denote the location of the author name and a <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string also encapsulated by #. The default format is "by #author# | #M j, Y | g:i A#". Note that byline format updates only preview on save.', 'apple-news' ),
+				'label'       => __( 'Unified Byline format', 'apple-news' ),
+				'type'        => 'text',
+			),
+			'unified_byline_line_height'         => array(
+				'default' => 24.0,
+				'label'   => __( 'Unified Byline line height', 'apple-news' ),
+				'type'    => 'float',
+			),
+			'unified_byline_size'                => array(
+				'default' => 13,
+				'label'   => __( 'Unified Byline font size', 'apple-news' ),
+				'type'    => 'integer',
+			),
+			'unified_byline_tracking'            => array(
+				'default'     => 0,
+				'description' => __( '(Percentage of font size)', 'apple-news' ),
+				'label'       => __( 'Unified Byline tracking', 'apple-news' ),
+				'type'        => 'integer',
 			),
 		);
 	}
