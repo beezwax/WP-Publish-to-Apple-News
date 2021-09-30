@@ -76,11 +76,7 @@ class Admin_Apple_Settings_Section_Advanced extends Admin_Apple_Settings_Section
 			),
 			'format' => array(
 				'label'    => __( 'Format Settings', 'apple-news' ),
-				'settings' => array( 'html_support' ),
-			),
-			'features' => array(
-				'label'    => __( 'Features', 'apple-news' ),
-				'settings' => array( 'use_unified_byline' ),
+				'settings' => array( 'html_support', 'use_unified_byline' ),
 			),
 		);
 
