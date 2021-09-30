@@ -35,6 +35,10 @@ class Test_End_Of_Article extends Component_TestCase {
 					'end_of_article' => [
 						'json'   => [
 							'role' => 'heading',
+							'text' => '<strong>Heading <em>1<\/em><\/strong> Test',
+							'format' => 'html',
+							'textStyle' => 'default-heading-1',
+							'layout' => 'heading-layout'
 						],
 						'layout' => [],
 					],
@@ -46,5 +50,6 @@ class Test_End_Of_Article extends Component_TestCase {
 		$json    = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 4, count( $json['components'] ) );
 		$this->assertEquals( 'heading', $json['components'][3]['role'] );
+		$this->assertEquals( '<strong>Heading <em>1</em></strong> Test', $json['components'][3]['text'] );
 	}
 }
