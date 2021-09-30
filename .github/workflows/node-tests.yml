@@ -21,9 +21,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: 14
-      - name: Install npm 7
-        run: npm i -g npm@7
+          node-version: 16
       - name: Install node dependencies (npm ci)
         run: npm ci
       - name: Run npm lint

@@ -4,7 +4,7 @@
   "license": "GPLv3",
   "main": "index.php",
   "engines": {
-    "node": "14",
+    "node": "16",
     "npm": "7"
   },
   "browserslist": [
@@ -103,6 +103,6 @@
     "classnames": "^2.3.1",
     "dompurify": "^2.3.0",
     "prop-types": "^15.7.2",
-    "react": "^16.13.1"
+    "react": "^17.0.2"
   }
 }
