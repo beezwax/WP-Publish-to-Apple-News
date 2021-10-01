@@ -66,31 +66,29 @@ class Admin_Apple_Preview extends Apple_News {
 			);
 
 			// Build the byline.
-			$author = __( 'John Doe', 'apple-news' );
-			$date   = apple_news_date( 'M j, Y g:i A' );
-			$export = new Apple_Actions\Index\Export( $settings );
+			$author_placeholder = __( 'John Doe', 'apple-news' );
+			$date_placeholder   = apple_news_date( 'M j, Y g:i A' );
+			$export             = new Apple_Actions\Index\Export( $settings );
 
 			$byline = sprintf(
 				'<div class="apple-news-byline apple-news-component apple-news-meta-component">%s</div>',
-				$export->format_byline( null, $author, $date )
+				$export->format_byline( null, $author_placeholder, $date_placeholder )
 			);
 
-			$standalone_byline = sprintf(
-				'<div class="apple-news-standalone-byline apple-news-component apple-news-meta-component">%s</div>',
-				$export->format_byline( null, $author, null )
+			$author = sprintf(
+				'<div class="apple-news-author apple-news-component apple-news-meta-component">%s</div>',
+				$export->format_author( null, $author_placeholder, null )
 			);
 
-			$publication_date = sprintf(
-				'<div class="apple-news-publication-date apple-news-component apple-news-meta-component">%s</div>',
-				$export->format_publication_date( null, $date )
+			$date = sprintf(
+				'<div class="apple-news-date apple-news-component apple-news-meta-component">%s</div>',
+				$export->format_date( null, $date_placeholder )
 			);
 
 			// Get the order of the top components.
 			$meta_component_order = $theme->get_value( 'meta_component_order' );
 			if ( ! is_array( $meta_component_order ) ) {
-				$meta_component_order = [];
-			} elseif ( $has_unified_byline ) {
-				$meta_component_order = [ 'cover', 'slug', 'title', 'byline' ];
+				$meta_component_order = array();
 			}
 			foreach ( $meta_component_order as $component ) {
 				if ( isset( $$component ) ) {

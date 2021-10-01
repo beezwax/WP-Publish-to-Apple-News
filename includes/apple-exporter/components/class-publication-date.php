@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News: \Apple_Exporter\Components\Publication_Date class
+ * Publish to Apple News: \Apple_Exporter\Components\date class
  *
  * @package Apple_News
  * @subpackage Apple_Exporter\Components
@@ -9,11 +9,11 @@
 namespace Apple_Exporter\Components;
 
 /**
- * A publication_date normally describes who wrote the article, the date, etc.
+ * A date normally describes who wrote the article, the date, etc.
  *
  * @since 0.2.0
  */
-class Publication_Date extends Component {
+class date extends Component {
 
 	/**
 	 * Register all specs for the component.
@@ -38,16 +38,16 @@ class Publication_Date extends Component {
 			(
 				array(
 					'textAlignment' => '#text_alignment#',
-					'fontName'      => '#publication_date_font#',
-					'fontSize'      => '#publication_date_size#',
-					'lineHeight'    => '#publication_date_line_height#',
-					'tracking'      => '#publication_date_tracking#',
-					'textColor'     => '#publication_date_color#',
+					'fontName'      => '#date_font#',
+					'fontSize'      => '#date_size#',
+					'lineHeight'    => '#date_line_height#',
+					'tracking'      => '#date_tracking#',
+					'textColor'     => '#date_color#',
 				) + (
-					! empty( $theme->get_value( 'publication_date_color_dark' ) )
+					! empty( $theme->get_value( 'date_color_dark' ) )
 						? array(
 							'conditional' => array(
-								'textColor'  => '#publication_date_color_dark#',
+								'textColor'  => '#date_color_dark#',
 								'conditions' => array(
 									'minSpecVersion'       => '1.14',
 									'preferredColorScheme' => 'dark',
@@ -112,14 +112,14 @@ class Publication_Date extends Component {
 			(
 				array(
 					'#text_alignment#'     => $this->find_text_alignment(),
-					'#publication_date_font#'        => $theme->get_value( 'publication_date_font' ),
-					'#publication_date_size#'        => intval( $theme->get_value( 'publication_date_size' ) ),
-					'#publication_date_line_height#' => intval( $theme->get_value( 'publication_date_line_height' ) ),
-					'#publication_date_tracking#'    => intval( $theme->get_value( 'publication_date_tracking' ) ) / 100,
-					'#publication_date_color#'       => $theme->get_value( 'publication_date_color' ),
+					'#date_font#'        => $theme->get_value( 'date_font' ),
+					'#date_size#'        => intval( $theme->get_value( 'date_size' ) ),
+					'#date_line_height#' => intval( $theme->get_value( 'date_line_height' ) ),
+					'#date_tracking#'    => intval( $theme->get_value( 'date_tracking' ) ) / 100,
+					'#date_color#'       => $theme->get_value( 'date_color' ),
 				) + (
-					! empty( $theme->get_value( 'publication_date_color_dark' ) )
-						? array( '#publication_date_color_dark' => $theme->get_value( 'publication_date_color_dark' ) )
+					! empty( $theme->get_value( 'date_color_dark' ) )
+						? array( '#date_color_dark' => $theme->get_value( 'date_color_dark' ) )
 						: array()
 				)
 			),

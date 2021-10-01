@@ -18,12 +18,12 @@
     "body_orientation": "left",
     "body_size": 17,
     "body_tracking": 0,
-    "byline_color": "#000000",
-    "byline_font": "AvenirNext-Bold",
-    "byline_format": "by #author#",
-    "byline_line_height": 19,
-    "byline_size": 14,
-    "byline_tracking": 0,
+    "author_color": "#000000",
+    "author_font": "AvenirNext-Bold",
+    "author_format": "by #author#",
+    "author_line_height": 19,
+    "author_size": 14,
+    "author_tracking": 0,
     "caption_color": "#333333",
     "caption_font": "AvenirNext-Regular",
     "caption_line_height": 19,
@@ -88,14 +88,14 @@
                 }
             }
         },
-        "byline": {
-            "default-byline": {
+        "author": {
+            "default-author": {
                 "textAlignment": "center",
-                "fontName": "#byline_font#",
-                "fontSize": "#byline_size#",
-                "lineHeight": "#byline_line_height#",
-                "tracking": "#byline_tracking#",
-                "textColor": "#byline_color#"
+                "fontName": "#author_font#",
+                "fontSize": "#author_size#",
+                "lineHeight": "#author_line_height#",
+                "tracking": "#author_tracking#",
+                "textColor": "#author_color#"
             }
         },
         "quote": {
@@ -234,20 +234,20 @@
         "slug",
         "cover",
         "title",
-        "standalone_byline",
-        "publication_date"
+        "author",
+        "date"
     ],
     "monospaced_color": "#000000",
     "monospaced_font": "Menlo-Regular",
     "monospaced_line_height": 20,
     "monospaced_size": 16,
     "monospaced_tracking": 0,
-    "publication_date_color": "#000000",
-    "publication_date_font": "AvenirNext-Bold",
-    "publication_date_format": "#F j \\a\\t g:i A#",
-    "publication_date_line_height": 19,
-    "publication_date_size": 14,
-    "publication_date_tracking": 0,
+    "date_color": "#000000",
+    "date_font": "AvenirNext-Bold",
+    "date_format": "#F j \\a\\t g:i A#",
+    "date_line_height": 19,
+    "date_size": 14,
+    "date_tracking": 0,
     "pullquote_border_color": "#ffebe0",
     "pullquote_border_style": "solid",
     "pullquote_border_width": 8,

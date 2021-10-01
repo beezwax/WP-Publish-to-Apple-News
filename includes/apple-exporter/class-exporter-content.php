@@ -78,7 +78,7 @@ class Exporter_Content {
 	 * @var string
 	 * @access private
 	 */
-	private $standalone_byline;
+	private $author;
 
 	/**
 	 * Publication date for the content being exported.
@@ -86,7 +86,7 @@ class Exporter_Content {
 	 * @var string
 	 * @access private
 	 */
-	private $publication_date;
+	private $date;
 
 	/**
 	 * Settings for the content being exported.
@@ -148,7 +148,7 @@ class Exporter_Content {
 	 * @param string                   $slug     Optional. The slug of the post to be exported.
 	 * @access public
 	 */
-	public function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $publication_date = null, $settings = null, $slug = null ) {
+	public function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $date = null, $settings = null, $slug = null ) {
 		$this->id                = $id;
 		$this->slug              = $slug;
 		$this->title             = $title;
@@ -156,8 +156,8 @@ class Exporter_Content {
 		$this->intro             = $intro;
 		$this->cover             = $cover;
 		$this->byline            = $byline;
-		$this->standalone_byline = $standalone_byline;
-		$this->publication_date  = $publication_date;
+		$this->author = $author;
+		$this->date  = $date;
 		$this->settings          = ! empty( $settings ) ? $settings : new Exporter_Content_Settings();
 	}
 
@@ -237,18 +237,18 @@ class Exporter_Content {
 	 * @access public
 	 * @return string The standalone byline.
 	 */
-	public function standalone_byline() {
-		return $this->standalone_byline;
+	public function author() {
+		return $this->author;
 	}
 
 	/**
-	 * Get the content publicaton_date.
+	 * Get the content date.
 	 *
 	 * @access public
 	 * @return string The byline.
 	 */
-	public function publicaton_date() {
-		return $this->publication_date;
+	public function date() {
+		return $this->date;
 	}
 
 	/**

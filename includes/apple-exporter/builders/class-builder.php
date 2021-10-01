@@ -89,8 +89,8 @@ abstract class Builder {
 	 * @access protected
 	 * @return string The byline from the content object.
 	 */
-	protected function content_standalone_byline() {
-		return $this->content->standalone_byline();
+	protected function content_author() {
+		return $this->content->author();
 	}
 
 	/**
@@ -99,8 +99,8 @@ abstract class Builder {
 	 * @access protected
 	 * @return string The publication date from the content object.
 	 */
-	protected function content_publication_date() {
-		return $this->content->publication_date();
+	protected function content_date() {
+		return $this->content->date();
 	}
 
 	/**

@@ -154,10 +154,10 @@ class Export extends Action {
 		$byline = $this->format_byline( $post );
 
 		// Build the standalone byline.
-		$standalone_byline = $this->format_standalone_byline( $post );
+		$author = $this->format_author( $post );
 
 		// Build the publication date.
-		$publication_date = $this->format_publication_date( $post );
+		$date = $this->format_date( $post );
 
 		// Get the content.
 		$content = $this->get_content( $post );
@@ -277,8 +277,8 @@ class Export extends Action {
 			$excerpt,
 			$post_thumb,
 			$byline,
-			$$standalone_byline,
-			$publication_date,
+			$$author,
+			$date,
 			$this->fetch_content_settings(),
 			$slug
 		);
@@ -298,13 +298,18 @@ class Export extends Action {
 	 * @return string
 	 */
 	public function format_byline( $post, $author = '', $date = '' ) {
-
 		// Get information about the currently used theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
 		// Get the author.
 		if ( empty( $author ) ) {
-			$author = Apple_News::get_authors();
+
+			// Try to get the author information from Co-Authors Plus.
+			if ( function_exists( 'coauthors' ) ) {
+				$author = coauthors( null, null, null, null, false );
+			} else {
+				$author = ucfirst( get_the_author_meta( 'display_name', $post->post_author ) );
+			}
 		}
 
 		// Get the date.
@@ -348,9 +353,7 @@ class Export extends Action {
 		return $byline;
 	}
 
-
-
-		/**
+	/**
 	 * Formats the standalone byline.
 	 *
 	 * @since 2.3.0
@@ -360,17 +363,23 @@ class Export extends Action {
 	 * @access public
 	 * @return string
 	 */
-	public function format_standalone_byline( $post, $author = '' ) {
+	public function format_author( $post, $author = '' ) {
 		// Get information about the currently used theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
 		// Get the author.
 		if ( empty( $author ) ) {
-			$author = Apple_News::get_authors();
+
+			// Try to get the author information from Co-Authors Plus.
+			if ( function_exists( 'coauthors' ) ) {
+				$author = coauthors( null, null, null, null, false );
+			} else {
+				$author = ucfirst( get_the_author_meta( 'display_name', $post->post_author ) );
+			}
 		}
 
 		// Check for a custom byline format.
-		$byline_format = $theme->get_value( 'byline_format' );
+		$byline_format = $theme->get_value( 'author_format' );
 		if ( ! empty( $byline_format ) ) {
 			/**
 			 * Find and replace the author format placeholder name with a temporary placeholder.
@@ -403,12 +412,9 @@ class Export extends Action {
 	 * @access public
 	 * @return string
 	 */
-	public function format_publication_date( $post, $date = '' ) {
+	public function format_date( $post, $date = '' ) {
 		// Get information about the currently used theme.
 		$theme = \Apple_Exporter\Theme::get_used();
-
-		// Set empty string.
-		$publication_date = '';
 
 		// Get the date.
 		if ( empty( $date ) && ! empty( $post->post_date ) ) {
@@ -420,25 +426,25 @@ class Export extends Action {
 		}
 
 		// Check for a custom byline format.
-		$publication_date_format = $theme->get_value( 'publication_date_format' );
+		$date_format = $theme->get_value( 'date_format' );
 
-		if ( ! empty( $publication_date_format ) ) {
+		if ( ! empty( $date_format ) ) {
 			// Attempt to parse the date format from the remaining string.
 			$matches = array();
-			preg_match( '/#(.*?)#/', $publication_date_format, $matches );
+			preg_match( '/#(.*?)#/', $date_format, $matches );
 			if ( ! empty( $matches[1] ) ) {
 				// Set the date using the custom format.
-				$publication_date = apple_news_date( $matches[1], strtotime( $date ) );
+				$date = apple_news_date( $matches[1], strtotime( $date ) );
 			}
 		} else {
 			// Use the default format.
-			$publication_date = sprintf(
+			$date = sprintf(
 				'%1$s',
 				apple_news_date( $date_format, strtotime( $date ) )
 			);
 		}
 
-		return $publication_date;
+		return $date;
 	}
 
 	/**

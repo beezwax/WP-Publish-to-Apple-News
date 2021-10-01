@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News: \Apple_Exporter\Components\Standalone_Byline class
+ * Publish to Apple News: \Apple_Exporter\Components\author class
  *
  * @package Apple_News
  * @subpackage Apple_Exporter\Components
@@ -13,7 +13,7 @@ namespace Apple_Exporter\Components;
  *
  * @since 0.2.0
  */
-class Standalone_Byline extends Component {
+class author extends Component {
 
 	/**
 	 * Register all specs for the component.
