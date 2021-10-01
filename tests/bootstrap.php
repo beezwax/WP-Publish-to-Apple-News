@@ -1,4 +1,12 @@
 <?php
+/**
+ * Publish to Apple News Tests: Bootstrap File
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
+
+const WP_TESTS_PHPUNIT_POLYFILLS_PATH = __DIR__ . '/../vendor/yoast/phpunit-polyfills';
 
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 if ( ! $_tests_dir ) {

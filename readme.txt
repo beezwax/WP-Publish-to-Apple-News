@@ -49,6 +49,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 = 2.3.0 =
 * Bugfix: Fixes an issue with some of the example themes where pullquotes would create invalid JSON due to the default-pullquote textStyle not being set. Props to @soulseekah for the fix.
 * Bugfix: Fixes an issue where a custom filter is used to make all image URLs root-relative when using featured images to populate the Cover component, which was leading to an INVALID_DOCUMENT error from the News API due to the root-relative URL (e.g., /path/to/my/image.jpg instead of https://example.org/path/to/my/image.jpg).
+* Bugfix: Fixes an issue with images not deduping when Jetpack Site Accelerator (Photon) is enabled.
 * Enhancement: Added support for mailto:, music://, musics://, stocks:// and webcal:// links.
 * Enhancement: Added an option and a filter for skipping auto-push of posts with certain taxonomy terms.
 * Enhancement: Added support for html tags when customizing theme JSON.
