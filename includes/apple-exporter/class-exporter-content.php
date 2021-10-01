@@ -73,6 +73,14 @@ class Exporter_Content {
 	private $byline;
 
 	/**
+	 * Publication date for the content being exported.
+	 *
+	 * @var string
+	 * @access private
+	 */
+	private $publication_date;
+
+	/**
 	 * Settings for the content being exported.
 	 *
 	 * @var Settings
@@ -132,15 +140,16 @@ class Exporter_Content {
 	 * @param string                   $slug     Optional. The slug of the post to be exported.
 	 * @access public
 	 */
-	public function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $settings = null, $slug = null ) {
-		$this->id       = $id;
-		$this->slug     = $slug;
-		$this->title    = $title;
-		$this->content  = $content;
-		$this->intro    = $intro;
-		$this->cover    = $cover;
-		$this->byline   = $byline;
-		$this->settings = ! empty( $settings ) ? $settings : new Exporter_Content_Settings();
+	public function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $publication_date = null, $settings = null, $slug = null ) {
+		$this->id               = $id;
+		$this->slug             = $slug;
+		$this->title            = $title;
+		$this->content          = $content;
+		$this->intro            = $intro;
+		$this->cover            = $cover;
+		$this->byline           = $byline;
+		$this->publication_date = $publication_date;
+		$this->settings         = ! empty( $settings ) ? $settings : new Exporter_Content_Settings();
 	}
 
 	/**

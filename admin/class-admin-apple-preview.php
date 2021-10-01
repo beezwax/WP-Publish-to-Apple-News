@@ -36,16 +36,25 @@ class Admin_Apple_Preview extends Apple_News {
 		}
 
 		// Merge plugin-level settings with theme-level settings.
-		$admin_settings = new Admin_Apple_Settings();
+		$admin_settings = new \Admin_Apple_Settings();
 		$settings       = $admin_settings->fetch_settings();
 
 		// Determine if HTML support is enabled.
 		$settings     = get_option( self::$option_name );
 		$html_support = ( isset( $settings['html_support'] )
-			&& 'yes' === $settings['html_support']
-		);
+			&& 'yes' === $settings['html_support'] );
 
+		// Determine if theme has unified byline support.
+		$has_unified_byline = ( isset( $settings['use_unified_byline'] )
+			&& 'yes' === $settings['use_unified_byline'] );
+
+		// Handle unified byline format for preview theme setup.
+		if ( $has_unified_byline ) {
+			$theme->set_value( 'byline_format', 'by #author# | #M j, Y | g:i A#' );
+			$theme->save();
+		}
 		?>
+
 		<div class="apple-news-preview">
 			<?php
 			/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
@@ -71,25 +80,29 @@ class Admin_Apple_Preview extends Apple_News {
 			$date   = apple_news_date( 'M j, Y g:i A' );
 			$export = new Apple_Actions\Index\Export( $settings );
 
-			$standalone_byline = sprintf(
-				'<div class="apple-news-standalone-byline apple-news-component apple-news-meta-component">%s</div>',
-				$export->format_byline( null, $author, null )
-			);
+			if ( $has_unified_byline ) {
+				$byline = sprintf(
+					'<div class="apple-news-byline apple-news-component apple-news-meta-component">%s</div>',
+					$export->format_byline( null, $author, $date )
+				);
+			} else {
+				$standalone_byline = sprintf(
+					'<div class="apple-news-standalone-byline apple-news-component apple-news-meta-component">%s</div>',
+					$export->format_byline( null, $author, null )
+				);
 
-			$byline = sprintf(
-				'<div class="apple-news-byline apple-news-component apple-news-meta-component">%s</div>',
-				$export->format_byline( null, $author, $date )
-			);
-
-			$publication_date = sprintf(
-				'<div class="apple-news-publication-date apple-news-component apple-news-meta-component">%s</div>',
-				$export->format_publication_date( null, $date )
-			);
+				$publication_date = sprintf(
+					'<div class="apple-news-publication-date apple-news-component apple-news-meta-component">%s</div>',
+					$export->format_publication_date( null, $date )
+				);
+			}
 
 			// Get the order of the top components.
 			$meta_component_order = $theme->get_value( 'meta_component_order' );
 			if ( ! is_array( $meta_component_order ) ) {
-				$meta_component_order = array();
+				$meta_component_order = [];
+			} elseif ( $has_unified_byline ) {
+				$meta_component_order = [ 'cover', 'slug', 'title', 'byline' ];
 			}
 			foreach ( $meta_component_order as $component ) {
 				if ( isset( $$component ) ) {

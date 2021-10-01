@@ -53,13 +53,15 @@ class Settings {
 	 * Constructor.
 	 */
 	public function __construct() {
-		self::set_default_byline_setting();
+		self::set_initial_byline_setting();
 	}
 
 	/**
 	 * Get byline settings for theme.
+	 *
+	 * @since 2.3.0
 	 */
-	public function set_default_byline_setting() {
+	public function set_initial_byline_setting() {
 		// Check if legacy byline component order exists and set setting.
 		$settings = get_option( 'apple_news_settings' );
 		if ( ! isset( $settings['use_unified_byline'] ) ) {
@@ -74,7 +76,23 @@ class Settings {
 	}
 
 	/**
+	 * Get byline setting or set default
+	 *
+	 * @since 2.3.0
+	 *
+	 * @return string yes or no
+	 */
+	public function get_byline_setting() {
+		// Check if legacy byline component order exists and set setting.
+		$settings = get_option( 'apple_news_settings' );
+		return isset( $settings['use_unified_byline'] )
+			? $settings['use_unified_byline'] : self::get_default_byline_setting();
+	}
+
+	/**
 	 * Return default theme value for byline.
+	 *
+	 * @since 2.3.0
 	 *
 	 * @return string yes or no.
 	 */

@@ -150,11 +150,11 @@
 		}
 
 		// Legacy Unified Byline
-		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_font', 'font-family', null, null );
-		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_size', 'font-size', 'px', null );
-		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_line_height', 'line-height', 'px', null );
-		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_tracking', 'letter-spacing', 'px', $( '#byline_size' ).val() / 100 );
-		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_color', 'color', null, null );
+		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'unified_byline_font', 'font-family', null, null );
+		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'unified_byline_size', 'font-size', 'px', null );
+		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'unified_byline_line_height', 'line-height', 'px', null );
+		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'unified_byline_tracking', 'letter-spacing', 'px', $( '#unified_byline_size' ).val() / 100 );
+		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'unified_byline_color', 'color', null, null );
 
 		// Standalone byline.
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-standalone-byline', 'byline_font', 'font-family', null, null );

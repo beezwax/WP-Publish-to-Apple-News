@@ -152,7 +152,22 @@ class Export extends Action {
 		}
 
 		// Build the byline.
-		$byline = $this->format_byline( $post );
+		$byline = $this->format_byline( $post );;
+
+		// Merge plugin-level settings with theme-level settings.
+		$admin_settings = new \Admin_Apple_Settings();
+		$settings       = $admin_settings->fetch_settings();
+
+		// Determine if we're using the unified byline.
+		$settings           = get_option( 'apple_news_settings' );
+		$has_unified_byline = ( isset( $settings['use_unified_byline'] )
+			&& 'yes' === $settings['use_unified_byline'] );
+
+		$publicatoin_date   = null;
+
+		if ( ! $has_unified_byline ) {
+			$publication_date = $this->format_publication_date( $post );
+		}
 
 		// Get the content.
 		$content = $this->get_content( $post );
@@ -272,6 +287,7 @@ class Export extends Action {
 			$excerpt,
 			$post_thumb,
 			$byline,
+			$publication_date,
 			$this->fetch_content_settings(),
 			$slug
 		);
@@ -291,12 +307,7 @@ class Export extends Action {
 	 * @return string
 	 */
 	public function format_byline( $post, $author = '', $date = '' ) {
-
 		$byline = '';
-
-		// Get byline setting from theme.
-		$settings           = new Settings();
-		$has_unified_byline = 'yes' === $settings->get_default_byline_setting();
 
 		// Get the author.
 		if ( empty( $author ) ) {
@@ -307,6 +318,15 @@ class Export extends Action {
 		if ( empty( $date ) && ! empty( $post->post_date ) ) {
 			$date = $post->post_date;
 		}
+
+		// Merge plugin-level settings with theme-level settings.
+		$admin_settings = new \Admin_Apple_Settings();
+		$settings       = $admin_settings->fetch_settings();
+
+		// Determine if we're using the unified byline.
+		$settings           = get_option( 'apple_news_settings' );
+		$has_unified_byline = ( isset( $settings['use_unified_byline'] )
+			&& 'yes' === $settings['use_unified_byline'] );
 
 		// If we have both author and date, assume unified byline.
 		if ( $has_unified_byline ) {
@@ -421,14 +441,6 @@ class Export extends Action {
 
 		// Set empty string.
 		$publication_date = '';
-
-		// Get byline setting from theme.
-		$settings           = new Settings();
-		$has_unified_byline = 'yes' === $settings->get_default_byline_setting();
-
-		if ( $has_unified_byline ) {
-			return;
-		}
 
 		// Get the date.
 		if ( empty( $date ) && ! empty( $post->post_date ) ) {

@@ -490,6 +490,17 @@ class Theme {
 		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
 		$options = self::get_options();
 
+		// Determine if theme has unified byline support.
+		$settings     = get_option( 'apple_news_settings' );
+		$has_unified_byline = ( isset( $settings['use_unified_byline'] )
+			&& 'yes' === $settings['use_unified_byline'] );
+
+		// Handle unified byline format for preview theme setup.
+		if ( $has_unified_byline ) {
+			$theme->set_value( 'meta_component_order', [ 'cover', 'slug', 'title', 'byline' ] );
+			$theme->save();
+		}
+
 		// Get the current order.
 		$component_order = $theme->get_value( 'meta_component_order' );
 		if ( empty( $component_order ) || ! is_array( $component_order ) ) {

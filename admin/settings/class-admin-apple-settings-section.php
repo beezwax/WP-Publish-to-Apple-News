@@ -577,6 +577,30 @@ class Admin_Apple_Settings_Section extends Apple_News {
 				if ( ! empty( $sanitized_value ) || in_array( $sanitized_value, array( 0, '0' ), true ) ) {
 					$value = $sanitized_value;
 				}
+
+				// Special handling for going betwen the unified byline and standalone byline.
+				if ( $key === 'use_unified_byline' ) {
+					// Get information about the currently used theme.
+					$theme = \Apple_Exporter\Theme::get_used();
+					$order = $theme->get_value( 'meta_component_order' );
+
+					// If we have the standalone byline theme setting, but we want to unify, update the theme.
+					// Else if we have byline and want to split, split.
+					// Else everything is as it should be.
+					if ( in_array( 'standalone_byline', $order, true ) && 'yes' === $value ) {
+						$order = array_diff( $order, [ 'standalone_byline', 'publication_date' ] );
+						array_push( $order, 'byline' );
+						$theme->set_value( 'meta_component_order', $order );
+						$theme->set_value( 'byline_format', 'by #author# | #M j, Y | g:i A#' );
+						$theme->save();
+					} elseif ( in_array( 'byline', $order, true ) && 'no' === $value ) {
+						unset( $order['byline'] );
+						array_push( $order, 'standalone_byline', 'publication_date' );
+						$theme->set_value( 'meta_component_order', $order );
+						$theme->set_value( 'byline_format', 'by #author#' );
+						$theme->save();
+					}
+				}
 			}
 
 			// Add to the array.
