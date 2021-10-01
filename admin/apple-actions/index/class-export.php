@@ -219,6 +219,30 @@ class Export extends Action {
 		$byline = apply_filters( 'apple_news_exporter_byline', $byline, $post->ID );
 
 		/**
+		 * Filters the standalone author of an article before it is sent to Apple News.
+		 *
+		 * The author is used for the Author component, if it is active.
+		 *
+		 * @since 2.3.0
+		 *
+		 * @param string $author  The standalone byline for the post.
+		 * @param int    $post_id The ID of the post.
+		 */
+		$author = apply_filters( 'apple_news_exporter_author', $author, $post->ID );
+
+		/**
+		 * Filters the date of an article before it is sent to Apple News.
+		 *
+		 * The date is used for the Date component, if it is active.
+		 *
+		 * @since 2.3.0
+		 *
+		 * @param string $ date   The date for the post.
+		 * @param int    $post_id The ID of the post.
+		 */
+		$date = apply_filters( 'apple_news_exporter_date', $date, $post->ID );
+
+		/**
 		 * Filters the slug of an article before it is sent to Apple News.
 		 *
 		 * The slug is used for the Slug component, if it is active.
@@ -271,13 +295,13 @@ class Export extends Action {
 
 		// Now pass all the variables into the Exporter_Content array.
 		$base_content = new Exporter_Content(
-			$post->ID,
+		$post->ID,
 			$title,
 			$content,
 			$excerpt,
 			$post_thumb,
 			$byline,
-			$$author,
+			$author,
 			$date,
 			$this->fetch_content_settings(),
 			$slug
@@ -301,15 +325,14 @@ class Export extends Action {
 		// Get information about the currently used theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
+		// Make sure we need to support this component.
+		if ( ! in_array( 'byline', $theme->get_value( 'meta_component_order' ), true ) ) {
+			return $author;
+		}
+
 		// Get the author.
 		if ( empty( $author ) ) {
-
-			// Try to get the author information from Co-Authors Plus.
-			if ( function_exists( 'coauthors' ) ) {
-				$author = coauthors( null, null, null, null, false );
-			} else {
-				$author = ucfirst( get_the_author_meta( 'display_name', $post->post_author ) );
-			}
+			$author = Apple_News::get_authors();
 		}
 
 		// Get the date.
@@ -367,15 +390,14 @@ class Export extends Action {
 		// Get information about the currently used theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
+		// Make sure we need to support this component.
+		if ( ! in_array( 'author', $theme->get_value( 'meta_component_order' ), true ) ) {
+			return $author;
+		}
+
 		// Get the author.
 		if ( empty( $author ) ) {
-
-			// Try to get the author information from Co-Authors Plus.
-			if ( function_exists( 'coauthors' ) ) {
-				$author = coauthors( null, null, null, null, false );
-			} else {
-				$author = ucfirst( get_the_author_meta( 'display_name', $post->post_author ) );
-			}
+			$author = Apple_News::get_authors();
 		}
 
 		// Check for a custom byline format.
@@ -415,6 +437,11 @@ class Export extends Action {
 	public function format_date( $post, $date = '' ) {
 		// Get information about the currently used theme.
 		$theme = \Apple_Exporter\Theme::get_used();
+
+		// Make sure we need to support this component.
+		if ( ! in_array( 'date', $theme->get_value( 'meta_component_order' ), true ) ) {
+			return $date;
+		}
 
 		// Get the date.
 		if ( empty( $date ) && ! empty( $post->post_date ) ) {

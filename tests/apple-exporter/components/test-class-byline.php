@@ -64,13 +64,14 @@ class Byline_Test extends Apple_News_Testcase {
 	public function test_settings() {
 		$this->set_theme_settings(
 			[
-				'byline_color'       => '#abcdef',
-				'byline_color_dark'  => '#123456',
-				'byline_font'        => 'AmericanTypewriter',
-				'byline_line_height' => 12,
-				'author_links'       => 'no',
-				'byline_size'        => 34,
-				'byline_tracking'    => 56,
+				'byline_color'         => '#abcdef',
+				'byline_color_dark'    => '#123456',
+				'byline_font'          => 'AmericanTypewriter',
+				'byline_line_height'   => 12,
+				'author_links'         => 'no',
+				'byline_size'          => 34,
+				'byline_tracking'      => 56,
+				'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ],
 			]
 		);
 
@@ -98,6 +99,7 @@ class Byline_Test extends Apple_News_Testcase {
 				'author_links'           => 'yes',
 				'byline_size'            => 34,
 				'byline_tracking'        => 56,
+				'meta_component_order'   => [ 'cover', 'slug', 'title', 'byline' ],
 			]
 		);
 
@@ -127,6 +129,7 @@ class Byline_Test extends Apple_News_Testcase {
 				'author_links'           => 'yes',
 				'byline_size'            => 34,
 				'byline_tracking'        => 56,
+				'meta_component_order'   => [ 'cover', 'slug', 'title', 'byline' ],
 			]
 		);
 

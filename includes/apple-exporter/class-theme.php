@@ -1097,7 +1097,7 @@ class Theme {
 				'type'    => 'integer',
 			),
 			'meta_component_order'               => array(
-				'default'     => array( 'cover', 'slug', 'title', 'byline', 'author', 'date' ),
+				'default'     => array( 'cover', 'slug', 'title', 'author', 'date' ),
 				'all_options' => array( 'cover', 'title', 'slug', 'byline', 'author', 'date', 'intro' ),
 				'callback'    => array( get_called_class(), 'render_meta_component_order' ),
 				'type'        => 'array',

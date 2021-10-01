@@ -262,6 +262,7 @@ HTML
 	 * Tests code formatting.
 	 */
 	public function test_code_formatting() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		$content = <<<HTML
 <!-- wp:paragraph -->
 <p>Lorem ipsum. <a href="https://www.wordpress.org">Dolor sit amet.</a></p>
@@ -296,6 +297,7 @@ HTML;
 	 * @param string $post_content The post content for the post.
 	 */
 	public function test_empty_html_content( $post_content ) {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		$post_id = self::factory()->post->create( [ 'post_content' => $post_content ] );
 		$json    = $this->get_json_for_post( $post_id );
 
@@ -309,6 +311,7 @@ HTML;
 	 * Test the `apple_news_body_json` filter.
 	 */
 	public function test_filter() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		add_filter( 'apple_news_body_json', [ $this, 'filter_apple_news_body_json' ] );
 
 		// Create a test post and get JSON for it.
@@ -325,6 +328,7 @@ HTML;
 	 * Test the `apple_news_body_html_enabled` filter.
 	 */
 	public function test_filter_html() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		// Test before filter.
 		$post_id = self::factory()->post->create( [ 'post_content' => 'Test content.' ] );
 		$json    = $this->get_json_for_post( $post_id );
@@ -354,6 +358,7 @@ HTML;
 	 * @param bool   $should_work Whether the link is expected to work in Apple News Format or not.
 	 */
 	public function test_link_types( $link, $should_work ) {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		$content  = <<<HTML
 <!-- wp:paragraph -->
 <p>Lorem ipsum <a href="{$link}">dolor sit amet</a>.</p>
@@ -456,7 +461,10 @@ HTML;
 	 * Test the setting to disable the initial dropcap.
 	 */
 	public function test_without_dropcap() {
-		$this->set_theme_settings( [ 'initial_dropcap' => 'no' ] );
+		$this->set_theme_settings( [
+			'initial_dropcap'      => 'no',
+			'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ],
+		] );
 		$content = <<<HTML
 <!-- wp:paragraph -->
 <p>Paragraph 1.</p>

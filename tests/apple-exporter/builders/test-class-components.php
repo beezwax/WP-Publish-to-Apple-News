@@ -129,7 +129,10 @@ class Component_Tests extends Apple_News_Testcase {
 	 * cover image.
 	 */
 	public function testFeaturedImageDeduping() {
-		$this->set_theme_settings( [ 'cover_caption' => true ] );
+		$this->set_theme_settings( [
+			'cover_caption'        => true,
+			'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ],
+		] );
 
 		// Get two images.
 		$image_1 = $this->get_new_attachment();

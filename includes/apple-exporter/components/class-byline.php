@@ -189,6 +189,4 @@ class Byline extends Component {
 			'layout'
 		);
 	}
-
 }
-

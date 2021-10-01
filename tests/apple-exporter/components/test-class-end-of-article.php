@@ -19,6 +19,7 @@ class Test_End_Of_Article extends Component_TestCase {
 	 * Test default End Of Article behavior
 	 */
 	public function testDefaultEndOfArticleSetting() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		$post_id = self::factory()->post->create();
 		$json    = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 3, count( $json['components'] ) );
@@ -43,6 +44,7 @@ class Test_End_Of_Article extends Component_TestCase {
 						'layout' => [],
 					],
 				],
+				'meta_component_order'             => [ 'cover', 'slug', 'title', 'byline' ],
 			]
 		);
 

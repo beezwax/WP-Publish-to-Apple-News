@@ -42,6 +42,7 @@ class Heading_Test extends Apple_News_Testcase {
 	 * Test the `apple_news_heading_json` filter.
 	 */
 	public function test_filter() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		add_filter( 'apple_news_heading_json', [ $this, 'filter_apple_news_heading_json' ] );
 
 		// Create a test post and get JSON for it.
@@ -63,6 +64,7 @@ HTML;
 	 * Ensures HTML is allowed in headings.
 	 */
 	public function test_html_in_headings() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		$content = <<<HTML
 <!-- wp:heading -->
 <h2>Heading <strong>Level</strong> 2</h2>
@@ -92,6 +94,7 @@ HTML;
 	 * Tests image splitting where the image is wrapped in a link.
 	 */
 	public function test_image_splitting_with_link() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		$content = <<<HTML
 <!-- wp:heading -->
 <h2><a href="https://www.google.com/"><img src="/example-image.jpg" /></a></h2>
@@ -115,6 +118,7 @@ HTML;
 	 * @param int $level Heading level. 1-6.
 	 */
 	public function test_render( $level ) {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		$content = <<<HTML
 <!-- wp:heading -->
 <h{$level}>Heading Level {$level}</h>

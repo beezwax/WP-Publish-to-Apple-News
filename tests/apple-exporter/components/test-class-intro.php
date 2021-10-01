@@ -31,6 +31,7 @@ class Intro_Test extends Apple_News_Testcase {
 	 * Ensures that the Intro component is disabled by default.
 	 */
 	public function test_disabled_by_default() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		$post_id = self::factory()->post->create(
 			[
 				'post_content' => 'Test content!',

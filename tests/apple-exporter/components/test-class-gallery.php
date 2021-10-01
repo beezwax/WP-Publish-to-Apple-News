@@ -102,6 +102,8 @@ HTML;
 	 * @param string $post_content The post content to load into the example post.
 	 */
 	public function test_component( $post_content ) {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+
 		// Create three new images for testing.
 		$images = [
 			$this->get_new_attachment( 0, 'Test Caption 1', 'Alt Text 1' ),

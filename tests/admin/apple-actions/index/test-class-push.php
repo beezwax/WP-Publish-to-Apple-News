@@ -28,6 +28,8 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 	 * Tests the behavior of the component errors setting (none, warn, fail).
 	 */
 	public function test_component_errors() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+
 		// Set up a post with an invalid element (div).
 		$this->become_admin();
 		$user_id   = wp_get_current_user()->ID;
