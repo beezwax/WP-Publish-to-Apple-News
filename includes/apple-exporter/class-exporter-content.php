@@ -144,11 +144,13 @@ class Exporter_Content {
 	 * @param string                   $intro    Optional. The intro of the post to be exported.
 	 * @param string|array             $cover    Optional. The cover of the post to be exported. If string, just the URL. If array, properties are 'url' and 'caption'.
 	 * @param string                   $byline   Optional. The byline of the post to be exported.
+	 * @param string                   $author   Optional. The standalone author(s) of the post to be exported.
+	 * @param string                   $date     Optional. They published date of the post to be exported.
 	 * @param \Apple_Exporter\Settings $settings Optional. Settings for the exporter.
 	 * @param string                   $slug     Optional. The slug of the post to be exported.
 	 * @access public
 	 */
-	public function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $date = null, $settings = null, $slug = null ) {
+	public function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $author = null, $date = null, $settings = null, $slug = null ) {
 		$this->id                = $id;
 		$this->slug              = $slug;
 		$this->title             = $title;
@@ -156,8 +158,8 @@ class Exporter_Content {
 		$this->intro             = $intro;
 		$this->cover             = $cover;
 		$this->byline            = $byline;
-		$this->author = $author;
-		$this->date  = $date;
+		$this->author            = $author;
+		$this->date              = $date;
 		$this->settings          = ! empty( $settings ) ? $settings : new Exporter_Content_Settings();
 	}
 
