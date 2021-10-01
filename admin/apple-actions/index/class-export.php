@@ -13,6 +13,7 @@ require_once plugin_dir_path( __FILE__ ) . '../class-action-exception.php';
 require_once plugin_dir_path( __FILE__ ) . '../../../includes/apple-exporter/autoload.php';
 
 use Apple_Actions\Action as Action;
+use Apple_Exporter\Settings as Settings;
 use Apple_Exporter\Exporter as Exporter;
 use Apple_Exporter\Exporter_Content as Exporter_Content;
 use Apple_Exporter\Exporter_Content_Settings as Exporter_Content_Settings;
@@ -291,8 +292,11 @@ class Export extends Action {
 	 */
 	public function format_byline( $post, $author = '', $date = '' ) {
 
-		// Get information about the currently used theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$byline = '';
+
+		// Get byline setting from theme.
+		$settings           = new Settings();
+		$has_unified_byline = 'yes' === $settings->get_default_byline_setting();
 
 		// Get the author.
 		if ( empty( $author ) ) {
@@ -303,6 +307,30 @@ class Export extends Action {
 		if ( empty( $date ) && ! empty( $post->post_date ) ) {
 			$date = $post->post_date;
 		}
+
+		// If we have both author and date, assume unified byline.
+		if ( $has_unified_byline ) {
+			$byline = $this->format_unified_byline( $author, $date );
+		} else {
+			$byline = $this->format_standalone_byline( $author );
+		}
+
+		return $byline;
+	}
+
+	/**
+	 * Formats the legacy unfiied byline
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param string   $author Optional. Overrides author information. Defaults to author of the post.
+	 * @param string   $date   Optional. Overrides the date. Defaults to the date of the post.
+	 * @access public
+	 * @return string
+	 */
+	public function format_unified_byline( $author, $date ) : string {
+		// Get information about the currently used theme.
+		$theme = \Apple_Exporter\Theme::get_used();
 
 		// Set the default date format.
 		$date_format = 'M j, Y | g:i A';
@@ -338,6 +366,99 @@ class Export extends Action {
 		}
 
 		return $byline;
+	}
+
+		/**
+	 * Formats the standalone byline.
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param string   $author Optional. Overrides author information. Defaults to author of the post.
+	 * @access public
+	 * @return string
+	 */
+	public function format_standalone_byline( $author ) : string {
+		// Get information about the currently used theme.
+		$theme = \Apple_Exporter\Theme::get_used();
+
+		// Check for a custom byline format.
+		$byline_format = $theme->get_value( 'byline_format' );
+		if ( ! empty( $byline_format ) ) {
+			/**
+			 * Find and replace the author format placeholder name with a temporary placeholder.
+			 * This is because some bylines could contain hashtags!
+			 */
+			$temp_byline_placeholder = 'AUTHOR';
+			$byline                  = str_replace( '#author#', $temp_byline_placeholder, $byline_format );
+
+			// Replace the temporary placeholder with the actual byline.
+			$byline = str_replace( $temp_byline_placeholder, $author, $byline );
+
+		} else {
+			// Use the default format.
+			$byline = sprintf(
+				'by %1$s',
+				$author
+			);
+		}
+
+		return $byline;
+	}
+
+	/**
+	 * Formats the publication date
+	 *
+	 * @since 2.3.0
+	 *
+	 * @param \WP_Post $post   The post to use.
+	 * @param string   $date   Optional. Overrides the date. Defaults to the date of the post.
+	 * @access public
+	 * @return string
+	 */
+	public function format_publication_date( $post, $date = '' ) {
+		// Get information about the currently used theme.
+		$theme = \Apple_Exporter\Theme::get_used();
+
+		// Set empty string.
+		$publication_date = '';
+
+		// Get byline setting from theme.
+		$settings           = new Settings();
+		$has_unified_byline = 'yes' === $settings->get_default_byline_setting();
+
+		if ( $has_unified_byline ) {
+			return;
+		}
+
+		// Get the date.
+		if ( empty( $date ) && ! empty( $post->post_date ) ) {
+			$date = $post->post_date;
+		}
+
+		if ( empty( $date ) ) {
+			return;
+		}
+
+		// Check for a custom byline format.
+		$publication_date_format = $theme->get_value( 'publication_date_format' );
+
+		if ( ! empty( $publication_date_format ) ) {
+			// Attempt to parse the date format from the remaining string.
+			$matches = array();
+			preg_match( '/#(.*?)#/', $publication_date_format, $matches );
+			if ( ! empty( $matches[1] ) ) {
+				// Set the date using the custom format.
+				$publication_date = apple_news_date( $matches[1], strtotime( $date ) );
+			}
+		} else {
+			// Use the default format.
+			$publication_date = sprintf(
+				'%1$s',
+				apple_news_date( $date_format, strtotime( $date ) )
+			);
+		}
+
+		return $publication_date;
 	}
 
 	/**
