@@ -601,6 +601,22 @@ class Theme {
 				'label'   => __( 'Byline line height', 'apple-news' ),
 				'type'    => 'float',
 			),
+			'author_link_color'                  => array(
+				'default' => '#7c7c7c',
+				'label'   => __( 'Byline link font color', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'author_link_color_dark'             => array(
+				'default' => '',
+				'label'   => __( 'Byline link font color ', 'apple-news' ),
+				'type'    => 'color',
+			),
+			'author_links'                       => array(
+				'default' => 'no',
+				'label'   => __( 'Byline author links', 'apple-news' ),
+				'options' => array( 'yes', 'no' ),
+				'type'    => 'select',
+			),
 			'author_size'                        => array(
 				'default' => 13,
 				'label'   => __( 'Byline font size', 'apple-news' ),
@@ -752,22 +768,6 @@ class Theme {
 				'description' => __( 'Set the byline format. Two tokens can be present, #author# to denote the location of the author name and a <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string also encapsulated by #. The default format is "by #author# | #M j, Y | g:i A#". Note that byline format updates only preview on save.', 'apple-news' ),
 				'label'       => __( 'Unified Byline format', 'apple-news' ),
 				'type'        => 'text',
-			),
-			'byline_link_color'                  => array(
-				'default' => '#7c7c7c',
-				'label'   => __( 'Byline link font color', 'apple-news' ),
-				'type'    => 'color',
-			),
-			'byline_link_color_dark'             => array(
-				'default' => '',
-				'label'   => __( 'Byline link font color ', 'apple-news' ),
-				'type'    => 'color',
-			),
-			'byline_links'                       => array(
-				'default' => 'no',
-				'label'   => __( 'Byline author links', 'apple-news' ),
-				'options' => array( 'yes', 'no' ),
-				'type'    => 'select',
 			),
 			'byline_line_height'                 => array(
 				'default' => 24.0,
@@ -2157,15 +2157,22 @@ class Theme {
 				'settings'    => array(
 					'byline_font',
 					'byline_size',
-					'byline_links',
 					'byline_line_height',
 					'byline_tracking',
 					'byline_color',
-					'byline_link_color',
 					'byline_format',
 					'dark_mode_colors_heading',
 					'byline_color_dark',
-					'byline_link_color_dark',
+				),
+			),
+			'author_links'     => array(
+				'label'       => __( 'Author Links', 'apple-news' ),
+				'description' => __( "Displays links to authors archive.", 'apple-news' ),
+				'settings'    => array(
+					'author_links',
+					'author_link_color',
+					'dark_mode_colors_heading',
+					'author_link_color_dark',
 				),
 			),
 			'date' => array(

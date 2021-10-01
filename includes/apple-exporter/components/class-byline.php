@@ -30,7 +30,7 @@ class Byline extends Component {
 				'role' => 'byline',
 				'text' => '#text#',
 			) + (
-				'yes' === $theme->get_value( 'byline_links' )
+				'yes' === $theme->get_value( 'author_links' )
 					? array(
 						'format' => 'html',
 					)
@@ -52,17 +52,17 @@ class Byline extends Component {
 		}
 
 		// Separate handling for byline link styles.
-		if ( 'yes' === $theme->get_value( 'byline_links' ) ) {
-			if ( ! empty( $theme->get_value( 'byline_link_color' ) ) ) {
+		if ( 'yes' === $theme->get_value( 'author_links' ) ) {
+			if ( ! empty( $theme->get_value( 'author_link_color' ) ) ) {
 				$byline_conditional['linkStyle'] = [
-					'textColor' => '#byline_link_color#',
+					'textColor' => '#author_link_color#',
 				];
 			}
 
-			if ( ! empty( $theme->get_value( 'byline_link_color_dark' ) ) ) {
+			if ( ! empty( $theme->get_value( 'author_link_color_dark' ) ) ) {
 				$byline_conditional['conditional'][] = [
 					'linkStyle'  => [
-						'textColor' => '#byline_link_color_dark#',
+						'textColor' => '#author_link_color_dark#',
 					],
 					'conditions' => array(
 						'minSpecVersion'       => '1.14',
@@ -144,16 +144,16 @@ class Byline extends Component {
 		}
 
 		// Separate handling for byline link styles.
-		if ( 'yes' === $theme->get_value( 'byline_links' ) ) {
-			if ( ! empty( $theme->get_value( 'byline_link_color' ) ) ) {
+		if ( 'yes' === $theme->get_value( 'author_links' ) ) {
+			if ( ! empty( $theme->get_value( 'author_link_color' ) ) ) {
 				$byline_conditional[] = [
-					'#byline_link_color#' => $theme->get_value( 'byline_link_color' ),
+					'#author_link_color#' => $theme->get_value( 'author_link_color' ),
 				];
 			}
 
-			if ( ! empty( $theme->get_value( 'byline_link_color_dark' ) ) ) {
+			if ( ! empty( $theme->get_value( 'author_link_color_dark' ) ) ) {
 				$byline_conditional[] = [
-					'#byline_link_color_dark#' => $theme->get_value( 'byline_link_color_dark' ),
+					'#author_link_color_dark#' => $theme->get_value( 'author_link_color_dark' ),
 				];
 			}
 		}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News: \Apple_Exporter\Components\author class
+ * Publish to Apple News: \Apple_Exporter\Components\Date class
  *
  * @package Apple_News
  * @subpackage Apple_Exporter\Components
@@ -13,7 +13,7 @@ namespace Apple_Exporter\Components;
  *
  * @since 0.2.0
  */
-class author extends Component {
+class Date extends Component {
 
 	/**
 	 * Register all specs for the component.
@@ -29,13 +29,53 @@ class author extends Component {
 			array(
 				'role' => 'byline',
 				'text' => '#text#',
+			) + (
+				'yes' === $theme->get_value( 'author_links' )
+					? array(
+						'format' => 'html',
+					)
+					: array()
 			)
 		);
+
+		// Byline style conditional.
+		$byline_conditional = [];
+
+		if ( ! empty( $theme->get_value( 'byline_color_dark' ) ) ) {
+			$byline_conditional['conditional'][] = [
+				'textColor'  => '#byline_color_dark#',
+				'conditions' => array(
+					'minSpecVersion'       => '1.14',
+					'preferredColorScheme' => 'dark',
+				),
+			];
+		}
+
+		// Separate handling for byline link styles.
+		if ( 'yes' === $theme->get_value( 'author_links' ) ) {
+			if ( ! empty( $theme->get_value( 'author_link_color' ) ) ) {
+				$byline_conditional['linkStyle'] = [
+					'textColor' => '#author_link_color#',
+				];
+			}
+
+			if ( ! empty( $theme->get_value( 'author_link_color_dark' ) ) ) {
+				$byline_conditional['conditional'][] = [
+					'linkStyle'  => [
+						'textColor' => '#author_link_color_dark#',
+					],
+					'conditions' => array(
+						'minSpecVersion'       => '1.14',
+						'preferredColorScheme' => 'dark',
+					),
+				];
+			}
+		}
 
 		$this->register_spec(
 			'default-byline',
 			__( 'Style', 'apple-news' ),
-			(
+			array_merge(
 				array(
 					'textAlignment' => '#text_alignment#',
 					'fontName'      => '#byline_font#',
@@ -43,19 +83,8 @@ class author extends Component {
 					'lineHeight'    => '#byline_line_height#',
 					'tracking'      => '#byline_tracking#',
 					'textColor'     => '#byline_color#',
-				) + (
-					! empty( $theme->get_value( 'byline_color_dark' ) )
-						? array(
-							'conditional' => array(
-								'textColor'  => '#byline_color_dark#',
-								'conditions' => array(
-									'minSpecVersion'       => '1.14',
-									'preferredColorScheme' => 'dark',
-								),
-							),
-						)
-						: array()
-				)
+				),
+				$byline_conditional
 			)
 		);
 
@@ -106,22 +135,42 @@ class author extends Component {
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
+		$byline_conditional = [];
+
+		if ( ! empty( $theme->get_value( 'byline_color_dark' ) ) ) {
+			$byline_conditional[] = [
+				'#byline_color_dark#' => $theme->get_value( 'byline_color_dark' ),
+			];
+		}
+
+		// Separate handling for byline link styles.
+		if ( 'yes' === $theme->get_value( 'author_links' ) ) {
+			if ( ! empty( $theme->get_value( 'author_link_color' ) ) ) {
+				$byline_conditional[] = [
+					'#author_link_color#' => $theme->get_value( 'author_link_color' ),
+				];
+			}
+
+			if ( ! empty( $theme->get_value( 'author_link_color_dark' ) ) ) {
+				$byline_conditional[] = [
+					'#author_link_color_dark#' => $theme->get_value( 'author_link_color_dark' ),
+				];
+			}
+		}
+
 		$this->register_style(
 			'default-byline',
 			'default-byline',
-			(
-				array(
+			array_merge(
+				[
 					'#text_alignment#'     => $this->find_text_alignment(),
 					'#byline_font#'        => $theme->get_value( 'byline_font' ),
 					'#byline_size#'        => intval( $theme->get_value( 'byline_size' ) ),
 					'#byline_line_height#' => intval( $theme->get_value( 'byline_line_height' ) ),
 					'#byline_tracking#'    => intval( $theme->get_value( 'byline_tracking' ) ) / 100,
 					'#byline_color#'       => $theme->get_value( 'byline_color' ),
-				) + (
-					! empty( $theme->get_value( 'byline_color_dark' ) )
-						? array( '#byline_color_dark' => $theme->get_value( 'byline_color_dark' ) )
-						: array()
-				)
+				],
+				$byline_conditional
 			),
 			'textStyle'
 		);
@@ -142,3 +191,4 @@ class author extends Component {
 	}
 
 }
+

@@ -129,11 +129,11 @@ class Apple_News {
 
 		// Get theme option for byline links. True if set to yes.
 		// Ignore html option if setting meta data.
-		$use_byline_links = $theme->get_value( 'byline_links' ) && 'yes' === $theme->get_value( 'byline_links' ) && 'APPLE_NEWS_DELIMITER' !== $between;
+		$use_author_links = $theme->get_value( 'author_links' ) && 'yes' === $theme->get_value( 'author_links' ) && 'APPLE_NEWS_DELIMITER' !== $between;
 
 		// Handle CAP authorship.
 		if ( $use_cap ) {
-			return $use_byline_links
+			return $use_author_links
 				? coauthors_posts_links( $between, $between_last, $before, $after, false )
 				: coauthors( $between, $between_last, $before, $after, false );
 		}
@@ -143,7 +143,7 @@ class Apple_News {
 		$author         = ucfirst( get_the_author_meta( 'display_name', $post_author_id ) );
 
 		// If we have byline links enabled.
-		if ( $use_byline_links ) {
+		if ( $use_author_links ) {
 			/**
 			 * Allows for modification of the byline link used by WordPress authors and CoAuthors Plus.
 			 *
@@ -154,7 +154,7 @@ class Apple_News {
 			 * @param string $author_nicename Author nicename for the URL being modified.
 			 */
 			$byline_url = apply_filters(
-				'apple_news_author_byline_link',
+				'apple_news_author_author_link',
 				get_author_posts_url( $post_author_id ),
 				$post_author_id,
 				get_the_author_meta( 'nicename', $post_author_id )
@@ -534,7 +534,7 @@ class Apple_News {
 		 * @param int    $author_id       Author id for the URL being modified.
 		 * @param string $author_nicename Author nicename for the URL being modified.
 		 */
-		return apply_filters( 'apple_news_author_byline_link', $link, $author_id, $author_nicename );
+		return apply_filters( 'apple_news_author_author_link', $link, $author_id, $author_nicename );
 	}
 
 	/**
