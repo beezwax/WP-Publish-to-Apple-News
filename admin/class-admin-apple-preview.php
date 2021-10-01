@@ -70,9 +70,20 @@ class Admin_Apple_Preview extends Apple_News {
 			$author = __( 'John Doe', 'apple-news' );
 			$date   = apple_news_date( 'M j, Y g:i A' );
 			$export = new Apple_Actions\Index\Export( $settings );
+
+			$standalone_byline = sprintf(
+				'<div class="apple-news-standalone-byline apple-news-component apple-news-meta-component">%s</div>',
+				$export->format_byline( null, $author, null )
+			);
+
 			$byline = sprintf(
 				'<div class="apple-news-byline apple-news-component apple-news-meta-component">%s</div>',
 				$export->format_byline( null, $author, $date )
+			);
+
+			$publication_date = sprintf(
+				'<div class="apple-news-publication-date apple-news-component apple-news-meta-component">%s</div>',
+				$export->format_publication_date( null, $date )
 			);
 
 			// Get the order of the top components.

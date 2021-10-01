@@ -1096,7 +1096,7 @@ class Theme {
 				'type'    => 'font',
 			),
 			'publication_date_format'            => array(
-				'default'     => 'by #author# | #M j, Y | g:i A#',
+				'default'     => '#M j, Y | g:i A#',
 				'description' => __( 'Set the publication date format. <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string is encapsulated by #. The default format is "#M j, Y | g:i A#". Note that publication date format updates only preview on save.', 'apple-news' ),
 				'label'       => __( 'Publication date format', 'apple-news' ),
 				'type'        => 'text',
@@ -2070,12 +2070,12 @@ class Theme {
 	 */
 	private function initialize_groups() {
 		self::$groups = array(
-			'layout'          => array(
+			'layout'           => array(
 				'label'       => __( 'Layout Spacing', 'apple-news' ),
 				'description' => __( 'The spacing for the base layout of the exported articles', 'apple-news' ),
 				'settings'    => array( 'layout_margin', 'layout_gutter' ),
 			),
-			'slug'            => array(
+			'slug'             => array(
 				'label'       => __( 'Slug', 'apple-news' ),
 				'description' => __( "The slug displays the article's section or topic", 'apple-news' ),
 				'settings'    => array(
@@ -2088,7 +2088,7 @@ class Theme {
 					'slug_color_dark',
 				),
 			),
-			'body'            => array(
+			'body'             => array(
 				'label'    => __( 'Body', 'apple-news' ),
 				'settings' => array(
 					'body_font',
@@ -2105,7 +2105,7 @@ class Theme {
 					'body_background_color_dark',
 				),
 			),
-			'dropcap'         => array(
+			'dropcap'          => array(
 				'label'    => __( 'Drop Cap', 'apple-news' ),
 				'settings' => array(
 					'initial_dropcap',
@@ -2121,9 +2121,9 @@ class Theme {
 					'dropcap_color_dark',
 				),
 			),
-			'byline'          => array(
+			'byline'           => array(
 				'label'       => __( 'Byline', 'apple-news' ),
-				'description' => __( "The byline displays the article's author and publish date", 'apple-news' ),
+				'description' => __( "Displays the article's author byline", 'apple-news' ),
 				'settings'    => array(
 					'byline_font',
 					'byline_size',
@@ -2135,7 +2135,21 @@ class Theme {
 					'byline_color_dark',
 				),
 			),
-			'heading1'        => array(
+			'publication_date' => array(
+				'label'       => __( 'Publicaton date', 'apple-news' ),
+				'description' => __( "Displays the article's publish date", 'apple-news' ),
+				'settings'    => array(
+					'publication_date_font',
+					'publication_date_size',
+					'publication_date_line_height',
+					'publication_date_tracking',
+					'publication_date_color',
+					'publication_date_format',
+					'dark_mode_colors_heading',
+					'publication_date_color_dark',
+				),
+			),
+			'heading1'         => array(
 				'label'    => __( 'Heading 1', 'apple-news' ),
 				'settings' => array(
 					'header1_font',
@@ -2160,7 +2174,7 @@ class Theme {
 
 				),
 			),
-			'heading3'        => array(
+			'heading3'         => array(
 				'label'    => __( 'Heading 3', 'apple-news' ),
 				'settings' => array(
 					'header3_font',
@@ -2172,7 +2186,7 @@ class Theme {
 					'header3_color_dark',
 				),
 			),
-			'heading4'        => array(
+			'heading4'         => array(
 				'label'    => __( 'Heading 4', 'apple-news' ),
 				'settings' => array(
 					'header4_font',
@@ -2184,7 +2198,7 @@ class Theme {
 					'header4_color_dark',
 				),
 			),
-			'heading5'        => array(
+			'heading5'         => array(
 				'label'    => __( 'Heading 5', 'apple-news' ),
 				'settings' => array(
 					'header5_font',
@@ -2196,7 +2210,7 @@ class Theme {
 					'header5_color_dark',
 				),
 			),
-			'heading6'        => array(
+			'heading6'         => array(
 				'label'    => __( 'Heading 6', 'apple-news' ),
 				'settings' => array(
 					'header6_font',
@@ -2208,7 +2222,7 @@ class Theme {
 					'header6_color_dark',
 				),
 			),
-			'caption'         => array(
+			'caption'          => array(
 				'label'    => __( 'Image caption', 'apple-news' ),
 				'settings' => array(
 					'cover_caption',
@@ -2221,14 +2235,14 @@ class Theme {
 					'caption_color_dark',
 				),
 			),
-			'pullquote'       => array(
+			'pullquote'        => array(
 				'label'       => __( 'Pull quote', 'apple-news' ),
 				'description' => sprintf(
 					'%s <a href="https://en.wikipedia.org/wiki/Pull_quote">%s</a>.',
 					__( 'Articles can have an optional', 'apple-news' ),
 					__( 'Pull quote', 'apple-news' )
 				),
-				'settings'    => array(
+				'settings'      => array(
 					'pullquote_font',
 					'pullquote_size',
 					'pullquote_line_height',
@@ -2244,7 +2258,7 @@ class Theme {
 					'pullquote_border_color_dark',
 				),
 			),
-			'blockquote'      => array(
+			'blockquote'       => array(
 				'label'    => __( 'Blockquote', 'apple-news' ),
 				'settings' => array(
 					'blockquote_font',
@@ -2262,7 +2276,7 @@ class Theme {
 					'blockquote_background_color_dark',
 				),
 			),
-			'table'           => array(
+			'table'            => array(
 				'label'    => __( 'Table (requires HTML support)', 'apple-news' ),
 				'settings' => array(
 					'table_border_color',
@@ -2294,7 +2308,7 @@ class Theme {
 					'table_header_color_dark',
 				),
 			),
-			'monospaced'      => array(
+			'monospaced'       => array(
 				'label'    => __( 'Monospaced (<pre>, <code>, <samp>)', 'apple-news' ),
 				'settings' => array(
 					'monospaced_font',
@@ -2306,12 +2320,12 @@ class Theme {
 					'monospaced_color_dark',
 				),
 			),
-			'gallery'         => array(
+			'gallery'          => array(
 				'label'       => __( 'Gallery', 'apple-news' ),
 				'description' => __( 'Can either be a standard gallery, or mosaic.', 'apple-news' ),
 				'settings'    => array( 'gallery_type' ),
 			),
-			'advertisement'   => array(
+			'advertisement'    => array(
 				'label'    => __( 'Advertisement', 'apple-news' ),
 				'settings' => array(
 					'enable_advertisement',
@@ -2319,15 +2333,41 @@ class Theme {
 					'ad_margin',
 				),
 			),
-			'component_order' => array(
+			'component_order'  => array(
 				'label'    => __( 'Component Order', 'apple-news' ),
 				'settings' => array( 'meta_component_order' ),
 			),
-			'screenshot'      => array(
+			'screenshot'       => array(
 				'label'    => __( 'Screenshots', 'apple-news' ),
 				'settings' => array( 'screenshot_url' ),
 			),
 		);
+
+		// Handle the legacy unified byline separately. 
+		$wp_settings = get_option( 'apple_news_settings' );
+		if ( isset( $wp_settings['use_unified_byline'] ) && 'yes' === $wp_settings['use_unified_byline'] ) {
+			$unified_byline = [
+				'unified_byline' => [
+					'label'       => __( 'Unified Byline', 'apple-news' ),
+					'description' => __( "The byline displays the article's author and publish date", 'apple-news' ),
+					'settings'    => [
+						'unified_byline_font',
+						'unified_byline_size',
+						'unified_byline_line_height',
+						'unified_byline_tracking',
+						'unified_byline_color',
+						'unified_byline_format',
+						'unified_dark_mode_colors_heading',
+						'unified_byline_color_dark',
+					],
+				]
+			];
+			unset(self::$groups['byline']);
+			unset(self::$groups['publication_date']);
+
+			// Insert unified byline in the 4th position under DropCap (as the standalone is above).
+			self::$groups = array_slice( self::$groups , 0, 4, true ) + $unified_byline + array_slice( self::$groups, 4, count( self::$groups ) - 4, true );
+		}
 	}
 
 	/**
