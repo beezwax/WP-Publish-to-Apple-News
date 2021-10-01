@@ -24,6 +24,8 @@
     "author_line_height": 19,
     "author_size": 14,
     "author_tracking": -1,
+    "author_links": "no",
+    "author_link_color": "#5c5c5c",
     "caption_color": "#333333",
     "caption_font": "Helvetica-Bold",
     "caption_line_height": 19,
