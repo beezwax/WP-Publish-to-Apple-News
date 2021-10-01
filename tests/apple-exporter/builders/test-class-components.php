@@ -24,32 +24,32 @@ class Component_Tests extends Apple_News_Testcase {
 		return [
 			// An image without crops should return itself.
 			[
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
 			],
 
 			// An image with a crop should return the original image without the crop.
 			[
-				'http://example.org/wp-content/uploads/2020/07/image-150x150.jpg',
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image-150x150.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
 			],
 
 			// Scaled images should return the un-scaled version.
 			[
-				'http://example.org/wp-content/uploads/2020/07/image-scaled.jpg',
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image-scaled.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
 			],
 
 			// Rotated images should return the un-rotated version.
 			[
-				'http://example.org/wp-content/uploads/2020/07/image-rotated.jpg',
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image-rotated.jpg',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
 			],
 
 			// Photon images should return the original.
 			[
-				'http://example.org/wp-content/uploads/2020/07/image.jpg?w=234&crop=0%2C5px%2C100%2C134px&ssl=1',
-				'http://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://i1.wp.com/example.org/wp-content/uploads/2020/07/image.jpg?w=234&crop=0%2C5px%2C100%2C134px&ssl=1',
+				'https://example.org/wp-content/uploads/2020/07/image.jpg',
 			],
 		];
 	}
@@ -230,6 +230,25 @@ class Component_Tests extends Apple_News_Testcase {
 		$this->assertEquals( 'photo', $json_6['components'][1]['components'][2]['role'] );
 		$this->assertEquals( wp_get_attachment_image_url( $image_2, 'full' ), $json_6['components'][1]['components'][2]['URL'] );
 		$this->assertEquals( 3, count( $json_6['components'][1]['components'] ) );
+
+		/*
+		 * Scenario 7:
+		 * - No featured image is set.
+		 * - Images in the content.
+		 * - Cover image set via postmeta.
+		 * Expected: The cover image is used from postmeta and the first image from the content is removed.
+		 */
+		$post_7 = self::factory()->post->create( [ 'post_content' => wp_get_attachment_image( $image_1, 'full' ) . wp_get_attachment_image( $image_2, 'full' ) ] );
+		add_post_meta( $post_7, 'apple_news_coverimage', $image_1 );
+		$json_7 = $this->get_json_for_post( $post_7 );
+		$this->assertEquals( 'header', $json_7['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_7['components'][0]['layout'] );
+		$this->assertEquals( 'photo', $json_7['components'][0]['components'][0]['role'] );
+		$this->assertEquals( 'headerPhotoLayout', $json_7['components'][0]['components'][0]['layout'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_1, 'full' ), $json_7['components'][0]['components'][0]['URL'] );
+		$this->assertEquals( 'photo', $json_7['components'][1]['components'][2]['role'] );
+		$this->assertEquals( wp_get_attachment_image_url( $image_2, 'full' ), $json_7['components'][1]['components'][2]['URL'] );
+		$this->assertEquals( 3, count( $json_7['components'][1]['components'] ) );
 	}
 
 	/**

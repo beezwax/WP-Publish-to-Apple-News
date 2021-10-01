@@ -152,9 +152,19 @@
 		// Legacy Unified Byline
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_font', 'font-family', null, null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_size', 'font-size', 'px', null );
+
+		// Toggle byline link.
+		// phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
+		$( '.apple-news-byline' ).html(function(index, html) {
+			return 'yes' === $( '#byline_links' ).val()
+				? html.replace('John Doe', '<a href="#">John Doe</a>')
+				: html.replace(/<a[^>]*>([^<]+)<\/a>/, 'John Doe');
+		})
+
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_line_height', 'line-height', 'px', null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_tracking', 'letter-spacing', 'px', $( '#byline_size' ).val() / 100 );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_color', 'color', null, null );
+		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline a', 'byline_link_color', 'color', null, null );
 
 		// Standalone byline.
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-author', 'author_font', 'font-family', null, null );

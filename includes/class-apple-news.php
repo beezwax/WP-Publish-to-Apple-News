@@ -113,6 +113,9 @@ class Apple_News {
 			return '';
 		}
 
+		// Get information about the currently used theme.
+		$theme = \Apple_Exporter\Theme::get_used();
+
 		/**
 		 * Allows for changing the option to use Co-Authors Plus for authorship.
 		 * Defaults to using Co-Authors Plus if the `coauthors` function is defined.
@@ -124,12 +127,42 @@ class Apple_News {
 		 */
 		$use_cap = apply_filters( 'apple_news_use_coauthors', function_exists( 'coauthors' ), get_the_ID() );
 
+		// Get theme option for byline links. True if set to yes.
+		// Ignore html option if setting meta data.
+		$use_byline_links = $theme->get_value( 'byline_links' ) && 'yes' === $theme->get_value( 'byline_links' ) && 'APPLE_NEWS_DELIMITER' !== $between;
+
 		// Handle CAP authorship.
 		if ( $use_cap ) {
-			return coauthors( $between, $between_last, $before, $after, false );
+			return $use_byline_links
+				? coauthors_posts_links( $between, $between_last, $before, $after, false )
+				: coauthors( $between, $between_last, $before, $after, false );
 		}
 
-		return ucfirst( get_the_author_meta( 'display_name', $post->post_author ) );
+		// Get author from post.
+		$post_author_id = intval( $post->post_author );
+		$author         = ucfirst( get_the_author_meta( 'display_name', $post_author_id ) );
+
+		// If we have byline links enabled.
+		if ( $use_byline_links ) {
+			/**
+			 * Allows for modification of the byline link used by WordPress authors and CoAuthors Plus.
+			 *
+			 * @since 2.3.0
+			 *
+			 * @param string $link            The author link to be filtered.
+			 * @param int    $author_id       Author id for the URL being modified.
+			 * @param string $author_nicename Author nicename for the URL being modified.
+			 */
+			$byline_url = apply_filters(
+				'apple_news_author_byline_link',
+				get_author_posts_url( $post_author_id ),
+				$post_author_id,
+				get_the_author_meta( 'nicename', $post_author_id )
+			);
+			return '<a href="' . esc_url( $byline_url ) . '" rel="author">' . esc_html( $author ) . '</a>';
+		}
+
+		return $author;
 	}
 
 	/**
@@ -298,6 +331,18 @@ class Apple_News {
 			[ $this, 'filter_update_post_metadata' ],
 			10,
 			5
+		);
+		add_filter(
+			'author_link',
+			[ $this, 'filter_author_link' ],
+			10,
+			3
+		);
+		add_filter(
+			'the_author',
+			[ $this, 'filter_the_author' ],
+			10,
+			3
 		);
 	}
 
@@ -469,6 +514,37 @@ class Apple_News {
 		}
 
 		return $check;
+	}
+
+	/**
+	 * A filter callback for author_link for coauthors URLs.
+	 *
+	 * @param string $link            The URL to the author's page.
+	 * @param int    $author_id       The author's ID.
+	 * @param string $author_nicename The author's nice name.
+	 * @return string updated $author attribute.
+	 */
+	public function filter_author_link( $link, $author_id, $author_nicename ) {
+		/**
+		 * Allows for modification of the byline link used by WordPress authors and CoAuthors Plus.
+		 *
+		 * @since 2.3.0
+		 *
+		 * @param string $link            The author link to be filtered.
+		 * @param int    $author_id       Author id for the URL being modified.
+		 * @param string $author_nicename Author nicename for the URL being modified.
+		 */
+		return apply_filters( 'apple_news_author_byline_link', $link, $author_id, $author_nicename );
+	}
+
+	/**
+	 * A filter callback for the_author to wrap authors in byline tag if supported.
+	 *
+	 * @param string $author author name.
+	 * @return string updated $author attribute.
+	 */
+	public function filter_the_author( $author ) {
+		return ucfirst( $author );
 	}
 
 	/**
