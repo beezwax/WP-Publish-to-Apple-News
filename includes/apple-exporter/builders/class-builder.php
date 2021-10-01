@@ -84,6 +84,26 @@ abstract class Builder {
 	}
 
 	/**
+	 * Gets the content standalone byline.
+	 *
+	 * @access protected
+	 * @return string The byline from the content object.
+	 */
+	protected function content_standalone_byline() {
+		return $this->content->standalone_byline();
+	}
+
+	/**
+	 * Gets the content publication date.
+	 *
+	 * @access protected
+	 * @return string The publication date from the content object.
+	 */
+	protected function content_publication_date() {
+		return $this->content->publication_date();
+	}
+
+	/**
 	 * Gets the content cover.
 	 *
 	 * @access protected

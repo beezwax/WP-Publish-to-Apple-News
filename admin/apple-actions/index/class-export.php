@@ -13,7 +13,6 @@ require_once plugin_dir_path( __FILE__ ) . '../class-action-exception.php';
 require_once plugin_dir_path( __FILE__ ) . '../../../includes/apple-exporter/autoload.php';
 
 use Apple_Actions\Action as Action;
-use Apple_Exporter\Settings as Settings;
 use Apple_Exporter\Exporter as Exporter;
 use Apple_Exporter\Exporter_Content as Exporter_Content;
 use Apple_Exporter\Exporter_Content_Settings as Exporter_Content_Settings;
@@ -155,11 +154,10 @@ class Export extends Action {
 		$byline = $this->format_byline( $post );
 
 		// Build the standalone byline.
-		$standalone_byline = $this->format_byline( $post );
+		$standalone_byline = $this->format_standalone_byline( $post );
 
 		// Build the publication date.
 		$publication_date = $this->format_publication_date( $post );
-
 
 		// Get the content.
 		$content = $this->get_content( $post );
@@ -279,6 +277,7 @@ class Export extends Action {
 			$excerpt,
 			$post_thumb,
 			$byline,
+			$$standalone_byline,
 			$publication_date,
 			$this->fetch_content_settings(),
 			$slug
@@ -299,7 +298,9 @@ class Export extends Action {
 	 * @return string
 	 */
 	public function format_byline( $post, $author = '', $date = '' ) {
-		$byline = '';
+
+		// Get information about the currently used theme.
+		$theme = \Apple_Exporter\Theme::get_used();
 
 		// Get the author.
 		if ( empty( $author ) ) {
@@ -310,30 +311,6 @@ class Export extends Action {
 		if ( empty( $date ) && ! empty( $post->post_date ) ) {
 			$date = $post->post_date;
 		}
-
-		// Merge plugin-level settings with theme-level settings.
-		$admin_settings = new \Admin_Apple_Settings();
-		$settings       = $admin_settings->fetch_settings();
-
-		// TODO: Consolodate Bylines.
-		$byline = $this->format_unified_byline( $author, $date );
-
-		return $byline;
-	}
-
-	/**
-	 * Formats the legacy unfiied byline
-	 *
-	 * @since 2.3.0
-	 *
-	 * @param string   $author Optional. Overrides author information. Defaults to author of the post.
-	 * @param string   $date   Optional. Overrides the date. Defaults to the date of the post.
-	 * @access public
-	 * @return string
-	 */
-	public function format_unified_byline( $author, $date ) : string {
-		// Get information about the currently used theme.
-		$theme = \Apple_Exporter\Theme::get_used();
 
 		// Set the default date format.
 		$date_format = 'M j, Y | g:i A';
@@ -371,18 +348,26 @@ class Export extends Action {
 		return $byline;
 	}
 
+
+
 		/**
 	 * Formats the standalone byline.
 	 *
 	 * @since 2.3.0
 	 *
+	 * @param \WP_Post $post   The post to use.
 	 * @param string   $author Optional. Overrides author information. Defaults to author of the post.
 	 * @access public
 	 * @return string
 	 */
-	public function format_standalone_byline( $author ) : string {
+	public function format_standalone_byline( $post, $author = '' ) {
 		// Get information about the currently used theme.
 		$theme = \Apple_Exporter\Theme::get_used();
+
+		// Get the author.
+		if ( empty( $author ) ) {
+			$author = Apple_News::get_authors();
+		}
 
 		// Check for a custom byline format.
 		$byline_format = $theme->get_value( 'byline_format' );
