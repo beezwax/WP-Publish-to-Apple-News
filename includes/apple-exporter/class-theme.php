@@ -490,17 +490,6 @@ class Theme {
 		/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
 		$options = self::get_options();
 
-		// Determine if theme has unified byline support.
-		$settings     = get_option( 'apple_news_settings' );
-		$has_unified_byline = ( isset( $settings['use_unified_byline'] )
-			&& 'yes' === $settings['use_unified_byline'] );
-
-		// Handle unified byline format for preview theme setup.
-		if ( $has_unified_byline ) {
-			$theme->set_value( 'meta_component_order', [ 'cover', 'slug', 'title', 'byline' ] );
-			$theme->save();
-		}
-
 		// Get the current order.
 		$component_order = $theme->get_value( 'meta_component_order' );
 		if ( empty( $component_order ) || ! is_array( $component_order ) ) {
@@ -2353,32 +2342,6 @@ class Theme {
 				'settings' => array( 'screenshot_url' ),
 			),
 		);
-
-		// Handle the legacy unified byline separately. 
-		$wp_settings = get_option( 'apple_news_settings' );
-		if ( isset( $wp_settings['use_unified_byline'] ) && 'yes' === $wp_settings['use_unified_byline'] ) {
-			$unified_byline = [
-				'unified_byline' => [
-					'label'       => __( 'Unified Byline', 'apple-news' ),
-					'description' => __( "The byline displays the article's author and publish date", 'apple-news' ),
-					'settings'    => [
-						'unified_byline_font',
-						'unified_byline_size',
-						'unified_byline_line_height',
-						'unified_byline_tracking',
-						'unified_byline_color',
-						'unified_byline_format',
-						'unified_dark_mode_colors_heading',
-						'unified_byline_color_dark',
-					],
-				]
-			];
-			unset(self::$groups['byline']);
-			unset(self::$groups['publication_date']);
-
-			// Insert unified byline in the 4th position under DropCap (as the standalone is above).
-			self::$groups = array_slice( self::$groups , 0, 4, true ) + $unified_byline + array_slice( self::$groups, 4, count( self::$groups ) - 4, true );
-		}
 	}
 
 	/**

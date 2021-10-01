@@ -46,48 +46,7 @@ class Settings {
 		'post_types'                  => array( 'post' ),
 		'show_metabox'                => 'yes',
 		'use_remote_images'           => 'yes',
-		'use_unified_byline'          => 'no',
 	);
-
-	/**
-	 * Constructor.
-	 */
-	public function __construct() {
-		self::set_initial_byline_setting();
-	}
-
-	/**
-	 * Get byline settings for theme.
-	 *
-	 * @since 2.3.0
-	 */
-	public function set_initial_byline_setting() {
-		// Check if legacy byline component order exists and set setting.
-		$settings = get_option( 'apple_news_settings' );
-		if ( ! isset( $settings['use_unified_byline'] ) ) {
-			$value = self::get_default_byline_setting();
-			$this->__set(
-				'use_unified_byline',
-				$value
-			);
-			$settings['use_unified_byline'] = $value;
-			update_option( 'apple_news_settings', $settings );
-		}
-	}
-
-	/**
-	 * Return default theme value for byline.
-	 *
-	 * @since 2.3.0
-	 *
-	 * @return string yes or no.
-	 */
-	public function get_default_byline_setting() {
-		// Get information about the currently used theme.
-		$theme = \Apple_Exporter\Theme::get_used();
-		$order = $theme->get_value( 'meta_component_order' );
-		return is_array( $order ) && in_array( 'byline', $order, true ) ? 'yes' : 'no';
-	}
 
 	/**
 	 * Magic method to get a computed or stored settings value.

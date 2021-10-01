@@ -43,19 +43,6 @@ class Admin_Apple_Preview extends Apple_News {
 		$settings     = get_option( self::$option_name );
 		$html_support = ( isset( $settings['html_support'] )
 			&& 'yes' === $settings['html_support'] );
-
-		// Determine if theme has unified byline support.
-		$has_unified_byline = ( isset( $settings['use_unified_byline'] )
-			&& 'yes' === $settings['use_unified_byline'] );
-
-		// Handle unified byline format for preview theme setup.
-		if ( $has_unified_byline ) {
-			$theme->set_value( 'byline_format', 'by #author# | #M j, Y | g:i A#' );
-			$theme->save();
-		} else {
-			$theme->set_value( 'byline_format', 'by #author#' );
-			$theme->save();
-		}
 		?>
 
 		<div class="apple-news-preview">
@@ -83,22 +70,20 @@ class Admin_Apple_Preview extends Apple_News {
 			$date   = apple_news_date( 'M j, Y g:i A' );
 			$export = new Apple_Actions\Index\Export( $settings );
 
-			if ( $has_unified_byline ) {
-				$byline = sprintf(
-					'<div class="apple-news-byline apple-news-component apple-news-meta-component">%s</div>',
-					$export->format_byline( null, $author, $date )
-				);
-			} else {
-				$standalone_byline = sprintf(
-					'<div class="apple-news-standalone-byline apple-news-component apple-news-meta-component">%s</div>',
-					$export->format_byline( null, $author, null )
-				);
+			$byline = sprintf(
+				'<div class="apple-news-byline apple-news-component apple-news-meta-component">%s</div>',
+				$export->format_byline( null, $author, $date )
+			);
 
-				$publication_date = sprintf(
-					'<div class="apple-news-publication-date apple-news-component apple-news-meta-component">%s</div>',
-					$export->format_publication_date( null, $date )
-				);
-			}
+			$standalone_byline = sprintf(
+				'<div class="apple-news-standalone-byline apple-news-component apple-news-meta-component">%s</div>',
+				$export->format_byline( null, $author, null )
+			);
+
+			$publication_date = sprintf(
+				'<div class="apple-news-publication-date apple-news-component apple-news-meta-component">%s</div>',
+				$export->format_publication_date( null, $date )
+			);
 
 			// Get the order of the top components.
 			$meta_component_order = $theme->get_value( 'meta_component_order' );

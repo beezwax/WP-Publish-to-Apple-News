@@ -152,22 +152,14 @@ class Export extends Action {
 		}
 
 		// Build the byline.
-		$byline = $this->format_byline( $post );;
+		$byline = $this->format_byline( $post );
 
-		// Merge plugin-level settings with theme-level settings.
-		$admin_settings = new \Admin_Apple_Settings();
-		$settings       = $admin_settings->fetch_settings();
+		// Build the standalone byline.
+		$standalone_byline = $this->format_byline( $post );
 
-		// Determine if we're using the unified byline.
-		$settings           = get_option( 'apple_news_settings' );
-		$has_unified_byline = ( isset( $settings['use_unified_byline'] )
-			&& 'yes' === $settings['use_unified_byline'] );
+		// Build the publication date.
+		$publication_date = $this->format_publication_date( $post );
 
-		$publicatoin_date   = null;
-
-		if ( ! $has_unified_byline ) {
-			$publication_date = $this->format_publication_date( $post );
-		}
 
 		// Get the content.
 		$content = $this->get_content( $post );
@@ -323,17 +315,8 @@ class Export extends Action {
 		$admin_settings = new \Admin_Apple_Settings();
 		$settings       = $admin_settings->fetch_settings();
 
-		// Determine if we're using the unified byline.
-		$settings           = get_option( 'apple_news_settings' );
-		$has_unified_byline = ( isset( $settings['use_unified_byline'] )
-			&& 'yes' === $settings['use_unified_byline'] );
-
-		// If we have both author and date, assume unified byline.
-		if ( $has_unified_byline ) {
-			$byline = $this->format_unified_byline( $author, $date );
-		} else {
-			$byline = $this->format_standalone_byline( $author );
-		}
+		// TODO: Consolodate Bylines.
+		$byline = $this->format_unified_byline( $author, $date );
 
 		return $byline;
 	}

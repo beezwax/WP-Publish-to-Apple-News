@@ -36,7 +36,6 @@ function get_settings_response( $data ) { // phpcs:ignore VariableAnalysis.CodeA
 		'postTypes'           => ! empty( $settings->post_types ) && is_array( $settings->post_types ) ? array_map( 'sanitize_text_field', $settings->post_types ) : [],
 		'showMetabox'         => 'yes' === $settings->show_metabox,
 		'useRemoteImages'     => 'yes' === $settings->use_remote_images,
-		'useUnifiedByline'    => 'yes' === $settings->use_unified_byline,
 	];
 }
 
