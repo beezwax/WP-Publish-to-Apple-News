@@ -52,6 +52,9 @@ class Admin_Apple_Preview extends Apple_News {
 		if ( $has_unified_byline ) {
 			$theme->set_value( 'byline_format', 'by #author# | #M j, Y | g:i A#' );
 			$theme->save();
+		} else {
+			$theme->set_value( 'byline_format', 'by #author#' );
+			$theme->save();
 		}
 		?>
 
