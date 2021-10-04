@@ -49,6 +49,7 @@ class Byline_Test extends Apple_News_Testcase {
 	 */
 	public function test_render() {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'byline' ] ] );
+		$this->disable_coauthors_support();
 
 		// Create a test post and get JSON for it.
 		$user_id = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
