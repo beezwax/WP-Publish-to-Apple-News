@@ -27,11 +27,24 @@ class Intro_Test extends Apple_News_Testcase {
 		return $json;
 	}
 
+		/**
+	 * Returns an array of arrays representing function arguments to the
+	 * test_filter function.
+	 */
+	public function data_test_disabled_by_default() {
+		return [
+			[ [ 'title', 'byline' ] ],
+			[ [ 'title', 'author' ] ],
+		];
+	}
+
 	/**
 	 * Ensures that the Intro component is disabled by default.
+	 *
+	 * @dataProvider data_test_disabled_by_default
 	 */
-	public function test_disabled_by_default() {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+	public function test_disabled_by_default( $meta_order ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		$post_id = self::factory()->post->create(
 			[
 				'post_content' => 'Test content!',
@@ -40,7 +53,8 @@ class Intro_Test extends Apple_News_Testcase {
 		);
 		$json    = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 'title', $json['components'][0]['role'] );
-		$this->assertEquals( 'byline', $json['components'][1]['role'] );
+
+		$this->assertEquals( $meta_order[1], $json['components'][1]['role'] );
 		$this->assertEquals( 'body', $json['components'][2]['role'] );
 		$this->assertEquals( '<p>Test content!</p>', $json['components'][2]['text'] );
 	}

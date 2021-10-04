@@ -235,6 +235,17 @@ HTML
 	}
 
 	/**
+	 * Returns an array of arrays representing function arguments to the
+	 * test_code_formatting, test_filter, and test_filter_html function.
+	 */
+	public function data_generic() {
+		return [
+			[ [ 'cover', 'slug', 'title', 'byline' ], 2 ],
+			[ [ 'cover', 'slug', 'title', 'author', 'date' ], 3 ],
+		];
+	}
+
+	/**
 	 * A filter function to modify the text style in the generated JSON.
 	 *
 	 * @param array $json The JSON array to modify.
@@ -260,9 +271,11 @@ HTML
 
 	/**
 	 * Tests code formatting.
+	 *
+	 * @dataProvider data_generic
 	 */
-	public function test_code_formatting() {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+	public function test_code_formatting( $meta_order, $index ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		$content = <<<HTML
 <!-- wp:paragraph -->
 <p>Lorem ipsum. <a href="https://www.wordpress.org">Dolor sit amet.</a></p>
@@ -278,15 +291,15 @@ HTML
 HTML;
 		$post_id = self::factory()->post->create( [ 'post_content' => $content ] );
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'body', $json['components'][2]['role'] );
-		$this->assertEquals( 'html', $json['components'][2]['format'] );
-		$this->assertEquals( '<p>Lorem ipsum. <a href="https://www.wordpress.org">Dolor sit amet.</a></p>', $json['components'][2]['text'] );
-		$this->assertEquals( 'body', $json['components'][3]['role'] );
-		$this->assertEquals( 'html', $json['components'][3]['format'] );
-		$this->assertEquals( '<pre>Preformatted text.</pre>', $json['components'][3]['text'] );
-		$this->assertEquals( 'body', $json['components'][4]['role'] );
-		$this->assertEquals( 'html', $json['components'][4]['format'] );
-		$this->assertEquals( '<p>Testing a <code>code sample</code>.</p>', $json['components'][4]['text'] );
+		$this->assertEquals( 'body', $json['components'][ $index ]['role'] );
+		$this->assertEquals( 'html', $json['components'][ $index ]['format'] );
+		$this->assertEquals( '<p>Lorem ipsum. <a href="https://www.wordpress.org">Dolor sit amet.</a></p>', $json['components'][ $index ]['text'] );
+		$this->assertEquals( 'body', $json['components'][ $index + 1 ]['role'] );
+		$this->assertEquals( 'html', $json['components'][ $index + 1  ]['format'] );
+		$this->assertEquals( '<pre>Preformatted text.</pre>', $json['components'][ $index + 1 ]['text'] );
+		$this->assertEquals( 'body', $json['components'][ $index + 2 ]['role'] );
+		$this->assertEquals( 'html', $json['components'][ $index + 2 ]['format'] );
+		$this->assertEquals( '<p>Testing a <code>code sample</code>.</p>', $json['components'][ $index + 2 ]['text'] );
 	}
 
 	/**
@@ -297,28 +310,47 @@ HTML;
 	 * @param string $post_content The post content for the post.
 	 */
 	public function test_empty_html_content( $post_content ) {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
-		$post_id = self::factory()->post->create( [ 'post_content' => $post_content ] );
-		$json    = $this->get_json_for_post( $post_id );
+		$components = [
+			[
+				'order' => [ 'cover', 'slug', 'title', 'byline' ],
+				'count' => 4,
+				'a'     => 2,
+				'b'     => 3,
+			],
+			[
+				'order' => [ 'cover', 'slug', 'title', 'author', 'date' ],
+				'count' => 5,
+				'a'     => 3,
+				'b'     => 4,
+			]
+		];
 
-		// There should only be two body components, one containing A, one containing B.
-		$this->assertEquals( 4, count( $json['components'] ) );
-		$this->assertEquals( '<p>A</p>', $json['components'][2]['text'] );
-		$this->assertEquals( '<p>B</p>', $json['components'][3]['text'] );
+		foreach ( $components as $component ) {
+			$this->set_theme_settings( [ 'meta_component_order' => $component['order'] ] );
+			$post_id = self::factory()->post->create( [ 'post_content' => $post_content ] );
+			$json    = $this->get_json_for_post( $post_id );
+
+			// There should only be two body components, one containing A, one containing B.
+			$this->assertEquals( $component['count'], count( $json['components'] ) );
+			$this->assertEquals( '<p>A</p>', $json['components'][ $component['a'] ]['text'] );
+			$this->assertEquals( '<p>B</p>', $json['components'][ $component['b'] ]['text'] );
+		}
 	}
 
 	/**
 	 * Test the `apple_news_body_json` filter.
+	 *
+	 * @dataProvider data_generic
 	 */
-	public function test_filter() {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+	public function test_filter( $meta_order, $index ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		add_filter( 'apple_news_body_json', [ $this, 'filter_apple_news_body_json' ] );
 
 		// Create a test post and get JSON for it.
 		$post_id = self::factory()->post->create();
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'body', $json['components'][2]['role'] );
-		$this->assertEquals( 'fancy-body', $json['components'][2]['textStyle'] );
+		$this->assertEquals( 'body', $json['components'][ $index ]['role'] );
+		$this->assertEquals( 'fancy-body', $json['components'][ $index ]['textStyle'] );
 
 		// Teardown.
 		remove_filter( 'apple_news_body_json', [ $this, 'filter_apple_news_body_json' ] );
@@ -326,23 +358,25 @@ HTML;
 
 	/**
 	 * Test the `apple_news_body_html_enabled` filter.
+	 *
+	 * @dataProvider data_generic
 	 */
-	public function test_filter_html() {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+	public function test_filter_html( $meta_order, $index ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		// Test before filter.
 		$post_id = self::factory()->post->create( [ 'post_content' => 'Test content.' ] );
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'body', $json['components'][2]['role'] );
-		$this->assertEquals( 'html', $json['components'][2]['format'] );
-		$this->assertEquals( '<p>Test content.</p>', $json['components'][2]['text'] );
+		$this->assertEquals( 'body', $json['components'][ $index ]['role'] );
+		$this->assertEquals( 'html', $json['components'][ $index ]['format'] );
+		$this->assertEquals( '<p>Test content.</p>', $json['components'][ $index ]['text'] );
 
 
 		// Add filter and test to ensure HTML mode is not used.
 		add_filter( 'apple_news_body_html_enabled', [ $this, 'filter_apple_news_body_html_enabled' ] );
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'body', $json['components'][2]['role'] );
-		$this->assertEquals( 'markdown', $json['components'][2]['format'] );
-		$this->assertEquals( 'Test content.', $json['components'][2]['text'] );
+		$this->assertEquals( 'body', $json['components'][ $index ]['role'] );
+		$this->assertEquals( 'markdown', $json['components'][ $index ]['format'] );
+		$this->assertEquals( 'Test content.', $json['components'][ $index ]['text'] );
 		remove_filter( 'apple_news_body_html_enabled', [ $this, 'filter_apple_news_body_html_enabled' ] );
 	}
 
@@ -358,25 +392,38 @@ HTML;
 	 * @param bool   $should_work Whether the link is expected to work in Apple News Format or not.
 	 */
 	public function test_link_types( $link, $should_work ) {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
-		$content  = <<<HTML
-<!-- wp:paragraph -->
-<p>Lorem ipsum <a href="{$link}">dolor sit amet</a>.</p>
-<!-- /wp:paragraph -->
-HTML;
-		$post_id  = self::factory()->post->create( [ 'post_content' => $content ] );
-		$json     = $this->get_json_for_post( $post_id );
+		$components = [
+			[
+				'order' => [ 'cover', 'slug', 'title', 'byline' ],
+				'index' => 2,
+			],
+			[
+				'order' => [ 'cover', 'slug', 'title', 'author', 'date' ],
+				'index' => 3,
+			]
+		];
 
-		// Negotiate expected value and test.
-		if ( 0 === strpos( $link, '/' ) ) {
-			$link = 'http://example.org' . $link;
-		} elseif ( 0 === strpos( $link, '#' ) ) {
-			$link = get_permalink( $post_id ) . $link;
+		foreach ( $components as $component ) {
+			$this->set_theme_settings( [ 'meta_component_order' => $component['order'] ] );
+			$content  = <<<HTML
+	<!-- wp:paragraph -->
+	<p>Lorem ipsum <a href="{$link}">dolor sit amet</a>.</p>
+	<!-- /wp:paragraph -->
+	HTML;
+			$post_id  = self::factory()->post->create( [ 'post_content' => $content ] );
+			$json     = $this->get_json_for_post( $post_id );
+
+			// Negotiate expected value and test.
+			if ( 0 === strpos( $link, '/' ) ) {
+				$link = 'http://example.org' . $link;
+			} elseif ( 0 === strpos( $link, '#' ) ) {
+				$link = get_permalink( $post_id ) . $link;
+			}
+			$expected = $should_work
+				? sprintf( '<p>Lorem ipsum <a href="%s">dolor sit amet</a>.</p>', $link )
+				: '<p>Lorem ipsum dolor sit amet.</p>';
+			$this->assertEquals( $expected, $json['components'][ $component['index'] ]['text'] );
 		}
-		$expected = $should_work
-			? sprintf( '<p>Lorem ipsum <a href="%s">dolor sit amet</a>.</p>', $link )
-			: '<p>Lorem ipsum dolor sit amet.</p>';
-		$this->assertEquals( $expected, $json['components'][2]['text'] );
 	}
 
 	/**

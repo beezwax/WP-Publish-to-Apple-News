@@ -97,11 +97,24 @@ HTML;
 	}
 
 	/**
-	 * Test the `apple_news_apply_hanging_punctuation` filter.
+	 * Returns an array of arrays representing function arguments to the
+	 * test_filter, test_filter_hanging_punctuation, test_html_in_headings functions.
 	 */
-	public function test_filter_hanging_punctuation() {
+	public function data_test_filter() {
+		return [
+			[ [ 'title', 'byline' ] ],
+			[ [ 'title', 'author' ] ],
+		];
+	}
+
+	/**
+	 * Test the `apple_news_apply_hanging_punctuation` filter.
+	 *
+	 * @dataProvider data_test_filter
+	 */
+	public function test_filter_hanging_punctuation( $meta_order ) {
 		$this->set_theme_settings( [
-			'meta_component_order'          => [ 'cover', 'slug', 'title', 'byline' ],
+			'meta_component_order'          => $meta_order,
 			'pullquote_hanging_punctuation' => 'yes'
 		] );
 		add_filter( 'apple_news_apply_hanging_punctuation', [ $this, 'filter_apple_news_apply_hanging_punctuation' ], 10, 2 );
@@ -114,7 +127,7 @@ HTML;
 	 * Test the `apple_news_quote_json` filter.
 	 */
 	public function test_filter_json() {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'title', 'author' ] ] );
 		add_filter( 'apple_news_quote_json', [ $this, 'filter_apple_news_quote_json' ] );
 		$json    = $this->get_json_for_post( $this->get_blockquote() );
 		$this->assertEquals( 'fancy-quote', $json['components'][2]['textStyle'] );
@@ -188,7 +201,7 @@ HTML;
 	 * Tests the transformation process from a blockquote to a Quote component.
 	 */
 	public function test_transform_blockquote() {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'title', 'author' ] ] );
 		$json = $this->get_json_for_post( $this->get_blockquote() );
 		$this->assertEquals( 'container', $json['components'][2]['role'] );
 		$this->assertEquals( 'quote', $json['components'][2]['components'][0]['role'] );
@@ -202,7 +215,7 @@ HTML;
 	 * Tests the transformation process with text alignment checking.
 	 */
 	public function test_transform_blockquote_alignment() {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'title', 'author' ] ] );
 		// Test right alignment.
 		$content_right = <<<HTML
 <!-- wp:quote -->
@@ -259,7 +272,7 @@ HTML;
 	 * @param string $hanging_punctuation The setting value for hanging punctuation.
 	 */
 	public function test_transform_pullquote( $text, $expected, $hanging_punctuation ) {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'title', 'byline' ] ] );
 		$this->set_theme_settings( [ 'pullquote_hanging_punctuation' => $hanging_punctuation ] );
 		$content = <<<HTML
 <!-- wp:pullquote -->

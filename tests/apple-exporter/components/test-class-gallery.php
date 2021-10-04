@@ -23,10 +23,8 @@ class Gallery_Test extends Component_TestCase {
 	 * @return array An array of arrays representing function arguments.
 	 */
 	public function data_gallery_content() {
-		$content = [];
-
 		// Gutenberg, standard gallery, three images.
-		$content[][] = <<<HTML
+		$standard = <<<HTML
 <!-- wp:gallery {"ids":[%1\$d,%4\$d,%7\$d]} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
 	<ul class="blocks-gallery-grid">
@@ -54,7 +52,7 @@ class Gallery_Test extends Component_TestCase {
 HTML;
 
 		// Gutenberg, Jetpack slideshow, three images.
-		$content[][] = <<<HTML
+		$jetpack = <<<HTML
 <!-- wp:jetpack/slideshow {"ids":[%1\$d,%4\$d,%7\$d],"sizeSlug":"large"} -->
 <div class="wp-block-jetpack-slideshow aligncenter" data-effect="slide">
 	<div class="wp-block-jetpack-slideshow_container swiper-container">
@@ -88,9 +86,16 @@ HTML;
 HTML;
 
 		// Classic editor, gallery, three images.
-		$content[][] = '[gallery ids="%1$d,%4$d,%7$d"]';
+		$shortcode = '[gallery ids="%1$d,%4$d,%7$d"]';
 
-		return $content;
+		return [
+			[ [ 'cover', 'slug', 'title', 'byline' ], $standard, 2 ],
+			[ [ 'cover', 'slug', 'title', 'byline' ], $jetpack, 2 ],
+			[ [ 'cover', 'slug', 'title', 'byline' ], $shortcode, 2 ],
+			[ [ 'cover', 'slug', 'title', 'author', 'date' ], $standard, 3 ],
+			[ [ 'cover', 'slug', 'title', 'author', 'date' ], $jetpack, 3 ],
+			[ [ 'cover', 'slug', 'title', 'author', 'date' ], $shortcode, 3 ],
+		];
 	}
 
 	/**
@@ -101,8 +106,8 @@ HTML;
 	 *
 	 * @param string $post_content The post content to load into the example post.
 	 */
-	public function test_component( $post_content ) {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+	public function test_component( $meta_order, $post_content, $index ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 
 		// Create three new images for testing.
 		$images = [
@@ -136,7 +141,7 @@ HTML;
 
 		// Get the JSON for the article and test the gallery output.
 		$json    = $this->get_json_for_post( $post_id );
-		$gallery = $json['components'][1]['components'][2];
+		$gallery = $json['components'][1]['components'][ $index ];
 		$this->assertEquals( 'gallery', $gallery['role'] );
 		$this->assertEquals( 3, count( $gallery['items'] ) );
 		$this->assertEquals( wp_get_attachment_image_url( $images[0] ), $gallery['items'][0]['URL'] );

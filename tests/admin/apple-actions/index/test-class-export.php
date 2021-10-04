@@ -18,16 +18,28 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 
 	/**
 	 * Returns an array of arrays representing function arguments to the
-	 * testBrightcoveVideo function.
+	 * test_brightcove_video function.
 	 */
-	public function dataProviderBrightcoveVideo() {
+	public function data_provider_brightcove_video() {
+		$editor_content    = '<!-- wp:bc/brightcove {"account_id":"1234567890","player_id":"abcd1234-ef56-ab78-cd90-efa1234567890","video_id":"1234567890123","playlist_id":"","experience_id":"","video_ids":"","embed":"in-page","autoplay":"","playsinline":"","picture_in_picture":"","height":"100%","width":"100%","min_width":"0px","max_width":"640px","padding_top":"56%"} /-->';
+		$shortcode_content = '[bc_video video_id="1234567890123" account_id="1234567890" player_id="abcd1234-ef56-ab78-cd90-efa1234567890" embed="in-page" padding_top="56%" autoplay="" min_width="0px" playsinline="" picture_in_picture="" max_width="640px" mute="" width="100%" height="100%" ]';
+
 		return [
-			[
-				'<!-- wp:bc/brightcove {"account_id":"1234567890","player_id":"abcd1234-ef56-ab78-cd90-efa1234567890","video_id":"1234567890123","playlist_id":"","experience_id":"","video_ids":"","embed":"in-page","autoplay":"","playsinline":"","picture_in_picture":"","height":"100%","width":"100%","min_width":"0px","max_width":"640px","padding_top":"56%"} /-->',
-			],
-			[
-				'[bc_video video_id="1234567890123" account_id="1234567890" player_id="abcd1234-ef56-ab78-cd90-efa1234567890" embed="in-page" padding_top="56%" autoplay="" min_width="0px" playsinline="" picture_in_picture="" max_width="640px" mute="" width="100%" height="100%" ]',
-			],
+			[ [ 'cover', 'slug', 'title', 'byline' ], $editor_content, 2 ],
+			[ [ 'cover', 'slug', 'title', 'byline' ], $shortcode_content, 2 ],
+			[ [ 'cover', 'slug', 'title', 'author', 'date' ], $editor_content, 3 ],
+			[ [ 'cover', 'slug', 'title', 'author', 'date' ], $shortcode_content, 3 ],
+		];
+	}
+
+		/**
+	 * Returns an array of arrays representing function arguments to the
+	 * test_is_exporting function.
+	 */
+	public function data_test_is_exporting() {
+		return [
+			[ [ 'cover', 'slug', 'title', 'byline' ], 2 ],
+			[ [ 'cover', 'slug', 'title', 'author', 'date' ], 3 ],
 		];
 	}
 
@@ -37,7 +49,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 * @access public
 	 * @return string The filtered content.
 	 */
-	public function filterTheContentTestIsExporting() {
+	public function filter_the_content_test_is_exporting() {
 		return apple_news_is_exporting() ? 'is exporting' : 'is not exporting';
 	}
 
@@ -46,19 +58,19 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 *
 	 * @param string $post_content The post content to load for the test.
 	 *
-	 * @dataProvider dataProviderBrightcoveVideo
+	 * @dataProvider data_provider_brightcove_video
 	 */
-	public function testBrightcoveVideo( $post_content ) {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+	public function test_brightcove_video( $meta_order, $post_content, $index ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		$post_id = self::factory()->post->create(
 			[
 				'post_content' => $post_content,
 			]
 		);
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'video', $json['components'][2]['role'] );
-		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][2]['URL'] );
-		$this->assertEquals( 'https://cf-images.us-east-1.prod.boltdns.net/v1/jit/1234567890/abcd1234-ef56-ab78-cd90-efabcd123456/main/1280x720/1s234ms/match/image.jpg', $json['components'][2]['stillURL'] );
+		$this->assertEquals( 'video', $json['components'][ $index ]['role'] );
+		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][ $index ]['URL'] );
+		$this->assertEquals( 'https://cf-images.us-east-1.prod.boltdns.net/v1/jit/1234567890/abcd1234-ef56-ab78-cd90-efabcd123456/main/1280x720/1s234ms/match/image.jpg', $json['components'][ $index ]['stillURL'] );
 	}
 
 	/**
@@ -336,9 +348,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 * category that is mapped to a particular section also gets the theme
 	 * that is mapped to that section.
 	 */
-	public function testThemeMapping() {
-		// TODO: Resolve issues with THIS TEST.
-		$this->markTestSkipped( 'must be revisited.' );
+	public function test_theme_mapping() {
 
 		// Load an additional example theme to facilitate mapping.
 		$this->load_example_theme( 'colorful' );
@@ -414,10 +424,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 * section that has the highest priority among the sections assigned to the
 	 * post.
 	 */
-	public function testPriority() {
-		// TODO: Resolve issues with THIS TEST.
-		$this->markTestSkipped( 'must be revisited.' );
-
+	public function test_priority() {
 		// Load an additional example theme to facilitate mapping.
 		$this->load_example_theme( 'colorful' );
 
@@ -486,7 +493,6 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		);
 
 		// Ensure that the default theme is used when no priority is specified.
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
 		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
 			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
@@ -503,7 +509,6 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		);
 
 		// Re-run the export and ensure the Colorful theme is used.
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'title', 'slug', 'byline', 'cover' ] ] );
 		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
 			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
@@ -536,10 +541,12 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the behavior of the apple_news_is_exporting() function.
 	 *
+	 * @dataProvider data_test_is_exporting
+	 *
 	 * @access public
 	 */
-	public function testIsExporting() {
-		$this->set_theme_settings( [ 'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ] ] );
+	public function test_is_exporting( $meta_order, $index ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 
 		// Setup.
 		$title = 'My Title';
@@ -550,7 +557,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		) );
 		add_filter(
 			'the_content',
-			array( $this, 'filterTheContentTestIsExporting' )
+			array( $this, 'filter_the_content_test_is_exporting' )
 		);
 
 		// Ensure is_exporting returns false before exporting.
@@ -563,7 +570,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
 			'<p>is exporting</p>',
-			$json['components'][2]['text']
+			$json['components'][ $index ]['text']
 		);
 
 		// Ensure is_exporting returns false after exporting.
@@ -575,7 +582,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		// Teardown.
 		remove_filter(
 			'the_content',
-			array( $this, 'filterTheContentTestIsExporting' )
+			array( $this, 'filter_the_content_test_is_exporting' )
 		);
 	}
 }
