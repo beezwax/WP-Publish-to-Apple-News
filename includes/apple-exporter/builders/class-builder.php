@@ -84,7 +84,7 @@ abstract class Builder {
 	}
 
 	/**
-	 * Gets the content standalone byline.
+	 * Gets the content author.
 	 *
 	 * @access protected
 	 * @return string The byline from the content object.

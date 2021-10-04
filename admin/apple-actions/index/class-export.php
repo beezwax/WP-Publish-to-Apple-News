@@ -153,7 +153,7 @@ class Export extends Action {
 		// Build the byline.
 		$byline = $this->format_byline( $post );
 
-		// Build the standalone byline.
+		// Build the author.
 		$author = $this->format_author( $post );
 
 		// Build the publication date.
@@ -219,13 +219,13 @@ class Export extends Action {
 		$byline = apply_filters( 'apple_news_exporter_byline', $byline, $post->ID );
 
 		/**
-		 * Filters the standalone author of an article before it is sent to Apple News.
+		 * Filters the author of an article before it is sent to Apple News.
 		 *
 		 * The author is used for the Author component, if it is active.
 		 *
 		 * @since 2.3.0
 		 *
-		 * @param string $author  The standalone byline for the post.
+		 * @param string $author  The author for the post.
 		 * @param int    $post_id The ID of the post.
 		 */
 		$author = apply_filters( 'apple_news_exporter_author', $author, $post->ID );
@@ -372,7 +372,7 @@ class Export extends Action {
 	}
 
 	/**
-	 * Formats the standalone byline.
+	 * Formats the author.
 	 *
 	 * @since 2.3.0
 	 *

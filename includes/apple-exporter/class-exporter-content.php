@@ -146,7 +146,7 @@ class Exporter_Content {
 	 * @param string                   $byline   Optional. The byline of the post to be exported.
 	 * @param \Apple_Exporter\Settings $settings Optional. Settings for the exporter.
 	 * @param string                   $slug     Optional. The slug of the post to be exported.
-	 * @param string                   $author   Optional. The standalone author(s) of the post to be exported.
+	 * @param string                   $author   Optional. The author(s) of the post to be exported.
 	 * @param string                   $date     Optional. They published date of the post to be exported.
 	 * @access public
 	 */
@@ -234,10 +234,10 @@ class Exporter_Content {
 	}
 
 	/**
-	 * Get the content standalone byline.
+	 * Get the content author.
 	 *
 	 * @access public
-	 * @return string The standalone byline.
+	 * @return string The author.
 	 */
 	public function author() {
 		return $this->author;

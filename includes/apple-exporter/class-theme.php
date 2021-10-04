@@ -2138,7 +2138,7 @@ class Theme {
 				),
 			),
 			'author'          => array(
-				'label'       => __( 'Standalone Byline', 'apple-news' ),
+				'label'       => __( 'Author', 'apple-news' ),
 				'description' => __( "Displays the article's author byline", 'apple-news' ),
 				'settings'    => array(
 					'author_font',
