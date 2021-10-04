@@ -26,10 +26,10 @@ class Date extends Component {
 		$this->register_spec(
 			'date-json',
 			__( 'Date JSON', 'apple-news' ),
-			array(
+			[
 				'role' => 'body',
 				'text' => '#text#',
-			)
+			]
 		);
 
 		// date style conditional.
@@ -49,14 +49,14 @@ class Date extends Component {
 			'default-date',
 			__( 'Style', 'apple-news' ),
 			array_merge(
-				array(
+				[
 					'textAlignment' => '#text_alignment#',
 					'fontName'      => '#date_font#',
 					'fontSize'      => '#date_size#',
 					'lineHeight'    => '#date_line_height#',
 					'tracking'      => '#date_tracking#',
 					'textColor'     => '#date_color#',
-				),
+				],
 				$date_conditional
 			)
 		);
@@ -64,11 +64,11 @@ class Date extends Component {
 		$this->register_spec(
 			'date-layout',
 			__( 'Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'bottom' => 10,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -88,9 +88,9 @@ class Date extends Component {
 
 		$this->register_json(
 			'date-json',
-			array(
+			[
 				'#text#' => $html,
-			)
+			]
 		);
 
 		$this->set_default_style();
@@ -142,7 +142,7 @@ class Date extends Component {
 		$this->register_full_width_layout(
 			'date-layout',
 			'date-layout',
-			array(),
+			[],
 			'layout'
 		);
 	}

@@ -26,16 +26,16 @@ class Author extends Component {
 		$this->register_spec(
 			'author-json',
 			__( 'Author JSON', 'apple-news' ),
-			array(
+			[
 				'role' => 'author',
 				'text' => '#text#',
-			) + (
+			 ] + [
 				'yes' === $theme->get_value( 'author_links' )
-					? array(
+					? [
 						'format' => 'html',
-					)
-					: array()
-			)
+					]
+					: []
+			]
 		);
 
 		// Author style conditional.
@@ -44,10 +44,10 @@ class Author extends Component {
 		if ( ! empty( $theme->get_value( 'author_color_dark' ) ) ) {
 			$author_conditional['conditional'][] = [
 				'textColor'  => '#author_color_dark#',
-				'conditions' => array(
+				'conditions' => [
 					'minSpecVersion'       => '1.14',
 					'preferredColorScheme' => 'dark',
-				),
+				],
 			];
 		}
 
@@ -64,10 +64,10 @@ class Author extends Component {
 					'linkStyle'  => [
 						'textColor' => '#author_link_color_dark#',
 					],
-					'conditions' => array(
+					'conditions' => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
+					],
 				];
 			}
 		}
@@ -76,14 +76,14 @@ class Author extends Component {
 			'default-author',
 			__( 'Style', 'apple-news' ),
 			array_merge(
-				array(
+				[
 					'textAlignment' => '#text_alignment#',
 					'fontName'      => '#author_font#',
 					'fontSize'      => '#author_size#',
 					'lineHeight'    => '#author_line_height#',
 					'tracking'      => '#author_tracking#',
 					'textColor'     => '#author_color#',
-				),
+				],
 				$author_conditional
 			)
 		);
@@ -91,11 +91,11 @@ class Author extends Component {
 		$this->register_spec(
 			'author-layout',
 			__( 'Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'top'    => 10,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -115,9 +115,9 @@ class Author extends Component {
 
 		$this->register_json(
 			'author-json',
-			array(
+			[
 				'#text#' => $html,
-			)
+			]
 		);
 
 		$this->set_default_style();
@@ -184,7 +184,7 @@ class Author extends Component {
 		$this->register_full_width_layout(
 			'author-layout',
 			'author-layout',
-			array(),
+			[],
 			'layout'
 		);
 	}
