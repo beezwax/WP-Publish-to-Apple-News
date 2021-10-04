@@ -29,12 +29,12 @@ class Author extends Component {
 			[
 				'role' => 'author',
 				'text' => '#text#',
-			 ] + [
+			] + [
 				'yes' === $theme->get_value( 'author_links' )
 					? [
 						'format' => 'html',
 					]
-					: []
+					: [],
 			]
 		);
 
@@ -93,7 +93,7 @@ class Author extends Component {
 			__( 'Layout', 'apple-news' ),
 			[
 				'margin' => [
-					'top'    => 10,
+					'top' => 10,
 				],
 			]
 		);

@@ -56,7 +56,7 @@ class Admin_Apple_Settings_Section_Advanced extends Admin_Apple_Settings_Section
 					'<a href="' . esc_url( 'https://developer.apple.com/documentation/apple_news/apple_news_format/components/using_html_with_apple_news_format' ) . '">',
 					'</a>'
 				),
-			)
+			),
 		);
 
 		// Add the groups.

@@ -120,7 +120,7 @@ class Date extends Component {
 			'default-date',
 			array_merge(
 				[
-					'#text_alignment#'     => $this->find_text_alignment(),
+					'#text_alignment#'   => $this->find_text_alignment(),
 					'#date_font#'        => $theme->get_value( 'date_font' ),
 					'#date_size#'        => intval( $theme->get_value( 'date_size' ) ),
 					'#date_line_height#' => intval( $theme->get_value( 'date_line_height' ) ),

@@ -151,16 +151,16 @@ class Exporter_Content {
 	 * @access public
 	 */
 	public function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $author = null, $date = null, $settings = null, $slug = null ) {
-		$this->id                = $id;
-		$this->slug              = $slug;
-		$this->title             = $title;
-		$this->content           = $content;
-		$this->intro             = $intro;
-		$this->cover             = $cover;
-		$this->byline            = $byline;
-		$this->author            = $author;
-		$this->date              = $date;
-		$this->settings          = ! empty( $settings ) ? $settings : new Exporter_Content_Settings();
+		$this->id       = $id;
+		$this->slug     = $slug;
+		$this->title    = $title;
+		$this->content  = $content;
+		$this->intro    = $intro;
+		$this->cover    = $cover;
+		$this->byline   = $byline;
+		$this->author   = $author;
+		$this->date     = $date;
+		$this->settings = ! empty( $settings ) ? $settings : new Exporter_Content_Settings();
 	}
 
 	/**
