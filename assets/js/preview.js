@@ -149,7 +149,7 @@
 			appleNewsSetCSS( '.apple-news-preview .apple-news-dropcap', 'dropcap_font', 'font-family', null, null );
 		}
 
-		// Legacy Unified Byline
+		// Byline
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_font', 'font-family', null, null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_size', 'font-size', 'px', null );
 
@@ -173,7 +173,7 @@
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_tracking', 'letter-spacing', 'px', $( '#byline_size' ).val() / 100 );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline', 'byline_color', 'color', null, null );
 
-		// Standalone byline.
+		// Author.
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-author', 'author_font', 'font-family', null, null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-author', 'author_size', 'font-size', 'px', null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-author', 'author_line_height', 'line-height', 'px', null );

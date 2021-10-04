@@ -26,16 +26,11 @@ class Byline extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
-				'role' => 'byline',
-				'text' => '#text#',
-			) + (
-				'yes' === $theme->get_value( 'author_links' )
-					? array(
-						'format' => 'html',
-					)
-					: array()
-			)
+			[
+				'role'   => 'byline',
+				'text'   => '#text#',
+				'format' => 'html',
+			]
 		);
 
 		// Byline style conditional.

@@ -26,15 +26,11 @@ class Author extends Component {
 		$this->register_spec(
 			'author-json',
 			__( 'Author JSON', 'apple-news' ),
-			array_merge(
-				[
-					'role' => 'author',
-					'text' => '#text#',
-				],
-				'yes' === $theme->get_value( 'author_links' ) ? [
-					'format' => 'html',
-				] : []
-			)
+			[
+				'role'   => 'author',
+				'text'   => '#text#',
+				'format' => 'html',
+			],
 		);
 
 		// Author style conditional.

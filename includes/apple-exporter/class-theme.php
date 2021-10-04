@@ -2153,7 +2153,7 @@ class Theme {
 			),
 			'byline'          => array(
 				'label'       => __( 'Unified Byline', 'apple-news' ),
-				'description' => __( "Displays the article's author byline", 'apple-news' ),
+				'description' => __( "The byline displays the article's author and publish date", 'apple-news' ),
 				'settings'    => array(
 					'byline_font',
 					'byline_size',

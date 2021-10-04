@@ -301,10 +301,10 @@ class Export extends Action {
 			$excerpt,
 			$post_thumb,
 			$byline,
-			$author,
-			$date,
 			$this->fetch_content_settings(),
-			$slug
+			$slug,
+			$author,
+			$date
 		);
 
 		return new Exporter( $base_content, null, $this->settings );
@@ -324,11 +324,6 @@ class Export extends Action {
 	public function format_byline( $post, $author = '', $date = '' ) {
 		// Get information about the currently used theme.
 		$theme = \Apple_Exporter\Theme::get_used();
-
-		// Make sure we need to support this component.
-		if ( ! in_array( 'byline', $theme->get_value( 'meta_component_order' ), true ) ) {
-			return $author;
-		}
 
 		// Get the author.
 		if ( empty( $author ) ) {
@@ -390,11 +385,6 @@ class Export extends Action {
 		// Get information about the currently used theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
-		// Make sure we need to support this component.
-		if ( ! in_array( 'author', $theme->get_value( 'meta_component_order' ), true ) ) {
-			return $author;
-		}
-
 		// Get the author.
 		if ( empty( $author ) ) {
 			$author = Apple_News::get_authors();
@@ -438,18 +428,9 @@ class Export extends Action {
 		// Get information about the currently used theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
-		// Make sure we need to support this component.
-		if ( ! in_array( 'date', $theme->get_value( 'meta_component_order' ), true ) ) {
-			return $date;
-		}
-
 		// Get the date.
 		if ( empty( $date ) && ! empty( $post->post_date ) ) {
 			$date = $post->post_date;
-		}
-
-		if ( empty( $date ) ) {
-			return;
 		}
 
 		// Check for a custom byline format.

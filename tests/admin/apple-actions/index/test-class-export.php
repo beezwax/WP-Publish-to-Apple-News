@@ -25,21 +25,8 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$shortcode_content = '[bc_video video_id="1234567890123" account_id="1234567890" player_id="abcd1234-ef56-ab78-cd90-efa1234567890" embed="in-page" padding_top="56%" autoplay="" min_width="0px" playsinline="" picture_in_picture="" max_width="640px" mute="" width="100%" height="100%" ]';
 
 		return [
-			[ [ 'cover', 'slug', 'title', 'byline' ], $editor_content, 2 ],
-			[ [ 'cover', 'slug', 'title', 'byline' ], $shortcode_content, 2 ],
-			[ [ 'cover', 'slug', 'title', 'author', 'date' ], $editor_content, 3 ],
-			[ [ 'cover', 'slug', 'title', 'author', 'date' ], $shortcode_content, 3 ],
-		];
-	}
-
-		/**
-	 * Returns an array of arrays representing function arguments to the
-	 * test_is_exporting function.
-	 */
-	public function data_test_is_exporting() {
-		return [
-			[ [ 'cover', 'slug', 'title', 'byline' ], 2 ],
-			[ [ 'cover', 'slug', 'title', 'author', 'date' ], 3 ],
+			[ [ 'title' ], $editor_content ],
+			[ [ 'title' ], $shortcode_content ],
 		];
 	}
 
@@ -60,7 +47,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 *
 	 * @dataProvider data_provider_brightcove_video
 	 */
-	public function test_brightcove_video( $meta_order, $post_content, $index ) {
+	public function test_brightcove_video( $meta_order, $post_content ) {
 		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		$post_id = self::factory()->post->create(
 			[
@@ -68,9 +55,9 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 			]
 		);
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'video', $json['components'][ $index ]['role'] );
-		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][ $index ]['URL'] );
-		$this->assertEquals( 'https://cf-images.us-east-1.prod.boltdns.net/v1/jit/1234567890/abcd1234-ef56-ab78-cd90-efabcd123456/main/1280x720/1s234ms/match/image.jpg', $json['components'][ $index ]['stillURL'] );
+		$this->assertEquals( 'video', $json['components'][1]['role'] );
+		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][1]['URL'] );
+		$this->assertEquals( 'https://cf-images.us-east-1.prod.boltdns.net/v1/jit/1234567890/abcd1234-ef56-ab78-cd90-efabcd123456/main/1280x720/1s234ms/match/image.jpg', $json['components'][1]['stillURL'] );
 	}
 
 	/**
@@ -541,12 +528,10 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the behavior of the apple_news_is_exporting() function.
 	 *
-	 * @dataProvider data_test_is_exporting
-	 *
 	 * @access public
 	 */
-	public function test_is_exporting( $meta_order, $index ) {
-		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
+	public function test_is_exporting() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'title' ] ] );
 
 		// Setup.
 		$title = 'My Title';
@@ -570,7 +555,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
 			'<p>is exporting</p>',
-			$json['components'][ $index ]['text']
+			$json['components'][1]['text']
 		);
 
 		// Ensure is_exporting returns false after exporting.

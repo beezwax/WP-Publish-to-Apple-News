@@ -36,7 +36,7 @@ class Admin_Apple_Preview extends Apple_News {
 		}
 
 		// Merge plugin-level settings with theme-level settings.
-		$admin_settings = new \Admin_Apple_Settings();
+		$admin_settings = new Admin_Apple_Settings();
 		$settings       = $admin_settings->fetch_settings();
 
 		// Determine if HTML support is enabled.
