@@ -9,7 +9,7 @@
 namespace Apple_Exporter\Components;
 
 /**
- * A byline normally describes who wrote the article, the date, etc.
+ * A date normally describes who wrote the article, the date, etc.
  *
  * @since 0.2.0
  */
@@ -24,26 +24,20 @@ class Date extends Component {
 		$theme = \Apple_Exporter\Theme::get_used();
 
 		$this->register_spec(
-			'json',
-			__( 'JSON', 'apple-news' ),
+			'date-json',
+			__( 'Date JSON', 'apple-news' ),
 			array(
-				'role' => 'byline',
+				'role' => 'body',
 				'text' => '#text#',
-			) + (
-				'yes' === $theme->get_value( 'author_links' )
-					? array(
-						'format' => 'html',
-					)
-					: array()
 			)
 		);
 
-		// Byline style conditional.
-		$byline_conditional = [];
+		// date style conditional.
+		$date_conditional = [];
 
-		if ( ! empty( $theme->get_value( 'byline_color_dark' ) ) ) {
-			$byline_conditional['conditional'][] = [
-				'textColor'  => '#byline_color_dark#',
+		if ( ! empty( $theme->get_value( 'date_color_dark' ) ) ) {
+			$date_conditional['conditional'][] = [
+				'textColor'  => '#date_color_dark#',
 				'conditions' => array(
 					'minSpecVersion'       => '1.14',
 					'preferredColorScheme' => 'dark',
@@ -51,49 +45,27 @@ class Date extends Component {
 			];
 		}
 
-		// Separate handling for byline link styles.
-		if ( 'yes' === $theme->get_value( 'author_links' ) ) {
-			if ( ! empty( $theme->get_value( 'author_link_color' ) ) ) {
-				$byline_conditional['linkStyle'] = [
-					'textColor' => '#author_link_color#',
-				];
-			}
-
-			if ( ! empty( $theme->get_value( 'author_link_color_dark' ) ) ) {
-				$byline_conditional['conditional'][] = [
-					'linkStyle'  => [
-						'textColor' => '#author_link_color_dark#',
-					],
-					'conditions' => array(
-						'minSpecVersion'       => '1.14',
-						'preferredColorScheme' => 'dark',
-					),
-				];
-			}
-		}
-
 		$this->register_spec(
-			'default-byline',
+			'default-date',
 			__( 'Style', 'apple-news' ),
 			array_merge(
 				array(
 					'textAlignment' => '#text_alignment#',
-					'fontName'      => '#byline_font#',
-					'fontSize'      => '#byline_size#',
-					'lineHeight'    => '#byline_line_height#',
-					'tracking'      => '#byline_tracking#',
-					'textColor'     => '#byline_color#',
+					'fontName'      => '#date_font#',
+					'fontSize'      => '#date_size#',
+					'lineHeight'    => '#date_line_height#',
+					'tracking'      => '#date_tracking#',
+					'textColor'     => '#date_color#',
 				),
-				$byline_conditional
+				$date_conditional
 			)
 		);
 
 		$this->register_spec(
-			'byline-layout',
+			'date-layout',
 			__( 'Layout', 'apple-news' ),
 			array(
 				'margin' => array(
-					'top'    => 10,
 					'bottom' => 10,
 				),
 			)
@@ -115,7 +87,7 @@ class Date extends Component {
 		}
 
 		$this->register_json(
-			'json',
+			'date-json',
 			array(
 				'#text#' => $html,
 			)
@@ -135,42 +107,27 @@ class Date extends Component {
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
-		$byline_conditional = [];
+		$date_conditional = [];
 
-		if ( ! empty( $theme->get_value( 'byline_color_dark' ) ) ) {
-			$byline_conditional[] = [
-				'#byline_color_dark#' => $theme->get_value( 'byline_color_dark' ),
+		if ( ! empty( $theme->get_value( 'date_color_dark' ) ) ) {
+			$date_conditional[] = [
+				'#date_color_dark#' => $theme->get_value( 'date_color_dark' ),
 			];
 		}
 
-		// Separate handling for byline link styles.
-		if ( 'yes' === $theme->get_value( 'author_links' ) ) {
-			if ( ! empty( $theme->get_value( 'author_link_color' ) ) ) {
-				$byline_conditional[] = [
-					'#author_link_color#' => $theme->get_value( 'author_link_color' ),
-				];
-			}
-
-			if ( ! empty( $theme->get_value( 'author_link_color_dark' ) ) ) {
-				$byline_conditional[] = [
-					'#author_link_color_dark#' => $theme->get_value( 'author_link_color_dark' ),
-				];
-			}
-		}
-
 		$this->register_style(
-			'default-byline',
-			'default-byline',
+			'default-date',
+			'default-date',
 			array_merge(
 				[
 					'#text_alignment#'     => $this->find_text_alignment(),
-					'#byline_font#'        => $theme->get_value( 'byline_font' ),
-					'#byline_size#'        => intval( $theme->get_value( 'byline_size' ) ),
-					'#byline_line_height#' => intval( $theme->get_value( 'byline_line_height' ) ),
-					'#byline_tracking#'    => intval( $theme->get_value( 'byline_tracking' ) ) / 100,
-					'#byline_color#'       => $theme->get_value( 'byline_color' ),
+					'#date_font#'        => $theme->get_value( 'date_font' ),
+					'#date_size#'        => intval( $theme->get_value( 'date_size' ) ),
+					'#date_line_height#' => intval( $theme->get_value( 'date_line_height' ) ),
+					'#date_tracking#'    => intval( $theme->get_value( 'date_tracking' ) ) / 100,
+					'#date_color#'       => $theme->get_value( 'date_color' ),
 				],
-				$byline_conditional
+				$date_conditional
 			),
 			'textStyle'
 		);
@@ -183,8 +140,8 @@ class Date extends Component {
 	 */
 	private function set_default_layout() {
 		$this->register_full_width_layout(
-			'byline-layout',
-			'byline-layout',
+			'date-layout',
+			'date-layout',
 			array(),
 			'layout'
 		);
