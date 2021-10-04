@@ -30,7 +30,7 @@ class Author extends Component {
 				'role'   => 'author',
 				'text'   => '#text#',
 				'format' => 'html',
-			],
+			]
 		);
 
 		// Author style conditional.

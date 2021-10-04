@@ -144,7 +144,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$this->assertEquals( '', $exporter_content->intro() );
 	}
 
-	public function testBylineFormat() {
+	public function test_byline_format() {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'byline' ] ] );
 		$user_id = $this->factory->user->create( array(
 			'role' => 'administrator',
