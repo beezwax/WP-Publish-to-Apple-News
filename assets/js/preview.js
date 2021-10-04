@@ -189,6 +189,7 @@
 
 		// Author Links.
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline a', 'author_link_color', 'color', null, null );
+		appleNewsSetCSS( '.apple-news-preview div.apple-news-author a', 'author_link_color', 'color', null, null );
 
 		// Slug
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-slug', 'slug_font', 'font-family', null, null );
