@@ -53,6 +53,8 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Enhancement: Added support for mailto:, music://, musics://, stocks:// and webcal:// links.
 * Enhancement: Added an option and a filter for skipping auto-push of posts with certain taxonomy terms.
 * Enhancement: Added support for html tags when customizing theme JSON.
+* Enhancement: Added an author component for author without date.
+* Enhancement: Added a date component for date without author byline.
 
 = 2.2.2 =
 * Bugfix: Moved custom metadata fields to the request level rather than the article level to align them with existing metadata properties like isPaid and isHidden.

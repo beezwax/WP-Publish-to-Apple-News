@@ -86,7 +86,7 @@ class Admin_Apple_Preview extends Apple_News {
 			);
 
 			// Get the order of the top components.
-			// Adds preview-only support for the unified (legacy) byline.
+			// Adds preview-only support for the unified (legacy) byline (would otherwise not display).
 			$meta_component_order = array_merge( $theme->get_value( 'meta_component_order' ), [ 'byline' ] );
 			if ( ! is_array( $meta_component_order ) ) {
 				$meta_component_order = array();
