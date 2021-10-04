@@ -111,8 +111,8 @@ class Component_Factory {
 		self::register_component( 'cover', '\\Apple_Exporter\\Components\\Cover' );
 		self::register_component( 'title', '\\Apple_Exporter\\Components\\Title' );
 		self::register_component( 'byline', '\\Apple_Exporter\\Components\\Byline' );
-		self::register_component( 'author', '\\Apple_Exporter\\Components\\author' );
-		self::register_component( 'date', '\\Apple_Exporter\\Components\\date' );
+		self::register_component( 'author', '\\Apple_Exporter\\Components\\Author' );
+		self::register_component( 'date', '\\Apple_Exporter\\Components\\Date' );
 		self::register_component( 'slug', '\\Apple_Exporter\\Components\\Slug' );
 		self::register_component( 'advertisement', '\\Apple_Exporter\\Components\\Advertisement' );
 		self::register_component( 'end-of-article', '\\Apple_Exporter\\Components\\End_Of_Article' );
