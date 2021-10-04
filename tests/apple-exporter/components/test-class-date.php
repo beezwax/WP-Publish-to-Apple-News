@@ -21,7 +21,7 @@ class Date_Test extends Apple_News_Testcase {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'date' ] ] );
 
 		// Create a test post and get JSON for it.
-		$post_id = self::factory()->post->create( [ 'post_date_gmt' => '1970-01-01 12:00:00' ] );
+		$post_id = self::factory()->post->create( [ 'post_date_gmt' => '1970-01-01 12:34:56' ] );
 		$json    = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 'body', $json['components'][0]['role'] );
 		$this->assertEquals( 'Jan 1, 1970 | 12:00 PM', $json['components'][0]['text'] );
