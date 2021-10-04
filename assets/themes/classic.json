@@ -28,7 +28,7 @@
     "author_link_color": "#5c5c5c",
     "byline_color": "#5c5c5c",
     "byline_font": "Helvetica-Bold",
-    "byline_format": "by #byline#",
+    "byline_format": "by #author# #F j \\a\\t g:i A#",
     "byline_line_height": 19,
     "byline_size": 14,
     "byline_tracking": -1,
