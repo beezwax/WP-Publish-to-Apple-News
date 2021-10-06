@@ -49,6 +49,7 @@ class Byline_Test extends Apple_News_Testcase {
 	 */
 	public function test_render() {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'byline' ] ] );
+		$this->disable_coauthors_support();
 
 		// Create a test post and get JSON for it.
 		$user_id = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
@@ -64,13 +65,14 @@ class Byline_Test extends Apple_News_Testcase {
 	public function test_settings() {
 		$this->set_theme_settings(
 			[
-				'byline_color'       => '#abcdef',
-				'byline_color_dark'  => '#123456',
-				'byline_font'        => 'AmericanTypewriter',
-				'byline_line_height' => 12,
-				'byline_links'       => 'no',
-				'byline_size'        => 34,
-				'byline_tracking'    => 56,
+				'byline_color'         => '#abcdef',
+				'byline_color_dark'    => '#123456',
+				'byline_font'          => 'AmericanTypewriter',
+				'byline_line_height'   => 12,
+				'author_links'         => 'no',
+				'byline_size'          => 34,
+				'byline_tracking'      => 56,
+				'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ],
 			]
 		);
 
@@ -93,11 +95,12 @@ class Byline_Test extends Apple_News_Testcase {
 				'byline_color_dark'      => '#123456',
 				'byline_font'            => 'AmericanTypewriter',
 				'byline_line_height'     => 12,
-				'byline_link_color'      => '#ffcc00',
-				'byline_link_color_dark' => '#ccff00',
-				'byline_links'           => 'yes',
+				'author_link_color'      => '#ffcc00',
+				'author_link_color_dark' => '#ccff00',
+				'author_links'           => 'yes',
 				'byline_size'            => 34,
 				'byline_tracking'        => 56,
+				'meta_component_order'   => [ 'cover', 'slug', 'title', 'byline' ],
 			]
 		);
 
@@ -122,11 +125,12 @@ class Byline_Test extends Apple_News_Testcase {
 				'byline_color_dark'      => '#123456',
 				'byline_font'            => 'AmericanTypewriter',
 				'byline_line_height'     => 12,
-				'byline_link_color'      => '#ffcc00',
-				'byline_link_color_dark' => '#ccff00',
-				'byline_links'           => 'yes',
+				'author_link_color'      => '#ffcc00',
+				'author_link_color_dark' => '#ccff00',
+				'author_links'           => 'yes',
 				'byline_size'            => 34,
 				'byline_tracking'        => 56,
+				'meta_component_order'   => [ 'cover', 'slug', 'title', 'byline' ],
 			]
 		);
 

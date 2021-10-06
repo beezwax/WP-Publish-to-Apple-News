@@ -18,6 +18,14 @@
     "body_orientation": "right",
     "body_size": 17,
     "body_tracking": 0,
+    "author_color": "#000000",
+    "author_font": "Optima-Regular",
+    "author_format": "by #author#",
+    "author_line_height": 22,
+    "author_size": 13,
+    "author_tracking": 21,
+    "author_links": "no",
+    "author_link_color": "#000000",
     "byline_color": "#000000",
     "byline_font": "Optima-Regular",
     "byline_format": "#F j, Y# | by #author#",
@@ -29,6 +37,12 @@
     "caption_line_height": 22,
     "caption_size": 14,
     "caption_tracking": -3,
+    "date_color": "#000000",
+    "date_font": "Optima-Regular",
+    "date_format": "#F j, Y#",
+    "date_line_height": 22,
+    "date_size": 13,
+    "date_tracking": 21,
     "dropcap_background_color": "#ffff00",
     "dropcap_color": "#000000",
     "dropcap_font": "HelveticaNeue-CondensedBlack",
@@ -90,18 +104,18 @@
                 }
             }
         },
-        "byline": {
-            "default-byline": {
+        "author": {
+            "default-author": {
                 "backgroundColor": "#blockquote_background_color#",
                 "textAlignment": "#text_alignment#",
-                "fontName": "#byline_font#",
-                "fontSize": "#byline_size#",
-                "lineHeight": "#byline_line_height#",
-                "tracking": "#byline_tracking#",
-                "textColor": "#byline_color#",
+                "fontName": "#author_font#",
+                "fontSize": "#author_size#",
+                "lineHeight": "#author_line_height#",
+                "tracking": "#author_tracking#",
+                "textColor": "#author_color#",
                 "textTransform": "uppercase"
             },
-            "byline-layout": {
+            "author-layout": {
                 "columnSpan": 6,
                 "columnStart": 1,
                 "margin": {
@@ -229,7 +243,8 @@
     "meta_component_order": [
         "title",
         "slug",
-        "byline",
+        "author",
+        "date",
         "cover"
     ],
     "monospaced_color": "#000000",

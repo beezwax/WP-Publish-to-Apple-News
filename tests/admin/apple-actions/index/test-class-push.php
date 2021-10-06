@@ -15,6 +15,10 @@ use Apple_Actions\Action_Exception;
  */
 class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 
+	/**
+	 * Returns an array of arrays representing function arguments to the
+	 * test_metadata function.
+	 */
 	public function data_metadata() {
 		return [
 			[ 'apple_news_is_hidden', true, false, false, false ],
@@ -28,6 +32,7 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 	 * Tests the behavior of the component errors setting (none, warn, fail).
 	 */
 	public function test_component_errors() {
+
 		// Set up a post with an invalid element (div).
 		$this->become_admin();
 		$user_id   = wp_get_current_user()->ID;

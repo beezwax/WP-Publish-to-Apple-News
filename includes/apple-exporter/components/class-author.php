@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News: \Apple_Exporter\Components\Byline class
+ * Publish to Apple News: \Apple_Exporter\Components\Author class
  *
  * @package Apple_News
  * @subpackage Apple_Exporter\Components
@@ -9,11 +9,11 @@
 namespace Apple_Exporter\Components;
 
 /**
- * A byline normally describes who wrote the article, the date, etc.
+ * A author normally describes who wrote the article, the date, etc.
  *
  * @since 0.2.0
  */
-class Byline extends Component {
+class Author extends Component {
 
 	/**
 	 * Register all specs for the component.
@@ -24,74 +24,73 @@ class Byline extends Component {
 		$theme = \Apple_Exporter\Theme::get_used();
 
 		$this->register_spec(
-			'json',
-			__( 'JSON', 'apple-news' ),
+			'author-json',
+			__( 'Author JSON', 'apple-news' ),
 			[
-				'role'   => 'byline',
+				'role'   => 'author',
 				'text'   => '#text#',
 				'format' => 'html',
 			]
 		);
 
-		// Byline style conditional.
-		$byline_conditional = [];
+		// Author style conditional.
+		$author_conditional = [];
 
-		if ( ! empty( $theme->get_value( 'byline_color_dark' ) ) ) {
-			$byline_conditional['conditional'][] = [
-				'textColor'  => '#byline_color_dark#',
-				'conditions' => array(
+		if ( ! empty( $theme->get_value( 'author_color_dark' ) ) ) {
+			$author_conditional['conditional'][] = [
+				'textColor'  => '#author_color_dark#',
+				'conditions' => [
 					'minSpecVersion'       => '1.14',
 					'preferredColorScheme' => 'dark',
-				),
+				],
 			];
 		}
 
-		// Separate handling for byline link styles.
+		// Separate handling for author link styles.
 		if ( 'yes' === $theme->get_value( 'author_links' ) ) {
 			if ( ! empty( $theme->get_value( 'author_link_color' ) ) ) {
-				$byline_conditional['linkStyle'] = [
+				$author_conditional['linkStyle'] = [
 					'textColor' => '#author_link_color#',
 				];
 			}
 
 			if ( ! empty( $theme->get_value( 'author_link_color_dark' ) ) ) {
-				$byline_conditional['conditional'][] = [
+				$author_conditional['conditional'][] = [
 					'linkStyle'  => [
 						'textColor' => '#author_link_color_dark#',
 					],
-					'conditions' => array(
+					'conditions' => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
+					],
 				];
 			}
 		}
 
 		$this->register_spec(
-			'default-byline',
+			'default-author',
 			__( 'Style', 'apple-news' ),
 			array_merge(
-				array(
+				[
 					'textAlignment' => '#text_alignment#',
-					'fontName'      => '#byline_font#',
-					'fontSize'      => '#byline_size#',
-					'lineHeight'    => '#byline_line_height#',
-					'tracking'      => '#byline_tracking#',
-					'textColor'     => '#byline_color#',
-				),
-				$byline_conditional
+					'fontName'      => '#author_font#',
+					'fontSize'      => '#author_size#',
+					'lineHeight'    => '#author_line_height#',
+					'tracking'      => '#author_tracking#',
+					'textColor'     => '#author_color#',
+				],
+				$author_conditional
 			)
 		);
 
 		$this->register_spec(
-			'byline-layout',
+			'author-layout',
 			__( 'Layout', 'apple-news' ),
-			array(
-				'margin' => array(
-					'top'    => 10,
-					'bottom' => 10,
-				),
-			)
+			[
+				'margin' => [
+					'top' => 10,
+				],
+			]
 		);
 	}
 
@@ -110,10 +109,10 @@ class Byline extends Component {
 		}
 
 		$this->register_json(
-			'json',
-			array(
+			'author-json',
+			[
 				'#text#' => $html,
-			)
+			]
 		);
 
 		$this->set_default_style();
@@ -130,42 +129,42 @@ class Byline extends Component {
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
-		$byline_conditional = [];
+		$author_conditional = [];
 
-		if ( ! empty( $theme->get_value( 'byline_color_dark' ) ) ) {
-			$byline_conditional[] = [
-				'#byline_color_dark#' => $theme->get_value( 'byline_color_dark' ),
+		if ( ! empty( $theme->get_value( 'author_color_dark' ) ) ) {
+			$author_conditional[] = [
+				'#author_color_dark#' => $theme->get_value( 'author_color_dark' ),
 			];
 		}
 
-		// Separate handling for byline link styles.
+		// Separate handling for author link styles.
 		if ( 'yes' === $theme->get_value( 'author_links' ) ) {
 			if ( ! empty( $theme->get_value( 'author_link_color' ) ) ) {
-				$byline_conditional[] = [
+				$author_conditional[] = [
 					'#author_link_color#' => $theme->get_value( 'author_link_color' ),
 				];
 			}
 
 			if ( ! empty( $theme->get_value( 'author_link_color_dark' ) ) ) {
-				$byline_conditional[] = [
+				$author_conditional[] = [
 					'#author_link_color_dark#' => $theme->get_value( 'author_link_color_dark' ),
 				];
 			}
 		}
 
 		$this->register_style(
-			'default-byline',
-			'default-byline',
+			'default-author',
+			'default-author',
 			array_merge(
 				[
 					'#text_alignment#'     => $this->find_text_alignment(),
-					'#byline_font#'        => $theme->get_value( 'byline_font' ),
-					'#byline_size#'        => intval( $theme->get_value( 'byline_size' ) ),
-					'#byline_line_height#' => intval( $theme->get_value( 'byline_line_height' ) ),
-					'#byline_tracking#'    => intval( $theme->get_value( 'byline_tracking' ) ) / 100,
-					'#byline_color#'       => $theme->get_value( 'byline_color' ),
+					'#author_font#'        => $theme->get_value( 'author_font' ),
+					'#author_size#'        => intval( $theme->get_value( 'author_size' ) ),
+					'#author_line_height#' => intval( $theme->get_value( 'author_line_height' ) ),
+					'#author_tracking#'    => intval( $theme->get_value( 'author_tracking' ) ) / 100,
+					'#author_color#'       => $theme->get_value( 'author_color' ),
 				],
-				$byline_conditional
+				$author_conditional
 			),
 			'textStyle'
 		);
@@ -178,9 +177,9 @@ class Byline extends Component {
 	 */
 	private function set_default_layout() {
 		$this->register_full_width_layout(
-			'byline-layout',
-			'byline-layout',
-			array(),
+			'author-layout',
+			'author-layout',
+			[],
 			'layout'
 		);
 	}

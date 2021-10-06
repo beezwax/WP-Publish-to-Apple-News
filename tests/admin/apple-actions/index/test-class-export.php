@@ -18,16 +18,15 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 
 	/**
 	 * Returns an array of arrays representing function arguments to the
-	 * testBrightcoveVideo function.
+	 * test_brightcove_video function.
 	 */
-	public function dataProviderBrightcoveVideo() {
+	public function data_provider_brightcove_video() {
+		$editor_content    = '<!-- wp:bc/brightcove {"account_id":"1234567890","player_id":"abcd1234-ef56-ab78-cd90-efa1234567890","video_id":"1234567890123","playlist_id":"","experience_id":"","video_ids":"","embed":"in-page","autoplay":"","playsinline":"","picture_in_picture":"","height":"100%","width":"100%","min_width":"0px","max_width":"640px","padding_top":"56%"} /-->';
+		$shortcode_content = '[bc_video video_id="1234567890123" account_id="1234567890" player_id="abcd1234-ef56-ab78-cd90-efa1234567890" embed="in-page" padding_top="56%" autoplay="" min_width="0px" playsinline="" picture_in_picture="" max_width="640px" mute="" width="100%" height="100%" ]';
+
 		return [
-			[
-				'<!-- wp:bc/brightcove {"account_id":"1234567890","player_id":"abcd1234-ef56-ab78-cd90-efa1234567890","video_id":"1234567890123","playlist_id":"","experience_id":"","video_ids":"","embed":"in-page","autoplay":"","playsinline":"","picture_in_picture":"","height":"100%","width":"100%","min_width":"0px","max_width":"640px","padding_top":"56%"} /-->',
-			],
-			[
-				'[bc_video video_id="1234567890123" account_id="1234567890" player_id="abcd1234-ef56-ab78-cd90-efa1234567890" embed="in-page" padding_top="56%" autoplay="" min_width="0px" playsinline="" picture_in_picture="" max_width="640px" mute="" width="100%" height="100%" ]',
-			],
+			[ [ 'title' ], $editor_content ],
+			[ [ 'title' ], $shortcode_content ],
 		];
 	}
 
@@ -37,7 +36,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 * @access public
 	 * @return string The filtered content.
 	 */
-	public function filterTheContentTestIsExporting() {
+	public function filter_the_content_test_is_exporting() {
 		return apple_news_is_exporting() ? 'is exporting' : 'is not exporting';
 	}
 
@@ -46,18 +45,19 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 *
 	 * @param string $post_content The post content to load for the test.
 	 *
-	 * @dataProvider dataProviderBrightcoveVideo
+	 * @dataProvider data_provider_brightcove_video
 	 */
-	public function testBrightcoveVideo( $post_content ) {
+	public function test_brightcove_video( $meta_order, $post_content ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		$post_id = self::factory()->post->create(
 			[
 				'post_content' => $post_content,
 			]
 		);
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'video', $json['components'][2]['role'] );
-		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][2]['URL'] );
-		$this->assertEquals( 'https://cf-images.us-east-1.prod.boltdns.net/v1/jit/1234567890/abcd1234-ef56-ab78-cd90-efabcd123456/main/1280x720/1s234ms/match/image.jpg', $json['components'][2]['stillURL'] );
+		$this->assertEquals( 'video', $json['components'][1]['role'] );
+		$this->assertEquals( 'https://edge.api.brightcove.com/playback/v1/accounts/1234567890/videos/1234567890123', $json['components'][1]['URL'] );
+		$this->assertEquals( 'https://cf-images.us-east-1.prod.boltdns.net/v1/jit/1234567890/abcd1234-ef56-ab78-cd90-efabcd123456/main/1280x720/1s234ms/match/image.jpg', $json['components'][1]['stillURL'] );
 	}
 
 	/**
@@ -144,7 +144,8 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$this->assertEquals( '', $exporter_content->intro() );
 	}
 
-	public function testBylineFormat() {
+	public function test_byline_format() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'byline' ] ] );
 		$user_id = $this->factory->user->create( array(
 			'role' => 'administrator',
 			'display_name' => 'Testuser',
@@ -169,6 +170,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	}
 
 	public function testBylineFormatWithHashtag() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'byline' ] ] );
 		$user_id = $this->factory->user->create( array(
 			'role' => 'administrator',
 			'display_name' => '#Testuser',
@@ -333,7 +335,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 * category that is mapped to a particular section also gets the theme
 	 * that is mapped to that section.
 	 */
-	public function testThemeMapping() {
+	public function test_theme_mapping() {
 
 		// Load an additional example theme to facilitate mapping.
 		$this->load_example_theme( 'colorful' );
@@ -409,7 +411,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 * section that has the highest priority among the sections assigned to the
 	 * post.
 	 */
-	public function testPriority() {
+	public function test_priority() {
 		// Load an additional example theme to facilitate mapping.
 		$this->load_example_theme( 'colorful' );
 
@@ -528,7 +530,8 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testIsExporting() {
+	public function test_is_exporting() {
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'title' ] ] );
 
 		// Setup.
 		$title = 'My Title';
@@ -539,7 +542,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		) );
 		add_filter(
 			'the_content',
-			array( $this, 'filterTheContentTestIsExporting' )
+			array( $this, 'filter_the_content_test_is_exporting' )
 		);
 
 		// Ensure is_exporting returns false before exporting.
@@ -552,7 +555,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
 			'<p>is exporting</p>',
-			$json['components'][2]['text']
+			$json['components'][1]['text']
 		);
 
 		// Ensure is_exporting returns false after exporting.
@@ -564,7 +567,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		// Teardown.
 		remove_filter(
 			'the_content',
-			array( $this, 'filterTheContentTestIsExporting' )
+			array( $this, 'filter_the_content_test_is_exporting' )
 		);
 	}
 }

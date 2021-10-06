@@ -18,6 +18,14 @@
     "body_orientation": "left",
     "body_size": 17,
     "body_tracking": 0,
+    "author_color": "#000000",
+    "author_font": "AvenirNext-Bold",
+    "author_format": "by #author#",
+    "author_line_height": 19,
+    "author_size": 14,
+    "author_tracking": 0,
+    "author_links": "no",
+    "author_link_color": "#000000",
     "byline_color": "#000000",
     "byline_font": "AvenirNext-Bold",
     "byline_format": "by #author# #F j \\a\\t g:i A#",
@@ -29,6 +37,12 @@
     "caption_line_height": 19,
     "caption_size": 14,
     "caption_tracking": -1,
+    "date_color": "#000000",
+    "date_font": "AvenirNext-Bold",
+    "date_format": "#F j \\a\\t g:i A#",
+    "date_line_height": 19,
+    "date_size": 14,
+    "date_tracking": 0,
     "dropcap_background_color": "",
     "dropcap_color": "#000000",
     "dropcap_font": "BodoniSvtyTwoITCTT-BookIta",
@@ -88,14 +102,14 @@
                 }
             }
         },
-        "byline": {
-            "default-byline": {
+        "author": {
+            "default-author": {
                 "textAlignment": "center",
-                "fontName": "#byline_font#",
-                "fontSize": "#byline_size#",
-                "lineHeight": "#byline_line_height#",
-                "tracking": "#byline_tracking#",
-                "textColor": "#byline_color#"
+                "fontName": "#author_font#",
+                "fontSize": "#author_size#",
+                "lineHeight": "#author_line_height#",
+                "tracking": "#author_tracking#",
+                "textColor": "#author_color#"
             }
         },
         "quote": {
@@ -234,7 +248,8 @@
         "slug",
         "cover",
         "title",
-        "byline"
+        "author",
+        "date"
     ],
     "monospaced_color": "#000000",
     "monospaced_font": "Menlo-Regular",

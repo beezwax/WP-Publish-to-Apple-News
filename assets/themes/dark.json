@@ -18,6 +18,14 @@
     "body_orientation": "left",
     "body_size": 17,
     "body_tracking": 0,
+    "author_color": "#e2e2e2",
+    "author_font": "Helvetica-Bold",
+    "author_format": "by #author#",
+    "author_line_height": 19,
+    "author_size": 14,
+    "author_tracking": -1,
+    "author_links": "no",
+    "author_link_color": "#e2e2e2",
     "byline_color": "#e2e2e2",
     "byline_font": "Helvetica-Bold",
     "byline_format": "by #author# #F j \\a\\t g:i A#",
@@ -29,6 +37,12 @@
     "caption_line_height": 19,
     "caption_size": 14,
     "caption_tracking": -1,
+    "date_color": "#e2e2e2",
+    "date_font": "Helvetica-Bold",
+    "date_format": "#F j \\a\\t g:i A#",
+    "date_line_height": 19,
+    "date_size": 14,
+    "date_tracking": -1,
     "dropcap_background_color": "",
     "dropcap_color": "#e2e2e2",
     "dropcap_font": "HelveticaNeue-CondensedBold",
@@ -86,14 +100,14 @@
                 }
             }
         },
-        "byline": {
-            "default-byline": {
+        "author": {
+            "default-author": {
                 "textAlignment": "center",
-                "fontName": "#byline_font#",
-                "fontSize": "#byline_size#",
-                "lineHeight": "#byline_line_height#",
-                "tracking": "#byline_tracking#",
-                "textColor": "#byline_color#"
+                "fontName": "#author_font#",
+                "fontSize": "#author_size#",
+                "lineHeight": "#author_line_height#",
+                "tracking": "#author_tracking#",
+                "textColor": "#author_color#"
             }
         },
         "image": {
@@ -243,7 +257,8 @@
         "cover",
         "slug",
         "title",
-        "byline"
+        "author",
+        "date"
     ],
     "monospaced_color": "#4f4f4f",
     "monospaced_font": "Menlo-Regular",

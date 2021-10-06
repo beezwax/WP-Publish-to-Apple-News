@@ -42,10 +42,9 @@ class Admin_Apple_Preview extends Apple_News {
 		// Determine if HTML support is enabled.
 		$settings     = get_option( self::$option_name );
 		$html_support = ( isset( $settings['html_support'] )
-			&& 'yes' === $settings['html_support']
-		);
-
+			&& 'yes' === $settings['html_support'] );
 		?>
+
 		<div class="apple-news-preview">
 			<?php
 			/* phpcs:disable VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable */
@@ -67,16 +66,28 @@ class Admin_Apple_Preview extends Apple_News {
 			);
 
 			// Build the byline.
-			$author = __( 'John Doe', 'apple-news' );
-			$date   = apple_news_date( 'M j, Y g:i A' );
-			$export = new Apple_Actions\Index\Export( $settings );
+			$author_placeholder = __( 'John Doe', 'apple-news' );
+			$date_placeholder   = apple_news_date( 'M j, Y g:i A' );
+			$export             = new Apple_Actions\Index\Export( $settings );
+
 			$byline = sprintf(
 				'<div class="apple-news-byline apple-news-component apple-news-meta-component">%s</div>',
-				$export->format_byline( null, $author, $date )
+				$export->format_byline( null, $author_placeholder, $date_placeholder )
+			);
+
+			$author = sprintf(
+				'<div class="apple-news-author apple-news-component apple-news-meta-component">%s</div>',
+				$export->format_author( null, $author_placeholder, null )
+			);
+
+			$date = sprintf(
+				'<div class="apple-news-date apple-news-component apple-news-meta-component">%s</div>',
+				$export->format_date( null, $date_placeholder )
 			);
 
 			// Get the order of the top components.
-			$meta_component_order = $theme->get_value( 'meta_component_order' );
+			// Adds preview-only support for the unified (legacy) byline (would otherwise not display).
+			$meta_component_order = array_merge( $theme->get_value( 'meta_component_order' ), [ 'byline' ] );
 			if ( ! is_array( $meta_component_order ) ) {
 				$meta_component_order = array();
 			}

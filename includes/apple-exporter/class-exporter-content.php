@@ -73,6 +73,22 @@ class Exporter_Content {
 	private $byline;
 
 	/**
+	 * Byline for the content being exported.
+	 *
+	 * @var string
+	 * @access private
+	 */
+	private $author;
+
+	/**
+	 * Publication date for the content being exported.
+	 *
+	 * @var string
+	 * @access private
+	 */
+	private $date;
+
+	/**
 	 * Settings for the content being exported.
 	 *
 	 * @var Settings
@@ -130,9 +146,11 @@ class Exporter_Content {
 	 * @param string                   $byline   Optional. The byline of the post to be exported.
 	 * @param \Apple_Exporter\Settings $settings Optional. Settings for the exporter.
 	 * @param string                   $slug     Optional. The slug of the post to be exported.
+	 * @param string                   $author   Optional. The author(s) of the post to be exported.
+	 * @param string                   $date     Optional. They published date of the post to be exported.
 	 * @access public
 	 */
-	public function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $settings = null, $slug = null ) {
+	public function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $settings = null, $slug = null, $author = null, $date = null ) {
 		$this->id       = $id;
 		$this->slug     = $slug;
 		$this->title    = $title;
@@ -141,6 +159,8 @@ class Exporter_Content {
 		$this->cover    = $cover;
 		$this->byline   = $byline;
 		$this->settings = ! empty( $settings ) ? $settings : new Exporter_Content_Settings();
+		$this->author   = $author;
+		$this->date     = $date;
 	}
 
 	/**
@@ -211,6 +231,26 @@ class Exporter_Content {
 	 */
 	public function byline() {
 		return $this->byline;
+	}
+
+	/**
+	 * Get the content author.
+	 *
+	 * @access public
+	 * @return string The author.
+	 */
+	public function author() {
+		return $this->author;
+	}
+
+	/**
+	 * Get the content date.
+	 *
+	 * @access public
+	 * @return string The byline.
+	 */
+	public function date() {
+		return $this->date;
 	}
 
 	/**

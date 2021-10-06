@@ -22,7 +22,20 @@ class Heading_Test extends Apple_News_Testcase {
 	 * @return array An array of arrays representing function arguments.
 	 */
 	public function data_headings() {
-		return [ [ 1 ], [ 2 ], [ 3 ], [ 4 ], [ 5 ], [ 6 ] ];
+		return [
+			[ 1, [ 'title', 'byline' ] ],
+			[ 2, [ 'title', 'byline' ] ],
+			[ 3, [ 'title', 'byline' ] ],
+			[ 4, [ 'title', 'byline' ] ],
+			[ 5, [ 'title', 'byline' ] ],
+			[ 6, [ 'title', 'byline' ] ],
+			[ 1, [ 'title', 'author' ] ],
+			[ 2, [ 'title', 'author' ] ],
+			[ 3, [ 'title', 'author' ] ],
+			[ 4, [ 'title', 'author' ] ],
+			[ 5, [ 'title', 'author' ] ],
+			[ 6, [ 'title', 'author' ] ]
+		];
 	}
 
 	/**
@@ -39,9 +52,23 @@ class Heading_Test extends Apple_News_Testcase {
 	}
 
 	/**
-	 * Test the `apple_news_heading_json` filter.
+	 * Returns an array of arrays representing function arguments to the
+	 * test_filter, test_filter_hanging_punctuation, test_html_in_headings functions.
 	 */
-	public function test_filter() {
+	public function data_test_filter() {
+		return [
+			[ [ 'title', 'byline' ] ],
+			[ [ 'title', 'author' ] ],
+		];
+	}
+
+	/**
+	 * Test the `apple_news_heading_json` filter.
+	 *
+	 * @dataProvider data_test_filter
+	 */
+	public function test_filter( $meta_order ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		add_filter( 'apple_news_heading_json', [ $this, 'filter_apple_news_heading_json' ] );
 
 		// Create a test post and get JSON for it.
@@ -61,8 +88,11 @@ HTML;
 
 	/**
 	 * Ensures HTML is allowed in headings.
+	 *
+	 * @dataProvider data_test_filter
 	 */
-	public function test_html_in_headings() {
+	public function test_html_in_headings( $meta_order ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		$content = <<<HTML
 <!-- wp:heading -->
 <h2>Heading <strong>Level</strong> 2</h2>
@@ -90,8 +120,11 @@ HTML;
 
 	/**
 	 * Tests image splitting where the image is wrapped in a link.
+	 *
+	 * @dataProvider data_test_filter
 	 */
-	public function test_image_splitting_with_link() {
+	public function test_image_splitting_with_link( $meta_order ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		$content = <<<HTML
 <!-- wp:heading -->
 <h2><a href="https://www.google.com/"><img src="/example-image.jpg" /></a></h2>
@@ -103,8 +136,8 @@ HTML;
 		$json = $this->get_json_for_post( $post_id );
 
 		// Validate image split in generated JSON.
-		$this->assertEquals( 'photo', $json['components'][1]['components'][2]['role'] );
-		$this->assertEquals( 'http://example.org/example-image.jpg', $json['components'][1]['components'][2]['URL'] );
+		$this->assertEquals( 'photo', $json['components'][2]['role'] );
+		$this->assertEquals( 'http://example.org/example-image.jpg', $json['components'][2]['URL'] );
 	}
 
 	/**
@@ -114,7 +147,8 @@ HTML;
 	 *
 	 * @param int $level Heading level. 1-6.
 	 */
-	public function test_render( $level ) {
+	public function test_render( $level, $meta_order ) {
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		$content = <<<HTML
 <!-- wp:heading -->
 <h{$level}>Heading Level {$level}</h>
