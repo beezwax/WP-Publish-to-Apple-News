@@ -23,7 +23,7 @@ jobs:
         can_fail: [false]
         multisite: [0,1]
 
-    name: phpunit '7.4' @ WP ${{ matrix.wp_version }} WP_MULTISITE=${{ matrix.multisite }}
+    name: phpunit 7.4 @ WP ${{ matrix.wp_version }} WP_MULTISITE=${{ matrix.multisite }}
     env:
       CACHEDIR: /tmp/test-cache
       WP_CORE_DIR: /tmp/wordpress/
