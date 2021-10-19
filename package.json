@@ -5,7 +5,7 @@
   "main": "index.php",
   "engines": {
     "node": "16",
-    "npm": "7"
+    "npm": "8"
   },
   "browserslist": [
     "defaults",
