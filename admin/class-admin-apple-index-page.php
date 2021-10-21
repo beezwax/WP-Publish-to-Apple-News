@@ -292,6 +292,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 
 		// Enable jQuery datepicker for the export table date filter.
 		wp_enqueue_script( 'jquery-ui-datepicker' );
+		wp_enqueue_style( 'jquery-ui-datepicker-style', '//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css' );
 
 		// Add the export table script and style.
 		wp_enqueue_style(
