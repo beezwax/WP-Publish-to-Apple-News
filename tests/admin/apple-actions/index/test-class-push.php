@@ -29,6 +29,18 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 	}
 
 	/**
+	 * A filter on the_content that tests the behavior of the
+	 * apple_news_is_exporting function.
+	 *
+	 * @param string $content The content to be filtered.
+	 *
+	 * @return string The filtered content.
+	 */
+	public function filter_the_content( $content ) {
+		return apple_news_is_exporting() ? '<p>EXPORTING</p>' : $content;
+	}
+
+	/**
 	 * Tests the behavior of the component errors setting (none, warn, fail).
 	 */
 	public function test_component_errors() {
@@ -137,6 +149,18 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		$this->assertEquals( 3, $metadata['data']['isNumber'] );
 		$this->assertEquals( 'Test String Value', $metadata['data']['isString'] );
 		$this->assertEquals( ['a', 'b', 'c'], $metadata['data']['isArray'] );
+	}
+
+	/**
+	 * Ensures that the apple_news_is_exporting function works properly during a
+	 * push request.
+	 */
+	public function test_exporting_flag() {
+		$post_id = self::factory()->post->create();
+		add_filter( 'the_content', [ $this, 'filter_the_content' ] );
+		$request = $this->get_request_for_post( $post_id );
+		remove_filter( 'the_content', [ $this, 'filter_the_content'] );
+		$this->assertTrue( false !== strpos( $request['body'], '<p>EXPORTING<\/p>' ) );
 	}
 
 	/**

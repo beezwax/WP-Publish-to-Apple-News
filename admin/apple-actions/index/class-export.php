@@ -76,10 +76,10 @@ class Export extends Action {
 	 * @access public
 	 */
 	public function perform() {
-		self::$exporting = true;
-		$exporter        = $this->fetch_exporter();
-		$json            = $exporter->export();
-		self::$exporting = false;
+		$this->set_exporting( true );
+		$exporter = $this->fetch_exporter();
+		$json     = $exporter->export();
+		$this->set_exporting( false );
 
 		return $json;
 	}
@@ -453,6 +453,15 @@ class Export extends Action {
 		}
 
 		return $date;
+	}
+
+	/**
+	 * Sets the exporting flag.
+	 *
+	 * @param bool $exporting The new value of the exporting flag.
+	 */
+	public function set_exporting( $exporting ) {
+		self::$exporting = (bool) $exporting;
 	}
 
 	/**
