@@ -95,40 +95,67 @@ class Admin_Apple_News extends Apple_News {
 
 			// Define custom postmeta fields to register.
 			$postmeta = [
-				'apple_news_api_created_at'     => [],
-				'apple_news_api_id'             => [],
-				'apple_news_api_modified_at'    => [],
-				'apple_news_api_revision'       => [],
-				'apple_news_api_share_url'      => [],
-				'apple_news_coverimage'         => [
-					'type' => 'integer',
+				'apple_news_api_created_at'     => [
+					'default' => '',
 				],
-				'apple_news_coverimage_caption' => [],
+				'apple_news_api_id'             => [
+					'default' => '',
+				],
+				'apple_news_api_modified_at'    => [
+					'default' => '',
+				],
+				'apple_news_api_revision'       => [
+					'default' => '',
+				],
+				'apple_news_api_share_url'      => [
+					'default' => '',
+				],
+				'apple_news_coverimage'         => [
+					'default' => 0,
+					'type'    => 'integer',
+				],
+				'apple_news_coverimage_caption' => [
+					'default' => '',
+				],
 				'apple_news_is_hidden'          => [
-					'type' => 'boolean',
+					'default' => false,
+					'type'    => 'boolean',
 				],
 				'apple_news_is_paid'            => [
-					'type' => 'boolean',
+					'default' => false,
+					'type'    => 'boolean',
 				],
 				'apple_news_is_preview'         => [
-					'type' => 'boolean',
+					'default' => false,
+					'type'    => 'boolean',
 				],
 				'apple_news_is_sponsored'       => [
-					'type' => 'boolean',
+					'default' => false,
+					'type'    => 'boolean',
 				],
-				'apple_news_maturity_rating'    => [],
+				'apple_news_maturity_rating'    => [
+					'default' => '',
+				],
 				'apple_news_metadata'           => [
+					'default'           => '',
 					'sanitize_callback' => function ( $value ) {
-						return is_string( $value ) ? json_decode( $value, true ) : $value;
+						return ! empty( $value ) && is_string( $value ) ? json_decode( $value, true ) : $value;
 					},
 					'show_in_rest'      => [
 						'prepare_callback' => 'apple_news_json_encode',
 					],
 				],
-				'apple_news_pullquote'          => [],
-				'apple_news_pullquote_position' => [],
-				'apple_news_slug'               => [],
+				'apple_news_pullquote'          => [
+					'default' => '',
+				],
+				'apple_news_pullquote_position' => [
+					'default' => '',
+				],
+				'apple_news_slug'               => [
+					'default' => '',
+				],
 				'apple_news_sections'           => [
+					'default'           => '',
 					'sanitize_callback' => 'apple_news_sanitize_selected_sections',
 					'show_in_rest'      => [
 						'prepare_callback' => 'apple_news_json_encode',
