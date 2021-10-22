@@ -1,26 +1,43 @@
+import { BlockIcon, MediaPlaceholder } from '@wordpress/block-editor';
+import { Button, Spinner } from '@wordpress/components';
+import { useSelect } from '@wordpress/data';
+import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Button, Spinner } from '@wordpress/components';
-import { MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
-import { __ } from '@wordpress/i18n';
-import { useSelect } from '@wordpress/data';
+import styled from 'styled-components';
 
 // Services.
-import getMediaUrl from '../../services/media/get-media-url';
+import getMediaURL from '../../services/media/get-media-url';
+
+// Styled components.
+const Container = styled.div`
+  display: block;
+  position: relative;
+`;
+
+const DefaultPreview = styled.div`
+  background: white;
+  border: 1px solid black;
+  padding: 1em;
+`;
 
 const MediaPicker = ({
   allowedTypes,
   className,
-  value,
+  icon,
   imageSize,
   onReset,
   onUpdate,
+  onUpdateURL,
+  preview: Preview,
+  value,
+  valueURL,
 }) => {
-  // Get the media object given the media ID.
+  // Get the media object, if given the media ID.
   const {
     media = null,
   } = useSelect((select) => ({
-    media: select('core').getMedia(value),
+    media: value ? select('core').getMedia(value) : null,
   }), [value]);
 
   // getEntityRecord returns `null` if the load is in progress.
@@ -30,95 +47,65 @@ const MediaPicker = ({
     );
   }
 
+  // If we have a valid source URL of any type, display it.
+  const src = media ? getMediaURL(media, imageSize) : valueURL;
+  if (src) {
+    return (
+      <Container className={className}>
+        {Preview ? (
+          <Preview src={src} />
+        ) : (
+          <DefaultPreview className="apple-news-media-picker__preview">
+            <p>{__('Selected file:', 'apple-news')}</p>
+            <p><a href={src}>{src}</a></p>
+          </DefaultPreview>
+        )}
+        <Button
+          isLarge
+          isPrimary
+          onClick={onReset}
+        >
+          { __('Replace', 'apple-news')}
+        </Button>
+      </Container>
+    );
+  }
+
   return (
-    <div
-      className={className}
-      style={{
-        backgroundColor: '#007CBA',
-        display: 'inline-block',
-        position: 'relative',
-      }}
-    >
-      <MediaUploadCheck>
-        <MediaUpload
-          title={__('Select/add File', 'apple-news')}
-          onSelect={onUpdate}
-          allowedTypes={allowedTypes}
-          value={value}
-          render={({ open }) => (
-            <>
-              {value !== 0 && media !== null ? (
-                <div>
-                  <img
-                    alt=""
-                    src={getMediaUrl(media, imageSize)}
-                  />
-                  <div
-                    style={{
-                      background: 'white',
-                      left: '50%',
-                      padding: 5,
-                      position: 'absolute',
-                      top: '50%',
-                      transform: 'translate(-50%, -50%)',
-                      zIndex: 10,
-                    }}
-                  >
-                    <Button
-                      isPrimary
-                      isLarge
-                      onClick={open}
-                      style={{ marginBottom: 0 }}
-                    >
-                      { __('Replace File', 'apple-news')}
-                    </Button>
-                    <Button
-                      isLink
-                      isDestructive
-                      onClick={onReset}
-                      style={{ marginBottom: 0 }}
-                    >
-                      { __('Remove File', 'apple-news')}
-                    </Button>
-                  </div>
-                </div>
-              ) : null}
-              {value === 0 ? (
-                <div
-                  style={{
-                    background: 'white',
-                    padding: 5,
-                  }}
-                >
-                  <Button
-                    isPrimary
-                    onClick={open}
-                  >
-                    { __('Select/add File', 'apple-news')}
-                  </Button>
-                </div>
-              ) : null}
-            </>
-          )}
-        />
-      </MediaUploadCheck>
-    </div>
+    <Container className={className}>
+      <MediaPlaceholder
+        allowedTypes={allowedTypes}
+        disableMediaButtons={!!valueURL}
+        icon={<BlockIcon icon={icon} />}
+        onSelect={onUpdate}
+        onSelectURL={onUpdateURL}
+        value={{ id: value, src }}
+      />
+    </Container>
   );
 };
 
 MediaPicker.defaultProps = {
   allowedTypes: [],
   className: '',
+  icon: 'format-aside',
   imageSize: 'thumbnail',
+  onUpdateURL: null,
+  preview: null,
+  valueURL: '',
 };
 
 MediaPicker.propTypes = {
-  allowedTypes: PropTypes.arrayOf([PropTypes.string]),
+  allowedTypes: PropTypes.arrayOf(PropTypes.string),
   className: PropTypes.string,
-  value: PropTypes.number.isRequired,
+  icon: PropTypes.string,
   imageSize: PropTypes.string,
   onReset: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
+  onUpdateURL: PropTypes.func,
+  preview: PropTypes.element,
+  value: PropTypes.number.isRequired,
+  valueURL: PropTypes.string,
 };
 
 export default MediaPicker;

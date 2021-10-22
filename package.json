@@ -30,6 +30,7 @@
     "autoprefixer": "^10.3.1",
     "babel-jest": "^27.0.6",
     "babel-loader": "^8.2.2",
+    "babel-plugin-styled-components": "^1.13.2",
     "chalk": "^4.1.1",
     "check-node-version": "^4.1.0",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
@@ -104,6 +105,7 @@
     "dompurify": "^2.3.0",
     "lodash": "^4.17.21",
     "prop-types": "^15.7.2",
-    "react": "^17.0.2"
+    "react": "^17.0.2",
+    "styled-components": "^5.3.1"
   }
 }
