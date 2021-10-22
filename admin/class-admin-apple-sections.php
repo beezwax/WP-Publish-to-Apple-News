@@ -411,8 +411,8 @@ class Admin_Apple_Sections extends Apple_News {
 		wp_enqueue_style(
 			'apple-news-jquery-ui-autocomplete',
 			'https://ajax.googleapis.com/ajax/libs/jqueryui/' . $jquery_ui->ver . '/themes/smoothness/jquery-ui.min.css',
-			array(),
-			self::$version
+			[],
+			$jquery_ui->ver
 		);
 		wp_enqueue_style(
 			'apple-news-sections-css',

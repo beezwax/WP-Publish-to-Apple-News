@@ -290,8 +290,17 @@ class Admin_Apple_Index_Page extends Apple_News {
 			return;
 		}
 
+		global $wp_scripts;
+
 		// Enable jQuery datepicker for the export table date filter.
 		wp_enqueue_script( 'jquery-ui-datepicker' );
+		$jquery_ui = $wp_scripts->query( 'jquery-ui-core' );
+		wp_enqueue_style(
+			'apple-news-jquery-ui-autocomplete',
+			'https://ajax.googleapis.com/ajax/libs/jqueryui/' . $jquery_ui->ver . '/themes/smoothness/jquery-ui.min.css',
+			[],
+			$jquery_ui->ver
+		);
 
 		// Add the export table script and style.
 		wp_enqueue_style(
