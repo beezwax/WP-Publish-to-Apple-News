@@ -554,9 +554,11 @@ class Push extends API_Action {
 	 */
 	private function generate_article() {
 
-		$export_action  = new Export( $this->settings, $this->id, $this->sections );
+		$export_action = new Export( $this->settings, $this->id, $this->sections );
+		Export::set_exporting( true );
 		$this->exporter = $export_action->fetch_exporter();
 		$this->exporter->generate();
+		Export::set_exporting( false );
 
 		return array( $this->exporter->get_json(), $this->exporter->get_bundles(), $this->exporter->get_errors() );
 	}
