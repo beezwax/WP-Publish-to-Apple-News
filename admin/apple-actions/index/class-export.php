@@ -70,16 +70,25 @@ class Export extends Action {
 	}
 
 	/**
+	 * Sets the exporting flag.
+	 *
+	 * @param bool $exporting The new value of the exporting flag.
+	 */
+	public static function set_exporting( $exporting ) {
+		self::$exporting = (bool) $exporting;
+	}
+
+	/**
 	 * Perform the export and return the results.
 	 *
 	 * @return string The JSON data
 	 * @access public
 	 */
 	public function perform() {
-		$this->set_exporting( true );
+		self::set_exporting( true );
 		$exporter = $this->fetch_exporter();
 		$json     = $exporter->export();
-		$this->set_exporting( false );
+		self::set_exporting( false );
 
 		return $json;
 	}
@@ -453,15 +462,6 @@ class Export extends Action {
 		}
 
 		return $date;
-	}
-
-	/**
-	 * Sets the exporting flag.
-	 *
-	 * @param bool $exporting The new value of the exporting flag.
-	 */
-	public function set_exporting( $exporting ) {
-		self::$exporting = (bool) $exporting;
 	}
 
 	/**
