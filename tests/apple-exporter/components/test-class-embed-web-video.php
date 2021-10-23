@@ -197,6 +197,31 @@ HTML;
 	}
 
 	/**
+	 * Tests the transformation of a generic Embed Gutenberg block containing a
+	 * web video embed into an EmbedWebVideo component.
+	 */
+	public function test_transform_embed_iframe() {
+		$post_content = <<<HTML
+<!-- wp:embed {"url":"https://www.youtube.com/embed/0qwALOOvUik","type":"rich","providerNameSlug":"embed-handler","responsive":true,"className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} -->
+<figure class="wp-block-embed is-type-rich is-provider-embed-handler wp-block-embed-embed-handler wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+https://www.youtube.com/embed/0qwALOOvUik
+</div></figure>
+<!-- /wp:embed -->
+HTML;
+		$post_id      = self::factory()->post->create( [ 'post_content' => $post_content ] );
+		$json         = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			[
+				'role'        => 'embedwebvideo',
+				'URL'         => 'https://www.youtube.com/embed/0qwALOOvUik',
+				'aspectRatio' => 1.777,
+				'layout'      => 'embed-web-video-layout'
+			],
+			$json['components'][3]
+		);
+	}
+
+	/**
 	 * Tests the transformation of an iframe containing a Vimeo embed into an
 	 * EmbedWebVideo component.
 	 */

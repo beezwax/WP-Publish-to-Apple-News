@@ -44,11 +44,11 @@ class Embed_Web_Video extends Component {
 			// Match an iframe with a src attribute.
 			|| ( 'iframe' === $node->nodeName && preg_match( $pattern, trim( $node->getAttribute( 'src' ) ) ) )
 
-			// Match a Gutenberg-style figure.
+			// Match a figure with an embedded iframe.
 			|| ( 'figure' === $node->nodeName && Component::is_embed_figure( $node ) && preg_match( $pattern, trim( $node->nodeValue ) ) )
 
 			// Match an iframe inside of a paragraph.
-			|| ( 'p' === $node->nodeName && $node->hasChildNodes() && 'iframe' === $node->childNodes->item(0)->nodeName && preg_match( $pattern, trim( $node->childNodes->item(0)->getAttribute( 'src' ) ) ) )
+			|| ( 'p' === $node->nodeName && $node->hasChildNodes() && 'iframe' === $node->childNodes->item( 0 )->nodeName && preg_match( $pattern, trim( $node->childNodes->item( 0 )->getAttribute( 'src' ) ) ) )
 		);
 	}
 
@@ -60,19 +60,20 @@ class Embed_Web_Video extends Component {
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
-
-		// Handling for a Gutenberg web video embed.
 		if (
-			'figure' === $node->nodeName
-			&& ( self::node_has_class( $node, 'wp-block-embed-vimeo' )
-				|| self::node_has_class( $node, 'wp-block-embed-youtube' )
-			)
-		) {
-			return $node;
-		}
-
-		// Is this node valid for further processing?
-		if ( self::is_embed_web_video( $node, self::YOUTUBE_MATCH )
+			// Handling for a Gutenberg web video embed.
+			( 'figure' === $node->nodeName
+				&& ( self::node_has_class( $node, 'wp-block-embed-vimeo' )
+					|| self::node_has_class( $node, 'wp-block-embed-youtube' )
+				)
+			// Handling for a Gutenberg generic embed that happens to contain a YouTube or Vimeo video.
+			) || ( 'figure' === $node->nodeName
+				&& self::node_has_class( $node, 'wp-block-embed' )
+				&& ( preg_match( self::VIMEO_MATCH, trim( $node->nodeValue ) )
+					|| preg_match( self::YOUTUBE_MATCH, trim( $node->nodeValue ) )
+				)
+			// Handling for Classic Editor YouTube embeds.
+			) || self::is_embed_web_video( $node, self::YOUTUBE_MATCH )
 			|| self::is_embed_web_video( $node, self::VIMEO_MATCH )
 		) {
 			return $node;
