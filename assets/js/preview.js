@@ -180,14 +180,14 @@
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-author', 'author_tracking', 'letter-spacing', 'px', $( '#author_size' ).val() / 100 );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-author', 'author_color', 'color', null, null );
 
-		// Publication date.
+		// Date.
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-date', 'date_font', 'font-family', null, null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-date', 'date_size', 'font-size', 'px', null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-date', 'date_line_height', 'line-height', 'px', null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-date', 'date_tracking', 'letter-spacing', 'px', $( '#date_size' ).val() / 100 );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-date', 'date_color', 'color', null, null );
 
-		// Author Links.
+		// Author URL.
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-byline a', 'author_link_color', 'color', null, null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-author a', 'author_link_color', 'color', null, null );
 
