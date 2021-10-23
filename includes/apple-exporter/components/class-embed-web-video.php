@@ -29,30 +29,6 @@ class Embed_Web_Video extends Component {
 	const YOUTUBE_MATCH = '#^https?://(?:www\.)?(?:youtube\.com/((watch\?v=)|(embed/))([\w\-]+)|youtu\.be/([\w\-]+))[^ ]*$#';
 
 	/**
-	 * Test if this node is a match based on the node type and URL format.
-	 *
-	 * @param \DOMElement $node    The node to examine for matches.
-	 * @param string      $pattern The regex pattern to match against.
-	 * @access public
-	 * @return boolean
-	 */
-	public static function is_embed_web_video( $node, $pattern ) {
-		return (
-			// Match a paragraph with the oEmbed string inside of it.
-			( 'p' === $node->nodeName && preg_match( $pattern, trim( $node->nodeValue ) ) )
-
-			// Match an iframe with a src attribute.
-			|| ( 'iframe' === $node->nodeName && preg_match( $pattern, trim( $node->getAttribute( 'src' ) ) ) )
-
-			// Match a figure with an embedded iframe.
-			|| ( 'figure' === $node->nodeName && Component::is_embed_figure( $node ) && preg_match( $pattern, trim( $node->nodeValue ) ) )
-
-			// Match an iframe inside of a paragraph.
-			|| ( 'p' === $node->nodeName && $node->hasChildNodes() && 'iframe' === $node->childNodes->item( 0 )->nodeName && preg_match( $pattern, trim( $node->childNodes->item( 0 )->getAttribute( 'src' ) ) ) )
-		);
-	}
-
-	/**
 	 * Look for node matches for this component.
 	 *
 	 * @param \DOMElement $node The node to examine for matches.
@@ -60,22 +36,28 @@ class Embed_Web_Video extends Component {
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
-		if (
-			// Handling for a Gutenberg web video embed.
-			( 'figure' === $node->nodeName
-				&& ( self::node_has_class( $node, 'wp-block-embed-vimeo' )
-					|| self::node_has_class( $node, 'wp-block-embed-youtube' )
-				)
-			// Handling for a Gutenberg generic embed that happens to contain a YouTube or Vimeo video.
-			) || ( 'figure' === $node->nodeName
-				&& self::node_has_class( $node, 'wp-block-embed' )
-				&& ( preg_match( self::VIMEO_MATCH, trim( $node->nodeValue ) )
-					|| preg_match( self::YOUTUBE_MATCH, trim( $node->nodeValue ) )
-				)
-			// Handling for Classic Editor YouTube embeds.
-			) || self::is_embed_web_video( $node, self::YOUTUBE_MATCH )
-			|| self::is_embed_web_video( $node, self::VIMEO_MATCH )
-		) {
+		// First, check to see if the node is a YouTube or Vimeo Gutenberg block, because these are the simplest checks to make.
+		$is_figure        = 'figure' === $node->nodeName;
+		$is_vimeo_block   = self::node_has_class( $node, 'wp-block-embed-vimeo' );
+		$is_youtube_block = self::node_has_class( $node, 'wp-block-embed-youtube' );
+		if ( $is_figure && ( $is_vimeo_block || $is_youtube_block ) ) {
+			return $node;
+		}
+
+		// Second, check to see if the node contains a YouTube or Vimeo oEmbed as a text string.
+		$inner_text      = trim( $node->nodeValue );
+		$has_vimeo_url   = (bool) preg_match( self::VIMEO_MATCH, $inner_text );
+		$has_youtube_url = (bool) preg_match( self::YOUTUBE_MATCH, $inner_text );
+		if ( $has_vimeo_url || $has_youtube_url ) {
+			return $node;
+		}
+
+		// Third, check to see if the node is, or contains, an iframe with a YouTube or Vimeo video.
+		$inner_iframe    = self::get_iframe_from_node( $node );
+		$iframe_src      = null !== $inner_iframe ? $inner_iframe->getAttribute( 'src' ) : '';
+		$has_vimeo_src   = (bool) preg_match( self::VIMEO_MATCH, $iframe_src );
+		$has_youtube_src = (bool) preg_match( self::YOUTUBE_MATCH, $iframe_src );
+		if ( $has_vimeo_src || $has_youtube_src ) {
 			return $node;
 		}
 
