@@ -50,11 +50,18 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 * Bugfix: Fixes an issue with some of the example themes where pullquotes would create invalid JSON due to the default-pullquote textStyle not being set. Props to @soulseekah for the fix.
 * Bugfix: Fixes an issue where a custom filter is used to make all image URLs root-relative when using featured images to populate the Cover component, which was leading to an INVALID_DOCUMENT error from the News API due to the root-relative URL (e.g., /path/to/my/image.jpg instead of https://example.org/path/to/my/image.jpg).
 * Bugfix: Fixes an issue with images not deduping when Jetpack Site Accelerator (Photon) is enabled.
+* Bugfix: Synchronizes the list of available fonts to what is actually available.
+* Bugfix: Fixes display of date pickers in the article list.
+* Bugfix: Fixes apple_news_is_exporting function to make it fire for both downloading JSON in the article list and pushing articles to Apple via the API.
+* Bugfix: Fixes an editor crash when using Gutenberg and a custom post type that does not support postmeta (custom-fields).
+* Bugfix: Fixes an issue with embedding YouTube and Vimeo videos when using Gutenberg blocks.
+* Bugfix: Fixes an issue where making a mistake in customizing JSON results in the custom JSON being reset to the default value rather than the previously saved value.
 * Enhancement: Added support for mailto:, music://, musics://, stocks:// and webcal:// links.
 * Enhancement: Added an option and a filter for skipping auto-push of posts with certain taxonomy terms.
-* Enhancement: Added support for html tags when customizing theme JSON.
+* Enhancement: Added support for HTML tags when customizing theme JSON.
 * Enhancement: Added an author component for author without date.
 * Enhancement: Added a date component for date without author byline.
+* Enhancement: Added support for determining the aspect ratio of an embedded video based on the value configured on the embed block.
 
 = 2.2.2 =
 * Bugfix: Moved custom metadata fields to the request level rather than the article level to align them with existing metadata properties like isPaid and isHidden.
