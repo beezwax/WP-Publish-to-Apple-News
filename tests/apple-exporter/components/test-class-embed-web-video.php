@@ -86,6 +86,70 @@ class Embed_Web_Video_Test extends Apple_News_Testcase {
 	}
 
 	/**
+	 * A filter function to modify the aspect ratio.
+	 *
+	 * @param array $json An array representing JSON for the component.
+	 *
+	 * @return array The modified JSON.
+	 */
+	public function filter_apple_news_embed_web_video_json( $json ) {
+		$json['aspectRatio'] = 1.4;
+
+		return $json;
+	}
+
+	/**
+	 * Tests the dynamic aspect ratio calculation.
+	 */
+	public function test_aspect_ratio() {
+		$post_content = <<<HTML
+<!-- wp:embed {"url":"https://www.youtube.com/watch?v=0qwALOOvUik","type":"video","providerNameSlug":"youtube","responsive":true,"className":"wp-embed-aspect-4-3 wp-has-aspect-ratio"} -->
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-4-3 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+		https://www.youtube.com/watch?v=0qwALOOvUik
+</div></figure>
+<!-- /wp:embed -->
+HTML;
+		$post_id      = self::factory()->post->create( [ 'post_content' => $post_content ] );
+		$json         = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			[
+				'role'        => 'embedwebvideo',
+				'URL'         => 'https://www.youtube.com/embed/0qwALOOvUik',
+				'aspectRatio' => 1.333,
+				'layout'      => 'embed-web-video-layout'
+			],
+			$json['components'][3]
+		);
+		remove_filter( 'apple_news_embed_web_video_json', [ $this, 'filter_apple_news_embed_web_video_json' ] );
+	}
+
+	/**
+	 * Test the `apple_news_embed_web_video_json` filter.
+	 */
+	public function test_filter() {
+		add_filter( 'apple_news_embed_web_video_json', [ $this, 'filter_apple_news_embed_web_video_json' ] );
+		$post_content = <<<HTML
+<!-- wp:embed {"url":"https://www.youtube.com/watch?v=0qwALOOvUik","type":"video","providerNameSlug":"youtube","responsive":true,"className":"wp-embed-aspect-16-9 wp-has-aspect-ratio"} -->
+<figure class="wp-block-embed is-type-video is-provider-youtube wp-block-embed-youtube wp-embed-aspect-16-9 wp-has-aspect-ratio"><div class="wp-block-embed__wrapper">
+		https://www.youtube.com/watch?v=0qwALOOvUik
+</div></figure>
+<!-- /wp:embed -->
+HTML;
+		$post_id      = self::factory()->post->create( [ 'post_content' => $post_content ] );
+		$json         = $this->get_json_for_post( $post_id );
+		$this->assertEquals(
+			[
+				'role'        => 'embedwebvideo',
+				'URL'         => 'https://www.youtube.com/embed/0qwALOOvUik',
+				'aspectRatio' => 1.4,
+				'layout'      => 'embed-web-video-layout'
+			],
+			$json['components'][3]
+		);
+		remove_filter( 'apple_news_embed_web_video_json', [ $this, 'filter_apple_news_embed_web_video_json' ] );
+	}
+
+	/**
 	 * Tests transforming an embed to an Embed Web Video component.
 	 *
 	 * @dataProvider data_transform
@@ -105,7 +169,15 @@ class Embed_Web_Video_Test extends Apple_News_Testcase {
 HTML;
 		$post_id      = self::factory()->post->create( [ 'post_content' => $post_content ] );
 		$json         = $this->get_json_for_post( $post_id );
-		$this->assertEquals( $expected, $json['components'][3]['URL'] );
+		$this->assertEquals(
+			[
+				'role'        => 'embedwebvideo',
+				'URL'         => $expected,
+				'aspectRatio' => 1.777,
+				'layout'      => 'embed-web-video-layout'
+			],
+			$json['components'][3]
+		);
 
 		// Test in the classic editor.
 		$post_content = <<<HTML
@@ -113,7 +185,15 @@ HTML;
 HTML;
 		$post_id      = self::factory()->post->create( [ 'post_content' => $post_content ] );
 		$json         = $this->get_json_for_post( $post_id );
-		$this->assertEquals( $expected, $json['components'][3]['URL'] );
+		$this->assertEquals(
+			[
+				'role'        => 'embedwebvideo',
+				'URL'         => $expected,
+				'aspectRatio' => 1.777,
+				'layout'      => 'embed-web-video-layout'
+			],
+			$json['components'][3]
+		);
 	}
 
 	/**
@@ -127,7 +207,15 @@ HTML;
 HTML;
 		$post_id      = self::factory()->post->create( [ 'post_content' => $post_content ] );
 		$json         = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'https://player.vimeo.com/video/12819723', $json['components'][3]['URL'] );
+		$this->assertEquals(
+			[
+				'role'        => 'embedwebvideo',
+				'URL'         => 'https://player.vimeo.com/video/12819723',
+				'aspectRatio' => 1.777,
+				'layout'      => 'embed-web-video-layout'
+			],
+			$json['components'][3]
+		);
 	}
 
 	/**
@@ -141,117 +229,14 @@ HTML;
 HTML;
 		$post_id      = self::factory()->post->create( [ 'post_content' => $post_content ] );
 		$json         = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'https://www.youtube.com/embed/0qwALOOvUik', $json['components'][3]['URL'] );
-	}
-
-	// TODO: REFACTOR LINE
-
-	/**
-	 * A filter function to modify the aspect ratio.
-	 *
-	 * @param array $json An array representing JSON for the component.
-	 *
-	 * @access public
-	 * @return array The modified JSON.
-	 */
-	public function filter_apple_news_embed_web_video_json( $json ) {
-		$json['aspectRatio'] = '1.4';
-
-		return $json;
-	}
-
-	/**
-	 * Test the `apple_news_embed_web_video_json` filter.
-	 *
-	 * @access public
-	 */
-	public function testFilter() {
-
-		// Setup.
-		add_filter(
-			'apple_news_embed_web_video_json',
-			array( $this, 'filter_apple_news_embed_web_video_json' )
-		);
-		$component = new Embed_Web_Video(
-			'<p>https://vimeo.com/12819723</p>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		// Test.
 		$this->assertEquals(
-			array(
+			[
 				'role'        => 'embedwebvideo',
-				'URL'         => 'https://player.vimeo.com/video/12819723',
-				'aspectRatio' => '1.4',
-				'layout'      => 'embed-web-video-layout',
-			),
-			$component->to_array()
-		);
-
-		// Teardown.
-		remove_filter(
-			'apple_news_embed_web_video_json',
-			array( $this, 'filter_apple_news_embed_web_video_json' )
-		);
-	}
-
-	/**
-	 * Tests the transformation process from a web video URL to an
-	 * Embed_Web_Video component.
-	 *
-	 * Tests a variety of URL formats to ensure that they produce the
-	 * proper output JSON using the dataProvider referenced below.
-	 *
-	 * @dataProvider dataTransformEmbedWebVideo
-	 *
-	 * @param string $html The HTML to be matched by the parser.
-	 * @param string $final_url The final URL used in the JSON.
-	 *
-	 * @access public
-	 */
-	public function testTransformEmbedWebVideo( $html, $final_url ) {
-
-		// Setup.
-		$component = new Embed_Web_Video(
-			$html,
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		// Test.
-		$this->assertEquals(
-			array(
-				'role'        => 'embedwebvideo',
-				'URL'         => $final_url,
-				'aspectRatio' => '1.777',
+				'URL'         => 'https://www.youtube.com/embed/0qwALOOvUik',
+				'aspectRatio' => 1.777,
 				'layout'      => 'embed-web-video-layout'
-			),
-			$component->to_array()
+			],
+			$json['components'][3]
 		);
-	}
-
-	/**
-	 * Tests an unsupported video provider.
-	 *
-	 * @access public
-	 */
-	public function testTransformUnsupportedProvider() {
-
-		// Setup.
-		$component = new Embed_Web_Video(
-			'<iframe src="//player.notvimeo.com/video/12819723" width="560" height="315" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts
-		);
-
-		// Test.
-		$this->assertNull( $component->to_array() );
 	}
 }

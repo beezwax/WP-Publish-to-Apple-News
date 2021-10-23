@@ -122,7 +122,15 @@ class Embed_Web_Video extends Component {
 		$ratio_y = 9;
 		$src     = '';
 
-		// TODO: Dynamic aspect ratio.
+		// Try to extract the aspect ratio from the markup.
+		if ( preg_match( '/wp-embed-aspect-([0-9]+)-([0-9]+)/', $html, $match ) ) {
+			$maybe_ratio_x = (int) $match[1];
+			$maybe_ratio_y = (int) $match[2];
+			if ( ! empty( $maybe_ratio_x ) && ! empty( $maybe_ratio_y ) ) {
+				$ratio_x = $maybe_ratio_x;
+				$ratio_y = $maybe_ratio_y;
+			}
+		}
 
 		// Get things that look like URLs.
 		if ( preg_match_all( '/https?:\/\/[^\'"\s<]+/', $html, $matches ) ) {
@@ -139,7 +147,7 @@ class Embed_Web_Video extends Component {
 					$this->register_json(
 						'json',
 						array(
-							'#aspect_ratio#' => round( $ratio_x / $ratio_y, 3 ),
+							'#aspect_ratio#' => floor( 1000 * $ratio_x / $ratio_y ) / 1000,
 							'#url#'          => $src,
 						)
 					);
