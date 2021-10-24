@@ -12,7 +12,6 @@
 namespace Apple_Exporter;
 
 use Admin_Apple_Notice;
-use Apple_Exporter\Theme;
 
 /**
  * A class that defines a JSON spec for a component.
@@ -232,26 +231,6 @@ class Component_Spec {
 	 */
 	public function save( $spec, $theme_name = '' ) {
 
-		// Negotiate the theme name.
-		if ( empty( $theme_name ) ) {
-			$theme_name = Theme::get_active_theme_name();
-		}
-
-		// Attempt to load the theme to be saved.
-		$theme = new Theme();
-		$theme->set_name( $theme_name );
-		if ( ! $theme->load() ) {
-			Admin_Apple_Notice::error(
-				sprintf(
-					// translators: token is a theme name.
-					__( 'Unable to load theme %s to save spec', 'apple-news' ),
-					$theme_name
-				)
-			);
-
-			return false;
-		}
-
 		// Check for empty JSON.
 		$json = $this->spec;
 		if ( empty( $spec ) ) {
@@ -298,6 +277,26 @@ class Component_Spec {
 						'apple-news'
 					),
 					$this->label
+				)
+			);
+
+			return false;
+		}
+
+		// Negotiate the theme name.
+		if ( empty( $theme_name ) ) {
+			$theme_name = Theme::get_active_theme_name();
+		}
+
+		// Attempt to load the theme to be saved.
+		$theme = new Theme();
+		$theme->set_name( $theme_name );
+		if ( ! $theme->load() ) {
+			Admin_Apple_Notice::error(
+				sprintf(
+				// translators: token is a theme name.
+					__( 'Unable to load theme %s to save spec', 'apple-news' ),
+					$theme_name
 				)
 			);
 
