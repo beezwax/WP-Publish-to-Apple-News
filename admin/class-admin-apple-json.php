@@ -339,10 +339,7 @@ class Admin_Apple_JSON extends Apple_News {
 			// Ensure the value exists.
 			$key = 'apple_news_json_' . $spec->key_from_name( $spec->name );
 			if ( isset( $_POST[ $key ] ) ) {
-				// Allow for HTML characters, strip extra slashes and unslash string.
-				$custom_spec = wp_kses_data( wp_unslash( $_POST[ $key ] ) );
-				$result      = $spec->save( $custom_spec, $theme );
-				if ( true === $result ) {
+				if ( true === $spec->save( wp_unslash( $_POST[ $key ] ), $theme ) ) { // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 					$updates[] = $spec->label;
 				}
 			}

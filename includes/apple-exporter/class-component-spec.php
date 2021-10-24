@@ -421,7 +421,7 @@ class Component_Spec {
 	 */
 	public function format_json( $spec ) {
 		return ! empty( $spec )
-			? wp_json_encode( $spec, JSON_PRETTY_PRINT )
+			? wp_json_encode( $spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE )
 			: '{}';
 	}
 
