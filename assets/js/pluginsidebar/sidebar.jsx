@@ -10,6 +10,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 // Hooks.
 import usePostMeta from '../services/hooks/use-post-meta';
+import usePostMetaValue from '../services/hooks/use-post-meta-value';
 
 // Panels.
 import CoverImage from './panels/cover-image';
@@ -57,7 +58,7 @@ const Sidebar = () => {
   // Get a reference to the dispatch function for notices for use later.
   const dispatchNotice = useDispatch('core/notices');
 
-  // Get the current post ID.
+  // Get information about the current post.
   const {
     notices,
     postId,
@@ -73,30 +74,44 @@ const Sidebar = () => {
     };
   });
 
-  // Getter/setter for postmeta managed by this PluginSidebar.
+  // Get read-only values from postmeta.
   const [{
-    apple_news_api_created_at: dateCreated = '',
-    apple_news_api_id: apiId = '',
-    apple_news_api_modified_at: dateModified = '',
-    apple_news_api_revision: revision = '',
-    apple_news_api_share_url: shareUrl = '',
-    apple_news_coverimage: coverImageId = 0,
-    apple_news_coverimage_caption: coverImageCaption = '',
-    apple_news_is_hidden: isHidden = false,
-    apple_news_is_paid: isPaid = false,
-    apple_news_is_preview: isPreview = false,
-    apple_news_is_sponsored: isSponsored = false,
-    apple_news_maturity_rating: maturityRating = '',
-    apple_news_metadata: metadataRaw = '',
-    apple_news_pullquote: pullquoteText = '',
-    apple_news_pullquote_position: pullquotePosition = '',
-    apple_news_sections: selectedSectionsRaw = '',
-    apple_news_slug: slug = '',
-  }, setMeta] = usePostMeta();
+    apple_news_api_created_at: dateCreated,
+    apple_news_api_id: apiId,
+    apple_news_api_modified_at: dateModified,
+    apple_news_api_revision: revision,
+    apple_news_api_share_url: shareUrl,
+  }] = usePostMeta();
+
+  // Getters and setters for individual postmeta values.
+  const [coverImageId, setCoverImageId] = usePostMetaValue('apple_news_coverimage');
+  const [coverImageCaption, setCoverImageCaption] = usePostMetaValue('apple_news_coverimage_caption');
+  const [isHidden, setIsHidden] = usePostMetaValue('apple_news_is_hidden');
+  const [isPaid, setIsPaid] = usePostMetaValue('apple_news_is_paid');
+  const [isPreview, setIsPreview] = usePostMetaValue('apple_news_is_preview');
+  const [isSponsored, setIsSponsored] = usePostMetaValue('apple_news_is_sponsored');
+  const [maturityRating, setMaturityRating] = usePostMetaValue('apple_news_maturity_rating');
+  const [metadataRaw, setMetadataRaw] = usePostMetaValue('apple_news_metadata');
+  const [pullquoteText, setPullquoteText] = usePostMetaValue('apple_news_pullquote');
+  const [pullquotePosition, setPullquotePosition] = usePostMetaValue('apple_news_pullquote_position');
+  const [selectedSectionsRaw, setSelectedSectionsRaw] = usePostMetaValue('apple_news_sections');
+  const [slug, setSlug] = usePostMetaValue('apple_news_slug');
 
   // Decode selected sections.
   const metadata = safeJsonParseArray(metadataRaw);
   const selectedSections = safeJsonParseArray(selectedSectionsRaw);
+
+  /**
+   * A helper function for setting metadata.
+   * @param {object} next - The metadata value to set.
+   */
+  const setMetadata = (next) => setMetadataRaw(JSON.stringify(next));
+
+  /**
+   * A helper function for setting selected sections.
+   * @param {Array} next - The array of selected sections to set.
+   */
+  const setSelectedSections = (next) => setSelectedSectionsRaw(JSON.stringify(next));
 
   /**
    * A helper function for displaying a notification to the user.
@@ -151,10 +166,11 @@ const Sidebar = () => {
    * A helper function to update which sections are selected.
    * @param {string} id - The id of the section to toggle.
    */
-  const toggleSelectedSection = (id) => setMeta('apple_news_sections',
+  const toggleSelectedSection = (id) => setSelectedSections(
     selectedSections.includes(id)
-      ? JSON.stringify(selectedSections.filter((section) => section !== id))
-      : JSON.stringify([...selectedSections, id]));
+      ? selectedSections.filter((section) => section !== id)
+      : [...selectedSections, id],
+  );
 
   // On initial load, fetch info from the API into state.
   useEffect(() => {
@@ -206,7 +222,7 @@ const Sidebar = () => {
               ...state,
               autoAssignCategories: next,
             });
-            setMeta('apple_news_sections', '');
+            setSelectedSections([]);
           }}
           onChangeSelectedSections={toggleSelectedSection}
           sections={sections}
@@ -218,31 +234,31 @@ const Sidebar = () => {
           isPreview={isPreview}
           isSponsored={isSponsored}
           metadata={metadata}
-          onChangeIsHidden={(next) => setMeta('apple_news_is_hidden', next)}
-          onChangeIsPaid={(next) => setMeta('apple_news_is_paid', next)}
-          onChangeIsPreview={(next) => setMeta('apple_news_is_preview', next)}
-          onChangeIsSponsored={(next) => setMeta('apple_news_is_sponsored', next)}
-          onChangeMetadata={(next) => setMeta('apple_news_metadata', JSON.stringify(next))}
+          onChangeIsHidden={setIsHidden}
+          onChangeIsPaid={setIsPaid}
+          onChangeIsPreview={setIsPreview}
+          onChangeIsSponsored={setIsSponsored}
+          onChangeMetadata={setMetadata}
         />
         <MaturityRating
           maturityRating={maturityRating}
-          onChangeMaturityRating={(next) => setMeta('apple_news_maturity_rating', next)}
+          onChangeMaturityRating={setMaturityRating}
         />
         <Slug
-          onChangeSlug={(next) => setMeta('apple_news_slug', next)}
+          onChangeSlug={setSlug}
           slug={slug}
         />
         <PullQuote
-          onChangePullquotePosition={(next) => setMeta('apple_news_pullquote_position', next)}
-          onChangePullquoteText={(next) => setMeta('apple_news_pullquote', next)}
+          onChangePullquotePosition={setPullquotePosition}
+          onChangePullquoteText={setPullquoteText}
           pullquotePosition={pullquotePosition}
           pullquoteText={pullquoteText}
         />
         <CoverImage
           coverImageCaption={coverImageCaption}
           coverImageId={coverImageId}
-          onChangeCoverImageCaption={(next) => setMeta('apple_news_coverimage_caption', next)}
-          onChangeCoverImageId={(next) => setMeta('apple_news_coverimage', next)}
+          onChangeCoverImageCaption={setCoverImageCaption}
+          onChangeCoverImageId={setCoverImageId}
         />
         {publishState !== 'N/A' ? (
           <PublishInfo
