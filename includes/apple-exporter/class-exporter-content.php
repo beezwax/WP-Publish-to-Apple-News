@@ -147,7 +147,7 @@ class Exporter_Content {
 	 * @param \Apple_Exporter\Settings $settings Optional. Settings for the exporter.
 	 * @param string                   $slug     Optional. The slug of the post to be exported.
 	 * @param string                   $author   Optional. The author(s) of the post to be exported.
-	 * @param string                   $date     Optional. They published date of the post to be exported.
+	 * @param string                   $date     Optional. The date of the post to be exported.
 	 * @access public
 	 */
 	public function __construct( $id, $title, $content, $intro = null, $cover = null, $byline = null, $settings = null, $slug = null, $author = null, $date = null ) {

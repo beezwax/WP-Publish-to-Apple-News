@@ -11,6 +11,8 @@
 
 namespace Apple_Exporter;
 
+use Admin_Apple_Notice;
+
 /**
  * A class that defines a JSON spec for a component.
  *
@@ -229,20 +231,29 @@ class Component_Spec {
 	 */
 	public function save( $spec, $theme_name = '' ) {
 
-		// Validate the JSON.
-		$json = json_decode( $spec, true );
-		if ( empty( $json ) ) {
+		// Check for empty JSON.
+		$json = $this->spec;
+		if ( empty( $spec ) ) {
+			Admin_Apple_Notice::info(
+				sprintf(
+					// translators: token is a spec label.
+					__( 'The spec for %s was empty. Reverting to the default spec.', 'apple-news' ),
+					$this->label
+				)
+			);
+		} else {
+			$json = json_decode( $spec, true );
 			if ( null === $json ) {
-				\Admin_Apple_Notice::info(
+				Admin_Apple_Notice::info(
 					sprintf(
-						// translators: token is a spec label.
-						__( 'The spec for %s was empty or invalid. Reverting to the default spec.', 'apple-news' ),
+					// translators: token is a spec label.
+						__( 'The spec for %s was empty or invalid. Reverting to the previous spec.', 'apple-news' ),
 						$this->label
 					)
 				);
-			}
 
-			$json = $this->spec;
+				return false;
+			}
 		}
 
 		// Compare this JSON to the built-in JSON.
@@ -258,7 +269,7 @@ class Component_Spec {
 		// Validate the JSON.
 		$result = $this->validate( $json );
 		if ( false === $result ) {
-			\Admin_Apple_Notice::error(
+			Admin_Apple_Notice::error(
 				sprintf(
 					// translators: token is a spec label.
 					__(
@@ -269,21 +280,21 @@ class Component_Spec {
 				)
 			);
 
-			return $result;
+			return false;
 		}
 
 		// Negotiate the theme name.
 		if ( empty( $theme_name ) ) {
-			$theme_name = \Apple_Exporter\Theme::get_active_theme_name();
+			$theme_name = Theme::get_active_theme_name();
 		}
 
 		// Attempt to load the theme to be saved.
-		$theme = new \Apple_Exporter\Theme();
+		$theme = new Theme();
 		$theme->set_name( $theme_name );
 		if ( ! $theme->load() ) {
-			\Admin_Apple_Notice::error(
+			Admin_Apple_Notice::error(
 				sprintf(
-					// translators: token is a theme name.
+				// translators: token is a theme name.
 					__( 'Unable to load theme %s to save spec', 'apple-news' ),
 					$theme_name
 				)
@@ -304,7 +315,7 @@ class Component_Spec {
 		$component_key = $this->key_from_name( $this->component );
 		$theme_settings['json_templates'][ $component_key ][ $this->name ] = $json;
 		if ( ! $theme->load( $theme_settings ) ) {
-			\Admin_Apple_Notice::error(
+			Admin_Apple_Notice::error(
 				sprintf(
 					// translators: token is a spec label.
 					__( 'The spec for %s could not be loaded into the theme', 'apple-news' ),
@@ -317,7 +328,7 @@ class Component_Spec {
 
 		// Try to save the theme.
 		if ( ! $theme->save() ) {
-			\Admin_Apple_Notice::error(
+			Admin_Apple_Notice::error(
 				sprintf(
 					// translators: token is a spec label.
 					__( 'The spec for %s could not be saved to the theme', 'apple-news' ),
@@ -328,7 +339,6 @@ class Component_Spec {
 			return false;
 		}
 
-		// Indicate success.
 		return true;
 	}
 
@@ -410,7 +420,7 @@ class Component_Spec {
 	 */
 	public function format_json( $spec ) {
 		return ! empty( $spec )
-			? wp_json_encode( $spec, JSON_PRETTY_PRINT )
+			? wp_json_encode( $spec, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE )
 			: '{}';
 	}
 

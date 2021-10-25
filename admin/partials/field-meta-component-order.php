@@ -10,6 +10,8 @@
  * @package Apple_News
  */
 
+use Apple_Exporter\Theme;
+
 ?>
 <div class="apple-news-sortable-list">
 	<h4><?php esc_html_e( 'Active', 'apple-news' ); ?></h4>
@@ -19,7 +21,7 @@
 			echo sprintf(
 				'<li id="%s" class="ui-sortable-handle">%s</li>',
 				esc_attr( $apple_component_name ),
-				esc_html( ucwords( $apple_component_name ) )
+				esc_html( Theme::get_meta_component_name( $apple_component_name ) )
 			);
 			?>
 		<?php endforeach; ?>
@@ -33,10 +35,10 @@
 			echo sprintf(
 				'<li id="%s" class="ui-sortable-handle">%s</li>',
 				esc_attr( $apple_component_name ),
-				esc_html( ucwords( $apple_component_name ) )
+				esc_html( Theme::get_meta_component_name( $apple_component_name ) )
 			);
 			?>
 		<?php endforeach; ?>
 	</ul>
 </div>
-<p class="description"><?php esc_html_e( 'Drag to set the order of the meta components at the top of the article. These include the title, the cover (i.e. featured image) and byline which also includes the date. Drag elements into the "Inactive" column to prevent them from being included in your articles.', 'apple-news' ); ?></p>
+<p class="description"><?php esc_html_e( 'Drag to set the order of the meta components at the top of the article. Drag elements into the "Inactive" column to prevent them from being included in your articles.', 'apple-news' ); ?></p>

@@ -378,6 +378,34 @@ class Theme {
 	}
 
 	/**
+	 * Given a meta component slug, returns its human-readable name.
+	 *
+	 * @param string $slug The meta component slug to look up.
+	 *
+	 * @return string The human-readable component name.
+	 */
+	public static function get_meta_component_name( $slug ) {
+		switch ( $slug ) {
+			case 'author':
+				return __( 'Author', 'apple-news' );
+			case 'byline':
+				return __( 'Combined Date and Author', 'apple-news' );
+			case 'cover':
+				return __( 'Cover', 'apple-news' );
+			case 'date':
+				return __( 'Date', 'apple-news' );
+			case 'intro':
+				return __( 'Intro', 'apple-news' );
+			case 'slug':
+				return __( 'Slug', 'apple-news' );
+			case 'title':
+				return __( 'Title', 'apple-news' );
+			default:
+				return ucwords( $slug );
+		}
+	}
+
+	/**
 	 * Returns an array of configurable options for themes.
 	 *
 	 * @access public
@@ -530,55 +558,55 @@ class Theme {
 			),
 			'author_color'                       => array(
 				'default' => '#7c7c7c',
-				'label'   => __( 'Byline font color', 'apple-news' ),
+				'label'   => __( 'Author font color', 'apple-news' ),
 				'type'    => 'color',
 			),
 			'author_color_dark'                  => array(
 				'default' => '',
-				'label'   => __( 'Byline font color', 'apple-news' ),
+				'label'   => __( 'Author font color', 'apple-news' ),
 				'type'    => 'color',
 			),
 			'author_font'                        => array(
 				'default' => 'AvenirNext-Medium',
-				'label'   => __( 'Byline font face', 'apple-news' ),
+				'label'   => __( 'Author font face', 'apple-news' ),
 				'type'    => 'font',
 			),
 			'author_format'                      => array(
 				'default'     => 'by #author#',
 				'description' => __( 'Set the byline format. #author# denotes the location of the author name. The default format is "by #author#. Note that byline format updates only preview on save.', 'apple-news' ),
-				'label'       => __( 'Byline format', 'apple-news' ),
+				'label'       => __( 'Author format', 'apple-news' ),
 				'type'        => 'text',
 			),
 			'author_line_height'                 => array(
 				'default' => 24.0,
-				'label'   => __( 'Byline line height', 'apple-news' ),
+				'label'   => __( 'Author line height', 'apple-news' ),
 				'type'    => 'float',
 			),
 			'author_link_color'                  => array(
 				'default' => '#7c7c7c',
-				'label'   => __( 'Byline link font color', 'apple-news' ),
+				'label'   => __( 'Author URL font color', 'apple-news' ),
 				'type'    => 'color',
 			),
 			'author_link_color_dark'             => array(
 				'default' => '',
-				'label'   => __( 'Byline link font color ', 'apple-news' ),
+				'label'   => __( 'Author URL font color ', 'apple-news' ),
 				'type'    => 'color',
 			),
 			'author_links'                       => array(
 				'default' => 'no',
-				'label'   => __( 'Byline author links', 'apple-news' ),
+				'label'   => __( 'Hyperlink author names?', 'apple-news' ),
 				'options' => array( 'yes', 'no' ),
 				'type'    => 'select',
 			),
 			'author_size'                        => array(
 				'default' => 13,
-				'label'   => __( 'Byline font size', 'apple-news' ),
+				'label'   => __( 'Author font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
 			'author_tracking'                    => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
-				'label'       => __( 'Byline tracking', 'apple-news' ),
+				'label'       => __( 'Author tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
 			'blockquote_background_color'        => array(
@@ -703,39 +731,39 @@ class Theme {
 			),
 			'byline_color'                       => array(
 				'default' => '#7c7c7c',
-				'label'   => __( 'Unified Byline font color', 'apple-news' ),
+				'label'   => __( 'Combined Date and Author font color', 'apple-news' ),
 				'type'    => 'color',
 			),
 			'byline_color_dark'                  => array(
 				'default' => '',
-				'label'   => __( 'Unified Byline font color', 'apple-news' ),
+				'label'   => __( 'Combined Date and Author font color', 'apple-news' ),
 				'type'    => 'color',
 			),
 			'byline_font'                        => array(
 				'default' => 'AvenirNext-Medium',
-				'label'   => __( 'Unified Byline font face', 'apple-news' ),
+				'label'   => __( 'Combined Date and Author font face', 'apple-news' ),
 				'type'    => 'font',
 			),
 			'byline_format'                      => array(
 				'default'     => 'by #author# | #M j, Y | g:i A#',
 				'description' => __( 'Set the byline format. Two tokens can be present, #author# to denote the location of the author name and a <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string also encapsulated by #. The default format is "by #author# | #M j, Y | g:i A#". Note that byline format updates only preview on save.', 'apple-news' ),
-				'label'       => __( 'Unified Byline format', 'apple-news' ),
+				'label'       => __( 'Combined Date and Author format', 'apple-news' ),
 				'type'        => 'text',
 			),
 			'byline_line_height'                 => array(
 				'default' => 24.0,
-				'label'   => __( 'Unified Byline line height', 'apple-news' ),
+				'label'   => __( 'Combined Date and Author line height', 'apple-news' ),
 				'type'    => 'float',
 			),
 			'byline_size'                        => array(
 				'default' => 13,
-				'label'   => __( 'Unified Byline font size', 'apple-news' ),
+				'label'   => __( 'Combined Date and Author font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
 			'byline_tracking'                    => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
-				'label'       => __( 'Unified Byline tracking', 'apple-news' ),
+				'label'       => __( 'Combined Date and Author tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
 			'caption_color'                      => array(
@@ -1088,39 +1116,39 @@ class Theme {
 			),
 			'date_color'                         => array(
 				'default' => '#7c7c7c',
-				'label'   => __( 'Publication date font color', 'apple-news' ),
+				'label'   => __( 'Date font color', 'apple-news' ),
 				'type'    => 'color',
 			),
 			'date_color_dark'                    => array(
 				'default' => '',
-				'label'   => __( 'Publication date font color', 'apple-news' ),
+				'label'   => __( 'Date font color', 'apple-news' ),
 				'type'    => 'color',
 			),
 			'date_font'                          => array(
 				'default' => 'AvenirNext-Medium',
-				'label'   => __( 'Publication date font face', 'apple-news' ),
+				'label'   => __( 'Date font face', 'apple-news' ),
 				'type'    => 'font',
 			),
 			'date_format'                        => array(
 				'default'     => '#M j, Y | g:i A#',
-				'description' => __( 'Set the publication date format. <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string is encapsulated by #. The default format is "#M j, Y | g:i A#". Note that publication date format updates only preview on save.', 'apple-news' ),
-				'label'       => __( 'Publication date format', 'apple-news' ),
+				'description' => __( 'Set the date format. <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string is encapsulated by #. The default format is "#M j, Y | g:i A#". Note that date format updates only preview on save.', 'apple-news' ),
+				'label'       => __( 'Date format', 'apple-news' ),
 				'type'        => 'text',
 			),
 			'date_line_height'                   => array(
 				'default' => 24.0,
-				'label'   => __( 'Publication date line height', 'apple-news' ),
+				'label'   => __( 'Date line height', 'apple-news' ),
 				'type'    => 'float',
 			),
 			'date_size'                          => array(
 				'default' => 13,
-				'label'   => __( 'Publication date font size', 'apple-news' ),
+				'label'   => __( 'Date font size', 'apple-news' ),
 				'type'    => 'integer',
 			),
 			'date_tracking'                      => array(
 				'default'     => 0,
 				'description' => __( '(Percentage of font size)', 'apple-news' ),
-				'label'       => __( 'Publication date tracking', 'apple-news' ),
+				'label'       => __( 'Date tracking', 'apple-news' ),
 				'type'        => 'integer',
 			),
 			'pullquote_border_color'             => array(
@@ -2090,6 +2118,20 @@ class Theme {
 					'dropcap_color_dark',
 				),
 			),
+			'date'            => array(
+				'label'       => __( 'Date', 'apple-news' ),
+				'description' => __( "Displays the article's date", 'apple-news' ),
+				'settings'    => array(
+					'date_font',
+					'date_size',
+					'date_line_height',
+					'date_tracking',
+					'date_color',
+					'date_format',
+					'dark_mode_colors_heading',
+					'date_color_dark',
+				),
+			),
 			'author'          => array(
 				'label'       => __( 'Author', 'apple-news' ),
 				'description' => __( "Displays the article's author byline", 'apple-news' ),
@@ -2105,8 +2147,8 @@ class Theme {
 				),
 			),
 			'byline'          => array(
-				'label'       => __( 'Unified Byline', 'apple-news' ),
-				'description' => __( "The byline displays the article's author and publish date", 'apple-news' ),
+				'label'       => __( 'Combined Date and Author', 'apple-news' ),
+				'description' => __( "The Combined Date and Author displays both the article's author and date", 'apple-news' ),
 				'settings'    => array(
 					'byline_font',
 					'byline_size',
@@ -2119,27 +2161,13 @@ class Theme {
 				),
 			),
 			'author_links'    => array(
-				'label'       => __( 'Author Links', 'apple-news' ),
+				'label'       => __( 'Author URL', 'apple-news' ),
 				'description' => __( 'Displays links to authors archive.', 'apple-news' ),
 				'settings'    => array(
 					'author_links',
 					'author_link_color',
 					'dark_mode_colors_heading',
 					'author_link_color_dark',
-				),
-			),
-			'date'            => array(
-				'label'       => __( 'Publicaton date', 'apple-news' ),
-				'description' => __( "Displays the article's published date", 'apple-news' ),
-				'settings'    => array(
-					'date_font',
-					'date_size',
-					'date_line_height',
-					'date_tracking',
-					'date_color',
-					'date_format',
-					'dark_mode_colors_heading',
-					'date_color_dark',
 				),
 			),
 			'heading1'        => array(

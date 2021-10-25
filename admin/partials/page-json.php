@@ -127,7 +127,7 @@
 					<p>
 						<label for="<?php echo esc_attr( $apple_field_name ); ?>"><?php echo esc_html( $apple_spec->label ); ?></label>
 						<div id="<?php echo esc_attr( $apple_editor_name ); ?>" style="<?php echo esc_attr( $apple_editor_style ); ?>"></div>
-						<textarea id="<?php echo esc_attr( $apple_field_name ); ?>" name="<?php echo esc_attr( $apple_field_name ); ?>"><?php echo esc_textarea( stripslashes( $apple_json_display ) ); ?></textarea>
+						<textarea id="<?php echo esc_attr( $apple_field_name ); ?>" name="<?php echo esc_attr( $apple_field_name ); ?>"><?php echo esc_textarea( $apple_json_display ); ?></textarea>
 						<script type="text/javascript">
 							var <?php echo esc_js( $apple_editor_name ); ?> = ace.edit( '<?php echo esc_js( $apple_editor_name ); ?>' );
 							jQuery( function() {
