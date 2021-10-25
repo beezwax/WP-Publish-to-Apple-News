@@ -778,6 +778,33 @@ abstract class Component {
 	}
 
 	/**
+	 * Given a DOMElement, recursively traverses its children looking for iframe
+	 * nodes and returns the first one it finds.
+	 *
+	 * @param \DOMElement $node The node to examine.
+	 *
+	 * @return \DOMElement|null The iframe DOMElement if found, null if not.
+	 */
+	public static function get_iframe_from_node( $node ) {
+		// If this node is an iframe, return it.
+		if ( 'iframe' === $node->nodeName ) {
+			return $node;
+		}
+
+		// If this node has children, loop over them and process each.
+		if ( $node->hasChildNodes() ) {
+			foreach ( $node->childNodes as $child_node ) {
+				$maybe_iframe = self::get_iframe_from_node( $child_node );
+				if ( null !== $maybe_iframe ) {
+					return $maybe_iframe;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * Get iframe/embed node.
 	 *
 	 * @param \DOMElement $node The node to examine.
