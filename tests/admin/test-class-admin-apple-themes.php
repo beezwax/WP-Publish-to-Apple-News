@@ -430,7 +430,7 @@ JSON;
 		$json = <<<JSON
 {
     "role": "audio",
-    "URL": "http://someurl.com",
+    "URL": "https://www.example.org",
     "style": {
         "backgroundColor": "#body_background_color#"
     }

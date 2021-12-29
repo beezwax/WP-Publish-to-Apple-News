@@ -22,7 +22,7 @@ class Audio_Test extends Component_TestCase {
 	 */
 	public function testGeneratedJSON() {
 		$component = new Audio(
-			'<audio><source src="http://someurl.com/audio-file.mp3?some_query=string"></audio>',
+			'<audio><source src="https://www.example.org/audio-file.mp3?some_query=string"></audio>',
 			$this->workspace,
 			$this->settings,
 			$this->styles,
@@ -31,7 +31,7 @@ class Audio_Test extends Component_TestCase {
 
 		$json = $component->to_array();
 		$this->assertEquals( 'audio', $json['role'] );
-		$this->assertEquals( 'http://someurl.com/audio-file.mp3?some_query=string', $json['URL'] );
+		$this->assertEquals( 'https://www.example.org/audio-file.mp3?some_query=string', $json['URL'] );
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Audio_Test extends Component_TestCase {
 	 */
 	public function testCaption() {
 		$component = new Audio(
-			'<figure class="wp-block-audio"><audio controls="" src="https://www.someurl.com/Song-1.mp3"/><figcaption>caption</figcaption></figure>',
+			'<figure class="wp-block-audio"><audio controls="" src="https://www.example.org/Song-1.mp3"/><figcaption>caption</figcaption></figure>',
 			$this->workspace,
 			$this->settings,
 			$this->styles,
@@ -53,7 +53,7 @@ class Audio_Test extends Component_TestCase {
 				'components' => array(
 					array(
 						'role' => 'audio',
-						'URL' => 'https://www.someurl.com/Song-1.mp3',
+						'URL' => 'https://www.example.org/Song-1.mp3',
 					),
 					array(
 						'role' => 'caption',
@@ -71,7 +71,7 @@ class Audio_Test extends Component_TestCase {
 	 */
 	public function testFilter() {
 		$component = new Audio(
-			'<audio><source src="http://someurl.com/audio-file.mp3?some_query=string"></audio>',
+			'<audio><source src="https://www.example.org/audio-file.mp3?some_query=string"></audio>',
 			$this->workspace,
 			$this->settings,
 			$this->styles,
@@ -81,13 +81,13 @@ class Audio_Test extends Component_TestCase {
 		add_filter(
 			'apple_news_audio_json',
 			function( $json ) {
-				$json['URL'] = 'http://someurl.com/audio-file.mp3?some_query=string';
+				$json['URL'] = 'https://www.example.org/audio-file.mp3?some_query=string';
 				return $json;
 			}
 		);
 
 		$json = $component->to_array();
 		$this->assertEquals( 'audio', $json['role'] );
-		$this->assertEquals( 'http://someurl.com/audio-file.mp3?some_query=string', $json['URL'] );
+		$this->assertEquals( 'https://www.example.org/audio-file.mp3?some_query=string', $json['URL'] );
 	}
 }

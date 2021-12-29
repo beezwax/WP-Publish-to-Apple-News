@@ -150,11 +150,11 @@ HTML;
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'no' );
 		$this->prophecized_workspace->bundle_source(
-			'filename.jpg',
-			'http://someurl.com/filename.jpg'
+			'test-filter-filename.jpg',
+			'https://www.example.org/test-filter-filename.jpg'
 		)->shouldBeCalled();
 		$component = new Image(
-			'<img src="http://someurl.com/filename.jpg" alt="Example" />',
+			'<img src="https://www.example.org/test-filter-filename.jpg" alt="Example" />',
 			$this->prophecized_workspace->reveal(),
 			$this->settings,
 			$this->styles,
@@ -208,11 +208,11 @@ HTML;
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'no' );
 		$this->prophecized_workspace->bundle_source(
-			'filename.jpg',
-			'http://someurl.com/filename.jpg'
+			'image-json-filename.jpg',
+			'https://www.example.org/image-json-filename.jpg'
 		)->shouldBeCalled();
 		$component = new Image(
-			'<img src="http://someurl.com/filename.jpg" alt="Example" align="left" />',
+			'<img src="https://www.example.org/image-json-filename.jpg" alt="Example" align="left" />',
 			$this->prophecized_workspace->reveal(),
 			$this->settings,
 			$this->styles,
@@ -222,7 +222,7 @@ HTML;
 
 		// Test.
 		$this->assertEquals( 'photo', $result['role'] );
-		$this->assertEquals( 'bundle://filename.jpg', $result['URL'] );
+		$this->assertEquals( 'bundle://image-json-filename.jpg', $result['URL'] );
 		$this->assertEquals( 'anchored-image', $result['layout'] );
 	}
 
@@ -237,10 +237,10 @@ HTML;
 		$this->settings->set( 'use_remote_images', 'yes' );
 		$this->prophecized_workspace->bundle_source(
 			'filename.jpg',
-			'http://someurl.com/filename.jpg'
+			'https://www.example.org/filename.jpg'
 		)->shouldNotBeCalled();
 		$component = new Image(
-			'<img src="http://someurl.com/filename.jpg" alt="Example" align="left" />',
+			'<img src="https://www.example.org/filename.jpg" alt="Example" align="left" />',
 			$this->prophecized_workspace->reveal(),
 			$this->settings,
 			$this->styles,
@@ -250,7 +250,7 @@ HTML;
 
 		// Test.
 		$this->assertEquals( 'photo', $result['role'] );
-		$this->assertEquals( 'http://someurl.com/filename.jpg', $result['URL'] );
+		$this->assertEquals( 'https://www.example.org/filename.jpg', $result['URL'] );
 		$this->assertEquals( 'anchored-image', $result['layout'] );
 	}
 
@@ -274,7 +274,7 @@ HTML;
 
 		// Test.
 		$this->assertEquals( 'photo', $result['role'] );
-		$this->assertEquals( 'http://example.org/relative/path/to/image.jpg', $result['URL'] );
+		$this->assertEquals( 'https://www.example.org/relative/path/to/image.jpg', $result['URL'] );
 		$this->assertEquals( 'anchored-image', $result['layout'] );
 	}
 
@@ -292,7 +292,7 @@ HTML;
 
 		$html = <<<HTML
 <figure>
-	<img src="https://example.org/filename.jpg" alt="Example">
+	<img src="https://www.example.org/filename.jpg" alt="Example">
 	<figcaption class="wp-caption-text">Caption Text</figcaption>
 </figure>
 HTML;
@@ -330,7 +330,7 @@ HTML;
 		);
 		$html = <<<HTML
 <figure>
-	<img src="http://someurl.com/filename.jpg" alt="Example">
+	<img src="https://www.example.org/filename.jpg" alt="Example">
 	<figcaption class="wp-caption-text">Caption Text</figcaption>
 </figure>
 HTML;

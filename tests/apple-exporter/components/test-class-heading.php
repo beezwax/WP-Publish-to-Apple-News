@@ -137,7 +137,7 @@ HTML;
 
 		// Validate image split in generated JSON.
 		$this->assertEquals( 'photo', $json['components'][2]['role'] );
-		$this->assertEquals( 'http://example.org/example-image.jpg', $json['components'][2]['URL'] );
+		$this->assertEquals( 'https://www.example.org/example-image.jpg', $json['components'][2]['URL'] );
 	}
 
 	/**

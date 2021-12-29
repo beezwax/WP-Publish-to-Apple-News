@@ -197,10 +197,10 @@ HTML
 	public function data_link_types() {
 		return [
 			// Standard link, non-https.
-			[ 'http://example.com', true ],
+			[ 'http://www.example.org', true ],
 
 			// Standard link, https.
-			[ 'https://example.com', true ],
+			[ 'https://www.example.org', true ],
 
 			// Root-relative URL. Should be permitted, but auto-converted to a fully qualified URL.
 			[ '/test', true ],
@@ -224,7 +224,7 @@ HTML
 			[ 'musics://abc123', true ],
 
 			// A mailto link.
-			[ 'mailto:example@example.com', true ],
+			[ 'mailto:example@example.org', true ],
 
 			// A hosted calendar.
 			[ 'webcal://abc123', true ],
@@ -384,7 +384,7 @@ HTML;
 
 		// Negotiate expected value and test.
 		if ( 0 === strpos( $link, '/' ) ) {
-			$link = 'http://example.org' . $link;
+			$link = 'https://www.example.org' . $link;
 		} elseif ( 0 === strpos( $link, '#' ) ) {
 			$link = get_permalink( $post_id ) . $link;
 		}

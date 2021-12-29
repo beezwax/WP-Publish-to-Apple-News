@@ -55,7 +55,7 @@ class Link_Button_Test extends Component_TestCase {
 		return [
 			// A bare link should not match.
 			[
-				'<a href="https://example.org/">Test Button</a>',
+				'<a href="https://www.example.org/">Test Button</a>',
 				false,
 			],
 			// A button link with the button class but no href should not match.
@@ -70,12 +70,12 @@ class Link_Button_Test extends Component_TestCase {
 			],
 			// A button link with the button class and an href but no button text should not match.
 			[
-				'<a class="wp-block-button__link" href="https://example.org/"></a>',
+				'<a class="wp-block-button__link" href="https://www.example.org/"></a>',
 				false,
 			],
 			// A button link with the button class should match.
 			[
-				'<a class="wp-block-button__link" href="https://example.org/">Test Button</a>',
+				'<a class="wp-block-button__link" href="https://www.example.org/">Test Button</a>',
 				true,
 			],
 		];
@@ -90,11 +90,11 @@ class Link_Button_Test extends Component_TestCase {
 		return [
 			// Test a normal button.
 			[
-				'<a class="wp-block-button__link" href="https://example.org/">Test Button</a>',
+				'<a class="wp-block-button__link" href="https://www.example.org/">Test Button</a>',
 				[
 					'role'      => 'link_button',
 					'text'      => 'Test Button',
-					'URL'       => 'https://example.org/',
+					'URL'       => 'https://www.example.org/',
 					'style'     => 'default-link-button',
 					'layout'    => 'link-button-layout',
 					'textStyle' => 'default-link-button-text-style',
@@ -106,7 +106,7 @@ class Link_Button_Test extends Component_TestCase {
 				[
 					'role'      => 'link_button',
 					'text'      => 'Test Button',
-					'URL'       => 'http://example.org/test',
+					'URL'       => 'https://www.example.org/test',
 					'style'     => 'default-link-button',
 					'layout'    => 'link-button-layout',
 					'textStyle' => 'default-link-button-text-style',
@@ -118,7 +118,7 @@ class Link_Button_Test extends Component_TestCase {
 				[
 					'role'      => 'link_button',
 					'text'      => 'Test Button',
-					'URL'       => 'http://example.org/test-post/#test',
+					'URL'       => 'https://www.example.org/test-post/#test',
 					'style'     => 'default-link-button',
 					'layout'    => 'link-button-layout',
 					'textStyle' => 'default-link-button-text-style',

@@ -22,12 +22,12 @@ class Metadata_Test extends Apple_News_Testcase {
 	public function data_video() {
 		return [
 			[
-				'https://example.com/wp-content/uploads/2017/02/example-poster.jpg',
-				'https://example.com/wp-content/uploads/2017/02/example-video.mp4',
+				'https://www.example.org/wp-content/uploads/2017/02/example-poster.jpg',
+				'https://www.example.org/wp-content/uploads/2017/02/example-video.mp4',
 			],
 			[
-				'https://example.com/wp-content/uploads/2017/02/example-poster.jpg',
-				'https://example.com/wp-content/uploads/2017/02/example-video.m3u8',
+				'https://www.example.org/wp-content/uploads/2017/02/example-poster.jpg',
+				'https://www.example.org/wp-content/uploads/2017/02/example-video.m3u8',
 			],
 		];
 	}

@@ -25,11 +25,11 @@ class Tweet_Test extends Component_TestCase {
 	public function data_tweets() {
 		return [
 			[
-				'<blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr">Swift will be open source later this year, available for iOS, OS X, and Linux. <a href="http://t.co/yQhyzxukTn">http://t.co/yQhyzxukTn</a></p>&mdash; Federico Ramirez (@gosukiwi) <a href="https://twitter.com/gosukiwi/status/608069908044390400">June 9, 2015</a></blockquote>',
+				'<blockquote class="twitter-tweet" lang="en"><p lang="en" dir="ltr">Swift will be open source later this year, available for iOS, OS X, and Linux. <a href="https://t.co/yQhyzxukTn">https://t.co/yQhyzxukTn</a></p>&mdash; Federico Ramirez (@gosukiwi) <a href="https://twitter.com/gosukiwi/status/608069908044390400">June 9, 2015</a></blockquote>',
 				'https://twitter.com/gosukiwi/status/608069908044390400',
 			],
 			[
-				'<blockquote class="twitter-tweet" lang="en">WordPress.com (@wordpressdotcom) <a href="http://twitter.com/#!/wordpressdotcom/status/204557548249026561" data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
+				'<blockquote class="twitter-tweet" lang="en">WordPress.com (@wordpressdotcom) <a href="https://twitter.com/#!/wordpressdotcom/status/204557548249026561" data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
 				'https://twitter.com/wordpressdotcom/status/204557548249026561',
 			],
 			[
@@ -41,7 +41,7 @@ class Tweet_Test extends Component_TestCase {
 				'https://twitter.com/wordpressdotcom/status/204557548249026561',
 			],
 			[
-				'<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/foo/status/1111">twitter.com/foo/status/1111</a></p>&mdash; <br />WordPress.com (@wordpressdotcom) <a href="http://twitter.com/#!/wordpressdotcom/status/123" data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
+				'<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/foo/status/1111">twitter.com/foo/status/1111</a></p>&mdash; <br />WordPress.com (@wordpressdotcom) <a href="https://twitter.com/#!/wordpressdotcom/status/123" data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
 				'https://twitter.com/wordpressdotcom/status/123',
 			],
 		];
@@ -97,7 +97,7 @@ class Tweet_Test extends Component_TestCase {
 	 */
 	public function testFilter() {
 		$component = new Tweet(
-			'<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/foo/status/1111">twitter.com/foo/status/1111</a></p>&mdash; <br />WordPress.com (@wordpressdotcom) <a href="http://twitter.com/#!/wordpressdotcom/status/123" data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
+			'<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/foo/status/1111">twitter.com/foo/status/1111</a></p>&mdash; <br />WordPress.com (@wordpressdotcom) <a href="https://twitter.com/#!/wordpressdotcom/status/123" data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
 			$this->workspace,
 			$this->settings,
 			$this->styles,

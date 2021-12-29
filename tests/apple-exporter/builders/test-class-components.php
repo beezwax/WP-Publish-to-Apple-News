@@ -24,32 +24,32 @@ class Component_Tests extends Apple_News_Testcase {
 		return [
 			// An image without crops should return itself.
 			[
-				'https://example.org/wp-content/uploads/2020/07/image.jpg',
-				'https://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://www.example.org/wp-content/uploads/2020/07/sample-image.jpg',
+				'https://www.example.org/wp-content/uploads/2020/07/sample-image.jpg',
 			],
 
 			// An image with a crop should return the original image without the crop.
 			[
-				'https://example.org/wp-content/uploads/2020/07/image-150x150.jpg',
-				'https://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://www.example.org/wp-content/uploads/2020/07/sample-image-150x150.jpg',
+				'https://www.example.org/wp-content/uploads/2020/07/sample-image.jpg',
 			],
 
 			// Scaled images should return the un-scaled version.
 			[
-				'https://example.org/wp-content/uploads/2020/07/image-scaled.jpg',
-				'https://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://www.example.org/wp-content/uploads/2020/07/sample-image-scaled.jpg',
+				'https://www.example.org/wp-content/uploads/2020/07/sample-image.jpg',
 			],
 
 			// Rotated images should return the un-rotated version.
 			[
-				'https://example.org/wp-content/uploads/2020/07/image-rotated.jpg',
-				'https://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://www.example.org/wp-content/uploads/2020/07/sample-image-rotated.jpg',
+				'https://www.example.org/wp-content/uploads/2020/07/sample-image.jpg',
 			],
 
 			// Photon images should return the original.
 			[
-				'https://i1.wp.com/example.org/wp-content/uploads/2020/07/image.jpg?w=234&crop=0%2C5px%2C100%2C134px&ssl=1',
-				'https://example.org/wp-content/uploads/2020/07/image.jpg',
+				'https://i1.wp.com/www.example.org/wp-content/uploads/2020/07/sample-image.jpg?w=234&crop=0%2C5px%2C100%2C134px&ssl=1',
+				'https://www.example.org/wp-content/uploads/2020/07/sample-image.jpg',
 			],
 		];
 	}
@@ -270,6 +270,42 @@ class Component_Tests extends Apple_News_Testcase {
 		$method->setAccessible( true );
 		$builder = new Components( $this->content, $this->content_settings );
 		$this->assertEquals( $expected, $method->invokeArgs( $builder, [ $original ] ) );
+	}
+
+	/**
+	 * Tests the functionality of the maybe_bundle_source function.
+	 */
+	public function testImageBundling() {
+		// Ensure remote images are turned off for this test.
+		$use_remote_images                 = $this->settings->use_remote_images;
+		$this->settings->use_remote_images = 'no';
+
+		// Make a post with multiple images with the same filename.
+		$post_content = <<<HTML
+<!-- wp:image {"sizeSlug":"large"} -->
+<figure class="wp-block-image size-large"><img src="https://www.example.org/wp-content/2021/12/filename.jpg" alt="Sample Image 1"/></figure>
+<!-- /wp:image -->
+
+<!-- wp:image {"sizeSlug":"large"} -->
+<figure class="wp-block-image size-large"><img src="https://www.example.org/wp-content/2021/11/filename.jpg" alt="Sample Image 2"/></figure>
+<!-- /wp:image -->
+
+<!-- wp:image {"sizeSlug":"large"} -->
+<figure class="wp-block-image size-large"><img src="https://www.example.org/wp-content/2021/10/filename.jpg" alt="Sample Image 3"/></figure>
+<!-- /wp:image -->
+HTML;
+		$post_id      = self::factory()->post->create( [ 'post_content' => $post_content ] );
+		$image        = $this->get_new_attachment( $post_id );
+		set_post_thumbnail( $post_id, $image );
+		$json = $this->get_json_for_post( $post_id );
+
+		// Reset the use remote images setting.
+		$this->settings->use_remote_images = $use_remote_images;
+
+		// Ensure the images are saved with different bundle filenames.
+		$this->assertEquals( 'bundle://filename.jpg', $json['components'][1]['components'][3]['URL'] );
+		$this->assertEquals( 'bundle://filename-1.jpg', $json['components'][1]['components'][4]['URL'] );
+		$this->assertEquals( 'bundle://filename-2.jpg', $json['components'][1]['components'][5]['URL'] );
 	}
 
 	/**
