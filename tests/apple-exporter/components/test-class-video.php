@@ -24,9 +24,9 @@ class Video_Test extends Component_TestCase {
 	 * @var string
 	 */
 	private $video_content = <<<HTML
-<video class="wp-video-shortcode" id="video-71-1" width="525" height="295" poster="https://example.com/wp-content/uploads/2017/02/ExamplePoster.jpg" preload="metadata" controls="controls">
-	<source type="video/mp4" src="https://example.com/wp-content/uploads/2017/02/example-video.mp4?_=1" />
-	<a href="https://example.com/wp-content/uploads/2017/02/example-video.mp4">https://example.com/wp-content/uploads/2017/02/example-video.mp4</a>
+<video class="wp-video-shortcode" id="video-71-1" width="525" height="295" poster="https://www.example.org/wp-content/uploads/2017/02/ExamplePoster.jpg" preload="metadata" controls="controls">
+	<source type="video/mp4" src="https://www.example.org/wp-content/uploads/2017/02/example-video.mp4?_=1" />
+	<a href="https://www.example.org/wp-content/uploads/2017/02/example-video.mp4">https://www.example.org/wp-content/uploads/2017/02/example-video.mp4</a>
 </video>
 HTML;
 
@@ -39,7 +39,7 @@ HTML;
 	 * @return array The modified JSON.
 	 */
 	public function filter_apple_news_video_json( $json ) {
-		$json['URL'] = 'http://filter.me';
+		$json['URL'] = 'https://www.example.org/filter-me';
 
 		return $json;
 	}
@@ -61,7 +61,7 @@ HTML;
 		// Test.
 		$result = $component->to_array();
 		$this->assertEquals(
-			'http://filter.me',
+			'https://www.example.org/filter-me',
 			$result['URL']
 		);
 
@@ -78,7 +78,7 @@ HTML;
 	 * @access public
 	 */
 	public function testCaption() {
-		$component = $this->get_component( '<figure class="wp-block-video"><video controls="" src="http://www.url.com/test.mp4"/><figcaption>caption</figcaption></figure>' );
+		$component = $this->get_component( '<figure class="wp-block-video"><video controls="" src="https://www.example.org/test.mp4"/><figcaption>caption</figcaption></figure>' );
 
 		// Test.
 		$this->assertEquals(
@@ -87,7 +87,7 @@ HTML;
 				'components' => array(
 					array(
 						'role' => 'video',
-						'URL' => 'http://www.url.com/test.mp4',
+						'URL' => 'https://www.example.org/test.mp4',
 					),
 					array(
 						'role' => 'caption',
@@ -114,7 +114,7 @@ HTML;
 		// Test.
 		$result = $component->to_array();
 		$this->assertEquals(
-			'https://example.com/wp-content/uploads/2017/02/ExamplePoster.jpg',
+			'https://www.example.org/wp-content/uploads/2017/02/ExamplePoster.jpg',
 			$result['stillURL']
 		);
 		$this->assertEquals(
@@ -122,7 +122,7 @@ HTML;
 			$result['role']
 		);
 		$this->assertEquals(
-			'https://example.com/wp-content/uploads/2017/02/example-video.mp4?_=1',
+			'https://www.example.org/wp-content/uploads/2017/02/example-video.mp4?_=1',
 			$result['URL']
 		);
 	}

@@ -5,7 +5,7 @@ Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 5.8
 Requires PHP: 5.6
-Stable tag: 2.3.0
+Stable tag: 2.3.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,9 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.3.1 =
+* Bugfix: Fixes an issue where images with different URLs but the same filename are bundled with the same name when not using remote images, which can lead to images appearing out of order.
 
 = 2.3.0 =
 * Bugfix: Fixes an issue with some of the example themes where pullquotes would create invalid JSON due to the default-pullquote textStyle not being set. Props to @soulseekah for the fix.

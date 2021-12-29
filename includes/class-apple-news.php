@@ -18,6 +18,13 @@
 class Apple_News {
 
 	/**
+	 * An array of bundle hashes that match an asset URL to a bundle filename.
+	 *
+	 * @var array
+	 */
+	private static $bundle_hashes = [];
+
+	/**
 	 * Link to support for the plugin on github.
 	 *
 	 * @var string
@@ -39,7 +46,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $version = '2.3.0';
+	public static $version = '2.3.1';
 
 	/**
 	 * Link to support for the plugin on WordPress.org.
@@ -193,6 +200,11 @@ class Apple_News {
 	 */
 	public static function get_filename( $path ) {
 
+		// If we already have a hash for this path, return it.
+		if ( isset( self::$bundle_hashes[ $path ] ) ) {
+			return self::$bundle_hashes[ $path ];
+		}
+
 		// Remove any URL parameters.
 		// This is important for sites using WordPress VIP or Jetpack Photon.
 		$url_parts = wp_parse_url( $path );
@@ -200,7 +212,39 @@ class Apple_News {
 			return '';
 		}
 
-		return str_replace( ' ', '', basename( $url_parts['path'] ) );
+		// Compute base filename.
+		$filename = str_replace( ' ', '', basename( $url_parts['path'] ) );
+
+		// Ensure there are no filename collisions with existing bundles.
+		$bundle_filenames = array_values( self::$bundle_hashes );
+		sort( $bundle_filenames );
+		if ( in_array( $filename, $bundle_filenames, true ) ) {
+			$file_number    = 1;
+			$filename_parts = pathinfo( $filename );
+			$pattern        = sprintf(
+				'/^%s-([0-9]+)\.%s$/',
+				preg_quote( $filename_parts['filename'], '/' ),
+				preg_quote( $filename_parts['extension'], '/' )
+			);
+			foreach ( self::$bundle_hashes as $bundle_filename ) {
+				if ( preg_match( $pattern, $bundle_filename, $matches ) ) {
+					$file_number = max( $file_number, (int) $matches[1] + 1 );
+				}
+			}
+
+			// Apply the new filename to avoid collisions.
+			$filename = sprintf(
+				'%s-%d.%s',
+				$filename_parts['filename'],
+				$file_number,
+				$filename_parts['extension']
+			);
+		}
+
+		// Store this path/filename pair in the bundle hashes property for future use.
+		self::$bundle_hashes[ $path ] = $filename;
+
+		return $filename;
 	}
 
 	/**

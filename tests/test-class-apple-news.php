@@ -23,9 +23,9 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 * @access public
 	 */
 	public function testGetFilename() {
-		$url = 'http://someurl.com/image.jpg?w=150&h=150';
+		$url = 'https://www.example.org/test-get-filename.jpg?w=150&h=150';
 		$filename = Apple_News::get_filename( $url );
-		$this->assertEquals( 'image.jpg', $filename );
+		$this->assertEquals( 'test-get-filename.jpg', $filename );
 	}
 
 	/**

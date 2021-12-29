@@ -6,26 +6,26 @@ class Parser_Test extends WP_UnitTestCase {
 
 	public function testParseMarkdown() {
 		// Create a basic HTML post
-		$post = '<html><body><h2>A heading</h2><p><strong>This is strong.</strong><br><a href="http://apple.com">This is a link</a></p></body></html>';
+		$post = '<html><body><h2>A heading</h2><p><strong>This is strong.</strong><br><a href="https://www.apple.com">This is a link</a></p></body></html>';
 
 		// Convert to Markdown
 		$parser = new Parser( 'markdown' );
 		$markdown = $parser->parse( $post );
 
 		// Verify
-		$this->assertEquals( $markdown, "## A heading\n**This is strong.**\n[This is a link](http://apple.com)\n\n" );
+		$this->assertEquals( $markdown, "## A heading\n**This is strong.**\n[This is a link](https://www.apple.com)\n\n" );
 	}
 
 	public function testParseHTML() {
 		// Create a basic HTML post
-		$post = '<h2 class="someClass">A heading</h2><p><strong>This is strong.</strong><br><a href="http://apple.com" target="_blank">This is a link</a></p><div>The div tags will disappear.</div>';
+		$post = '<h2 class="someClass">A heading</h2><p><strong>This is strong.</strong><br><a href="https://www.apple.com" target="_blank">This is a link</a></p><div>The div tags will disappear.</div>';
 
 		// Parse only HTML that's valid for Apple News
 		$parser = new Parser( 'html' );
 		$markdown = $parser->parse( $post );
 
 		// Verify
-		$this->assertEquals( $markdown, 'A heading<p><strong>This is strong.</strong><br><a href="http://apple.com">This is a link</a></p>The div tags will disappear.' );
+		$this->assertEquals( $markdown, 'A heading<p><strong>This is strong.</strong><br><a href="https://www.apple.com">This is a link</a></p>The div tags will disappear.' );
 	}
 
 	/**
@@ -35,9 +35,6 @@ class Parser_Test extends WP_UnitTestCase {
 	 * @access public
 	 */
 	public function testCleanHTMLMarkdown() {
-		update_option( 'siteurl', 'http://wp.dev' );
-		update_option( 'home', 'http://wp.dev' );
-
 		// Create a post.
 		global $post;
 		$post_content = <<<HTML
@@ -69,7 +66,7 @@ HTML;
 		// Verify.
 		$this->assertEquals(
 			'[Absolute link](https://www.google.com)'
-			. '[Root-relative link](http://wp.dev/2018/05/03/an-92-test)'
+			. '[Root-relative link](https://www.example.org/2018/05/03/an-92-test)'
 			. 'Test Anchor'
 			. '[Anchor Link](' . $permalink . '#testanchor)'
 			. 'Legit empty link'
@@ -86,9 +83,6 @@ HTML;
 	 * @access public
 	 */
 	public function testCleanHTML() {
-		update_option( 'siteurl', 'http://wp.dev' );
-		update_option( 'home', 'http://wp.dev' );
-
 		// Create a post.
 		global $post;
 		$post_content = <<<HTML
@@ -120,7 +114,7 @@ HTML;
 		// Verify.
 		$this->assertEquals(
 			'<p><a href="https://www.google.com">Absolute link</a></p>'
-				. '<p><a href="http://wp.dev/2018/05/03/an-92-test">Root-relative link</a></p>'
+				. '<p><a href="https://www.example.org/2018/05/03/an-92-test">Root-relative link</a></p>'
 				. '<p>Test Anchor</p>'
 				. '<p><a href="' . $permalink . '#testanchor">Anchor Link</a></p>'
 				. '<p>Legit empty link</p>'

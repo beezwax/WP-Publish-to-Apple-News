@@ -27,8 +27,13 @@ function _manually_load_plugin() {
 		remove_action( 'init', [ WPCOM_VIP_Cache_Manager::instance(), 'init' ] );
 	}
 
-	// Set the permalink structure.
+	// Set the permalink structure and domain options.
+	update_option( 'home', 'https://www.example.org' );
 	update_option( 'permalink_structure', '/%postname%' );
+	update_option( 'siteurl', 'https://www.example.org' );
+
+	// Force WP to treat URLs as HTTPS during testing so the home and siteurl option protocols are honored.
+	$_SERVER['HTTPS'] = 1;
 
 	// Load mocks for integration tests.
 	require_once __DIR__ . '/mocks/class-bc-setup.php';
