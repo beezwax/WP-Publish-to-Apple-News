@@ -228,7 +228,7 @@ class Apple_News {
 			);
 			foreach ( self::$bundle_hashes as $bundle_filename ) {
 				if ( preg_match( $pattern, $bundle_filename, $matches ) ) {
-					$file_number = (int) $matches[1] + 1;
+					$file_number = max( $file_number, (int) $matches[1] + 1 );
 				}
 			}
 
