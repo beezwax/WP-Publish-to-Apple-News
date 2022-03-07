@@ -3,9 +3,9 @@ Contributors: potatomaster, kevinfodness, jomurgel, tylermachado, benpbolton, al
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 5.8
+Tested up to: 5.9
 Requires PHP: 5.6
-Stable tag: 2.3.1
+Stable tag: 2.3.2
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,12 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.3.2 =
+* Bugfix: Fixes a bug where the layout body-layout-last is not added to the list of layouts if the body content ends with something other than a paragraph.
+* Bugfix: Fixes a bug where galleries were no longer being properly converted to Apple News Format due to a change in gallery markup that was introduced in WordPress 5.8.
+* Bugfix: Fixes an issue with enqueueing the Gutenberg PluginSidebar script on Windows webservers.
+* Bugfix: Fixes an error in class-components.php if the function is called with an empty list of components.
 
 = 2.3.1 =
 * Bugfix: Fixes an issue where images with different URLs but the same filename are bundled with the same name when not using remote images, which can lead to images appearing out of order.
