@@ -103,7 +103,7 @@ class Components extends Builder {
 		}
 
 		// If none was found, do not add.
-		if ( ! $components[ $position ]->can_be_anchor_target() ) {
+		if ( empty( $components[ $position ] ) || ! $components[ $position ]->can_be_anchor_target() ) {
 			return;
 		}
 
