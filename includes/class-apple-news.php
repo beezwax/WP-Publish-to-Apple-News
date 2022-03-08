@@ -436,7 +436,8 @@ class Apple_News {
 
 		// Get the path to the PHP file containing the dependencies.
 		$dependency_file = dirname( __DIR__ ) . '/build/pluginSidebar.asset.php';
-		if ( ! file_exists( $dependency_file ) || 0 !== validate_file( $dependency_file ) ) {
+		// Validate file is considered successful if it has no issues (0) or is a Windows filepath (2).
+		if ( ! file_exists( $dependency_file ) || ! in_array( validate_file( $dependency_file ), [ 0, 2 ], true ) ) {
 			return;
 		}
 
