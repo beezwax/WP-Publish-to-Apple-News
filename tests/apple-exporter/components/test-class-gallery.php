@@ -23,36 +23,28 @@ class Gallery_Test extends Component_TestCase {
 	 * @return array An array of arrays representing function arguments.
 	 */
 	public function data_gallery_content() {
-		// Gutenberg, standard gallery, three images.
-		$standard = <<<HTML
-<!-- wp:gallery {"ids":[%1\$d,%4\$d,%7\$d]} -->
-<figure class="wp-block-gallery columns-3 is-cropped">
-	<ul class="blocks-gallery-grid">
-		<li class="blocks-gallery-item">
-			<figure>
-				<img src="%2\$s" alt="Alt Text 1" data-id="%1\$d" data-full-url="%2\$s" data-link="%3\$s" class="wp-image-%1\$d"/>
-				<figcaption class="blocks-gallery-item__caption">Test Caption 1</figcaption>
-			</figure>
-		</li>
-		<li class="blocks-gallery-item">
-			<figure>
-				<img src="%5\$s" alt="Alt Text 2" data-id="%4\$d" data-full-url="%5\$s" data-link="%6\$s" class="wp-image-%4\$d"/>
-				<figcaption class="blocks-gallery-item__caption">Test Caption 2</figcaption>
-			</figure>
-		</li>
-		<li class="blocks-gallery-item">
-			<figure>
-				<img src="%8\$s" alt="Alt Text 3" data-id="%7\$d" data-full-url="%8\$s" data-link="%9\$s" class="wp-image-%7\$d"/>
-				<figcaption class="blocks-gallery-item__caption">Test Caption 3</figcaption>
-			</figure>
-		</li>
-	</ul>
-</figure>
-<!-- /wp:gallery -->
-HTML;
+		return [
+			[
+				// Gutenberg, standard gallery, three images.
+				<<<HTML
+<!-- wp:gallery {"linkTo":"none"} -->
+<figure class="wp-block-gallery has-nested-images columns-default is-cropped"><!-- wp:image {"id":%1\$d,"sizeSlug":"large","linkDestination":"custom"} -->
+<figure class="wp-block-image size-large"><a href="%3\$s"><img src="%2\$s" alt="Alt Text 1" class="wp-image-%1\$d"/></a><figcaption>Test Caption 1</figcaption></figure>
+<!-- /wp:image -->
 
-		// Gutenberg, Jetpack slideshow, three images.
-		$jetpack = <<<HTML
+<!-- wp:image {"id":%4\$d,"sizeSlug":"large","linkDestination":"custom"} -->
+<figure class="wp-block-image size-large"><a href="%6\$s"><img src="%5\$s" alt="Alt Text 2" class="wp-image-%4\$d"/></a><figcaption>Test Caption 2</figcaption></figure>
+<!-- /wp:image -->
+
+<!-- wp:image {"id":%7\$d,"sizeSlug":"large","linkDestination":"custom"} -->
+<figure class="wp-block-image size-large"><a href="%9\$s"><img src="%8\$s" alt="Alt Text 3" class="wp-image-%7\$d"/></a><figcaption>Test Caption 3</figcaption></figure>
+<!-- /wp:image --></figure>
+<!-- /wp:gallery -->
+HTML
+			],
+			[
+				// Gutenberg, Jetpack slideshow, three images.
+				<<<HTML
 <!-- wp:jetpack/slideshow {"ids":[%1\$d,%4\$d,%7\$d],"sizeSlug":"large"} -->
 <div class="wp-block-jetpack-slideshow aligncenter" data-effect="slide">
 	<div class="wp-block-jetpack-slideshow_container swiper-container">
@@ -83,18 +75,12 @@ HTML;
 	</div>
 </div>
 <!-- /wp:jetpack/slideshow -->
-HTML;
-
-		// Classic editor, gallery, three images.
-		$shortcode = '[gallery ids="%1$d,%4$d,%7$d"]';
-
-		return [
-			[ [ 'cover', 'slug', 'title', 'byline' ], $standard, 2 ],
-			[ [ 'cover', 'slug', 'title', 'byline' ], $jetpack, 2 ],
-			[ [ 'cover', 'slug', 'title', 'byline' ], $shortcode, 2 ],
-			[ [ 'cover', 'slug', 'title', 'author', 'date' ], $standard, 3 ],
-			[ [ 'cover', 'slug', 'title', 'author', 'date' ], $jetpack, 3 ],
-			[ [ 'cover', 'slug', 'title', 'author', 'date' ], $shortcode, 3 ],
+HTML
+			],
+			[
+				// Classic editor, gallery shortcode, three images.
+				'[gallery ids="%1$d,%4$d,%7$d"]',
+			],
 		];
 	}
 
@@ -106,9 +92,7 @@ HTML;
 	 *
 	 * @param string $post_content The post content to load into the example post.
 	 */
-	public function test_component( $meta_order, $post_content, $index ) {
-		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
-
+	public function test_component( $post_content ) {
 		// Create three new images for testing.
 		$images = [
 			$this->get_new_attachment( 0, 'Test Caption 1', 'Alt Text 1' ),
@@ -141,7 +125,7 @@ HTML;
 
 		// Get the JSON for the article and test the gallery output.
 		$json    = $this->get_json_for_post( $post_id );
-		$gallery = $json['components'][1]['components'][ $index ];
+		$gallery = $json['components'][1]['components'][3];
 		$this->assertEquals( 'gallery', $gallery['role'] );
 		$this->assertEquals( 3, count( $gallery['items'] ) );
 		$this->assertEquals( wp_get_attachment_image_url( $images[0] ), $gallery['items'][0]['URL'] );
