@@ -362,6 +362,16 @@ HTML;
 	}
 
 	/**
+	 * Ensures that the body-layout-last class is properly applied.
+	 */
+	public function test_layouts() {
+		// Create a post with empty body content to force the body-layout-last bug to appear.
+		$post_id = self::factory()->post->create( [ 'post_content' => '' ] );
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertNotEquals( 'body-layout-last', $json['components'][ count( $json['components'] ) - 1 ]['layout'] );
+	}
+
+	/**
 	 * Given an expected result and an actual link, verifies that the link URL is
 	 * correctly processed. Used to ensure that valid link types (not just http/s,
 	 * but also mailto, webcal, stocks, etc) are supported, and that unsupported
