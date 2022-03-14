@@ -103,7 +103,7 @@ class Components extends Builder {
 		}
 
 		// If none was found, do not add.
-		if ( ! $components[ $position ]->can_be_anchor_target() ) {
+		if ( empty( $components[ $position ] ) || ! $components[ $position ]->can_be_anchor_target() ) {
 			return;
 		}
 
@@ -685,7 +685,7 @@ class Components extends Builder {
 
 		// If the final node has a role of 'body', add 'body-layout-last' layout.
 		$last = count( $new_components ) - 1;
-		if ( 'body' === $new_components[ $last ]['role'] ) {
+		if ( 'body' === $new_components[ $last ]['role'] && 'body-layout' === $new_components[ $last ]['layout'] ) {
 			$new_components[ $last ]['layout'] = 'body-layout-last';
 		}
 

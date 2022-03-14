@@ -291,7 +291,8 @@ class Exporter_Content {
 		libxml_clear_errors();
 
 		// Find the first-level nodes of the body tag.
-		return $dom->getElementsByTagName( 'body' )->item( 0 )->childNodes;
+		$body = $dom->getElementsByTagName( 'body' )->item( 0 );
+		return $body ? $body->childNodes : new \DOMNodeList();
 	}
 
 }

@@ -74,6 +74,7 @@ class Gallery extends Component {
 	 * @access protected
 	 */
 	protected function build( $html ) {
+		$container = null;
 
 		// Convert the text into a NodeList.
 		libxml_use_internal_errors( true );
@@ -82,16 +83,26 @@ class Gallery extends Component {
 		libxml_clear_errors();
 		libxml_use_internal_errors( false );
 
-		// Negotiate container. This will either be a <ul> or a <div> with a class of "gallery".
-		$nodes     = $dom->getElementsByTagName( 'ul' );
-		$container = null;
-		if ( ! empty( $nodes->item( 0 ) ) ) {
-			$container = $nodes->item( 0 );
-		} else {
-			$nodes = $dom->getElementsByTagName( 'div' );
-			foreach ( $nodes as $node ) {
-				if ( self::node_has_class( $node, 'gallery' ) ) {
-					$container = $node;
+		// See if the gallery is a collection of figures within a figure.
+		$figures = $dom->getElementsByTagName( 'figure' );
+		if ( ! empty( $figures->item( 0 ) ) && self::node_has_class( $figures->item( 0 ), 'wp-block-gallery' ) ) {
+			$container = $figures->item( 0 );
+		}
+
+		// See if the gallery is a UL.
+		if ( empty( $container ) ) {
+			$ul = $dom->getElementsByTagName( 'ul' );
+			if ( ! empty( $ul->item( 0 ) ) ) {
+				$container = $ul->item( 0 );
+			}
+		}
+
+		// See if the gallery is a div with a class of "gallery".
+		if ( empty( $container ) ) {
+			$divs = $dom->getElementsByTagName( 'div' );
+			foreach ( $divs as $div ) {
+				if ( self::node_has_class( $div, 'gallery' ) ) {
+					$container = $div;
 					break;
 				}
 			}
