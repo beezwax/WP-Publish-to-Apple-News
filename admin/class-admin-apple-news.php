@@ -190,7 +190,8 @@ class Admin_Apple_News extends Apple_News {
 				foreach ( self::$settings->post_types as $post_type ) {
 					add_action(
 						'rest_insert_' . $post_type,
-						array( $this, 'action_rest_insert_post' )
+						array( $this, 'action_rest_insert_post' ),
+						10, 3
 					);
 				}
 			}
@@ -218,16 +219,9 @@ class Admin_Apple_News extends Apple_News {
 	/**
 	 * A callback function for the rest_insert_{$this->post_type} action hook.
 	 */
-	public function action_rest_insert_post() {
-		global $wp_rest_server;
-
-		// Ensure there is a last request. (There should be, at this point).
-		if ( empty( $wp_rest_server->last_request ) ) {
-			return;
-		}
-
+	public function action_rest_insert_post($post, $request, $creating) {
 		// Try to get the meta param.
-		$meta = $wp_rest_server->last_request->get_param( 'meta' );
+		$meta = $request->get_param( 'meta' );
 		if ( empty( $meta ) || ! is_array( $meta ) ) {
 			return;
 		}
@@ -241,7 +235,7 @@ class Admin_Apple_News extends Apple_News {
 		}
 
 		// Overwrite the meta property with the new value.
-		$wp_rest_server->last_request->set_param( 'meta', $new_meta );
+		$request->set_param( 'meta', $new_meta );
 	}
 
 	/**
