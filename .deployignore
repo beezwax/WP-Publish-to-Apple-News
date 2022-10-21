@@ -17,6 +17,9 @@ npm-debug.log
 .eslintignore
 .eslintrc.json
 .github
+.phpcs.xml
+.phpcs-cache.json
+.phpunit.result.cache
 .travis.yml
 assets/js/pluginsidebar
 assets/js/util
@@ -24,7 +27,6 @@ bin
 composer.json
 package.json
 package-lock.json
-phpcs.xml.dist
 phpunit.xml.dist
 README.md
 tests

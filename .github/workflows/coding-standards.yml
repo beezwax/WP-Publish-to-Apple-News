@@ -1,0 +1,25 @@
+name: Coding Standards
+
+on: pull_request
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action
+        with:
+          all_but_latest: true
+      - name: Checkout code
+        uses: actions/checkout
+      - name: Setup PHP
+        uses: shivammathur/setup-php
+        with:
+          php-version: '8.0'
+          coverage: none
+      - name: Validate Composer package
+        run: composer validate --strict
+      - name: Install dependencies
+        uses: ramsey/composer-install
+      - name: Run PHPCS
+        run: composer phpcs
