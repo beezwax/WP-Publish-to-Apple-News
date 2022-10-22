@@ -7,11 +7,11 @@ class Exporter_Test extends WP_UnitTestCase {
 
 	private $prophet;
 
-	public function setup() {
+	public function setup(): void {
 		$this->prophet = new \Prophecy\Prophet;
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->prophet->checkPredictions();
 	}
 

@@ -5,6 +5,9 @@
   <!-- Include Alley Rules -->
   <rule ref="Alley-Interactive" />
 
+  <!-- Check for cross-version support for PHP 7.4 and higher. -->
+  <config name="testVersion" value="7.1-"/>
+
   <!-- Set the text domain for i18n. -->
   <rule ref="WordPress.WP.I18n">
     <properties>

@@ -6,7 +6,7 @@ use Apple_Push_API\Credentials as Credentials;
 
 class Credentials_Test extends WP_UnitTestCase {
 
-	public function setup() {
+	public function setup(): void {
 		$this->credentials = new Credentials( 'foo', 'bar' );
 	}
 

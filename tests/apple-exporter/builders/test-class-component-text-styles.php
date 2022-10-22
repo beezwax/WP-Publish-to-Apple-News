@@ -6,7 +6,7 @@ use \Apple_Exporter\Builders\Component_Text_Styles as Component_Text_Styles;
 
 class Component_Text_Styles_Tests extends WP_UnitTestCase {
 
-	public function setup() {
+	public function setup(): void {
 		$this->settings = new Settings();
 		$this->content  = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>' );
 	}

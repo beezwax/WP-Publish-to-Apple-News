@@ -8,7 +8,7 @@ use Apple_Push_API\MIME_Builder as MIME_Builder;
 
 class MIME_Builder_Test extends WP_UnitTestCase {
 
-	public function setup() {
+	public function setup(): void {
 		$this->builder = new MIME_Builder();
 	}
 

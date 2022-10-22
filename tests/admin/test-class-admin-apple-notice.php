@@ -5,7 +5,7 @@ use \Apple_News as Apple_News;
 
 class Admin_Apple_Notice_Test extends WP_UnitTestCase {
 
-	public function setup() {
+	public function setup(): void {
 		$this->user_id = $this->factory->user->create( array( 'role' => 'administrator' ) );
 		wp_set_current_user( $this->user_id );
 	}

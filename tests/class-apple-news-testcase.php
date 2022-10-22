@@ -134,7 +134,7 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 *
 	 * @access public
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		// Capture arguments sent to the Apple News API in POST requests.
@@ -196,7 +196,7 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 *
 	 * @access public
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->prophet->checkPredictions();
 		remove_filter( 'apple_news_post_args', [ $this, 'filter_apple_news_post_args' ] );
 		remove_filter( 'pre_http_request', [ $this, 'filter_pre_http_request' ] );

@@ -75,7 +75,7 @@ class Admin_Apple_Themes_Test extends WP_UnitTestCase {
 	 *
 	 * @access public
 	 */
-	public function setup() {
+	public function setup(): void {
 		parent::setup();
 
 		// Store an instance of the Settings class for use in testing.
@@ -272,10 +272,7 @@ class Admin_Apple_Themes_Test extends WP_UnitTestCase {
 		);
 
 		// Test.
-		$this->assertInternalType(
-			'string',
-			$this->themes->import_theme( $import_settings )
-		);
+		$this->assertIsString( $this->themes->import_theme( $import_settings ) );
 		$theme = new \Apple_Exporter\Theme;
 		$theme->set_name( 'Test Import Theme' );
 		$this->assertFalse( $theme->load() );

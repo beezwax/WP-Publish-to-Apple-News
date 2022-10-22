@@ -4,7 +4,7 @@ Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
 Tested up to: 6.0
-Requires PHP: 5.6
+Requires PHP: 7.1
 Stable tag: 2.4.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
