@@ -1,7 +1,7 @@
 name: Coding Standards
-
-on: pull_request
-
+on:
+  pull_request:
+  workflow_dispatch:
 jobs:
   phpcs:
     runs-on: ubuntu-latest
