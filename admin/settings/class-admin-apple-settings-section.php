@@ -84,7 +84,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @var array
 	 * @access protected
 	 */
-	protected $settings = array();
+	protected $settings = [];
 
 	/**
 	 * Groups for the section.
@@ -92,7 +92,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @var array
 	 * @access protected
 	 */
-	protected $groups = array();
+	protected $groups = [];
 
 	/**
 	 * Allowed HTML for settings pages.
@@ -100,65 +100,65 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @var array
 	 * @access public
 	 */
-	public static $allowed_html = array(
-		'select'   => array(
-			'class'    => array(),
-			'name'     => array(),
-			'multiple' => array(),
-			'id'       => array(),
-			'size'     => array(),
-		),
-		'textarea' => array(
-			'class' => array(),
-			'name'  => array(),
-			'id'    => array(),
-		),
-		'option'   => array(
-			'value'    => array(),
-			'selected' => array(),
-		),
-		'input'    => array(
-			'class'       => array(),
-			'name'        => array(),
-			'value'       => array(),
-			'placeholder' => array(),
-			'step'        => array(),
-			'type'        => array(),
-			'required'    => array(),
-			'size'        => array(),
-			'id'          => array(),
-		),
-		'br'       => array(),
-		'b'        => array(),
-		'strong'   => array(),
-		'i'        => array(),
-		'em'       => array(),
-		'a'        => array(
-			'href'   => array(),
-			'target' => array(),
-		),
-		'div'      => array(
-			'class' => array(),
-		),
-		'h1'       => array(
-			'class' => array(),
-		),
-		'h2'       => array(
-			'class' => array(),
-		),
-		'h3'       => array(
-			'class' => array(),
-		),
-		'h4'       => array(
-			'class' => array(),
-		),
-		'h5'       => array(
-			'class' => array(),
-		),
-		'h6'       => array(
-			'class' => array(),
-		),
-	);
+	public static $allowed_html = [
+		'select'   => [
+			'class'    => [],
+			'name'     => [],
+			'multiple' => [],
+			'id'       => [],
+			'size'     => [],
+		],
+		'textarea' => [
+			'class' => [],
+			'name'  => [],
+			'id'    => [],
+		],
+		'option'   => [
+			'value'    => [],
+			'selected' => [],
+		],
+		'input'    => [
+			'class'       => [],
+			'name'        => [],
+			'value'       => [],
+			'placeholder' => [],
+			'step'        => [],
+			'type'        => [],
+			'required'    => [],
+			'size'        => [],
+			'id'          => [],
+		],
+		'br'       => [],
+		'b'        => [],
+		'strong'   => [],
+		'i'        => [],
+		'em'       => [],
+		'a'        => [
+			'href'   => [],
+			'target' => [],
+		],
+		'div'      => [
+			'class' => [],
+		],
+		'h1'       => [
+			'class' => [],
+		],
+		'h2'       => [
+			'class' => [],
+		],
+		'h3'       => [
+			'class' => [],
+		],
+		'h4'       => [
+			'class' => [],
+		],
+		'h5'       => [
+			'class' => [],
+		],
+		'h6'       => [
+			'class' => [],
+		],
+	];
 
 	/**
 	 * Constructor.
@@ -219,20 +219,20 @@ class Admin_Apple_Settings_Section extends Apple_News {
 	 * @return array An array of all groups and their related settings.
 	 */
 	public function groups() {
-		$result = array();
+		$result = [];
 		foreach ( $this->groups as $name => $info ) {
-			$settings = array();
+			$settings = [];
 			foreach ( $info['settings'] as $name ) {
 				$settings[ $name ]             = $this->settings[ $name ];
 				$settings[ $name ]['default']  = self::get_default_for( $name );
 				$settings[ $name ]['callback'] = ( ! empty( $this->settings[ $name ]['callback'] ) ) ? $this->settings[ $name ]['callback'] : '';
 			}
 
-			$result[ $name ] = array(
+			$result[ $name ] = [
 				'label'       => $info['label'],
 				'description' => empty( $info['description'] ) ? null : $info['description'],
 				'settings'    => $settings,
-			);
+			];
 		}
 
 		return $result;
@@ -559,7 +559,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 		check_admin_referer( $this->save_action );
 
 		// Get the current Apple News settings.
-		$settings = get_option( self::$section_option_name, array() );
+		$settings = get_option( self::$section_option_name, [] );
 
 		/**
 		 * Iterate over the settings and save each value.
@@ -574,7 +574,7 @@ class Admin_Apple_Settings_Section extends Apple_News {
 			if ( isset( $_POST[ $key ] ) ) {
 				$sanitize        = ( empty( $attributes['sanitize'] ) || ! is_callable( $attributes['sanitize'] ) ) ? 'sanitize_text_field' : $attributes['sanitize'];
 				$sanitized_value = call_user_func( $sanitize, wp_unslash( $_POST[ $key ] ) ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-				if ( ! empty( $sanitized_value ) || in_array( $sanitized_value, array( 0, '0' ), true ) ) {
+				if ( ! empty( $sanitized_value ) || in_array( $sanitized_value, [ 0, '0' ], true ) ) {
 					$value = $sanitized_value;
 				}
 			}

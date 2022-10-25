@@ -39,131 +39,131 @@ class Quote extends Component {
 		$this->register_spec(
 			'blockquote-without-border-json',
 			__( 'Blockquote Without Border JSON', 'apple-news' ),
-			array(
+			[
 				'role'       => 'container',
-				'layout'     => array(
+				'layout'     => [
 					'columnStart' => '#body_offset#',
 					'columnSpan'  => '#body_column_span#',
-					'margin'      => array(
+					'margin'      => [
 						'bottom' => '#layout_gutter#',
 						'top'    => '#layout_gutter#',
-					),
-				),
-				'style'      => array(
+					],
+				],
+				'style'      => [
 					'backgroundColor' => '#blockquote_background_color#',
-				),
-				'components' => array(
-					array(
+				],
+				'components' => [
+					[
 						'role'      => 'quote',
 						'text'      => '#text#',
 						'format'    => '#format#',
 						'layout'    => 'blockquote-layout',
 						'textStyle' => '#default_blockquote#',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
-		$blockquote_conditional_style = array();
+		$blockquote_conditional_style = [];
 		if ( ! empty( $theme->get_value( 'blockquote_background_color_dark' ) ) ) {
-			$blockquote_conditional_style = array(
-				'conditional' => array(
+			$blockquote_conditional_style = [
+				'conditional' => [
 					'backgroundColor' => '#blockquote_background_color_dark#',
-					'border'          => array(
-						'all'    => array(
+					'border'          => [
+						'all'    => [
 							'width' => '#blockquote_border_width#',
 							'style' => '#blockquote_border_style#',
 							'color' => '#blockquote_border_color_dark#',
-						),
+						],
 						'bottom' => false,
 						'right'  => false,
 						'top'    => false,
-					),
-					'conditions'      => array(
+					],
+					'conditions'      => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
+					],
+				],
+			];
 		}
 		$this->register_spec(
 			'blockquote-with-border-json',
 			__( 'Blockquote With Border JSON', 'apple-news' ),
-			array(
+			[
 				'role'       => 'container',
-				'layout'     => array(
+				'layout'     => [
 					'columnStart' => '#body_offset#',
 					'columnSpan'  => '#body_column_span#',
-					'margin'      => array(
+					'margin'      => [
 						'bottom' => '#layout_gutter#',
 						'top'    => '#layout_gutter#',
-					),
-				),
+					],
+				],
 				'style'      => array_merge(
-					array(
+					[
 						'backgroundColor' => '#blockquote_background_color#',
-						'border'          => array(
-							'all'    => array(
+						'border'          => [
+							'all'    => [
 								'width' => '#blockquote_border_width#',
 								'style' => '#blockquote_border_style#',
 								'color' => '#blockquote_border_color#',
-							),
+							],
 							'bottom' => false,
 							'right'  => false,
 							'top'    => false,
-						),
-					),
+						],
+					],
 					$blockquote_conditional_style
 				),
-				'components' => array(
-					array(
+				'components' => [
+					[
 						'role'      => 'quote',
 						'text'      => '#text#',
 						'format'    => '#format#',
 						'layout'    => 'blockquote-layout',
 						'textStyle' => '#default_blockquote#',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$this->register_spec(
 			'blockquote-layout',
 			__( 'Blockquote Layout', 'apple-news' ),
-			array(
-				'contentInset' => array(
+			[
+				'contentInset' => [
 					'bottom' => true,
 					'left'   => true,
 					'right'  => true,
 					'top'    => true,
-				),
-			)
+				],
+			]
 		);
 
-		$blockquote_conditional_text_color = array();
+		$blockquote_conditional_text_color = [];
 		if ( ! empty( $theme->get_value( 'blockquote_color_dark' ) ) ) {
-			$blockquote_conditional_text_color = array(
-				'conditional' => array(
+			$blockquote_conditional_text_color = [
+				'conditional' => [
 					'textColor'  => '#blockquote_color_dark#',
-					'conditions' => array(
+					'conditions' => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
+					],
+				],
+			];
 		}
 		$this->register_spec(
 			'default-blockquote',
 			__( 'Blockquote Style', 'apple-news' ),
 			array_merge(
-				array(
+				[
 					'fontName'      => '#blockquote_font#',
 					'fontSize'      => '#blockquote_size#',
 					'textColor'     => '#blockquote_color#',
 					'lineHeight'    => '#blockquote_line_height#',
 					'textAlignment' => '#text_alignment#',
 					'tracking'      => '#blockquote_tracking#',
-				),
+				],
 				$blockquote_conditional_text_color
 			)
 		);
@@ -171,121 +171,121 @@ class Quote extends Component {
 		$this->register_spec(
 			'pullquote-without-border-json',
 			__( 'Pull quote Without Border JSON', 'apple-news' ),
-			array(
+			[
 				'role'       => 'container',
-				'layout'     => array(
+				'layout'     => [
 					'columnStart' => 3,
 					'columnSpan'  => 4,
-				),
-				'components' => array(
-					array(
+				],
+				'components' => [
+					[
 						'role'      => 'quote',
 						'text'      => '#text#',
 						'format'    => '#format#',
 						'layout'    => 'pullquote-layout',
 						'textStyle' => '#default_pullquote#',
-					),
-				),
-				'anchor'     => array(
+					],
+				],
+				'anchor'     => [
 					'targetComponentIdentifier' => 'pullquoteAnchor',
 					'originAnchorPosition'      => 'top',
 					'targetAnchorPosition'      => 'top',
 					'rangeStart'                => 0,
 					'rangeLength'               => 10,
-				),
-			)
+				],
+			]
 		);
 
-		$pullquote_conditional_style = array();
+		$pullquote_conditional_style = [];
 		if ( ! empty( $theme->get_value( 'pullquote_border_color_dark' ) ) ) {
-			$pullquote_conditional_style = array(
-				'conditional' => array(
-					'border'     => array(
-						'all'   => array(
+			$pullquote_conditional_style = [
+				'conditional' => [
+					'border'     => [
+						'all'   => [
 							'width' => '#pullquote_border_width#',
 							'style' => '#pullquote_border_style#',
 							'color' => '#pullquote_border_color_dark#',
-						),
+						],
 						'left'  => false,
 						'right' => false,
-					),
-					'conditions' => array(
+					],
+					'conditions' => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
+					],
+				],
+			];
 		}
 		$this->register_spec(
 			'pullquote-with-border-json',
 			__( 'Pull quote With Border JSON', 'apple-news' ),
-			array(
+			[
 				'role'       => 'container',
-				'layout'     => array(
+				'layout'     => [
 					'columnStart' => 3,
 					'columnSpan'  => 4,
-				),
-				'components' => array(
-					array(
+				],
+				'components' => [
+					[
 						'role'      => 'quote',
 						'text'      => '#text#',
 						'format'    => '#format#',
 						'layout'    => 'pullquote-layout',
 						'textStyle' => '#default_pullquote#',
-					),
-				),
+					],
+				],
 				'style'      => array_merge(
-					array(
-						'border' => array(
-							'all'   => array(
+					[
+						'border' => [
+							'all'   => [
 								'width' => '#pullquote_border_width#',
 								'style' => '#pullquote_border_style#',
 								'color' => '#pullquote_border_color#',
-							),
+							],
 							'left'  => false,
 							'right' => false,
-						),
-					),
+						],
+					],
 					$pullquote_conditional_style
 				),
-				'anchor'     => array(
+				'anchor'     => [
 					'targetComponentIdentifier' => 'pullquoteAnchor',
 					'originAnchorPosition'      => 'top',
 					'targetAnchorPosition'      => 'top',
 					'rangeStart'                => 0,
 					'rangeLength'               => 10,
-				),
-			)
+				],
+			]
 		);
 
 		$this->register_spec(
 			'pullquote-layout',
 			__( 'Pull quote Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'top'    => 12,
 					'bottom' => 12,
-				),
-			)
+				],
+			]
 		);
 
-		$pullquote_conditional_text_color = array();
+		$pullquote_conditional_text_color = [];
 		if ( ! empty( $theme->get_value( 'pullquote_color_dark' ) ) ) {
-			$pullquote_conditional_text_color = array(
-				'conditional' => array(
+			$pullquote_conditional_text_color = [
+				'conditional' => [
 					'textColor'  => '#pullquote_color_dark#',
-					'conditions' => array(
+					'conditions' => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
+					],
+				],
+			];
 		}
 		$this->register_spec(
 			'default-pullquote',
 			__( 'Pull quote Style', 'apple-news' ),
 			array_merge(
-				array(
+				[
 					'fontName'           => '#pullquote_font#',
 					'fontSize'           => '#pullquote_size#',
 					'hangingPunctuation' => '#pullquote_hanging_punctuation#',
@@ -294,7 +294,7 @@ class Quote extends Component {
 					'lineHeight'         => '#pullquote_line_height#',
 					'textAlignment'      => '#text_alignment#',
 					'tracking'           => '#pullquote_tracking#',
-				),
+				],
 				$pullquote_conditional_text_color
 			)
 		);
@@ -420,7 +420,7 @@ class Quote extends Component {
 		$theme = \Apple_Exporter\Theme::get_used();
 
 		// Set JSON for this element.
-		$values = array(
+		$values = [
 			'#body_offset#'                      => $theme->get_body_offset(),
 			'#body_column_span#'                 => $theme->get_body_column_span(),
 			'#layout_gutter#'                    => $theme->get_value( 'layout_gutter' ),
@@ -429,7 +429,7 @@ class Quote extends Component {
 			'#text#'                             => $this->parser->parse( $text ),
 			'#format#'                           => $this->parser->format,
 			'#default_blockquote#'               => 'default-blockquote-' . $this->text_alignment,
-		);
+		];
 
 		// Set component attributes.
 		// Determine if there is a border specified.
@@ -465,11 +465,11 @@ class Quote extends Component {
 		}
 
 		// Set JSON for this element.
-		$values = array(
+		$values = [
 			'#text#'              => $text,
 			'#format#'            => $this->parser->format,
 			'#default_pullquote#' => 'default-pullquote-' . $this->text_alignment,
-		);
+		];
 
 		// Determine if there is a border specified.
 		if ( 'none' !== $theme->get_value( 'pullquote_border_style' ) ) {
@@ -508,12 +508,12 @@ class Quote extends Component {
 		// Set the border.
 		return array_merge(
 			$values,
-			array(
+			[
 				'#blockquote_border_width#'      => $theme->get_value( 'blockquote_border_width' ),
 				'#blockquote_border_style#'      => $theme->get_value( 'blockquote_border_style' ),
 				'#blockquote_border_color#'      => $theme->get_value( 'blockquote_border_color' ),
 				'#blockquote_border_color_dark#' => $theme->get_value( 'blockquote_border_color_dark' ),
-			)
+			]
 		);
 	}
 
@@ -542,7 +542,7 @@ class Quote extends Component {
 		$this->register_style(
 			'default-blockquote-' . $this->text_alignment,
 			'default-blockquote',
-			array(
+			[
 				'#blockquote_font#'        => $theme->get_value( 'blockquote_font' ),
 				'#blockquote_size#'        => intval( $theme->get_value( 'blockquote_size' ) ),
 				'#blockquote_color#'       => $theme->get_value( 'blockquote_color' ),
@@ -550,7 +550,7 @@ class Quote extends Component {
 				'#blockquote_line_height#' => intval( $theme->get_value( 'blockquote_line_height' ) ),
 				'#text_alignment#'         => $this->text_alignment,
 				'#blockquote_tracking#'    => intval( $theme->get_value( 'blockquote_tracking' ) ) / 100,
-			)
+			]
 		);
 	}
 
@@ -578,12 +578,12 @@ class Quote extends Component {
 		// Set the border.
 		return array_merge(
 			$values,
-			array(
+			[
 				'#pullquote_border_width#'      => $theme->get_value( 'pullquote_border_width' ),
 				'#pullquote_border_style#'      => $theme->get_value( 'pullquote_border_style' ),
 				'#pullquote_border_color#'      => $theme->get_value( 'pullquote_border_color' ),
 				'#pullquote_border_color_dark#' => $theme->get_value( 'pullquote_border_color_dark' ),
-			)
+			]
 		);
 	}
 
@@ -612,7 +612,7 @@ class Quote extends Component {
 		$this->register_style(
 			'default-pullquote-' . $this->text_alignment,
 			'default-pullquote',
-			array(
+			[
 				'#pullquote_font#'                => $theme->get_value( 'pullquote_font' ),
 				'#pullquote_size#'                => intval( $theme->get_value( 'pullquote_size' ) ),
 				'#pullquote_hanging_punctuation#' => ( 'yes' === $theme->get_value( 'pullquote_hanging_punctuation' ) ),
@@ -622,7 +622,7 @@ class Quote extends Component {
 				'#pullquote_line_height#'         => intval( $theme->get_value( 'pullquote_line_height' ) ),
 				'#text_alignment#'                => $this->text_alignment,
 				'#pullquote_tracking#'            => intval( $theme->get_value( 'pullquote_tracking' ) ) / 100,
-			),
+			],
 			'textStyle'
 		);
 	}

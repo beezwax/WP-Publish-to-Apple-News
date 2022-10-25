@@ -35,7 +35,7 @@ class Components extends Builder {
 	protected function build() {
 
 		// Initialize.
-		$components = array();
+		$components = [];
 		$workspace  = new Workspace( $this->content_id() );
 
 		// Loop through body components and process each.
@@ -81,7 +81,7 @@ class Components extends Builder {
 		// Must we add a pullquote?
 		$pullquote          = $this->content_setting( 'pullquote' );
 		$pullquote_position = $this->content_setting( 'pullquote_position' );
-		$valid_positions    = array( 'top', 'middle', 'bottom' );
+		$valid_positions    = [ 'top', 'middle', 'bottom' ];
 		if ( empty( $pullquote ) || ! in_array( $pullquote_position, $valid_positions, true ) ) {
 			return;
 		}
@@ -118,7 +118,7 @@ class Components extends Builder {
 		$this->anchor_together( $component, $components[ $position ] );
 
 		// Add component in position.
-		array_splice( $components, $position, 0, array( $component ) );
+		array_splice( $components, $position, 0, [ $component ] );
 	}
 
 	/**
@@ -316,11 +316,11 @@ class Components extends Builder {
 
 		// If the component doesn't have its own anchor settings, use the defaults.
 		if ( empty( $anchor_json ) ) {
-			$anchor_json = array(
+			$anchor_json = [
 				'targetAnchorPosition' => 'center',
 				'rangeStart'           => 0,
 				'rangeLength'          => 1,
-			);
+			];
 		}
 
 		/**
@@ -608,7 +608,7 @@ class Components extends Builder {
 	private function group_body_components( $components ) {
 
 		// Initialize.
-		$new_components = array();
+		$new_components = [];
 		$cover_index    = null;
 		$anchor_buffer  = 0;
 		$prev           = null;
@@ -681,7 +681,7 @@ class Components extends Builder {
 		$new_components[] = $current;
 
 		// Perform text cleanup on each node.
-		array_walk( $new_components, array( $this, 'clean_up_components' ) );
+		array_walk( $new_components, [ $this, 'clean_up_components' ] );
 
 		// If the final node has a role of 'body', add 'body-layout-last' layout.
 		$last = count( $new_components ) - 1;
@@ -698,35 +698,35 @@ class Components extends Builder {
 		 * All components after the cover must be grouped to avoid issues with
 		 * parallax text scroll.
 		 */
-		$conditional = array();
+		$conditional = [];
 		if ( ! empty( $theme->get_value( 'body_background_color_dark' ) ) ) {
-			$conditional = array(
-				'conditional' => array(
+			$conditional = [
+				'conditional' => [
 					'backgroundColor' => $theme->get_value( 'body_background_color_dark' ),
-					'conditions'      => array(
+					'conditions'      => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
+					],
+				],
+			];
 		}
-		$regrouped_components = array(
+		$regrouped_components = [
 			'role'       => 'container',
-			'layout'     => array(
+			'layout'     => [
 				'columnSpan'           => $theme->get_layout_columns(),
 				'columnStart'          => 0,
 				'ignoreDocumentMargin' => true,
-			),
+			],
 			'style'      => array_merge(
-				array( 'backgroundColor' => $theme->get_value( 'body_background_color' ) ),
+				[ 'backgroundColor' => $theme->get_value( 'body_background_color' ) ],
 				$conditional
 			),
 			'components' => array_slice( $new_components, $cover_index + 1 ),
-		);
+		];
 
 		return array_merge(
 			array_slice( $new_components, 0, $cover_index + 1 ),
-			array( $regrouped_components )
+			[ $regrouped_components ]
 		);
 	}
 
@@ -747,11 +747,11 @@ class Components extends Builder {
 		// Attempt to get the component order.
 		$meta_component_order = $theme->get_value( 'meta_component_order' );
 		if ( empty( $meta_component_order ) || ! is_array( $meta_component_order ) ) {
-			return array();
+			return [];
 		}
 
 		// Build array of meta components using specified order.
-		$components = array();
+		$components = [];
 		foreach ( $meta_component_order as $i => $component ) {
 
 			// Determine if component is loadable.
@@ -796,7 +796,7 @@ class Components extends Builder {
 		 * Loop though the first-level nodes of the body element. Components might
 		 * include child-components, like an Cover and Image.
 		 */
-		$components = array();
+		$components = [];
 		foreach ( $this->content_nodes() as $node ) {
 			$components = array_merge(
 				$components,

@@ -41,7 +41,7 @@ class Body extends Component {
 	 */
 	public static function node_matches( $node ) {
 		// We are only interested in p, pre, ul and ol.
-		if ( ! in_array( $node->nodeName, array( 'p', 'pre', 'ul', 'ol' ), true ) ) {
+		if ( ! in_array( $node->nodeName, [ 'p', 'pre', 'ul', 'ol' ], true ) ) {
 			return null;
 		}
 
@@ -101,37 +101,37 @@ class Body extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role'   => 'body',
 				'text'   => '#text#',
 				'format' => '#format#',
-			)
+			]
 		);
 
 		$this->register_spec(
 			'body-layout',
 			__( 'Layout', 'apple-news' ),
-			array(
+			[
 				'columnStart' => '#body_offset#',
 				'columnSpan'  => '#body_column_span#',
-				'margin'      => array(
+				'margin'      => [
 					'top'    => 12,
 					'bottom' => 12,
-				),
-			)
+				],
+			]
 		);
 
 		$this->register_spec(
 			'body-layout-last',
 			__( 'Layout for Last Component', 'apple-news' ),
-			array(
+			[
 				'columnStart' => '#body_offset#',
 				'columnSpan'  => '#body_column_span#',
-				'margin'      => array(
+				'margin'      => [
 					'top'    => 12,
 					'bottom' => 30,
-				),
-			)
+				],
+			]
 		);
 
 		$this->register_spec(
@@ -145,22 +145,22 @@ class Body extends Component {
 
 		$dark_colors_exist = ! empty( $dropcap_color_dark ) || ! empty( $dropcap_background_color_dark );
 
-		$conditional = array();
+		$conditional = [];
 		if ( $dark_colors_exist ) {
-			$conditional = array(
+			$conditional = [
 				'conditional' => array_merge(
-					array(
-						'dropCapStyle' => array(
+					[
+						'dropCapStyle' => [
 							'numberOfLines' => '#dropcap_number_of_lines#',
-						),
-						'conditions'   => array(
+						],
+						'conditions'   => [
 							'minSpecVersion'       => '1.14',
 							'preferredColorScheme' => 'dark',
-						),
-					),
+						],
+					],
 					$default_spec['conditional']
 				),
-			);
+			];
 		}
 
 		if ( ! empty( $dropcap_color_dark ) ) {
@@ -176,8 +176,8 @@ class Body extends Component {
 			__( 'Drop Cap Style', 'apple-news' ),
 			array_merge(
 				$this->get_default_style_spec(),
-				array(
-					'dropCapStyle' => array(
+				[
+					'dropCapStyle' => [
 						'numberOfLines'       => '#dropcap_number_of_lines#',
 						'numberOfCharacters'  => '#dropcap_number_of_characters#',
 						'padding'             => '#dropcap_padding#',
@@ -185,8 +185,8 @@ class Body extends Component {
 						'textColor'           => '#dropcap_color#',
 						'numberOfRaisedLines' => '#dropcap_number_of_raised_lines#',
 						'backgroundColor'     => '#dropcap_background_color#',
-					),
-				),
+					],
+				],
 				$conditional
 			)
 		);
@@ -206,7 +206,7 @@ class Body extends Component {
 
 		// Don't bother processing if there is nothing to operate on.
 		if ( empty( $html ) ) {
-			return array();
+			return [];
 		}
 
 		// Try to get matches of unsupported elements to split.
@@ -215,15 +215,15 @@ class Body extends Component {
 
 			// Ensure the resulting HTML is not devoid of actual content.
 			if ( '' === trim( wp_strip_all_tags( $html ) ) ) {
-				return array();
+				return [];
 			}
 
-			return array(
-				array(
+			return [
+				[
 					'name'  => $tag,
 					'value' => $html,
-				),
-			);
+				],
+			];
 		}
 
 		// Split the HTML by the found element into the left and right parts.
@@ -243,22 +243,22 @@ class Body extends Component {
 		$right = force_balance_tags( $open . $right );
 
 		// Start building the return value.
-		$elements = array(
-			array(
+		$elements = [
+			[
 				'name'  => $tag_name,
 				'value' => $whole,
-			),
-		);
+			],
+		];
 
 		// Check for conditions under which left should be added.
 		if ( '' !== trim( wp_strip_all_tags( $left ) ) ) {
 			$elements = array_merge(
-				array(
-					array(
+				[
+					[
 						'name'  => $tag,
 						'value' => $left,
-					),
-				),
+					],
+				],
 				$elements
 			);
 		}
@@ -287,10 +287,10 @@ class Body extends Component {
 		// Add the JSON for this component.
 		$this->register_json(
 			'json',
-			array(
+			[
 				'#text#'   => $html,
 				'#format#' => $this->parser->format,
-			)
+			]
 		);
 
 		// Determine whether to apply dropcap style.
@@ -333,10 +333,10 @@ class Body extends Component {
 		$this->register_layout(
 			'body-layout',
 			'body-layout',
-			array(
+			[
 				'#body_offset#'      => $theme->get_body_offset(),
 				'#body_column_span#' => $theme->get_body_column_span(),
-			),
+			],
 			'layout'
 		);
 
@@ -344,10 +344,10 @@ class Body extends Component {
 		$this->register_layout(
 			'body-layout-last',
 			'body-layout-last',
-			array(
+			[
 				'#body_offset#'      => $theme->get_body_offset(),
 				'#body_column_span#' => $theme->get_body_column_span(),
-			)
+			]
 		);
 	}
 
@@ -363,16 +363,16 @@ class Body extends Component {
 		$body_link_color_dark = $theme->get_value( 'body_link_color_dark' );
 		$dark_colors_exist    = ! empty( $body_color_dark ) || ! empty( $body_link_color_dark );
 
-		$conditional = array();
+		$conditional = [];
 		if ( $dark_colors_exist ) {
-			$conditional = array(
-				'conditional' => array(
-					'conditions' => array(
+			$conditional = [
+				'conditional' => [
+					'conditions' => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
+					],
+				],
+			];
 		}
 
 		if ( ! empty( $body_color_dark ) ) {
@@ -380,25 +380,25 @@ class Body extends Component {
 		}
 
 		if ( ! empty( $body_link_color_dark ) ) {
-			$conditional['conditional']['linkStyle'] = array(
+			$conditional['conditional']['linkStyle'] = [
 				'textColor' => '#body_link_color_dark#',
-			);
+			];
 		}
 
 		return array_merge(
-			array(
+			[
 				'textAlignment'          => 'left',
 				'fontName'               => '#body_font#',
 				'fontSize'               => '#body_size#',
 				'tracking'               => '#body_tracking#',
 				'lineHeight'             => '#body_line_height#',
 				'textColor'              => '#body_color#',
-				'linkStyle'              => array(
+				'linkStyle'              => [
 					'textColor' => '#body_link_color#',
-				),
+				],
 				'paragraphSpacingBefore' => 18,
 				'paragraphSpacingAfter'  => 18,
-			),
+			],
 			$conditional
 		);
 	}
@@ -414,7 +414,7 @@ class Body extends Component {
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
 
-		return array(
+		return [
 			'#body_font#'            => $theme->get_value( 'body_font' ),
 			'#body_size#'            => intval( $theme->get_value( 'body_size' ) ),
 			'#body_tracking#'        => intval( $theme->get_value( 'body_tracking' ) ) / 100,
@@ -423,7 +423,7 @@ class Body extends Component {
 			'#body_link_color#'      => $theme->get_value( 'body_link_color' ),
 			'#body_color_dark#'      => $theme->get_value( 'body_color_dark' ),
 			'#body_link_color_dark#' => $theme->get_value( 'body_link_color_dark' ),
-		);
+		];
 	}
 
 	/**
@@ -459,14 +459,14 @@ class Body extends Component {
 		}
 
 		// Start building the custom dropcap body style.
-		$dropcap_style = array(
+		$dropcap_style = [
 			'#dropcap_font#'                   => $theme->get_value( 'dropcap_font' ),
 			'#dropcap_number_of_characters#'   => absint( $theme->get_value( 'dropcap_number_of_characters' ) ),
 			'#dropcap_number_of_lines#'        => $number_of_lines,
 			'#dropcap_number_of_raised_lines#' => absint( $theme->get_value( 'dropcap_number_of_raised_lines' ) ),
 			'#dropcap_padding#'                => absint( $theme->get_value( 'dropcap_padding' ) ),
 			'#dropcap_color#'                  => $theme->get_value( 'dropcap_color' ),
-		);
+		];
 
 		// Add the background color, if defined.
 		$background_color = $theme->get_value( 'dropcap_background_color' );
@@ -505,7 +505,7 @@ class Body extends Component {
 		// If the text content evaluates to empty, just return an empty array.
 		$sanitized_text = sanitize_text_field( $this->json['text'] );
 		if ( empty( $sanitized_text ) ) {
-			return array();
+			return [];
 		}
 
 		return parent::to_array();

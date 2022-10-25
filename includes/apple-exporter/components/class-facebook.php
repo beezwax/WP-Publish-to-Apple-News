@@ -32,10 +32,10 @@ class Facebook extends Component {
 	 * @access private
 	 * @var array
 	 */
-	private static $url_signatures = array(
+	private static $url_signatures = [
 		'/data-href="([^"]+)"/i',
 		'/<(?:fb:)?post\s.*?href="([^"]+)"/i',
-	);
+	];
 
 	/**
 	 * Register all specs for the component.
@@ -46,10 +46,10 @@ class Facebook extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role' => 'facebook_post',
 				'URL'  => '#url#',
-			)
+			]
 		);
 	}
 
@@ -136,9 +136,9 @@ class Facebook extends Component {
 
 		$this->register_json(
 			'json',
-			array(
+			[
 				'#url#' => $url,
-			)
+			]
 		);
 	}
 

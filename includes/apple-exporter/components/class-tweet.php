@@ -55,21 +55,21 @@ class Tweet extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role' => 'tweet',
 				'URL'  => '#url#',
-			)
+			]
 		);
 
 		$this->register_spec(
 			'tweet-layout',
 			__( 'Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'top'    => 30,
 					'bottom' => 30,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -91,9 +91,9 @@ class Tweet extends Component {
 
 		$this->register_json(
 			'json',
-			array(
+			[
 				'#url#' => $url,
-			)
+			]
 		);
 
 		$this->set_layout();
@@ -108,7 +108,7 @@ class Tweet extends Component {
 		$this->register_full_width_layout(
 			'tweet-layout',
 			'tweet-layout',
-			array(),
+			[],
 			'layout'
 		);
 	}

@@ -39,10 +39,10 @@ class Byline extends Component {
 		if ( ! empty( $theme->get_value( 'byline_color_dark' ) ) ) {
 			$byline_conditional['conditional'][] = [
 				'textColor'  => '#byline_color_dark#',
-				'conditions' => array(
+				'conditions' => [
 					'minSpecVersion'       => '1.14',
 					'preferredColorScheme' => 'dark',
-				),
+				],
 			];
 		}
 
@@ -59,10 +59,10 @@ class Byline extends Component {
 					'linkStyle'  => [
 						'textColor' => '#author_link_color_dark#',
 					],
-					'conditions' => array(
+					'conditions' => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
+					],
 				];
 			}
 		}
@@ -71,14 +71,14 @@ class Byline extends Component {
 			'default-byline',
 			__( 'Style', 'apple-news' ),
 			array_merge(
-				array(
+				[
 					'textAlignment' => '#text_alignment#',
 					'fontName'      => '#byline_font#',
 					'fontSize'      => '#byline_size#',
 					'lineHeight'    => '#byline_line_height#',
 					'tracking'      => '#byline_tracking#',
 					'textColor'     => '#byline_color#',
-				),
+				],
 				$byline_conditional
 			)
 		);
@@ -86,12 +86,12 @@ class Byline extends Component {
 		$this->register_spec(
 			'byline-layout',
 			__( 'Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'top'    => 10,
 					'bottom' => 10,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -111,9 +111,9 @@ class Byline extends Component {
 
 		$this->register_json(
 			'json',
-			array(
+			[
 				'#text#' => $html,
-			)
+			]
 		);
 
 		$this->set_default_style();
@@ -180,7 +180,7 @@ class Byline extends Component {
 		$this->register_full_width_layout(
 			'byline-layout',
 			'byline-layout',
-			array(),
+			[],
 			'layout'
 		);
 	}

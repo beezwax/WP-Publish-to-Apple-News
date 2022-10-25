@@ -154,7 +154,7 @@ class Admin_Apple_Notice {
 		}
 
 		// Sanitize values.
-		$message = wp_kses( $message, array( 'a' => array( 'href' => array() ) ) );
+		$message = wp_kses( $message, [ 'a' => [ 'href' => [] ] ] );
 		$type    = sanitize_text_field( $type );
 
 		// Pull usermeta and see if the message already exists.
@@ -174,13 +174,13 @@ class Admin_Apple_Notice {
 		// Add the message to usermeta for later display.
 		self::add_user_meta(
 			$user_id,
-			array(
+			[
 				'dismissible' => $dismissible,
 				'dismissed'   => false,
 				'message'     => $message,
 				'type'        => $type,
 				'timestamp'   => time(),
-			)
+			]
 		);
 	}
 
@@ -195,7 +195,7 @@ class Admin_Apple_Notice {
 		wp_enqueue_script(
 			'apple_news_notices_js',
 			plugin_dir_url( __FILE__ ) . '../assets/js/notices.js',
-			array(),
+			[],
 			Apple_News::$version,
 			true
 		);
@@ -220,7 +220,7 @@ class Admin_Apple_Notice {
 		}
 
 		// Keep track of an updated list of notices to save to the DB, if necessary.
-		$updated_notices = array();
+		$updated_notices = [];
 
 		// Show the notices.
 		foreach ( $notices as $notice ) {
@@ -312,7 +312,7 @@ class Admin_Apple_Notice {
 		// Instead manage values within the same variable for consistency.
 		$values = self::get_user_meta( $user_id );
 		if ( empty( $values ) ) {
-			$values = array();
+			$values = [];
 		}
 
 		// Add the new value.
@@ -357,7 +357,7 @@ class Admin_Apple_Notice {
 			$meta_value = get_user_meta( $user_id, self::KEY, true ); // phpcs:ignore WordPress.VIP.RestrictedFunctions.user_meta_get_user_meta
 		}
 
-		return ( ! empty( $meta_value ) ) ? $meta_value : array();
+		return ( ! empty( $meta_value ) ) ? $meta_value : [];
 	}
 
 	/**

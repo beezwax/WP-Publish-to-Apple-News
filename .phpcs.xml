@@ -68,9 +68,4 @@
 
   <!-- The version set here matches the minimum version in readme.txt. -->
   <config name="minimum_supported_wp_version" value="4.0" />
-
-  <!-- TODO: Replace all instances of long array syntax with short array syntax. -->
-  <rule ref="Generic.Arrays.DisallowLongArraySyntax">
-    <severity>0</severity>
-  </rule>
 </ruleset>

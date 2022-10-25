@@ -51,29 +51,29 @@ class Audio extends Component {
 		$this->register_spec(
 			'json-with-caption-text',
 			__( 'JSON With Caption Text', 'apple-news' ),
-			array(
+			[
 				'role'       => 'container',
-				'components' => array(
-					array(
+				'components' => [
+					[
 						'role' => 'audio',
 						'URL'  => '#url#',
-					),
-					array(
+					],
+					[
 						'role'   => 'caption',
 						'text'   => '#caption_text#',
 						'format' => 'html',
-					),
-				),
-			)
+					],
+				],
+			]
 		);
 
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role' => 'audio',
 				'URL'  => '#url#',
-			)
+			]
 		);
 	}
 
@@ -101,10 +101,10 @@ class Audio extends Component {
 			$audio_caption = $caption_match[1];
 			$audio_spec    = 'json-with-caption-text';
 		}
-		$values = array(
+		$values = [
 			'#url#'          => esc_url_raw( $url ),
 			'#caption_text#' => $audio_caption,
-		);
+		];
 
 		$this->register_json( $audio_spec, $values );
 	}

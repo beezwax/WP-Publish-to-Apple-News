@@ -79,13 +79,13 @@ class Admin_Apple_Settings extends Apple_News {
 	 */
 	public function __construct() {
 		$this->loaded_settings = null;
-		$this->sections        = array();
+		$this->sections        = [];
 		$this->page_name       = $this->plugin_domain . '-options';
 
 		if ( ! self::$initialized ) {
-			add_action( 'admin_init', array( $this, 'register_sections' ), 5 );
-			add_action( 'admin_menu', array( $this, 'setup_options_page' ), 99 );
-			add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
+			add_action( 'admin_init', [ $this, 'register_sections' ], 5 );
+			add_action( 'admin_menu', [ $this, 'setup_options_page' ], 99 );
+			add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
 			self::$initialized = true;
 		}
 	}
@@ -142,7 +142,7 @@ class Admin_Apple_Settings extends Apple_News {
 			/** This filter is documented in admin/class-admin-apple-settings.php */
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->page_name,
-			array( $this, 'page_options_render' )
+			[ $this, 'page_options_render' ]
 		);
 	}
 
@@ -185,14 +185,14 @@ class Admin_Apple_Settings extends Apple_News {
 		wp_enqueue_style(
 			'apple-news-select2-css',
 			plugin_dir_url( __FILE__ ) . '../assets/css/select2.min.css',
-			array(),
+			[],
 			self::$version
 		);
 
 		wp_enqueue_script(
 			'apple-news-select2-js',
 			plugin_dir_url( __FILE__ ) . '../assets/js/select2.full.min.js',
-			array( 'jquery' ),
+			[ 'jquery' ],
 			self::$version,
 			false
 		);
@@ -200,7 +200,7 @@ class Admin_Apple_Settings extends Apple_News {
 		wp_enqueue_script(
 			'apple-news-settings',
 			plugin_dir_url( __FILE__ ) . '../assets/js/settings.js',
-			array( 'jquery' ),
+			[ 'jquery' ],
 			self::$version,
 			true
 		);

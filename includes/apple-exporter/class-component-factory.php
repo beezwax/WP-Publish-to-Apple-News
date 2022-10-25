@@ -22,7 +22,7 @@ class Component_Factory {
 	 * @var array
 	 * @access private
 	 */
-	private static $components = array();
+	private static $components = [];
 
 	/**
 	 * Current workspace.
@@ -191,7 +191,7 @@ class Component_Factory {
 	 * @return array An array of components contained in the node.
 	 */
 	public static function get_components_from_node( $node ) {
-		$result = array();
+		$result = [];
 
 		foreach ( self::$components as $shortname => $class ) {
 

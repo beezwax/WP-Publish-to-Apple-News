@@ -75,10 +75,10 @@ class Request {
 		 */
 		$this->default_args = apply_filters(
 			'apple_news_request_args',
-			array(
+			[
 				'reject_unsafe_urls' => true,
 				'timeout'            => 3,
-			)
+			]
 		);
 	}
 
@@ -95,7 +95,7 @@ class Request {
 	 * @return mixed The response body from the API.
 	 * @throws Request_Exception If the request fails.
 	 */
-	public function post( $url, $article, $bundles = array(), $meta = null, $post_id = null ) {
+	public function post( $url, $article, $bundles = [], $meta = null, $post_id = null ) {
 		return $this->request(
 			'POST',
 			$url,
@@ -233,7 +233,7 @@ class Request {
 		$response_decoded = json_decode( $response['body'] );
 		if ( ! empty( $response_decoded->errors ) && is_array( $response_decoded->errors ) ) {
 			$message  = '';
-			$messages = array();
+			$messages = [];
 			foreach ( $response_decoded->errors as $error ) {
 				// If there is a keyPath, build it into a string.
 				$key_path = '';
@@ -287,7 +287,7 @@ class Request {
 	 * @return string The content to be sent to the API.
 	 * @throws Request_Exception If the content cannot be built.
 	 */
-	private function build_content( $article, $bundles = array(), $meta = array(), $post_id = null ) {
+	private function build_content( $article, $bundles = [], $meta = [], $post_id = null ) {
 		$bundles = array_unique( $bundles );
 		$content = '';
 
@@ -329,12 +329,12 @@ class Request {
 			: null;
 
 		// Build the request args.
-		$args = array(
-			'headers' => array(
+		$args = [
+			'headers' => [
 				'Authorization' => $this->sign( $url, $verb, $content ),
-			),
+			],
 			'method'  => $verb,
-		);
+		];
 
 		// If this is a POST request, add the content to it.
 		if ( 'POST' === $verb ) {

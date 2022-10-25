@@ -46,11 +46,11 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 
 		// Initialize the table.
 		parent::__construct(
-			array(
+			[
 				'singular' => __( 'article', 'apple-news' ),
 				'plural'   => __( 'articles', 'apple-news' ),
 				'ajax'     => false,
-			)
+			]
 		);
 	}
 
@@ -174,21 +174,21 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 
 		// Build the base URL.
 		$base_url = add_query_arg(
-			array(
+			[
 				'page'    => $current_screen->parent_base,
 				'post_id' => $item->ID,
-			),
+			],
 			get_admin_url( null, 'admin.php' )
 		);
 
 		// Add common actions.
-		$actions = array(
+		$actions = [
 			'export' => sprintf(
 				"<a href='%s'>%s</a>",
 				esc_url( Admin_Apple_Index_Page::action_query_params( 'export', $base_url ) ),
 				esc_html__( 'Download', 'apple-news' )
 			),
-		);
+		];
 
 		// Only add push if the article is not pending publish.
 		$pending = get_post_meta( $item->ID, 'apple_news_api_pending', true );
@@ -266,13 +266,13 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		 */
 		return apply_filters(
 			'apple_news_export_list_columns',
-			array(
+			[
 				'cb'         => '<input type="checkbox">',
 				'title'      => __( 'Title', 'apple-news' ),
 				'updated_at' => __( 'Last updated at', 'apple-news' ),
 				'status'     => __( 'Apple News Status', 'apple-news' ),
 				'sync'       => __( 'Sync Status', 'apple-news' ),
-			)
+			]
 		);
 	}
 
@@ -321,9 +321,9 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		 */
 		return apply_filters(
 			'apple_news_bulk_actions',
-			array(
+			[
 				Admin_Apple_Index_Page::namespace_action( 'push' ) => __( 'Publish', 'apple-news' ),
-			)
+			]
 		);
 	}
 
@@ -338,68 +338,68 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		 * argument an array of hidden columns, which in this case is empty.
 		 */
 		$columns               = $this->get_columns();
-		$this->_column_headers = array( $columns, array(), array() );
+		$this->_column_headers = [ $columns, [], [] ];
 
 		// Build the default args for the query.
 		$current_page = $this->get_pagenum();
-		$args         = array(
+		$args         = [
 			'post_type'      => $this->settings->get( 'post_types' ),
 			'post_status'    => 'publish',
 			'posts_per_page' => $this->per_page,
 			'offset'         => ( $current_page - 1 ) * $this->per_page,
 			'orderby'        => 'ID',
 			'order'          => 'DESC',
-		);
+		];
 
 		// Add the publish status filter if set.
 		$publish_status = $this->get_publish_status_filter();
 		if ( ! empty( $publish_status ) ) {
 			switch ( $publish_status ) {
 				case 'published':
-					$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-						array(
+					$args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						[
 							'key'     => 'apple_news_api_id',
 							'compare' => '!=',
 							'value'   => '',
-						),
-					);
+						],
+					];
 					break;
 				case 'not_published':
-					$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+					$args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 						'relation' => 'AND',
-						array(
+						[
 							'relation' => 'OR',
-							array(
+							[
 								'key'     => 'apple_news_api_id',
 								'compare' => 'NOT EXISTS',
-							),
-							array(
+							],
+							[
 								'key'     => 'apple_news_api_id',
 								'compare' => '=',
 								'value'   => '',
-							),
-						),
-						array(
+							],
+						],
+						[
 							'key'     => 'apple_news_api_deleted',
 							'compare' => 'NOT EXISTS',
-						),
-					);
+						],
+					];
 					break;
 				case 'deleted':
-					$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-						array(
+					$args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						[
 							'key'     => 'apple_news_api_deleted',
 							'compare' => 'EXISTS',
-						),
-					);
+						],
+					];
 					break;
 				case 'pending':
-					$args['meta_query'] = array( // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
-						array(
+					$args['meta_query'] = [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+						[
 							'key'     => 'apple_news_api_pending',
 							'compare' => 'EXISTS',
-						),
-					);
+						],
+					];
 					break;
 			}
 		}
@@ -408,11 +408,11 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		$date_from = $this->get_date_from_filter();
 		$date_to   = $this->get_date_to_filter();
 		if ( ! empty( $date_from ) || ! empty( $date_to ) ) {
-			$args['date_query'] = array(
-				array(
+			$args['date_query'] = [
+				[
 					'inclusive' => true,
-				),
-			);
+				],
+			];
 
 			if ( ! empty( $date_from ) ) {
 				$args['date_query'][0]['after'] = $date_from;
@@ -448,11 +448,11 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 			 */
 			apply_filters(
 				'apple_news_export_table_pagination_args',
-				array(
+				[
 					'total_items' => $total_items,
 					'per_page'    => $this->per_page,
 					'total_pages' => ceil( $total_items / $this->per_page ),
-				)
+				]
 			)
 		);
 	}
@@ -483,7 +483,7 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		 */
 		do_action( 'apple_news_extra_tablenav' );
 
-		submit_button( __( 'Filter', 'apple-news' ), 'button', 'filter_action', false, array( 'id' => 'post-query-submit' ) );
+		submit_button( __( 'Filter', 'apple-news' ), 'button', 'filter_action', false, [ 'id' => 'post-query-submit' ] );
 		?>
 		</div>
 		<?php
@@ -553,13 +553,13 @@ class Admin_Apple_News_List_Table extends WP_List_Table {
 		 */
 		$publish_statuses = apply_filters(
 			'apple_news_publish_statuses',
-			array(
+			[
 				''              => __( 'Show All Statuses', 'apple-news' ),
 				'published'     => __( 'Published', 'apple-news' ),
 				'not_published' => __( 'Not Published', 'apple-news' ),
 				'pending'       => __( 'Pending', 'apple-news' ),
 				'deleted'       => __( 'Deleted', 'apple-news' ),
-			)
+			]
 		);
 
 		// Build the dropdown.

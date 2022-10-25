@@ -166,8 +166,8 @@ class Component_Spec {
 
 		// Iterate recursively over the built-in spec and get all the tokens.
 		// Do the same for the provided spec.
-		$new_tokens     = array();
-		$default_tokens = array();
+		$new_tokens     = [];
+		$default_tokens = [];
 		$this->find_tokens( $spec, $new_tokens );
 		$this->find_tokens( $this->spec, $default_tokens );
 
@@ -308,7 +308,7 @@ class Component_Spec {
 		if ( empty( $theme_settings['json_templates'] )
 			|| ! is_array( $theme_settings['json_templates'] )
 		) {
-			$theme_settings['json_templates'] = array();
+			$theme_settings['json_templates'] = [];
 		}
 
 		// Try to load the custom JSON into the theme.

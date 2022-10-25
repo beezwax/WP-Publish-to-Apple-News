@@ -40,53 +40,53 @@ class Link_Button extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role'      => 'link_button',
 				'text'      => '#text#',
 				'URL'       => '#url#',
 				'style'     => 'default-link-button',
 				'layout'    => 'link-button-layout',
 				'textStyle' => 'default-link-button-text-style',
-			)
+			]
 		);
 
 		// Register the JSON for the link button layout.
 		$this->register_spec(
 			'link-button-layout',
 			__( 'Button Layout', 'apple-news' ),
-			array(
-				'margin'  => array(
+			[
+				'margin'  => [
 					'bottom' => 20,
-				),
-				'padding' => array(
+				],
+				'padding' => [
 					'top'    => 10,
 					'bottom' => 10,
 					'left'   => 15,
 					'right'  => 15,
-				),
-			)
+				],
+			]
 		);
 
 		// Register the JSON for the link button style.
 		$this->register_spec(
 			'default-link-button',
 			__( 'Link Button Style', 'apple-news' ),
-			array(
+			[
 				'backgroundColor' => '#DDD',
-				'mask'            => array(
+				'mask'            => [
 					'type'   => 'corners',
 					'radius' => 25,
-				),
-			)
+				],
+			]
 		);
 
 		// Register the JSON for the link button text style.
 		$this->register_spec(
 			'default-link-button-text-style',
 			__( 'Link Button Text Style', 'apple-news' ),
-			array(
+			[
 				'textColor' => '#000',
-			)
+			]
 		);
 	}
 
@@ -111,10 +111,10 @@ class Link_Button extends Component {
 			// Register JSON for this component.
 			$this->register_json(
 				'json',
-				array(
+				[
 					'#url#'  => $url,
 					'#text#' => $link_button_match[2],
-				)
+				]
 			);
 		} else {
 			// If, for some reason, the match failed, bail out.
