@@ -25,21 +25,21 @@ class Advertisement extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role'       => 'banner_advertisement',
 				'bannerType' => 'standard',
-			)
+			]
 		);
 
 		$this->register_spec(
 			'layout',
 			__( 'Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'top'    => 25,
 					'bottom' => 25,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -52,7 +52,7 @@ class Advertisement extends Component {
 	protected function build( $html ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		$this->register_json(
 			'json',
-			array()
+			[]
 		);
 
 		$this->set_layout();
@@ -67,7 +67,7 @@ class Advertisement extends Component {
 		$this->register_full_width_layout(
 			'advertisement-layout',
 			'layout',
-			array(),
+			[],
 			'layout'
 		);
 	}

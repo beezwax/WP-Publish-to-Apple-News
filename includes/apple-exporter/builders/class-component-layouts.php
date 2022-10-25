@@ -35,7 +35,7 @@ class Component_Layouts extends Builder {
 	 */
 	public function __construct( $content, $settings ) {
 		parent::__construct( $content, $settings );
-		$this->layouts = array();
+		$this->layouts = [];
 	}
 
 	/**
@@ -163,10 +163,10 @@ class Component_Layouts extends Builder {
 			// Finally, register the layout.
 			$this->register_layout(
 				$layout_name,
-				array(
+				[
 					'columnStart' => $col_start,
 					'columnSpan'  => $col_span,
-				)
+				]
 			);
 		}
 

@@ -31,49 +31,49 @@ class Admin_Apple_Settings_Section_Advanced extends Admin_Apple_Settings_Section
 		$this->name = __( 'Advanced Settings', 'apple-news' );
 
 		// Add the settings.
-		$this->settings = array(
-			'component_alerts'  => array(
+		$this->settings = [
+			'component_alerts'  => [
 				'label'       => __( 'Component Alerts', 'apple-news' ),
-				'type'        => array( 'none', 'warn', 'fail' ),
+				'type'        => [ 'none', 'warn', 'fail' ],
 				'description' => __( 'If a post has a component that is unsupported by Apple News, choose "none" to generate no alert, "warn" to provide an admin warning notice, or "fail" to generate a notice and stop publishing.', 'apple-news' ),
-			),
-			'use_remote_images' => array(
+			],
+			'use_remote_images' => [
 				'label'       => __( 'Use Remote Images?', 'apple-news' ),
-				'type'        => array( 'yes', 'no' ),
+				'type'        => [ 'yes', 'no' ],
 				'description' => __( 'Allow the Apple News API to retrieve images remotely rather than bundle them. This setting is recommended if you are having any issues with publishing images. If your images are not publicly accessible, such as on a development site, you cannot use this feature.', 'apple-news' ),
-			),
-			'full_bleed_images' => array(
+			],
+			'full_bleed_images' => [
 				'label'       => __( 'Use Full-Bleed Images?', 'apple-news' ),
-				'type'        => array( 'yes', 'no' ),
+				'type'        => [ 'yes', 'no' ],
 				'description' => __( 'If set to yes, images that are centered or have no alignment will span edge-to-edge rather than being constrained within the body margins.', 'apple-news' ),
-			),
-			'html_support'      => array(
+			],
+			'html_support'      => [
 				'label'       => __( 'Enable HTML support?', 'apple-news' ),
-				'type'        => array( 'yes', 'no' ),
+				'type'        => [ 'yes', 'no' ],
 				'description' => sprintf(
 					// Translators: Placeholder 1 is an opening <a> tag, placeholder 2 is </a>.
 					__( 'If set to no, certain text fields will use Markdown instead of %1$sApple News HTML format%2$s. As of version 1.4.0, HTML format is the preferred output format. Support for Markdown may be removed in the future.', 'apple-news' ),
 					'<a href="' . esc_url( 'https://developer.apple.com/documentation/apple_news/apple_news_format/components/using_html_with_apple_news_format' ) . '">',
 					'</a>'
 				),
-			),
-		);
+			],
+		];
 
 		// Add the groups.
-		$this->groups = array(
-			'alerts' => array(
+		$this->groups = [
+			'alerts' => [
 				'label'    => __( 'Alerts', 'apple-news' ),
-				'settings' => array( 'component_alerts' ),
-			),
-			'images' => array(
+				'settings' => [ 'component_alerts' ],
+			],
+			'images' => [
 				'label'    => __( 'Image Settings', 'apple-news' ),
-				'settings' => array( 'use_remote_images', 'full_bleed_images' ),
-			),
-			'format' => array(
+				'settings' => [ 'use_remote_images', 'full_bleed_images' ],
+			],
+			'format' => [
 				'label'    => __( 'Format Settings', 'apple-news' ),
-				'settings' => array( 'html_support' ),
-			),
-		);
+				'settings' => [ 'html_support' ],
+			],
+		];
 
 		parent::__construct( $page );
 	}

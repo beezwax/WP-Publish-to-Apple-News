@@ -43,7 +43,7 @@ class Jetpack_Tiled_Gallery {
 	 */
 	private function setup() {
 		// Only do this on export in Apple News context.
-		add_action( 'apple_news_do_fetch_exporter', array( $this, 'tiled_gallery' ) );
+		add_action( 'apple_news_do_fetch_exporter', [ $this, 'tiled_gallery' ] );
 	}
 
 	/**
@@ -65,7 +65,7 @@ class Jetpack_Tiled_Gallery {
 		add_filter(
 			'jetpack_tiled_gallery_types',
 			function() {
-				return array();
+				return [];
 			}
 		);
 	}

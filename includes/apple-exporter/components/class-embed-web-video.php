@@ -73,24 +73,24 @@ class Embed_Web_Video extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role'        => 'embedwebvideo',
 				'aspectRatio' => '#aspect_ratio#',
 				'URL'         => '#url#',
 				'layout'      => 'embed-web-video-layout',
-			)
+			]
 		);
 
 		// Register the JSON for the link button layout.
 		$this->register_spec(
 			'embed-web-video-layout',
 			__( 'Web Embed Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'bottom' => 18,
 					'top'    => 18,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -129,10 +129,10 @@ class Embed_Web_Video extends Component {
 				if ( ! empty( $src ) ) {
 					$this->register_json(
 						'json',
-						array(
+						[
 							'#aspect_ratio#' => floor( 1000 * $ratio_x / $ratio_y ) / 1000,
 							'#url#'          => $src,
-						)
+						]
 					);
 					$this->register_layout( 'embed-web-video-layout', 'embed-web-video-layout' );
 				}

@@ -47,7 +47,7 @@ class Admin_Apple_News extends Apple_News {
 	 */
 	public function __construct() {
 		// Register hooks.
-		add_action( 'admin_print_styles-toplevel_page_apple_news_index', array( $this, 'plugin_styles' ) );
+		add_action( 'admin_print_styles-toplevel_page_apple_news_index', [ $this, 'plugin_styles' ] );
 
 		/**
 		 * Admin_Settings builds the settings page for the plugin. Besides setting
@@ -190,7 +190,7 @@ class Admin_Apple_News extends Apple_News {
 				foreach ( self::$settings->post_types as $post_type ) {
 					add_action(
 						'rest_insert_' . $post_type,
-						array( $this, 'action_rest_insert_post' )
+						[ $this, 'action_rest_insert_post' ]
 					);
 				}
 			}

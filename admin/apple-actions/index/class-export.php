@@ -358,7 +358,7 @@ class Export extends Action {
 			$byline                  = str_replace( '#author#', $temp_byline_placeholder, $byline_format );
 
 			// Attempt to parse the date format from the remaining string.
-			$matches = array();
+			$matches = [];
 			preg_match( '/#(.*?)#/', $byline, $matches );
 			if ( ! empty( $matches[1] ) && ! empty( $date ) ) {
 				// Set the date using the custom format.
@@ -447,7 +447,7 @@ class Export extends Action {
 
 		if ( ! empty( $date_format ) ) {
 			// Attempt to parse the date format from the remaining string.
-			$matches = array();
+			$matches = [];
 			preg_match( '/#(.*?)#/', $date_format, $matches );
 			if ( ! empty( $matches[1] ) ) {
 				// Set the date using the custom format.

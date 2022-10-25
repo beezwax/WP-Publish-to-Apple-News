@@ -29,7 +29,7 @@ class Settings {
 	 * @var array
 	 * @access private
 	 */
-	private $settings = array(
+	private $settings = [
 		'api_async'                   => 'no',
 		'api_autosync'                => 'yes',
 		'api_autosync_delete'         => 'yes',
@@ -43,10 +43,10 @@ class Settings {
 		'component_alerts'            => 'none',
 		'full_bleed_images'           => 'no',
 		'html_support'                => 'yes',
-		'post_types'                  => array( 'post' ),
+		'post_types'                  => [ 'post' ],
 		'show_metabox'                => 'yes',
 		'use_remote_images'           => 'yes',
-	);
+	];
 
 	/**
 	 * Magic method to get a computed or stored settings value.
@@ -72,7 +72,7 @@ class Settings {
 		$theme       = \Apple_Exporter\Theme::get_used();
 		$method_name = 'get_' . $name;
 		if ( method_exists( $theme, $method_name ) ) {
-			$value = call_user_func( array( $theme, $method_name ) );
+			$value = call_user_func( [ $theme, $method_name ] );
 
 			// Log a deprecated notice, since this is no longer preferred.
 			_deprecated_function(

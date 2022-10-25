@@ -17,11 +17,11 @@ foreach ( $apple_section->groups() as $apple_group ) {
 		do_action( 'apple_news_before_setting', $apple_setting_name, $apple_setting_meta );
 		echo wp_kses(
 			$apple_section->render_field(
-				array(
+				[
 					$apple_setting_name,
 					$apple_setting_meta['default'],
 					$apple_setting_meta['callback'],
-				)
+				]
 			),
 			Admin_Apple_Settings_Section::$allowed_html
 		);

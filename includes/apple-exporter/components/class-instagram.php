@@ -57,10 +57,10 @@ class Instagram extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role' => 'instagram',
 				'URL'  => '#url#',
-			)
+			]
 		);
 	}
 
@@ -89,9 +89,9 @@ class Instagram extends Component {
 
 		$this->register_json(
 			'json',
-			array(
+			[
 				'#url#' => esc_url_raw( $url ),
-			)
+			]
 		);
 	}
 

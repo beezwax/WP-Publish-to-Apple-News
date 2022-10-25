@@ -32,114 +32,114 @@ class Cover extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role'       => 'header',
 				'layout'     => 'headerPhotoLayout',
-				'components' => array(
-					array(
+				'components' => [
+					[
 						'role'   => 'photo',
 						'layout' => 'headerPhotoLayout',
 						'URL'    => '#url#',
-					),
-				),
-				'behavior'   => array(
+					],
+				],
+				'behavior'   => [
 					'type'   => 'parallax',
 					'factor' => 0.8,
-				),
-			)
+				],
+			]
 		);
 
-		$conditional = array();
+		$conditional = [];
 		if ( ! empty( $theme->get_value( 'caption_color_dark' ) ) ) {
-			$conditional = array(
-				'conditional' => array(
+			$conditional = [
+				'conditional' => [
 					'textColor'  => '#caption_color_dark#',
-					'conditions' => array(
+					'conditions' => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
+					],
+				],
+			];
 		}
 
 		$this->register_spec(
 			'jsonWithCaption',
 			__( 'JSON with Caption', 'apple-news' ),
-			array(
+			[
 				'role'       => 'header',
 				'layout'     => 'headerPhotoLayout',
-				'components' => array(
-					array(
+				'components' => [
+					[
 						'role'    => 'photo',
 						'layout'  => 'headerPhotoLayoutWithCaption',
 						'URL'     => '#url#',
-						'caption' => array(
+						'caption' => [
 							'format'    => 'html',
 							'text'      => '#caption#',
-							'textStyle' => array(
+							'textStyle' => [
 								'fontName' => '#caption_font#',
-							),
-						),
-					),
-					array(
+							],
+						],
+					],
+					[
 						'role'      => 'caption',
 						'text'      => '#caption#',
 						'format'    => 'html',
 						'textStyle' => array_merge(
-							array(
+							[
 								'textAlignment' => '#text_alignment#',
 								'fontName'      => '#caption_font#',
 								'fontSize'      => '#caption_size#',
 								'tracking'      => '#caption_tracking#',
 								'lineHeight'    => '#caption_line_height#',
 								'textColor'     => '#caption_color#',
-							),
+							],
 							$conditional
 						),
-					),
-				),
-				'behavior'   => array(
+					],
+				],
+				'behavior'   => [
 					'type'   => 'parallax',
 					'factor' => 0.8,
-				),
-			)
+				],
+			]
 		);
 
 		$this->register_spec(
 			'headerPhotoLayout',
 			__( 'Layout', 'apple-news' ),
-			array(
+			[
 				'ignoreDocumentMargin' => true,
 				'columnStart'          => 0,
 				'columnSpan'           => '#layout_columns#',
-			)
+			]
 		);
 
 		$this->register_spec(
 			'headerPhotoLayoutWithCaption',
 			__( 'Layout with Caption', 'apple-news' ),
-			array(
+			[
 				'ignoreDocumentMargin' => true,
 				'columnStart'          => 0,
 				'columnSpan'           => '#layout_columns#',
-				'margin'               => array(
+				'margin'               => [
 					'bottom' => '#caption_line_height#',
-				),
-			)
+				],
+			]
 		);
 
 		$this->register_spec(
 			'headerBelowTextPhotoLayout',
 			__( 'Below Text Layout', 'apple-news' ),
-			array(
+			[
 				'ignoreDocumentMargin' => true,
 				'columnStart'          => 0,
 				'columnSpan'           => '#layout_columns#',
-				'margin'               => array(
+				'margin'               => [
 					'top'    => 30,
 					'bottom' => 0,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -178,18 +178,18 @@ class Cover extends Component {
 		) {
 			$this->register_json(
 				'jsonWithCaption',
-				array(
+				[
 					'#caption#'          => $options['caption'],
 					'#url#'              => $url,
 					'#caption_tracking#' => intval( $theme->get_value( 'caption_tracking' ) ) / 100,
-				)
+				]
 			);
 		} else {
 			$this->register_json(
 				'json',
-				array(
+				[
 					'#url#' => $url,
-				)
+				]
 			);
 		}
 
@@ -209,26 +209,26 @@ class Cover extends Component {
 		$this->register_layout(
 			'headerPhotoLayout',
 			'headerPhotoLayout',
-			array(
+			[
 				'#layout_columns#' => $theme->get_layout_columns(),
-			)
+			]
 		);
 
 		$this->register_layout(
 			'headerPhotoLayoutWithCaption',
 			'headerPhotoLayoutWithCaption',
-			array(
+			[
 				'#caption_line_height#' => $theme->get_value( 'caption_line_height' ),
 				'#layout_columns#'      => $theme->get_layout_columns(),
-			)
+			]
 		);
 
 		$this->register_layout(
 			'headerBelowTextPhotoLayout',
 			'headerBelowTextPhotoLayout',
-			array(
+			[
 				'#layout_columns#' => $theme->get_layout_columns(),
-			)
+			]
 		);
 	}
 }

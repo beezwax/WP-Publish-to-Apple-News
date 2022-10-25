@@ -19,10 +19,10 @@ class Exporter_Content_Settings {
 	 * @var array
 	 * @access private
 	 */
-	private $settings = array(
+	private $settings = [
 		'pullquote'          => '',
 		'pullquote_position' => 'top',
-	);
+	];
 
 	/**
 	 * Get a setting.

@@ -62,7 +62,7 @@ class API {
 	 * @access public
 	 * @return object The response body from the API.
 	 */
-	public function post_article_to_channel( $article, $channel_uuid, $bundles = array(), $meta = array(), $post_id = null ) {
+	public function post_article_to_channel( $article, $channel_uuid, $bundles = [], $meta = [], $post_id = null ) {
 		$url = $this->endpoint . '/channels/' . $channel_uuid . '/articles';
 		return $this->send_post_request( $url, $article, $bundles, $meta, $post_id );
 	}
@@ -80,12 +80,12 @@ class API {
 	 * @access public
 	 * @return object The response body from the API.
 	 */
-	public function update_article( $uid, $revision, $article, $bundles = array(), $meta = array(), $post_id = null ) {
+	public function update_article( $uid, $revision, $article, $bundles = [], $meta = [], $post_id = null ) {
 		$url = $this->endpoint . '/articles/' . $uid;
 
 		// Always add the revision.
 		if ( empty( $meta['data'] ) || ! is_array( $meta['data'] ) ) {
-			$meta['data'] = array();
+			$meta['data'] = [];
 		}
 		$meta['data']['revision'] = $revision;
 

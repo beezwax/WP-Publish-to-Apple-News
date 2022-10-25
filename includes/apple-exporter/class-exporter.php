@@ -70,7 +70,7 @@ class Exporter {
 		$this->content   = $content;
 		$this->workspace = ! empty( $workspace ) ? $workspace : new Workspace( $this->content_id() );
 		$this->settings  = ! empty( $settings ) ? $settings : new Settings();
-		$this->builders  = array();
+		$this->builders  = [];
 	}
 
 	/**
@@ -206,12 +206,12 @@ class Exporter {
 		);
 
 		// Base JSON.
-		$json = array(
+		$json = [
 			'version'    => '1.11',
 			'identifier' => 'post-' . $this->content_id(),
 			'language'   => $language,
 			'title'      => wp_strip_all_tags( $this->content_title() ),
-		);
+		];
 
 		// Builders.
 		$json['documentStyle'] = $this->build_article_style();
@@ -301,21 +301,21 @@ class Exporter {
 
 		// Get information about the currently used theme.
 		$theme       = \Apple_Exporter\Theme::get_used();
-		$conditional = array();
+		$conditional = [];
 		if ( ! empty( $theme->get_value( 'body_background_color_dark' ) ) ) {
-			$conditional = array(
-				'conditional' => array(
+			$conditional = [
+				'conditional' => [
 					'backgroundColor' => $theme->get_value( 'body_background_color_dark' ),
-					'conditions'      => array(
+					'conditions'      => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
+					],
+				],
+			];
 		}
 
 		return array_merge(
-			array( 'backgroundColor' => $theme->get_value( 'body_background_color' ) ),
+			[ 'backgroundColor' => $theme->get_value( 'body_background_color' ) ],
 			$conditional
 		);
 	}

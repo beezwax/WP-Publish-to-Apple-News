@@ -21,7 +21,7 @@ class Heading extends Component {
 	 * @var array
 	 * @access public
 	 */
-	public static $levels = array( 1, 2, 3, 4, 5, 6 );
+	public static $levels = [ 1, 2, 3, 4, 5, 6 ];
 
 	/**
 	 * Look for node matches for this component.
@@ -60,38 +60,38 @@ class Heading extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role'   => '#heading_level#',
 				'text'   => '#text#',
 				'format' => '#format#',
-			)
+			]
 		);
 
 		$this->register_spec(
 			'heading-layout',
 			__( 'Layout', 'apple-news' ),
-			array(
+			[
 				'columnStart' => '#body_offset#',
 				'columnSpan'  => '#body_column_span#',
-				'margin'      => array(
+				'margin'      => [
 					'bottom' => 15,
 					'top'    => 15,
-				),
-			)
+				],
+			]
 		);
 
 		foreach ( self::$levels as $level ) {
-			$conditional = array();
+			$conditional = [];
 			if ( ! empty( $theme->get_value( 'header' . $level . '_color_dark' ) ) ) {
-				$conditional = array(
-					'conditional' => array(
+				$conditional = [
+					'conditional' => [
 						'textColor'  => '#header' . $level . '_color_dark#',
-						'conditions' => array(
+						'conditions' => [
 							'minSpecVersion'       => '1.14',
 							'preferredColorScheme' => 'dark',
-						),
-					),
-				);
+						],
+					],
+				];
 			}
 			$this->register_spec(
 				'default-heading-' . $level,
@@ -101,14 +101,14 @@ class Heading extends Component {
 					$level
 				),
 				array_merge(
-					array(
+					[
 						'fontName'      => '#header' . $level . '_font#',
 						'fontSize'      => '#header' . $level . '_size#',
 						'lineHeight'    => '#header' . $level . '_line_height#',
 						'textColor'     => '#header' . $level . '_color#',
 						'textAlignment' => '#text_alignment#',
 						'tracking'      => '#header' . $level . '_tracking#',
-					),
+					],
 					$conditional
 				)
 			);
@@ -136,34 +136,34 @@ class Heading extends Component {
 	 */
 	private static function split_image( $html ) {
 		if ( empty( $html ) ) {
-			return array();
+			return [];
 		}
 
 		// Find the first image inside.
 		preg_match( '#<img.*?>#si', $html, $matches );
 
 		if ( ! $matches ) {
-			return array(
-				array(
+			return [
+				[
 					'name'  => 'heading',
 					'value' => $html,
-				),
-			);
+				],
+			];
 		}
 
 		$image_html   = $matches[0];
 		$heading_html = str_replace( $image_html, '', $html );
 
-		return array(
-			array(
+		return [
+			[
 				'name'  => 'heading',
 				'value' => self::clean_html( $heading_html ),
-			),
-			array(
+			],
+			[
 				'name'  => 'img',
 				'value' => $image_html,
-			),
-		);
+			],
+		];
 	}
 
 	/**
@@ -188,11 +188,11 @@ class Heading extends Component {
 
 		$this->register_json(
 			'json',
-			array(
+			[
 				'#heading_level#' => 'heading' . $level,
 				'#text#'          => $text,
 				'#format#'        => $this->parser->format,
-			)
+			]
 		);
 
 		$this->set_style( $level );
@@ -212,10 +212,10 @@ class Heading extends Component {
 		$this->register_layout(
 			'heading-layout',
 			'heading-layout',
-			array(
+			[
 				'#body_offset#'      => $theme->get_body_offset(),
 				'#body_column_span#' => $theme->get_body_column_span(),
-			),
+			],
 			'layout'
 		);
 	}
@@ -234,7 +234,7 @@ class Heading extends Component {
 		$this->register_style(
 			'default-heading-' . $level,
 			'default-heading-' . $level,
-			array(
+			[
 				'#header' . $level . '_font#'        => $theme->get_value( 'header' . $level . '_font' ),
 				'#header' . $level . '_size#'        => intval( $theme->get_value( 'header' . $level . '_size' ) ),
 				'#header' . $level . '_line_height#' => intval( $theme->get_value( 'header' . $level . '_line_height' ) ),
@@ -242,7 +242,7 @@ class Heading extends Component {
 				'#header' . $level . '_color_dark#'  => $theme->get_value( 'header' . $level . '_color_dark' ),
 				'#text_alignment#'                   => $this->find_text_alignment(),
 				'#header' . $level . '_tracking#'    => intval( $theme->get_value( 'header' . $level . '_tracking' ) ) / 100,
-			),
+			],
 			'textStyle'
 		);
 	}
