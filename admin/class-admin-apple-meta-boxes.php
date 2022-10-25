@@ -44,19 +44,19 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			// Add the custom meta boxes to each post type.
 			$post_types = $settings->get( 'post_types' );
 			if ( ! is_array( $post_types ) ) {
-				$post_types = array( $post_types );
+				$post_types = [ $post_types ];
 			}
 
 			foreach ( $post_types as $post_type ) {
-				add_action( 'add_meta_boxes_' . $post_type, array( $this, 'add_meta_boxes' ) );
-				add_action( 'save_post_' . $post_type, array( $this, 'do_publish' ), 10, 2 );
+				add_action( 'add_meta_boxes_' . $post_type, [ $this, 'add_meta_boxes' ] );
+				add_action( 'save_post_' . $post_type, [ $this, 'do_publish' ], 10, 2 );
 			}
 
 			// Register assets used by the meta box.
-			add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
+			add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
 
 			// Refresh the nonce after the user re-authenticates due to a wp_auth_check() to avoid failing check_admin_referrer().
-			add_action( 'wp_refresh_nonces', array( $this, 'refresh_nonce' ), 20, 1 );
+			add_action( 'wp_refresh_nonces', [ $this, 'refresh_nonce' ], 20, 1 );
 		}
 	}
 
@@ -86,7 +86,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		// Verify the post types.
 		$post_types = $this->settings->get( 'post_types' );
 		if ( ! is_array( $post_types ) ) {
-			$post_types = array( $post_types );
+			$post_types = [ $post_types ];
 		}
 
 		if ( ! empty( $post_types ) && ! in_array( get_post_type( $post ), $post_types, true ) ) {
@@ -199,7 +199,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 		// Determine whether to save sections.
 		if ( empty( $_POST['apple_news_sections_by_taxonomy'] ) ) {
-			$sections = array();
+			$sections = [];
 			if ( ! empty( $_POST['apple_news_sections'] )
 				&& is_array( $_POST['apple_news_sections'] )
 			) {
@@ -293,7 +293,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		add_meta_box(
 			'apple_news_publish',
 			__( 'Apple News', 'apple-news' ),
-			array( $this, 'publish_meta_box' ),
+			[ $this, 'publish_meta_box' ],
 			$post->post_type,
 			/**
 			 * Changes the context (i.e. column) where the Apple News meta box
@@ -517,7 +517,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		wp_enqueue_style(
 			$this->plugin_slug . '_meta_boxes_css',
 			plugin_dir_url( __FILE__ ) . '../assets/css/meta-boxes.css',
-			array(),
+			[],
 			self::$version
 		);
 
@@ -525,7 +525,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		wp_enqueue_script(
 			$this->plugin_slug . '_meta_boxes_js',
 			plugin_dir_url( __FILE__ ) . '../assets/js/meta-boxes.js',
-			array( 'jquery' ),
+			[ 'jquery' ],
 			self::$version,
 			true
 		);
@@ -534,9 +534,9 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		wp_localize_script(
 			$this->plugin_slug . '_meta_boxes_js',
 			'apple_news_meta_boxes',
-			array(
+			[
 				'publish_action' => self::PUBLISH_ACTION,
-			)
+			]
 		);
 	}
 }

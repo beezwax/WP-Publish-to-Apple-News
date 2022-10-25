@@ -57,7 +57,7 @@ class Admin_Apple_Post_Sync {
 
 		// Register delete hook if needed.
 		if ( 'yes' === $this->settings->get( 'api_autosync_delete' ) ) {
-			add_action( 'before_delete_post', array( $this, 'do_delete' ) );
+			add_action( 'before_delete_post', [ $this, 'do_delete' ] );
 		}
 	}
 

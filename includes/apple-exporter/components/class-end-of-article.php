@@ -26,13 +26,13 @@ class End_Of_Article extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array()
+			[]
 		);
 
 		$this->register_spec(
 			'layout',
 			__( 'Layout', 'apple-news' ),
-			array()
+			[]
 		);
 	}
 
@@ -45,7 +45,7 @@ class End_Of_Article extends Component {
 	protected function build( $html ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		$this->register_json(
 			'json',
-			array()
+			[]
 		);
 
 		$this->set_layout();
@@ -60,7 +60,7 @@ class End_Of_Article extends Component {
 		$this->register_full_width_layout(
 			'end-of-article-layout',
 			'layout',
-			array(),
+			[],
 			'layout'
 		);
 	}

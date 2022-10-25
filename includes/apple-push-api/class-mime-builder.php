@@ -48,7 +48,7 @@ class MIME_Builder {
 	 * @var array
 	 * @access private
 	 */
-	private static $valid_mime_types = array(
+	private static $valid_mime_types = [
 		'image/jpeg',
 		'image/png',
 		'image/gif',
@@ -59,7 +59,7 @@ class MIME_Builder {
 		'application/x-font-opentype',
 		'application/font-opentype',
 		'application/octet-stream',
-	);
+	];
 
 	/**
 	 * Constructor.

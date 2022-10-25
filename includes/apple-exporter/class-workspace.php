@@ -188,12 +188,12 @@ class Workspace {
 
 		// Initialize if needed.
 		if ( empty( $errors ) ) {
-			$errors = array();
+			$errors = [];
 		}
 
 		// Initialize the key if needed.
 		if ( empty( $errors[ $key ] ) ) {
-			$errors[ $key ] = array();
+			$errors[ $key ] = [];
 		}
 
 		// Log the error.

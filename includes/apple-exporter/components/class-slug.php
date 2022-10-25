@@ -52,35 +52,35 @@ class Slug extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role' => 'heading',
 				'text' => '#text#',
-			)
+			]
 		);
 
 		$this->register_spec(
 			'default-slug',
 			__( 'Style', 'apple-news' ),
 			(
-				array(
+				[
 					'textAlignment' => '#text_alignment#',
 					'fontName'      => '#slug_font#',
 					'fontSize'      => '#slug_size#',
 					'lineHeight'    => '#slug_line_height#',
 					'tracking'      => '#slug_tracking#',
 					'textColor'     => '#slug_color#',
-				) + (
+				] + (
 				! empty( $theme->get_value( 'slug_color_dark' ) )
-					? array(
-						'conditional' => array(
+					? [
+						'conditional' => [
 							'textColor'  => '#slug_color_dark#',
-							'conditions' => array(
+							'conditions' => [
 								'minSpecVersion'       => '1.14',
 								'preferredColorScheme' => 'dark',
-							),
-						),
-					)
-					: array()
+							],
+						],
+					]
+					: []
 				)
 			)
 		);
@@ -88,12 +88,12 @@ class Slug extends Component {
 		$this->register_spec(
 			'slug-layout',
 			__( 'Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'top'    => 30,
 					'bottom' => 0,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -112,9 +112,9 @@ class Slug extends Component {
 
 		$this->register_json(
 			'json',
-			array(
+			[
 				'#text#' => $html,
-			)
+			]
 		);
 
 		$this->set_default_style();
@@ -134,14 +134,14 @@ class Slug extends Component {
 		$this->register_style(
 			'default-slug',
 			'default-slug',
-			array(
+			[
 				'#text_alignment#'   => $this->find_text_alignment(),
 				'#slug_font#'        => $theme->get_value( 'slug_font' ),
 				'#slug_size#'        => intval( $theme->get_value( 'slug_size' ) ),
 				'#slug_line_height#' => intval( $theme->get_value( 'slug_line_height' ) ),
 				'#slug_tracking#'    => intval( $theme->get_value( 'slug_tracking' ) ) / 100,
 				'#slug_color#'       => $theme->get_value( 'slug_color' ),
-			),
+			],
 			'textStyle'
 		);
 	}
@@ -155,7 +155,7 @@ class Slug extends Component {
 		$this->register_full_width_layout(
 			'slug-layout',
 			'slug-layout',
-			array(),
+			[],
 			'layout'
 		);
 	}

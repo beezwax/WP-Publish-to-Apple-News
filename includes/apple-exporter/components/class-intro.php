@@ -25,21 +25,21 @@ class Intro extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role' => 'intro',
 				'text' => '#text#',
-			)
+			]
 		);
 
 		$this->register_spec(
 			'default-intro',
 			__( 'Style', 'apple-news' ),
-			array(
+			[
 				'fontName'   => '#body_font#',
 				'fontSize'   => '#body_size#',
 				'lineHeight' => '#body_line_height#',
 				'textColor'  => '#body_color#',
-			)
+			]
 		);
 	}
 
@@ -59,9 +59,9 @@ class Intro extends Component {
 
 		$this->register_json(
 			'json',
-			array(
+			[
 				'#text#' => $html,
-			)
+			]
 		);
 
 		$this->set_style();
@@ -80,12 +80,12 @@ class Intro extends Component {
 		$this->register_style(
 			'default-intro',
 			'default-intro',
-			array(
+			[
 				'#body_font#'        => $theme->get_value( 'body_font' ),
 				'#body_size#'        => intval( $theme->get_value( 'body_size' ) ),
 				'#body_line_height#' => intval( $theme->get_value( 'body_line_height' ) ),
 				'#body_color#'       => $theme->get_value( 'body_color' ),
-			),
+			],
 			'textStyle'
 		);
 	}

@@ -27,7 +27,7 @@ class Metadata extends Builder {
 	 * @access protected
 	 */
 	protected function build() {
-		$meta = array();
+		$meta = [];
 
 		/**
 		 * The content's intro is optional. In WordPress, it's a post's

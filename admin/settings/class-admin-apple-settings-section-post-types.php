@@ -31,12 +31,12 @@ class Admin_Apple_Settings_Section_Post_Types extends Admin_Apple_Settings_Secti
 		$this->name = __( 'Post Type Options', 'apple-news' );
 
 		// Add the settings.
-		$this->settings = array(
-			'show_metabox' => array(
+		$this->settings = [
+			'show_metabox' => [
 				'label' => __( 'Show a publish meta box on post types that have Apple News enabled.', 'apple-news' ),
-				'type'  => array( 'yes', 'no' ),
-			),
-		);
+				'type'  => [ 'yes', 'no' ],
+			],
+		];
 
 		/**
 		 * Modifies the post types available for selection on the settings page.
@@ -46,36 +46,36 @@ class Admin_Apple_Settings_Section_Post_Types extends Admin_Apple_Settings_Secti
 		$post_types = apply_filters(
 			'apple_news_post_types',
 			get_post_types(
-				array(
+				[
 					'public'  => true,
 					'show_ui' => true,
-				),
+				],
 				'objects'
 			)
 		);
 
 		if ( ! empty( $post_types ) ) {
-			$post_type_options = array();
+			$post_type_options = [];
 			foreach ( $post_types as $post_type ) {
 				$post_type_options[ $post_type->name ] = $post_type->label;
 			}
 
-			$this->settings['post_types'] = array(
+			$this->settings['post_types'] = [
 				'label'    => __( 'Post Types', 'apple-news' ),
 				'type'     => $post_type_options,
 				'multiple' => true,
-				'sanitize' => array( $this, 'sanitize_array' ),
+				'sanitize' => [ $this, 'sanitize_array' ],
 				'size'     => 10,
-			);
+			];
 		}
 
 		// Add the groups.
-		$this->groups = array(
-			'post_type_settings' => array(
+		$this->groups = [
+			'post_type_settings' => [
 				'label'    => __( 'Post Types', 'apple-news' ),
-				'settings' => array( 'post_types', 'show_metabox' ),
-			),
-		);
+				'settings' => [ 'post_types', 'show_metabox' ],
+			],
+		];
 
 		parent::__construct( $page );
 	}
