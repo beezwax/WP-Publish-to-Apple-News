@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News Tests: Metadata_Test class
+ * Publish to Apple News Tests: Apple_News_Metadata_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -12,7 +12,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Metadata_Test extends Apple_News_Testcase {
+class Apple_News_Metadata_Test extends Apple_News_Testcase {
 
 	/**
 	 * A data provider for the test_video function.
@@ -42,10 +42,10 @@ class Metadata_Test extends Apple_News_Testcase {
 		$this->enable_coauthors_support();
 		global $apple_news_coauthors;
 		$apple_news_coauthors = [ 'Test Author 1', 'Test Author 2' ];
-		$author   = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
-		$post_id  = self::factory()->post->create( [ 'post_author'  => $author ] );
-		$result   = $this->get_json_for_post( $post_id );
-		$metadata = $result['metadata'];
+		$author               = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
+		$post_id              = self::factory()->post->create( [ 'post_author' => $author ] );
+		$result               = $this->get_json_for_post( $post_id );
+		$metadata             = $result['metadata'];
 
 		// Assertions.
 		$this->assertEquals(

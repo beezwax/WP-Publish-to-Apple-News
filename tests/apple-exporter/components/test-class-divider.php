@@ -15,7 +15,7 @@ use Apple_Exporter\Components\Divider;
  * @package Apple_News
  * @subpackage Tests
  */
-class Divider_Test extends Component_TestCase {
+class Apple_News_Divider_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * Ensures that an <hr/> tag gets converted to a Divider component.
@@ -28,7 +28,7 @@ class Divider_Test extends Component_TestCase {
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		$this->assertEquals( 'divider', $result['role'] );
 		$this->assertEquals( 'divider-layout', $result['layout'] );

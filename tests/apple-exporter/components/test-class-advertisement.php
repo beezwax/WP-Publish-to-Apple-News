@@ -15,7 +15,7 @@ use Apple_Exporter\Components\Advertisement;
  * @package Apple_News
  * @subpackage Tests
  */
-class Advertisement_Test extends Component_TestCase {
+class Apple_News_Advertisement_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * Tests basic JSON generation.
@@ -28,7 +28,7 @@ class Advertisement_Test extends Component_TestCase {
 			$this->styles,
 			$this->layouts
 		);
-		$json = $component->to_array();
+		$json      = $component->to_array();
 
 		$this->assertEquals( 'banner_advertisement', $json['role'] );
 		$this->assertEquals( 'standard', $json['bannerType'] );

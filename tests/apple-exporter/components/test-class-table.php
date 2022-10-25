@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Table_Test class
+ * Publish to Apple News tests: Apple_News_Table_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -17,16 +17,12 @@ use Apple_Exporter\Components\Table;
  * @package Apple_News
  * @subpackage Tests
  */
-class Table_Test extends Component_TestCase {
+class Apple_News_Table_Test extends Apple_News_Component_TestCase {
 
 	/**
-	 * Instructions to be executed before each test.
-	 *
-	 * @access public
+	 * A fixture containing operations to be run before each test.
 	 */
 	public function setUp(): void {
-
-		// Run the parent setup function (not done automatically).
 		parent::setup();
 
 		// Create an example table to use in tests.
@@ -75,20 +71,20 @@ HTML;
 		// Test.
 		$this->assertEquals(
 			array(
-				'role' => 'container',
+				'role'       => 'container',
 				'components' => array(
 					array(
-						'role' => 'htmltable',
-						'html' => '<table><thead><tr><th>Column Header 1</th><th>Column Header 2</th></tr></thead><tbody><tr><td>Column Data 1</td><td>Column Data 2</td></tr></tbody><tfoot><tr><td>Column Footer 1</td><td>Column Footer 2</td></tr></tfoot></table>',
+						'role'   => 'htmltable',
+						'html'   => '<table><thead><tr><th>Column Header 1</th><th>Column Header 2</th></tr></thead><tbody><tr><td>Column Data 1</td><td>Column Data 2</td></tr></tbody><tfoot><tr><td>Column Footer 1</td><td>Column Footer 2</td></tr></tfoot></table>',
 						'layout' => 'table-layout',
-						'style' => 'default-table',
+						'style'  => 'default-table',
 					),
 					array(
-						'role' => 'caption',
-						'text' => 'Caption',
+						'role'   => 'caption',
+						'text'   => 'Caption',
 						'format' => 'html',
-					)
-				)
+					),
+				),
 			),
 			$component->to_array()
 		);
@@ -115,10 +111,10 @@ HTML;
 		// Test.
 		$this->assertEquals(
 			array(
-				'html' => $this->html,
+				'html'   => $this->html,
 				'layout' => 'table-layout',
-				'role' => 'htmltable',
-				'style' => 'default-table',
+				'role'   => 'htmltable',
+				'style'  => 'default-table',
 			),
 			$component->to_array()
 		);
@@ -142,17 +138,17 @@ HTML;
 		// Set table settings.
 		$this->set_theme_settings(
 			[
-				'table_border_color_dark'                => '#abcdef',
-				'table_body_background_color_dark'       => '#fedcba',
-				'table_body_color_dark'                  => '#123456',
-				'table_header_background_color_dark'     => '#654321',
-				'table_header_color_dark'                => '#987654',
+				'table_border_color_dark'            => '#abcdef',
+				'table_body_background_color_dark'   => '#fedcba',
+				'table_body_color_dark'              => '#123456',
+				'table_header_background_color_dark' => '#654321',
+				'table_header_color_dark'            => '#987654',
 			]
 		);
 
 		// Run the export.
 		$exporter = new Exporter( $content, $this->workspace, $this->settings );
-		$json = $exporter->export();
+		$json     = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
 
@@ -165,12 +161,12 @@ HTML;
 		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['columns']['conditional'] ) );
 		// Row Border.
 		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['rows']['conditional'] ) );
-		// Header Border
+		// Header Border.
 		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['headerRows']['conditional'] ) );
-		// Header Background, Header Text Color
+		// Header Background, Header Text Color.
 		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'] ) );
 
-		// Ensure Color Values match
+		// Ensure Color Values match.
 		$this->assertEquals(
 			'#abcdef',
 			$json['componentStyles']['default-table']['conditional']['border']['all']['color']
@@ -250,7 +246,7 @@ HTML;
 
 		// Run the export.
 		$exporter = new Exporter( $content, $this->workspace, $this->settings );
-		$json = $exporter->export();
+		$json     = $exporter->export();
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
 
@@ -273,15 +269,15 @@ HTML;
 		$this->assertFalse( isset( $json['componentStyles']['default-table']['tableStyle']['columns']['conditional'] ) );
 		// Row Border.
 		$this->assertFalse( isset( $json['componentStyles']['default-table']['tableStyle']['rows']['conditional'] ) );
-		// Header Border
+		// Header Border.
 		$this->assertFalse( isset( $json['componentStyles']['default-table']['tableStyle']['headerRows']['conditional'] ) );
-		// Header Background, Header Text Color
+		// Header Background, Header Text Color.
 		$this->assertFalse( isset( $json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'] ) );
 
 		// Validate table settings in generated JSON.
 		$this->assertEquals(
 			array(
-				'border' => array(
+				'border'     => array(
 					'all' => array(
 						'color' => '#abcdef',
 						'style' => 'dashed',
@@ -289,20 +285,20 @@ HTML;
 					),
 				),
 				'tableStyle' => array(
-					'cells' => array(
-						'backgroundColor' => '#fedcba',
+					'cells'       => array(
+						'backgroundColor'     => '#fedcba',
 						'horizontalAlignment' => 'center',
-						'padding' => 2,
-						'textStyle' => array(
-							'fontName' => 'AmericanTypewriter',
-							'fontSize' => 3,
+						'padding'             => 2,
+						'textStyle'           => array(
+							'fontName'   => 'AmericanTypewriter',
+							'fontSize'   => 3,
 							'lineHeight' => 1,
-							'textColor' => '#123456',
-							'tracking' => 4,
+							'textColor'  => '#123456',
+							'tracking'   => 4,
 						),
-						'verticalAlignment' => 'bottom',
+						'verticalAlignment'   => 'bottom',
 					),
-					'columns' => array(
+					'columns'     => array(
 						'divider' => array(
 							'color' => '#abcdef',
 							'style' => 'dashed',
@@ -310,26 +306,26 @@ HTML;
 						),
 					),
 					'headerCells' => array(
-						'backgroundColor' => '#654321',
+						'backgroundColor'     => '#654321',
 						'horizontalAlignment' => 'right',
-						'padding' => 6,
-						'textStyle' => array(
-							'fontName' => 'Menlo-Regular',
-							'fontSize' => 7,
+						'padding'             => 6,
+						'textStyle'           => array(
+							'fontName'   => 'Menlo-Regular',
+							'fontSize'   => 7,
 							'lineHeight' => 5,
-							'textColor' => '#987654',
-							'tracking' => 8,
+							'textColor'  => '#987654',
+							'tracking'   => 8,
 						),
-						'verticalAlignment' => 'top',
+						'verticalAlignment'   => 'top',
 					),
-					'headerRows' => array(
+					'headerRows'  => array(
 						'divider' => array(
 							'color' => '#abcdef',
 							'style' => 'dashed',
 							'width' => 5,
 						),
 					),
-					'rows' => array(
+					'rows'        => array(
 						'divider' => array(
 							'color' => '#abcdef',
 							'style' => 'dashed',

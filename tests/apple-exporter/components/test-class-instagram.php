@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Instagram_Test class
+ * Publish to Apple News tests: Apple_News_Instagram_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -15,7 +15,7 @@ use Apple_Exporter\Components\Instagram;
  * @package Apple_News
  * @subpackage Tests
  */
-class Instagram_Test extends Component_TestCase {
+class Apple_News_Instagram_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * Contains a templated embed string for use in tests.
@@ -129,7 +129,7 @@ HTML;
 	public function testTransform( $url ) {
 
 		// Setup.
-		$components = array();
+		$components   = array();
 		$components[] = new Instagram(
 			$url,
 			$this->workspace,
@@ -150,7 +150,7 @@ HTML;
 			$this->assertEquals(
 				array(
 					'role' => 'instagram',
-					'URL' => $url,
+					'URL'  => $url,
 				),
 				$component->to_array()
 			);

@@ -6,16 +6,18 @@
  * @subpackage Tests
  */
 
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedFunctionFound, WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound, WordPress.WP.I18n.TextDomainMismatch, WordPress.WP.I18n.MissingTranslatorsComment */
+
 /**
  * A mock for the coauthors function from Co-Authors Plus.
  *
- * @param string $between     Delimiter that should appear between the co-authors
- * @param string $betweenLast Delimiter that should appear between the last two co-authors
- * @param string $before      What should appear before the presentation of co-authors
- * @param string $after       What should appear after the presentation of co-authors
+ * @param string $between     Delimiter that should appear between the co-authors.
+ * @param string $between_last Delimiter that should appear between the last two co-authors.
+ * @param string $before      What should appear before the presentation of co-authors.
+ * @param string $after       What should appear after the presentation of co-authors.
  * @param bool   $echo        Whether the co-authors should be echoed or returned. Defaults to true.
  */
-function coauthors( $between = ', ', $betweenLast = ' and ', $before = '', $after = '', $echo = true ) {
+function coauthors( $between = ', ', $between_last = ' and ', $before = '', $after = '', $echo = true ) {
 	// To use this function, put display names in a global array called $apple_news_coauthors.
 	global $apple_news_coauthors;
 
@@ -30,7 +32,7 @@ function coauthors( $between = ', ', $betweenLast = ' and ', $before = '', $afte
 	// Compute output.
 	$output = $before
 		. implode( $between, array_slice( $apple_news_coauthors, 0, $last_index ) )
-		. ( 0 !== $last_index ? $betweenLast : '' )
+		. ( 0 !== $last_index ? $between_last : '' )
 		. $apple_news_coauthors[ $last_index ]
 		. $after;
 
@@ -39,19 +41,19 @@ function coauthors( $between = ', ', $betweenLast = ' and ', $before = '', $afte
 		return $output;
 	}
 
-	echo $output;
+	echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
  * A mock for the coauthors_posts_links function from Co-Authors Plus.
  *
- * @param string $between Delimiter that should appear between the co-authors
- * @param string $betweenLast Delimiter that should appear between the last two co-authors
- * @param string $before What should appear before the presentation of co-authors
- * @param string $after What should appear after the presentation of co-authors
- * @param bool   $echo Whether the co-authors should be echoed or returned. Defaults to true.
+ * @param string $between      Delimiter that should appear between the co-authors.
+ * @param string $between_last Delimiter that should appear between the last two co-authors.
+ * @param string $before       What should appear before the presentation of co-authors.
+ * @param string $after        What should appear after the presentation of co-authors.
+ * @param bool   $echo         Whether the co-authors should be echoed or returned. Defaults to true.
  */
-function coauthors_posts_links( $between = null, $betweenLast = null, $before = null, $after = null, $echo = true ) {
+function coauthors_posts_links( $between = null, $between_last = null, $before = null, $after = null, $echo = true ) {
 	// To use this function, put display names in a global array called $apple_news_coauthors.
 	global $apple_news_coauthors;
 
@@ -92,24 +94,24 @@ function coauthors_posts_links( $between = null, $betweenLast = null, $before = 
 	array_push( $output, 'and ' . $last_element );
 
 	// If we have more than two items comma-separate array items and then conver to string.
-	$output = implode( 2 > count( $output ) ? ', ' : ' ', $output ) ;
+	$output = implode( 2 > count( $output ) ? ', ' : ' ', $output );
 
 	// Fork for echo.
 	if ( ! $echo ) {
 		return $output;
 	}
 
-	echo $output;
+	echo $output; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
  * A mock for the coauthors_posts_links_single function from Co-Authors Plus.
  *
- * @param object $author
+ * @param object $author The author object to use in output.
  * @return string
  */
 function coauthors_posts_links_single( $author ) {
-	// Return if the fields we are trying to use are not sent
+	// Return if the fields we are trying to use are not sent.
 	if ( ! isset( $author->ID, $author->user_nicename, $author->display_name ) ) {
 		_doing_it_wrong(
 			'coauthors_posts_links_single',

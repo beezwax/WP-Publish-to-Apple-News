@@ -8,6 +8,8 @@
  * @subpackage Tests
  */
 
+use Apple_Exporter\Theme;
+
 /**
  * A class which is used to test the Apple_News class.
  *
@@ -23,7 +25,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 * @access public
 	 */
 	public function testGetFilename() {
-		$url = 'https://www.example.org/test-get-filename.jpg?w=150&h=150';
+		$url      = 'https://www.example.org/test-get-filename.jpg?w=150&h=150';
 		$filename = Apple_News::get_filename( $url );
 		$this->assertEquals( 'test-get-filename.jpg', $filename );
 	}
@@ -36,7 +38,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 		$this->assertTrue( Apple_News::is_default_theme() );
 
 		// Load the default theme and change its name but not its settings.
-		$theme = new \Apple_Exporter\Theme();
+		$theme = new Theme();
 		$theme->set_name( 'Default' );
 		$theme->load();
 		$theme->rename( 'Not Default' );
@@ -68,7 +70,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 	public function testMigrateApiSettings() {
 
 		// Setup.
-		$legacy_settings = $this->settings->all();
+		$legacy_settings                        = $this->settings->all();
 		$legacy_settings['api_autosync_update'] = 'no';
 		unset( $legacy_settings['api_autosync_delete'] );
 		$apple_news = new Apple_News();
@@ -76,9 +78,9 @@ class Apple_News_Test extends Apple_News_Testcase {
 		$apple_news->migrate_api_settings();
 
 		// Ensure the defaults did not overwrite the migrated legacy data.
-		$expected_settings = $legacy_settings;
+		$expected_settings                        = $legacy_settings;
 		$expected_settings['api_autosync_delete'] = 'no';
-		$migrated_settings = get_option( $apple_news::$option_name );
+		$migrated_settings                        = get_option( $apple_news::$option_name );
 		$this->assertEquals( $expected_settings, $migrated_settings );
 	}
 
@@ -92,16 +94,16 @@ class Apple_News_Test extends Apple_News_Testcase {
 	public function testMigrateBlockquoteSettings() {
 
 		// Setup.
-		$legacy_settings = $this->settings->all();
-		$legacy_settings['body_background_color'] = '#aaaaaa';
+		$legacy_settings                           = $this->settings->all();
+		$legacy_settings['body_background_color']  = '#aaaaaa';
 		$legacy_settings['pullquote_border_color'] = '#abcdef';
 		$legacy_settings['pullquote_border_style'] = 'dashed';
 		$legacy_settings['pullquote_border_width'] = 10;
-		$legacy_settings['body_color'] = '#012345';
-		$legacy_settings['body_font'] = 'TestFont';
-		$legacy_settings['body_line_height'] = 30;
-		$legacy_settings['body_size'] = 20;
-		$legacy_settings['body_tracking'] = 10;
+		$legacy_settings['body_color']             = '#012345';
+		$legacy_settings['body_font']              = 'TestFont';
+		$legacy_settings['body_line_height']       = 30;
+		$legacy_settings['body_size']              = 20;
+		$legacy_settings['body_tracking']          = 10;
 		unset( $legacy_settings['blockquote_background_color'] );
 		unset( $legacy_settings['blockquote_border_color'] );
 		unset( $legacy_settings['blockquote_border_style'] );
@@ -116,17 +118,17 @@ class Apple_News_Test extends Apple_News_Testcase {
 		$apple_news->migrate_blockquote_settings();
 
 		// Ensure the defaults did not overwrite the migrated legacy data.
-		$expected_settings = $legacy_settings;
+		$expected_settings                                = $legacy_settings;
 		$expected_settings['blockquote_background_color'] = '#999999';
-		$expected_settings['blockquote_border_color'] = '#abcdef';
-		$expected_settings['blockquote_border_style'] = 'dashed';
-		$expected_settings['blockquote_border_width'] = 10;
-		$expected_settings['blockquote_color'] = '#012345';
-		$expected_settings['blockquote_font'] = 'TestFont';
-		$expected_settings['blockquote_line_height'] = 30;
-		$expected_settings['blockquote_size'] = 20;
-		$expected_settings['blockquote_tracking'] = 10;
-		$migrated_settings = get_option( $apple_news::$option_name );
+		$expected_settings['blockquote_border_color']     = '#abcdef';
+		$expected_settings['blockquote_border_style']     = 'dashed';
+		$expected_settings['blockquote_border_width']     = 10;
+		$expected_settings['blockquote_color']            = '#012345';
+		$expected_settings['blockquote_font']             = 'TestFont';
+		$expected_settings['blockquote_line_height']      = 30;
+		$expected_settings['blockquote_size']             = 20;
+		$expected_settings['blockquote_tracking']         = 10;
+		$migrated_settings                                = get_option( $apple_news::$option_name );
 		$this->assertEquals( $expected_settings, $migrated_settings );
 	}
 
@@ -140,12 +142,12 @@ class Apple_News_Test extends Apple_News_Testcase {
 	public function testMigrateCaptionSettings() {
 
 		// Setup.
-		$legacy_settings = $this->settings->all();
-		$legacy_settings['body_color'] = '#abcdef';
-		$legacy_settings['body_font'] = 'TestFont';
+		$legacy_settings                     = $this->settings->all();
+		$legacy_settings['body_color']       = '#abcdef';
+		$legacy_settings['body_font']        = 'TestFont';
 		$legacy_settings['body_line_height'] = 40;
-		$legacy_settings['body_size'] = 30;
-		$legacy_settings['body_tracking'] = 10;
+		$legacy_settings['body_size']        = 30;
+		$legacy_settings['body_tracking']    = 10;
 		unset( $legacy_settings['caption_color'] );
 		unset( $legacy_settings['caption_font'] );
 		unset( $legacy_settings['caption_line_height'] );
@@ -156,13 +158,13 @@ class Apple_News_Test extends Apple_News_Testcase {
 		$apple_news->migrate_caption_settings();
 
 		// Ensure the defaults did not overwrite the migrated legacy data.
-		$expected_settings = $legacy_settings;
-		$expected_settings['caption_color'] = '#abcdef';
-		$expected_settings['caption_font'] = 'TestFont';
+		$expected_settings                        = $legacy_settings;
+		$expected_settings['caption_color']       = '#abcdef';
+		$expected_settings['caption_font']        = 'TestFont';
 		$expected_settings['caption_line_height'] = 40;
-		$expected_settings['caption_size'] = 28;
-		$expected_settings['caption_tracking'] = 10;
-		$migrated_settings = get_option( $apple_news::$option_name );
+		$expected_settings['caption_size']        = 28;
+		$expected_settings['caption_tracking']    = 10;
+		$migrated_settings                        = get_option( $apple_news::$option_name );
 		$this->assertEquals( $expected_settings, $migrated_settings );
 	}
 
@@ -176,9 +178,9 @@ class Apple_News_Test extends Apple_News_Testcase {
 	public function testMigrateHeaderSettings() {
 
 		// Setup.
-		$legacy_settings = $this->settings->all();
-		$legacy_settings['header_color'] = '#abcdef';
-		$legacy_settings['header_font'] = 'TestFont';
+		$legacy_settings                       = $this->settings->all();
+		$legacy_settings['header_color']       = '#abcdef';
+		$legacy_settings['header_font']        = 'TestFont';
 		$legacy_settings['header_line_height'] = 100;
 		unset( $legacy_settings['header1_color'] );
 		unset( $legacy_settings['header2_color'] );
@@ -203,19 +205,19 @@ class Apple_News_Test extends Apple_News_Testcase {
 		$apple_news->migrate_header_settings( $legacy_settings );
 
 		// Ensure the defaults did not overwrite the migrated legacy data.
-		$expected_settings = $legacy_settings;
-		$expected_settings['header1_color'] = '#abcdef';
-		$expected_settings['header2_color'] = '#abcdef';
-		$expected_settings['header3_color'] = '#abcdef';
-		$expected_settings['header4_color'] = '#abcdef';
-		$expected_settings['header5_color'] = '#abcdef';
-		$expected_settings['header6_color'] = '#abcdef';
-		$expected_settings['header1_font'] = 'TestFont';
-		$expected_settings['header2_font'] = 'TestFont';
-		$expected_settings['header3_font'] = 'TestFont';
-		$expected_settings['header4_font'] = 'TestFont';
-		$expected_settings['header5_font'] = 'TestFont';
-		$expected_settings['header6_font'] = 'TestFont';
+		$expected_settings                        = $legacy_settings;
+		$expected_settings['header1_color']       = '#abcdef';
+		$expected_settings['header2_color']       = '#abcdef';
+		$expected_settings['header3_color']       = '#abcdef';
+		$expected_settings['header4_color']       = '#abcdef';
+		$expected_settings['header5_color']       = '#abcdef';
+		$expected_settings['header6_color']       = '#abcdef';
+		$expected_settings['header1_font']        = 'TestFont';
+		$expected_settings['header2_font']        = 'TestFont';
+		$expected_settings['header3_font']        = 'TestFont';
+		$expected_settings['header4_font']        = 'TestFont';
+		$expected_settings['header5_font']        = 'TestFont';
+		$expected_settings['header6_font']        = 'TestFont';
 		$expected_settings['header1_line_height'] = 100;
 		$expected_settings['header2_line_height'] = 100;
 		$expected_settings['header3_line_height'] = 100;

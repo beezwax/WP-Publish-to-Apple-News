@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Slug_Test class
+ * Publish to Apple News tests: Apple_News_Slug_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -12,7 +12,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Slug_Test extends Apple_News_Testcase {
+class Apple_News_Slug_Test extends Apple_News_Testcase {
 
 	/**
 	 * A filter function to modify the text style in the generated JSON.

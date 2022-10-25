@@ -6,8 +6,6 @@
  * @subpackage Tests
  */
 
-use \Apple_Exporter\Components\Gallery;
-
 /**
  * A class to test the behavior of the
  * Apple_Exporter\Components\Gallery class.
@@ -15,7 +13,7 @@ use \Apple_Exporter\Components\Gallery;
  * @package Apple_News
  * @subpackage Tests
  */
-class Gallery_Test extends Component_TestCase {
+class Apple_News_Gallery_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * A data provider that includes various ways of making galleries.
@@ -40,7 +38,7 @@ class Gallery_Test extends Component_TestCase {
 <figure class="wp-block-image size-large"><a href="%9\$s"><img src="%8\$s" alt="Alt Text 3" class="wp-image-%7\$d"/></a><figcaption>Test Caption 3</figcaption></figure>
 <!-- /wp:image --></figure>
 <!-- /wp:gallery -->
-HTML
+HTML,
 			],
 			[
 				// Gutenberg, Jetpack slideshow, three images.
@@ -75,7 +73,7 @@ HTML
 	</div>
 </div>
 <!-- /wp:jetpack/slideshow -->
-HTML
+HTML,
 			],
 			[
 				// Classic editor, gallery shortcode, three images.

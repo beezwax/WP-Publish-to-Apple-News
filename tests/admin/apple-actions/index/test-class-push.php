@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News Tests: Admin_Action_Index_Push_Test class
+ * Publish to Apple News Tests: Apple_News_Admin_Action_Index_Push_Test class
  *
  * Contains a class to test the functionality of the Apple_Actions\Index\Push class.
  *
@@ -13,7 +13,7 @@ use Apple_Actions\Action_Exception;
 /**
  * A class used to test the functionality of the Apple_Actions\Index\Push class.
  */
-class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
+class Apple_News_Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 
 	/**
 	 * Returns an array of arrays representing function arguments to the
@@ -48,7 +48,12 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		// Set up a post with an invalid element (div).
 		$this->become_admin();
 		$user_id   = wp_get_current_user()->ID;
-		$post_id_1 = self::factory()->post->create( [ 'post_author' => $user_id, 'post_content' => '<div>Test Content</div>' ] );
+		$post_id_1 = self::factory()->post->create(
+			[
+				'post_author'  => $user_id,
+				'post_content' => '<div>Test Content</div>',
+			]
+		);
 
 		// Test the default behavior, which is no warning or error.
 		$this->get_request_for_post( $post_id_1 );
@@ -61,7 +66,12 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 
 		// Test the behavior of component warnings.
 		$this->settings->component_alerts = 'warn';
-		$post_id_2 = self::factory()->post->create( [ 'post_author' => $user_id, 'post_content' => '<div>Test Content</div>' ] );
+		$post_id_2                        = self::factory()->post->create(
+			[
+				'post_author'  => $user_id,
+				'post_content' => '<div>Test Content</div>',
+			]
+		);
 		$this->get_request_for_post( $post_id_2 );
 		$notices = get_user_meta( $user_id, 'apple_news_notice', true );
 		$this->assertEquals( 4, count( $notices ) );
@@ -72,8 +82,13 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 
 		// Test the behavior of component errors.
 		$this->settings->component_alerts = 'fail';
-		$post_id_3 = self::factory()->post->create( [ 'post_author' => $user_id, 'post_content' => '<div>Test Content</div>' ] );
-		$exception = false;
+		$post_id_3                        = self::factory()->post->create(
+			[
+				'post_author'  => $user_id,
+				'post_content' => '<div>Test Content</div>',
+			]
+		);
+		$exception                        = false;
 		try {
 			$this->get_request_for_post( $post_id_3 );
 		} catch ( Action_Exception $e ) {
@@ -148,7 +163,7 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		$this->assertEquals( true, $metadata['data']['isBoolean'] );
 		$this->assertEquals( 3, $metadata['data']['isNumber'] );
 		$this->assertEquals( 'Test String Value', $metadata['data']['isString'] );
-		$this->assertEquals( ['a', 'b', 'c'], $metadata['data']['isArray'] );
+		$this->assertEquals( [ 'a', 'b', 'c' ], $metadata['data']['isArray'] );
 	}
 
 	/**
@@ -159,7 +174,7 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		$post_id = self::factory()->post->create();
 		add_filter( 'the_content', [ $this, 'filter_the_content' ] );
 		$request = $this->get_request_for_post( $post_id );
-		remove_filter( 'the_content', [ $this, 'filter_the_content'] );
+		remove_filter( 'the_content', [ $this, 'filter_the_content' ] );
 		$this->assertTrue( false !== strpos( $request['body'], '<p>EXPORTING<\/p>' ) );
 	}
 
@@ -167,7 +182,7 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 	 * Ensures that maturity rating is properly set in the request.
 	 */
 	public function test_maturity_rating() {
-		$post_id  = self::factory()->post->create();
+		$post_id = self::factory()->post->create();
 		add_post_meta( $post_id, 'apple_news_maturity_rating', 'MATURE' );
 		$request  = $this->get_request_for_post( $post_id );
 		$metadata = $this->get_metadata_from_request( $request );
@@ -179,23 +194,23 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 	 *
 	 * @dataProvider data_metadata
 	 *
-	 * @param string $meta_key    The meta key to set to true (e.g., apple_news_is_hidden).
-	 * @param bool   $isHidden    The expected value for isHidden in the request.
-	 * @param bool   $isPaid      The expected value for isPaid in the request.
-	 * @param bool   $isPreview   The expected value for isPreview in the request.
-	 * @param bool   $isSponsored The expected value for isSponsored in the request.
+	 * @param string $meta_key     The meta key to set to true (e.g., apple_news_is_hidden).
+	 * @param bool   $is_hidden    The expected value for isHidden in the request.
+	 * @param bool   $is_paid      The expected value for isPaid in the request.
+	 * @param bool   $is_preview   The expected value for isPreview in the request.
+	 * @param bool   $is_sponsored The expected value for isSponsored in the request.
 	 */
-	public function test_metadata( $meta_key, $isHidden, $isPaid, $isPreview, $isSponsored ) {
-		$post_id  = self::factory()->post->create();
+	public function test_metadata( $meta_key, $is_hidden, $is_paid, $is_preview, $is_sponsored ) {
+		$post_id = self::factory()->post->create();
 		add_post_meta( $post_id, $meta_key, true );
 		$request  = $this->get_request_for_post( $post_id );
 		$metadata = $this->get_metadata_from_request( $request );
 
 		// Check the values for the four metadata keys against expected values.
-		$this->assertEquals( $isHidden, $metadata['data']['isHidden'] );
-		$this->assertEquals( $isPaid, $metadata['data']['isPaid'] );
-		$this->assertEquals( $isPreview, $metadata['data']['isPreview'] );
-		$this->assertEquals( $isSponsored, $metadata['data']['isSponsored'] );
+		$this->assertEquals( $is_hidden, $metadata['data']['isHidden'] );
+		$this->assertEquals( $is_paid, $metadata['data']['isPaid'] );
+		$this->assertEquals( $is_preview, $metadata['data']['isPreview'] );
+		$this->assertEquals( $is_sponsored, $metadata['data']['isSponsored'] );
 	}
 
 	/**
@@ -233,7 +248,7 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 
 		// Test skip by setting the option for skipping by term ID.
 		$this->settings->api_autosync_skip = wp_json_encode( [ $term_id ] );
-		$exception = false;
+		$exception                         = false;
 		try {
 			$this->get_request_for_post( $post_id );
 		} catch ( Action_Exception $e ) {

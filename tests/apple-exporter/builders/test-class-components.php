@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News Tests: Component_Tests class
+ * Publish to Apple News Tests: Apple_News_Component_Tests class
  *
  * Contains a class which is used to test \Apple_Exporter\Builders\Components.
  *
@@ -8,12 +8,12 @@
  * @subpackage Tests
  */
 
-use \Apple_Exporter\Builders\Components;
+use Apple_Exporter\Builders\Components;
 
 /**
  * A class which is used to test the \Apple_Exporter\Builders\Components class.
  */
-class Component_Tests extends Apple_News_Testcase {
+class Apple_News_Component_Tests extends Apple_News_Testcase {
 
 	/**
 	 * A data provider for the full size image URL test.
@@ -129,10 +129,12 @@ class Component_Tests extends Apple_News_Testcase {
 	 * cover image.
 	 */
 	public function testFeaturedImageDeduping() {
-		$this->set_theme_settings( [
-			'cover_caption'        => true,
-			'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ],
-		] );
+		$this->set_theme_settings(
+			[
+				'cover_caption'        => true,
+				'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ],
+			]
+		);
 
 		// Get two images.
 		$image_1 = $this->get_new_attachment();
@@ -262,7 +264,7 @@ class Component_Tests extends Apple_News_Testcase {
 	 * @param string $original The original URL to test.
 	 * @param string $expected The expected result.
 	 *
-	 * @throws ReflectionException
+	 * @throws ReflectionException If the reflection fails.
 	 */
 	public function testGetImageFullSizeUrl( $original, $expected ) {
 		$class  = new ReflectionClass( 'Apple_Exporter\Builders\Components' );
@@ -334,10 +336,12 @@ HTML;
 		$json = $this->get_json_for_post( $post_id );
 
 		// Test.
-		for ( $i = 0; $i < count( $expected ); $i ++ ) {
+		$expected_total = count( $expected );
+		for ( $i = 0; $i < $expected_total; $i ++ ) {
 			$this->assertEquals( $expected[ $i ], $json['components'][ $i ]['role'] );
 			if ( 'container' === $json['components'][ $i ]['role'] ) {
-				for ( $j = 0; $j < count( $components ); $j ++ ) {
+				$components_total = count( $components );
+				for ( $j = 0; $j < $components_total; $j ++ ) {
 					$this->assertEquals(
 						$components[ $j ],
 						$json['components'][ $i ]['components'][ $j ]['role']

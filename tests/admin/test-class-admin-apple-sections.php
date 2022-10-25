@@ -4,28 +4,27 @@
  *
  * Contains a class to test the Admin_Apple_Sections class.
  *
+ * @package Apple_News
+ * @subpackage Tests
  * @since 1.2.2
  */
 
-use \Apple_Exporter\Settings;
+use Apple_Exporter\Theme;
 
 /**
  * A class to test the Admin_Apple_Sections class.
  *
+ * @package Apple_News
+ * @subpackage Tests
  * @since 1.2.2
  */
-class Admin_Apple_Sections_Test extends WP_UnitTestCase {
+class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 
 	/**
-	 * Actions to be run before each test in this class.
-	 *
-	 * @access public
+	 * A fixture containing operations to be run before each test.
 	 */
 	public function setUp(): void {
-		parent::setup();
-
-		// Cache default settings for future use.
-		$this->settings = new Settings();
+		parent::setUp();
 
 		// Create some dummy categories to use in mapping testing.
 		wp_insert_term( 'Category 1', 'category' );
@@ -37,41 +36,41 @@ class Admin_Apple_Sections_Test extends WP_UnitTestCase {
 			'apple_news_sections',
 			array(
 				(object) array(
-					'createdAt' => '2017-01-01T00:00:00Z',
-					'id' => 'abcdef01-2345-6789-abcd-ef012356789a',
-					'isDefault' => true,
-					'links' => (object) array(
+					'createdAt'  => '2017-01-01T00:00:00Z',
+					'id'         => 'abcdef01-2345-6789-abcd-ef012356789a',
+					'isDefault'  => true,
+					'links'      => (object) array(
 						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
-						'self' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
+						'self'    => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
 					),
 					'modifiedAt' => '2017-01-01T00:00:00Z',
-					'name' => 'Main',
-					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
-					'type' => 'section',
+					'name'       => 'Main',
+					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
+					'type'       => 'section',
 				),
 				(object) array(
-					'createdAt' => '2017-01-01T00:00:00Z',
-					'id' => 'abcdef01-2345-6789-abcd-ef012356789b',
-					'isDefault' => false,
-					'links' => (object) array(
+					'createdAt'  => '2017-01-01T00:00:00Z',
+					'id'         => 'abcdef01-2345-6789-abcd-ef012356789b',
+					'isDefault'  => false,
+					'links'      => (object) array(
 						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
-						'self' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789b',
+						'self'    => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789b',
 					),
 					'modifiedAt' => '2017-01-01T00:00:00Z',
-					'name' => 'Secondary Section',
-					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUw',
-					'type' => 'section',
-				)
+					'name'       => 'Secondary Section',
+					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUw',
+					'type'       => 'section',
+				),
 			)
 		);
 
-		// Create some themes
+		// Create some themes.
 		$this->createThemes();
 
 		// Set up post data for creating taxonomy and theme mappings.
 		$_POST = array(
 			'action' => 'apple_news_set_section_mappings',
-			'page' => 'apple_news_sections',
+			'page'   => 'apple_news_sections',
 			'taxonomy-mapping-abcdef01-2345-6789-abcd-ef012356789a' => array(
 				'Category 1',
 			),
@@ -85,8 +84,8 @@ class Admin_Apple_Sections_Test extends WP_UnitTestCase {
 
 		$_REQUEST = array(
 			'_wp_http_referer' => '/wp-admin/admin.php?page=apple-news-sections',
-			'_wpnonce' => wp_create_nonce( 'apple_news_sections' ),
-			'action' => 'apple_news_set_section_mappings',
+			'_wpnonce'         => wp_create_nonce( 'apple_news_sections' ),
+			'action'           => 'apple_news_set_section_mappings',
 		);
 
 		// Run the request to set up taxonomy mappings.
@@ -102,13 +101,13 @@ class Admin_Apple_Sections_Test extends WP_UnitTestCase {
 	private function createThemes() {
 
 		// Create the default theme.
-		$theme = new \Apple_Exporter\Theme;
+		$theme = new Theme();
 		$theme->set_name( 'Default' );
 		$this->assertTrue( $theme->save() );
 		unset( $theme );
 
 		// Create a test theme.
-		$theme = new \Apple_Exporter\Theme;
+		$theme = new Theme();
 		$theme->set_name( 'Test Theme' );
 		$this->assertTrue( $theme->save() );
 		unset( $theme );
@@ -123,7 +122,7 @@ class Admin_Apple_Sections_Test extends WP_UnitTestCase {
 
 		// Create a post with Category 2 to trigger second section membership.
 		$category2 = get_term_by( 'name', 'Category 2', 'category' );
-		$post_id = $this->factory->post->create();
+		$post_id   = $this->factory->post->create();
 		wp_set_post_categories( $post_id, $category2->term_id );
 
 		// Validate automatic section assignment.
@@ -147,9 +146,12 @@ class Admin_Apple_Sections_Test extends WP_UnitTestCase {
 		$this->assertEquals( 'category', $taxonomy->name );
 
 		// Switch to post tag.
-		add_filter( 'apple_news_section_taxonomy', function () {
-			return 'post_tag';
-		} );
+		add_filter(
+			'apple_news_section_taxonomy',
+			function () {
+				return 'post_tag';
+			}
+		);
 
 		// Test filtered value.
 		$taxonomy = Admin_Apple_Sections::get_mapping_taxonomy();
@@ -165,7 +167,7 @@ class Admin_Apple_Sections_Test extends WP_UnitTestCase {
 
 		// Create a post with Category 2 to trigger second section membership.
 		$category2 = get_term_by( 'name', 'Category 2', 'category' );
-		$post_id = $this->factory->post->create();
+		$post_id   = $this->factory->post->create();
 		wp_set_post_categories( $post_id, $category2->term_id );
 
 		// Manually set the first section to override automatic mapping.
@@ -202,7 +204,7 @@ class Admin_Apple_Sections_Test extends WP_UnitTestCase {
 		$this->assertEquals(
 			array(
 				'abcdef01-2345-6789-abcd-ef012356789a' => array(
-					$category1->term_id
+					$category1->term_id,
 				),
 				'abcdef01-2345-6789-abcd-ef012356789b' => array(
 					$category2->term_id,

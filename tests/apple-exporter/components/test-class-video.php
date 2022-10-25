@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Video_Test class
+ * Publish to Apple News tests: Apple_News_Video_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -15,7 +15,7 @@ use Apple_Exporter\Components\Video;
  * @package Apple_News
  * @subpackage Tests
  */
-class Video_Test extends Component_TestCase {
+class Apple_News_Video_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * Contains test HTML content to feed into the Video object for testing.
@@ -83,18 +83,18 @@ HTML;
 		// Test.
 		$this->assertEquals(
 			array(
-				'role' => 'container',
+				'role'       => 'container',
 				'components' => array(
 					array(
 						'role' => 'video',
-						'URL' => 'https://www.example.org/test.mp4',
+						'URL'  => 'https://www.example.org/test.mp4',
 					),
 					array(
-						'role' => 'caption',
-						'text' => 'caption',
+						'role'   => 'caption',
+						'text'   => 'caption',
 						'format' => 'html',
-					)
-				)
+					),
+				),
 			),
 			$component->to_array()
 		);

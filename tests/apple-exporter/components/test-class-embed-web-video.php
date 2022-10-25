@@ -13,7 +13,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Embed_Web_Video_Test extends Apple_News_Testcase {
+class Apple_News_Embed_Web_Video_Test extends Apple_News_Testcase {
 
 	/**
 	 * A data provider for the test_transform function.
@@ -22,12 +22,12 @@ class Embed_Web_Video_Test extends Apple_News_Testcase {
 	 */
 	public function data_transform() {
 		return [
-			'Vimeo standard watch URL'           => [
+			'Vimeo standard watch URL'                     => [
 				'vimeo',
 				'https://vimeo.com/12819723',
 				'https://player.vimeo.com/video/12819723',
 			],
-			'Vimeo standard watch URL, no https' => [
+			'Vimeo standard watch URL, no https'           => [
 				'vimeo',
 				'http://vimeo.com/12819723',
 				'https://player.vimeo.com/video/12819723',
@@ -116,7 +116,7 @@ HTML;
 				'role'        => 'embedwebvideo',
 				'URL'         => 'https://www.youtube.com/embed/0qwALOOvUik',
 				'aspectRatio' => 1.333,
-				'layout'      => 'embed-web-video-layout'
+				'layout'      => 'embed-web-video-layout',
 			],
 			$json['components'][3]
 		);
@@ -142,7 +142,7 @@ HTML;
 				'role'        => 'embedwebvideo',
 				'URL'         => 'https://www.youtube.com/embed/0qwALOOvUik',
 				'aspectRatio' => 1.4,
-				'layout'      => 'embed-web-video-layout'
+				'layout'      => 'embed-web-video-layout',
 			],
 			$json['components'][3]
 		);
@@ -174,7 +174,7 @@ HTML;
 				'role'        => 'embedwebvideo',
 				'URL'         => $expected,
 				'aspectRatio' => 1.777,
-				'layout'      => 'embed-web-video-layout'
+				'layout'      => 'embed-web-video-layout',
 			],
 			$json['components'][3]
 		);
@@ -190,7 +190,7 @@ HTML;
 				'role'        => 'embedwebvideo',
 				'URL'         => $expected,
 				'aspectRatio' => 1.777,
-				'layout'      => 'embed-web-video-layout'
+				'layout'      => 'embed-web-video-layout',
 			],
 			$json['components'][3]
 		);
@@ -215,7 +215,7 @@ HTML;
 				'role'        => 'embedwebvideo',
 				'URL'         => 'https://www.youtube.com/embed/0qwALOOvUik',
 				'aspectRatio' => 1.777,
-				'layout'      => 'embed-web-video-layout'
+				'layout'      => 'embed-web-video-layout',
 			],
 			$json['components'][3]
 		);
@@ -237,7 +237,7 @@ HTML;
 				'role'        => 'embedwebvideo',
 				'URL'         => 'https://player.vimeo.com/video/12819723',
 				'aspectRatio' => 1.777,
-				'layout'      => 'embed-web-video-layout'
+				'layout'      => 'embed-web-video-layout',
 			],
 			$json['components'][3]
 		);
@@ -259,7 +259,7 @@ HTML;
 				'role'        => 'embedwebvideo',
 				'URL'         => 'https://www.youtube.com/embed/0qwALOOvUik',
 				'aspectRatio' => 1.777,
-				'layout'      => 'embed-web-video-layout'
+				'layout'      => 'embed-web-video-layout',
 			],
 			$json['components'][3]
 		);

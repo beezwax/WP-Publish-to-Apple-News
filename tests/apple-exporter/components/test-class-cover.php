@@ -12,7 +12,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Cover_Test extends Apple_News_Testcase {
+class Apple_News_Cover_Test extends Apple_News_Testcase {
 
 	/**
 	 * A filter function to modify the text style in the generated JSON.
@@ -125,7 +125,7 @@ class Cover_Test extends Apple_News_Testcase {
 		// The image from the content should be the cover image, and the image should be removed from the content.
 		$image_id = $this->get_new_attachment( 0, 'Test Caption', 'Test alt text.' );
 		$post_id  = self::factory()->post->create( [ 'post_content' => $this->get_image_with_caption( $image_id ) ] );
-		$json = $this->get_json_for_post( $post_id );
+		$json     = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 'header', $json['components'][0]['role'] );
 		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
 		$this->assertEquals( wp_get_attachment_image_url( $image_id, 'full' ), $json['components'][0]['components'][0]['URL'] );

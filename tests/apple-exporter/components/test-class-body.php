@@ -12,7 +12,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Body_Test extends Apple_News_Testcase {
+class Apple_News_Body_Test extends Apple_News_Testcase {
 
 	/**
 	 * A data provider that supplies empty HTML signatures to ensure that they
@@ -30,7 +30,7 @@ A
 
 
 B
-HTML
+HTML,
 			],
 
 			// Test classic editor, multiple line breaks with &nbsp.
@@ -41,7 +41,7 @@ A
 &nbsp;
 
 B
-HTML
+HTML,
 			],
 
 			// Test classic editor, extra line breaks at the end.
@@ -52,7 +52,7 @@ A
 B
 
 
-HTML
+HTML,
 			],
 
 			// Test classic editor, extra line breaks at the end with a non-breaking space.
@@ -63,7 +63,7 @@ A
 B
 
 &nbsp;
-HTML
+HTML,
 			],
 
 			// Test Gutenberg editor, empty paragraph tag.
@@ -80,7 +80,7 @@ HTML
 <!-- wp:paragraph -->
 <p>B</p>
 <!-- /wp:paragraph -->
-HTML
+HTML,
 			],
 
 			// Test Gutenberg editor, paragraph tag containing a single space.
@@ -97,7 +97,7 @@ HTML
 <!-- wp:paragraph -->
 <p>B</p>
 <!-- /wp:paragraph -->
-HTML
+HTML,
 			],
 
 			// Test Gutenberg editor, paragraph tag containing a non-breaking space.
@@ -114,7 +114,7 @@ HTML
 <!-- wp:paragraph -->
 <p>B</p>
 <!-- /wp:paragraph -->
-HTML
+HTML,
 			],
 
 			// Test Gutenberg editor, extra paragraph at the end.
@@ -131,7 +131,7 @@ HTML
 <!-- wp:paragraph -->
 <p></p>
 <!-- /wp:paragraph -->
-HTML
+HTML,
 			],
 
 			// Test Gutenberg editor, extra paragraph at the end containing a space.
@@ -148,7 +148,7 @@ HTML
 <!-- wp:paragraph -->
 <p> </p>
 <!-- /wp:paragraph -->
-HTML
+HTML,
 			],
 
 			// Test Gutenberg editor, extra paragraph at the end containing a non-breaking space.
@@ -165,7 +165,7 @@ HTML
 <!-- wp:paragraph -->
 <p>&nbsp;</p>
 <!-- /wp:paragraph -->
-HTML
+HTML,
 			],
 
 			// Test Gutenberg editor, extra paragraph at the end containing a non-breaking space surrounded by a link tag.
@@ -182,7 +182,7 @@ HTML
 <!-- wp:paragraph -->
 <p><a href="https://www.apple.com/">&nbsp;</a></p>
 <!-- /wp:paragraph -->
-HTML
+HTML,
 			],
 		];
 	}
@@ -289,15 +289,15 @@ HTML
 HTML;
 		$post_id = self::factory()->post->create( [ 'post_content' => $content ] );
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'body', $json['components'][ 2 ]['role'] );
-		$this->assertEquals( 'html', $json['components'][ 2 ]['format'] );
-		$this->assertEquals( '<p>Lorem ipsum. <a href="https://www.wordpress.org">Dolor sit amet.</a></p>', $json['components'][ 2 ]['text'] );
-		$this->assertEquals( 'body', $json['components'][ 3 ]['role'] );
-		$this->assertEquals( 'html', $json['components'][ 3  ]['format'] );
-		$this->assertEquals( '<pre>Preformatted text.</pre>', $json['components'][ 3 ]['text'] );
-		$this->assertEquals( 'body', $json['components'][ 4 ]['role'] );
-		$this->assertEquals( 'html', $json['components'][ 4 ]['format'] );
-		$this->assertEquals( '<p>Testing a <code>code sample</code>.</p>', $json['components'][ 4 ]['text'] );
+		$this->assertEquals( 'body', $json['components'][2]['role'] );
+		$this->assertEquals( 'html', $json['components'][2]['format'] );
+		$this->assertEquals( '<p>Lorem ipsum. <a href="https://www.wordpress.org">Dolor sit amet.</a></p>', $json['components'][2]['text'] );
+		$this->assertEquals( 'body', $json['components'][3]['role'] );
+		$this->assertEquals( 'html', $json['components'][3]['format'] );
+		$this->assertEquals( '<pre>Preformatted text.</pre>', $json['components'][3]['text'] );
+		$this->assertEquals( 'body', $json['components'][4]['role'] );
+		$this->assertEquals( 'html', $json['components'][4]['format'] );
+		$this->assertEquals( '<p>Testing a <code>code sample</code>.</p>', $json['components'][4]['text'] );
 	}
 
 	/**
@@ -314,14 +314,17 @@ HTML;
 
 		// There should only be two body components, one containing A, one containing B.
 		$this->assertEquals( 4, count( $json['components'] ) );
-		$this->assertEquals( '<p>A</p>', $json['components'][ 2 ]['text'] );
-		$this->assertEquals( '<p>B</p>', $json['components'][ 3 ]['text'] );
+		$this->assertEquals( '<p>A</p>', $json['components'][2]['text'] );
+		$this->assertEquals( '<p>B</p>', $json['components'][3]['text'] );
 	}
 
 	/**
 	 * Test the `apple_news_body_json` filter.
 	 *
 	 * @dataProvider data_generic
+	 *
+	 * @param string[] $meta_order The order of meta components to use.
+	 * @param int      $index      The index of the component in the JSON to target.
 	 */
 	public function test_filter( $meta_order, $index ) {
 		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
@@ -341,6 +344,9 @@ HTML;
 	 * Test the `apple_news_body_html_enabled` filter.
 	 *
 	 * @dataProvider data_generic
+	 *
+	 * @param string[] $meta_order The order of meta components to use.
+	 * @param int      $index      The index of the component in the JSON to target.
 	 */
 	public function test_filter_html( $meta_order, $index ) {
 		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
@@ -354,7 +360,7 @@ HTML;
 
 		// Add filter and test to ensure HTML mode is not used.
 		add_filter( 'apple_news_body_html_enabled', [ $this, 'filter_apple_news_body_html_enabled' ] );
-		$json    = $this->get_json_for_post( $post_id );
+		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 'body', $json['components'][ $index ]['role'] );
 		$this->assertEquals( 'markdown', $json['components'][ $index ]['format'] );
 		$this->assertEquals( 'Test content.', $json['components'][ $index ]['text'] );
@@ -384,13 +390,13 @@ HTML;
 	 */
 	public function test_link_types( $link, $should_work ) {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'title', 'author' ] ] );
-		$content  = <<<HTML
+		$content = <<<HTML
 <!-- wp:paragraph -->
 <p>Lorem ipsum <a href="{$link}">dolor sit amet</a>.</p>
 <!-- /wp:paragraph -->
 HTML;
-		$post_id  = self::factory()->post->create( [ 'post_content' => $content ] );
-		$json     = $this->get_json_for_post( $post_id );
+		$post_id = self::factory()->post->create( [ 'post_content' => $content ] );
+		$json    = $this->get_json_for_post( $post_id );
 
 		// Negotiate expected value and test.
 		if ( 0 === strpos( $link, '/' ) ) {
@@ -486,10 +492,12 @@ HTML;
 	 * Test the setting to disable the initial dropcap.
 	 */
 	public function test_without_dropcap() {
-		$this->set_theme_settings( [
-			'initial_dropcap'      => 'no',
-			'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ],
-		] );
+		$this->set_theme_settings(
+			[
+				'initial_dropcap'      => 'no',
+				'meta_component_order' => [ 'cover', 'slug', 'title', 'byline' ],
+			]
+		);
 		$content = <<<HTML
 <!-- wp:paragraph -->
 <p>Paragraph 1.</p>

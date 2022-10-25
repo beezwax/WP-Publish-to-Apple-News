@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Test_Class_Advertising_Settings class
+ * Publish to Apple News tests: Apple_News_Class_Advertising_Settings_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -15,7 +15,7 @@ use Apple_Exporter\Builders\Advertising_Settings;
  * @package Apple_News
  * @subpackage Tests
  */
-class Test_Class_Advertising_Settings extends Apple_News_Testcase {
+class Apple_News_Class_Advertising_Settings_Test extends Apple_News_Testcase {
 
 	/**
 	 * Tests the default advertising settings.
@@ -30,7 +30,7 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 					'enabled'           => true,
 					'frequency'         => 5,
 					'layout'            => [
-						'margin'          => 15,
+						'margin' => 15,
 					],
 				],
 			],
@@ -44,14 +44,14 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 	public function testNoAds() {
 
 		// Setup.
-		$settings = $this->theme->all_settings();
+		$settings                         = $this->theme->all_settings();
 		$settings['enable_advertisement'] = 'no';
 		$this->theme->load( $settings );
 		$this->assertTrue( $this->theme->save() );
 
 		// Test.
 		$builder = new Advertising_Settings( $this->content, $this->content_settings );
-		$result = $builder->to_array();
+		$result  = $builder->to_array();
 		$this->assertEquals( 0, count( $result ) );
 	}
 
@@ -61,7 +61,7 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 	public function testCustomAdFrequency() {
 
 		// Setup.
-		$settings = $this->theme->all_settings();
+		$settings                 = $this->theme->all_settings();
 		$settings['ad_frequency'] = 10;
 		$this->theme->load( $settings );
 		$this->assertTrue( $this->theme->save() );
@@ -76,7 +76,7 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 					'enabled'           => true,
 					'frequency'         => 10,
 					'layout'            => [
-						'margin'          => 15,
+						'margin' => 15,
 					],
 				],
 			],
@@ -90,7 +90,7 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 	public function testCustomAdMargin() {
 
 		// Setup.
-		$settings = $this->theme->all_settings();
+		$settings              = $this->theme->all_settings();
 		$settings['ad_margin'] = 20;
 		$this->theme->load( $settings );
 		$this->assertTrue( $this->theme->save() );
@@ -105,7 +105,7 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 					'enabled'           => true,
 					'frequency'         => 5,
 					'layout'            => [
-						'margin'          => 20,
+						'margin' => 20,
 					],
 				],
 			],
@@ -127,7 +127,7 @@ class Test_Class_Advertising_Settings extends Apple_News_Testcase {
 					'enabled'           => true,
 					'frequency'         => 5,
 					'layout'            => [
-						'margin'          => 15,
+						'margin' => 15,
 					],
 				],
 			],

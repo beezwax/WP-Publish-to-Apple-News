@@ -1,30 +1,50 @@
 <?php
+/**
+ * Publish to Apple News Tests: Apple_News_Parser_Test class
+ *
+ * Contains a class to test the functionality of the Apple_Exporter\Parser class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
 
-use Apple_Exporter\Parser as Parser;
+use Apple_Exporter\Parser;
 
-class Parser_Test extends WP_UnitTestCase {
+/**
+ * A class to test the behavior of the Apple_Exporter\Parser class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
+class Apple_News_Parser_Test extends Apple_News_Testcase {
 
-	public function testParseMarkdown() {
-		// Create a basic HTML post
+	/**
+	 * Tests the parser's ability to parse markdown.
+	 */
+	public function test_parse_markdown() {
+		// Create a basic HTML post.
 		$post = '<html><body><h2>A heading</h2><p><strong>This is strong.</strong><br><a href="https://www.apple.com">This is a link</a></p></body></html>';
 
-		// Convert to Markdown
-		$parser = new Parser( 'markdown' );
+		// Convert to Markdown.
+		$parser   = new Parser( 'markdown' );
 		$markdown = $parser->parse( $post );
 
-		// Verify
+		// Verify.
 		$this->assertEquals( $markdown, "## A heading\n**This is strong.**\n[This is a link](https://www.apple.com)\n\n" );
 	}
 
-	public function testParseHTML() {
-		// Create a basic HTML post
+	/**
+	 * Tests the parser's ability to parse HTML.
+	 */
+	public function test_parse_html() {
+		// Create a basic HTML post.
 		$post = '<h2 class="someClass">A heading</h2><p><strong>This is strong.</strong><br><a href="https://www.apple.com" target="_blank">This is a link</a></p><div>The div tags will disappear.</div>';
 
-		// Parse only HTML that's valid for Apple News
-		$parser = new Parser( 'html' );
+		// Parse only HTML that's valid for Apple News.
+		$parser   = new Parser( 'html' );
 		$markdown = $parser->parse( $post );
 
-		// Verify
+		// Verify.
 		$this->assertEquals( $markdown, 'A heading<p><strong>This is strong.</strong><br><a href="https://www.apple.com">This is a link</a></p>The div tags will disappear.' );
 	}
 
@@ -52,16 +72,18 @@ class Parser_Test extends WP_UnitTestCase {
 
 <a href="thisisntarealurl">Not a real URL</a>
 HTML;
-		$post = $this->factory->post->create_and_get( array(
-			'post_type' => 'article',
-			'post_title' => 'Test Article',
-			'post_content' => $post_content,
-		) );
-		$permalink = get_permalink( $post );
+		$post         = $this->factory->post->create_and_get( // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			array(
+				'post_type'    => 'article',
+				'post_title'   => 'Test Article',
+				'post_content' => $post_content,
+			)
+		);
+		$permalink    = get_permalink( $post );
 
-		// Convert to Markdown
-		$parser = new Parser( 'markdown' );
-		$markdown = $parser->parse( apply_filters( 'the_content', $post->post_content ) );
+		// Convert to Markdown.
+		$parser   = new Parser( 'markdown' );
+		$markdown = $parser->parse( apply_filters( 'the_content', $post->post_content ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		// Verify.
 		$this->assertEquals(
@@ -72,7 +94,7 @@ HTML;
 			. 'Legit empty link'
 			. 'Link that trims to empty'
 			. 'Not a real URL',
-			str_replace( "\n" , '', $markdown )
+			str_replace( "\n", '', $markdown )
 		);
 	}
 
@@ -100,16 +122,18 @@ HTML;
 
 <a href="thisisntarealurl">Not a real URL</a>
 HTML;
-		$post = $this->factory->post->create_and_get( array(
-			'post_type' => 'article',
-			'post_title' => 'Test Article',
-			'post_content' => $post_content,
-		) );
-		$permalink = get_permalink( $post );
+		$post         = $this->factory->post->create_and_get( // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+			array(
+				'post_type'    => 'article',
+				'post_title'   => 'Test Article',
+				'post_content' => $post_content,
+			)
+		);
+		$permalink    = get_permalink( $post );
 
 		// Parse the post with HTML content format.
-		$parser = new Parser( 'html' );
-		$parsed_html = $parser->parse( apply_filters( 'the_content', $post->post_content ) );
+		$parser      = new Parser( 'html' );
+		$parsed_html = $parser->parse( apply_filters( 'the_content', $post->post_content ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 
 		// Verify.
 		$this->assertEquals(

@@ -6,6 +6,8 @@
  * @subpackage Tests
  */
 
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound, WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */
+
 /**
  * A mock for the BC_Setup class from the Brightcove Video Connect plugin.
  *

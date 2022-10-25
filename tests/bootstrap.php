@@ -6,22 +6,24 @@
  * @subpackage Tests
  */
 
-const WP_TESTS_PHPUNIT_POLYFILLS_PATH = __DIR__ . '/../vendor/yoast/phpunit-polyfills';
+/* phpcs:disable WordPressVIPMinimum.Files.IncludingFile.UsingVariable */
 
-$_tests_dir = getenv( 'WP_TESTS_DIR' );
-if ( ! $_tests_dir ) {
-	$_tests_dir = '/tmp/wordpress-tests-lib';
+const WP_TESTS_PHPUNIT_POLYFILLS_PATH = __DIR__ . '/../vendor/yoast/phpunit-polyfills'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
+
+$apple_news_tests_dir = getenv( 'WP_TESTS_DIR' );
+if ( ! $apple_news_tests_dir ) {
+	$apple_news_tests_dir = '/tmp/wordpress-tests-lib';
 }
 
-require_once $_tests_dir . '/includes/functions.php';
+require_once $apple_news_tests_dir . '/includes/functions.php';
 
-// Autoloading for prophecy
+// Autoloading for prophecy.
 require_once dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php';
 
 /**
  * Manually load the plugin for tests.
  */
-function _manually_load_plugin() {
+function apple_news_manually_load_plugin() {
 	// Disable VIP cache manager when testing against VIP Go integration.
 	if ( method_exists( 'WPCOM_VIP_Cache_Manager', 'instance' ) ) {
 		remove_action( 'init', [ WPCOM_VIP_Cache_Manager::instance(), 'init' ] );
@@ -48,7 +50,7 @@ function _manually_load_plugin() {
 	// Load the plugin.
 	require dirname( dirname( __FILE__ ) ) . '/apple-news.php';
 }
-tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
+tests_add_filter( 'muplugins_loaded', 'apple_news_manually_load_plugin' );
 
 // Disable CAP by default - make it opt-in in tests.
 tests_add_filter( 'apple_news_use_coauthors', '__return_false' );
@@ -68,7 +70,7 @@ tests_add_filter(
 	}
 );
 
-require $_tests_dir . '/includes/bootstrap.php';
+require $apple_news_tests_dir . '/includes/bootstrap.php';
 
 require_once __DIR__ . '/class-apple-news-testcase.php';
 

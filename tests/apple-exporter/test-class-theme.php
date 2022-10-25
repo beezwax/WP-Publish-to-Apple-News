@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News Tests: Theme_Test class
+ * Publish to Apple News Tests: Apple_News_Theme_Test class
  *
  * Contains a class to test the functionality of the Apple_Exporter\Theme class.
  *
@@ -15,7 +15,7 @@ use Apple_Exporter\Theme;
  *
  * @since 1.3.0
  */
-class Theme_Test extends WP_UnitTestCase {
+class Apple_News_Theme_Test extends Apple_News_Testcase {
 
 	/**
 	 * An example filter for the font list.
@@ -50,7 +50,7 @@ class Theme_Test extends WP_UnitTestCase {
 		);
 
 		// Create a theme and load the custom settings.
-		$theme = new Theme;
+		$theme = new Theme();
 		$theme->load( $theme_settings );
 
 		// Ensure the custom JSON templates exist within the theme.
@@ -78,11 +78,13 @@ class Theme_Test extends WP_UnitTestCase {
 	public function testFontFilter() {
 
 		// Test before filter.
-		$this->assertFalse( in_array(
-			'ExampleFont',
-			\Apple_Exporter\Theme::get_fonts(),
-			true
-		) );
+		$this->assertFalse(
+			in_array(
+				'ExampleFont',
+				Theme::get_fonts(),
+				true
+			)
+		);
 
 		// Add the filter.
 		add_filter(
@@ -91,11 +93,13 @@ class Theme_Test extends WP_UnitTestCase {
 		);
 
 		// Test.
-		$this->assertTrue( in_array(
-			'ExampleFont',
-			\Apple_Exporter\Theme::get_fonts(),
-			true
-		) );
+		$this->assertTrue(
+			in_array(
+				'ExampleFont',
+				Theme::get_fonts(),
+				true
+			)
+		);
 
 		// Teardown.
 		remove_filter(

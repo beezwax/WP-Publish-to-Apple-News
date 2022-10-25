@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Link_Button_Test class
+ * Publish to Apple News tests: Apple_News_Link_Button_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -15,7 +15,7 @@ use Apple_Exporter\Components\Link_Button;
  * @package Apple_News
  * @subpackage Tests
  */
-class Link_Button_Test extends Component_TestCase {
+class Apple_News_Link_Button_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * Holds a WP_Post object containing test data.
@@ -25,7 +25,7 @@ class Link_Button_Test extends Component_TestCase {
 	public static $test_post;
 
 	/**
-	 * Code to run once before the entire test suite.
+	 * A fixture containing operations to be run before the test suite.
 	 */
 	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
@@ -38,12 +38,12 @@ class Link_Button_Test extends Component_TestCase {
 	}
 
 	/**
-	 * Code to run before each test in the suite.
+	 * A fixture containing operations to be run before each test.
 	 */
 	public function setUp(): void {
 		parent::setUp();
 		global $post;
-		$post = self::$test_post;
+		$post = self::$test_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	}
 
 	/**
@@ -165,7 +165,7 @@ class Link_Button_Test extends Component_TestCase {
 			null,
 			$this->component_styles
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 		$this->assertEquals( $expected, $result );
 	}
 }

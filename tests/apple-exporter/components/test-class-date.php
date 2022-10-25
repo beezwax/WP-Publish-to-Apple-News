@@ -12,7 +12,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Date_Test extends Apple_News_Testcase {
+class Apple_News_Date_Test extends Apple_News_Testcase {
 
 	/**
 	 * Tests the render method for the component.
@@ -33,12 +33,12 @@ class Date_Test extends Apple_News_Testcase {
 	public function test_settings() {
 		$this->set_theme_settings(
 			[
-				'date_color'         => '#abcdef',
-				'date_color_dark'    => '#123456',
-				'date_font'          => 'AmericanTypewriter',
-				'date_line_height'   => 12,
-				'date_size'          => 34,
-				'date_tracking'      => 56,
+				'date_color'       => '#abcdef',
+				'date_color_dark'  => '#123456',
+				'date_font'        => 'AmericanTypewriter',
+				'date_line_height' => 12,
+				'date_size'        => 34,
+				'date_tracking'    => 56,
 			]
 		);
 

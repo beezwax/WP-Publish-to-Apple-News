@@ -15,7 +15,7 @@ use Apple_Exporter\Components\Audio;
  * @package Apple_News
  * @subpackage Tests
  */
-class Audio_Test extends Component_TestCase {
+class Apple_News_Audio_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * Tests basic JSON generation.
@@ -49,18 +49,18 @@ class Audio_Test extends Component_TestCase {
 		// Test.
 		$this->assertEquals(
 			array(
-				'role' => 'container',
+				'role'       => 'container',
 				'components' => array(
 					array(
 						'role' => 'audio',
-						'URL' => 'https://www.example.org/Song-1.mp3',
+						'URL'  => 'https://www.example.org/Song-1.mp3',
 					),
 					array(
-						'role' => 'caption',
-						'text' => 'caption',
+						'role'   => 'caption',
+						'text'   => 'caption',
 						'format' => 'html',
-					)
-				)
+					),
+				),
 			),
 			$component->to_array()
 		);

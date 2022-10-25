@@ -1,23 +1,22 @@
 <?php
+/**
+ * Publish to Apple News Tests: Apple_News_Exporter_Test class
+ *
+ * Contains a class to test the functionality of the Apple_Exporter\Exporter class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
 
-use Apple_Exporter\Exporter as Exporter;
-use Prophecy\Argument;
+use Apple_Exporter\Exporter;
 
-class Exporter_Test extends WP_UnitTestCase {
-
-	private $prophet;
-
-	public function setup(): void {
-		$this->prophet = new \Prophecy\Prophet;
-	}
-
-	public function tearDown(): void {
-		$this->prophet->checkPredictions();
-	}
-
-	public function isValidJSON( $json ) {
-		return ( null !== json_decode( $json ) );
-	}
+/**
+ * A class to test the behavior of the Apple_Exporter\Exporter class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
+class Apple_News_Exporter_Test extends Apple_News_Testcase {
 
 	/**
 	 * Tests the functionality of the prepare_for_encoding function to ensure

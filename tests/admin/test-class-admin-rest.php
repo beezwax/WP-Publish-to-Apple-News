@@ -11,7 +11,7 @@
 /**
  * A class which is used to test REST requests in the admin.
  */
-class Admin_Apple_REST_Test extends WP_UnitTestCase {
+class Admin_Apple_REST_Test extends Apple_News_Testcase {
 	/**
 	 * Make a REST request to reset API postmeta entries.
 	 *

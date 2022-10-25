@@ -39,6 +39,11 @@
     </properties>
   </rule>
 
+  <!-- PHPUnit uses files that start with "test-" and contain classes, which conflicts with this rule. -->
+  <rule ref="WordPress.Files.FileName.InvalidClassFileName">
+    <exclude-pattern>tests/</exclude-pattern>
+  </rule>
+
   <!--
   Pass some flags to PHPCS:
     p flag: Show progress of the run.
@@ -62,9 +67,6 @@
   <exclude-pattern>build/</exclude-pattern>
   <exclude-pattern>node_modules/</exclude-pattern>
   <exclude-pattern>vendor/</exclude-pattern>
-
-  <!-- TODO: Enable sniffs against test files also. -->
-  <exclude-pattern>tests/</exclude-pattern>
 
   <!-- The version set here matches the minimum version in readme.txt. -->
   <config name="minimum_supported_wp_version" value="4.0" />

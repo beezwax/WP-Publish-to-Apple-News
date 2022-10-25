@@ -1,26 +1,27 @@
 <?php
+/**
+ * Publish to Apple News tests: Apple_News_Credentials_Test class
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
 
-require_once __DIR__ . '/../../includes/apple-push-api/class-credentials.php';
+use Apple_Push_API\Credentials;
 
-use Apple_Push_API\Credentials as Credentials;
+/**
+ * A class to test the behavior of the Apple_Push_API\Credentials class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
+class Apple_News_Credentials_Test extends Apple_News_Testcase {
 
-class Credentials_Test extends WP_UnitTestCase {
-
-	public function setup(): void {
-		$this->credentials = new Credentials( 'foo', 'bar' );
+	/**
+	 * Tests the behavior of the getters on the Credentials class.
+	 */
+	public function test_gets_values() {
+		$credentials = new Credentials( 'foo', 'bar' );
+		$this->assertEquals( 'foo', $credentials->key() );
+		$this->assertEquals( 'bar', $credentials->secret() );
 	}
-
-	public function testGetsValues() {
-		$this->assertEquals(
-			'foo',
-			$this->credentials->key()
-		);
-
-		$this->assertEquals(
-			'bar',
-			$this->credentials->secret()
-		);
-	}
-
 }
-

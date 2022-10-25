@@ -1,12 +1,12 @@
 <?php
 /**
- * Publish to Apple News tests: Admin_Action_Index_Export_Test class
+ * Publish to Apple News tests: Apple_News_Admin_Action_Index_Export_Test class
  *
  * @package Apple_News
  * @subpackage Tests
  */
 
-use \Apple_Actions\Index\Export as Export;
+use Apple_Actions\Index\Export;
 
 /**
  * A class to test the functionality of the Apple_Actions\Index\Export class.
@@ -14,7 +14,7 @@ use \Apple_Actions\Index\Export as Export;
  * @package Apple_News
  * @subpackage Tests
  */
-class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
+class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 
 	/**
 	 * Returns an array of arrays representing function arguments to the
@@ -43,7 +43,8 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	/**
 	 * Tests Brightcove video support.
 	 *
-	 * @param string $post_content The post content to load for the test.
+	 * @param string[] $meta_order   The order of meta components to use.
+	 * @param string   $post_content The post content to load for the test.
 	 *
 	 * @dataProvider data_provider_brightcove_video
 	 */
@@ -93,135 +94,169 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$this->assertEquals( 'Test Caption 2', $json['components'][0]['components'][1]['text'] );
 	}
 
-	public function testHasExcerpt() {
-		$title = 'My Title';
+	/**
+	 * Tests the behavior of an export when an excerpt is manually defined.
+	 */
+	public function test_has_excerpt() {
+		$title   = 'My Title';
 		$excerpt = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue...';
 
-		$post_id = $this->factory->post->create( array(
-			'post_title' => $title,
-			'post_content' => '',
-			'post_excerpt' => $excerpt,
-		) );
+		$post_id = $this->factory->post->create(
+			array(
+				'post_title'   => $title,
+				'post_content' => '',
+				'post_excerpt' => $excerpt,
+			)
+		);
 
-		$export = new Export( $this->settings, $post_id );
-		$exporter = $export->fetch_exporter();
+		$export           = new Export( $this->settings, $post_id );
+		$exporter         = $export->fetch_exporter();
 		$exporter_content = $exporter->get_content();
 
 		$this->assertEquals( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue...', $exporter_content->intro() );
 	}
 
-	public function testNoExcerpt() {
-		$title = 'My Title';
+	/**
+	 * Tests the behavior of an export when no excerpt is defined.
+	 */
+	public function test_no_excerpt() {
+		$title   = 'My Title';
 		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
 
-		$post_id = $this->factory->post->create( array(
-			'post_title' => $title,
-			'post_content' => $content,
-			'post_excerpt' => '',
-		) );
+		$post_id = $this->factory->post->create(
+			array(
+				'post_title'   => $title,
+				'post_content' => $content,
+				'post_excerpt' => '',
+			)
+		);
 
-		$export = new Export( $this->settings, $post_id );
-		$exporter = $export->fetch_exporter();
+		$export           = new Export( $this->settings, $post_id );
+		$exporter         = $export->fetch_exporter();
 		$exporter_content = $exporter->get_content();
 
 		$this->assertEquals( '', $exporter_content->intro() );
 	}
 
-	public function testShortcodeInExcerpt() {
-		$title = 'My Title';
+	/**
+	 * Tests the behavior of a shortcode in the excerpt.
+	 */
+	public function test_shortcode_in_excerpt() {
+		$title   = 'My Title';
 		$content = '<p>[caption id="attachment_12345" align="aligncenter" width="500"]Test[/caption]Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
 
-		$post_id = $this->factory->post->create( array(
-			'post_title' => $title,
-			'post_content' => $content,
-			'post_excerpt' => '',
-		) );
+		$post_id = $this->factory->post->create(
+			array(
+				'post_title'   => $title,
+				'post_content' => $content,
+				'post_excerpt' => '',
+			)
+		);
 
-		$export = new Export( $this->settings, $post_id );
-		$exporter = $export->fetch_exporter();
+		$export           = new Export( $this->settings, $post_id );
+		$exporter         = $export->fetch_exporter();
 		$exporter_content = $exporter->get_content();
 
 		$this->assertEquals( '', $exporter_content->intro() );
 	}
 
+	/**
+	 * Tests generic byline formatting.
+	 */
 	public function test_byline_format() {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'byline' ] ] );
-		$user_id = $this->factory->user->create( array(
-			'role' => 'administrator',
-			'display_name' => 'Testuser',
-		) );
+		$user_id = $this->factory->user->create(
+			array(
+				'role'         => 'administrator',
+				'display_name' => 'Testuser',
+			)
+		);
 
-		$title = 'My Title';
+		$title   = 'My Title';
 		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
 
-		$post_id = $this->factory->post->create( array(
-			'post_title' => $title,
-			'post_content' => $content,
-			'post_excerpt' => '',
-			'post_author' => $user_id,
-			'post_date' => '2016-08-26 12:00',
-		) );
+		$post_id = $this->factory->post->create(
+			array(
+				'post_title'   => $title,
+				'post_content' => $content,
+				'post_excerpt' => '',
+				'post_author'  => $user_id,
+				'post_date'    => '2016-08-26 12:00',
+			)
+		);
 
-		$export = new Export( $this->settings, $post_id );
-		$exporter = $export->fetch_exporter();
+		$export           = new Export( $this->settings, $post_id );
+		$exporter         = $export->fetch_exporter();
 		$exporter_content = $exporter->get_content();
 
 		$this->assertEquals( 'by Testuser | Aug 26, 2016 | 12:00 PM', $exporter_content->byline() );
 	}
 
-	public function testBylineFormatWithHashtag() {
+	/**
+	 * Tests byline formatting when a hash is used in the author's display name.
+	 */
+	public function test_byline_format_with_hashtag() {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'byline' ] ] );
-		$user_id = $this->factory->user->create( array(
-			'role' => 'administrator',
-			'display_name' => '#Testuser',
-		) );
+		$user_id = $this->factory->user->create(
+			array(
+				'role'         => 'administrator',
+				'display_name' => '#Testuser',
+			)
+		);
 
-		$title = 'My Title';
+		$title   = 'My Title';
 		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
 
-		$post_id = $this->factory->post->create( array(
-			'post_title' => $title,
-			'post_content' => $content,
-			'post_excerpt' => '',
-			'post_author' => $user_id,
-			'post_date' => '2016-08-26 12:00',
-		) );
+		$post_id = $this->factory->post->create(
+			array(
+				'post_title'   => $title,
+				'post_content' => $content,
+				'post_excerpt' => '',
+				'post_author'  => $user_id,
+				'post_date'    => '2016-08-26 12:00',
+			)
+		);
 
-		$export = new Export( $this->settings, $post_id );
-		$exporter = $export->fetch_exporter();
+		$export           = new Export( $this->settings, $post_id );
+		$exporter         = $export->fetch_exporter();
 		$exporter_content = $exporter->get_content();
 
 		$this->assertEquals( 'by #Testuser | Aug 26, 2016 | 12:00 PM', $exporter_content->byline() );
 	}
 
-	public function testRemoveEntities() {
-		$post_id = $this->factory->post->create( array(
-			'post_title' => 'Test Title',
-			'post_content' => '<p>&amp;Lorem ipsum dolor sit amet &amp; consectetur adipiscing elit.&amp;</p>',
-			'post_date' => '2016-08-26 12:00',
-		) );
+	/**
+	 * Tests conversion of HTML entities.
+	 */
+	public function test_remove_entities() {
+		$post_id = $this->factory->post->create(
+			array(
+				'post_title'   => 'Test Title',
+				'post_content' => '<p>&amp;Lorem ipsum dolor sit amet &amp; consectetur adipiscing elit.&amp;</p>',
+				'post_date'    => '2016-08-26 12:00',
+			)
+		);
 
 		// Set HTML content format.
 		$this->settings->html_support = 'yes';
 
-		$export = new Export( $this->settings, $post_id );
-		$exporter = $export->fetch_exporter();
+		$export           = new Export( $this->settings, $post_id );
+		$exporter         = $export->fetch_exporter();
 		$exporter_content = $exporter->get_content();
 
 		$this->assertEquals(
 			'<p>&amp;Lorem ipsum dolor sit amet &amp; consectetur adipiscing elit.&amp;</p>',
-			str_replace( array( "\n","\r" ), '', $exporter_content->content() )
+			str_replace( array( "\n", "\r" ), '', $exporter_content->content() )
 		);
 
 		// Set Markdown content format.
 		$this->settings->html_support = 'no';
 
-		$markdown_export = new Export( $this->settings, $post_id );
-		$markdown_exporter = $markdown_export->fetch_exporter();
+		$markdown_export           = new Export( $this->settings, $post_id );
+		$markdown_exporter         = $markdown_export->fetch_exporter();
 		$markdown_exporter_content = $markdown_exporter->get_content();
 		$this->assertEquals(
 			'<p>&Lorem ipsum dolor sit amet & consectetur adipiscing elit.&</p>',
-			str_replace( array( "\n","\r" ), '', $markdown_exporter_content->content() )
+			str_replace( array( "\n", "\r" ), '', $markdown_exporter_content->content() )
 		);
 	}
 
@@ -347,19 +382,27 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$post_id = self::factory()->post->create();
 
 		// Create a term and add it to the post.
-		$term_id = self::factory()->term->create( array(
-			'taxonomy' => 'category',
-			'name' => 'entertainment',
-		) );
+		$term_id = self::factory()->term->create(
+			array(
+				'taxonomy' => 'category',
+				'name'     => 'entertainment',
+			)
+		);
 		wp_set_post_terms( $post_id, array( $term_id ), 'category' );
 
 		// Create a taxonomy map.
-		update_option( \Admin_Apple_Sections::TAXONOMY_MAPPING_KEY, array(
-			'abcdef01-2345-6789-abcd-ef012356789a' => array( $term_id ),
-		) );
-		update_option( \Admin_Apple_Sections::THEME_MAPPING_KEY, array(
-			'abcdef01-2345-6789-abcd-ef012356789a' => 'Colorful',
-		) );
+		update_option(
+			\Admin_Apple_Sections::TAXONOMY_MAPPING_KEY,
+			array(
+				'abcdef01-2345-6789-abcd-ef012356789a' => array( $term_id ),
+			)
+		);
+		update_option(
+			\Admin_Apple_Sections::THEME_MAPPING_KEY,
+			array(
+				'abcdef01-2345-6789-abcd-ef012356789a' => 'Colorful',
+			)
+		);
 
 		// Cache as a transient to bypass the API call.
 		$self = 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a';
@@ -367,17 +410,17 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 			'apple_news_sections',
 			array(
 				(object) array(
-					'createdAt' => '2017-01-01T00:00:00Z',
-					'id' => 'abcdef01-2345-6789-abcd-ef012356789a',
-					'isDefault' => true,
-					'links' => (object) array(
+					'createdAt'  => '2017-01-01T00:00:00Z',
+					'id'         => 'abcdef01-2345-6789-abcd-ef012356789a',
+					'isDefault'  => true,
+					'links'      => (object) array(
 						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
-						'self' => $self,
+						'self'    => $self,
 					),
 					'modifiedAt' => '2017-01-01T00:00:00Z',
-					'name' => 'Main',
-					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
-					'type' => 'section',
+					'name'       => 'Main',
+					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
+					'type'       => 'section',
 				),
 			)
 		);
@@ -390,9 +433,12 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		);
 
 		// Change the theme mapping to use the Default theme instead and re-test.
-		update_option( \Admin_Apple_Sections::THEME_MAPPING_KEY, array(
-			'abcdef01-2345-6789-abcd-ef012356789a' => 'Default',
-		) );
+		update_option(
+			\Admin_Apple_Sections::THEME_MAPPING_KEY,
+			array(
+				'abcdef01-2345-6789-abcd-ef012356789a' => 'Default',
+			)
+		);
 		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
 			$json['componentTextStyles']['dropcapBodyStyle']['textColor'],
@@ -422,10 +468,12 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$post_id = self::factory()->post->create();
 
 		// Create a term and add it to the post.
-		$term_id = self::factory()->term->create( array(
-			'taxonomy' => 'category',
-			'name' => 'politics',
-		) );
+		$term_id = self::factory()->term->create(
+			array(
+				'taxonomy' => 'category',
+				'name'     => 'politics',
+			)
+		);
 		wp_set_post_terms( $post_id, array( $term_id ), 'category' );
 
 		// Create a taxonomy map that maps to multiple sections..
@@ -451,30 +499,30 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 			'apple_news_sections',
 			array(
 				(object) array(
-					'createdAt' => '2017-01-01T00:00:00Z',
-					'id' => 'abcdef01-2345-6789-abcd-ef012356789a',
-					'isDefault' => true,
-					'links' => (object) array(
+					'createdAt'  => '2017-01-01T00:00:00Z',
+					'id'         => 'abcdef01-2345-6789-abcd-ef012356789a',
+					'isDefault'  => true,
+					'links'      => (object) array(
 						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
-						'self' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
+						'self'    => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
 					),
 					'modifiedAt' => '2017-01-01T00:00:00Z',
-					'name' => 'Main',
-					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
-					'type' => 'section',
+					'name'       => 'Main',
+					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
+					'type'       => 'section',
 				),
 				(object) array(
-					'createdAt' => '2017-01-01T00:00:00Z',
-					'id' => 'abcdef01-2345-6789-abcd-ef012356789b',
-					'isDefault' => false,
-					'links' => (object) array(
+					'createdAt'  => '2017-01-01T00:00:00Z',
+					'id'         => 'abcdef01-2345-6789-abcd-ef012356789b',
+					'isDefault'  => false,
+					'links'      => (object) array(
 						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
-						'self' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789b',
+						'self'    => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789b',
 					),
 					'modifiedAt' => '2017-01-01T00:00:00Z',
-					'name' => 'Secondary',
-					'shareUrl' => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUw',
-					'type' => 'section',
+					'name'       => 'Secondary',
+					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUw',
+					'type'       => 'section',
 				),
 			)
 		);
@@ -534,12 +582,14 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'title' ] ] );
 
 		// Setup.
-		$title = 'My Title';
+		$title   = 'My Title';
 		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
-		$post_id = $this->factory->post->create( array(
-			'post_title' => $title,
-			'post_content' => $content,
-		) );
+		$post_id = $this->factory->post->create(
+			array(
+				'post_title'   => $title,
+				'post_content' => $content,
+			)
+		);
 		add_filter(
 			'the_content',
 			array( $this, 'filter_the_content_test_is_exporting' )
@@ -548,7 +598,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		// Ensure is_exporting returns false before exporting.
 		$this->assertEquals(
 			'is not exporting',
-			apply_filters( 'the_content', 'Lorem ipsum dolor sit amet' )
+			apply_filters( 'the_content', 'Lorem ipsum dolor sit amet' ) // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		);
 
 		// Get sections for the post.
@@ -561,7 +611,7 @@ class Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		// Ensure is_exporting returns false after exporting.
 		$this->assertEquals(
 			'is not exporting',
-			apply_filters( 'the_content', 'Lorem ipsum dolor sit amet' )
+			apply_filters( 'the_content', 'Lorem ipsum dolor sit amet' ) // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound
 		);
 
 		// Teardown.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Image_Test class
+ * Publish to Apple News tests: Apple_News_Image_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -15,7 +15,7 @@ use Apple_Exporter\Components\Image;
  * @package Apple_News
  * @subpackage Tests
  */
-class Image_Test extends Component_TestCase {
+class Apple_News_Image_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * A filter function to modify the text style in the generated JSON.
@@ -134,7 +134,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEmpty( $result );
@@ -192,7 +192,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEmpty( $result );
@@ -218,7 +218,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEquals( 'photo', $result['role'] );
@@ -246,7 +246,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEquals( 'photo', $result['role'] );
@@ -270,7 +270,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEquals( 'photo', $result['role'] );
@@ -286,11 +286,11 @@ HTML;
 	public function testDarkColors() {
 		$this->set_theme_settings(
 			[
-				'caption_color_dark'       => '#abcdef',
+				'caption_color_dark' => '#abcdef',
 			]
 		);
 
-		$html = <<<HTML
+		$html      = <<<HTML
 <figure>
 	<img src="https://www.example.org/filename.jpg" alt="Example">
 	<figcaption class="wp-caption-text">Caption Text</figcaption>
@@ -303,7 +303,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 		$this->assertEquals(
 			'#abcdef',
 			$result['components'][1]['textStyle']['conditional']['textColor']
@@ -328,7 +328,7 @@ HTML;
 				'caption_tracking'    => 50,
 			]
 		);
-		$html = <<<HTML
+		$html      = <<<HTML
 <figure>
 	<img src="https://www.example.org/filename.jpg" alt="Example">
 	<figcaption class="wp-caption-text">Caption Text</figcaption>
@@ -341,7 +341,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEquals( true, $result['layout']['ignoreDocumentMargin'] );

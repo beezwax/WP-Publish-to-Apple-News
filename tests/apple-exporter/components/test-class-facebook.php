@@ -15,7 +15,7 @@ use Apple_Exporter\Components\Facebook;
  * @package Apple_News
  * @subpackage Tests
  */
-class Facebook_Test extends Component_TestCase {
+class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * A data provider for the test_transform function.
@@ -108,7 +108,7 @@ class Facebook_Test extends Component_TestCase {
 		$this->assertEquals(
 			array(
 				'role' => 'facebook_post',
-				'URL' => $url,
+				'URL'  => $url,
 			),
 			$component->to_array()
 		);

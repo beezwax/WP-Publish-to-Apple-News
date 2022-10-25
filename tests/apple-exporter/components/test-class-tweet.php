@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Tweet_Test class
+ * Publish to Apple News tests: Apple_News_Tweet_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -15,7 +15,7 @@ use Apple_Exporter\Components\Tweet;
  * @package Apple_News
  * @subpackage Tests
  */
-class Tweet_Test extends Component_TestCase {
+class Apple_News_Tweet_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * A data provider for the testComponent function.
