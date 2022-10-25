@@ -30,7 +30,7 @@ A
 
 
 B
-HTML,
+HTML
 			],
 
 			// Test classic editor, multiple line breaks with &nbsp.
@@ -41,7 +41,7 @@ A
 &nbsp;
 
 B
-HTML,
+HTML
 			],
 
 			// Test classic editor, extra line breaks at the end.
@@ -52,7 +52,7 @@ A
 B
 
 
-HTML,
+HTML
 			],
 
 			// Test classic editor, extra line breaks at the end with a non-breaking space.
@@ -63,7 +63,7 @@ A
 B
 
 &nbsp;
-HTML,
+HTML
 			],
 
 			// Test Gutenberg editor, empty paragraph tag.
@@ -80,7 +80,7 @@ HTML,
 <!-- wp:paragraph -->
 <p>B</p>
 <!-- /wp:paragraph -->
-HTML,
+HTML
 			],
 
 			// Test Gutenberg editor, paragraph tag containing a single space.
@@ -97,7 +97,7 @@ HTML,
 <!-- wp:paragraph -->
 <p>B</p>
 <!-- /wp:paragraph -->
-HTML,
+HTML
 			],
 
 			// Test Gutenberg editor, paragraph tag containing a non-breaking space.
@@ -114,7 +114,7 @@ HTML,
 <!-- wp:paragraph -->
 <p>B</p>
 <!-- /wp:paragraph -->
-HTML,
+HTML
 			],
 
 			// Test Gutenberg editor, extra paragraph at the end.
@@ -131,7 +131,7 @@ HTML,
 <!-- wp:paragraph -->
 <p></p>
 <!-- /wp:paragraph -->
-HTML,
+HTML
 			],
 
 			// Test Gutenberg editor, extra paragraph at the end containing a space.
@@ -148,7 +148,7 @@ HTML,
 <!-- wp:paragraph -->
 <p> </p>
 <!-- /wp:paragraph -->
-HTML,
+HTML
 			],
 
 			// Test Gutenberg editor, extra paragraph at the end containing a non-breaking space.
@@ -165,7 +165,7 @@ HTML,
 <!-- wp:paragraph -->
 <p>&nbsp;</p>
 <!-- /wp:paragraph -->
-HTML,
+HTML
 			],
 
 			// Test Gutenberg editor, extra paragraph at the end containing a non-breaking space surrounded by a link tag.
@@ -182,7 +182,7 @@ HTML,
 <!-- wp:paragraph -->
 <p><a href="https://www.apple.com/">&nbsp;</a></p>
 <!-- /wp:paragraph -->
-HTML,
+HTML
 			],
 		];
 	}
