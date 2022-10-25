@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Intro_Test class
+ * Publish to Apple News tests: Apple_News_Intro_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -12,7 +12,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Intro_Test extends Apple_News_Testcase {
+class Apple_News_Intro_Test extends Apple_News_Testcase {
 
 	/**
 	 * A filter function to modify the text style in the generated JSON.
@@ -28,9 +28,9 @@ class Intro_Test extends Apple_News_Testcase {
 	}
 
 		/**
-	 * Returns an array of arrays representing function arguments to the
-	 * test_filter function.
-	 */
+		 * Returns an array of arrays representing function arguments to the
+		 * test_filter function.
+		 */
 	public function data_test_disabled_by_default() {
 		return [
 			[ [ 'title', 'byline' ] ],
@@ -42,6 +42,8 @@ class Intro_Test extends Apple_News_Testcase {
 	 * Ensures that the Intro component is disabled by default.
 	 *
 	 * @dataProvider data_test_disabled_by_default
+	 *
+	 * @param string[] $meta_order The order of meta components to use.
 	 */
 	public function test_disabled_by_default( $meta_order ) {
 		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );

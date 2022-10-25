@@ -47,7 +47,7 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 == Changelog ==
 
 = 2.4.0 =
-* TODO
+* Deprecation: Removed official support for PHP 5.6 and 7.0.
 
 = 2.3.2 =
 * Bugfix: Fixes a bug where the layout body-layout-last is not added to the list of layouts if the body content ends with something other than a paragraph.

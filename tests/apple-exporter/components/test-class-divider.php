@@ -15,12 +15,12 @@ use Apple_Exporter\Components\Divider;
  * @package Apple_News
  * @subpackage Tests
  */
-class Divider_Test extends Component_TestCase {
+class Apple_News_Divider_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * Ensures that an <hr/> tag gets converted to a Divider component.
 	 */
-	public function testBuildingRemovesTags() {
+	public function test_building_removes_tags() {
 		$component = new Divider(
 			'<hr/>',
 			$this->workspace,
@@ -28,7 +28,7 @@ class Divider_Test extends Component_TestCase {
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		$this->assertEquals( 'divider', $result['role'] );
 		$this->assertEquals( 'divider-layout', $result['layout'] );
@@ -38,7 +38,7 @@ class Divider_Test extends Component_TestCase {
 	/**
 	 * Tests the behavior of the apple_news_divider_json filter.
 	 */
-	public function testFilter() {
+	public function test_filter() {
 		$component = new Divider(
 			'<hr/>',
 			$this->workspace,

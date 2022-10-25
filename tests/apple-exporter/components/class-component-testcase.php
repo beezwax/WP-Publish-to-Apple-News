@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Component_TestCase class
+ * Publish to Apple News tests: Apple_News_Component_TestCase class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -11,7 +11,7 @@
  *
  * @package Apple_News
  */
-abstract class Component_TestCase extends Apple_News_Testcase {
+abstract class Apple_News_Component_TestCase extends Apple_News_Testcase {
 
 	/**
 	 * Parses HTML into a DOMNode.
@@ -35,8 +35,6 @@ abstract class Component_TestCase extends Apple_News_Testcase {
 	 * A function to ensure that tokens are replaced in a JSON string.
 	 *
 	 * @param string $json The JSON to check for unreplaced tokens.
-	 *
-	 * @access protected
 	 */
 	protected function ensure_tokens_replaced( $json ) {
 		preg_match( '/"#[^"#]+#"/', $json, $matches );

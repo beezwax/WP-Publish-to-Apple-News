@@ -14,7 +14,7 @@ use Apple_Exporter\Theme;
  * @package Apple_News
  * @subpackage Tests
  */
-class Heading_Test extends Apple_News_Testcase {
+class Apple_News_Heading_Test extends Apple_News_Testcase {
 
 	/**
 	 * A data provider for the test_settings function.
@@ -34,7 +34,7 @@ class Heading_Test extends Apple_News_Testcase {
 			[ 3, [ 'title', 'author' ] ],
 			[ 4, [ 'title', 'author' ] ],
 			[ 5, [ 'title', 'author' ] ],
-			[ 6, [ 'title', 'author' ] ]
+			[ 6, [ 'title', 'author' ] ],
 		];
 	}
 
@@ -66,6 +66,8 @@ class Heading_Test extends Apple_News_Testcase {
 	 * Test the `apple_news_heading_json` filter.
 	 *
 	 * @dataProvider data_test_filter
+	 *
+	 * @param string[] $meta_order The order of meta components to use.
 	 */
 	public function test_filter( $meta_order ) {
 		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
@@ -90,6 +92,8 @@ HTML;
 	 * Ensures HTML is allowed in headings.
 	 *
 	 * @dataProvider data_test_filter
+	 *
+	 * @param string[] $meta_order The order of meta components to use.
 	 */
 	public function test_html_in_headings( $meta_order ) {
 		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
@@ -122,6 +126,8 @@ HTML;
 	 * Tests image splitting where the image is wrapped in a link.
 	 *
 	 * @dataProvider data_test_filter
+	 *
+	 * @param string[] $meta_order The order of meta components to use.
 	 */
 	public function test_image_splitting_with_link( $meta_order ) {
 		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
@@ -145,7 +151,8 @@ HTML;
 	 *
 	 * @dataProvider data_headings
 	 *
-	 * @param int $level Heading level. 1-6.
+	 * @param int      $level      Heading level. 1-6.
+	 * @param string[] $meta_order The order of meta components to use.
 	 */
 	public function test_render( $level, $meta_order ) {
 		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
@@ -186,12 +193,12 @@ HTML;
 HTML;
 		$post_id = self::factory()->post->create( [ 'post_content' => $content ] );
 		$json    = $this->get_json_for_post( $post_id );
-		$this->assertEquals( 'AmericanTypewriter', $json['componentTextStyles']['default-heading-' . $level]['fontName'] );
-		$this->assertEquals( 12, $json['componentTextStyles']['default-heading-' . $level]['fontSize'] );
-		$this->assertEquals( '#abcdef', $json['componentTextStyles']['default-heading-' . $level]['textColor'] );
-		$this->assertEquals( 34, $json['componentTextStyles']['default-heading-' . $level]['lineHeight'] );
-		$this->assertEquals( 0.56, $json['componentTextStyles']['default-heading-' . $level]['tracking'] );
-		$this->assertEquals( '#fedcba', $json['componentTextStyles']['default-heading-' . $level]['conditional']['textColor'] );
+		$this->assertEquals( 'AmericanTypewriter', $json['componentTextStyles'][ 'default-heading-' . $level ]['fontName'] );
+		$this->assertEquals( 12, $json['componentTextStyles'][ 'default-heading-' . $level ]['fontSize'] );
+		$this->assertEquals( '#abcdef', $json['componentTextStyles'][ 'default-heading-' . $level ]['textColor'] );
+		$this->assertEquals( 34, $json['componentTextStyles'][ 'default-heading-' . $level ]['lineHeight'] );
+		$this->assertEquals( 0.56, $json['componentTextStyles'][ 'default-heading-' . $level ]['tracking'] );
+		$this->assertEquals( '#fedcba', $json['componentTextStyles'][ 'default-heading-' . $level ]['conditional']['textColor'] );
 	}
 
 	/**
@@ -218,7 +225,7 @@ HTML;
 
 		// Delete the active theme by force.
 		$active_theme = Theme::get_active_theme_name();
-		$theme_key = Theme::theme_key( $active_theme );
+		$theme_key    = Theme::theme_key( $active_theme );
 		delete_option( $theme_key );
 		delete_option( Theme::ACTIVE_KEY );
 

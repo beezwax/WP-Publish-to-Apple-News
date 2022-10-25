@@ -13,12 +13,12 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Test_End_Of_Article extends Component_TestCase {
+class Apple_News_End_Of_Article_Test extends Apple_News_Component_TestCase {
 
 		/**
-	 * Returns an array of arrays representing function arguments to the
-	 * test_filter function.
-	 */
+		 * Returns an array of arrays representing function arguments to the
+		 * test_filter function.
+		 */
 	public function data_default_end_of_article_setting() {
 		return [
 			[ [ 'cover', 'slug', 'title', 'byline' ], 3, 4 ],
@@ -30,6 +30,9 @@ class Test_End_Of_Article extends Component_TestCase {
 	 * Test default End Of Article behavior
 	 *
 	 * @dataProvider data_default_end_of_article_setting
+	 *
+	 * @param string[] $meta_order The order of meta components to use.
+	 * @param int      $index      The index of the component in the JSON to target.
 	 */
 	public function test_default_end_of_article_setting( $meta_order, $index ) {
 		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
@@ -42,6 +45,10 @@ class Test_End_Of_Article extends Component_TestCase {
 	 * Test adding of End Of Article JSON content
 	 *
 	 * @dataProvider data_default_end_of_article_setting
+	 *
+	 * @param string[] $meta_order The order of meta components to use.
+	 * @param int      $index      The index of the component in the JSON to target.
+	 * @param int      $count      The expected number of components.
 	 */
 	public function test_end_of_article_content( $meta_order, $index, $count ) {
 		// Setup.
@@ -54,12 +61,12 @@ class Test_End_Of_Article extends Component_TestCase {
 							'text'      => '<strong>Heading <em>1<\/em><\/strong> Test',
 							'format'    => 'html',
 							'textStyle' => 'default-heading-1',
-							'layout'    => 'heading-layout'
+							'layout'    => 'heading-layout',
 						],
 						'layout' => [],
 					],
 				],
-				'meta_component_order' => $meta_order
+				'meta_component_order' => $meta_order,
 			]
 		);
 

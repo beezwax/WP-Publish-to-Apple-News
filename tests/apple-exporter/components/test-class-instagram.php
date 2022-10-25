@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Instagram_Test class
+ * Publish to Apple News tests: Apple_News_Instagram_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -15,7 +15,7 @@ use Apple_Exporter\Components\Instagram;
  * @package Apple_News
  * @subpackage Tests
  */
-class Instagram_Test extends Component_TestCase {
+class Apple_News_Instagram_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * Contains a templated embed string for use in tests.
@@ -23,7 +23,6 @@ class Instagram_Test extends Component_TestCase {
 	 * Since this string is intended to be used with sprintf, all literal % signs
 	 * are escaped.
 	 *
-	 * @access private
 	 * @var string
 	 */
 	private $embed = <<<HTML
@@ -33,20 +32,19 @@ HTML;
 	/**
 	 * A data provider for the testTransform function.
 	 *
-	 * @see self::testTransform()
+	 * @see self::test_transform()
 	 *
-	 * @access public
 	 * @return array Parameters to use when calling testTransform.
 	 */
-	public function dataTransform() {
-		return array(
-			array( 'http://www.instagram.com/p/LtaiGnryiu/' ),
-			array( 'https://www.instagram.com/p/LtaiGnryiu/' ),
-			array( 'http://instagram.com/p/LtaiGnryiu/' ),
-			array( 'https://instagram.com/p/LtaiGnryiu/' ),
-			array( 'http://instagr.am/p/LtaiGnryiu/' ),
-			array( 'https://instagr.am/p/LtaiGnryiu/' ),
-		);
+	public function data_transform() {
+		return [
+			[ 'http://www.instagram.com/p/LtaiGnryiu/' ],
+			[ 'https://www.instagram.com/p/LtaiGnryiu/' ],
+			[ 'http://instagram.com/p/LtaiGnryiu/' ],
+			[ 'https://instagram.com/p/LtaiGnryiu/' ],
+			[ 'http://instagr.am/p/LtaiGnryiu/' ],
+			[ 'https://instagr.am/p/LtaiGnryiu/' ],
+		];
 	}
 
 	/**
@@ -54,7 +52,6 @@ HTML;
 	 *
 	 * @param array $json The JSON array to modify.
 	 *
-	 * @access public
 	 * @return array The modified JSON.
 	 */
 	public function filter_apple_news_instagram_json( $json ) {
@@ -65,10 +62,8 @@ HTML;
 
 	/**
 	 * Test the `apple_news_instagram_json` filter.
-	 *
-	 * @access public
 	 */
-	public function testFilterJSON() {
+	public function test_filter_json() {
 
 		// Setup.
 		$component = new Instagram(
@@ -80,7 +75,7 @@ HTML;
 		);
 		add_filter(
 			'apple_news_instagram_json',
-			array( $this, 'filter_apple_news_instagram_json' )
+			[ $this, 'filter_apple_news_instagram_json' ]
 		);
 
 		// Test.
@@ -90,16 +85,14 @@ HTML;
 		// Teardown.
 		remove_filter(
 			'apple_news_instagram_json',
-			array( $this, 'filter_apple_news_instagram_json' )
+			[ $this, 'filter_apple_news_instagram_json' ]
 		);
 	}
 
 	/**
 	 * Ensures an embed without a URL is not incorrectly transformed.
-	 *
-	 * @access public
 	 */
-	public function testInvalidMarkup() {
+	public function test_invalid_markup() {
 
 		// Setup.
 		$component = new Instagram(
@@ -120,16 +113,14 @@ HTML;
 	/**
 	 * Ensures that given test parameters properly transform into components.
 	 *
-	 * @dataProvider dataTransform
+	 * @dataProvider data_transform
 	 *
 	 * @param string $url The URL to use.
-	 *
-	 * @access public
 	 */
-	public function testTransform( $url ) {
+	public function test_transform( $url ) {
 
 		// Setup.
-		$components = array();
+		$components   = [];
 		$components[] = new Instagram(
 			$url,
 			$this->workspace,
@@ -148,10 +139,10 @@ HTML;
 		// Test.
 		foreach ( $components as $component ) {
 			$this->assertEquals(
-				array(
+				[
 					'role' => 'instagram',
-					'URL' => $url,
-				),
+					'URL'  => $url,
+				],
 				$component->to_array()
 			);
 		}

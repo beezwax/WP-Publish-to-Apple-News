@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Title_Test class
+ * Publish to Apple News tests: Apple_News_Title_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -12,7 +12,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Title_Test extends Component_TestCase {
+class Apple_News_Title_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * A filter function to modify the text style in the generated JSON.
@@ -63,12 +63,12 @@ class Title_Test extends Component_TestCase {
 	public function test_settings() {
 		$this->set_theme_settings(
 			[
-				'header1_color'       => '#abcdef',
-				'header1_color_dark'  => '#123456',
-				'header1_font'        => 'AmericanTypewriter',
-				'header1_line_height' => 12,
-				'header1_size'        => 34,
-				'header1_tracking'    => 56,
+				'header1_color'        => '#abcdef',
+				'header1_color_dark'   => '#123456',
+				'header1_font'         => 'AmericanTypewriter',
+				'header1_line_height'  => 12,
+				'header1_size'         => 34,
+				'header1_tracking'     => 56,
 				'meta_component_order' => [ 'title' ],
 			]
 		);
