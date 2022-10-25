@@ -21,8 +21,6 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 * Ensures that the get_filename function properly returns an image filename.
 	 *
 	 * @see Apple_News::get_filename()
-	 *
-	 * @access public
 	 */
 	public function test_get_filename() {
 		$url      = 'https://www.example.org/test-get-filename.jpg?w=150&h=150';
@@ -64,8 +62,6 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 * Ensures that the migrate_api_settings function migrates settings.
 	 *
 	 * @see Apple_News::migrate_api_settings()
-	 *
-	 * @access public
 	 */
 	public function test_migrate_api_settings() {
 
@@ -88,8 +84,6 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 * Ensures that the migrate_blockquote_settings function migrates settings.
 	 *
 	 * @see Apple_News::migrate_blockquote_settings()
-	 *
-	 * @access public
 	 */
 	public function test_migrate_blockquote_settings() {
 
@@ -136,8 +130,6 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 * Ensures that the migrate_caption_settings function migrates settings.
 	 *
 	 * @see Apple_News::migrate_caption_settings()
-	 *
-	 * @access public
 	 */
 	public function test_migrate_caption_settings() {
 
@@ -172,8 +164,6 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 * Ensures that the migrate_header_settings function migrates settings.
 	 *
 	 * @see Apple_News::migrate_header_settings()
-	 *
-	 * @access public
 	 */
 	public function test_migrate_header_settings() {
 
@@ -235,8 +225,6 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 * Ensures that the migrate_settings function properly migrates legacy settings.
 	 *
 	 * @see Apple_News::migrate_settings()
-	 *
-	 * @access public
 	 */
 	public function test_migrate_settings() {
 
@@ -265,8 +253,6 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 * Ensures that the get_support_info returns the correct values.
 	 *
 	 * @see Apple_News::get_support_info()
-	 *
-	 * @access public
 	 */
 	public function test_support_info() {
 
@@ -299,8 +285,6 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 * Ensures that the version in Apple_News matches the reported plugin version.
 	 *
 	 * @see Apple_News::$version
-	 *
-	 * @access public
 	 */
 	public function test_version() {
 		$plugin_data = apple_news_get_plugin_data();

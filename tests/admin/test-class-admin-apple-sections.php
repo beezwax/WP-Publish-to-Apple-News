@@ -95,8 +95,6 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 
 	/**
 	 * Create some themes for testing
-	 *
-	 * @access private
 	 */
 	private function createThemes() {
 
@@ -115,8 +113,6 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 
 	/**
 	 * Ensures that automatic section/category mappings function properly.
-	 *
-	 * @access public
 	 */
 	public function test_automatic_category_mapping() {
 
@@ -136,8 +132,6 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 
 	/**
 	 * Ensures that the apple_news_section_taxonomy filter is working properly.
-	 *
-	 * @access public
 	 */
 	public function test_mapping_taxonomy_filter() {
 
@@ -160,8 +154,6 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 
 	/**
 	 * Ensures that the category mapping override is respected.
-	 *
-	 * @access public
 	 */
 	public function test_override_category_mapping() {
 
@@ -190,8 +182,6 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 
 	/**
 	 * Ensures that the theme mapping fields save properly.
-	 *
-	 * @access public
 	 */
 	public function test_save_theme_mapping() {
 		// Validate the response.

@@ -22,7 +22,6 @@ class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 	 *
 	 * @see self::test_transform()
 	 *
-	 * @access public
 	 * @return array An array of test data
 	 */
 	public function data_transform() {
@@ -41,7 +40,6 @@ class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 	 *
 	 * @param array $json The JSON array to modify.
 	 *
-	 * @access public
 	 * @return array The modified JSON.
 	 */
 	public function filter_apple_news_facebook_json( $json ) {
@@ -52,8 +50,6 @@ class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * Test the `apple_news_facebook_json` filter.
-	 *
-	 * @access public
 	 */
 	public function test_filter() {
 
@@ -90,8 +86,6 @@ class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 	 * @dataProvider data_transform
 	 *
 	 * @param string $url The URL to test.
-	 *
-	 * @access public
 	 */
 	public function test_transform( $url ) {
 

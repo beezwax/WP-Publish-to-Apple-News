@@ -52,7 +52,6 @@ class Apple_News_Parser_Test extends Apple_News_Testcase {
 	 * Test the anchor cleaning functions of the parser for Markdown.
 	 *
 	 * @see \Apple_Exporter\Parser::parse
-	 * @access public
 	 */
 	public function test_clean_html_markdown() {
 		// Create a post.
@@ -102,7 +101,6 @@ HTML;
 	 * Test the anchor cleaning functions of the parser for HTML.
 	 *
 	 * @see \Apple_Exporter\Parser::parse
-	 * @access public
 	 */
 	public function test_clean_html() {
 		// Create a post.

@@ -20,7 +20,6 @@ class Apple_News_Video_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Contains test HTML content to feed into the Video object for testing.
 	 *
-	 * @access private
 	 * @var string
 	 */
 	private $video_content = <<<HTML
@@ -35,7 +34,6 @@ HTML;
 	 *
 	 * @param array $json The JSON array to modify.
 	 *
-	 * @access public
 	 * @return array The modified JSON.
 	 */
 	public function filter_apple_news_video_json( $json ) {
@@ -46,8 +44,6 @@ HTML;
 
 	/**
 	 * Test the `apple_news_quote_json` filter.
-	 *
-	 * @access public
 	 */
 	public function test_filter() {
 
@@ -74,8 +70,6 @@ HTML;
 
 	/**
 	 * Tests the ability for the Video component to get and save caption information
-	 *
-	 * @access public
 	 */
 	public function test_caption() {
 		$component = $this->get_component( '<figure class="wp-block-video"><video controls="" src="https://www.example.org/test.mp4"/><figcaption>caption</figcaption></figure>' );
@@ -102,8 +96,6 @@ HTML;
 
 	/**
 	 * Tests the transformation process from a video element to a Video component.
-	 *
-	 * @access public
 	 */
 	public function test_generated_json() {
 
@@ -132,7 +124,6 @@ HTML;
 	 *
 	 * @param string $content HTML for the component.
 	 *
-	 * @access private
 	 * @return Video A Video object containing the specified content.
 	 */
 	private function get_component( $content = '' ) {

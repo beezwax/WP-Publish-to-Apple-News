@@ -19,8 +19,6 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 
 	/**
 	 * A helper function to create the default theme.
-	 *
-	 * @access public
 	 */
 	public function create_default_theme() {
 
@@ -41,8 +39,6 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	 *
 	 * @param string $name The name for the theme.
 	 * @param array  $settings The settings for the theme.
-	 *
-	 * @access public
 	 */
 	public function create_new_theme( $name, $settings = [] ) {
 
@@ -98,8 +94,6 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 
 	/**
 	 * Ensures that the default theme is created properly.
-	 *
-	 * @access public
 	 */
 	public function test_create_default_theme() {
 
@@ -130,8 +124,6 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 
 	/**
 	 * Ensures themes are able to be created properly.
-	 *
-	 * @access public
 	 */
 	public function test_create_theme() {
 
@@ -209,8 +201,6 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 
 	/**
 	 * Tests a theme import.
-	 *
-	 * @access public
 	 */
 	public function test_import_theme() {
 
@@ -249,8 +239,6 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 
 	/**
 	 * Tests a theme import with an invalid JSON spec.
-	 *
-	 * @access public
 	 */
 	public function test_import_theme_invalid_json() {
 
@@ -280,8 +268,6 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	/**
 	 * Ensures that JSON customizations from versions prior to 1.3.0 are migrated to
 	 * the theme(s).
-	 *
-	 * @access public
 	 */
 	public function test_json_migrate_to_theme() {
 
@@ -336,8 +322,6 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 
 	/**
 	 * Ensures that a custom spec is saved properly.
-	 *
-	 * @access public
 	 */
 	public function test_json_save_custom_spec() {
 
@@ -380,8 +364,6 @@ JSON;
 
 	/**
 	 * Ensure that invalid tokens are not saved in a custom spec.
-	 *
-	 * @access public
 	 */
 	public function test_json_save_invalid_tokens() {
 
@@ -420,8 +402,6 @@ JSON;
 
 	/**
 	 * Ensure that valid tokens are saved in the custom JSON spec.
-	 *
-	 * @access public
 	 */
 	public function test_json_save_valid_tokens() {
 
@@ -469,8 +449,6 @@ JSON;
 
 	/**
 	 * Ensure that the custom spec is used on render.
-	 *
-	 * @access public
 	 */
 	public function test_json_use_custom_spec() {
 
@@ -524,8 +502,6 @@ JSON;
 
 	/**
 	 * Ensure that postmeta in a custom spec is used on render.
-	 *
-	 * @access public
 	 */
 	public function test_json_use_custom_spec_postmeta() {
 
@@ -577,8 +553,6 @@ JSON;
 
 	/**
 	 * Ensure that a new theme can be set as the active theme.
-	 *
-	 * @access public
 	 */
 	public function test_set_theme() {
 

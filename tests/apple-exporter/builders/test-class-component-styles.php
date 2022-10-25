@@ -19,8 +19,6 @@ class Apple_News_Component_Styles_Tests extends Apple_News_Testcase {
 	 * Tests the functionality of the builder.
 	 *
 	 * @see \Apple_Exporter\Builders\Component_Styles::build()
-	 *
-	 * @access public
 	 */
 	public function test_built_array() {
 		$styles = new Component_Styles( $this->content, $this->settings );

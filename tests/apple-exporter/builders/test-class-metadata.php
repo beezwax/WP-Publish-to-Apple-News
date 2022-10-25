@@ -34,8 +34,6 @@ class Apple_News_Metadata_Test extends Apple_News_Testcase {
 
 	/**
 	 * Ensures authors are properly added using Co-Authors Plus.
-	 *
-	 * @access public
 	 */
 	public function test_cap_authors() {
 		// Setup.

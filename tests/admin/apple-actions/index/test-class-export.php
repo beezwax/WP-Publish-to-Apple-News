@@ -33,7 +33,6 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	/**
 	 * A filter to ensure that the is_exporting flag is set during export.
 	 *
-	 * @access public
 	 * @return string The filtered content.
 	 */
 	public function filter_the_content_test_is_exporting() {
@@ -575,8 +574,6 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 
 	/**
 	 * Tests the behavior of the apple_news_is_exporting() function.
-	 *
-	 * @access public
 	 */
 	public function test_is_exporting() {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'title' ] ] );

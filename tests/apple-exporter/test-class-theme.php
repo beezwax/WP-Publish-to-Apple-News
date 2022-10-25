@@ -21,7 +21,7 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 	 * An example filter for the font list.
 	 *
 	 * @param array $fonts An array of fonts to include.
-	 * @access public
+	 *
 	 * @return array The modified font array.
 	 */
 	public function filter_apple_news_fonts_list( $fonts ) {
@@ -33,8 +33,6 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 	 * Ensure that custom JSON can be deleted.
 	 *
 	 * @see Apple_Exporter\Theme::load()
-	 *
-	 * @access public
 	 */
 	public function test_delete_custom_json() {
 
@@ -72,8 +70,6 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 
 	/**
 	 * Tests the 'apple_news_fonts_list' filter.
-	 *
-	 * @access public
 	 */
 	public function test_font_filter() {
 
@@ -112,8 +108,6 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 	 * Tests the functionality of the get_registry function.
 	 *
 	 * @see Apple_Exporter\Theme::get_registry()
-	 *
-	 * @access public
 	 */
 	public function test_get_registry() {
 

@@ -35,8 +35,6 @@ abstract class Apple_News_Component_TestCase extends Apple_News_Testcase {
 	 * A function to ensure that tokens are replaced in a JSON string.
 	 *
 	 * @param string $json The JSON to check for unreplaced tokens.
-	 *
-	 * @access protected
 	 */
 	protected function ensure_tokens_replaced( $json ) {
 		preg_match( '/"#[^"#]+#"/', $json, $matches );

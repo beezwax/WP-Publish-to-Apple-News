@@ -350,8 +350,6 @@ HTML
 
 	/**
 	 * Test the `apple_news_embed_generic_json` filter.
-	 *
-	 * @access public
 	 */
 	public function test_filter() {
 		add_filter( 'apple_news_embed_generic_json', [ $this, 'filter_apple_news_embed_generic_json' ] );

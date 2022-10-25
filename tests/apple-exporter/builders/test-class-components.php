@@ -59,7 +59,6 @@ class Apple_News_Component_Tests extends Apple_News_Testcase {
 	 *
 	 * @see self::test_meta_component_ordering()
 	 *
-	 * @access public
 	 * @return array An array of arguments to pass to the test function.
 	 */
 	public function data_meta_component_ordering() {
@@ -318,8 +317,6 @@ HTML;
 	 * @param array $order The meta component order setting to use.
 	 * @param array $expected The expected component order after compilation.
 	 * @param array $components The expected container components, in order.
-	 *
-	 * @access public
 	 */
 	public function test_meta_component_ordering( $order, $expected, $components ) {
 		$this->set_theme_settings(

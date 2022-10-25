@@ -54,8 +54,6 @@ HTML;
 
 	/**
 	 * Tests HTML formatting with captions.
-	 *
-	 * @access public
 	 */
 	public function test_captions() {
 		$component = new Table(
@@ -92,8 +90,6 @@ HTML;
 
 	/**
 	 * Tests HTML formatting.
-	 *
-	 * @access public
 	 */
 	public function test_html() {
 
@@ -123,8 +119,6 @@ HTML;
 
 	/**
 	 * Tests table settings.
-	 *
-	 * @access public
 	 */
 	public function test_dark_colors() {
 
@@ -205,8 +199,6 @@ HTML;
 
 	/**
 	 * Tests table settings.
-	 *
-	 * @access public
 	 */
 	public function test_settings() {
 

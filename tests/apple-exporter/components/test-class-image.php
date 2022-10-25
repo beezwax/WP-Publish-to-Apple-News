@@ -22,7 +22,6 @@ class Apple_News_Image_Test extends Apple_News_Component_TestCase {
 	 *
 	 * @param array $json The JSON array to modify.
 	 *
-	 * @access public
 	 * @return array The modified JSON.
 	 */
 	public function filter_apple_news_image_json( $json ) {
@@ -34,8 +33,6 @@ class Apple_News_Image_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Test Image component matching and JSON
 	 * output with HTML markup for an image.
-	 *
-	 * @access public
 	 */
 	public function test_transform_image() {
 		$this->settings->set( 'html_support', 'yes' );
@@ -72,8 +69,6 @@ class Apple_News_Image_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Test Image component matching and JSON output
 	 * with HTML5 markup for an image with a caption.
-	 *
-	 * @access public
 	 */
 	public function test_transform_image_caption() {
 		$this->settings->set( 'html_support', 'yes' );
@@ -120,8 +115,6 @@ HTML;
 
 	/**
 	 * Test empty src attribute.
-	 *
-	 * @access public
 	 */
 	public function test_empty_src() {
 
@@ -142,8 +135,6 @@ HTML;
 
 	/**
 	 * Test the `apple_news_image_json` filter.
-	 *
-	 * @access public
 	 */
 	public function test_filter() {
 
@@ -178,8 +169,6 @@ HTML;
 
 	/**
 	 * Test src attribute that is just a fragment.
-	 *
-	 * @access public
 	 */
 	public function test_fragment_src() {
 
@@ -200,8 +189,6 @@ HTML;
 
 	/**
 	 * Test standard JSON export.
-	 *
-	 * @access public
 	 */
 	public function test_generated_json() {
 
@@ -228,8 +215,6 @@ HTML;
 
 	/**
 	 * Test remote image JSON export.
-	 *
-	 * @access public
 	 */
 	public function test_generated_json_remote_images() {
 
@@ -256,8 +241,6 @@ HTML;
 
 	/**
 	 * Test relative src attribute.
-	 *
-	 * @access public
 	 */
 	public function test_relative_src() {
 
@@ -280,8 +263,6 @@ HTML;
 
 	/**
 	 * Tests dark color setting for image captions
-	 *
-	 * @access public
 	 */
 	public function test_dark_colors() {
 		$this->set_theme_settings(
@@ -312,8 +293,6 @@ HTML;
 
 	/**
 	 * Tests image and image caption settings.
-	 *
-	 * @access public
 	 */
 	public function test_settings() {
 

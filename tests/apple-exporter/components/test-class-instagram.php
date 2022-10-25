@@ -23,7 +23,6 @@ class Apple_News_Instagram_Test extends Apple_News_Component_TestCase {
 	 * Since this string is intended to be used with sprintf, all literal % signs
 	 * are escaped.
 	 *
-	 * @access private
 	 * @var string
 	 */
 	private $embed = <<<HTML
@@ -35,7 +34,6 @@ HTML;
 	 *
 	 * @see self::test_transform()
 	 *
-	 * @access public
 	 * @return array Parameters to use when calling testTransform.
 	 */
 	public function data_transform() {
@@ -54,7 +52,6 @@ HTML;
 	 *
 	 * @param array $json The JSON array to modify.
 	 *
-	 * @access public
 	 * @return array The modified JSON.
 	 */
 	public function filter_apple_news_instagram_json( $json ) {
@@ -65,8 +62,6 @@ HTML;
 
 	/**
 	 * Test the `apple_news_instagram_json` filter.
-	 *
-	 * @access public
 	 */
 	public function test_filter_json() {
 
@@ -96,8 +91,6 @@ HTML;
 
 	/**
 	 * Ensures an embed without a URL is not incorrectly transformed.
-	 *
-	 * @access public
 	 */
 	public function test_invalid_markup() {
 
@@ -123,8 +116,6 @@ HTML;
 	 * @dataProvider data_transform
 	 *
 	 * @param string $url The URL to use.
-	 *
-	 * @access public
 	 */
 	public function test_transform( $url ) {
 
