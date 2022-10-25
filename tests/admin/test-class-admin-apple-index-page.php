@@ -19,7 +19,7 @@ class Apple_News_Admin_Apple_Index_Page_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the behavior of resetting a stuck post.
 	 */
-	public function testReset() {
+	public function test_reset() {
 		// Create post.
 		$post_id = $this->factory->post->create();
 

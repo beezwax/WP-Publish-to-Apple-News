@@ -57,7 +57,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testCaptions() {
+	public function test_captions() {
 		$component = new Table(
 			$this->html_caption,
 			$this->workspace,
@@ -95,7 +95,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testHTML() {
+	public function test_html() {
 
 		// Setup.
 		$component = new Table(
@@ -126,7 +126,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testDarkColors() {
+	public function test_dark_colors() {
 
 		// Setup.
 		$content = new Exporter_Content(
@@ -208,7 +208,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testSettings() {
+	public function test_settings() {
 
 		// Setup.
 		$content = new Exporter_Content(

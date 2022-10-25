@@ -22,7 +22,7 @@ class Apple_News_Exporter_Test extends Apple_News_Testcase {
 	 * Tests the functionality of the prepare_for_encoding function to ensure
 	 * that unwanted characters are stripped.
 	 */
-	public function testPrepareForEncoding() {
+	public function test_prepare_for_encoding() {
 		// Test UTF-8 characters with accents common in French.
 		$test_content = 'Pondant à Noël — aÀâÂèÈéÉêÊëËîÎïÏôÔùÙûÛüÜÿŸçÇœŒ€æÆ';
 		Exporter::prepare_for_encoding( $test_content );

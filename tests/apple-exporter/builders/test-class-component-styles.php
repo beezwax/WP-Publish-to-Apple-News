@@ -22,7 +22,7 @@ class Apple_News_Component_Styles_Tests extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testBuiltArray() {
+	public function test_built_array() {
 		$styles = new Component_Styles( $this->content, $this->settings );
 		$styles->register_style( 'some-name', [ 'my-key' => 'my value' ] );
 		$result = $styles->to_array();

@@ -49,7 +49,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testFilter() {
+	public function test_filter() {
 
 		// Setup.
 		$component = $this->get_component();
@@ -77,7 +77,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testCaption() {
+	public function test_caption() {
 		$component = $this->get_component( '<figure class="wp-block-video"><video controls="" src="https://www.example.org/test.mp4"/><figcaption>caption</figcaption></figure>' );
 
 		// Test.
@@ -105,7 +105,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testGeneratedJSON() {
+	public function test_generated_json() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );

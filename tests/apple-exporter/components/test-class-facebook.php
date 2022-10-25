@@ -55,7 +55,7 @@ class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 	 *
 	 * @access public
 	 */
-	public function testFilter() {
+	public function test_filter() {
 
 		// Setup.
 		$component = new Facebook(
@@ -93,7 +93,7 @@ class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 	 *
 	 * @access public
 	 */
-	public function testTransform( $url ) {
+	public function test_transform( $url ) {
 
 		// Setup.
 		$component = new Facebook(

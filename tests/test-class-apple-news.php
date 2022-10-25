@@ -24,7 +24,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testGetFilename() {
+	public function test_get_filename() {
 		$url      = 'https://www.example.org/test-get-filename.jpg?w=150&h=150';
 		$filename = Apple_News::get_filename( $url );
 		$this->assertEquals( 'test-get-filename.jpg', $filename );
@@ -33,7 +33,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the functionality of Apple_News::is_default_theme.
 	 */
-	public function testIsDefaultTheme() {
+	public function test_is_default_theme() {
 		// Absent any customizations, the check for the default theme should return true.
 		$this->assertTrue( Apple_News::is_default_theme() );
 
@@ -67,7 +67,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testMigrateApiSettings() {
+	public function test_migrate_api_settings() {
 
 		// Setup.
 		$legacy_settings                        = $this->settings->all();
@@ -91,7 +91,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testMigrateBlockquoteSettings() {
+	public function test_migrate_blockquote_settings() {
 
 		// Setup.
 		$legacy_settings                           = $this->settings->all();
@@ -139,7 +139,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testMigrateCaptionSettings() {
+	public function test_migrate_caption_settings() {
 
 		// Setup.
 		$legacy_settings                     = $this->settings->all();
@@ -175,7 +175,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testMigrateHeaderSettings() {
+	public function test_migrate_header_settings() {
 
 		// Setup.
 		$legacy_settings                       = $this->settings->all();
@@ -238,7 +238,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testMigrateSettings() {
+	public function test_migrate_settings() {
 
 		// Setup.
 		$apple_news = new Apple_News();
@@ -268,7 +268,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testSupportInfo() {
+	public function test_support_info() {
 
 		// Test HTML.
 		$this->assertEquals(
@@ -302,7 +302,7 @@ class Apple_News_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testVersion() {
+	public function test_version() {
 		$plugin_data = apple_news_get_plugin_data();
 		$this->assertEquals( Apple_News::$version, $plugin_data['Version'] );
 	}

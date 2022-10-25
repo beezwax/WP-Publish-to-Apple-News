@@ -55,7 +55,7 @@ class Apple_News_Tweet_Test extends Apple_News_Component_TestCase {
 	 * @param string $html The HTML to be fed to the component.
 	 * @param string $url  The expected URL of the Twitter component.
 	 */
-	public function testComponent( $html, $url ) {
+	public function test_component( $html, $url ) {
 		$component = new Tweet(
 			$html,
 			$this->workspace,
@@ -72,7 +72,7 @@ class Apple_News_Tweet_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Ensures invalid Twitter embeds are not converted.
 	 */
-	public function testInvalidMarkup() {
+	public function test_invalid_markup() {
 		$component = new Tweet(
 			'<blockquote class="twitter-tweet" lang="en">Invalid content. No URL.</blockquote>',
 			$this->workspace,
@@ -87,7 +87,7 @@ class Apple_News_Tweet_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Tests the behavior of an oEmbed.
 	 */
-	public function testMatchesASingleURL() {
+	public function test_matches_a_single_url() {
 		$node = $this->build_node( 'https://twitter.com/gosukiwi/status/608069908044390400' );
 		$this->assertNotNull( Tweet::node_matches( $node ) );
 	}
@@ -95,7 +95,7 @@ class Apple_News_Tweet_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Tests the behavior of the apple_news_tweet_json filter.
 	 */
-	public function testFilter() {
+	public function test_filter() {
 		$component = new Tweet(
 			'<blockquote class="twitter-tweet" lang="en"><p><a href="https://twitter.com/foo/status/1111">twitter.com/foo/status/1111</a></p>&mdash; <br />WordPress.com (@wordpressdotcom) <a href="https://twitter.com/#!/wordpressdotcom/status/123" data-datetime="2012-05-21T13:01:34+00:00">May 21, 2012</a></blockquote>',
 			$this->workspace,

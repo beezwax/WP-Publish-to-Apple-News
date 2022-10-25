@@ -20,7 +20,7 @@ class Apple_News_Class_Advertising_Settings_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the default advertising settings.
 	 */
-	public function testDefaultAdSettings() {
+	public function test_default_ad_settings() {
 		$builder = new Advertising_Settings( $this->content, $this->content_settings );
 		$this->assertEquals(
 			[
@@ -41,7 +41,7 @@ class Apple_News_Class_Advertising_Settings_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the behavior of the component when advertisements are disabled.
 	 */
-	public function testNoAds() {
+	public function test_no_ads() {
 
 		// Setup.
 		$settings                         = $this->theme->all_settings();
@@ -58,7 +58,7 @@ class Apple_News_Class_Advertising_Settings_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the ability to customize ad frequency.
 	 */
-	public function testCustomAdFrequency() {
+	public function test_custom_ad_frequency() {
 
 		// Setup.
 		$settings                 = $this->theme->all_settings();
@@ -87,7 +87,7 @@ class Apple_News_Class_Advertising_Settings_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the ability to customize the ad margin.
 	 */
-	public function testCustomAdMargin() {
+	public function test_custom_ad_margin() {
 
 		// Setup.
 		$settings              = $this->theme->all_settings();
@@ -116,7 +116,7 @@ class Apple_News_Class_Advertising_Settings_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the article-level automatic advertisement settings.
 	 */
-	public function testAutoplacement() {
+	public function test_autoplacement() {
 		$post_id = self::factory()->post->create();
 		$json    = $this->get_json_for_post( $post_id );
 		$this->assertEquals(

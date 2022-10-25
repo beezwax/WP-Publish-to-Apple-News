@@ -33,12 +33,12 @@ HTML;
 	/**
 	 * A data provider for the testTransform function.
 	 *
-	 * @see self::testTransform()
+	 * @see self::test_transform()
 	 *
 	 * @access public
 	 * @return array Parameters to use when calling testTransform.
 	 */
-	public function dataTransform() {
+	public function data_transform() {
 		return [
 			[ 'http://www.instagram.com/p/LtaiGnryiu/' ],
 			[ 'https://www.instagram.com/p/LtaiGnryiu/' ],
@@ -68,7 +68,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testFilterJSON() {
+	public function test_filter_json() {
 
 		// Setup.
 		$component = new Instagram(
@@ -99,7 +99,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testInvalidMarkup() {
+	public function test_invalid_markup() {
 
 		// Setup.
 		$component = new Instagram(
@@ -120,13 +120,13 @@ HTML;
 	/**
 	 * Ensures that given test parameters properly transform into components.
 	 *
-	 * @dataProvider dataTransform
+	 * @dataProvider data_transform
 	 *
 	 * @param string $url The URL to use.
 	 *
 	 * @access public
 	 */
-	public function testTransform( $url ) {
+	public function test_transform( $url ) {
 
 		// Setup.
 		$components   = [];

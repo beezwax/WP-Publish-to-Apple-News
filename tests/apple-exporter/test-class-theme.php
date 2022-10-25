@@ -36,7 +36,7 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testDeleteCustomJSON() {
+	public function test_delete_custom_json() {
 
 		// Define custom JSON to be removed.
 		$theme_settings = [
@@ -75,7 +75,7 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testFontFilter() {
+	public function test_font_filter() {
 
 		// Test before filter.
 		$this->assertFalse(
@@ -115,7 +115,7 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testGetRegistry() {
+	public function test_get_registry() {
 
 		// Setup.
 		update_option(

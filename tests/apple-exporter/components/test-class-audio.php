@@ -20,7 +20,7 @@ class Apple_News_Audio_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Tests basic JSON generation.
 	 */
-	public function testGeneratedJSON() {
+	public function test_generated_json() {
 		$component = new Audio(
 			'<audio><source src="https://www.example.org/audio-file.mp3?some_query=string"></audio>',
 			$this->workspace,
@@ -37,7 +37,7 @@ class Apple_News_Audio_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Tests HTML formatting with captions.
 	 */
-	public function testCaption() {
+	public function test_caption() {
 		$component = new Audio(
 			'<figure class="wp-block-audio"><audio controls="" src="https://www.example.org/Song-1.mp3"/><figcaption>caption</figcaption></figure>',
 			$this->workspace,
@@ -69,7 +69,7 @@ class Apple_News_Audio_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Tests the behavior of the apple_news_audio_json filter.
 	 */
-	public function testFilter() {
+	public function test_filter() {
 		$component = new Audio(
 			'<audio><source src="https://www.example.org/audio-file.mp3?some_query=string"></audio>',
 			$this->workspace,

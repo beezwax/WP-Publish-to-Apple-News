@@ -51,7 +51,7 @@ class Apple_News_Link_Button_Test extends Apple_News_Component_TestCase {
 	 *
 	 * @return array An array of function arguments.
 	 */
-	public function dataProviderNodeMatches() {
+	public function data_provider_node_matches() {
 		return [
 			// A bare link should not match.
 			[
@@ -86,7 +86,7 @@ class Apple_News_Link_Button_Test extends Apple_News_Component_TestCase {
 	 *
 	 * @return array An array of function arguments for the test function.
 	 */
-	public function dataProviderTransform() {
+	public function data_provider_transform() {
 		return [
 			// Test a normal button.
 			[
@@ -134,9 +134,9 @@ class Apple_News_Link_Button_Test extends Apple_News_Component_TestCase {
 	 * @param string $html    The HTML to test.
 	 * @param bool   $matches Whether the node matches or not.
 	 *
-	 * @dataProvider dataProviderNodeMatches
+	 * @dataProvider data_provider_node_matches
 	 */
-	public function testNodeMatches( $html, $matches ) {
+	public function test_node_matches( $html, $matches ) {
 		$node   = self::build_node( $html );
 		$result = Link_Button::node_matches( $node );
 		if ( $matches ) {
@@ -152,9 +152,9 @@ class Apple_News_Link_Button_Test extends Apple_News_Component_TestCase {
 	 * @param string $html     The HTML to transform into a Link Button.
 	 * @param array  $expected The expected result from the component's to_array method.
 	 *
-	 * @dataProvider dataProviderTransform
+	 * @dataProvider data_provider_transform
 	 */
-	public function testTransform( $html, $expected ) {
+	public function test_transform( $html, $expected ) {
 		// Setup.
 		$component = new Link_Button(
 			$html,

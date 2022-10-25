@@ -20,7 +20,7 @@ class Apple_News_Advertisement_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Tests basic JSON generation.
 	 */
-	public function testGeneratedJSON() {
+	public function test_generated_json() {
 		$component = new Advertisement(
 			null,
 			$this->workspace,
@@ -37,7 +37,7 @@ class Apple_News_Advertisement_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Tests the behavior of the apple_news_advertisement_json filter.
 	 */
-	public function testFilter() {
+	public function test_filter() {
 		$component = new Advertisement(
 			null,
 			$this->workspace,

@@ -22,7 +22,7 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function createDefaultTheme() {
+	public function create_default_theme() {
 
 		// Create default settings in the database.
 		$settings = new \Admin_Apple_Settings();
@@ -44,7 +44,7 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function createNewTheme( $name, $settings = [] ) {
+	public function create_new_theme( $name, $settings = [] ) {
 
 		// Set up the request.
 		$nonce = wp_create_nonce( 'apple_news_save_edit_theme' );
@@ -101,10 +101,10 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testCreateDefaultTheme() {
+	public function test_create_default_theme() {
 
 		// Create the default theme.
-		$this->createDefaultTheme();
+		$this->create_default_theme();
 
 		// Ensure the default theme was created.
 		$vanilla_theme = new Theme();
@@ -133,11 +133,11 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testCreateTheme() {
+	public function test_create_theme() {
 
 		// Set the POST data required to create a new theme.
 		$name = 'Test Theme';
-		$this->createNewTheme( $name, [ 'body_color' => '#ff0000' ] );
+		$this->create_new_theme( $name, [ 'body_color' => '#ff0000' ] );
 
 		// Check that the data was saved properly.
 		$default_theme                   = new Theme();
@@ -152,14 +152,14 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	/**
 	 * Ensure that a theme can be deleted.
 	 */
-	public function testDeleteTheme() {
+	public function test_delete_theme() {
 
 		// Create the default theme.
-		$this->createDefaultTheme();
+		$this->create_default_theme();
 
 		// Name and create a new theme.
 		$name = 'Test Theme';
-		$this->createNewTheme( $name );
+		$this->create_new_theme( $name );
 
 		// Ensure both themes exist.
 		$this->assertTrue(
@@ -212,7 +212,7 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testImportTheme() {
+	public function test_import_theme() {
 
 		// Setup.
 		$advertisement_json = [
@@ -252,7 +252,7 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testImportThemeInvalidJSON() {
+	public function test_import_theme_invalid_json() {
 
 		// Setup.
 		$invalid_json    = [
@@ -283,11 +283,11 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testJSONMigrateToTheme() {
+	public function test_json_migrate_to_theme() {
 
 		// Create the default theme and the Test Theme.
-		$this->createDefaultTheme();
-		$this->createNewTheme( 'Test Theme' );
+		$this->create_default_theme();
+		$this->create_new_theme( 'Test Theme' );
 
 		// Define the default-body JSON override we will be testing against.
 		$default_body = [
@@ -339,10 +339,10 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testJSONSaveCustomSpec() {
+	public function test_json_save_custom_spec() {
 
 		// Setup.
-		$this->createDefaultTheme();
+		$this->create_default_theme();
 		$json  = <<<JSON
 {
     "role": "banner_advertisement",
@@ -383,10 +383,10 @@ JSON;
 	 *
 	 * @access public
 	 */
-	public function testJSONSaveInvalidTokens() {
+	public function test_json_save_invalid_tokens() {
 
 		// Setup.
-		$this->createDefaultTheme();
+		$this->create_default_theme();
 		$invalid_json = <<<JSON
 {
     "role": "audio",
@@ -423,10 +423,10 @@ JSON;
 	 *
 	 * @access public
 	 */
-	public function testJSONSaveValidTokens() {
+	public function test_json_save_valid_tokens() {
 
 		// Setup.
-		$this->createDefaultTheme();
+		$this->create_default_theme();
 		$json  = <<<JSON
 {
     "role": "audio",
@@ -472,10 +472,10 @@ JSON;
 	 *
 	 * @access public
 	 */
-	public function testJSONUseCustomSpec() {
+	public function test_json_use_custom_spec() {
 
 		// Setup.
-		$this->createDefaultTheme();
+		$this->create_default_theme();
 		$json  = <<<JSON
 {
     "columnStart": "#body_offset#",
@@ -527,10 +527,10 @@ JSON;
 	 *
 	 * @access public
 	 */
-	public function testJSONUseCustomSpecPostmeta() {
+	public function test_json_use_custom_spec_postmeta() {
 
 		// Setup.
-		$this->createDefaultTheme();
+		$this->create_default_theme();
 		$json  = <<<JSON
 {
     "columnStart": "#body_offset#",
@@ -580,13 +580,13 @@ JSON;
 	 *
 	 * @access public
 	 */
-	public function testSetTheme() {
+	public function test_set_theme() {
 
 		// Create the default theme.
-		$this->createDefaultTheme();
+		$this->create_default_theme();
 
 		// Create a test theme with altered settings.
-		$this->createNewTheme( 'Test Theme', [ 'layout_margin' => 50 ] );
+		$this->create_new_theme( 'Test Theme', [ 'layout_margin' => 50 ] );
 
 		// Simulate the form submission to set the theme.
 		/* phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized */

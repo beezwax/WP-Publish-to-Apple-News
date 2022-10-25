@@ -45,7 +45,7 @@ class Apple_News_Exporter_Content_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the ability to set a cover using an array configuration.
 	 */
-	public function testCompleteContentWithCoverConfig() {
+	public function test_complete_content_with_cover_config() {
 		$cover   = [
 			'caption' => 'Test Caption',
 			'url'     => 'https://www.example.org/wp-content/uploads/2020/07/test-image.jpg',

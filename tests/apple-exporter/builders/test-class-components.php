@@ -20,7 +20,7 @@ class Apple_News_Component_Tests extends Apple_News_Testcase {
 	 *
 	 * @return array
 	 */
-	public function dataImageFullSizeUrl() {
+	public function data_image_full_size_url() {
 		return [
 			// An image without crops should return itself.
 			[
@@ -57,12 +57,12 @@ class Apple_News_Component_Tests extends Apple_News_Testcase {
 	/**
 	 * A data provider for the meta component ordering test.
 	 *
-	 * @see self::testMetaComponentOrdering()
+	 * @see self::test_meta_component_ordering()
 	 *
 	 * @access public
 	 * @return array An array of arguments to pass to the test function.
 	 */
-	public function dataMetaComponentOrdering() {
+	public function data_meta_component_ordering() {
 		return [
 			[
 				[ 'cover', 'title', 'byline' ],
@@ -95,7 +95,7 @@ class Apple_News_Component_Tests extends Apple_News_Testcase {
 	/**
 	 * Tests the ability to view captions below cover images.
 	 */
-	public function testCoverImage() {
+	public function test_cover_image() {
 		// Enable the cover caption option in the theme.
 		$this->set_theme_settings( [ 'cover_caption' => true ] );
 
@@ -128,7 +128,7 @@ class Apple_News_Component_Tests extends Apple_News_Testcase {
 	 * image and instead extracting the first image from the post to use as the
 	 * cover image.
 	 */
-	public function testFeaturedImageDeduping() {
+	public function test_featured_image_deduping() {
 		$this->set_theme_settings(
 			[
 				'cover_caption'        => true,
@@ -259,14 +259,14 @@ class Apple_News_Component_Tests extends Apple_News_Testcase {
 	/**
 	 * Tests the functionality of the get_image_full_size_url function.
 	 *
-	 * @dataProvider dataImageFullSizeUrl
+	 * @dataProvider data_image_full_size_url
 	 *
 	 * @param string $original The original URL to test.
 	 * @param string $expected The expected result.
 	 *
 	 * @throws ReflectionException If the reflection fails.
 	 */
-	public function testGetImageFullSizeUrl( $original, $expected ) {
+	public function test_get_image_full_size_url( $original, $expected ) {
 		$class  = new ReflectionClass( 'Apple_Exporter\Builders\Components' );
 		$method = $class->getMethod( 'get_image_full_size_url' );
 		$method->setAccessible( true );
@@ -277,7 +277,7 @@ class Apple_News_Component_Tests extends Apple_News_Testcase {
 	/**
 	 * Tests the functionality of the maybe_bundle_source function.
 	 */
-	public function testImageBundling() {
+	public function test_image_bundling() {
 		// Ensure remote images are turned off for this test.
 		$use_remote_images                 = $this->settings->use_remote_images;
 		$this->settings->use_remote_images = 'no';
@@ -313,7 +313,7 @@ HTML;
 	/**
 	 * Ensures that the specified component order is respected.
 	 *
-	 * @dataProvider dataMetaComponentOrdering
+	 * @dataProvider data_meta_component_ordering
 	 *
 	 * @param array $order The meta component order setting to use.
 	 * @param array $expected The expected component order after compilation.
@@ -321,7 +321,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testMetaComponentOrdering( $order, $expected, $components ) {
+	public function test_meta_component_ordering( $order, $expected, $components ) {
 		$this->set_theme_settings(
 			[
 				'enable_advertisement' => 'no',

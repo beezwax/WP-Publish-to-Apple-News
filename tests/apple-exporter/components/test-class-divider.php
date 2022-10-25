@@ -20,7 +20,7 @@ class Apple_News_Divider_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Ensures that an <hr/> tag gets converted to a Divider component.
 	 */
-	public function testBuildingRemovesTags() {
+	public function test_building_removes_tags() {
 		$component = new Divider(
 			'<hr/>',
 			$this->workspace,
@@ -38,7 +38,7 @@ class Apple_News_Divider_Test extends Apple_News_Component_TestCase {
 	/**
 	 * Tests the behavior of the apple_news_divider_json filter.
 	 */
-	public function testFilter() {
+	public function test_filter() {
 		$component = new Divider(
 			'<hr/>',
 			$this->workspace,

@@ -37,7 +37,7 @@ class Apple_News_Image_Test extends Apple_News_Component_TestCase {
 	 *
 	 * @access public
 	 */
-	public function testTransformImage() {
+	public function test_transform_image() {
 		$this->settings->set( 'html_support', 'yes' );
 		$this->settings->set( 'use_remote_images', 'yes' );
 
@@ -75,7 +75,7 @@ class Apple_News_Image_Test extends Apple_News_Component_TestCase {
 	 *
 	 * @access public
 	 */
-	public function testTransformImageCaption() {
+	public function test_transform_image_caption() {
 		$this->settings->set( 'html_support', 'yes' );
 		$this->settings->set( 'use_remote_images', 'yes' );
 
@@ -123,7 +123,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testEmptySrc() {
+	public function test_empty_src() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
@@ -145,7 +145,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testFilter() {
+	public function test_filter() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'no' );
@@ -181,7 +181,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testFragmentSrc() {
+	public function test_fragment_src() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
@@ -203,7 +203,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testGeneratedJSON() {
+	public function test_generated_json() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'no' );
@@ -231,7 +231,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testGeneratedJSONRemoteImages() {
+	public function test_generated_json_remote_images() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
@@ -259,7 +259,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testRelativeSrc() {
+	public function test_relative_src() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
@@ -283,7 +283,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testDarkColors() {
+	public function test_dark_colors() {
 		$this->set_theme_settings(
 			[
 				'caption_color_dark' => '#abcdef',
@@ -315,7 +315,7 @@ HTML;
 	 *
 	 * @access public
 	 */
-	public function testSettings() {
+	public function test_settings() {
 
 		// Setup.
 		$this->settings->full_bleed_images = 'yes';
@@ -373,7 +373,7 @@ HTML;
 	/**
 	 * Ensures that the lightbox font is set to the same font face as the image caption.
 	 */
-	public function testLightboxFont() {
+	public function test_lightbox_font() {
 		$this->set_theme_settings(
 			[
 				'caption_font'         => 'Menlo-Regular',

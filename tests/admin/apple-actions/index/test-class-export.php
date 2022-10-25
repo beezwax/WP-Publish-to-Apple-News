@@ -64,7 +64,7 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the ability to include a caption with a cover image.
 	 */
-	public function testCoverWithCaption() {
+	public function test_cover_with_caption() {
 		$this->set_theme_settings( [ 'cover_caption' => true ] );
 
 		// Create dummy post and attachment.

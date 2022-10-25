@@ -118,7 +118,7 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testAutomaticCategoryMapping() {
+	public function test_automatic_category_mapping() {
 
 		// Create a post with Category 2 to trigger second section membership.
 		$category2 = get_term_by( 'name', 'Category 2', 'category' );
@@ -139,7 +139,7 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testMappingTaxonomyFilter() {
+	public function test_mapping_taxonomy_filter() {
 
 		// Test default behavior.
 		$taxonomy = Admin_Apple_Sections::get_mapping_taxonomy();
@@ -163,7 +163,7 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testOverrideCategoryMapping() {
+	public function test_override_category_mapping() {
 
 		// Create a post with Category 2 to trigger second section membership.
 		$category2 = get_term_by( 'name', 'Category 2', 'category' );
@@ -193,7 +193,7 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function testSaveThemeMapping() {
+	public function test_save_theme_mapping() {
 		// Validate the response.
 		$this->assertEquals(
 			[
