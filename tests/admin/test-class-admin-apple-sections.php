@@ -21,7 +21,7 @@ class Admin_Apple_Sections_Test extends WP_UnitTestCase {
 	 *
 	 * @access public
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setup();
 
 		// Cache default settings for future use.

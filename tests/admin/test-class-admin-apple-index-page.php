@@ -4,7 +4,7 @@ use \Apple_Exporter\Settings as Settings;
 
 class Admin_Apple_Index_Page_Test extends WP_UnitTestCase {
 
-	public function setup() {
+	public function setup(): void {
 		parent::setup();
 
 		$this->settings = new Settings();

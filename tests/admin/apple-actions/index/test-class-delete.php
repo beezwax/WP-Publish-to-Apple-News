@@ -8,7 +8,7 @@ class Admin_Action_Index_Delete_Test extends WP_UnitTestCase {
 
 	private $prophet;
 
-	public function setup() {
+	public function setup(): void {
 		parent::setup();
 
 		$this->prophet = new \Prophecy\Prophet;
@@ -18,7 +18,7 @@ class Admin_Action_Index_Delete_Test extends WP_UnitTestCase {
 		$this->settings->set( 'api_channel', 'baz' );
 	}
 
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->prophet->checkPredictions();
 	}
 

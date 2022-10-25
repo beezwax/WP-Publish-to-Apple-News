@@ -27,7 +27,7 @@ class Link_Button_Test extends Component_TestCase {
 	/**
 	 * Code to run once before the entire test suite.
 	 */
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 		self::$test_post = self::factory()->post->create_and_get(
 			[
@@ -40,7 +40,7 @@ class Link_Button_Test extends Component_TestCase {
 	/**
 	 * Code to run before each test in the suite.
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		global $post;
 		$post = self::$test_post;

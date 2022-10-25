@@ -24,7 +24,7 @@ class Table_Test extends Component_TestCase {
 	 *
 	 * @access public
 	 */
-	public function setUp() {
+	public function setUp(): void {
 
 		// Run the parent setup function (not done automatically).
 		parent::setup();

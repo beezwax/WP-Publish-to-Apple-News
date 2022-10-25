@@ -7,7 +7,7 @@ use Apple_Exporter\Builders\Layout as Layout;
 
 class Layout_Test extends WP_UnitTestCase {
 
-	public function setup() {
+	public function setup(): void {
 		$this->settings = new Settings();
 		$this->content  = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>' );
 	}

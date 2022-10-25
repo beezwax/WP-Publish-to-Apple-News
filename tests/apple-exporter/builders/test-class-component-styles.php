@@ -22,7 +22,7 @@ class Component_Styles_Tests extends WP_UnitTestCase {
 	 *
 	 * @access public
 	 */
-	public function setup() {
+	public function setup(): void {
 		$this->settings = new Settings();
 		$this->content  = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>' );
 	}
