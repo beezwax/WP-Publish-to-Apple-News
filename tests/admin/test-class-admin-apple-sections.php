@@ -189,33 +189,6 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 	}
 
 	/**
-	 * Ensures that the category mapping fields save properly.
-	 *
-	 * @access public
-	 */
-	public function testSaveCategoryMapping() {
-
-		// Get info about our categories.
-		$category1 = get_term_by( 'name', 'Category 1', 'category' );
-		$category2 = get_term_by( 'name', 'Category 2', 'category' );
-		$category3 = get_term_by( 'name', 'Category 3', 'category' );
-
-		// Validate the response.
-		$this->assertEquals(
-			[
-				'abcdef01-2345-6789-abcd-ef012356789a' => [
-					$category1->term_id,
-				],
-				'abcdef01-2345-6789-abcd-ef012356789b' => [
-					$category2->term_id,
-					$category3->term_id,
-				],
-			],
-			get_option( Admin_Apple_Sections::TAXONOMY_MAPPING_KEY )
-		);
-	}
-
-	/**
 	 * Ensures that the theme mapping fields save properly.
 	 *
 	 * @access public
