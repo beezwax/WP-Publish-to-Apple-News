@@ -73,5 +73,4 @@ class Apple_News_Exporter_Content_Test extends Apple_News_Testcase {
 			Exporter_Content::format_src_url( 'https://www.example.org/some.mp3?one=two&amp;query=arg' )
 		);
 	}
-
 }

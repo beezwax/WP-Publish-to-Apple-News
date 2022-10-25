@@ -52,4 +52,3 @@ class Apple_News_Exporter_Test extends Apple_News_Testcase {
 		);
 	}
 }
-

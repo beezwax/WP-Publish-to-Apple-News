@@ -102,4 +102,3 @@ class Apple_News_Admin_Apple_Meta_Boxes_Test extends Apple_News_Testcase {
 		$this->assertEquals( 'middle', get_post_meta( $post_id, 'apple_news_pullquote_position', true ) );
 	}
 }
-

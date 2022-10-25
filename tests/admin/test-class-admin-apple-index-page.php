@@ -47,4 +47,3 @@ class Apple_News_Admin_Apple_Index_Page_Test extends Apple_News_Testcase {
 		$this->assertEquals( false, get_post_meta( $post_id, 'apple_news_api_errors', true ) );
 	}
 }
-
