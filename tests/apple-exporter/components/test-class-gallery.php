@@ -38,7 +38,8 @@ class Apple_News_Gallery_Test extends Apple_News_Component_TestCase {
 <figure class="wp-block-image size-large"><a href="%9\$s"><img src="%8\$s" alt="Alt Text 3" class="wp-image-%7\$d"/></a><figcaption>Test Caption 3</figcaption></figure>
 <!-- /wp:image --></figure>
 <!-- /wp:gallery -->
-HTML,
+HTML
+				,
 			],
 			[
 				// Gutenberg, Jetpack slideshow, three images.
@@ -73,7 +74,8 @@ HTML,
 	</div>
 </div>
 <!-- /wp:jetpack/slideshow -->
-HTML,
+HTML
+				,
 			],
 			[
 				// Classic editor, gallery shortcode, three images.
