@@ -26,14 +26,14 @@ class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 	 * @return array An array of test data
 	 */
 	public function data_transform() {
-		return array(
-			array( 'https://www.facebook.com/page-name/posts/12345' ),
-			array( 'https://www.facebook.com/username/posts/12345' ),
-			array( 'https://www.facebook.com/username/activity/12345' ),
-			array( 'https://www.facebook.com/photo.php?fbid=12345' ),
-			array( 'https://www.facebook.com/photos/12345' ),
-			array( 'https://www.facebook.com/permalink.php?story_fbid=12345' ),
-		);
+		return [
+			[ 'https://www.facebook.com/page-name/posts/12345' ],
+			[ 'https://www.facebook.com/username/posts/12345' ],
+			[ 'https://www.facebook.com/username/activity/12345' ],
+			[ 'https://www.facebook.com/photo.php?fbid=12345' ],
+			[ 'https://www.facebook.com/photos/12345' ],
+			[ 'https://www.facebook.com/permalink.php?story_fbid=12345' ],
+		];
 	}
 
 	/**
@@ -67,7 +67,7 @@ class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 		);
 		add_filter(
 			'apple_news_facebook_json',
-			array( $this, 'filter_apple_news_facebook_json' )
+			[ $this, 'filter_apple_news_facebook_json' ]
 		);
 
 		// Test.
@@ -80,7 +80,7 @@ class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 		// Teardown.
 		remove_filter(
 			'apple_news_facebook_json',
-			array( $this, 'filter_apple_news_facebook_json' )
+			[ $this, 'filter_apple_news_facebook_json' ]
 		);
 	}
 
@@ -106,10 +106,10 @@ class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 
 		// Test.
 		$this->assertEquals(
-			array(
+			[
 				'role' => 'facebook_post',
 				'URL'  => $url,
-			),
+			],
 			$component->to_array()
 		);
 
@@ -139,10 +139,10 @@ class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 		);
 
 		$this->assertEquals(
-			array(
+			[
 				'role' => 'facebook_post',
 				'URL'  => $url,
-			),
+			],
 			$component->to_array()
 		);
 

@@ -162,7 +162,7 @@ HTML;
 		);
 		add_filter(
 			'apple_news_image_json',
-			array( $this, 'filter_apple_news_image_json' )
+			[ $this, 'filter_apple_news_image_json' ]
 		);
 
 		// Test.
@@ -172,7 +172,7 @@ HTML;
 		// Teardown.
 		remove_filter(
 			'apple_news_image_json',
-			array( $this, 'filter_apple_news_image_json' )
+			[ $this, 'filter_apple_news_image_json' ]
 		);
 	}
 

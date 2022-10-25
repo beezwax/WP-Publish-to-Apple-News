@@ -34,59 +34,59 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 		// Pre-cache a transient for sections using dummy data to bypass API call.
 		set_transient(
 			'apple_news_sections',
-			array(
-				(object) array(
+			[
+				(object) [
 					'createdAt'  => '2017-01-01T00:00:00Z',
 					'id'         => 'abcdef01-2345-6789-abcd-ef012356789a',
 					'isDefault'  => true,
-					'links'      => (object) array(
+					'links'      => (object) [
 						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
 						'self'    => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
-					),
+					],
 					'modifiedAt' => '2017-01-01T00:00:00Z',
 					'name'       => 'Main',
 					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
 					'type'       => 'section',
-				),
-				(object) array(
+				],
+				(object) [
 					'createdAt'  => '2017-01-01T00:00:00Z',
 					'id'         => 'abcdef01-2345-6789-abcd-ef012356789b',
 					'isDefault'  => false,
-					'links'      => (object) array(
+					'links'      => (object) [
 						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
 						'self'    => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789b',
-					),
+					],
 					'modifiedAt' => '2017-01-01T00:00:00Z',
 					'name'       => 'Secondary Section',
 					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUw',
 					'type'       => 'section',
-				),
-			)
+				],
+			]
 		);
 
 		// Create some themes.
 		$this->createThemes();
 
 		// Set up post data for creating taxonomy and theme mappings.
-		$_POST = array(
+		$_POST = [
 			'action' => 'apple_news_set_section_mappings',
 			'page'   => 'apple_news_sections',
-			'taxonomy-mapping-abcdef01-2345-6789-abcd-ef012356789a' => array(
+			'taxonomy-mapping-abcdef01-2345-6789-abcd-ef012356789a' => [
 				'Category 1',
-			),
-			'taxonomy-mapping-abcdef01-2345-6789-abcd-ef012356789b' => array(
+			],
+			'taxonomy-mapping-abcdef01-2345-6789-abcd-ef012356789b' => [
 				'Category 2',
 				'Category 3',
-			),
+			],
 			'theme-mapping-abcdef01-2345-6789-abcd-ef012356789a' => 'Default',
 			'theme-mapping-abcdef01-2345-6789-abcd-ef012356789b' => 'Test Theme',
-		);
+		];
 
-		$_REQUEST = array(
+		$_REQUEST = [
 			'_wp_http_referer' => '/wp-admin/admin.php?page=apple-news-sections',
 			'_wpnonce'         => wp_create_nonce( 'apple_news_sections' ),
 			'action'           => 'apple_news_set_section_mappings',
-		);
+		];
 
 		// Run the request to set up taxonomy mappings.
 		$sections = new Admin_Apple_Sections();
@@ -127,9 +127,9 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 
 		// Validate automatic section assignment.
 		$this->assertEquals(
-			array(
+			[
 				'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789b',
-			),
+			],
 			Admin_Apple_Sections::get_sections_for_post( $post_id )
 		);
 	}
@@ -174,16 +174,16 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 		update_post_meta(
 			$post_id,
 			'apple_news_sections',
-			array(
+			[
 				'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
-			)
+			]
 		);
 
 		// Validate manual section assignment.
 		$this->assertEquals(
-			array(
+			[
 				'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
-			),
+			],
 			Admin_Apple_Sections::get_sections_for_post( $post_id )
 		);
 	}
@@ -202,15 +202,15 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 
 		// Validate the response.
 		$this->assertEquals(
-			array(
-				'abcdef01-2345-6789-abcd-ef012356789a' => array(
+			[
+				'abcdef01-2345-6789-abcd-ef012356789a' => [
 					$category1->term_id,
-				),
-				'abcdef01-2345-6789-abcd-ef012356789b' => array(
+				],
+				'abcdef01-2345-6789-abcd-ef012356789b' => [
 					$category2->term_id,
 					$category3->term_id,
-				),
-			),
+				],
+			],
 			get_option( Admin_Apple_Sections::TAXONOMY_MAPPING_KEY )
 		);
 	}
@@ -223,10 +223,10 @@ class Admin_Apple_Sections_Test extends Apple_News_Testcase {
 	public function testSaveThemeMapping() {
 		// Validate the response.
 		$this->assertEquals(
-			array(
+			[
 				'abcdef01-2345-6789-abcd-ef012356789a' => 'Default',
 				'abcdef01-2345-6789-abcd-ef012356789b' => 'Test Theme',
-			),
+			],
 			get_option( Admin_Apple_Sections::THEME_MAPPING_KEY )
 		);
 	}

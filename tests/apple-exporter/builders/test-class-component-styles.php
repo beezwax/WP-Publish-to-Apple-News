@@ -24,10 +24,10 @@ class Apple_News_Component_Styles_Tests extends Apple_News_Testcase {
 	 */
 	public function testBuiltArray() {
 		$styles = new Component_Styles( $this->content, $this->settings );
-		$styles->register_style( 'some-name', array( 'my-key' => 'my value' ) );
+		$styles->register_style( 'some-name', [ 'my-key' => 'my value' ] );
 		$result = $styles->to_array();
 
 		$this->assertEquals( 1, count( $result ) );
-		$this->assertEquals( array( 'my-key' => 'my value' ), $result['some-name'] );
+		$this->assertEquals( [ 'my-key' => 'my value' ], $result['some-name'] );
 	}
 }

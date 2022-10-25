@@ -70,22 +70,22 @@ HTML;
 
 		// Test.
 		$this->assertEquals(
-			array(
+			[
 				'role'       => 'container',
-				'components' => array(
-					array(
+				'components' => [
+					[
 						'role'   => 'htmltable',
 						'html'   => '<table><thead><tr><th>Column Header 1</th><th>Column Header 2</th></tr></thead><tbody><tr><td>Column Data 1</td><td>Column Data 2</td></tr></tbody><tfoot><tr><td>Column Footer 1</td><td>Column Footer 2</td></tr></tfoot></table>',
 						'layout' => 'table-layout',
 						'style'  => 'default-table',
-					),
-					array(
+					],
+					[
 						'role'   => 'caption',
 						'text'   => 'Caption',
 						'format' => 'html',
-					),
-				),
-			),
+					],
+				],
+			],
 			$component->to_array()
 		);
 	}
@@ -110,12 +110,12 @@ HTML;
 
 		// Test.
 		$this->assertEquals(
-			array(
+			[
 				'html'   => $this->html,
 				'layout' => 'table-layout',
 				'role'   => 'htmltable',
 				'style'  => 'default-table',
-			),
+			],
 			$component->to_array()
 		);
 	}
@@ -252,11 +252,11 @@ HTML;
 
 		// Validate table layout in generated JSON.
 		$this->assertEquals(
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'bottom' => 1,
-				),
-			),
+				],
+			],
 			$json['componentLayouts']['table-layout']
 		);
 
@@ -276,64 +276,64 @@ HTML;
 
 		// Validate table settings in generated JSON.
 		$this->assertEquals(
-			array(
-				'border'     => array(
-					'all' => array(
+			[
+				'border'     => [
+					'all' => [
 						'color' => '#abcdef',
 						'style' => 'dashed',
 						'width' => 5,
-					),
-				),
-				'tableStyle' => array(
-					'cells'       => array(
+					],
+				],
+				'tableStyle' => [
+					'cells'       => [
 						'backgroundColor'     => '#fedcba',
 						'horizontalAlignment' => 'center',
 						'padding'             => 2,
-						'textStyle'           => array(
+						'textStyle'           => [
 							'fontName'   => 'AmericanTypewriter',
 							'fontSize'   => 3,
 							'lineHeight' => 1,
 							'textColor'  => '#123456',
 							'tracking'   => 4,
-						),
+						],
 						'verticalAlignment'   => 'bottom',
-					),
-					'columns'     => array(
-						'divider' => array(
+					],
+					'columns'     => [
+						'divider' => [
 							'color' => '#abcdef',
 							'style' => 'dashed',
 							'width' => 5,
-						),
-					),
-					'headerCells' => array(
+						],
+					],
+					'headerCells' => [
 						'backgroundColor'     => '#654321',
 						'horizontalAlignment' => 'right',
 						'padding'             => 6,
-						'textStyle'           => array(
+						'textStyle'           => [
 							'fontName'   => 'Menlo-Regular',
 							'fontSize'   => 7,
 							'lineHeight' => 5,
 							'textColor'  => '#987654',
 							'tracking'   => 8,
-						),
+						],
 						'verticalAlignment'   => 'top',
-					),
-					'headerRows'  => array(
-						'divider' => array(
+					],
+					'headerRows'  => [
+						'divider' => [
 							'color' => '#abcdef',
 							'style' => 'dashed',
 							'width' => 5,
-						),
-					),
-					'rows'        => array(
-						'divider' => array(
+						],
+					],
+					'rows'        => [
+						'divider' => [
 							'color' => '#abcdef',
 							'style' => 'dashed',
 							'width' => 5,
-						),
-					),
-				),
-			),
+						],
+					],
+				],
+			],
 			$json['componentStyles']['default-table']
 		);
 	}

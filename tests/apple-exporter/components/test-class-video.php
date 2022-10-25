@@ -55,7 +55,7 @@ HTML;
 		$component = $this->get_component();
 		add_filter(
 			'apple_news_video_json',
-			array( $this, 'filter_apple_news_video_json' )
+			[ $this, 'filter_apple_news_video_json' ]
 		);
 
 		// Test.
@@ -68,7 +68,7 @@ HTML;
 		// Teardown.
 		remove_filter(
 			'apple_news_video_json',
-			array( $this, 'filter_apple_news_video_json' )
+			[ $this, 'filter_apple_news_video_json' ]
 		);
 	}
 
@@ -82,20 +82,20 @@ HTML;
 
 		// Test.
 		$this->assertEquals(
-			array(
+			[
 				'role'       => 'container',
-				'components' => array(
-					array(
+				'components' => [
+					[
 						'role' => 'video',
 						'URL'  => 'https://www.example.org/test.mp4',
-					),
-					array(
+					],
+					[
 						'role'   => 'caption',
 						'text'   => 'caption',
 						'format' => 'html',
-					),
-				),
-			),
+					],
+				],
+			],
 			$component->to_array()
 		);
 	}

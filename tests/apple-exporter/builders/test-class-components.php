@@ -63,33 +63,33 @@ class Apple_News_Component_Tests extends Apple_News_Testcase {
 	 * @return array An array of arguments to pass to the test function.
 	 */
 	public function dataMetaComponentOrdering() {
-		return array(
-			array(
-				array( 'cover', 'title', 'byline' ),
-				array( 'header', 'container' ),
-				array( 'title', 'byline' ),
-			),
-			array(
-				array( 'byline', 'cover', 'title' ),
-				array( 'byline', 'header', 'container' ),
-				array( 'title' ),
-			),
-			array(
-				array( 'title', 'byline' ),
-				array( 'title', 'byline' ),
-				array(),
-			),
-			array(
-				array( 'cover', 'byline' ),
-				array( 'header', 'container' ),
-				array( 'byline' ),
-			),
-			array(
-				array( 'cover', 'title' ),
-				array( 'header', 'container' ),
-				array( 'title' ),
-			),
-		);
+		return [
+			[
+				[ 'cover', 'title', 'byline' ],
+				[ 'header', 'container' ],
+				[ 'title', 'byline' ],
+			],
+			[
+				[ 'byline', 'cover', 'title' ],
+				[ 'byline', 'header', 'container' ],
+				[ 'title' ],
+			],
+			[
+				[ 'title', 'byline' ],
+				[ 'title', 'byline' ],
+				[],
+			],
+			[
+				[ 'cover', 'byline' ],
+				[ 'header', 'container' ],
+				[ 'byline' ],
+			],
+			[
+				[ 'cover', 'title' ],
+				[ 'header', 'container' ],
+				[ 'title' ],
+			],
+		];
 	}
 
 	/**

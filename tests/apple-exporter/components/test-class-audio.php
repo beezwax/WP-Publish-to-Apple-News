@@ -48,20 +48,20 @@ class Apple_News_Audio_Test extends Apple_News_Component_TestCase {
 
 		// Test.
 		$this->assertEquals(
-			array(
+			[
 				'role'       => 'container',
-				'components' => array(
-					array(
+				'components' => [
+					[
 						'role' => 'audio',
 						'URL'  => 'https://www.example.org/Song-1.mp3',
-					),
-					array(
+					],
+					[
 						'role'   => 'caption',
 						'text'   => 'caption',
 						'format' => 'html',
-					),
-				),
-			),
+					],
+				],
+			],
 			$component->to_array()
 		);
 	}

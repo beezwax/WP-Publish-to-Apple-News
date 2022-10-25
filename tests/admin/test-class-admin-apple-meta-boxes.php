@@ -30,7 +30,7 @@ class Apple_News_Admin_Apple_Meta_Boxes_Test extends Apple_News_Testcase {
 		// Create post data.
 		/* phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized */
 		$_POST['post_ID']                       = $post_id;
-		$_POST['apple_news_sections']           = array( 'https://news-api.apple.com/sections/1234567890' );
+		$_POST['apple_news_sections']           = [ 'https://news-api.apple.com/sections/1234567890' ];
 		$_POST['apple_news_is_paid']            = 0;
 		$_POST['apple_news_is_preview']         = 0;
 		$_POST['apple_news_is_sponsored']       = 0;
@@ -50,7 +50,7 @@ class Apple_News_Admin_Apple_Meta_Boxes_Test extends Apple_News_Testcase {
 		}
 
 		// Check the meta values.
-		$this->assertEquals( array( 'https://news-api.apple.com/sections/1234567890' ), get_post_meta( $post_id, 'apple_news_sections', true ) );
+		$this->assertEquals( [ 'https://news-api.apple.com/sections/1234567890' ], get_post_meta( $post_id, 'apple_news_sections', true ) );
 		$this->assertEquals( false, get_post_meta( $post_id, 'apple_news_is_paid', true ) );
 		$this->assertEquals( false, get_post_meta( $post_id, 'apple_news_is_preview', true ) );
 		$this->assertEquals( false, get_post_meta( $post_id, 'apple_news_is_sponsored', true ) );
@@ -73,7 +73,7 @@ class Apple_News_Admin_Apple_Meta_Boxes_Test extends Apple_News_Testcase {
 		// Create post data.
 		/* phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized */
 		$_POST['post_ID']                       = $post_id;
-		$_POST['apple_news_sections']           = array( 'https://news-api.apple.com/sections/1234567890' );
+		$_POST['apple_news_sections']           = [ 'https://news-api.apple.com/sections/1234567890' ];
 		$_POST['apple_news_is_paid']            = 0;
 		$_POST['apple_news_is_preview']         = 0;
 		$_POST['apple_news_is_sponsored']       = 0;
@@ -93,7 +93,7 @@ class Apple_News_Admin_Apple_Meta_Boxes_Test extends Apple_News_Testcase {
 		}
 
 		// Check the meta values.
-		$this->assertEquals( array( 'https://news-api.apple.com/sections/1234567890' ), get_post_meta( $post_id, 'apple_news_sections', true ) );
+		$this->assertEquals( [ 'https://news-api.apple.com/sections/1234567890' ], get_post_meta( $post_id, 'apple_news_sections', true ) );
 		$this->assertEquals( false, get_post_meta( $post_id, 'apple_news_is_paid', true ) );
 		$this->assertEquals( false, get_post_meta( $post_id, 'apple_news_is_preview', true ) );
 		$this->assertEquals( false, get_post_meta( $post_id, 'apple_news_is_sponsored', true ) );

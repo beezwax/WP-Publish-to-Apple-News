@@ -39,15 +39,15 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 	public function testDeleteCustomJSON() {
 
 		// Define custom JSON to be removed.
-		$theme_settings = array(
-			'json_templates' => array(
-				'body' => array(
-					'default-body' => array(
+		$theme_settings = [
+			'json_templates' => [
+				'body' => [
+					'default-body' => [
 						'hyphenation' => false,
-					),
-				),
-			),
-		);
+					],
+				],
+			],
+		];
 
 		// Create a theme and load the custom settings.
 		$theme = new Theme();
@@ -65,7 +65,7 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 
 		// Ensure the custom JSON was removed from the theme.
 		$this->assertSame(
-			array(),
+			[],
 			$theme->get_value( 'json_templates' )
 		);
 	}
@@ -89,7 +89,7 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 		// Add the filter.
 		add_filter(
 			'apple_news_fonts_list',
-			array( $this, 'filter_apple_news_fonts_list' )
+			[ $this, 'filter_apple_news_fonts_list' ]
 		);
 
 		// Test.
@@ -104,7 +104,7 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 		// Teardown.
 		remove_filter(
 			'apple_news_fonts_list',
-			array( $this, 'filter_apple_news_fonts_list' )
+			[ $this, 'filter_apple_news_fonts_list' ]
 		);
 	}
 
@@ -120,14 +120,14 @@ class Apple_News_Theme_Test extends Apple_News_Testcase {
 		// Setup.
 		update_option(
 			Theme::INDEX_KEY,
-			array( 'Theme 3', 'Theme 2', 'Theme 1' ),
+			[ 'Theme 3', 'Theme 2', 'Theme 1' ],
 			false
 		);
 		update_option( Theme::ACTIVE_KEY, 'Theme 2', false );
 
 		// Ensure the get_registry function returns in sorted order with active 1st.
 		$this->assertSame(
-			array( 'Theme 2', 'Theme 1', 'Theme 3' ),
+			[ 'Theme 2', 'Theme 1', 'Theme 3' ],
 			Theme::get_registry()
 		);
 	}

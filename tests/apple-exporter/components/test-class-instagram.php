@@ -39,14 +39,14 @@ HTML;
 	 * @return array Parameters to use when calling testTransform.
 	 */
 	public function dataTransform() {
-		return array(
-			array( 'http://www.instagram.com/p/LtaiGnryiu/' ),
-			array( 'https://www.instagram.com/p/LtaiGnryiu/' ),
-			array( 'http://instagram.com/p/LtaiGnryiu/' ),
-			array( 'https://instagram.com/p/LtaiGnryiu/' ),
-			array( 'http://instagr.am/p/LtaiGnryiu/' ),
-			array( 'https://instagr.am/p/LtaiGnryiu/' ),
-		);
+		return [
+			[ 'http://www.instagram.com/p/LtaiGnryiu/' ],
+			[ 'https://www.instagram.com/p/LtaiGnryiu/' ],
+			[ 'http://instagram.com/p/LtaiGnryiu/' ],
+			[ 'https://instagram.com/p/LtaiGnryiu/' ],
+			[ 'http://instagr.am/p/LtaiGnryiu/' ],
+			[ 'https://instagr.am/p/LtaiGnryiu/' ],
+		];
 	}
 
 	/**
@@ -80,7 +80,7 @@ HTML;
 		);
 		add_filter(
 			'apple_news_instagram_json',
-			array( $this, 'filter_apple_news_instagram_json' )
+			[ $this, 'filter_apple_news_instagram_json' ]
 		);
 
 		// Test.
@@ -90,7 +90,7 @@ HTML;
 		// Teardown.
 		remove_filter(
 			'apple_news_instagram_json',
-			array( $this, 'filter_apple_news_instagram_json' )
+			[ $this, 'filter_apple_news_instagram_json' ]
 		);
 	}
 
@@ -129,7 +129,7 @@ HTML;
 	public function testTransform( $url ) {
 
 		// Setup.
-		$components   = array();
+		$components   = [];
 		$components[] = new Instagram(
 			$url,
 			$this->workspace,
@@ -148,10 +148,10 @@ HTML;
 		// Test.
 		foreach ( $components as $component ) {
 			$this->assertEquals(
-				array(
+				[
 					'role' => 'instagram',
 					'URL'  => $url,
-				),
+				],
 				$component->to_array()
 			);
 		}

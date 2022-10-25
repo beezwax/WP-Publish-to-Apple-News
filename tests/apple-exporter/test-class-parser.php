@@ -73,11 +73,11 @@ class Apple_News_Parser_Test extends Apple_News_Testcase {
 <a href="thisisntarealurl">Not a real URL</a>
 HTML;
 		$post         = $this->factory->post->create_and_get( // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-			array(
+			[
 				'post_type'    => 'article',
 				'post_title'   => 'Test Article',
 				'post_content' => $post_content,
-			)
+			]
 		);
 		$permalink    = get_permalink( $post );
 
@@ -123,11 +123,11 @@ HTML;
 <a href="thisisntarealurl">Not a real URL</a>
 HTML;
 		$post         = $this->factory->post->create_and_get( // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-			array(
+			[
 				'post_type'    => 'article',
 				'post_title'   => 'Test Article',
 				'post_content' => $post_content,
-			)
+			]
 		);
 		$permalink    = get_permalink( $post );
 

@@ -102,11 +102,11 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$excerpt = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue...';
 
 		$post_id = $this->factory->post->create(
-			array(
+			[
 				'post_title'   => $title,
 				'post_content' => '',
 				'post_excerpt' => $excerpt,
-			)
+			]
 		);
 
 		$export           = new Export( $this->settings, $post_id );
@@ -124,11 +124,11 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
 
 		$post_id = $this->factory->post->create(
-			array(
+			[
 				'post_title'   => $title,
 				'post_content' => $content,
 				'post_excerpt' => '',
-			)
+			]
 		);
 
 		$export           = new Export( $this->settings, $post_id );
@@ -146,11 +146,11 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$content = '<p>[caption id="attachment_12345" align="aligncenter" width="500"]Test[/caption]Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
 
 		$post_id = $this->factory->post->create(
-			array(
+			[
 				'post_title'   => $title,
 				'post_content' => $content,
 				'post_excerpt' => '',
-			)
+			]
 		);
 
 		$export           = new Export( $this->settings, $post_id );
@@ -166,23 +166,23 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	public function test_byline_format() {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'byline' ] ] );
 		$user_id = $this->factory->user->create(
-			array(
+			[
 				'role'         => 'administrator',
 				'display_name' => 'Testuser',
-			)
+			]
 		);
 
 		$title   = 'My Title';
 		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
 
 		$post_id = $this->factory->post->create(
-			array(
+			[
 				'post_title'   => $title,
 				'post_content' => $content,
 				'post_excerpt' => '',
 				'post_author'  => $user_id,
 				'post_date'    => '2016-08-26 12:00',
-			)
+			]
 		);
 
 		$export           = new Export( $this->settings, $post_id );
@@ -198,23 +198,23 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	public function test_byline_format_with_hashtag() {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'byline' ] ] );
 		$user_id = $this->factory->user->create(
-			array(
+			[
 				'role'         => 'administrator',
 				'display_name' => '#Testuser',
-			)
+			]
 		);
 
 		$title   = 'My Title';
 		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
 
 		$post_id = $this->factory->post->create(
-			array(
+			[
 				'post_title'   => $title,
 				'post_content' => $content,
 				'post_excerpt' => '',
 				'post_author'  => $user_id,
 				'post_date'    => '2016-08-26 12:00',
-			)
+			]
 		);
 
 		$export           = new Export( $this->settings, $post_id );
@@ -229,11 +229,11 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 	 */
 	public function test_remove_entities() {
 		$post_id = $this->factory->post->create(
-			array(
+			[
 				'post_title'   => 'Test Title',
 				'post_content' => '<p>&amp;Lorem ipsum dolor sit amet &amp; consectetur adipiscing elit.&amp;</p>',
 				'post_date'    => '2016-08-26 12:00',
-			)
+			]
 		);
 
 		// Set HTML content format.
@@ -245,7 +245,7 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 
 		$this->assertEquals(
 			'<p>&amp;Lorem ipsum dolor sit amet &amp; consectetur adipiscing elit.&amp;</p>',
-			str_replace( array( "\n", "\r" ), '', $exporter_content->content() )
+			str_replace( [ "\n", "\r" ], '', $exporter_content->content() )
 		);
 
 		// Set Markdown content format.
@@ -256,7 +256,7 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$markdown_exporter_content = $markdown_exporter->get_content();
 		$this->assertEquals(
 			'<p>&Lorem ipsum dolor sit amet & consectetur adipiscing elit.&</p>',
-			str_replace( array( "\n", "\r" ), '', $markdown_exporter_content->content() )
+			str_replace( [ "\n", "\r" ], '', $markdown_exporter_content->content() )
 		);
 	}
 
@@ -383,46 +383,46 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 
 		// Create a term and add it to the post.
 		$term_id = self::factory()->term->create(
-			array(
+			[
 				'taxonomy' => 'category',
 				'name'     => 'entertainment',
-			)
+			]
 		);
-		wp_set_post_terms( $post_id, array( $term_id ), 'category' );
+		wp_set_post_terms( $post_id, [ $term_id ], 'category' );
 
 		// Create a taxonomy map.
 		update_option(
 			\Admin_Apple_Sections::TAXONOMY_MAPPING_KEY,
-			array(
-				'abcdef01-2345-6789-abcd-ef012356789a' => array( $term_id ),
-			)
+			[
+				'abcdef01-2345-6789-abcd-ef012356789a' => [ $term_id ],
+			]
 		);
 		update_option(
 			\Admin_Apple_Sections::THEME_MAPPING_KEY,
-			array(
+			[
 				'abcdef01-2345-6789-abcd-ef012356789a' => 'Colorful',
-			)
+			]
 		);
 
 		// Cache as a transient to bypass the API call.
 		$self = 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a';
 		set_transient(
 			'apple_news_sections',
-			array(
-				(object) array(
+			[
+				(object) [
 					'createdAt'  => '2017-01-01T00:00:00Z',
 					'id'         => 'abcdef01-2345-6789-abcd-ef012356789a',
 					'isDefault'  => true,
-					'links'      => (object) array(
+					'links'      => (object) [
 						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
 						'self'    => $self,
-					),
+					],
 					'modifiedAt' => '2017-01-01T00:00:00Z',
 					'name'       => 'Main',
 					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
 					'type'       => 'section',
-				),
-			)
+				],
+			]
 		);
 
 		// Get sections for the post.
@@ -435,9 +435,9 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		// Change the theme mapping to use the Default theme instead and re-test.
 		update_option(
 			\Admin_Apple_Sections::THEME_MAPPING_KEY,
-			array(
+			[
 				'abcdef01-2345-6789-abcd-ef012356789a' => 'Default',
-			)
+			]
 		);
 		$json = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
@@ -469,62 +469,62 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 
 		// Create a term and add it to the post.
 		$term_id = self::factory()->term->create(
-			array(
+			[
 				'taxonomy' => 'category',
 				'name'     => 'politics',
-			)
+			]
 		);
-		wp_set_post_terms( $post_id, array( $term_id ), 'category' );
+		wp_set_post_terms( $post_id, [ $term_id ], 'category' );
 
 		// Create a taxonomy map that maps to multiple sections..
 		update_option(
 			\Admin_Apple_Sections::TAXONOMY_MAPPING_KEY,
-			array(
-				'abcdef01-2345-6789-abcd-ef012356789a' => array( $term_id ),
-				'abcdef01-2345-6789-abcd-ef012356789b' => array( $term_id ),
-			)
+			[
+				'abcdef01-2345-6789-abcd-ef012356789a' => [ $term_id ],
+				'abcdef01-2345-6789-abcd-ef012356789b' => [ $term_id ],
+			]
 		);
 
 		// Map each section to a different theme.
 		update_option(
 			\Admin_Apple_Sections::THEME_MAPPING_KEY,
-			array(
+			[
 				'abcdef01-2345-6789-abcd-ef012356789a' => 'Default',
 				'abcdef01-2345-6789-abcd-ef012356789b' => 'Colorful',
-			)
+			]
 		);
 
 		// Cache as a transient to bypass the API call.
 		set_transient(
 			'apple_news_sections',
-			array(
-				(object) array(
+			[
+				(object) [
 					'createdAt'  => '2017-01-01T00:00:00Z',
 					'id'         => 'abcdef01-2345-6789-abcd-ef012356789a',
 					'isDefault'  => true,
-					'links'      => (object) array(
+					'links'      => (object) [
 						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
 						'self'    => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
-					),
+					],
 					'modifiedAt' => '2017-01-01T00:00:00Z',
 					'name'       => 'Main',
 					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
 					'type'       => 'section',
-				),
-				(object) array(
+				],
+				(object) [
 					'createdAt'  => '2017-01-01T00:00:00Z',
 					'id'         => 'abcdef01-2345-6789-abcd-ef012356789b',
 					'isDefault'  => false,
-					'links'      => (object) array(
+					'links'      => (object) [
 						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
 						'self'    => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789b',
-					),
+					],
 					'modifiedAt' => '2017-01-01T00:00:00Z',
 					'name'       => 'Secondary',
 					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUw',
 					'type'       => 'section',
-				),
-			)
+				],
+			]
 		);
 
 		// Ensure that the default theme is used when no priority is specified.
@@ -537,10 +537,10 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		// Set the priority on the sections to boost the priority of the secondary section.
 		update_option(
 			\Admin_Apple_Sections::PRIORITY_MAPPING_KEY,
-			array(
+			[
 				'abcdef01-2345-6789-abcd-ef012356789a' => 1,
 				'abcdef01-2345-6789-abcd-ef012356789b' => 2,
-			)
+			]
 		);
 
 		// Re-run the export and ensure the Colorful theme is used.
@@ -553,10 +553,10 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		// Set the priority on the sections to boost the priority of the main section.
 		update_option(
 			\Admin_Apple_Sections::PRIORITY_MAPPING_KEY,
-			array(
+			[
 				'abcdef01-2345-6789-abcd-ef012356789a' => 2,
 				'abcdef01-2345-6789-abcd-ef012356789b' => 1,
-			)
+			]
 		);
 
 		// Re-run the export and ensure the Default theme is used.
@@ -585,14 +585,14 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$title   = 'My Title';
 		$content = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tristique quis justo sit amet eleifend. Praesent id metus semper, fermentum nibh at, malesuada enim. Mauris eget faucibus lectus. Vivamus iaculis eget urna non porttitor. Donec in dignissim neque. Vivamus ut ornare magna. Nulla eros nisi, maximus nec neque at, condimentum lobortis leo. Fusce in augue arcu. Curabitur lacus elit, venenatis a laoreet sit amet, imperdiet ac lorem. Curabitur sed leo sed ligula tempor feugiat. Cras in tellus et elit volutpat.</p>';
 		$post_id = $this->factory->post->create(
-			array(
+			[
 				'post_title'   => $title,
 				'post_content' => $content,
-			)
+			]
 		);
 		add_filter(
 			'the_content',
-			array( $this, 'filter_the_content_test_is_exporting' )
+			[ $this, 'filter_the_content_test_is_exporting' ]
 		);
 
 		// Ensure is_exporting returns false before exporting.
@@ -617,7 +617,7 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		// Teardown.
 		remove_filter(
 			'the_content',
-			array( $this, 'filter_the_content_test_is_exporting' )
+			[ $this, 'filter_the_content_test_is_exporting' ]
 		);
 	}
 }

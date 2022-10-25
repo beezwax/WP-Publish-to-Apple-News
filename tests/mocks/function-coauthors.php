@@ -120,7 +120,7 @@ function coauthors_posts_links_single( $author ) {
 		);
 		return;
 	}
-	$args        = array(
+	$args        = [
 		'before_html' => '',
 		'href'        => get_author_posts_url( $author->ID, $author->user_nicename ),
 		'rel'         => 'author',
@@ -128,7 +128,7 @@ function coauthors_posts_links_single( $author ) {
 		'class'       => 'author url fn',
 		'text'        => apply_filters( 'the_author', $author->display_name ),
 		'after_html'  => '',
-	);
+	];
 	$args        = apply_filters( 'coauthors_posts_link', $args, $author );
 	$single_link = sprintf(
 		'<a href="%1$s" title="%2$s" class="%3$s" rel="%4$s">%5$s</a>',

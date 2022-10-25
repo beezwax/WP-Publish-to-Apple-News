@@ -44,7 +44,7 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	 *
 	 * @access public
 	 */
-	public function createNewTheme( $name, $settings = array() ) {
+	public function createNewTheme( $name, $settings = [] ) {
 
 		// Set up the request.
 		$nonce = wp_create_nonce( 'apple_news_save_edit_theme' );
@@ -137,7 +137,7 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 
 		// Set the POST data required to create a new theme.
 		$name = 'Test Theme';
-		$this->createNewTheme( $name, array( 'body_color' => '#ff0000' ) );
+		$this->createNewTheme( $name, [ 'body_color' => '#ff0000' ] );
 
 		// Check that the data was saved properly.
 		$default_theme                   = new Theme();
@@ -215,20 +215,20 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	public function testImportTheme() {
 
 		// Setup.
-		$advertisement_json = array(
+		$advertisement_json = [
 			'role'       => 'banner_advertisement',
 			'bannerType' => 'double_height',
-		);
-		$import_settings    = array(
+		];
+		$import_settings    = [
 			'layout_margin'  => 100,
 			'layout_gutter'  => 20,
-			'json_templates' => array(
-				'advertisement' => array(
+			'json_templates' => [
+				'advertisement' => [
 					'json' => $advertisement_json,
-				),
-			),
+				],
+			],
 			'theme_name'     => 'Test Import Theme',
-		);
+		];
 
 		// Test.
 		$this->assertTrue( $this->themes->import_theme( $import_settings ) );
@@ -255,20 +255,20 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 	public function testImportThemeInvalidJSON() {
 
 		// Setup.
-		$invalid_json    = array(
+		$invalid_json    = [
 			'role' => 'audio',
 			'URL'  => '#invalid#',
-		);
-		$import_settings = array(
+		];
+		$import_settings = [
 			'layout_margin'  => 100,
 			'layout_gutter'  => 20,
-			'json_templates' => array(
-				'audio' => array(
+			'json_templates' => [
+				'audio' => [
 					'json' => $invalid_json,
-				),
-			),
+				],
+			],
 			'theme_name'     => 'Test Import Theme',
-		);
+		];
 
 		// Test.
 		$this->assertIsString( $this->themes->import_theme( $import_settings ) );
@@ -290,24 +290,24 @@ class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 		$this->createNewTheme( 'Test Theme' );
 
 		// Define the default-body JSON override we will be testing against.
-		$default_body = array(
+		$default_body = [
 			'textAlignment'          => 'left',
 			'fontName'               => '#body_font#',
 			'fontSize'               => '#body_size#',
 			'tracking'               => '#body_tracking#',
 			'lineHeight'             => '#body_line_height#',
 			'textColor'              => '#body_color#',
-			'linkStyle'              => array(
+			'linkStyle'              => [
 				'textColor' => '#body_link_color#',
-			),
+			],
 			'paragraphSpacingBefore' => 24,
 			'paragraphSpacingAfter'  => 24,
-		);
+		];
 
 		// Add legacy format JSON overrides.
 		update_option(
 			'apple_news_json_body',
-			array( 'apple_news_json_default-body' => $default_body ),
+			[ 'apple_news_json_default-body' => $default_body ],
 			false
 		);
 
@@ -586,7 +586,7 @@ JSON;
 		$this->createDefaultTheme();
 
 		// Create a test theme with altered settings.
-		$this->createNewTheme( 'Test Theme', array( 'layout_margin' => 50 ) );
+		$this->createNewTheme( 'Test Theme', [ 'layout_margin' => 50 ] );
 
 		// Simulate the form submission to set the theme.
 		/* phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotValidated, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized */
