@@ -12,7 +12,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Byline_Test extends Apple_News_Testcase {
+class Apple_News_Byline_Test extends Apple_News_Testcase {
 
 	/**
 	 * A filter function to modify the text style in the generated JSON.
@@ -53,7 +53,12 @@ class Byline_Test extends Apple_News_Testcase {
 
 		// Create a test post and get JSON for it.
 		$user_id = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
-		$post_id = self::factory()->post->create( [ 'post_author' => $user_id, 'post_date_gmt' => '1970-01-01 12:00:00' ] );
+		$post_id = self::factory()->post->create(
+			[
+				'post_author'   => $user_id,
+				'post_date_gmt' => '1970-01-01 12:00:00',
+			]
+		);
 		$json    = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 'byline', $json['components'][0]['role'] );
 		$this->assertEquals( 'by Test Author | Jan 1, 1970 | 12:00 PM', $json['components'][0]['text'] );
@@ -78,7 +83,12 @@ class Byline_Test extends Apple_News_Testcase {
 
 		// Create a test post and get JSON for it.
 		$user_id = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
-		$post_id = self::factory()->post->create( [ 'post_author' => $user_id, 'post_date_gmt' => '1970-01-01 12:00:00' ] );
+		$post_id = self::factory()->post->create(
+			[
+				'post_author'   => $user_id,
+				'post_date_gmt' => '1970-01-01 12:00:00',
+			]
+		);
 		$json    = $this->get_json_for_post( $post_id );
 
 		// Validate byline settings in generated JSON.
@@ -106,7 +116,12 @@ class Byline_Test extends Apple_News_Testcase {
 
 		// Create a test post and get JSON for it.
 		$user_id = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
-		$post_id = self::factory()->post->create( [ 'post_author' => $user_id, 'post_date_gmt' => '1970-01-01 12:00:00' ] );
+		$post_id = self::factory()->post->create(
+			[
+				'post_author'   => $user_id,
+				'post_date_gmt' => '1970-01-01 12:00:00',
+			]
+		);
 		$json    = $this->get_json_for_post( $post_id );
 
 		// Validate byline settings in generated JSON.

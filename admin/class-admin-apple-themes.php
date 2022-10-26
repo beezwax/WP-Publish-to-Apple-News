@@ -168,38 +168,38 @@ class Admin_Apple_Themes extends Apple_News {
 		$this->theme_page_name      = $this->plugin_domain . '-themes';
 		$this->theme_edit_page_name = $this->plugin_domain . '-theme-edit';
 
-		$this->valid_actions = array(
-			'apple_news_upload_theme'        => array(
-				'callback' => array( $this, 'upload_theme' ),
+		$this->valid_actions = [
+			'apple_news_upload_theme'        => [
+				'callback' => [ $this, 'upload_theme' ],
 				'nonce'    => 'apple_news_themes',
-			),
-			'apple_news_export_theme'        => array(
-				'callback' => array( $this, 'export_theme' ),
+			],
+			'apple_news_export_theme'        => [
+				'callback' => [ $this, 'export_theme' ],
 				'nonce'    => 'apple_news_themes',
-			),
-			'apple_news_delete_theme'        => array(
-				'callback' => array( $this, 'delete_theme' ),
+			],
+			'apple_news_delete_theme'        => [
+				'callback' => [ $this, 'delete_theme' ],
 				'nonce'    => 'apple_news_themes',
-			),
-			'apple_news_save_edit_theme'     => array(
-				'callback' => array( $this, 'save_edit_theme' ),
+			],
+			'apple_news_save_edit_theme'     => [
+				'callback' => [ $this, 'save_edit_theme' ],
 				'nonce'    => 'apple_news_save_edit_theme',
-			),
-			'apple_news_set_theme'           => array(
-				'callback' => array( $this, 'set_theme' ),
+			],
+			'apple_news_set_theme'           => [
+				'callback' => [ $this, 'set_theme' ],
 				'nonce'    => 'apple_news_themes',
-			),
-			'apple_news_load_example_themes' => array(
-				'callback' => array( $this, 'load_example_themes' ),
+			],
+			'apple_news_load_example_themes' => [
+				'callback' => [ $this, 'load_example_themes' ],
 				'nonce'    => 'apple_news_themes',
-			),
-		);
+			],
+		];
 
-		add_action( 'admin_menu', array( $this, 'setup_theme_pages' ), 99 );
-		add_action( 'admin_init', array( $this, 'action_router' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
-		add_action( 'admin_notices', array( $this, 'theme_nag' ), 1 );
-		add_filter( 'admin_title', array( $this, 'set_title' ), 10, 1 );
+		add_action( 'admin_menu', [ $this, 'setup_theme_pages' ], 99 );
+		add_action( 'admin_init', [ $this, 'action_router' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
+		add_action( 'admin_notices', [ $this, 'theme_nag' ], 1 );
+		add_filter( 'admin_title', [ $this, 'set_title' ], 10, 1 );
 	}
 
 	/**
@@ -329,10 +329,10 @@ class Admin_Apple_Themes extends Apple_News {
 	public function register_assets( $hook ) {
 		if ( ! in_array(
 			$hook,
-			array(
+			[
 				'apple-news_page_apple-news-themes',
 				'admin_page_apple-news-theme-edit',
-			),
+			],
 			true
 		) ) {
 			return;
@@ -341,14 +341,14 @@ class Admin_Apple_Themes extends Apple_News {
 		wp_enqueue_style(
 			'apple-news-themes-css',
 			plugin_dir_url( __FILE__ ) . '../assets/css/themes.css',
-			array(),
+			[],
 			self::$version
 		);
 
 		wp_enqueue_script(
 			'apple-news-themes-js',
 			plugin_dir_url( __FILE__ ) . '../assets/js/themes.js',
-			array( 'jquery' ),
+			[ 'jquery' ],
 			self::$version,
 			false
 		);
@@ -356,24 +356,24 @@ class Admin_Apple_Themes extends Apple_News {
 		wp_localize_script(
 			'apple-news-themes-js',
 			'appleNewsThemes',
-			array(
+			[
 				'deleteWarning' => __( 'Are you sure you want to delete the theme', 'apple-news' ),
 				'noNameError'   => __( 'Please enter a name for the new theme.', 'apple-news' ),
 				'tooLongError'  => __( 'Theme names must be 45 characters or less.', 'apple-news' ),
-			)
+			]
 		);
 
 		if ( 'admin_page_apple-news-theme-edit' === $hook ) {
 			wp_enqueue_style(
 				'apple-news-select2-css',
 				plugin_dir_url( __FILE__ ) . '../assets/css/select2.min.css',
-				array(),
+				[],
 				self::$version
 			);
 			wp_enqueue_style(
 				'apple-news-theme-edit-css',
 				plugin_dir_url( __FILE__ ) . '../assets/css/theme-edit.css',
-				array(),
+				[],
 				self::$version
 			);
 
@@ -381,21 +381,21 @@ class Admin_Apple_Themes extends Apple_News {
 			wp_enqueue_script(
 				'apple-news-select2-js',
 				plugin_dir_url( __FILE__ ) . '../assets/js/select2.full.min.js',
-				array( 'jquery' ),
+				[ 'jquery' ],
 				self::$version,
 				false
 			);
 			wp_enqueue_script(
 				'apple-news-theme-edit-js',
 				plugin_dir_url( __FILE__ ) . '../assets/js/theme-edit.js',
-				array(
+				[
 					'jquery',
 					'jquery-ui-draggable',
 					'jquery-ui-sortable',
 					'apple-news-select2-js',
 					'iris',
 					'apple-news-preview-js',
-				),
+				],
 				self::$version,
 				false
 			);
@@ -403,9 +403,9 @@ class Admin_Apple_Themes extends Apple_News {
 			wp_localize_script(
 				'apple-news-theme-edit-js',
 				'appleNewsThemeEdit',
-				array(
+				[
 					'fontNotice' => __( 'Font preview is only available on macOS', 'apple-news' ),
-				)
+				]
 			);
 		}
 	}
@@ -458,7 +458,7 @@ class Admin_Apple_Themes extends Apple_News {
 			/** This filter is documented in admin/class-admin-apple-settings.php */
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->theme_page_name,
-			array( $this, 'page_themes_render' )
+			[ $this, 'page_themes_render' ]
 		);
 
 		// Add the edit theme page.
@@ -469,7 +469,7 @@ class Admin_Apple_Themes extends Apple_News {
 			/** This filter is documented in admin/class-admin-apple-settings.php */
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			$this->theme_edit_page_name,
-			array( $this, 'page_theme_edit_render' )
+			[ $this, 'page_theme_edit_render' ]
 		);
 	}
 

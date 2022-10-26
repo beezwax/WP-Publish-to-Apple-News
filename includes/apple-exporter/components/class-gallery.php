@@ -49,21 +49,21 @@ class Gallery extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role'  => '#gallery_type#',
 				'items' => '#items#',
-			)
+			]
 		);
 
 		$this->register_spec(
 			'gallery-layout',
 			__( 'Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'bottom' => 25,
 					'top'    => 25,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -115,7 +115,7 @@ class Gallery extends Component {
 
 		// Loop through items and construct slides.
 		$theme = \Apple_Exporter\Theme::get_used();
-		$items = array();
+		$items = [];
 		foreach ( $container->childNodes as $item ) {
 
 			// Convert item into HTML for regex matching.
@@ -133,20 +133,20 @@ class Gallery extends Component {
 			}
 
 			// Start building the item.
-			$content = array(
+			$content = [
 				'URL' => $this->maybe_bundle_source( esc_url_raw( $url ) ),
-			);
+			];
 
 			// Try to add the caption.
 			$caption_regex = '/<(dd|figcaption).*?>(.*)<\/\g1>/s';
 			if ( preg_match( $caption_regex, $item_html, $matches ) ) {
-				$content['caption'] = array(
+				$content['caption'] = [
 					'format'    => 'html',
 					'text'      => trim( $matches[2] ),
-					'textStyle' => array(
+					'textStyle' => [
 						'fontName' => $theme->get_value( 'caption_font' ),
-					),
-				);
+					],
+				];
 			}
 
 			// Try to add the alt text as the accessibility caption.
@@ -168,10 +168,10 @@ class Gallery extends Component {
 		// Build the JSON.
 		$this->register_json(
 			'json',
-			array(
+			[
 				'#gallery_type#' => $theme->get_value( 'gallery_type' ),
 				'#items#'        => $items,
-			)
+			]
 		);
 
 		// Set the layout.
@@ -187,7 +187,7 @@ class Gallery extends Component {
 		$this->register_full_width_layout(
 			'gallery-layout',
 			'gallery-layout',
-			array(),
+			[],
 			'layout'
 		);
 	}

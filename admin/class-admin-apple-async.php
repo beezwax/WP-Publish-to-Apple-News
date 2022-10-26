@@ -38,11 +38,11 @@ class Admin_Apple_Async extends Apple_News {
 
 		// If async mode is enabled create the action hook.
 		if ( 'yes' === $settings->get( 'api_async' ) ) {
-			add_action( self::ASYNC_PUSH_HOOK, array( $this, 'async_push' ), 10, 2 );
+			add_action( self::ASYNC_PUSH_HOOK, [ $this, 'async_push' ], 10, 2 );
 
 			// If we're on VIP, set async mode to use the jobs system.
 			if ( defined( 'WPCOM_IS_VIP_ENV' ) && true === WPCOM_IS_VIP_ENV ) {
-				add_filter( 'wpcom_vip_passthrough_cron_to_jobs', array( $this, 'passthrough_cron_to_jobs' ) );
+				add_filter( 'wpcom_vip_passthrough_cron_to_jobs', [ $this, 'passthrough_cron_to_jobs' ] );
 			}
 		}
 	}

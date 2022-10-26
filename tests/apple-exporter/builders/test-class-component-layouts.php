@@ -1,36 +1,42 @@
 <?php
+/**
+ * Publish to Apple News Tests: Apple_News_Component_Layouts_Test class
+ *
+ * Contains a class to test the functionality of the Apple_Exporter\Builders\Component_Layouts class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
 
-use \Apple_Exporter\Exporter_Content as Exporter_Content;
-use \Apple_Exporter\Settings as Settings;
-use \Apple_Exporter\Builders\Component_Layouts as Component_Layouts;
-use \Apple_Exporter\Components\Component as Component;
+use Apple_Exporter\Builders\Component_Layouts;
+use Apple_Exporter\Components\Component;
 
-class Component_Layouts_Test extends WP_UnitTestCase {
+/**
+ * A class to test the behavior of the Apple_Exporter\Builders\Component_Layouts class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
+class Apple_News_Component_Layouts_Test extends Apple_News_Testcase {
 
-	protected $prophet;
-
-	public function setup() {
-		$this->prophet  = new \Prophecy\Prophet;
-		$this->settings = new Settings();
-		$this->content  = new Exporter_Content( 1, 'My Title', '<p>Hello, World!</p>' );
-	}
-
-	public function tearDown() {
-		$this->prophet->checkPredictions();
-	}
-
-	public function testRegisterLayout() {
+	/**
+	 * Tests the behavior of registering layouts.
+	 */
+	public function test_register_layout() {
 		$layouts = new Component_Layouts( $this->content, $this->settings );
 		$layouts->register_layout( 'l1', 'val1' );
 		$layouts->register_layout( 'l2', 'val2' );
 		$result = $layouts->to_array();
 
 		$this->assertEquals( 2, count( $result ) );
-		$this->assertEquals( 'val1', $result[ 'l1' ] );
-		$this->assertEquals( 'val2', $result[ 'l2' ] );
+		$this->assertEquals( 'val1', $result['l1'] );
+		$this->assertEquals( 'val2', $result['l2'] );
 	}
 
-	public function testLeftLayoutGetsAdded() {
+	/**
+	 * Tests the behavior of anchor layout left.
+	 */
+	public function test_left_layout_gets_added() {
 		$layouts = new Component_Layouts( $this->content, $this->settings );
 
 		$this->assertFalse( array_key_exists( 'anchor-layout-left', $layouts->to_array() ) );
@@ -48,5 +54,4 @@ class Component_Layouts_Test extends WP_UnitTestCase {
 
 		$this->assertTrue( array_key_exists( 'anchor-layout-left', $layouts->to_array() ) );
 	}
-
 }

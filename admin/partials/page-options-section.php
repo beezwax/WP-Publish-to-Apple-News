@@ -34,11 +34,11 @@
 					<?php
 						echo wp_kses(
 							$apple_section->render_field(
-								array(
+								[
 									$apple_setting_name,
 									$apple_setting_meta['default'],
 									$apple_setting_meta['callback'],
-								)
+								]
 							),
 							Admin_Apple_Settings_Section::$allowed_html
 						);

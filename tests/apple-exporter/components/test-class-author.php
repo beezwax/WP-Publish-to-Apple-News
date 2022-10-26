@@ -12,7 +12,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Author_Test extends Apple_News_Testcase {
+class Apple_News_Author_Test extends Apple_News_Testcase {
 
 	/**
 	 * Tests the render method for the component.
@@ -22,7 +22,12 @@ class Author_Test extends Apple_News_Testcase {
 
 		// Create a test post and get JSON for it.
 		$user_id = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
-		$post_id = self::factory()->post->create( [ 'post_author' => $user_id, 'post_date_gmt' => '1970-01-01 12:00:00' ] );
+		$post_id = self::factory()->post->create(
+			[
+				'post_author'   => $user_id,
+				'post_date_gmt' => '1970-01-01 12:00:00',
+			]
+		);
 		$json    = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 'author', $json['components'][0]['role'] );
 		$this->assertEquals( 'by Test Author', $json['components'][0]['text'] );
@@ -34,19 +39,24 @@ class Author_Test extends Apple_News_Testcase {
 	public function test_settings() {
 		$this->set_theme_settings(
 			[
-				'author_color'         => '#abcdef',
-				'author_color_dark'    => '#123456',
-				'author_font'          => 'AmericanTypewriter',
-				'author_line_height'   => 12,
-				'author_links'         => 'no',
-				'author_size'          => 34,
-				'author_tracking'      => 56,
+				'author_color'       => '#abcdef',
+				'author_color_dark'  => '#123456',
+				'author_font'        => 'AmericanTypewriter',
+				'author_line_height' => 12,
+				'author_links'       => 'no',
+				'author_size'        => 34,
+				'author_tracking'    => 56,
 			]
 		);
 
 		// Create a test post and get JSON for it.
 		$user_id = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
-		$post_id = self::factory()->post->create( [ 'post_author' => $user_id, 'post_date_gmt' => '1970-01-01 12:00:00' ] );
+		$post_id = self::factory()->post->create(
+			[
+				'post_author'   => $user_id,
+				'post_date_gmt' => '1970-01-01 12:00:00',
+			]
+		);
 		$json    = $this->get_json_for_post( $post_id );
 
 		// Validate author settings in generated JSON.
@@ -73,7 +83,12 @@ class Author_Test extends Apple_News_Testcase {
 
 		// Create a test post and get JSON for it.
 		$user_id = self::factory()->user->create( [ 'display_name' => 'Test Author' ] );
-		$post_id = self::factory()->post->create( [ 'post_author' => $user_id, 'post_date_gmt' => '1970-01-01 12:00:00' ] );
+		$post_id = self::factory()->post->create(
+			[
+				'post_author'   => $user_id,
+				'post_date_gmt' => '1970-01-01 12:00:00',
+			]
+		);
 		$json    = $this->get_json_for_post( $post_id );
 
 		// Validate author settings in generated JSON.

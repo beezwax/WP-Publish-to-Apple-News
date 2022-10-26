@@ -173,30 +173,30 @@ abstract class Component {
 	 * @var array
 	 * @access public
 	 */
-	public $allowed_html = array(
-		'p'          => array(),
-		'strong'     => array(),
-		'b'          => array(),
-		'em'         => array(),
-		'i'          => array(),
-		'a'          => array(
-			'href' => array(),
-		),
-		'ul'         => array(),
-		'ol'         => array(),
-		'li'         => array(),
-		'br'         => array(),
-		'sub'        => array(),
-		'sup'        => array(),
-		'del'        => array(),
-		's'          => array(),
-		'pre'        => array(),
-		'code'       => array(),
-		'samp'       => array(),
-		'footer'     => array(),
-		'aside'      => array(),
-		'blockquote' => array(),
-	);
+	public $allowed_html = [
+		'p'          => [],
+		'strong'     => [],
+		'b'          => [],
+		'em'         => [],
+		'i'          => [],
+		'a'          => [
+			'href' => [],
+		],
+		'ul'         => [],
+		'ol'         => [],
+		'li'         => [],
+		'br'         => [],
+		'sub'        => [],
+		'sup'        => [],
+		'del'        => [],
+		's'          => [],
+		'pre'        => [],
+		'code'       => [],
+		'samp'       => [],
+		'footer'     => [],
+		'aside'      => [],
+		'blockquote' => [],
+	];
 
 	/**
 	 * Constructor.
@@ -537,7 +537,7 @@ abstract class Component {
 	 * @param array  $values    Values to substitute for placeholders in the spec.
 	 * @access protected
 	 */
-	protected function register_json( $spec_name, $values = array() ) {
+	protected function register_json( $spec_name, $values = [] ) {
 		$component_spec = $this->get_spec( $spec_name );
 		if ( ! empty( $component_spec ) ) {
 			$post_id    = ( ! empty( $this->workspace->content_id ) )
@@ -557,7 +557,7 @@ abstract class Component {
 	 * @param array  $property  The JSON property to set with the style.
 	 * @access protected
 	 */
-	protected function register_style( $name, $spec_name, $values = array(), $property = null ) {
+	protected function register_style( $name, $spec_name, $values = [], $property = null ) {
 		$component_spec = $this->get_spec( $spec_name );
 		if ( ! empty( $component_spec ) ) {
 			$post_id = ( ! empty( $this->workspace->content_id ) )
@@ -580,7 +580,7 @@ abstract class Component {
 	 * @param array  $property  The JSON property to set with the style.
 	 * @access protected
 	 */
-	protected function register_component_style( $name, $spec_name, $values = array(), $property = null ) {
+	protected function register_component_style( $name, $spec_name, $values = [], $property = null ) {
 		$component_spec = $this->get_spec( $spec_name );
 		if ( ! empty( $component_spec ) ) {
 			$post_id = ( ! empty( $this->workspace->content_id ) )
@@ -602,7 +602,7 @@ abstract class Component {
 	 * @param array  $property  The JSON property to set with the layout.
 	 * @access protected
 	 */
-	protected function register_layout( $name, $spec_name, $values = array(), $property = null ) {
+	protected function register_layout( $name, $spec_name, $values = [], $property = null ) {
 		$component_spec = $this->get_spec( $spec_name );
 		if ( ! empty( $component_spec ) ) {
 			$post_id = ( ! empty( $this->workspace->content_id ) )
@@ -626,7 +626,7 @@ abstract class Component {
 	 * @param array  $property  The JSON property to set with the layout.
 	 * @access protected
 	 */
-	protected function register_full_width_layout( $name, $spec_name, $values = array(), $property = null ) {
+	protected function register_full_width_layout( $name, $spec_name, $values = [], $property = null ) {
 
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
@@ -650,10 +650,10 @@ abstract class Component {
 		if ( isset( $this->specs[ $spec_name ] ) ) {
 			$this->specs[ $spec_name ]->spec = array_merge(
 				$this->specs[ $spec_name ]->spec,
-				array(
+				[
 					'columnStart' => $col_start,
 					'columnSpan'  => $col_span,
-				)
+				]
 			);
 		}
 

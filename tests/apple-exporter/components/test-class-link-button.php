@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Link_Button_Test class
+ * Publish to Apple News tests: Apple_News_Link_Button_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -15,7 +15,7 @@ use Apple_Exporter\Components\Link_Button;
  * @package Apple_News
  * @subpackage Tests
  */
-class Link_Button_Test extends Component_TestCase {
+class Apple_News_Link_Button_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * Holds a WP_Post object containing test data.
@@ -25,9 +25,9 @@ class Link_Button_Test extends Component_TestCase {
 	public static $test_post;
 
 	/**
-	 * Code to run once before the entire test suite.
+	 * A fixture containing operations to be run before the test suite.
 	 */
-	public static function setUpBeforeClass() {
+	public static function setUpBeforeClass(): void {
 		parent::setUpBeforeClass();
 		self::$test_post = self::factory()->post->create_and_get(
 			[
@@ -38,12 +38,12 @@ class Link_Button_Test extends Component_TestCase {
 	}
 
 	/**
-	 * Code to run before each test in the suite.
+	 * A fixture containing operations to be run before each test.
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		global $post;
-		$post = self::$test_post;
+		$post = self::$test_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	}
 
 	/**
@@ -51,7 +51,7 @@ class Link_Button_Test extends Component_TestCase {
 	 *
 	 * @return array An array of function arguments.
 	 */
-	public function dataProviderNodeMatches() {
+	public function data_provider_node_matches() {
 		return [
 			// A bare link should not match.
 			[
@@ -86,7 +86,7 @@ class Link_Button_Test extends Component_TestCase {
 	 *
 	 * @return array An array of function arguments for the test function.
 	 */
-	public function dataProviderTransform() {
+	public function data_provider_transform() {
 		return [
 			// Test a normal button.
 			[
@@ -134,9 +134,9 @@ class Link_Button_Test extends Component_TestCase {
 	 * @param string $html    The HTML to test.
 	 * @param bool   $matches Whether the node matches or not.
 	 *
-	 * @dataProvider dataProviderNodeMatches
+	 * @dataProvider data_provider_node_matches
 	 */
-	public function testNodeMatches( $html, $matches ) {
+	public function test_node_matches( $html, $matches ) {
 		$node   = self::build_node( $html );
 		$result = Link_Button::node_matches( $node );
 		if ( $matches ) {
@@ -152,9 +152,9 @@ class Link_Button_Test extends Component_TestCase {
 	 * @param string $html     The HTML to transform into a Link Button.
 	 * @param array  $expected The expected result from the component's to_array method.
 	 *
-	 * @dataProvider dataProviderTransform
+	 * @dataProvider data_provider_transform
 	 */
-	public function testTransform( $html, $expected ) {
+	public function test_transform( $html, $expected ) {
 		// Setup.
 		$component = new Link_Button(
 			$html,
@@ -165,7 +165,7 @@ class Link_Button_Test extends Component_TestCase {
 			null,
 			$this->component_styles
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 		$this->assertEquals( $expected, $result );
 	}
 }

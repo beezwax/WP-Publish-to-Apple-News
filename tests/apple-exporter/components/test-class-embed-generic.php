@@ -6,8 +6,6 @@
  * @subpackage Tests
  */
 
-use Apple_Exporter\Components\Embed_Generic;
-
 /**
  * A class to test the behavior of the
  * Apple_Exporter\Components\Embed_Generic class.
@@ -15,7 +13,7 @@ use Apple_Exporter\Components\Embed_Generic;
  * @package Apple_News
  * @subpackage Tests
  */
-class Embed_Generic_Test extends Apple_News_Testcase {
+class Apple_News_Embed_Generic_Test extends Apple_News_Testcase {
 
 	/**
 	 * A data provider for the test_transform function.
@@ -33,6 +31,7 @@ class Embed_Generic_Test extends Apple_News_Testcase {
 	 * @return array An array of test data.
 	 */
 	public function data_transform() {
+		/* phpcs:disable WordPress.WP.EnqueuedResources.NonEnqueuedScript */
 		return [
 			// Gutenberg: Generic embed.
 			[
@@ -287,7 +286,7 @@ HTML
 				,
 				'https://speakerdeck.com/player/4648d440a3230130452522b217532879',
 				'Speaker Deck',
-				'Why Backbone'
+				'Why Backbone',
 			],
 
 			// Classic: Spotify embed.
@@ -333,6 +332,7 @@ HTML
 				'VideoPress',
 			],
 		];
+		/* phpcs:enable */
 	}
 
 	/**
@@ -350,8 +350,6 @@ HTML
 
 	/**
 	 * Test the `apple_news_embed_generic_json` filter.
-	 *
-	 * @access public
 	 */
 	public function test_filter() {
 		add_filter( 'apple_news_embed_generic_json', [ $this, 'filter_apple_news_embed_generic_json' ] );
@@ -364,8 +362,8 @@ https://wordpress.org/plugins/publish-to-apple-news/
 </div></figure>
 <!-- /wp:embed -->
 HTML;
-		$post_id = self::factory()->post->create( [ 'post_content' => $post_content ] );
-		$json    = $this->get_json_for_post( $post_id );
+		$post_id      = self::factory()->post->create( [ 'post_content' => $post_content ] );
+		$json         = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 'my-cool-layout', $json['components'][3]['layout'] );
 
 		// Teardown.

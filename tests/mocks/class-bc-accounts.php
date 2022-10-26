@@ -6,6 +6,8 @@
  * @subpackage Tests
  */
 
+/* phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedClassFound */
+
 /**
  * A mock for the BC_Accounts class from the Brightcove Video Connect plugin.
  *

@@ -38,10 +38,10 @@ class Date extends Component {
 		if ( ! empty( $theme->get_value( 'date_color_dark' ) ) ) {
 			$date_conditional['conditional'][] = [
 				'textColor'  => '#date_color_dark#',
-				'conditions' => array(
+				'conditions' => [
 					'minSpecVersion'       => '1.14',
 					'preferredColorScheme' => 'dark',
-				),
+				],
 			];
 		}
 

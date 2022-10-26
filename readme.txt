@@ -3,9 +3,9 @@ Contributors: potatomaster, kevinfodness, jomurgel, tylermachado, benpbolton, al
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 5.9
-Requires PHP: 5.6
-Stable tag: 2.3.2
+Tested up to: 6.0
+Requires PHP: 7.1
+Stable tag: 2.4.0
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,9 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.4.0 =
+* Deprecation: Removed official support for PHP 5.6 and 7.0.
 
 = 2.3.2 =
 * Bugfix: Fixes a bug where the layout body-layout-last is not added to the list of layouts if the body content ends with something other than a paragraph.

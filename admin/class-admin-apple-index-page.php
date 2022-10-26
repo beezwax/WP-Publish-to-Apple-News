@@ -52,9 +52,9 @@ class Admin_Apple_Index_Page extends Apple_News {
 		$this->settings = $settings;
 
 		// Handle routing to various admin pages.
-		add_action( 'admin_init', array( $this, 'page_router' ) );
-		add_action( 'admin_menu', array( $this, 'setup_admin_page' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'setup_assets' ) );
+		add_action( 'admin_init', [ $this, 'page_router' ] );
+		add_action( 'admin_menu', [ $this, 'setup_admin_page' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'setup_assets' ] );
 	}
 
 
@@ -78,7 +78,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 			__( 'Apple News', 'apple-news' ),
 			$capability,
 			$this->plugin_slug . '_index',
-			array( $this, 'admin_page' ),
+			[ $this, 'admin_page' ],
 			'dashicons-format-aside'
 		);
 
@@ -88,7 +88,7 @@ class Admin_Apple_Index_Page extends Apple_News {
 			__( 'Articles', 'apple-news' ),
 			$capability,
 			$this->plugin_slug . '_index',
-			array( $this, 'admin_page' )
+			[ $this, 'admin_page' ]
 		);
 	}
 
@@ -227,16 +227,16 @@ class Admin_Apple_Index_Page extends Apple_News {
 	 */
 	public static function action_query_params( $action, $url ) {
 		// Set the keys we need to pay attention to.
-		$keys = array(
+		$keys = [
 			'apple_news_publish_status',
 			'apple_news_date_from',
 			'apple_news_date_to',
 			's',
 			'paged',
-		);
+		];
 
 		// Start the params.
-		$params = array();
+		$params = [];
 		if ( ! empty( $action ) ) {
 			$params['action'] = self::namespace_action( $action );
 		}
@@ -306,20 +306,20 @@ class Admin_Apple_Index_Page extends Apple_News {
 		wp_enqueue_style(
 			$this->plugin_slug . '_export_table_css',
 			plugin_dir_url( __FILE__ ) . '../assets/css/export-table.css',
-			array(),
+			[],
 			self::$version
 		);
 		wp_enqueue_script(
 			$this->plugin_slug . '_export_table_js',
 			plugin_dir_url( __FILE__ ) . '../assets/js/export-table.js',
-			array( 'jquery', 'jquery-ui-datepicker' ),
+			[ 'jquery', 'jquery-ui-datepicker' ],
 			self::$version,
 			true
 		);
 		wp_enqueue_script(
 			$this->plugin_slug . '_single_push_js',
 			plugin_dir_url( __FILE__ ) . '../assets/js/single-push.js',
-			array( 'jquery' ),
+			[ 'jquery' ],
 			self::$version,
 			true
 		);
@@ -328,10 +328,10 @@ class Admin_Apple_Index_Page extends Apple_News {
 		wp_localize_script(
 			$this->plugin_slug . '_export_table_js',
 			'apple_news_export_table',
-			array(
+			[
 				'reset_confirmation'  => __( "Are you sure you want to reset status? Please only proceed if you're certain the post is stuck or this could reset in duplicate posts in Apple News.", 'apple-news' ),
 				'delete_confirmation' => __( 'Are you sure you want to delete this post from Apple News?', 'apple-news' ),
-			)
+			]
 		);
 	}
 

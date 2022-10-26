@@ -39,10 +39,10 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 	public function __construct( $settings ) {
 		$this->settings = $settings;
 
-		add_action( 'admin_menu', array( $this, 'register_page' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'register_assets' ) );
-		add_action( 'wp_ajax_push_post', array( $this, 'ajax_push_post' ) );
-		add_filter( 'admin_title', array( $this, 'set_title' ) );
+		add_action( 'admin_menu', [ $this, 'register_page' ] );
+		add_action( 'admin_enqueue_scripts', [ $this, 'register_assets' ] );
+		add_action( 'wp_ajax_push_post', [ $this, 'ajax_push_post' ] );
+		add_filter( 'admin_title', [ $this, 'set_title' ] );
 	}
 
 	/**
@@ -62,7 +62,7 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 			 */
 			apply_filters( 'apple_news_bulk_export_capability', 'manage_options' ), // Capability.
 			$this->plugin_slug . '_bulk_export', // Menu Slug.
-			array( $this, 'build_page' )         // Function.
+			[ $this, 'build_page' ]         // Function.
 		);
 	}
 
@@ -97,7 +97,7 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 		}
 
 		// Populate $articles array with a set of valid posts.
-		$articles = array();
+		$articles = [];
 		foreach ( explode( '.', $ids ) as $id ) {
 			$post = get_post( absint( $id ) );
 			if ( ! empty( $post ) ) {
@@ -124,10 +124,10 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 		$post = get_post( $id );
 		if ( empty( $post ) ) {
 			echo wp_json_encode(
-				array(
+				[
 					'success' => false,
 					'error'   => __( 'This post no longer exists.', 'apple-news' ),
-				)
+				]
 			);
 			wp_die();
 		}
@@ -138,24 +138,24 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 			apply_filters( 'apple_news_publish_capability', self::get_capability_for_post_type( 'publish_posts', $post->post_type ) )
 		) ) {
 			echo wp_json_encode(
-				array(
+				[
 					'success' => false,
 					'error'   => __( 'You do not have permission to publish to Apple News', 'apple-news' ),
-				)
+				]
 			);
 			wp_die();
 		}
 
 		if ( 'publish' !== $post->post_status ) {
 			echo wp_json_encode(
-				array(
+				[
 					'success' => false,
 					'error'   => sprintf(
 						// translators: token is a post ID.
 						__( 'Article %s is not published and cannot be pushed to Apple News.', 'apple-news' ),
 						$id
 					),
-				)
+				]
 			);
 			wp_die();
 		}
@@ -169,16 +169,16 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 
 		if ( $errors ) {
 			echo wp_json_encode(
-				array(
+				[
 					'success' => false,
 					'error'   => $errors,
-				)
+				]
 			);
 		} else {
 			echo wp_json_encode(
-				array(
+				[
 					'success' => true,
-				)
+				]
 			);
 		}
 
@@ -200,13 +200,13 @@ class Admin_Apple_Bulk_Export_Page extends Apple_News {
 		wp_enqueue_style(
 			$this->plugin_slug . '_bulk_export_css',
 			plugin_dir_url( __FILE__ ) . '../assets/css/bulk-export.css',
-			array(),
+			[],
 			self::$version
 		);
 		wp_enqueue_script(
 			$this->plugin_slug . '_bulk_export_js',
 			plugin_dir_url( __FILE__ ) . '../assets/js/bulk-export.js',
-			array( 'jquery' ),
+			[ 'jquery' ],
 			self::$version,
 			true
 		);

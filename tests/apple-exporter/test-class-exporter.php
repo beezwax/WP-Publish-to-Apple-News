@@ -1,29 +1,28 @@
 <?php
+/**
+ * Publish to Apple News Tests: Apple_News_Exporter_Test class
+ *
+ * Contains a class to test the functionality of the Apple_Exporter\Exporter class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
 
-use Apple_Exporter\Exporter as Exporter;
-use Prophecy\Argument;
+use Apple_Exporter\Exporter;
 
-class Exporter_Test extends WP_UnitTestCase {
-
-	private $prophet;
-
-	public function setup() {
-		$this->prophet = new \Prophecy\Prophet;
-	}
-
-	public function tearDown() {
-		$this->prophet->checkPredictions();
-	}
-
-	public function isValidJSON( $json ) {
-		return ( null !== json_decode( $json ) );
-	}
+/**
+ * A class to test the behavior of the Apple_Exporter\Exporter class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
+class Apple_News_Exporter_Test extends Apple_News_Testcase {
 
 	/**
 	 * Tests the functionality of the prepare_for_encoding function to ensure
 	 * that unwanted characters are stripped.
 	 */
-	public function testPrepareForEncoding() {
+	public function test_prepare_for_encoding() {
 		// Test UTF-8 characters with accents common in French.
 		$test_content = 'Pondant à Noël — aÀâÂèÈéÉêÊëËîÎïÏôÔùÙûÛüÜÿŸçÇœŒ€æÆ';
 		Exporter::prepare_for_encoding( $test_content );
@@ -53,4 +52,3 @@ class Exporter_Test extends WP_UnitTestCase {
 		);
 	}
 }
-

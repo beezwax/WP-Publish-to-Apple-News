@@ -130,11 +130,9 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	}
 
 	/**
-	 * A function containing operations to be run before each test function.
-	 *
-	 * @access public
+	 * A fixture containing operations to be run before each test.
 	 */
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		// Capture arguments sent to the Apple News API in POST requests.
@@ -144,7 +142,7 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		add_filter( 'pre_http_request', [ $this, 'filter_pre_http_request' ], 10, 3 );
 
 		// Ensure HTML5 image captions are supported.
-		add_theme_support( 'html5', ['caption'] );
+		add_theme_support( 'html5', [ 'caption' ] );
 
 		// Create some dummy content and save it for future use.
 		$this->content = new Apple_Exporter\Exporter_Content(
@@ -192,11 +190,9 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	}
 
 	/**
-	 * Actions to be run after every test.
-	 *
-	 * @access public
+	 * A fixture containing operations to be run after each test.
 	 */
-	public function tearDown() {
+	public function tearDown(): void {
 		$this->prophet->checkPredictions();
 		remove_filter( 'apple_news_post_args', [ $this, 'filter_apple_news_post_args' ] );
 		remove_filter( 'pre_http_request', [ $this, 'filter_pre_http_request' ] );
@@ -208,11 +204,26 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 * the queue for that URL. Used to fake HTTP responses from the Apple News
 	 * API.
 	 *
-	 * @param string $verb The HTTP verb to respond to.
-	 * @param string $url  The API endpoint to fake the response for.
-	 * @param string $body The faked response body.
+	 * @param string $verb     The HTTP verb to respond to.
+	 * @param string $url      The API endpoint to fake the response for.
+	 * @param string $body     The faked response body.
+	 * @param array  $headers  Optional. Faked response headers. Defaults to empty array.
+	 * @param array  $response Optional. Faked response array. Defaults to empty array.
+	 * @param array  $cookies  Optional. Faked response cookies. Defaults to empty array.
+	 * @param string $filename Optional. Faked uploaded filename. Defaults to null.
 	 */
-	protected function add_http_response( $verb, $url, $body, $headers = [], $response = [ 'code' => 200, 'message' => 'OK' ], $cookies = [], $filename = null ) {
+	protected function add_http_response(
+		$verb,
+		$url,
+		$body,
+		$headers = [],
+		$response = [
+			'code'    => 200,
+			'message' => 'OK',
+		],
+		$cookies = [],
+		$filename = null
+	) {
 		$this->http_responses[ $verb ][ $url ][] = [
 			'body'     => $body,
 			'cookies'  => $cookies,
@@ -282,7 +293,7 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 					'title'                       => 'Test Article',
 					'maturityRating'              => null,
 					'warnings'                    => [],
-					'targetTerritoryCountryCodes' => ['US'],
+					'targetTerritoryCountryCodes' => [ 'US' ],
 					'isCandidateToBeFeatured'     => false,
 					'isSponsored'                 => false,
 					'isPreview'                   => false,
@@ -385,7 +396,7 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		$image_id = self::factory()->attachment->create_upload_object( __DIR__ . '/data/test-image.jpg', $parent );
 
 		if ( ! empty( $caption ) ) {
-			$image = get_post( $image_id );
+			$image               = get_post( $image_id );
 			$image->post_excerpt = $caption;
 			wp_update_post( $image );
 		}
@@ -401,11 +412,11 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 * A helper function that performs a sample push operation for a given post ID
 	 * and returns the request data that would be sent to Apple.
 	 *
-	 * @param int $post_id The post ID for which to perform the push.
+	 * @param int   $post_id The post ID for which to perform the push.
 	 * @param array $data Optional. Overrides for default faked values in the data.
 	 *
 	 * @return array The request data for the post.
-	 * @throws Action_Exception
+	 * @throws Action_Exception If the Push action fails.
 	 */
 	protected function get_request_for_post( $post_id, $data = [] ) {
 		// Fake the API response.
@@ -442,11 +453,11 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 * A helper function that performs a sample update operation for a given post
 	 * ID and returns the request data that would be sent to Apple.
 	 *
-	 * @param int $post_id The post ID for which to perform the update.
+	 * @param int   $post_id The post ID for which to perform the update.
 	 * @param array $data Optional. Overrides for default faked values in the data.
 	 *
 	 * @return array The request data for the post.
-	 * @throws Action_Exception
+	 * @throws Action_Exception If the Push action fails.
 	 */
 	protected function get_request_for_update( $post_id, $data = [] ) {
 		$article_id = isset( $data['id'] ) ? $data['id'] : 'abcd1234-ef56-ab78-cd90-efabcdef123456';

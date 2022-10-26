@@ -15,25 +15,24 @@ use Apple_Exporter\Components\Facebook;
  * @package Apple_News
  * @subpackage Tests
  */
-class Facebook_Test extends Component_TestCase {
+class Apple_News_Facebook_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * A data provider for the test_transform function.
 	 *
 	 * @see self::test_transform()
 	 *
-	 * @access public
 	 * @return array An array of test data
 	 */
 	public function data_transform() {
-		return array(
-			array( 'https://www.facebook.com/page-name/posts/12345' ),
-			array( 'https://www.facebook.com/username/posts/12345' ),
-			array( 'https://www.facebook.com/username/activity/12345' ),
-			array( 'https://www.facebook.com/photo.php?fbid=12345' ),
-			array( 'https://www.facebook.com/photos/12345' ),
-			array( 'https://www.facebook.com/permalink.php?story_fbid=12345' ),
-		);
+		return [
+			[ 'https://www.facebook.com/page-name/posts/12345' ],
+			[ 'https://www.facebook.com/username/posts/12345' ],
+			[ 'https://www.facebook.com/username/activity/12345' ],
+			[ 'https://www.facebook.com/photo.php?fbid=12345' ],
+			[ 'https://www.facebook.com/photos/12345' ],
+			[ 'https://www.facebook.com/permalink.php?story_fbid=12345' ],
+		];
 	}
 
 	/**
@@ -41,7 +40,6 @@ class Facebook_Test extends Component_TestCase {
 	 *
 	 * @param array $json The JSON array to modify.
 	 *
-	 * @access public
 	 * @return array The modified JSON.
 	 */
 	public function filter_apple_news_facebook_json( $json ) {
@@ -52,10 +50,8 @@ class Facebook_Test extends Component_TestCase {
 
 	/**
 	 * Test the `apple_news_facebook_json` filter.
-	 *
-	 * @access public
 	 */
-	public function testFilter() {
+	public function test_filter() {
 
 		// Setup.
 		$component = new Facebook(
@@ -67,7 +63,7 @@ class Facebook_Test extends Component_TestCase {
 		);
 		add_filter(
 			'apple_news_facebook_json',
-			array( $this, 'filter_apple_news_facebook_json' )
+			[ $this, 'filter_apple_news_facebook_json' ]
 		);
 
 		// Test.
@@ -80,7 +76,7 @@ class Facebook_Test extends Component_TestCase {
 		// Teardown.
 		remove_filter(
 			'apple_news_facebook_json',
-			array( $this, 'filter_apple_news_facebook_json' )
+			[ $this, 'filter_apple_news_facebook_json' ]
 		);
 	}
 
@@ -90,10 +86,8 @@ class Facebook_Test extends Component_TestCase {
 	 * @dataProvider data_transform
 	 *
 	 * @param string $url The URL to test.
-	 *
-	 * @access public
 	 */
-	public function testTransform( $url ) {
+	public function test_transform( $url ) {
 
 		// Setup.
 		$component = new Facebook(
@@ -106,10 +100,10 @@ class Facebook_Test extends Component_TestCase {
 
 		// Test.
 		$this->assertEquals(
-			array(
+			[
 				'role' => 'facebook_post',
-				'URL' => $url,
-			),
+				'URL'  => $url,
+			],
 			$component->to_array()
 		);
 
@@ -139,10 +133,10 @@ class Facebook_Test extends Component_TestCase {
 		);
 
 		$this->assertEquals(
-			array(
+			[
 				'role' => 'facebook_post',
 				'URL'  => $url,
-			),
+			],
 			$component->to_array()
 		);
 

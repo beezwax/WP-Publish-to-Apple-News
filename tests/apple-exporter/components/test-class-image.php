@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Image_Test class
+ * Publish to Apple News tests: Apple_News_Image_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -15,14 +15,13 @@ use Apple_Exporter\Components\Image;
  * @package Apple_News
  * @subpackage Tests
  */
-class Image_Test extends Component_TestCase {
+class Apple_News_Image_Test extends Apple_News_Component_TestCase {
 
 	/**
 	 * A filter function to modify the text style in the generated JSON.
 	 *
 	 * @param array $json The JSON array to modify.
 	 *
-	 * @access public
 	 * @return array The modified JSON.
 	 */
 	public function filter_apple_news_image_json( $json ) {
@@ -34,10 +33,8 @@ class Image_Test extends Component_TestCase {
 	/**
 	 * Test Image component matching and JSON
 	 * output with HTML markup for an image.
-	 *
-	 * @access public
 	 */
-	public function testTransformImage() {
+	public function test_transform_image() {
 		$this->settings->set( 'html_support', 'yes' );
 		$this->settings->set( 'use_remote_images', 'yes' );
 
@@ -72,10 +69,8 @@ class Image_Test extends Component_TestCase {
 	/**
 	 * Test Image component matching and JSON output
 	 * with HTML5 markup for an image with a caption.
-	 *
-	 * @access public
 	 */
-	public function testTransformImageCaption() {
+	public function test_transform_image_caption() {
 		$this->settings->set( 'html_support', 'yes' );
 		$this->settings->set( 'use_remote_images', 'yes' );
 
@@ -120,10 +115,8 @@ HTML;
 
 	/**
 	 * Test empty src attribute.
-	 *
-	 * @access public
 	 */
-	public function testEmptySrc() {
+	public function test_empty_src() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
@@ -134,7 +127,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEmpty( $result );
@@ -142,10 +135,8 @@ HTML;
 
 	/**
 	 * Test the `apple_news_image_json` filter.
-	 *
-	 * @access public
 	 */
-	public function testFilter() {
+	public function test_filter() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'no' );
@@ -162,7 +153,7 @@ HTML;
 		);
 		add_filter(
 			'apple_news_image_json',
-			array( $this, 'filter_apple_news_image_json' )
+			[ $this, 'filter_apple_news_image_json' ]
 		);
 
 		// Test.
@@ -172,16 +163,14 @@ HTML;
 		// Teardown.
 		remove_filter(
 			'apple_news_image_json',
-			array( $this, 'filter_apple_news_image_json' )
+			[ $this, 'filter_apple_news_image_json' ]
 		);
 	}
 
 	/**
 	 * Test src attribute that is just a fragment.
-	 *
-	 * @access public
 	 */
-	public function testFragmentSrc() {
+	public function test_fragment_src() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
@@ -192,7 +181,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEmpty( $result );
@@ -200,10 +189,8 @@ HTML;
 
 	/**
 	 * Test standard JSON export.
-	 *
-	 * @access public
 	 */
-	public function testGeneratedJSON() {
+	public function test_generated_json() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'no' );
@@ -218,7 +205,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEquals( 'photo', $result['role'] );
@@ -228,10 +215,8 @@ HTML;
 
 	/**
 	 * Test remote image JSON export.
-	 *
-	 * @access public
 	 */
-	public function testGeneratedJSONRemoteImages() {
+	public function test_generated_json_remote_images() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
@@ -246,7 +231,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEquals( 'photo', $result['role'] );
@@ -256,10 +241,8 @@ HTML;
 
 	/**
 	 * Test relative src attribute.
-	 *
-	 * @access public
 	 */
-	public function testRelativeSrc() {
+	public function test_relative_src() {
 
 		// Setup.
 		$this->settings->set( 'use_remote_images', 'yes' );
@@ -270,7 +253,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEquals( 'photo', $result['role'] );
@@ -280,17 +263,15 @@ HTML;
 
 	/**
 	 * Tests dark color setting for image captions
-	 *
-	 * @access public
 	 */
-	public function testDarkColors() {
+	public function test_dark_colors() {
 		$this->set_theme_settings(
 			[
-				'caption_color_dark'       => '#abcdef',
+				'caption_color_dark' => '#abcdef',
 			]
 		);
 
-		$html = <<<HTML
+		$html      = <<<HTML
 <figure>
 	<img src="https://www.example.org/filename.jpg" alt="Example">
 	<figcaption class="wp-caption-text">Caption Text</figcaption>
@@ -303,7 +284,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 		$this->assertEquals(
 			'#abcdef',
 			$result['components'][1]['textStyle']['conditional']['textColor']
@@ -312,10 +293,8 @@ HTML;
 
 	/**
 	 * Tests image and image caption settings.
-	 *
-	 * @access public
 	 */
-	public function testSettings() {
+	public function test_settings() {
 
 		// Setup.
 		$this->settings->full_bleed_images = 'yes';
@@ -328,7 +307,7 @@ HTML;
 				'caption_tracking'    => 50,
 			]
 		);
-		$html = <<<HTML
+		$html      = <<<HTML
 <figure>
 	<img src="https://www.example.org/filename.jpg" alt="Example">
 	<figcaption class="wp-caption-text">Caption Text</figcaption>
@@ -341,7 +320,7 @@ HTML;
 			$this->styles,
 			$this->layouts
 		);
-		$result = $component->to_array();
+		$result    = $component->to_array();
 
 		// Test.
 		$this->assertEquals( true, $result['layout']['ignoreDocumentMargin'] );
@@ -373,7 +352,7 @@ HTML;
 	/**
 	 * Ensures that the lightbox font is set to the same font face as the image caption.
 	 */
-	public function testLightboxFont() {
+	public function test_lightbox_font() {
 		$this->set_theme_settings(
 			[
 				'caption_font'         => 'Menlo-Regular',

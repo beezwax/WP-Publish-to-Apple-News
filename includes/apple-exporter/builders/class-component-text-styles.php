@@ -33,7 +33,7 @@ class Component_Text_Styles extends Builder {
 	 */
 	public function __construct( $content, $settings ) {
 		parent::__construct( $content, $settings );
-		$this->styles = array();
+		$this->styles = [];
 	}
 
 	/**

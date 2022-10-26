@@ -26,38 +26,38 @@ class Title extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role'   => 'title',
 				'text'   => '#text#',
 				'format' => 'html',
-			)
+			]
 		);
 
-		$conditional = array();
+		$conditional = [];
 		if ( ! empty( $theme->get_value( 'header1_color_dark' ) ) ) {
-			$conditional = array(
-				'conditional' => array(
+			$conditional = [
+				'conditional' => [
 					'textColor'  => '#header1_color_dark#',
-					'conditions' => array(
+					'conditions' => [
 						'minSpecVersion'       => '1.14',
 						'preferredColorScheme' => 'dark',
-					),
-				),
-			);
+					],
+				],
+			];
 		}
 
 		$this->register_spec(
 			'default-title',
 			__( 'Style', 'apple-news' ),
 			array_merge(
-				array(
+				[
 					'fontName'      => '#header1_font#',
 					'fontSize'      => '#header1_size#',
 					'lineHeight'    => '#header1_line_height#',
 					'tracking'      => '#header1_tracking#',
 					'textColor'     => '#header1_color#',
 					'textAlignment' => '#text_alignment#',
-				),
+				],
 				$conditional
 			)
 		);
@@ -65,12 +65,12 @@ class Title extends Component {
 		$this->register_spec(
 			'title-layout',
 			__( 'Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'top'    => 30,
 					'bottom' => 0,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -90,9 +90,9 @@ class Title extends Component {
 
 		$this->register_json(
 			'json',
-			array(
+			[
 				'#text#' => $html,
-			)
+			]
 		);
 
 		$this->set_style();
@@ -112,7 +112,7 @@ class Title extends Component {
 		$this->register_style(
 			'default-title',
 			'default-title',
-			array(
+			[
 				'#header1_font#'        => $theme->get_value( 'header1_font' ),
 				'#header1_size#'        => intval( $theme->get_value( 'header1_size' ) ),
 				'#header1_line_height#' => intval( $theme->get_value( 'header1_line_height' ) ),
@@ -120,7 +120,7 @@ class Title extends Component {
 				'#header1_color#'       => $theme->get_value( 'header1_color' ),
 				'#header1_color_dark#'  => $theme->get_value( 'header1_color_dark' ),
 				'#text_alignment#'      => $this->find_text_alignment(),
-			),
+			],
 			'textStyle'
 		);
 	}
@@ -134,7 +134,7 @@ class Title extends Component {
 		$this->register_layout(
 			'title-layout',
 			'title-layout',
-			array(),
+			[],
 			'layout'
 		);
 	}

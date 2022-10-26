@@ -39,25 +39,25 @@ class Divider extends Component {
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			array(
+			[
 				'role'   => 'divider',
 				'layout' => 'divider-layout',
-				'stroke' => array(
+				'stroke' => [
 					'color' => '#E6E6E6',
 					'width' => 1,
-				),
-			)
+				],
+			]
 		);
 
 		$this->register_spec(
 			'divider-layout',
 			__( 'Layout', 'apple-news' ),
-			array(
-				'margin' => array(
+			[
+				'margin' => [
 					'top'    => 25,
 					'bottom' => 25,
-				),
-			)
+				],
+			]
 		);
 	}
 
@@ -70,13 +70,13 @@ class Divider extends Component {
 	protected function build( $html ) { // phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable
 		$this->register_json(
 			'json',
-			array()
+			[]
 		);
 
 		$this->register_full_width_layout(
 			'divider-layout',
 			'divider-layout',
-			array()
+			[]
 		);
 	}
 

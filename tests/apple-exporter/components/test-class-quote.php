@@ -1,6 +1,6 @@
 <?php
 /**
- * Publish to Apple News tests: Quote_Test class
+ * Publish to Apple News tests: Apple_News_Quote_Test class
  *
  * @package Apple_News
  * @subpackage Tests
@@ -13,7 +13,7 @@
  * @package Apple_News
  * @subpackage Tests
  */
-class Quote_Test extends Apple_News_Testcase {
+class Apple_News_Quote_Test extends Apple_News_Testcase {
 
 	/**
 	 * Creates a post containing a blockquote and returns the post ID.
@@ -111,14 +111,18 @@ HTML;
 	 * Test the `apple_news_apply_hanging_punctuation` filter.
 	 *
 	 * @dataProvider data_test_filter
+	 *
+	 * @param string[] $meta_order The order of meta components to use.
 	 */
 	public function test_filter_hanging_punctuation( $meta_order ) {
-		$this->set_theme_settings( [
-			'meta_component_order'          => $meta_order,
-			'pullquote_hanging_punctuation' => 'yes'
-		] );
+		$this->set_theme_settings(
+			[
+				'meta_component_order'          => $meta_order,
+				'pullquote_hanging_punctuation' => 'yes',
+			]
+		);
 		add_filter( 'apple_news_apply_hanging_punctuation', [ $this, 'filter_apple_news_apply_hanging_punctuation' ], 10, 2 );
-		$json    = $this->get_json_for_post( $this->get_pullquote() );
+		$json = $this->get_json_for_post( $this->get_pullquote() );
 		$this->assertEquals( '<p>«Test pullquote.»</p>', $json['components'][2]['components'][0]['text'] );
 		remove_filter( 'apple_news_apply_hanging_punctuation', [ $this, 'filter_apple_news_apply_hanging_punctuation' ] );
 	}
@@ -129,7 +133,7 @@ HTML;
 	public function test_filter_json() {
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'title', 'author' ] ] );
 		add_filter( 'apple_news_quote_json', [ $this, 'filter_apple_news_quote_json' ] );
-		$json    = $this->get_json_for_post( $this->get_blockquote() );
+		$json = $this->get_json_for_post( $this->get_blockquote() );
 		$this->assertEquals( 'fancy-quote', $json['components'][2]['textStyle'] );
 		remove_filter( 'apple_news_quote_json', [ $this, 'filter_apple_news_quote_json' ] );
 	}
@@ -295,11 +299,12 @@ HTML;
 	 *
 	 * @dataProvider data_transform_pullquote_for_theme
 	 *
-	 * @param string $theme The theme slug to test.
+	 * @param string   $theme      The theme slug to test.
+	 * @param string[] $meta_order The order of meta components to use.
 	 */
-	public function test_transform_pullquote_for_theme( $theme, $component_order ) {
+	public function test_transform_pullquote_for_theme( $theme, $meta_order ) {
 		$this->load_example_theme( $theme );
-		$this->set_theme_settings( [ 'meta_component_order' => $component_order ] );
+		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		$json = $this->get_json_for_post( $this->get_pullquote() );
 		$this->assertEquals( 'default-pullquote-left', $json['components'][2]['components'][1]['textStyle'] );
 	}
