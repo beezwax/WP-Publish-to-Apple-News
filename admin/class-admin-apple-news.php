@@ -192,7 +192,7 @@ class Admin_Apple_News extends Apple_News {
 						'rest_insert_' . $post_type,
 						[ $this, 'action_rest_insert_post' ],
 						10,
-            3
+						2
 					);
 				}
 			}
@@ -219,8 +219,11 @@ class Admin_Apple_News extends Apple_News {
 
 	/**
 	 * A callback function for the rest_insert_{$this->post_type} action hook.
+	 *
+	 * @param WP_Post         $post    Inserted or updated post object.
+	 * @param WP_REST_Request $request Request object.
 	 */
-	public function action_rest_insert_post($post, $request, $creating) {
+	public function action_rest_insert_post( $post, $request ) {
 		// Try to get the meta param.
 		$meta = $request->get_param( 'meta' );
 		if ( empty( $meta ) || ! is_array( $meta ) ) {
