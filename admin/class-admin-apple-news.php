@@ -19,6 +19,7 @@ require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-sections.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-themes.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-preview.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-admin-apple-json.php';
+require_once plugin_dir_path( __FILE__ ) . 'class-automation.php';
 
 // REST Includes.
 require_once plugin_dir_path( __FILE__ ) . '../includes/REST/apple-news-delete.php';
@@ -88,6 +89,9 @@ class Admin_Apple_News extends Apple_News {
 
 		// Add JSON customization support.
 		new Admin_Apple_JSON();
+
+		// Add automation support.
+		Apple_News\Admin\Automation::init();
 
 		// Enhancements if the block editor is available.
 		if ( apple_news_block_editor_is_active() ) {
