@@ -29,6 +29,19 @@ class Apple_News_Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 	}
 
 	/**
+	 * Returns an array of arrays representing function arguments to the
+	 * test_metadata_automation function.
+	 */
+	public function data_metadata_automation() {
+		return [
+			[ 'isHidden' ],
+			[ 'isPaid' ],
+			[ 'isPreview' ],
+			[ 'isSponsored' ],
+		];
+	}
+
+	/**
 	 * A filter on the_content that tests the behavior of the
 	 * apple_news_is_exporting function.
 	 *
@@ -211,6 +224,41 @@ class Apple_News_Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		$this->assertEquals( $is_paid, $metadata['data']['isPaid'] );
 		$this->assertEquals( $is_preview, $metadata['data']['isPreview'] );
 		$this->assertEquals( $is_sponsored, $metadata['data']['isSponsored'] );
+	}
+
+	/**
+	 * Ensures that named metadata is properly set via an automation process.
+	 *
+	 * @dataProvider data_metadata_automation
+	 *
+	 * @param string $flag The flag that should be set by automation.
+	 */
+	public function test_metadata_automation( $flag ) {
+		$post_id = self::factory()->post->create();
+
+		// Create an automation routine for this flag.
+		$result  = wp_insert_term( 'Test Flag ' . $flag, 'category' );
+		$term_id = $result['term_id'];
+		add_option(
+			'apple_news_automation',
+			[
+				[
+					'field'    => $flag,
+					'taxonomy' => 'category',
+					'term_id'  => $term_id,
+					'value'    => true,
+				],
+			]
+		);
+
+		// Ensure that the flag is not set to true initially.
+		$request  = $this->get_request_for_post( $post_id );
+		$metadata = $this->get_metadata_from_request( $request );
+		$this->assertEquals( false, $metadata['data'][ $flag ] );
+
+		// Set the taxonomy term to trigger the automation routine and ensure the flag is set.
+		wp_set_post_terms( $post_id, [ $term_id ], 'category' );
+		$this->assertEquals( true, $metadata['data'][ $flag ] );
 	}
 
 	/**
