@@ -378,6 +378,16 @@ class Push extends API_Action {
 			}
 		}
 
+		/**
+		 * Allow article metadata to be filtered.
+		 *
+		 * @since 2.4.0
+		 *
+		 * @param array $metadata The article metadata to be filtered.
+		 * @param int   $post_id  The ID of the post being pushed to Apple News.
+		 */
+		$meta['data'] = apply_filters( 'apple_news_article_metadata', $meta['data'], $this->id );
+
 		// Ignore if the post is already in sync.
 		if ( $this->is_post_in_sync( $json, $meta, $bundles ) ) {
 			throw new \Apple_Actions\Action_Exception(

@@ -239,7 +239,7 @@ class Apple_News_Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		// Create an automation routine for this flag.
 		$result  = wp_insert_term( 'Test Flag ' . $flag, 'category' );
 		$term_id = $result['term_id'];
-		add_option(
+		update_option(
 			'apple_news_automation',
 			[
 				[
@@ -251,13 +251,10 @@ class Apple_News_Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 			]
 		);
 
-		// Ensure that the flag is not set to true initially.
-		$request  = $this->get_request_for_post( $post_id );
-		$metadata = $this->get_metadata_from_request( $request );
-		$this->assertEquals( false, $metadata['data'][ $flag ] );
-
 		// Set the taxonomy term to trigger the automation routine and ensure the flag is set.
 		wp_set_post_terms( $post_id, [ $term_id ], 'category' );
+		$request  = $this->get_request_for_post( $post_id );
+		$metadata = $this->get_metadata_from_request( $request );
 		$this->assertEquals( true, $metadata['data'][ $flag ] );
 	}
 
