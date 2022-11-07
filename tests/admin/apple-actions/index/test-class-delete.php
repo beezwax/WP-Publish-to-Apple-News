@@ -1,56 +1,32 @@
 <?php
+/**
+ * Publish to Apple News tests: Apple_News_Admin_Action_Index_Delete_Test class
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
 
-use \Apple_Actions\Index\Delete as Delete;
-use \Apple_Exporter\Settings as Settings;
-use \Prophecy\Argument as Argument;
+use Apple_Actions\Index\Delete;
 
-class Admin_Action_Index_Delete_Test extends WP_UnitTestCase {
+/**
+ * A class to test the functionality of the Apple_Actions\Index\Delete class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
+class Apple_News_Admin_Action_Index_Delete_Test extends Apple_News_Testcase {
+	/**
+	 * Tests the behavior of the automatic delete setting.
+	 */
+	public function test_auto_delete() {
+		// Create a post, which will automatically be published.
+		$this->become_admin();
+		$this->add_http_response( 'POST', 'https://news-api.apple.com/channels/foo/articles', wp_json_encode( $this->fake_article_response() ) );
+		$post_id = self::factory()->post->create();
 
-	private $prophet;
-
-	public function setup() {
-		parent::setup();
-
-		$this->prophet = new \Prophecy\Prophet;
-		$this->settings = new Settings();
-		$this->settings->set( 'api_key', 'foo' );
-		$this->settings->set( 'api_secret', 'bar' );
-		$this->settings->set( 'api_channel', 'baz' );
+		// Add an HTTP response for the delete operation, then delete the article, and verify it was triggered.
+		$this->add_http_response( 'DELETE', 'https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456' );
+		wp_delete_post( $post_id, true );
+		$this->assertEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
 	}
-
-	public function tearDown() {
-		$this->prophet->checkPredictions();
-	}
-
-	public function testActionPerform() {
-		$remote_id = uniqid();
-		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
-		$api->delete_article( $remote_id )
-			->shouldBeCalled();
-
-		// Create post with dummy remote id
-		$post_id = $this->factory->post->create();
-		update_post_meta( $post_id, 'apple_news_api_id', $remote_id );
-
-		$action = new Delete( $this->settings, $post_id );
-		$action->set_api( $api->reveal() );
-		$action->perform();
-
-		$this->assertNotEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
-		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_id', true ) );
-	}
-
-	public function testActionPerformWhenNotPushed() {
-		// Expect an exception
-		$this->setExpectedException( '\Apple_Actions\Action_Exception', 'This post has not been pushed to Apple News, cannot delete.' );
-
-		$api = $this->prophet->prophesize( '\Push_API\API' );
-		$post_id = $this->factory->post->create();
-
-		$action = new Delete( $this->settings, $post_id );
-		$action->set_api( $api->reveal() );
-		$action->perform();
-	}
-
 }
-
