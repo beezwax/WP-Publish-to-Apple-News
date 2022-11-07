@@ -32,6 +32,16 @@ function _manually_load_plugin() {
 	update_option( 'permalink_structure', '/%postname%' );
 	update_option( 'siteurl', 'https://www.example.org' );
 
+	// Apple News reads in the channel/key/secret values on load.
+	update_option(
+		'apple_news_settings',
+		[
+			'api_channel' => 'foo',
+			'api_key'     => 'bar',
+			'api_secret'  => 'baz',
+		]
+	);
+
 	// Force WP to treat URLs as HTTPS during testing so the home and siteurl option protocols are honored.
 	$_SERVER['HTTPS'] = 1;
 
