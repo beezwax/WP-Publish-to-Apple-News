@@ -59,6 +59,53 @@ class Admin_Apple_Post_Sync {
 		if ( 'yes' === $this->settings->get( 'api_autosync_delete' ) ) {
 			add_action( 'before_delete_post', array( $this, 'do_delete' ) );
 		}
+
+		// Optionally take certain actions on post status transition.
+		add_action( 'transition_post_status', [ $this, 'action__transition_post_status' ], 10, 3 );
+	}
+
+	/**
+	 * A callback function for the transition_post_status action hook.
+	 *
+	 * @param string  $new_status The new post status after the transition.
+	 * @param string  $old_status The previous post status.
+	 * @param WP_Post $post       The post object being transitioned.
+	 */
+	public function action__transition_post_status( $new_status, $old_status, $post ) {
+		/**
+		 * Determines whether to delete an article via the Apple News API if it is
+		 * moved from publish status to the trash in WordPress.
+		 *
+		 * @since 2.3.3
+		 *
+		 * @param bool $should_delete Whether the post should be deleted via the Apple News API or not.
+		 * @param int  $post_id       The ID of the post that was moved to the trash.
+		 */
+		$delete_on_trash = apply_filters( 'apple_news_should_post_delete_on_trash', false, $post->ID );
+
+		/**
+		 * Determines whether to delete an article via the Apple News API if it is
+		 * unpublished in WordPress (defined as moving a post from the `publish`
+		 * status to any other status, including `trash`).
+		 *
+		 * @since 2.3.3
+		 *
+		 * @param bool $should_delete Whether the post should be deleted via the Apple News API or not.
+		 * @param int  $post_id       The ID of the post that was unpublished.
+		 */
+		$delete_on_unpublish = apply_filters( 'apple_news_should_post_delete_on_unpublish', false, $post->ID );
+
+		// Determine whether to delete the article via the API.
+		if ( $old_status !== $new_status
+			&& 'publish' === $old_status
+			&& ( $delete_on_unpublish
+				|| ( 'trash' === $new_status
+					&& $delete_on_trash
+				)
+			)
+		) {
+			$this->do_delete( $post->ID );
+		}
 	}
 
 	/**
