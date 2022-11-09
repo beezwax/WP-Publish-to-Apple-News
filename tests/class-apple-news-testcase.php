@@ -212,14 +212,16 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	 * @param string $url  The API endpoint to fake the response for.
 	 * @param string $body The faked response body.
 	 */
-	protected function add_http_response( $verb, $url, $body, $headers = [], $response = [ 'code' => 200, 'message' => 'OK' ], $cookies = [], $filename = null ) {
-		$this->http_responses[ $verb ][ $url ][] = [
-			'body'     => $body,
-			'cookies'  => $cookies,
-			'filename' => $filename,
-			'headers'  => new Requests_Utility_CaseInsensitiveDictionary( $headers ),
-			'response' => $response,
-		];
+	protected function add_http_response( $verb, $url, $body = '', $headers = [], $response = [ 'code' => 200, 'message' => 'OK' ], $cookies = [], $filename = null ) {
+		// Handle null for DELETE.
+		$this->http_responses[ $verb ][ $url ][] = 'DELETE' !== $verb
+			? [
+				'body'     => $body,
+				'cookies'  => $cookies,
+				'filename' => $filename,
+				'headers'  => new Requests_Utility_CaseInsensitiveDictionary( $headers ),
+				'response' => $response,
+			] : null;
 	}
 
 	/**

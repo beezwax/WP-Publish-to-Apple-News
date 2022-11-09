@@ -55,7 +55,7 @@ class Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		$notices = get_user_meta( $user_id, 'apple_news_notice', true );
 		$this->assertEquals( 2, count( $notices ) );
 		$this->assertEquals( 'error', $notices[0]['type'] );
-		$this->assertEquals( 'Your Apple News API settings seem to be empty. Please fill in the API key, API secret and API channel fields in the plugin configuration page.', $notices[0]['message'] );
+		$this->assertEquals( 'There has been an error with the Apple News API: There has been an error with your request: ', $notices[0]['message'] );
 		$this->assertEquals( 'success', $notices[1]['type'] );
 		$this->assertEquals( 'abcd1234-ef56-ab78-cd90-efabcdef123456', get_post_meta( $post_id_1, 'apple_news_api_id', true ) );
 

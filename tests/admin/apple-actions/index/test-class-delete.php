@@ -1,56 +1,97 @@
 <?php
+/**
+ * Publish to Apple News tests: Apple_News_Admin_Action_Index_Delete_Test class
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
 
-use \Apple_Actions\Index\Delete as Delete;
-use \Apple_Exporter\Settings as Settings;
-use \Prophecy\Argument as Argument;
+use Apple_Actions\Index\Delete;
 
-class Admin_Action_Index_Delete_Test extends WP_UnitTestCase {
+/**
+ * A class to test the functionality of the Apple_Actions\Index\Delete class.
+ *
+ * @package Apple_News
+ * @subpackage Tests
+ */
+class Apple_News_Admin_Action_Index_Delete_Test extends Apple_News_Testcase {
+	/**
+	 * Tests the behavior of the automatic delete setting.
+	 */
+	public function test_auto_delete() {
+		// Create a post, which will automatically be published.
+		$this->become_admin();
+		$this->add_http_response( 'POST', 'https://news-api.apple.com/channels/foo/articles', wp_json_encode( $this->fake_article_response() ) );
+		$this->assertNotEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
+		$post_id = self::factory()->post->create();
+		$this->assertEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
 
-	private $prophet;
+		// Add an HTTP response for the delete operation, then delete the article, and verify it was triggered.
+		$this->add_http_response( 'DELETE', 'https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456' );
+		$this->assertNotEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		wp_delete_post( $post_id, true );
+		$this->assertEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
 
-	public function setup() {
-		parent::setup();
+		// Create a new article and move it to the trash and verify that the delete operation was not triggered.
+		$this->add_http_response( 'POST', 'https://news-api.apple.com/channels/foo/articles', wp_json_encode( $this->fake_article_response() ) );
+		$this->assertNotEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
+		$post_id = self::factory()->post->create();
+		$this->assertEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
+		$this->add_http_response( 'DELETE', 'https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456' );
+		$this->assertNotEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		wp_delete_post( $post_id );
+		$this->assertNotEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		array_pop( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		$this->assertEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
 
-		$this->prophet = new \Prophecy\Prophet;
-		$this->settings = new Settings();
-		$this->settings->set( 'api_key', 'foo' );
-		$this->settings->set( 'api_secret', 'bar' );
-		$this->settings->set( 'api_channel', 'baz' );
+		// Create a new article and move it to draft status and verify that the delete operation was not triggered.
+		$this->add_http_response( 'POST', 'https://news-api.apple.com/channels/foo/articles', wp_json_encode( $this->fake_article_response() ) );
+		$this->assertNotEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
+		$post = self::factory()->post->create_and_get();
+		$this->assertEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
+		$this->add_http_response( 'DELETE', 'https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456' );
+		$this->assertNotEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		$post->post_status = 'draft';
+		wp_update_post( $post );
+		$this->assertNotEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		array_pop( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		$this->assertEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+
+		// Opt in to delete on trash via filter, create a new article, move it to the trash, and verify that the delete operation was triggered.
+		add_filter( 'apple_news_should_post_delete_on_trash', '__return_true' );
+		$this->add_http_response( 'POST', 'https://news-api.apple.com/channels/foo/articles', wp_json_encode( $this->fake_article_response() ) );
+		$this->assertNotEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
+		$post_id = self::factory()->post->create();
+		$this->assertEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
+		$this->add_http_response( 'DELETE', 'https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456' );
+		$this->assertNotEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		wp_delete_post( $post_id );
+		$this->assertEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		remove_filter( 'apple_news_should_post_delete_on_trash', '__return_true' );
+
+		// Opt in to delete on unpublish via filter, create a new article, move it to draft, and verify that the delete operation was triggered.
+		add_filter( 'apple_news_should_post_delete_on_unpublish', '__return_true' );
+		$this->add_http_response( 'POST', 'https://news-api.apple.com/channels/foo/articles', wp_json_encode( $this->fake_article_response() ) );
+		$this->assertNotEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
+		$post = self::factory()->post->create_and_get();
+		$this->assertEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
+		$this->add_http_response( 'DELETE', 'https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456' );
+		$this->assertNotEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		$post->post_status = 'draft';
+		wp_update_post( $post );
+		$this->assertEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		remove_filter( 'apple_news_should_post_delete_on_unpublish', '__return_true' );
+
+		// Opt in to delete on unpublish via filter, create a new article, move it to the trash, and verify that the delete operation was triggered.
+		add_filter( 'apple_news_should_post_delete_on_unpublish', '__return_true' );
+		$this->add_http_response( 'POST', 'https://news-api.apple.com/channels/foo/articles', wp_json_encode( $this->fake_article_response() ) );
+		$this->assertNotEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
+		$post_id = self::factory()->post->create();
+		$this->assertEmpty( $this->http_responses['POST']['https://news-api.apple.com/channels/foo/articles'] );
+		$this->add_http_response( 'DELETE', 'https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456' );
+		$this->assertNotEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		wp_delete_post( $post_id );
+		$this->assertEmpty( $this->http_responses['DELETE']['https://news-api.apple.com/articles/abcd1234-ef56-ab78-cd90-efabcdef123456'] );
+		remove_filter( 'apple_news_should_post_delete_on_unpublish', '__return_true' );
 	}
-
-	public function tearDown() {
-		$this->prophet->checkPredictions();
-	}
-
-	public function testActionPerform() {
-		$remote_id = uniqid();
-		$api = $this->prophet->prophesize( '\Apple_Push_API\API' );
-		$api->delete_article( $remote_id )
-			->shouldBeCalled();
-
-		// Create post with dummy remote id
-		$post_id = $this->factory->post->create();
-		update_post_meta( $post_id, 'apple_news_api_id', $remote_id );
-
-		$action = new Delete( $this->settings, $post_id );
-		$action->set_api( $api->reveal() );
-		$action->perform();
-
-		$this->assertNotEquals( null, get_post_meta( $post_id, 'apple_news_api_deleted', true ) );
-		$this->assertEquals( null, get_post_meta( $post_id, 'apple_news_api_id', true ) );
-	}
-
-	public function testActionPerformWhenNotPushed() {
-		// Expect an exception
-		$this->setExpectedException( '\Apple_Actions\Action_Exception', 'This post has not been pushed to Apple News, cannot delete.' );
-
-		$api = $this->prophet->prophesize( '\Push_API\API' );
-		$post_id = $this->factory->post->create();
-
-		$action = new Delete( $this->settings, $post_id );
-		$action->set_api( $api->reveal() );
-		$action->perform();
-	}
-
 }
-
