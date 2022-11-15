@@ -106,6 +106,18 @@ class Automation {
 			self::PAGE_NAME,
 			[ __CLASS__, 'render_submenu_page' ]
 		);
+
+		add_submenu_page(
+			'apple_news_index',
+			__( 'Apple News React Options', 'apple-news' ),
+			__( 'React Options', 'apple-news' ),
+			/** This filter is documented in admin/class-admin-apple-settings.php */
+			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
+			'apple-news-react-options',
+			[ __CLASS__, 'render_react_submenu_page' ]
+		);
+
+		add_action( "admin_print_scripts", [ __CLASS__, 'add_options_assets' ] );
 	}
 
 	/**
@@ -232,6 +244,35 @@ class Automation {
 				</form>
 			</div>
 		<?php
+	}
+
+	/**
+	 * A render callback for the REACT submenu page.
+	 */
+	public static function render_react_submenu_page(): void {
+		add_filter(
+			'should_load_block_editor_scripts_and_styles',
+			function() {
+				return true;
+			}
+		);
+		wp_add_iframed_editor_assets_html();
+		echo wp_kses(
+			'<div class="block-editor"><div class="editor-styles-wrapper"><div id="apple-news-options__page"></div></div></div>',
+			[ 'div' => [ 'id' => [] ] ]
+		);
+	}
+
+	public static function add_options_assets(): void {
+		wp_enqueue_script(
+			'apple-news-plugin-admin-settings',
+			plugins_url( 'build/adminSettings.js', __DIR__ ),
+			[ 'wp-block-editor', 'wp-api-fetch', 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-tinymce' ],
+			[],
+			true
+		);
+		wp_enqueue_style( 'wp-edit-blocks' );
+		// inline_locale_data( 'apple-news-plugin-admin-settings' );
 	}
 
 	/**
