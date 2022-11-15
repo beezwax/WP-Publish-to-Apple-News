@@ -195,7 +195,7 @@ class Automation {
 			'apple-news-plugin-admin-settings',
 			'localizedData',
 			[
-				'taxonomies' => ['test', 'test'],
+				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
 				'fields'     => self::FIELDS,
 			]
 		);
