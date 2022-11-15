@@ -25,12 +25,11 @@ const AdminSettings = () => {
    * Helper function for saving the in-memory settings to the server.
    */
    const saveSettings = () => {
-    const next = { ...settings, apple_news_automation: test };
+    const next = { ...settings, apple_news_automation: [test] };
 
     // Enforce some defaults prior to save.
     next.site_logo = next.site_logo ?? 0;
     console.log('settings-pre-save', next);
-    console.log('test');
 
     // Kick off the save to the server.
     setOptions(next);

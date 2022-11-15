@@ -73,12 +73,12 @@ class Automation {
 			self::PAGE_NAME,
 			self::OPTION_KEY,
 			[
-				'default'           => 'default',
+				'default'           => [],
 				'description'       => __( 'Automation settings for Publish to Apple News.', 'apple-news' ),
 				'sanitize_callback' => [ __CLASS__, 'sanitize_setting' ],
 				// Do we need a schema here?
 				'show_in_rest'      => true,
-				'type'              => 'string',
+				'type'              => 'array',
 			]
 		);
 	}
