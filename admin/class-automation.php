@@ -190,6 +190,15 @@ class Automation {
 		// Was included in BASS logic, method not defined here.
 		// Leaving for now in case it's important and needs to be done differently here.
 		// inline_locale_data( 'apple-news-plugin-admin-settings' );
+
+		wp_localize_script(
+			'apple-news-plugin-admin-settings',
+			'localizedData',
+			[
+				'taxonomies' => ['test', 'test'],
+				'fields'     => self::FIELDS,
+			]
+		);
 	}
 
 	/**

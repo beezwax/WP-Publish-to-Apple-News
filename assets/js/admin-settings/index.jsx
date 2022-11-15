@@ -1,3 +1,4 @@
+/* global localizedData */
 import {
   Button,
   SelectControl,
@@ -12,6 +13,13 @@ import useSiteOptions from '../services/hooks/use-site-options';
 const AdminSettings = () => {
   const [{ loading, saving, settings }, setOptions] = useSiteOptions();
   const [test, setTest] = useState('');
+
+  const {
+    taxonomies,
+    fields
+  } = localizedData;
+
+  console.log(taxonomies, fields);
 
   /**
    * Helper function for saving the in-memory settings to the server.
