@@ -11,44 +11,44 @@ import { useSelect } from '@wordpress/data';
 
 
 const Rule = ({
-  deleteRule,
+  onAdd,
+  onDelete,
+  onUpdate,
   taxonomy,
-  termId,
+  term_id,
   field,
-  fieldValue,
+  value,
   loading,
   newRule,
   ruleIndex,
   saving,
-  saveSettings,
 }) => {
   const [rule, setRule] = useState({
-    locTaxonomy: '',
-    locTermId: 0,
-    locField: '',
-    locFieldValue: '',
+    taxonomy: '',
+    term_id: 0,
+    field: '',
+    value: '',
   });
 
   // If existing rule, sync local state with incoming settings.
   // Else set some default values.
   useEffect(() => {
     if(!newRule) {
-      console.log(taxonomy, termId, field, fieldValue);
       setRule({
-        locTaxonomy: taxonomy,
-        locTermId: termId,
-        locField: field,
-        locFieldValue: fieldValue,
+        taxonomy: taxonomy,
+        term_id: term_id,
+        field: field,
+        value: value,
       })
     } else {
       setRule({
-        locTaxonomy: '',
-        locTermId: 0,
-        locField: '',
-        locFieldValue: '',
+        taxonomy: '',
+        term_id: 0,
+        field: '',
+        value: '',
       })
     }
-  },[taxonomy, termId, field, fieldValue, newRule])
+  },[taxonomy, term_id, field, value, newRule])
 
   const {
     taxonomies,
@@ -68,57 +68,52 @@ const Rule = ({
       <SelectControl
         disabled={loading || saving}
         label={__('Taxonomy', 'apple-news')}
-        onChange={(next) => setRule({...rule, locTaxonomy: next})}
+        onChange={(next) => setRule({...rule, taxonomy: next})}
         options={Object.keys(taxonomies).map((tax) => ({ value: tax, label: tax }))}
-        value={rule.locTaxonomy}
+        value={rule.taxonomy}
       />
       <TextControl
         disabled={loading || saving}
         label={__('Term ID', 'apple-news')}
-        onChange={(next) => setRule({...rule, locTermId: next})}
+        onChange={(next) => setRule({...rule, term_id: next})}
         type="number"
-        value={rule.locTermId}
+        value={rule.term_id}
       />
       <SelectControl
         disabled={loading || saving}
         label={__('Field', 'apple-news')}
-        onChange={(next) => setRule({...rule, locField: next})}
+        onChange={(next) => setRule({...rule, field: next})}
         options={Object.keys(fields).map((field) => ({ value: field, label: field }))}
-        value={rule.locField}
+        value={rule.field}
       />
-      {fields[rule.locField] && fields[rule.locField].type === 'boolean' ? (
+      {fields[rule.field] && fields[rule.field].type === 'boolean' ? (
         <ToggleControl
-          checked={rule.locFieldValue}
+          checked={rule.value}
           disabled={loading || saving}
           label={__('True or False', 'apple-news')}
-          onChange={(next) => setRule({...rule, locFieldValue: next})}
+          onChange={(next) => setRule({...rule, value: next})}
         />
       ):(
         <TextControl
           disabled={loading || saving}
           label={__('Field Value', 'apple-news')}
-          onChange={(next) => setRule({...rule, locFieldValue: next})}
-          value={rule.locFieldValue}
+          onChange={(next) => setRule({...rule, value: next})}
+          value={rule.value}
         />
       )}
 
       <Button
         disabled={loading || saving}
         isPrimary
-        onClick={()=> saveSettings({
-          taxonomy: rule.locTaxonomy,
-          termId: rule.locTermId,
-          field: rule.locField,
-          fieldValue: rule.locFieldValue,
-        }, ruleIndex)}
+        onClick={newRule ? () => onAdd(rule) : () => onUpdate(ruleIndex, rule)}
       >
-        {newRule ? __('Create New Rule', 'apple-news') : __('Save Settings', 'apple-news')}
+        {newRule ? __('Create New Rule', 'apple-news') : __('Update Rule', 'apple-news')}
       </Button>
       {!newRule ? (
         <Button
           disabled={loading || saving}
           isDestructive
-          onClick={()=> deleteRule(ruleIndex)}
+          onClick={()=> onDelete(ruleIndex)}
         >
           {__('Delete Rule', 'apple-news')}
         </Button>
