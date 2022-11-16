@@ -67,21 +67,21 @@ const Rule = ({
     <div className="apple-news-options__wrapper">
       <SelectControl
         disabled={loading || saving}
-        label={__('Taxonomy', 'apple-news-plugin')}
+        label={__('Taxonomy', 'apple-news')}
         onChange={(next) => setRule({...rule, locTaxonomy: next})}
         options={Object.keys(taxonomies).map((tax) => ({ value: tax, label: tax }))}
         value={rule.locTaxonomy}
       />
       <TextControl
         disabled={loading || saving}
-        label={__('Term ID', 'apple-news-plugin')}
+        label={__('Term ID', 'apple-news')}
         onChange={(next) => setRule({...rule, locTermId: next})}
         type="number"
         value={rule.locTermId}
       />
       <SelectControl
         disabled={loading || saving}
-        label={__('Field', 'apple-news-plugin')}
+        label={__('Field', 'apple-news')}
         onChange={(next) => setRule({...rule, locField: next})}
         options={Object.keys(fields).map((field) => ({ value: field, label: field }))}
         value={rule.locField}
@@ -90,13 +90,13 @@ const Rule = ({
         <ToggleControl
           checked={rule.locFieldValue}
           disabled={loading || saving}
-          label={__('True or False', 'apple-news-plugin')}
+          label={__('True or False', 'apple-news')}
           onChange={(next) => setRule({...rule, locFieldValue: next})}
         />
       ):(
         <TextControl
           disabled={loading || saving}
-          label={__('Field Value', 'apple-news-plugin')}
+          label={__('Field Value', 'apple-news')}
           onChange={(next) => setRule({...rule, locFieldValue: next})}
           value={rule.locFieldValue}
         />
@@ -112,7 +112,7 @@ const Rule = ({
           fieldValue: rule.locFieldValue,
         }, ruleIndex)}
       >
-        {newRule ? __('Create New Rule', 'apple-news-plugin') : __('Save Settings', 'apple-news-plugin')}
+        {newRule ? __('Create New Rule', 'apple-news') : __('Save Settings', 'apple-news')}
       </Button>
       {!newRule ? (
         <Button
@@ -120,7 +120,7 @@ const Rule = ({
           isDestructive
           onClick={()=> deleteRule(ruleIndex)}
         >
-          {__('Delete Rule', 'apple-news-plugin')}
+          {__('Delete Rule', 'apple-news')}
         </Button>
       ):null}
     </div>
