@@ -5,40 +5,30 @@ import {
   TextControl,
   ToggleControl,
 } from '@wordpress/components';
-import { __, sprintf } from '@wordpress/i18n';
-import React, { useState } from 'react';
+import { __ } from '@wordpress/i18n';
+import React, { useEffect, useState } from 'react';
 import useSiteOptions from '../services/hooks/use-site-options';
+import Rule from './rule';
 
 
 const AdminSettings = () => {
   const [{ loading, saving, settings }, setOptions] = useSiteOptions();
-  const [rule, setRule] = useState({
-    taxonomy: '',
-    termId: 0,
-    field: '',
-    fieldValue: '',
-  });
-
-  // TODO, set correct default values based on incoming settings.
-
-  const {
-    taxonomies,
-    fields
-  } = localizedData;
-
-  console.log(rule);
 
   /**
    * Helper function for saving the in-memory settings to the server.
    */
-   const saveSettings = () => {
+   const saveSettings = (rule, ruleIndex) => {
     // Remove old rule.
-    const newVal = settings.apple_news_automation.filter((x) => x.taxonomy !== rule.taxonomy);
+    let newVal = settings.apple_news_automation ?? [];
+    if (ruleIndex) {
+      newVal = settings.apple_news_automation.filter((x, index) => index !== ruleIndex);
+    }
     // Add updated rule.
     newVal.push(rule);
     const next = { ...settings, apple_news_automation: newVal };
 
     // Enforce some defaults prior to save.
+    // Request will 500 when site_logo === null.
     next.site_logo = next.site_logo ?? 0;
     console.log('settings-pre-save', next);
 
@@ -46,44 +36,49 @@ const AdminSettings = () => {
     setOptions(next);
   };
 
+  // Eventually fold this into saveSettings method, only difference is pushing new rule value.
+  const deleteRule = (ruleIndex) => {
+    // Remove rule.
+    const newVal = settings.apple_news_automation.filter((x, index) => index !== ruleIndex);
+    console.log(newVal);
+    const next = { ...settings, apple_news_automation: newVal };
+
+    // Enforce some defaults prior to save.
+    // Request will 500 when site_logo === null.
+    next.site_logo = next.site_logo ?? 0;
+
+    // Kick off the save to the server.
+    setOptions(next);
+  }
+
   console.log(settings);
   return (
     <div className="apple-news-options__wrapper">
-      <SelectControl
-        disabled={loading || saving}
-        label={__('Taxonomy', 'apple-news-plugin')}
-        onChange={(next) => setRule({...rule, taxonomy: next})}
-        options={Object.keys(taxonomies).map((tax) => ({ value: tax, label: tax }))}
-        value={rule.taxonomy}
+      <h2>Add New Rule</h2>
+      <Rule
+        newRule={true}
+        saving={saving}
+        loading={loading}
+        ruleIndex={null}
+        saveSettings={saveSettings}
       />
-      <TextControl
-        disabled={loading || saving}
-        label={__('Term ID', 'apple-news-plugin')}
-        onChange={(next) => setRule({...rule, termId: next})}
-        type="number"
-        value={rule.termId}
-      />
-      <SelectControl
-        disabled={loading || saving}
-        label={__('Field', 'apple-news-plugin')}
-        onChange={(next) => setRule({...rule, field: next})}
-        options={Object.keys(fields).map((field) => ({ value: field, label: field }))}
-        value={rule.field}
-      />
-      <TextControl
-        disabled={loading || saving}
-        label={__('Field Value', 'apple-news-plugin')}
-        onChange={(next) => setRule({...rule, fieldValue: next})}
-        value={rule.fieldValue}
-      />
-
-      <Button
-        disabled={loading || saving}
-        isPrimary
-        onClick={saveSettings}
-      >
-        {__('Save Settings', 'apple-news-plugin')}
-      </Button>
+      <h2>Edit Existing Rules</h2>
+      {!loading && settings.apple_news_automation ? (
+        settings.apple_news_automation.map((item, index) => (
+          <Rule
+            deleteRule={deleteRule}
+            field={item.field}
+            fieldValue={item.fieldValue}
+            ruleIndex={index}
+            loading={loading}
+            newRule={false}
+            saveSettings={saveSettings}
+            saving={saving}
+            taxonomy={item.taxonomy}
+            termId={item.termId}
+          />
+        ))
+      ):null}
     </div>
   );
 };

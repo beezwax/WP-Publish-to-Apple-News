@@ -193,7 +193,7 @@ class Automation {
 
 		wp_localize_script(
 			'apple-news-plugin-admin-settings',
-			'localizedData',
+			'wpLocalizedData',
 			[
 				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
 				'fields'     => self::FIELDS,
