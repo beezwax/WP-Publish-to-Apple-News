@@ -46,6 +46,37 @@ class Automation {
 	];
 
 	/**
+	 * The schema for automation rules.
+	 */
+	const SCHEMA = [
+		'schema' => [
+			'type'  => 'array',
+			'items' => [
+				'type'       => 'object',
+				'properties' => [
+					'field' => [
+						'default' => '',
+						'type'    => 'string',
+					],
+					'taxonomy'  => [
+						'default' => '',
+						'type'    => 'string',
+					],
+					'term_id'  => [
+						'default' => 0,
+						'type'    => 'integer',
+					],
+					// Could be boolean or string?
+					'value' => [
+						'default' => false,
+						'type'    => 'boolean',
+					],
+				],
+			],
+		],
+	];
+
+	/**
 	 * The option name for automation.
 	 */
 	const OPTION_KEY = 'apple_news_automation';
@@ -59,16 +90,17 @@ class Automation {
 	 * Initialize functionality of this class by registering hooks.
 	 */
 	public static function init(): void {
-		add_action( 'init', [ __CLASS__, 'action__admin_init' ] );
+		add_action( 'init', [ __CLASS__, 'action__init' ] );
 		add_action( 'admin_menu', [ __CLASS__, 'action__admin_menu' ] );
+		// Hook below called in self::render_submenu_page() instead.
+		// add_action( 'admin_print_scripts', [ __CLASS__, 'action__admin_print_scripts' ] );
 		add_filter( 'apple_news_article_metadata', [ __CLASS__, 'filter__apple_news_article_metadata' ], 0, 2 );
 	}
 
 	/**
 	 * A callback function for the admin_init action hook.
 	 */
-	public static function action__admin_init(): void {
-		// New React Routine
+	public static function action__init(): void {
 		register_setting(
 			self::PAGE_NAME,
 			self::OPTION_KEY,
@@ -76,7 +108,7 @@ class Automation {
 				'default'           => [],
 				'description'       => __( 'Automation settings for Publish to Apple News.', 'apple-news' ),
 				'sanitize_callback' => [ __CLASS__, 'sanitize_setting' ],
-				// Do we need a schema here?
+				// Created self::SCHEMA but haven't yet tested.
 				'show_in_rest'      => true,
 				'type'              => 'array',
 			]
@@ -96,8 +128,25 @@ class Automation {
 			self::PAGE_NAME,
 			[ __CLASS__, 'render_submenu_page' ]
 		);
+	}
 
-		add_action( "admin_print_scripts", [ __CLASS__, 'add_options_assets' ] );
+	public static function action__admin_print_scripts(): void {
+		wp_enqueue_script(
+			'apple-news-plugin-admin-settings',
+			plugins_url( 'build/adminSettings.js', __DIR__ ),
+			[ 'wp-block-editor', 'wp-api-fetch', 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-tinymce' ],
+			[],
+			true
+		);
+		wp_enqueue_style( 'wp-edit-blocks' );
+		wp_localize_script(
+			'apple-news-plugin-admin-settings',
+			'wpLocalizedData',
+			[
+				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
+				'fields'     => self::FIELDS,
+			]
+		);
 	}
 
 	/**
@@ -162,43 +211,14 @@ class Automation {
 	}
 
 	/**
-	 * A render callback for the REACT submenu page.
+	 * A render callback for the React submenu page.
 	 */
 	public static function render_submenu_page(): void {
-		add_filter(
-			'should_load_block_editor_scripts_and_styles',
-			function() {
-				return true;
-			}
-		);
+		// Calling this here instead of in init hook to limited to this submenu
+		self::action__admin_print_scripts();
+		add_filter( 'should_load_block_editor_scripts_and_styles', '__return_true' );
 		wp_add_iframed_editor_assets_html();
-		echo wp_kses(
-			'<div class="block-editor"><div class="editor-styles-wrapper"><div id="apple-news-options__page"></div></div></div>',
-			[ 'div' => [ 'id' => [] ] ]
-		);
-	}
-
-	public static function add_options_assets(): void {
-		wp_enqueue_script(
-			'apple-news-plugin-admin-settings',
-			plugins_url( 'build/adminSettings.js', __DIR__ ),
-			[ 'wp-block-editor', 'wp-api-fetch', 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-tinymce' ],
-			[],
-			true
-		);
-		wp_enqueue_style( 'wp-edit-blocks' );
-		// Was included in BASS logic, method not defined here.
-		// Leaving for now in case it's important and needs to be done differently here.
-		// inline_locale_data( 'apple-news-plugin-admin-settings' );
-
-		wp_localize_script(
-			'apple-news-plugin-admin-settings',
-			'wpLocalizedData',
-			[
-				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
-				'fields'     => self::FIELDS,
-			]
-		);
+		echo '<div id="apple-news-options__page"></div>';
 	}
 
 	/**
