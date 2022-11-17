@@ -61,27 +61,25 @@ class Automation {
 	 * The schema for automation rules.
 	 */
 	const SCHEMA = [
-		'schema' => [
-			'type'  => 'array',
-			'items' => [
-				'type'       => 'object',
-				'properties' => [
-					'field' => [
-						'default' => '',
-						'type'    => 'string',
-					],
-					'taxonomy'  => [
-						'default' => '',
-						'type'    => 'string',
-					],
-					'term_id'  => [
-						'default' => 0,
-						'type'    => 'integer',
-					],
-					'value' => [
-						'default' => false,
-						'type'    => 'string',
-					],
+		'type'  => 'array',
+		'items' => [
+			'type'       => 'object',
+			'properties' => [
+				'field' => [
+					'default' => '',
+					'type'    => 'string',
+				],
+				'taxonomy'  => [
+					'default' => '',
+					'type'    => 'string',
+				],
+				'term_id'  => [
+					'default' => 0,
+					'type'    => 'integer',
+				],
+				'value' => [
+					'default' => 'false',
+					'type'    => 'string',
 				],
 			],
 		],
@@ -103,8 +101,7 @@ class Automation {
 	public static function init(): void {
 		add_action( 'init', [ __CLASS__, 'action__init' ] );
 		add_action( 'admin_menu', [ __CLASS__, 'action__admin_menu' ] );
-		// Hook below called in self::render_submenu_page() instead.
-		// add_action( 'admin_print_scripts', [ __CLASS__, 'action__admin_print_scripts' ] );
+		add_action( 'admin_print_scripts', [ __CLASS__, 'action__admin_print_scripts' ] );
 		add_filter( 'apple_news_article_metadata', [ __CLASS__, 'filter__apple_news_article_metadata' ], 0, 2 );
 	}
 
@@ -119,7 +116,7 @@ class Automation {
 				'default'           => [],
 				'description'       => __( 'Automation settings for Publish to Apple News.', 'apple-news' ),
 				'sanitize_callback' => [ __CLASS__, 'sanitize_setting' ],
-				'show_in_rest'      => self::SCHEMA,
+				'show_in_rest'      => [ 'schema' => self::SCHEMA ],
 				'type'              => 'array',
 			]
 		);
@@ -226,8 +223,6 @@ class Automation {
 	 * A render callback for the React submenu page.
 	 */
 	public static function render_submenu_page(): void {
-		// Calling this here instead of in init hook to limited to this submenu
-		self::action__admin_print_scripts();
 		add_filter( 'should_load_block_editor_scripts_and_styles', '__return_true' );
 		wp_add_iframed_editor_assets_html();
 		echo '<div id="apple-news-options__page"></div>';
