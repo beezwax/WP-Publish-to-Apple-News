@@ -108,10 +108,10 @@ const Rule = ({
       />
       {fields[rule.field] && fields[rule.field].type === 'boolean' ? (
         <ToggleControl
-          checked={rule.value}
+          checked={rule.value === 'true'}
           disabled={loading || saving}
           label={__('True or False', 'apple-news')}
-          onChange={(next) => setRule({...rule, value: next})}
+          onChange={(next) => setRule({...rule, value: next.toString()})}
         />
       ):(
         <TextControl

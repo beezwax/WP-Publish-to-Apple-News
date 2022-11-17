@@ -66,10 +66,9 @@ class Automation {
 						'default' => 0,
 						'type'    => 'integer',
 					],
-					// Could be boolean or string?
 					'value' => [
 						'default' => false,
-						'type'    => 'boolean',
+						'type'    => 'string',
 					],
 				],
 			],
@@ -108,8 +107,7 @@ class Automation {
 				'default'           => [],
 				'description'       => __( 'Automation settings for Publish to Apple News.', 'apple-news' ),
 				'sanitize_callback' => [ __CLASS__, 'sanitize_setting' ],
-				// Created self::SCHEMA but haven't yet tested.
-				'show_in_rest'      => true,
+				'show_in_rest'      => self::SCHEMA,
 				'type'              => 'array',
 			]
 		);
