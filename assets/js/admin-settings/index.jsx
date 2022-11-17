@@ -9,10 +9,13 @@ import { __ } from '@wordpress/i18n';
 import React, { useEffect, useState } from 'react';
 import useSiteOptions from '../services/hooks/use-site-options';
 import Rule from './rule';
+import { ruleCorral } from './styles';
 
 
 const AdminSettings = () => {
   const [{ loading, saving, settings }, setOptions] = useSiteOptions();
+  const [originIndex, setOriginIndex] = useState(null);
+  const [targetIndex, setTargetIndex] = useState(null);
 
   /**
    * Helper function for saving the in-memory settings to the server.
@@ -28,10 +31,14 @@ const AdminSettings = () => {
     // Kick off the save to the server.
     setOptions(next);
   };
-
+  
   const cleanData = () => {
     saveSettings([]);
   }
+  
+  // useEffect(() => {
+  //   cleanData();
+  // },[]);
 
   const addRule = (newRule) => {
     const updatedRules = settings.apple_news_automation ?? [];
@@ -45,8 +52,17 @@ const AdminSettings = () => {
     saveSettings(updatedRules);
   }
 
-  const reorderRule = (ruleIndex) => {
-    const oldRules = settings.apple_news_automation ?? [];
+  const reorderRule = () => {
+    // Do nothing if the rule it dropped into its own slot.
+    if (originIndex === targetIndex) {
+      return;
+    }
+    const updatedRules = settings.apple_news_automation ?? [];
+    // Destructures and reassigns indexed values, effectively swapping them.
+    [updatedRules[originIndex], updatedRules[targetIndex]] = [updatedRules[targetIndex], updatedRules[originIndex]]
+    // Reset draggable indexes.
+    setOriginIndex(null);
+    setTargetIndex(null);
     saveSettings(updatedRules);
   }
 
@@ -68,28 +84,33 @@ const AdminSettings = () => {
       </Button>
       <h2>Add New Rule</h2>
       <Rule
-        onAdd={addRule}
-        newRule={true}
-        saving={saving}
         loading={loading}
+        newRule={true}
+        onAdd={addRule}
+        saving={saving}
       />
       <h2>Edit Existing Rules</h2>
-      {!loading && settings.apple_news_automation ? (
-        settings.apple_news_automation.map((item, index) => (
-          <Rule
-            onDelete={deleteRule}
-            onUpdate={updateRule}
-            field={item.field}
-            value={item.value}
-            ruleIndex={index}
-            loading={loading}
-            newRule={false}
-            saving={saving}
-            taxonomy={item.taxonomy}
-            term_id={item.term_id}
-          />
-        ))
-      ):null}
+      <div style={ruleCorral} className="rule-corral">
+        {!loading && settings.apple_news_automation ? (
+          settings.apple_news_automation.map((item, index) => (
+            <Rule
+              field={item.field}
+              loading={loading}
+              newRule={false}
+              onDelete={deleteRule}
+              onUpdate={updateRule}
+              reorderRule={reorderRule}
+              ruleIndex={index}
+              saving={saving}
+              setOriginIndex={setOriginIndex}
+              setTargetIndex={setTargetIndex}
+              taxonomy={item.taxonomy}
+              term_id={item.term_id}
+              value={item.value}
+            />
+          ))
+        ):null}
+      </div>
     </div>
   );
 };

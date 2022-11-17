@@ -8,26 +8,35 @@ import {
 import { __ } from '@wordpress/i18n';
 import React, { useEffect, useState } from 'react';
 import { useSelect } from '@wordpress/data';
+import { ruleCard } from './styles';
 
 
 const Rule = ({
+  field,
+  loading,
+  newRule,
   onAdd,
   onDelete,
   onUpdate,
-  taxonomy,
-  term_id,
-  field,
-  value,
-  loading,
-  newRule,
+  reorderRule,
   ruleIndex,
   saving,
+  setOriginIndex,
+  setTargetIndex,
+  taxonomy,
+  term_id,
+  value,
 }) => {
+  const {
+    fields,
+    taxonomies,
+  } = wpLocalizedData;
+
   const [rule, setRule] = useState({
-    taxonomy: '',
+    field: Object.keys(fields)[0],
+    taxonomy: Object.keys(taxonomies)[0],
     term_id: 0,
-    field: '',
-    value: '',
+    value: false,
   });
 
   // If existing rule, sync local state with incoming settings.
@@ -35,25 +44,20 @@ const Rule = ({
   useEffect(() => {
     if(!newRule) {
       setRule({
+        field: field,
         taxonomy: taxonomy,
         term_id: term_id,
-        field: field,
         value: value,
       })
     } else {
       setRule({
-        taxonomy: '',
+        field: Object.keys(fields)[0],
+        taxonomy: Object.keys(taxonomies)[0],
         term_id: 0,
-        field: '',
-        value: '',
+        value: false,
       })
     }
   },[taxonomy, term_id, field, value, newRule])
-
-  const {
-    taxonomies,
-    fields
-  } = wpLocalizedData;
 
   // const { loadingTerms, taxTerms } = useSelect((select) => ({
   //   loadingTerms: select('core/data').isResolving('core', 'getEntityRecords', ['taxonomy', 'category']),
@@ -64,7 +68,23 @@ const Rule = ({
   // }
 
   return (
-    <div className="apple-news-options__wrapper">
+    <div
+      className="rule-wrapper"
+      draggable={!newRule}
+      style={ruleCard}
+      onDragEnd={(e) => {
+        const targetEl = document.elementFromPoint(e.clientX, e.clientY);
+        // Only reorder if the target element is inside rule flex container.
+        if (targetEl.closest('.rule-corral')) {
+          reorderRule();
+        }
+      }}
+      onDragStart={() => setOriginIndex(ruleIndex)}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setTargetIndex(ruleIndex)
+      }}
+    >
       <SelectControl
         disabled={loading || saving}
         label={__('Taxonomy', 'apple-news')}
