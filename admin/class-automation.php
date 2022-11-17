@@ -43,6 +43,18 @@ class Automation {
 			'location' => 'article_metadata',
 			'type'     => 'boolean',
 		],
+		'Section'     => [
+			'location' => 'apple_news_api',
+			'type'     => 'string',
+		],
+		'Slug'     => [
+			'location' => 'user_input',
+			'type'     => 'string',
+		],
+		'Theme'     => [
+			'location' => 'apple_new_api',
+			'type'     => 'string',
+		],
 	];
 
 	/**
@@ -143,6 +155,8 @@ class Automation {
 			[
 				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
 				'fields'     => self::FIELDS,
+				'sections'   => \Admin_Apple_Sections::get_sections(),
+				'themes'     => \Apple_Exporter\Theme::get_registry(),
 			]
 		);
 	}

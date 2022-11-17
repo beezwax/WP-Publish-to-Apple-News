@@ -29,14 +29,16 @@ const Rule = ({
 }) => {
   const {
     fields,
+    sections,
     taxonomies,
+    themes,
   } = wpLocalizedData;
 
   const [rule, setRule] = useState({
     field: Object.keys(fields)[0],
     taxonomy: Object.keys(taxonomies)[0],
     term_id: 0,
-    value: false,
+    value: 'false',
   });
 
   // If existing rule, sync local state with incoming settings.
@@ -54,10 +56,21 @@ const Rule = ({
         field: Object.keys(fields)[0],
         taxonomy: Object.keys(taxonomies)[0],
         term_id: 0,
-        value: false,
+        value: 'false',
       })
     }
   },[taxonomy, term_id, field, value, newRule])
+
+  // Ensures rule.value state is in sync with forms fields.
+  // Form inputs for rule.value change conditionally depending on rule.field's value.
+  useEffect(() => {
+    let defaultValues = {
+      Section: sections[0].id,
+      Slug: '',
+      Theme: 'Default',
+    };
+    setRule({...rule, value: defaultValues[rule.field] !== undefined ? defaultValues[rule.field] : 'false'});
+  }, [rule.field])
 
   // const { loadingTerms, taxTerms } = useSelect((select) => ({
   //   loadingTerms: select('core/data').isResolving('core', 'getEntityRecords', ['taxonomy', 'category']),
@@ -106,6 +119,15 @@ const Rule = ({
         options={Object.keys(fields).map((field) => ({ value: field, label: field }))}
         value={rule.field}
       />
+      {rule.field === 'Section' ? (
+        <SelectControl
+          disabled={loading || saving}
+          label={__('Sections', 'apple-news')}
+          onChange={(next) => setRule({...rule, value: next})}
+          options={sections.map((sect) => ({ value: sect.id, label: sect.name }))}
+          value={rule.value}
+        />
+      ):null}
       {fields[rule.field] && fields[rule.field].type === 'boolean' ? (
         <ToggleControl
           checked={rule.value === 'true'}
@@ -113,15 +135,24 @@ const Rule = ({
           label={__('True or False', 'apple-news')}
           onChange={(next) => setRule({...rule, value: next.toString()})}
         />
-      ):(
+      ):null}
+      {rule.field === 'Slug' ? (
         <TextControl
           disabled={loading || saving}
-          label={__('Field Value', 'apple-news')}
+          label={__('Slug', 'apple-news')}
           onChange={(next) => setRule({...rule, value: next})}
           value={rule.value}
         />
-      )}
-
+      ):null}
+      {rule.field === 'Theme' ? (
+        <SelectControl
+          disabled={loading || saving}
+          label={__('Themes', 'apple-news')}
+          onChange={(next) => setRule({...rule, value: next})}
+          options={themes.map((name) => ({ value: name, label: name }))}
+          value={rule.value}
+        />
+      ):null}
       <Button
         disabled={loading || saving}
         isPrimary
