@@ -14,8 +14,6 @@ import { ruleCard } from './styles';
 const Rule = ({
   field,
   loading,
-  newRule,
-  onAdd,
   onDelete,
   onUpdate,
   reorderRule,
@@ -44,22 +42,13 @@ const Rule = ({
   // If existing rule, sync local state with incoming settings.
   // Else set some default values.
   useEffect(() => {
-    if(!newRule) {
-      setRule({
-        field: field,
-        taxonomy: taxonomy,
-        term_id: term_id,
-        value: value,
-      })
-    } else {
-      setRule({
-        field: Object.keys(fields)[0],
-        taxonomy: Object.keys(taxonomies)[0],
-        term_id: 0,
-        value: 'false',
-      })
-    }
-  },[taxonomy, term_id, field, value, newRule])
+    setRule({
+      field: field,
+      taxonomy: taxonomy,
+      term_id: term_id,
+      value: value,
+    })
+  },[taxonomy, term_id, field, value])
 
   // Ensures rule.value state is in sync with forms fields.
   // Form inputs for rule.value change conditionally depending on rule.field's value.
@@ -83,7 +72,7 @@ const Rule = ({
   return (
     <div
       className="rule-wrapper"
-      draggable={!newRule}
+      draggable
       style={ruleCard}
       onDragEnd={(e) => {
         const targetEl = document.elementFromPoint(e.clientX, e.clientY);
@@ -156,19 +145,17 @@ const Rule = ({
       <Button
         disabled={loading || saving}
         isPrimary
-        onClick={newRule ? () => onAdd(rule) : () => onUpdate(ruleIndex, rule)}
+        onClick={() => onUpdate(ruleIndex, rule)}
       >
-        {newRule ? __('Create New Rule', 'apple-news') : __('Update Rule', 'apple-news')}
+        {__('Update Rule', 'apple-news')}
       </Button>
-      {!newRule ? (
-        <Button
-          disabled={loading || saving}
-          isDestructive
-          onClick={()=> onDelete(ruleIndex)}
-        >
-          {__('Delete Rule', 'apple-news')}
-        </Button>
-      ):null}
+      <Button
+        disabled={loading || saving}
+        isDestructive
+        onClick={()=> onDelete(ruleIndex)}
+      >
+        {__('Delete Rule', 'apple-news')}
+      </Button>
     </div>
   );
 };

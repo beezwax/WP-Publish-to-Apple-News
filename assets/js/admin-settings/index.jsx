@@ -40,9 +40,14 @@ const AdminSettings = () => {
   //   cleanData();
   // },[]);
 
-  const addRule = (newRule) => {
+  const addRule = () => {
     const updatedRules = settings.apple_news_automation ?? [];
-    updatedRules.push(newRule);
+    updatedRules.unshift({
+      field: '',
+      taxonomy: '',
+      term_id: 0,
+      value: '',
+    });
     saveSettings(updatedRules);
   }
 
@@ -83,12 +88,13 @@ const AdminSettings = () => {
         {'Scrub Data'}
       </Button>
       <h2>Add New Rule</h2>
-      <Rule
-        loading={loading}
-        newRule={true}
-        onAdd={addRule}
-        saving={saving}
-      />
+        <Button
+          disabled={loading || saving}
+          isPrimary
+          onClick={addRule}
+        >
+          {__('Create New Rule', 'apple-news')}
+        </Button>
       <h2>Edit Existing Rules</h2>
       <div style={ruleCorral} className="rule-corral">
         {!loading && settings.apple_news_automation ? (
