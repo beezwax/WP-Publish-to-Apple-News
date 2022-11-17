@@ -8,6 +8,7 @@ const useSiteOptions = () => {
   const [notices, setNotices] = useState([]);
   const [saving, setSaving] = useState(false);
   const [settings, setSettings] = useState({});
+  console.log(settings);
 
   // Setup for Gutenberg's notices system.
   const {
@@ -59,7 +60,7 @@ const useSiteOptions = () => {
    *
    * @param {object} newSettings settings object.
    */
-  const setOptions = async (newSettings) => {
+  const saveSettings = async () => {
     setSaving(true);
     notices.forEach((id) => removeNotice(id));
     setNotices([]);
@@ -67,7 +68,7 @@ const useSiteOptions = () => {
       const response = await apiFetch({
         path: '/wp/v2/settings',
         method: 'POST',
-        data: newSettings,
+        data: settings,
       });
       setSettings(response || {});
       await success(__('Settings Saved', 'bassmaster-plugin'));
@@ -81,10 +82,11 @@ const useSiteOptions = () => {
   return [
     {
       loading,
+      setSettings,
       saving,
       settings,
     },
-    setOptions,
+    saveSettings,
   ];
 };
 

@@ -33,14 +33,12 @@ const Rule = ({
   } = wpLocalizedData;
 
   const [rule, setRule] = useState({
-    field: Object.keys(fields)[0],
-    taxonomy: Object.keys(taxonomies)[0],
-    term_id: 0,
-    value: 'false',
+    field: field,
+    taxonomy: taxonomy,
+    term_id: term_id,
+    value: value,
   });
 
-  // If existing rule, sync local state with incoming settings.
-  // Else set some default values.
   useEffect(() => {
     setRule({
       field: field,
@@ -48,18 +46,18 @@ const Rule = ({
       term_id: term_id,
       value: value,
     })
-  },[taxonomy, term_id, field, value])
+  }, [field, taxonomy, term_id, value])
 
   // Ensures rule.value state is in sync with forms fields.
   // Form inputs for rule.value change conditionally depending on rule.field's value.
-  useEffect(() => {
-    let defaultValues = {
-      Section: sections[0].id,
-      Slug: '',
-      Theme: 'Default',
-    };
-    setRule({...rule, value: defaultValues[rule.field] !== undefined ? defaultValues[rule.field] : 'false'});
-  }, [rule.field])
+  // useEffect(() => {
+  //   let defaultValues = {
+  //     Section: sections[0].id,
+  //     Slug: '',
+  //     Theme: 'Default',
+  //   };
+  //   setRule({...rule, value: defaultValues[rule.field] !== undefined ? defaultValues[rule.field] : 'false'});
+  // }, [rule.field])
 
   // const { loadingTerms, taxTerms } = useSelect((select) => ({
   //   loadingTerms: select('core/data').isResolving('core', 'getEntityRecords', ['taxonomy', 'category']),

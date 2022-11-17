@@ -13,48 +13,54 @@ import { ruleCorral } from './styles';
 
 
 const AdminSettings = () => {
-  const [{ loading, saving, settings }, setOptions] = useSiteOptions();
+  const [{ loading, setSettings, saving, settings }, saveSettings] = useSiteOptions();
   const [originIndex, setOriginIndex] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
+
+  const { apple_news_automation: ruleList } = settings;
+
+  // useEffect(() => {
+  //   setRuleList(settings.apple_news_automation);
+  // }, [])
 
   /**
    * Helper function for saving the in-memory settings to the server.
    */
-   const saveSettings = (updatedRules) => {
+   const sendSettings = (updatedRules) => {
     const next = { ...settings, apple_news_automation: updatedRules };
 
     // Enforce some defaults prior to save.
     // Request will 500 when site_logo === null.
     next.site_logo = next.site_logo ?? 0;
-    console.log('settings-pre-save', next);
 
     // Kick off the save to the server.
-    setOptions(next);
+    setSettings(next);
   };
-  
-  const cleanData = () => {
-    saveSettings([]);
-  }
+
+  // const cleanData = () => {
+  //   setSettings([]);
+  //   saveSettings();
+  // }
   
   // useEffect(() => {
   //   cleanData();
   // },[]);
 
   const addRule = () => {
-    const updatedRules = settings.apple_news_automation ?? [];
+    const updatedRules = ruleList ?? [];
     updatedRules.unshift({
       field: '',
       taxonomy: '',
       term_id: 0,
       value: '',
     });
-    saveSettings(updatedRules);
+    sendSettings(updatedRules);
   }
 
   const deleteRule = (ruleIndex) => {
-    const oldRules = settings.apple_news_automation ?? [];
+    const oldRules = ruleList ?? [];
     const updatedRules = oldRules.filter((x, index) => index !== ruleIndex);
-    saveSettings(updatedRules);
+    sendSettings(updatedRules);
   }
 
   const reorderRule = () => {
@@ -62,22 +68,22 @@ const AdminSettings = () => {
     if (originIndex === targetIndex) {
       return;
     }
-    const updatedRules = settings.apple_news_automation ?? [];
+    const updatedRules = ruleList ?? [];
     // Destructures and reassigns indexed values, effectively swapping them.
     [updatedRules[originIndex], updatedRules[targetIndex]] = [updatedRules[targetIndex], updatedRules[originIndex]]
     // Reset draggable indexes.
     setOriginIndex(null);
     setTargetIndex(null);
-    saveSettings(updatedRules);
+    sendSettings(updatedRules);
   }
 
   const updateRule = (ruleIndex, updatedRule) => {
-    const updatedRules = settings.apple_news_automation ?? [];
+    const updatedRules = ruleList ?? [];
     updatedRules[ruleIndex] = updatedRule;
-    saveSettings(updatedRules);
+    sendSettings(updatedRules);
   }
 
-  console.log(settings);
+  console.log('ruleList', ruleList);
   return (
     <div className="apple-news-options__wrapper">
       <Button
@@ -87,6 +93,14 @@ const AdminSettings = () => {
       >
         {'Scrub Data'}
       </Button>
+      <h2>Save New Settings</h2>
+        <Button
+          disabled={loading || saving}
+          isPrimary
+          onClick={saveSettings}
+        >
+          {__('Save Settings', 'apple-news')}
+        </Button>
       <h2>Add New Rule</h2>
         <Button
           disabled={loading || saving}
@@ -97,16 +111,17 @@ const AdminSettings = () => {
         </Button>
       <h2>Edit Existing Rules</h2>
       <div style={ruleCorral} className="rule-corral">
-        {!loading && settings.apple_news_automation ? (
-          settings.apple_news_automation.map((item, index) => (
+        {!loading && ruleList ? (
+          ruleList.map((item, index) => (
             <Rule
+              key={index}
               field={item.field}
               loading={loading}
-              newRule={false}
               onDelete={deleteRule}
               onUpdate={updateRule}
               reorderRule={reorderRule}
               ruleIndex={index}
+              ruleList={ruleList}
               saving={saving}
               setOriginIndex={setOriginIndex}
               setTargetIndex={setTargetIndex}
