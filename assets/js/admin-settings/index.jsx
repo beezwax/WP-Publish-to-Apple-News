@@ -19,10 +19,6 @@ const AdminSettings = () => {
 
   const { apple_news_automation: ruleList } = settings;
 
-  // useEffect(() => {
-  //   setRuleList(settings.apple_news_automation);
-  // }, [])
-
   /**
    * Helper function for saving the in-memory settings to the server.
    */
@@ -47,7 +43,7 @@ const AdminSettings = () => {
   // },[]);
 
   const addRule = () => {
-    const updatedRules = ruleList ?? [];
+    const updatedRules = [...(ruleList ?? [])];
     updatedRules.unshift({
       field: '',
       taxonomy: '',
@@ -58,7 +54,7 @@ const AdminSettings = () => {
   }
 
   const deleteRule = (ruleIndex) => {
-    const oldRules = ruleList ?? [];
+    const oldRules = [...(ruleList ?? [])];
     const updatedRules = oldRules.filter((x, index) => index !== ruleIndex);
     sendSettings(updatedRules);
   }
@@ -68,7 +64,7 @@ const AdminSettings = () => {
     if (originIndex === targetIndex) {
       return;
     }
-    const updatedRules = ruleList ?? [];
+    const updatedRules = [...(ruleList ?? [])];
     // Destructures and reassigns indexed values, effectively swapping them.
     [updatedRules[originIndex], updatedRules[targetIndex]] = [updatedRules[targetIndex], updatedRules[originIndex]]
     // Reset draggable indexes.
@@ -78,18 +74,17 @@ const AdminSettings = () => {
   }
 
   const updateRule = (ruleIndex, updatedRule) => {
-    const updatedRules = ruleList ?? [];
+    const updatedRules = [...(ruleList ?? [])];
     updatedRules[ruleIndex] = updatedRule;
     sendSettings(updatedRules);
   }
 
-  console.log('ruleList', ruleList);
   return (
     <div className="apple-news-options__wrapper">
       <Button
         disabled={loading || saving}
         isPrimary
-        onClick={() => cleanData()}
+        onClick={cleanData}
       >
         {'Scrub Data'}
       </Button>
