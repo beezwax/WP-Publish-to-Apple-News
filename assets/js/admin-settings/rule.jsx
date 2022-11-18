@@ -61,7 +61,7 @@ const Rule = ({
       <SelectControl
         disabled={busy}
         label={__('Taxonomy', 'apple-news')}
-        onChange={(next) => onUpdate(ruleIndex, 'taxonomy', next)}
+        onChange={(next) => onUpdate('taxonomy', next)}
         options={[
           { value: '', label: __('Select Taxonomy', 'apple-news') },
           ...Object.keys(taxonomies).map((tax) => ({ value: tax, label: tax }))
@@ -71,14 +71,14 @@ const Rule = ({
       <TextControl
         disabled={busy}
         label={__('Term ID', 'apple-news')}
-        onChange={(next) => onUpdate(ruleIndex, 'term_id', next)}
+        onChange={(next) => onUpdate('term_id', next)}
         type="number"
         value={term_id}
       />
       <SelectControl
         disabled={busy}
         label={__('Field', 'apple-news')}
-        onChange={(next) => onUpdate(ruleIndex, 'field', next)}
+        onChange={(next) => onUpdate('field', next)}
         options={[
           { value: '', label: __('Select Field', 'apple-news') },
           ...Object.keys(fields).map((field) => ({ value: field, label: fields[field].label }))
@@ -89,7 +89,7 @@ const Rule = ({
         <SelectControl
           disabled={busy}
           label={__('Sections', 'apple-news')}
-          onChange={(next) => onUpdate(ruleIndex, 'value', next)}
+          onChange={(next) => onUpdate('value', next)}
           options={[
             { value: '', label: __('Select Section', 'apple-news') },
             ...sections.map((sect) => ({ value: sect.id, label: sect.name }))
@@ -102,14 +102,14 @@ const Rule = ({
           checked={value === 'true'}
           disabled={busy}
           label={__('True or False', 'apple-news')}
-          onChange={(next) => onUpdate(ruleIndex, 'value', next.toString())}
+          onChange={(next) => onUpdate('value', next.toString())}
         />
       ):null}
       {fields[field]?.label === 'Slug' ? (
         <TextControl
           disabled={busy}
           label={__('Slug', 'apple-news')}
-          onChange={(next) => onUpdate(ruleIndex, 'value', next)}
+          onChange={(next) => onUpdate('value', next)}
           value={value}
         />
       ):null}
@@ -117,7 +117,7 @@ const Rule = ({
         <SelectControl
           disabled={busy}
           label={__('Themes', 'apple-news')}
-          onChange={(next) => onUpdate(ruleIndex, 'value', next)}
+          onChange={(next) => onUpdate('value', next)}
           options={[
             { value: '', label: __('Select Theme', 'apple-news') },
             ...themes.map((name) => ({ value: name, label: name }))
@@ -128,7 +128,7 @@ const Rule = ({
       <Button
         disabled={busy}
         isDestructive
-        onClick={()=> onDelete(ruleIndex)}
+        onClick={onDelete}
       >
         {__('Delete Rule', 'apple-news')}
       </Button>

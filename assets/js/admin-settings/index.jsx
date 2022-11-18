@@ -106,8 +106,8 @@ const AdminSettings = () => {
               busy={busy}
               key={index}
               field={item.field}
-              onDelete={deleteRule}
-              onUpdate={updateRule}
+              onDelete={() => deleteRule(index)}
+              onUpdate={(key, value) => updateRule(index, key, value)}
               reorderRule={reorderRule}
               ruleIndex={index}
               ruleList={ruleList}
