@@ -46,18 +46,7 @@ const Rule = ({
       term_id: term_id,
       value: value,
     })
-  }, [field, taxonomy, term_id, value])
-
-  // Ensures rule.value state is in sync with forms fields.
-  // Form inputs for rule.value change conditionally depending on rule.field's value.
-  // useEffect(() => {
-  //   let defaultValues = {
-  //     Section: sections[0].id,
-  //     Slug: '',
-  //     Theme: 'Default',
-  //   };
-  //   setRule({...rule, value: defaultValues[rule.field] !== undefined ? defaultValues[rule.field] : 'false'});
-  // }, [rule.field])
+  }, [field, taxonomy, term_id, value]);
 
   // const { loadingTerms, taxTerms } = useSelect((select) => ({
   //   loadingTerms: select('core/data').isResolving('core', 'getEntityRecords', ['taxonomy', 'category']),
@@ -89,7 +78,10 @@ const Rule = ({
         disabled={loading || saving}
         label={__('Taxonomy', 'apple-news')}
         onChange={(next) => setRule({...rule, taxonomy: next})}
-        options={Object.keys(taxonomies).map((tax) => ({ value: tax, label: tax }))}
+        options={[
+          { value: '', label: 'Select Taxonomy' },
+          ...Object.keys(taxonomies).map((tax) => ({ value: tax, label: tax }))
+        ]}
         value={rule.taxonomy}
       />
       <TextControl
@@ -102,8 +94,18 @@ const Rule = ({
       <SelectControl
         disabled={loading || saving}
         label={__('Field', 'apple-news')}
-        onChange={(next) => setRule({...rule, field: next})}
-        options={Object.keys(fields).map((field) => ({ value: field, label: field }))}
+        onChange={(next) => {
+          setRule({
+            ...rule,
+            field: next,
+            // Need to reset value state in case field changes the resulting value's type.
+            value: fields[next]?.type === 'boolean' ? 'false' : '',
+          });
+        }}
+        options={[
+          { value: '', label: 'Select Field' },
+          ...Object.keys(fields).map((field) => ({ value: field, label: field }))
+        ]}
         value={rule.field}
       />
       {rule.field === 'Section' ? (
@@ -111,7 +113,10 @@ const Rule = ({
           disabled={loading || saving}
           label={__('Sections', 'apple-news')}
           onChange={(next) => setRule({...rule, value: next})}
-          options={sections.map((sect) => ({ value: sect.id, label: sect.name }))}
+          options={[
+            { value: '', label: 'Select Section' },
+            ...sections.map((sect) => ({ value: sect.id, label: sect.name }))
+          ]}
           value={rule.value}
         />
       ):null}
@@ -136,7 +141,10 @@ const Rule = ({
           disabled={loading || saving}
           label={__('Themes', 'apple-news')}
           onChange={(next) => setRule({...rule, value: next})}
-          options={themes.map((name) => ({ value: name, label: name }))}
+          options={[
+            { value: '', label: 'Select Theme' },
+            ...themes.map((name) => ({ value: name, label: name }))
+          ]}
           value={rule.value}
         />
       ):null}
