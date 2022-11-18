@@ -63,7 +63,7 @@ const Rule = ({
         label={__('Taxonomy', 'apple-news')}
         onChange={(next) => onUpdate(ruleIndex, 'taxonomy', next)}
         options={[
-          { value: '', label: 'Select Taxonomy' },
+          { value: '', label: __('Select Taxonomy', 'apple-news') },
           ...Object.keys(taxonomies).map((tax) => ({ value: tax, label: tax }))
         ]}
         value={taxonomy}
