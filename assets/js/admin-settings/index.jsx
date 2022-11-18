@@ -83,7 +83,7 @@ const AdminSettings = () => {
 
   return (
     <div className="apple-news-options__wrapper">
-      <h1>Automation Rules</h1>
+      <h1>{__('Automation Rules', 'apple-news')}</h1>
       <Button
         disabled={busy}
         isPrimary
@@ -94,12 +94,11 @@ const AdminSettings = () => {
       </Button>
       <Button
         disabled={busy}
-        isPrimary
+        isSecondary
         onClick={addRule}
       >
         {__('Create New Rule', 'apple-news')}
       </Button>
-      <h2>Edit Existing Rules</h2>
       <div style={ruleCorral} className="rule-corral">
         {!loading && ruleList ? (
           ruleList.map((item, index) => (

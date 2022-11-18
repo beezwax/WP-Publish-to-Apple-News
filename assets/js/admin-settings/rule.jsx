@@ -80,7 +80,7 @@ const Rule = ({
         label={__('Field', 'apple-news')}
         onChange={(next) => onUpdate(ruleIndex, 'field', next)}
         options={[
-          { value: '', label: 'Select Field' },
+          { value: '', label: __('Select Field', 'apple-news') },
           ...Object.keys(fields).map((field) => ({ value: field, label: fields[field].label }))
         ]}
         value={field}
@@ -91,7 +91,7 @@ const Rule = ({
           label={__('Sections', 'apple-news')}
           onChange={(next) => onUpdate(ruleIndex, 'value', next)}
           options={[
-            { value: '', label: 'Select Section' },
+            { value: '', label: __('Select Section', 'apple-news') },
             ...sections.map((sect) => ({ value: sect.id, label: sect.name }))
           ]}
           value={value}
@@ -119,7 +119,7 @@ const Rule = ({
           label={__('Themes', 'apple-news')}
           onChange={(next) => onUpdate(ruleIndex, 'value', next)}
           options={[
-            { value: '', label: 'Select Theme' },
+            { value: '', label: __('Select Theme', 'apple-news') },
             ...themes.map((name) => ({ value: name, label: name }))
           ]}
           value={value}

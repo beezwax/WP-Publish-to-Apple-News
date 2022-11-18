@@ -9,4 +9,5 @@ export const ruleCorral = {
   display: 'flex',
   flexWrap: 'wrap',
   gap: '20px',
+  marginTop: '20px'
 }
