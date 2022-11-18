@@ -81,11 +81,11 @@ const Rule = ({
         onChange={(next) => onUpdate(ruleIndex, 'field', next)}
         options={[
           { value: '', label: 'Select Field' },
-          ...Object.keys(fields).map((field) => ({ value: field, label: field }))
+          ...Object.keys(fields).map((field) => ({ value: field, label: fields[field].label }))
         ]}
         value={field}
       />
-      {field === 'Section' ? (
+      {fields[field]?.label === 'Section' ? (
         <SelectControl
           disabled={busy}
           label={__('Sections', 'apple-news')}
@@ -97,7 +97,7 @@ const Rule = ({
           value={value}
         />
       ):null}
-      {fields[field] && fields[field].type === 'boolean' ? (
+      {fields[field]?.type === 'boolean' ? (
         <ToggleControl
           checked={value === 'true'}
           disabled={busy}
@@ -105,7 +105,7 @@ const Rule = ({
           onChange={(next) => onUpdate(ruleIndex, 'value', next.toString())}
         />
       ):null}
-      {field === 'Slug' ? (
+      {fields[field]?.label === 'Slug' ? (
         <TextControl
           disabled={busy}
           label={__('Slug', 'apple-news')}
@@ -113,7 +113,7 @@ const Rule = ({
           value={value}
         />
       ):null}
-      {field === 'Theme' ? (
+      {fields[field]?.label === 'Theme' ? (
         <SelectControl
           disabled={busy}
           label={__('Themes', 'apple-news')}

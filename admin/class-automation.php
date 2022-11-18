@@ -27,33 +27,40 @@ class Automation {
 	 * location within what is sent to Apple News.
 	 */
 	const FIELDS = [
-		'isHidden'    => [
+		'isHidden'       => [
 			'location' => 'article_metadata',
 			'type'     => 'boolean',
+			'label'    => 'isHidden'
 		],
-		'isPaid'      => [
+		'isPaid'         => [
 			'location' => 'article_metadata',
 			'type'     => 'boolean',
+			'label'    => 'isPaid'
 		],
-		'isPreview'   => [
+		'isPreview'      => [
 			'location' => 'article_metadata',
 			'type'     => 'boolean',
+			'label'    => 'isPreview'
 		],
-		'isSponsored' => [
+		'isSponsored'    => [
 			'location' => 'article_metadata',
 			'type'     => 'boolean',
+			'label'    => 'isSponsored'
 		],
-		'Section'     => [
+		'links.sections' => [
 			'location' => 'article_metadata',
 			'type'     => 'string',
+			'label'    => 'Section'
 		],
-		'Slug'        => [
+		'slug.#text#'    => [
 			'location' => 'component',
 			'type'     => 'string',
+			'label'    => 'Slug'
 		],
-		'Theme'       => [
+		'theme'          => [
 			'location' => 'exporter',
 			'type'     => 'string',
+			'label'    => 'Theme'
 		],
 	];
 
