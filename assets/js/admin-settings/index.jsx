@@ -1,4 +1,4 @@
-/* global localizedData */
+/* global AppleNewsAutomationConfig */
 import {
   Button,
 } from '@wordpress/components';
@@ -15,7 +15,7 @@ const AdminSettings = () => {
   const [originIndex, setOriginIndex] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
   const { apple_news_automation: ruleList } = settings;
-  const { fields } = wpLocalizedData;
+  const { fields } = AppleNewsAutomationConfig;
 
   /**
    * Helper function for pushing to in-memory settings inside the useSiteOptions hook.

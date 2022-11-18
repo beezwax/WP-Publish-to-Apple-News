@@ -1,4 +1,4 @@
-/* global wp, wpLocalizedData */
+/* global wp, AppleNewsAutomationConfig */
 import {
   Button,
   SelectControl,
@@ -30,7 +30,7 @@ const Rule = ({
     sections,
     taxonomies,
     themes,
-  } = wpLocalizedData;
+  } = AppleNewsAutomationConfig;
 
   // const { loadingTerms, taxTerms } = useSelect((select) => ({
   //   loadingTerms: select('core/data').isResolving('core', 'getEntityRecords', ['taxonomy', 'category']),

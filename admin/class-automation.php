@@ -219,7 +219,7 @@ class Automation {
 		wp_enqueue_style( 'wp-edit-blocks' );
 		wp_localize_script(
 			'apple-news-plugin-admin-settings',
-			'wpLocalizedData',
+			'AppleNewsAutomationConfig',
 			[
 				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
 				'fields'     => self::FIELDS,
