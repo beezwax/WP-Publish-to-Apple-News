@@ -173,37 +173,37 @@ class Automation {
 			'isHidden'       => [
 				'location' => 'article_metadata',
 				'type'     => 'boolean',
-				'label'    => __('isHidden', 'apple-news'),
+				'label'    => __( 'isHidden', 'apple-news' ),
 			],
 			'isPaid'         => [
 				'location' => 'article_metadata',
 				'type'     => 'boolean',
-				'label'    => __('isPaid', 'apple-news'),
+				'label'    => __( 'isPaid', 'apple-news' ),
 			],
 			'isPreview'      => [
 				'location' => 'article_metadata',
 				'type'     => 'boolean',
-				'label'    => __('isPreview', 'apple-news'),
+				'label'    => __( 'isPreview', 'apple-news' ),
 			],
 			'isSponsored'    => [
 				'location' => 'article_metadata',
 				'type'     => 'boolean',
-				'label'    => __('isSponsored', 'apple-news'),
+				'label'    => __( 'isSponsored', 'apple-news' ),
 			],
 			'links.sections' => [
 				'location' => 'article_metadata',
 				'type'     => 'string',
-				'label'    => __('Section', 'apple-news'),
+				'label'    => __( 'Section', 'apple-news' ),
 			],
 			'slug.#text#'    => [
 				'location' => 'component',
 				'type'     => 'string',
-				'label'    => __('Slug', 'apple-news'),
+				'label'    => __( 'Slug', 'apple-news' ),
 			],
 			'theme'          => [
 				'location' => 'exporter',
 				'type'     => 'string',
-				'label'    => __('Theme', 'apple-news'),
+				'label'    => __( 'Theme', 'apple-news' ),
 			],
 		];
 	}
@@ -212,7 +212,7 @@ class Automation {
 	 * A callback to load automation settings scripts and styles and render target div for the React submenu page.
 	 */
 	public static function render_submenu_page(): void {
-		// Enqueue page specific scripts
+		// Enqueue page specific scripts.
 		wp_enqueue_script(
 			'apple-news-plugin-admin-settings',
 			plugins_url( 'build/adminSettings.js', __DIR__ ),
