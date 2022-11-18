@@ -47,11 +47,11 @@ class Automation {
 			'location' => 'apple_news_api',
 			'type'     => 'string',
 		],
-		'Slug'     => [
+		'Slug'        => [
 			'location' => 'user_input',
 			'type'     => 'string',
 		],
-		'Theme'     => [
+		'Theme'       => [
 			'location' => 'apple_new_api',
 			'type'     => 'string',
 		],
@@ -65,11 +65,11 @@ class Automation {
 		'items' => [
 			'type'       => 'object',
 			'properties' => [
-				'field' => [
+				'field'    => [
 					'default' => '',
 					'type'    => 'string',
 				],
-				'taxonomy'  => [
+				'taxonomy' => [
 					'default' => '',
 					'type'    => 'string',
 				],
@@ -77,7 +77,7 @@ class Automation {
 					'default' => 0,
 					'type'    => 'integer',
 				],
-				'value' => [
+				'value'    => [
 					'default' => 'false',
 					'type'    => 'string',
 				],
@@ -137,6 +137,9 @@ class Automation {
 		);
 	}
 
+	/**
+	 * A callback function to load automation settings scripts and styles.
+	 */
 	public static function action__admin_print_scripts(): void {
 		wp_enqueue_script(
 			'apple-news-plugin-admin-settings',
