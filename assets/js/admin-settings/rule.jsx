@@ -47,7 +47,7 @@ const Rule = ({
       onDragEnd={(e) => {
         const targetEl = document.elementFromPoint(e.clientX, e.clientY);
         // Only reorder if the target element is inside rule flex container.
-        if (targetEl.closest('.rule-corral')) {
+        if (targetEl.closest('.rule-wrapper')) {
           reorderRule();
         }
       }}

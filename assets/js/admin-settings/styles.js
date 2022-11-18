@@ -1,11 +1,12 @@
 export const ruleCard = {
-  width: '250px',
   border: '2px solid black',
+  cursor: 'grab',
   padding: '5px',
+  width: '250px',
 }
 
 export const ruleCorral = {
   display: 'flex',
-  gap: '20px',
   flexWrap: 'wrap',
+  gap: '20px',
 }
