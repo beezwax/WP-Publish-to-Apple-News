@@ -1,12 +1,9 @@
 /* global localizedData */
 import {
   Button,
-  SelectControl,
-  TextControl,
-  ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import useSiteOptions from '../services/hooks/use-site-options';
 import Rule from './rule';
 import { ruleCorral } from './styles';
@@ -34,15 +31,6 @@ const AdminSettings = () => {
     // Kick off the save to the server.
     setSettings(next);
   };
-
-  const cleanData = () => {
-    setSettings([]);
-    saveSettings();
-  }
-  
-  // useEffect(() => {
-  //   cleanData();
-  // },[]);
 
   const addRule = () => {
     const updatedRules = [...(ruleList ?? [])];
@@ -90,29 +78,22 @@ const AdminSettings = () => {
 
   return (
     <div className="apple-news-options__wrapper">
+      <h1>Automation Rules</h1>
       <Button
         disabled={busy}
         isPrimary
-        onClick={cleanData}
+        onClick={saveSettings}
+        style={{ marginRight: '10px' }}
       >
-        {'Scrub Data'}
+        {__('Save Settings', 'apple-news')}
       </Button>
-      <h2>Save New Settings</h2>
-        <Button
-          disabled={busy}
-          isPrimary
-          onClick={saveSettings}
-        >
-          {__('Save Settings', 'apple-news')}
-        </Button>
-      <h2>Add New Rule</h2>
-        <Button
-          disabled={busy}
-          isPrimary
-          onClick={addRule}
-        >
-          {__('Create New Rule', 'apple-news')}
-        </Button>
+      <Button
+        disabled={busy}
+        isPrimary
+        onClick={addRule}
+      >
+        {__('Create New Rule', 'apple-news')}
+      </Button>
       <h2>Edit Existing Rules</h2>
       <div style={ruleCorral} className="rule-corral">
         {!loading && ruleList ? (

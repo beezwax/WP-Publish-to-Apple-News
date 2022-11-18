@@ -6,7 +6,7 @@ import {
   ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useSelect } from '@wordpress/data';
 import { ruleCard } from './styles';
 
