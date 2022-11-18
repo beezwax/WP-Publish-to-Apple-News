@@ -20,7 +20,7 @@ const AdminSettings = () => {
   /**
    * Helper function for pushing to in-memory settings inside the useSiteOptions hook.
    */
-   const sendSettings = (updatedRules) => {
+   const updateSettings = (updatedRules) => {
     const next = { ...settings, apple_news_automation: updatedRules };
 
     // Enforce some defaults prior to save.
@@ -39,13 +39,13 @@ const AdminSettings = () => {
       term_id: 0,
       value: '',
     });
-    sendSettings(updatedRules);
+    updateSettings(updatedRules);
   }
 
   const deleteRule = (ruleIndex) => {
     const updatedRules = [...(ruleList ?? [])];
     updatedRules.splice(ruleIndex, 1);
-    sendSettings(updatedRules);
+    updateSettings(updatedRules);
   }
 
   /**
@@ -62,7 +62,7 @@ const AdminSettings = () => {
     // Reset draggable indexes.
     setOriginIndex(null);
     setTargetIndex(null);
-    sendSettings(updatedRules);
+    updateSettings(updatedRules);
   }
 
   /**
@@ -78,7 +78,7 @@ const AdminSettings = () => {
         value: fields[value]?.type === 'boolean' ? 'false' : ''
       };
     }
-    sendSettings(updatedRules);
+    updateSettings(updatedRules);
   }
 
   return (
