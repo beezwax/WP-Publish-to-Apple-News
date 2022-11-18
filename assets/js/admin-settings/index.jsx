@@ -43,8 +43,8 @@ const AdminSettings = () => {
   }
 
   const deleteRule = (ruleIndex) => {
-    const oldRules = [...(ruleList ?? [])];
-    const updatedRules = oldRules.filter((x, index) => index !== ruleIndex);
+    const updatedRules = [...(ruleList ?? [])];
+    updatedRules.splice(ruleIndex, 1);
     sendSettings(updatedRules);
   }
 
