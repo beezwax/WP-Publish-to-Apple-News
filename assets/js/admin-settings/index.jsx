@@ -33,13 +33,15 @@ const AdminSettings = () => {
 
   const addRule = () => {
     const updatedRules = [...(ruleList ?? [])];
-    updatedRules.unshift({
-      field: '',
-      taxonomy: '',
-      term_id: 0,
-      value: '',
-    });
-    updateSettings(updatedRules);
+    updateSettings([
+      ...updatedRules,
+      {
+        field: '',
+        taxonomy: '',
+        term_id: 0,
+        value: '',
+      },
+    ]);
   }
 
   const deleteRule = (ruleIndex) => {
@@ -88,16 +90,8 @@ const AdminSettings = () => {
         disabled={busy}
         isPrimary
         onClick={saveSettings}
-        style={{ marginRight: '10px' }}
       >
         {__('Save Settings', 'apple-news')}
-      </Button>
-      <Button
-        disabled={busy}
-        isSecondary
-        onClick={addRule}
-      >
-        {__('Create New Rule', 'apple-news')}
       </Button>
       <div style={ruleCorral} className="rule-corral">
         {!loading && ruleList ? (
@@ -132,6 +126,14 @@ const AdminSettings = () => {
           ))
         ):null}
       </div>
+      <Button
+        disabled={busy}
+        isPrimary
+        onClick={addRule}
+        style={{ marginTop: '10px' }}
+      >
+        {__('Create New Rule', 'apple-news')}
+      </Button>
     </div>
   );
 };
