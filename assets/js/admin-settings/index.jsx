@@ -19,6 +19,7 @@ const AdminSettings = () => {
   const [targetIndex, setTargetIndex] = useState(null);
 
   const { apple_news_automation: ruleList } = settings;
+  const { fields } = wpLocalizedData;
 
   /**
    * Helper function for saving the in-memory settings to the server.
@@ -74,9 +75,16 @@ const AdminSettings = () => {
     sendSettings(updatedRules);
   }
 
-  const updateRule = (ruleIndex, updatedRule) => {
+  const updateRule = (index, key, value) => {
     const updatedRules = [...(ruleList ?? [])];
-    updatedRules[ruleIndex] = updatedRule;
+    updatedRules[index] = {...updatedRules[index], [key]: value};
+    // Need to reset value state in case field changes the resulting value's type.
+    if (key === 'field') {
+      updatedRules[index] = {
+        ...updatedRules[index],
+        value: fields[value]?.type === 'boolean' ? 'false' : ''
+      };
+    }
     sendSettings(updatedRules);
   }
 
