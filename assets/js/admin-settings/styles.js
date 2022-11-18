@@ -7,4 +7,5 @@ export const ruleCard = {
 export const ruleCorral = {
   display: 'flex',
   gap: '20px',
+  flexWrap: 'wrap',
 }
