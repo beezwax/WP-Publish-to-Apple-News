@@ -14,6 +14,7 @@ import { ruleCorral } from './styles';
 
 const AdminSettings = () => {
   const [{ loading, setSettings, saving, settings }, saveSettings] = useSiteOptions();
+  const busy = loading || saving;
   const [originIndex, setOriginIndex] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
 
@@ -33,10 +34,10 @@ const AdminSettings = () => {
     setSettings(next);
   };
 
-  // const cleanData = () => {
-  //   setSettings([]);
-  //   saveSettings();
-  // }
+  const cleanData = () => {
+    setSettings([]);
+    saveSettings();
+  }
   
   // useEffect(() => {
   //   cleanData();
@@ -82,7 +83,7 @@ const AdminSettings = () => {
   return (
     <div className="apple-news-options__wrapper">
       <Button
-        disabled={loading || saving}
+        disabled={busy}
         isPrimary
         onClick={cleanData}
       >
@@ -90,7 +91,7 @@ const AdminSettings = () => {
       </Button>
       <h2>Save New Settings</h2>
         <Button
-          disabled={loading || saving}
+          disabled={busy}
           isPrimary
           onClick={saveSettings}
         >
@@ -98,7 +99,7 @@ const AdminSettings = () => {
         </Button>
       <h2>Add New Rule</h2>
         <Button
-          disabled={loading || saving}
+          disabled={busy}
           isPrimary
           onClick={addRule}
         >
@@ -109,15 +110,14 @@ const AdminSettings = () => {
         {!loading && ruleList ? (
           ruleList.map((item, index) => (
             <Rule
+              busy={busy}
               key={index}
               field={item.field}
-              loading={loading}
               onDelete={deleteRule}
               onUpdate={updateRule}
               reorderRule={reorderRule}
               ruleIndex={index}
               ruleList={ruleList}
-              saving={saving}
               setOriginIndex={setOriginIndex}
               setTargetIndex={setTargetIndex}
               taxonomy={item.taxonomy}

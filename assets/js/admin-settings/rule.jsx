@@ -12,13 +12,12 @@ import { ruleCard } from './styles';
 
 
 const Rule = ({
+  busy,
   field,
-  loading,
   onDelete,
   onUpdate,
   reorderRule,
   ruleIndex,
-  saving,
   setOriginIndex,
   setTargetIndex,
   taxonomy,
@@ -75,7 +74,7 @@ const Rule = ({
       }}
     >
       <SelectControl
-        disabled={loading || saving}
+        disabled={busy}
         label={__('Taxonomy', 'apple-news')}
         onChange={(next) => setRule({...rule, taxonomy: next})}
         options={[
@@ -85,14 +84,14 @@ const Rule = ({
         value={rule.taxonomy}
       />
       <TextControl
-        disabled={loading || saving}
+        disabled={busy}
         label={__('Term ID', 'apple-news')}
         onChange={(next) => setRule({...rule, term_id: next})}
         type="number"
         value={rule.term_id}
       />
       <SelectControl
-        disabled={loading || saving}
+        disabled={busy}
         label={__('Field', 'apple-news')}
         onChange={(next) => {
           setRule({
@@ -110,7 +109,7 @@ const Rule = ({
       />
       {rule.field === 'Section' ? (
         <SelectControl
-          disabled={loading || saving}
+          disabled={busy}
           label={__('Sections', 'apple-news')}
           onChange={(next) => setRule({...rule, value: next})}
           options={[
@@ -123,14 +122,14 @@ const Rule = ({
       {fields[rule.field] && fields[rule.field].type === 'boolean' ? (
         <ToggleControl
           checked={rule.value === 'true'}
-          disabled={loading || saving}
+          disabled={busy}
           label={__('True or False', 'apple-news')}
           onChange={(next) => setRule({...rule, value: next.toString()})}
         />
       ):null}
       {rule.field === 'Slug' ? (
         <TextControl
-          disabled={loading || saving}
+          disabled={busy}
           label={__('Slug', 'apple-news')}
           onChange={(next) => setRule({...rule, value: next})}
           value={rule.value}
@@ -138,7 +137,7 @@ const Rule = ({
       ):null}
       {rule.field === 'Theme' ? (
         <SelectControl
-          disabled={loading || saving}
+          disabled={busy}
           label={__('Themes', 'apple-news')}
           onChange={(next) => setRule({...rule, value: next})}
           options={[
@@ -149,14 +148,14 @@ const Rule = ({
         />
       ):null}
       <Button
-        disabled={loading || saving}
+        disabled={busy}
         isPrimary
         onClick={() => onUpdate(ruleIndex, rule)}
       >
         {__('Update Rule', 'apple-news')}
       </Button>
       <Button
-        disabled={loading || saving}
+        disabled={busy}
         isDestructive
         onClick={()=> onDelete(ruleIndex)}
       >
