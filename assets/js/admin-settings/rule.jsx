@@ -6,6 +6,7 @@ import {
   ToggleControl,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
+import PropTypes from 'prop-types';
 import React from 'react';
 import { useSelect } from '@wordpress/data';
 import { ruleCard } from './styles';
@@ -133,6 +134,20 @@ const Rule = ({
       </Button>
     </div>
   );
+};
+
+Rule.propTypes = {
+  busy: PropTypes.bool,
+  field: PropTypes.string,
+  onDelete: PropTypes.func,
+  onUpdate: PropTypes.func,
+  reorderRule: PropTypes.func,
+  ruleIndex: PropTypes.number,
+  setOriginIndex: PropTypes.func,
+  setTargetIndex: PropTypes.func,
+  taxonomy: PropTypes.string,
+  term_id: PropTypes.number,
+  value: PropTypes.string,
 };
 
 export default Rule;

@@ -14,12 +14,11 @@ const AdminSettings = () => {
   const busy = loading || saving;
   const [originIndex, setOriginIndex] = useState(null);
   const [targetIndex, setTargetIndex] = useState(null);
-
   const { apple_news_automation: ruleList } = settings;
   const { fields } = wpLocalizedData;
 
   /**
-   * Helper function for saving the in-memory settings to the server.
+   * Helper function for pushing to in-memory settings inside the useSiteOptions hook.
    */
    const sendSettings = (updatedRules) => {
     const next = { ...settings, apple_news_automation: updatedRules };
@@ -28,7 +27,7 @@ const AdminSettings = () => {
     // Request will 500 when site_logo === null.
     next.site_logo = next.site_logo ?? 0;
 
-    // Kick off the save to the server.
+    // Trigger state hook from useSiteOptions.
     setSettings(next);
   };
 
@@ -49,6 +48,9 @@ const AdminSettings = () => {
     sendSettings(updatedRules);
   }
 
+  /**
+   * Drag and drop logic/re-indexing for Rules.
+   */
   const reorderRule = () => {
     // Do nothing if the rule it dropped into its own slot.
     if (originIndex === targetIndex) {
@@ -63,6 +65,9 @@ const AdminSettings = () => {
     sendSettings(updatedRules);
   }
 
+  /**
+   * Manages Rule component's form state.
+   */
   const updateRule = (index, key, value) => {
     const updatedRules = [...(ruleList ?? [])];
     updatedRules[index] = {...updatedRules[index], [key]: value};
