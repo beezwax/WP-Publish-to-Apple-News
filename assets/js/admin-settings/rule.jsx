@@ -16,11 +16,10 @@ const Rule = ({
   busy,
   field,
   onDelete,
+  onDragEnd,
+  onDragOver,
+  onDragStart,
   onUpdate,
-  reorderRule,
-  ruleIndex,
-  setOriginIndex,
-  setTargetIndex,
   taxonomy,
   term_id,
   value,
@@ -45,18 +44,9 @@ const Rule = ({
       className="rule-wrapper"
       draggable
       style={ruleCard}
-      onDragEnd={(e) => {
-        const targetEl = document.elementFromPoint(e.clientX, e.clientY);
-        // Only reorder if the target element is inside rule flex container.
-        if (targetEl.closest('.rule-wrapper')) {
-          reorderRule();
-        }
-      }}
-      onDragStart={() => setOriginIndex(ruleIndex)}
-      onDragOver={(e) => {
-        e.preventDefault();
-        setTargetIndex(ruleIndex)
-      }}
+      onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
+      onDragStart={onDragStart}
     >
       <SelectControl
         disabled={busy}
@@ -140,11 +130,10 @@ Rule.propTypes = {
   busy: PropTypes.bool,
   field: PropTypes.string,
   onDelete: PropTypes.func,
+  onDragEnd: PropTypes.func,
+  onDragOver: PropTypes.func,
+  onDragStart: PropTypes.func,
   onUpdate: PropTypes.func,
-  reorderRule: PropTypes.func,
-  ruleIndex: PropTypes.number,
-  setOriginIndex: PropTypes.func,
-  setTargetIndex: PropTypes.func,
   taxonomy: PropTypes.string,
   term_id: PropTypes.number,
   value: PropTypes.string,

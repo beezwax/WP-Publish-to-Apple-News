@@ -108,6 +108,18 @@ const AdminSettings = () => {
               field={item.field}
               onDelete={() => deleteRule(index)}
               onUpdate={(key, value) => updateRule(index, key, value)}
+              onDragEnd={(e) => {
+                const targetEl = document.elementFromPoint(e.clientX, e.clientY);
+                // Only reorder if the target element is inside rule flex container.
+                if (targetEl.closest('.rule-wrapper')) {
+                  reorderRule();
+                }
+              }}
+              onDragStart={() => setOriginIndex(index)}
+              onDragOver={(e) => {
+                e.preventDefault();
+                setTargetIndex(index)
+              }}
               reorderRule={reorderRule}
               ruleIndex={index}
               ruleList={ruleList}
