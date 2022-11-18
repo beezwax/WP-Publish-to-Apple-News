@@ -44,15 +44,15 @@ class Automation {
 			'type'     => 'boolean',
 		],
 		'Section'     => [
-			'location' => 'apple_news_api',
+			'location' => 'article_metadata',
 			'type'     => 'string',
 		],
 		'Slug'        => [
-			'location' => 'user_input',
+			'location' => 'component',
 			'type'     => 'string',
 		],
 		'Theme'       => [
-			'location' => 'apple_new_api',
+			'location' => 'exporter',
 			'type'     => 'string',
 		],
 	];
