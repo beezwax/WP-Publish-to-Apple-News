@@ -23,48 +23,6 @@ class Automation {
 	const FIELD_NAME = 'apple-news-automation-settings-field';
 
 	/**
-	 * An array of valid automation fields with information about data type and
-	 * location within what is sent to Apple News.
-	 */
-	const FIELDS = [
-		'isHidden'       => [
-			'location' => 'article_metadata',
-			'type'     => 'boolean',
-			'label'    => 'isHidden'
-		],
-		'isPaid'         => [
-			'location' => 'article_metadata',
-			'type'     => 'boolean',
-			'label'    => 'isPaid'
-		],
-		'isPreview'      => [
-			'location' => 'article_metadata',
-			'type'     => 'boolean',
-			'label'    => 'isPreview'
-		],
-		'isSponsored'    => [
-			'location' => 'article_metadata',
-			'type'     => 'boolean',
-			'label'    => 'isSponsored'
-		],
-		'links.sections' => [
-			'location' => 'article_metadata',
-			'type'     => 'string',
-			'label'    => 'Section'
-		],
-		'slug.#text#'    => [
-			'location' => 'component',
-			'type'     => 'string',
-			'label'    => 'Slug'
-		],
-		'theme'          => [
-			'location' => 'exporter',
-			'type'     => 'string',
-			'label'    => 'Theme'
-		],
-	];
-
-	/**
 	 * The schema for automation rules.
 	 */
 	const SCHEMA = [
@@ -205,6 +163,52 @@ class Automation {
 	}
 
 	/**
+	 * Returns an array of valid automation fields with information about data type and
+	 * location within what is sent to Apple News.
+	 *
+	 * @return array An array of fields.
+	 */
+	public static function get_fields(): array {
+		return [
+			'isHidden'       => [
+				'location' => 'article_metadata',
+				'type'     => 'boolean',
+				'label'    => __('isHidden', 'apple-news'),
+			],
+			'isPaid'         => [
+				'location' => 'article_metadata',
+				'type'     => 'boolean',
+				'label'    => __('isPaid', 'apple-news'),
+			],
+			'isPreview'      => [
+				'location' => 'article_metadata',
+				'type'     => 'boolean',
+				'label'    => __('isPreview', 'apple-news'),
+			],
+			'isSponsored'    => [
+				'location' => 'article_metadata',
+				'type'     => 'boolean',
+				'label'    => __('isSponsored', 'apple-news'),
+			],
+			'links.sections' => [
+				'location' => 'article_metadata',
+				'type'     => 'string',
+				'label'    => __('Section', 'apple-news'),
+			],
+			'slug.#text#'    => [
+				'location' => 'component',
+				'type'     => 'string',
+				'label'    => __('Slug', 'apple-news'),
+			],
+			'theme'          => [
+				'location' => 'exporter',
+				'type'     => 'string',
+				'label'    => __('Theme', 'apple-news'),
+			],
+		];
+	}
+
+	/**
 	 * A callback to load automation settings scripts and styles and render target div for the React submenu page.
 	 */
 	public static function render_submenu_page(): void {
@@ -222,7 +226,7 @@ class Automation {
 			'AppleNewsAutomationConfig',
 			[
 				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
-				'fields'     => self::FIELDS,
+				'fields'     => self::get_fields(),
 				'sections'   => \Admin_Apple_Sections::get_sections(),
 				'themes'     => \Apple_Exporter\Theme::get_registry(),
 			]
