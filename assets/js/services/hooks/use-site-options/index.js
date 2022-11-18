@@ -8,7 +8,6 @@ const useSiteOptions = () => {
   const [notices, setNotices] = useState([]);
   const [saving, setSaving] = useState(false);
   const [settings, setSettings] = useState({});
-  console.log(settings);
 
   // Setup for Gutenberg's notices system.
   const {
@@ -53,7 +52,7 @@ const useSiteOptions = () => {
         setLoading(false);
       }
     })();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   /**
    * Set settings.
