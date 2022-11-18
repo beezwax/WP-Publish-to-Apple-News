@@ -85,7 +85,7 @@ class Automation {
 					'type'    => 'integer',
 				],
 				'value'    => [
-					'default' => 'false',
+					'default' => '',
 					'type'    => 'string',
 				],
 			],
@@ -108,7 +108,6 @@ class Automation {
 	public static function init(): void {
 		add_action( 'init', [ __CLASS__, 'action__init' ] );
 		add_action( 'admin_menu', [ __CLASS__, 'action__admin_menu' ] );
-		add_action( 'admin_print_scripts', [ __CLASS__, 'action__admin_print_scripts' ] );
 		add_filter( 'apple_news_article_metadata', [ __CLASS__, 'filter__apple_news_article_metadata' ], 0, 2 );
 	}
 
@@ -141,30 +140,6 @@ class Automation {
 			apply_filters( 'apple_news_settings_capability', 'manage_options' ),
 			self::PAGE_NAME,
 			[ __CLASS__, 'render_submenu_page' ]
-		);
-	}
-
-	/**
-	 * A callback function to load automation settings scripts and styles.
-	 */
-	public static function action__admin_print_scripts(): void {
-		wp_enqueue_script(
-			'apple-news-plugin-admin-settings',
-			plugins_url( 'build/adminSettings.js', __DIR__ ),
-			[ 'wp-block-editor', 'wp-api-fetch', 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-tinymce' ],
-			[],
-			true
-		);
-		wp_enqueue_style( 'wp-edit-blocks' );
-		wp_localize_script(
-			'apple-news-plugin-admin-settings',
-			'wpLocalizedData',
-			[
-				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
-				'fields'     => self::FIELDS,
-				'sections'   => \Admin_Apple_Sections::get_sections(),
-				'themes'     => \Apple_Exporter\Theme::get_registry(),
-			]
 		);
 	}
 
@@ -230,11 +205,32 @@ class Automation {
 	}
 
 	/**
-	 * A render callback for the React submenu page.
+	 * A callback to load automation settings scripts and styles and render target div for the React submenu page.
 	 */
 	public static function render_submenu_page(): void {
+		// Enqueue page specific scripts
+		wp_enqueue_script(
+			'apple-news-plugin-admin-settings',
+			plugins_url( 'build/adminSettings.js', __DIR__ ),
+			[ 'wp-block-editor', 'wp-api-fetch', 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-tinymce' ],
+			[],
+			true
+		);
+		wp_enqueue_style( 'wp-edit-blocks' );
+		wp_localize_script(
+			'apple-news-plugin-admin-settings',
+			'wpLocalizedData',
+			[
+				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
+				'fields'     => self::FIELDS,
+				'sections'   => \Admin_Apple_Sections::get_sections(),
+				'themes'     => \Apple_Exporter\Theme::get_registry(),
+			]
+		);
 		add_filter( 'should_load_block_editor_scripts_and_styles', '__return_true' );
 		wp_add_iframed_editor_assets_html();
+
+		// Render target div for React app.
 		echo '<div id="apple-news-options__page"></div>';
 	}
 
