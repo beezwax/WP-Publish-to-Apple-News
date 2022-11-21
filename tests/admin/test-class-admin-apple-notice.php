@@ -28,7 +28,7 @@ class Apple_News_Admin_Apple_Notice_Test extends Apple_News_Testcase {
 	 * Tests the behavior of outputting info messages.
 	 */
 	public function test_info() {
-		Admin_Apple_Notice::info( 'This is an info message', $this->user_id );
+		Admin_Apple_Notice::info( 'This is an info message' );
 
 		ob_start();
 		Admin_Apple_Notice::show();
@@ -46,7 +46,7 @@ class Apple_News_Admin_Apple_Notice_Test extends Apple_News_Testcase {
 	 * Tests the behavior of outputting success messages.
 	 */
 	public function test_success() {
-		Admin_Apple_Notice::success( 'This is a success message', $this->user_id );
+		Admin_Apple_Notice::success( 'This is a success message' );
 
 		ob_start();
 		Admin_Apple_Notice::show();
@@ -64,7 +64,7 @@ class Apple_News_Admin_Apple_Notice_Test extends Apple_News_Testcase {
 	 * Tests the behavior of outputting error messages.
 	 */
 	public function test_error() {
-		Admin_Apple_Notice::error( 'This is an error message', $this->user_id );
+		Admin_Apple_Notice::error( 'This is an error message' );
 
 		ob_start();
 		Admin_Apple_Notice::show();
@@ -82,7 +82,7 @@ class Apple_News_Admin_Apple_Notice_Test extends Apple_News_Testcase {
 	 * Tests the behavior of displaying a single notice.
 	 */
 	public function test_formatting_single() {
-		Admin_Apple_Notice::info( 'One error occurred: error 1', $this->user_id );
+		Admin_Apple_Notice::info( 'One error occurred: error 1' );
 
 		ob_start();
 		Admin_Apple_Notice::show();
@@ -100,7 +100,7 @@ class Apple_News_Admin_Apple_Notice_Test extends Apple_News_Testcase {
 	 * Tests the behavior of multiple errors being displayed at once.
 	 */
 	public function test_formatting_multiple() {
-		Admin_Apple_Notice::info( 'A number of errors occurred: error 1, error 2, error 3', $this->user_id );
+		Admin_Apple_Notice::info( 'A number of errors occurred: error 1, error 2, error 3' );
 
 		ob_start();
 		Admin_Apple_Notice::show();
@@ -118,7 +118,7 @@ class Apple_News_Admin_Apple_Notice_Test extends Apple_News_Testcase {
 	 * Tests the behavior of line breaks in notices.
 	 */
 	public function test_line_breaks() {
-		Admin_Apple_Notice::info( 'One message|Another message', $this->user_id );
+		Admin_Apple_Notice::info( 'One message|Another message' );
 
 		ob_start();
 		Admin_Apple_Notice::show();

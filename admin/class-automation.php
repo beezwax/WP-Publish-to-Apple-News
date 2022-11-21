@@ -23,25 +23,30 @@ class Automation {
 	const FIELD_NAME = 'apple-news-automation-settings-field';
 
 	/**
-	 * An array of valid automation fields with information about data type and
-	 * location within what is sent to Apple News.
+	 * The schema for automation rules.
 	 */
-	const FIELDS = [
-		'isHidden'    => [
-			'location' => 'article_metadata',
-			'type'     => 'boolean',
-		],
-		'isPaid'      => [
-			'location' => 'article_metadata',
-			'type'     => 'boolean',
-		],
-		'isPreview'   => [
-			'location' => 'article_metadata',
-			'type'     => 'boolean',
-		],
-		'isSponsored' => [
-			'location' => 'article_metadata',
-			'type'     => 'boolean',
+	const SCHEMA = [
+		'type'  => 'array',
+		'items' => [
+			'type'       => 'object',
+			'properties' => [
+				'field'    => [
+					'default' => '',
+					'type'    => 'string',
+				],
+				'taxonomy' => [
+					'default' => '',
+					'type'    => 'string',
+				],
+				'term_id'  => [
+					'default' => 0,
+					'type'    => 'integer',
+				],
+				'value'    => [
+					'default' => '',
+					'type'    => 'string',
+				],
+			],
 		],
 	];
 
@@ -59,7 +64,7 @@ class Automation {
 	 * Initialize functionality of this class by registering hooks.
 	 */
 	public static function init(): void {
-		add_action( 'admin_init', [ __CLASS__, 'action__admin_init' ] );
+		add_action( 'init', [ __CLASS__, 'action__init' ] );
 		add_action( 'admin_menu', [ __CLASS__, 'action__admin_menu' ] );
 		add_filter( 'apple_news_article_metadata', [ __CLASS__, 'filter__apple_news_article_metadata' ], 0, 2 );
 	}
@@ -67,20 +72,7 @@ class Automation {
 	/**
 	 * A callback function for the admin_init action hook.
 	 */
-	public static function action__admin_init(): void {
-		add_settings_section(
-			self::PAGE_NAME,
-			esc_html__( 'Configuration', 'apple-news' ),
-			'__return_null',
-			self::PAGE_NAME
-		);
-		add_settings_field(
-			self::FIELD_NAME,
-			esc_html__( 'By Taxonomy Term', 'apple-news' ),
-			[ __CLASS__, 'render_settings_field' ],
-			self::PAGE_NAME,
-			self::PAGE_NAME
-		);
+	public static function action__init(): void {
 		register_setting(
 			self::PAGE_NAME,
 			self::OPTION_KEY,
@@ -88,6 +80,7 @@ class Automation {
 				'default'           => [],
 				'description'       => __( 'Automation settings for Publish to Apple News.', 'apple-news' ),
 				'sanitize_callback' => [ __CLASS__, 'sanitize_setting' ],
+				'show_in_rest'      => [ 'schema' => self::SCHEMA ],
 				'type'              => 'array',
 			]
 		);
@@ -122,7 +115,7 @@ class Automation {
 			array_filter(
 				self::get_automation_for_post( $post_id ),
 				function( $rule ) {
-					return 'article_metadata' === self::FIELDS[ $rule['field'] ]['location'] ?? '';
+					return 'article_metadata' === self::get_fields()[ $rule['field'] ]['location'] ?? '';
 				}
 			)
 		);
@@ -170,68 +163,79 @@ class Automation {
 	}
 
 	/**
-	 * A render callback for the automation settings field.
+	 * Returns an array of valid automation fields with information about data type and
+	 * location within what is sent to Apple News.
+	 *
+	 * @return array An array of fields.
 	 */
-	public static function render_settings_field(): void {
-		$value = self::get_automation_rules();
-		// TODO: Dynamically get list of registered taxonomies.
-		?>
-			<fieldset>
-				<legend class="screen-reader-text">
-					<?php esc_html_e( 'Configuration', 'apple-news' ); ?> 1
-				</legend>
-				<div>
-					<label>
-						<?php esc_html_e( 'Taxonomy', 'apple-news' ); ?>
-						<select name="<?php echo esc_attr( self::OPTION_KEY ); ?>[0][taxonomy]">
-							<option value=""></option>
-							<option value="category" <?php selected( 'category' === ( $value[0]['taxonomy'] ?? '' ) ); ?>><?php esc_html_e( 'Category', 'apple-news' ); ?></option>
-							<option value="post_tag" <?php selected( 'post_tag' === ( $value[0]['taxonomy'] ?? '' ) ); ?>><?php esc_html_e( 'Tag', 'apple-news' ); ?></option>
-						</select>
-					</label>
-				</div>
-				<div>
-					<label>
-						<?php esc_html_e( 'Term ID', 'apple-news' ); ?>
-						<input name="<?php echo esc_attr( self::OPTION_KEY ); ?>[0][term_id]" type="number" value="<?php echo esc_attr( $value[0]['term_id'] ?? '' ); ?>" />
-					</label>
-				</div>
-				<div>
-					<label>
-						<?php esc_html_e( 'Field', 'apple-news' ); ?>
-						<select name="<?php echo esc_attr( self::OPTION_KEY ); ?>[0][field]">
-							<option value=""></option>
-							<?php foreach ( array_keys( self::FIELDS ) as $field_key ) : ?>
-								<option value="<?php echo esc_attr( $field_key ); ?>" <?php selected( ( $value[0]['field'] ?? '' ) === $field_key ); ?>><?php echo esc_html( $field_key ); ?></option>
-							<?php endforeach; ?>
-						</select>
-					</label>
-				</div>
-				<div>
-					<label>
-						<?php esc_html_e( 'Field Value', 'apple-news' ); ?>
-						<input name="<?php echo esc_attr( self::OPTION_KEY ); ?>[0][value]" type="text" value="<?php echo esc_attr( $value[0]['value'] ?? '' ); ?>" />
-					</label>
-				</div>
-			</fieldset>
-		<?php
+	public static function get_fields(): array {
+		return [
+			'isHidden'       => [
+				'location' => 'article_metadata',
+				'type'     => 'boolean',
+				'label'    => __( 'isHidden', 'apple-news' ),
+			],
+			'isPaid'         => [
+				'location' => 'article_metadata',
+				'type'     => 'boolean',
+				'label'    => __( 'isPaid', 'apple-news' ),
+			],
+			'isPreview'      => [
+				'location' => 'article_metadata',
+				'type'     => 'boolean',
+				'label'    => __( 'isPreview', 'apple-news' ),
+			],
+			'isSponsored'    => [
+				'location' => 'article_metadata',
+				'type'     => 'boolean',
+				'label'    => __( 'isSponsored', 'apple-news' ),
+			],
+			'links.sections' => [
+				'location' => 'article_metadata',
+				'type'     => 'string',
+				'label'    => __( 'Section', 'apple-news' ),
+			],
+			'slug.#text#'    => [
+				'location' => 'component',
+				'type'     => 'string',
+				'label'    => __( 'Slug', 'apple-news' ),
+			],
+			'theme'          => [
+				'location' => 'exporter',
+				'type'     => 'string',
+				'label'    => __( 'Theme', 'apple-news' ),
+			],
+		];
 	}
 
 	/**
-	 * A render callback for the submenu page.
+	 * A callback to load automation settings scripts and styles and render target div for the React submenu page.
 	 */
 	public static function render_submenu_page(): void {
-		?>
-			<div class="wrap apple-news-settings">
-				<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-				<?php settings_errors(); ?>
-				<form method="post" action="options.php" id="apple-news-automation">
-					<?php settings_fields( 'apple-news-automation' ); ?>
-					<?php do_settings_sections( 'apple-news-automation' ); ?>
-					<?php submit_button(); ?>
-				</form>
-			</div>
-		<?php
+		// Enqueue page specific scripts.
+		wp_enqueue_script(
+			'apple-news-plugin-admin-settings',
+			plugins_url( 'build/adminSettings.js', __DIR__ ),
+			[ 'wp-block-editor', 'wp-api-fetch', 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-tinymce' ],
+			[],
+			true
+		);
+		wp_enqueue_style( 'wp-edit-blocks' );
+		wp_localize_script(
+			'apple-news-plugin-admin-settings',
+			'AppleNewsAutomationConfig',
+			[
+				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
+				'fields'     => self::get_fields(),
+				'sections'   => \Admin_Apple_Sections::get_sections(),
+				'themes'     => \Apple_Exporter\Theme::get_registry(),
+			]
+		);
+		add_filter( 'should_load_block_editor_scripts_and_styles', '__return_true' );
+		wp_add_iframed_editor_assets_html();
+
+		// Render target div for React app.
+		echo '<div id="apple-news-options__page"></div>';
 	}
 
 	/**
