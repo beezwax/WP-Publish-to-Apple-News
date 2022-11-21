@@ -1015,7 +1015,56 @@ class Apple_News {
 	 * Upgrades settings and data formats to be compatible with version 2.4.0.
 	 */
 	public function upgrade_to_2_4_0() {
-		// TODO: Do stuff.
+		$automation = [];
+
+		// Get legacy settings, if they exist.
+		$priority_mappings = get_option( 'apple_news_section_priority_mappings', [] );
+		$taxonomy_mappings = get_option( 'apple_news_section_taxonomy_mappings', [] );
+		$theme_mappings    = get_option( 'apple_news_section_theme_mappings', [] );
+		$mapping_taxonomy  = apply_filters( 'apple_news_section_taxonomy', 'category' );
+
+		// Get an ordered list of sections.
+		$sections = [];
+		if ( ! empty( $priority_mappings ) ) {
+			arsort( $priority_mappings );
+			$sections = array_keys( $priority_mappings );
+		} elseif ( ! empty( $taxonomy_mappings ) ) {
+			$sections = array_keys( $taxonomy_mappings );
+		} elseif ( ! empty( $theme_mappings ) ) {
+			$sections = array_keys( $theme_mappings );
+		} else {
+			return;
+		}
+
+		// Loop through sections, in priority order, and convert settings to Automation.
+		foreach ( $sections as $section_id ) {
+			foreach ( $taxonomy_mappings[ $section_id ] ?? [] as $term_id ) {
+				// Add the mapping for this term ID to the section ID.
+				$automation[] = [
+					'field'    => 'links.sections',
+					'taxonomy' => $mapping_taxonomy,
+					'term_id'  => $term_id,
+					'value'    => $section_id,
+				];
+
+				// Apply theme mapping, if set.
+				if ( ! empty( $theme_mappings[ $section_id ] ) ) {
+					$automation[] = [
+						'field'    => 'theme',
+						'taxonomy' => $mapping_taxonomy,
+						'term_id'  => $term_id,
+						'value'    => $theme_mappings[ $section_id ],
+					];
+				}
+			}
+		}
+
+		// Update Automation settings.
+		if ( add_option( Apple_News\Admin\Automation::OPTION_KEY, $automation ) ) {
+			delete_option( 'apple_news_section_priority_mappings' );
+			delete_option( 'apple_news_section_taxonomy_mappings' );
+			delete_option( 'apple_news_section_theme_mappings' );
+		}
 	}
 
 	/**

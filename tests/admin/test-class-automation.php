@@ -56,16 +56,16 @@ class Automation_Test extends Apple_News_Testcase {
 					'value'    => 'cdef0123-4567-89ab-cdef-012356789012',
 				],
 				[
-					'field'    => 'links.sections',
-					'taxonomy' => 'category',
-					'term_id'  => 4,
-					'value'    => 'cdef0123-4567-89ab-cdef-012356789012',
-				],
-				[
 					'field'    => 'theme',
 					'taxonomy' => 'category',
 					'term_id'  => 3,
 					'value'    => 'Entertainment Theme',
+				],
+				[
+					'field'    => 'links.sections',
+					'taxonomy' => 'category',
+					'term_id'  => 4,
+					'value'    => 'cdef0123-4567-89ab-cdef-012356789012',
 				],
 				[
 					'field'    => 'theme',
