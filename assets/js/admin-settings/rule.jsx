@@ -8,8 +8,7 @@ import {
 import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useSelect } from '@wordpress/data';
-import { ruleCard } from './styles';
+// import { useSelect } from '@wordpress/data';
 
 
 const Rule = ({
@@ -17,11 +16,9 @@ const Rule = ({
   field,
   onDelete,
   onDragEnd,
-  onDragOver,
-  onDragStart,
   onUpdate,
   taxonomy,
-  term_id,
+  termId,
   value,
 }) => {
   const {
@@ -40,103 +37,108 @@ const Rule = ({
   // }
 
   return (
-    <div
-      className="rule-wrapper"
+    <tr
+      className="apple-news-automation-row"
       draggable
-      style={ruleCard}
       onDragEnd={onDragEnd}
-      onDragOver={onDragOver}
-      onDragStart={onDragStart}
     >
-      <SelectControl
-        disabled={busy}
-        label={__('Taxonomy', 'apple-news')}
-        onChange={(next) => onUpdate('taxonomy', next)}
-        options={[
-          { value: '', label: __('Select Taxonomy', 'apple-news') },
-          ...Object.keys(taxonomies).map((tax) => ({ value: tax, label: tax }))
-        ]}
-        value={taxonomy}
-      />
-      <TextControl
-        disabled={busy}
-        label={__('Term ID', 'apple-news')}
-        onChange={(next) => onUpdate('term_id', next)}
-        type="number"
-        value={term_id}
-      />
-      <SelectControl
-        disabled={busy}
-        label={__('Field', 'apple-news')}
-        onChange={(next) => onUpdate('field', next)}
-        options={[
-          { value: '', label: __('Select Field', 'apple-news') },
-          ...Object.keys(fields).map((field) => ({ value: field, label: fields[field].label }))
-        ]}
-        value={field}
-      />
-      {fields[field]?.label === 'Section' ? (
+      <td>
         <SelectControl
+          aria-labelledby="apple-news-automation-column-taxonomy"
           disabled={busy}
-          label={__('Sections', 'apple-news')}
-          onChange={(next) => onUpdate('value', next)}
+          onChange={(next) => onUpdate('taxonomy', next)}
           options={[
-            { value: '', label: __('Select Section', 'apple-news') },
-            ...sections.map((sect) => ({ value: sect.id, label: sect.name }))
+            { value: '', label: __('Select Taxonomy', 'apple-news') },
+            ...Object.keys(taxonomies).map((tax) => ({ value: tax, label: tax }))
           ]}
-          value={value}
+          value={taxonomy}
         />
-      ):null}
-      {fields[field]?.type === 'boolean' ? (
-        <ToggleControl
-          checked={value === 'true'}
-          disabled={busy}
-          label={__('True or False', 'apple-news')}
-          onChange={(next) => onUpdate('value', next.toString())}
-        />
-      ):null}
-      {fields[field]?.label === 'Slug' ? (
+      </td>
+      <td>
         <TextControl
+          aria-labelledby="apple-news-automation-column-term"
           disabled={busy}
-          label={__('Slug', 'apple-news')}
-          onChange={(next) => onUpdate('value', next)}
-          value={value}
+          onChange={(next) => onUpdate('term_id', next)}
+          type="number"
+          value={termId}
         />
-      ):null}
-      {fields[field]?.label === 'Theme' ? (
+      </td>
+      <td>
         <SelectControl
+          aria-labelledby="apple-news-automation-column-field"
           disabled={busy}
-          label={__('Themes', 'apple-news')}
-          onChange={(next) => onUpdate('value', next)}
+          onChange={(next) => onUpdate('field', next)}
           options={[
-            { value: '', label: __('Select Theme', 'apple-news') },
-            ...themes.map((name) => ({ value: name, label: name }))
+            { value: '', label: __('Select Field', 'apple-news') },
+            ...Object.keys(fields).map((field) => ({ value: field, label: fields[field].label }))
           ]}
-          value={value}
+          value={field}
         />
-      ):null}
-      <Button
-        disabled={busy}
-        isDestructive
-        onClick={onDelete}
-      >
-        {__('Delete Rule', 'apple-news')}
-      </Button>
-    </div>
+      </td>
+      <td>
+        {fields[field]?.label === 'Section' ? (
+          <SelectControl
+            aria-labelledby="apple-news-automation-column-value"
+            disabled={busy}
+            onChange={(next) => onUpdate('value', next)}
+            options={[
+              { value: '', label: __('Select Section', 'apple-news') },
+              ...sections.map((sect) => ({ value: sect.id, label: sect.name }))
+            ]}
+            value={value}
+          />
+        ):null}
+        {fields[field]?.type === 'boolean' ? (
+          <ToggleControl
+            aria-labelledby="apple-news-automation-column-value"
+            checked={value === 'true'}
+            disabled={busy}
+            onChange={(next) => onUpdate('value', next.toString())}
+          />
+        ):null}
+        {fields[field]?.label === 'Slug' ? (
+          <TextControl
+            aria-labelledby="apple-news-automation-column-value"
+            disabled={busy}
+            onChange={(next) => onUpdate('value', next)}
+            value={value}
+          />
+        ):null}
+        {fields[field]?.label === 'Theme' ? (
+          <SelectControl
+            aria-labelledby="apple-news-automation-column-value"
+            disabled={busy}
+            onChange={(next) => onUpdate('value', next)}
+            options={[
+              { value: '', label: __('Select Theme', 'apple-news') },
+              ...themes.map((name) => ({ value: name, label: name }))
+            ]}
+            value={value}
+          />
+        ):null}
+      </td>
+      <td>
+        <Button
+          disabled={busy}
+          isDestructive
+          onClick={onDelete}
+        >
+          {__('Delete Rule', 'apple-news')}
+        </Button>
+      </td>
+    </tr>
   );
 };
 
 Rule.propTypes = {
-  busy: PropTypes.bool,
-  field: PropTypes.string,
-  onDelete: PropTypes.func,
-  onDragEnd: PropTypes.func,
-  onDragOver: PropTypes.func,
-  onDragStart: PropTypes.func,
-  onUpdate: PropTypes.func,
-  taxonomy: PropTypes.string,
-  term_id: PropTypes.number,
-  value: PropTypes.string,
+  busy: PropTypes.bool.isRequired,
+  field: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onDragEnd: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  taxonomy: PropTypes.string.isRequired,
+  termId: PropTypes.number.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 export default Rule;

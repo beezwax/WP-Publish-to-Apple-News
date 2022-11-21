@@ -6,19 +6,17 @@ import { __ } from '@wordpress/i18n';
 import React, { useState } from 'react';
 import useSiteOptions from '../services/hooks/use-site-options';
 import Rule from './rule';
-import { ruleCorral } from './styles';
 
 
 const AdminSettings = () => {
   const [{ loading, setSettings, saving, settings }, saveSettings] = useSiteOptions();
   const busy = loading || saving;
-  const [originIndex, setOriginIndex] = useState(null);
-  const [targetIndex, setTargetIndex] = useState(null);
   const { apple_news_automation: ruleList } = settings;
   const { fields } = AppleNewsAutomationConfig;
 
   /**
-   * Helper function for pushing to in-memory settings inside the useSiteOptions hook.
+   * Helper function for pushing to in-memory settings inside useSiteOptions.
+   * @param {array} updatedRules - The new array of rules.
    */
    const updateSettings = (updatedRules) => {
     const next = { ...settings, apple_news_automation: updatedRules };
@@ -31,6 +29,9 @@ const AdminSettings = () => {
     setSettings(next);
   };
 
+  /**
+   * Ads a new empty rule to the end of the list.
+   */
   const addRule = () => {
     const updatedRules = [...(ruleList ?? [])];
     updateSettings([
@@ -44,31 +45,35 @@ const AdminSettings = () => {
     ]);
   }
 
-  const deleteRule = (ruleIndex) => {
+  /**
+   * Deletes a rule at the specified index.
+   * @param {number} index - The index of the rule to delete.
+   */
+  const deleteRule = (index) => {
     const updatedRules = [...(ruleList ?? [])];
-    updatedRules.splice(ruleIndex, 1);
+    updatedRules.splice(index, 1);
     updateSettings(updatedRules);
   }
 
   /**
    * Drag and drop logic/re-indexing for Rules.
+   * @param {number} from - The origin index.
+   * @param {number} to - The destination index.
    */
-  const reorderRule = () => {
-    // Do nothing if the rule it dropped into its own slot.
-    if (originIndex === targetIndex) {
-      return;
+  const reorderRule = (from, to) => {
+    if (from !== to) {
+      const updatedRules = [...(ruleList ?? [])];
+      [updatedRules[from], updatedRules[to]] = [updatedRules[to], updatedRules[from]]
+      updateSettings(updatedRules);
     }
-    const updatedRules = [...(ruleList ?? [])];
-    // Destructures and reassigns indexed values, effectively swapping them.
-    [updatedRules[originIndex], updatedRules[targetIndex]] = [updatedRules[targetIndex], updatedRules[originIndex]]
-    // Reset draggable indexes.
-    setOriginIndex(null);
-    setTargetIndex(null);
-    updateSettings(updatedRules);
   }
 
   /**
-   * Manages Rule component's form state.
+   * Updates a configuration parameter for a rule given the rule index, a field
+   * key, and a field value.
+   * @param {number} index - The index of the rule being updated.
+   * @param {string} key - The field key within the rule.
+   * @param {string|number} value - A number for term_id, string otherwise.
    */
   const updateRule = (index, key, value) => {
     const updatedRules = [...(ruleList ?? [])];
@@ -86,54 +91,65 @@ const AdminSettings = () => {
   return (
     <div className="apple-news-options__wrapper">
       <h1>{__('Automation Rules', 'apple-news')}</h1>
-      <Button
-        disabled={busy}
-        isPrimary
-        onClick={saveSettings}
-      >
-        {__('Save Settings', 'apple-news')}
-      </Button>
-      <div style={ruleCorral} className="rule-corral">
-        {!loading && ruleList ? (
-          ruleList.map((item, index) => (
-            <Rule
-              busy={busy}
-              key={index}
-              field={item.field}
-              onDelete={() => deleteRule(index)}
-              onUpdate={(key, value) => updateRule(index, key, value)}
-              onDragEnd={(e) => {
-                const targetEl = document.elementFromPoint(e.clientX, e.clientY);
-                // Only reorder if the target element is inside rule flex container.
-                if (targetEl.closest('.rule-wrapper')) {
-                  reorderRule();
-                }
-              }}
-              onDragStart={() => setOriginIndex(index)}
-              onDragOver={(e) => {
-                e.preventDefault();
-                setTargetIndex(index)
-              }}
-              reorderRule={reorderRule}
-              ruleIndex={index}
-              ruleList={ruleList}
-              setOriginIndex={setOriginIndex}
-              setTargetIndex={setTargetIndex}
-              taxonomy={item.taxonomy}
-              term_id={item.term_id}
-              value={item.value}
-            />
-          ))
-        ):null}
+      <table className="wp-list-table widefat fixed striped">
+        <thead>
+          <tr>
+            <th id="apple-news-automation-column-taxonomy" scope="col">{__('Taxonomy', 'apple-news')}</th>
+            <th id="apple-news-automation-column-term" scope="col">{__('Term', 'apple-news')}</th>
+            <th id="apple-news-automation-column-field" scope="col">{__('Field', 'apple-news')}</th>
+            <th id="apple-news-automation-column-value" scope="col">{__('Value', 'apple-news')}</th>
+            <th id="apple-news-automation-column-delete" scope="col">{__('Delete?', 'apple-news')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {!loading && ruleList ? (
+            ruleList.map((item, index) => (
+              <Rule
+                busy={busy}
+                field={item.field}
+                key={index}
+                onDelete={() => deleteRule(index)}
+                onDragEnd={(e) => {
+                  const targetRow = document
+                    .elementFromPoint(e.clientX, e.clientY)
+                    .closest('.apple-news-automation-row');
+                  if (targetRow) {
+                    reorderRule(
+                      index,
+                      Array.from(targetRow.parentElement.querySelectorAll('tr'))
+                        .indexOf(targetRow)
+                    );
+                  }
+                }}
+                onUpdate={(key, value) => updateRule(index, key, value)}
+                taxonomy={item.taxonomy}
+                termId={item.term_id}
+                value={item.value}
+              />
+            ))
+          ) : null}
+        </tbody>
+      </table>
+      <div className="tablenav bottom">
+        <div className="alignleft actions">
+          <Button
+            disabled={busy}
+            isSecondary
+            onClick={addRule}
+            style={{ marginTop: '10px' }}
+          >
+            {__('Add Rule', 'apple-news')}
+          </Button>
+          {' '}
+          <Button
+            disabled={busy}
+            isPrimary
+            onClick={saveSettings}
+          >
+            {__('Save Settings', 'apple-news')}
+          </Button>
+        </div>
       </div>
-      <Button
-        disabled={busy}
-        isPrimary
-        onClick={addRule}
-        style={{ marginTop: '10px' }}
-      >
-        {__('Create New Rule', 'apple-news')}
-      </Button>
     </div>
   );
 };
