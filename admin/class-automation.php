@@ -18,9 +18,14 @@ namespace Apple_News\Admin;
 class Automation {
 
 	/**
-	 * The field name for the automation settings screen.
+	 * The option name for automation.
 	 */
-	const FIELD_NAME = 'apple-news-automation-settings-field';
+	const OPTION_KEY = 'apple_news_automation';
+
+	/**
+	 * The page name for the automation settings screen.
+	 */
+	const PAGE_NAME = 'apple-news-automation';
 
 	/**
 	 * The schema for automation rules.
@@ -49,16 +54,6 @@ class Automation {
 			],
 		],
 	];
-
-	/**
-	 * The option name for automation.
-	 */
-	const OPTION_KEY = 'apple_news_automation';
-
-	/**
-	 * The page name for the automation settings screen.
-	 */
-	const PAGE_NAME = 'apple-news-automation';
 
 	/**
 	 * Initialize functionality of this class by registering hooks.

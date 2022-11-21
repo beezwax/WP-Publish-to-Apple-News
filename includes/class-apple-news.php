@@ -485,6 +485,11 @@ class Apple_News {
 			if ( version_compare( $current_version, '1.4.0', '<' ) ) {
 				$this->upgrade_to_1_4_0();
 			}
+
+			// Handle upgrade to version 2.4.0.
+			if ( version_compare( $current_version, '2.4.0', '<' ) ) {
+				$this->upgrade_to_2_4_0();
+			}
 		}
 
 		// Ensure the default themes are created.
@@ -1004,6 +1009,13 @@ class Apple_News {
 				$this->migrate_table_settings( $theme );
 			}
 		}
+	}
+
+	/**
+	 * Upgrades settings and data formats to be compatible with version 2.4.0.
+	 */
+	public function upgrade_to_2_4_0() {
+		// TODO: Do stuff.
 	}
 
 	/**
