@@ -115,7 +115,7 @@ class Automation {
 			array_filter(
 				self::get_automation_for_post( $post_id ),
 				function( $rule ) {
-					return 'article_metadata' === self::FIELDS[ $rule['field'] ]['location'] ?? '';
+					return 'article_metadata' === self::get_fields()[ $rule['field'] ]['location'] ?? '';
 				}
 			)
 		);
