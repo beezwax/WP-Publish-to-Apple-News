@@ -3,13 +3,14 @@ import {
   Button,
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import React, { useState } from 'react';
+import React from 'react';
 import useSiteOptions from '../services/hooks/use-site-options';
 import Rule from './rule';
 
-
 const AdminSettings = () => {
-  const [{ loading, setSettings, saving, settings }, saveSettings] = useSiteOptions();
+  const [{
+    loading, setSettings, saving, settings,
+  }, saveSettings] = useSiteOptions();
   const busy = loading || saving;
   const { apple_news_automation: ruleList } = settings;
   const { fields } = AppleNewsAutomationConfig;
@@ -18,7 +19,7 @@ const AdminSettings = () => {
    * Helper function for pushing to in-memory settings inside useSiteOptions.
    * @param {array} updatedRules - The new array of rules.
    */
-   const updateSettings = (updatedRules) => {
+  const updateSettings = (updatedRules) => {
     const next = { ...settings, apple_news_automation: updatedRules };
 
     // Enforce some defaults prior to save.
@@ -43,7 +44,7 @@ const AdminSettings = () => {
         value: '',
       },
     ]);
-  }
+  };
 
   /**
    * Deletes a rule at the specified index.
@@ -53,7 +54,7 @@ const AdminSettings = () => {
     const updatedRules = [...(ruleList ?? [])];
     updatedRules.splice(index, 1);
     updateSettings(updatedRules);
-  }
+  };
 
   /**
    * Drag and drop logic/re-indexing for Rules.
@@ -63,10 +64,10 @@ const AdminSettings = () => {
   const reorderRule = (from, to) => {
     if (from !== to) {
       const updatedRules = [...(ruleList ?? [])];
-      [updatedRules[from], updatedRules[to]] = [updatedRules[to], updatedRules[from]]
+      [updatedRules[from], updatedRules[to]] = [updatedRules[to], updatedRules[from]];
       updateSettings(updatedRules);
     }
-  }
+  };
 
   /**
    * Updates a configuration parameter for a rule given the rule index, a field
@@ -77,16 +78,16 @@ const AdminSettings = () => {
    */
   const updateRule = (index, key, value) => {
     const updatedRules = [...(ruleList ?? [])];
-    updatedRules[index] = {...updatedRules[index], [key]: value};
+    updatedRules[index] = { ...updatedRules[index], [key]: value };
     // Need to reset value state in case field changes the resulting value's type.
     if (key === 'field') {
       updatedRules[index] = {
         ...updatedRules[index],
-        value: fields[value]?.type === 'boolean' ? 'false' : ''
+        value: fields[value]?.type === 'boolean' ? 'false' : '',
       };
     }
     updateSettings(updatedRules);
-  }
+  };
 
   return (
     <div className="apple-news-options__wrapper">
@@ -107,7 +108,7 @@ const AdminSettings = () => {
               <Rule
                 busy={busy}
                 field={item.field}
-                key={index}
+                key={index} // eslint-disable-line react/no-array-index-key
                 onDelete={() => deleteRule(index)}
                 onDragEnd={(e) => {
                   const targetRow = document
@@ -117,7 +118,7 @@ const AdminSettings = () => {
                     reorderRule(
                       index,
                       Array.from(targetRow.parentElement.querySelectorAll('tr'))
-                        .indexOf(targetRow)
+                        .indexOf(targetRow),
                     );
                   }
                 }}

@@ -1,4 +1,4 @@
-/* global wp, AppleNewsAutomationConfig */
+/* global AppleNewsAutomationConfig */
 import {
   Button,
   SelectControl,
@@ -9,7 +9,6 @@ import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 import React from 'react';
 // import { useSelect } from '@wordpress/data';
-
 
 const Rule = ({
   busy,
@@ -29,7 +28,8 @@ const Rule = ({
   } = AppleNewsAutomationConfig;
 
   // const { loadingTerms, taxTerms } = useSelect((select) => ({
-  //   loadingTerms: select('core/data').isResolving('core', 'getEntityRecords', ['taxonomy', 'category']),
+  //   loadingTerms: select('core/data')
+  //    .isResolving('core', 'getEntityRecords', ['taxonomy', 'category']),
   //   taxTerms: select('core').getEntityRecords('taxonomy', 'category') || [],
   // }));
   // if(!loadingTerms) {
@@ -49,7 +49,7 @@ const Rule = ({
           onChange={(next) => onUpdate('taxonomy', next)}
           options={[
             { value: '', label: __('Select Taxonomy', 'apple-news') },
-            ...Object.keys(taxonomies).map((tax) => ({ value: tax, label: tax }))
+            ...Object.keys(taxonomies).map((tax) => ({ value: tax, label: tax })),
           ]}
           value={taxonomy}
         />
@@ -70,7 +70,10 @@ const Rule = ({
           onChange={(next) => onUpdate('field', next)}
           options={[
             { value: '', label: __('Select Field', 'apple-news') },
-            ...Object.keys(fields).map((field) => ({ value: field, label: fields[field].label }))
+            ...Object.keys(fields).map((fieldSlug) => ({
+              label: fields[field].label,
+              value: fieldSlug,
+            })),
           ]}
           value={field}
         />
@@ -83,11 +86,11 @@ const Rule = ({
             onChange={(next) => onUpdate('value', next)}
             options={[
               { value: '', label: __('Select Section', 'apple-news') },
-              ...sections.map((sect) => ({ value: sect.id, label: sect.name }))
+              ...sections.map((sect) => ({ value: sect.id, label: sect.name })),
             ]}
             value={value}
           />
-        ):null}
+        ) : null}
         {fields[field]?.type === 'boolean' ? (
           <ToggleControl
             aria-labelledby="apple-news-automation-column-value"
@@ -95,7 +98,7 @@ const Rule = ({
             disabled={busy}
             onChange={(next) => onUpdate('value', next.toString())}
           />
-        ):null}
+        ) : null}
         {fields[field]?.label === 'Slug' ? (
           <TextControl
             aria-labelledby="apple-news-automation-column-value"
@@ -103,7 +106,7 @@ const Rule = ({
             onChange={(next) => onUpdate('value', next)}
             value={value}
           />
-        ):null}
+        ) : null}
         {fields[field]?.label === 'Theme' ? (
           <SelectControl
             aria-labelledby="apple-news-automation-column-value"
@@ -111,11 +114,11 @@ const Rule = ({
             onChange={(next) => onUpdate('value', next)}
             options={[
               { value: '', label: __('Select Theme', 'apple-news') },
-              ...themes.map((name) => ({ value: name, label: name }))
+              ...themes.map((name) => ({ value: name, label: name })),
             ]}
             value={value}
           />
-        ):null}
+        ) : null}
       </td>
       <td>
         <Button
