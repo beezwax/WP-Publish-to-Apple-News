@@ -8,7 +8,9 @@ import {
 import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 import React from 'react';
-// import { useSelect } from '@wordpress/data';
+
+// Components.
+import TermSelector from '../components/term-selector';
 
 const Rule = ({
   busy,
@@ -26,15 +28,6 @@ const Rule = ({
     taxonomies,
     themes,
   } = AppleNewsAutomationConfig;
-
-  // const { loadingTerms, taxTerms } = useSelect((select) => ({
-  //   loadingTerms: select('core/data')
-  //    .isResolving('core', 'getEntityRecords', ['taxonomy', 'category']),
-  //   taxTerms: select('core').getEntityRecords('taxonomy', 'category') || [],
-  // }));
-  // if(!loadingTerms) {
-  //   console.log(taxTerms)
-  // }
 
   return (
     <tr
@@ -55,12 +48,12 @@ const Rule = ({
         />
       </td>
       <td>
-        <TextControl
+        <TermSelector
           aria-labelledby="apple-news-automation-column-term"
           disabled={busy}
           onChange={(next) => onUpdate('term_id', next)}
-          type="number"
-          value={termId}
+          taxonomy={taxonomy}
+          termId={termId}
         />
       </td>
       <td>
