@@ -62,7 +62,7 @@ class Automation {
 	 */
 	public static function init(): void {
 		add_action( 'init', [ __CLASS__, 'action__init' ] );
-		add_action( 'admin_menu', [ __CLASS__, 'action__admin_menu' ] );
+		add_action( 'admin_menu', [ __CLASS__, 'action__admin_menu' ], 100 );
 		add_filter( 'apple_news_article_metadata', [ __CLASS__, 'filter__apple_news_article_metadata' ], 0, 2 );
 	}
 

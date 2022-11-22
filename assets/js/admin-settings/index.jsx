@@ -77,7 +77,7 @@ const AdminSettings = () => {
 
   return (
     <div className="apple-news-options__wrapper">
-      <h1>{__('Automation Rules', 'apple-news')}</h1>
+      <h1>{__('Apple News Automation', 'apple-news')}</h1>
       <p>{__('Configure automation rules below to automatically apply certain settings based on the taxonomy terms applied to each post.', 'apple-news')}</p>
       <p><a target="_blank" rel="noreferrer" href="https://github.com/alleyinteractive/apple-news/wiki/Automation">{__('For more information on how automation works, visit our wiki.', 'apple-news')}</a></p>
       <table className="wp-list-table widefat fixed striped">
