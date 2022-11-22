@@ -4,8 +4,16 @@ import {
 } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
-import useSiteOptions from '../services/hooks/use-site-options';
+
+// Components.
 import Rule from './rule';
+
+// Hooks.
+import useSiteOptions from '../services/hooks/use-site-options';
+
+// Util.
+import deleteAtIndex from '../util/delete-at-index';
+import updateValueAtIndex from '../util/update-value-at-index';
 
 const AdminSettings = () => {
   const [{
@@ -24,12 +32,11 @@ const AdminSettings = () => {
   };
 
   /**
-   * Ads a new empty rule to the end of the list.
+   * Adds a new empty rule to the end of the list.
    */
   const addRule = () => {
-    const updatedRules = [...(ruleList ?? [])];
     updateSettings([
-      ...updatedRules,
+      ...(ruleList ?? []),
       {
         field: '',
         taxonomy: '',
@@ -37,16 +44,6 @@ const AdminSettings = () => {
         value: '',
       },
     ]);
-  };
-
-  /**
-   * Deletes a rule at the specified index.
-   * @param {number} index - The index of the rule to delete.
-   */
-  const deleteRule = (index) => {
-    const updatedRules = [...(ruleList ?? [])];
-    updatedRules.splice(index, 1);
-    updateSettings(updatedRules);
   };
 
   /**
@@ -70,14 +67,10 @@ const AdminSettings = () => {
    * @param {string|number} value - A number for term_id, string otherwise.
    */
   const updateRule = (index, key, value) => {
-    const updatedRules = [...(ruleList ?? [])];
-    updatedRules[index] = { ...updatedRules[index], [key]: value };
+    let updatedRules = updateValueAtIndex(ruleList, key, value, index);
     // Need to reset value state in case field changes the resulting value's type.
     if (key === 'field') {
-      updatedRules[index] = {
-        ...updatedRules[index],
-        value: fields[value]?.type === 'boolean' ? 'false' : '',
-      };
+      updatedRules = updateValueAtIndex(updatedRules, 'value', fields[value]?.type === 'boolean' ? 'false' : '', index);
     }
     updateSettings(updatedRules);
   };
@@ -102,7 +95,7 @@ const AdminSettings = () => {
                 busy={busy}
                 field={item.field}
                 key={index} // eslint-disable-line react/no-array-index-key
-                onDelete={() => deleteRule(index)}
+                onDelete={() => updateSettings(deleteAtIndex(ruleList, index))}
                 onDragEnd={(e) => {
                   const targetRow = document
                     .elementFromPoint(e.clientX, e.clientY)
