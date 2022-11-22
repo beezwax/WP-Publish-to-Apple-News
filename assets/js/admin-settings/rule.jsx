@@ -71,7 +71,7 @@ const Rule = ({
           options={[
             { value: '', label: __('Select Field', 'apple-news') },
             ...Object.keys(fields).map((fieldSlug) => ({
-              label: fields[field].label,
+              label: fields[fieldSlug].label,
               value: fieldSlug,
             })),
           ]}

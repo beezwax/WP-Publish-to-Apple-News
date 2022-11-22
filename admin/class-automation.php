@@ -227,7 +227,6 @@ class Automation {
 			]
 		);
 		add_filter( 'should_load_block_editor_scripts_and_styles', '__return_true' );
-		wp_add_iframed_editor_assets_html();
 
 		// Render target div for React app.
 		echo '<div id="apple-news-options__page"></div>';
