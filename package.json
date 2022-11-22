@@ -46,6 +46,7 @@
     "webpack-stats-plugin": "^1.0.3"
   },
   "dependencies": {
+    "@alleyinteractive/block-editor-tools": "^0.0.1",
     "@wordpress/a11y": "^3.1.0",
     "@wordpress/annotations": "^2.1.0",
     "@wordpress/api-fetch": "^5.1.0",

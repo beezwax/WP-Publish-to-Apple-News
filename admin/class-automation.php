@@ -10,6 +10,8 @@
 
 namespace Apple_News\Admin;
 
+use Apple_News;
+
 /**
  * This class is in charge of handling the management of Apple News automation.
  *
@@ -209,20 +211,20 @@ class Automation {
 	public static function render_submenu_page(): void {
 		// Enqueue page specific scripts.
 		wp_enqueue_script(
-			'apple-news-plugin-admin-settings',
+			'apple-news-admin-settings',
 			plugins_url( 'build/adminSettings.js', __DIR__ ),
 			[ 'wp-block-editor', 'wp-api-fetch', 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-tinymce' ],
-			[],
+			Apple_News::$version,
 			true
 		);
 		wp_enqueue_style( 'wp-edit-blocks' );
 		wp_localize_script(
-			'apple-news-plugin-admin-settings',
+			'apple-news-admin-settings',
 			'AppleNewsAutomationConfig',
 			[
-				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
 				'fields'     => self::get_fields(),
 				'sections'   => \Admin_Apple_Sections::get_sections(),
+				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
 				'themes'     => \Apple_Exporter\Theme::get_registry(),
 			]
 		);

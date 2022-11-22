@@ -20,14 +20,7 @@ const AdminSettings = () => {
    * @param {array} updatedRules - The new array of rules.
    */
   const updateSettings = (updatedRules) => {
-    const next = { ...settings, apple_news_automation: updatedRules };
-
-    // Enforce some defaults prior to save.
-    // Request will 500 when site_logo === null.
-    next.site_logo = next.site_logo ?? 0;
-
-    // Trigger state hook from useSiteOptions.
-    setSettings(next);
+    setSettings({ ...settings, apple_news_automation: updatedRules });
   };
 
   /**

@@ -1,3 +1,4 @@
+import { usePostMeta, usePostMetaValue } from '@alleyinteractive/block-editor-tools';
 import apiFetch from '@wordpress/api-fetch';
 import { useDispatch, useSelect } from '@wordpress/data';
 import {
@@ -7,10 +8,6 @@ import {
 import { __ } from '@wordpress/i18n';
 import DOMPurify from 'dompurify';
 import React, { useCallback, useEffect, useState } from 'react';
-
-// Hooks.
-import usePostMeta from '../services/hooks/use-post-meta';
-import usePostMetaValue from '../services/hooks/use-post-meta-value';
 
 // Panels.
 import CoverImage from './panels/cover-image';
