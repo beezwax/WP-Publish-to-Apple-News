@@ -13,7 +13,7 @@ use Apple_News\Admin\Automation;
 /**
  * A class which is used to test the Apple_News\Admin\Automation class.
  */
-class Automation_Test extends Apple_News_Testcase {
+class Apple_News_Automation_Test extends Apple_News_Testcase {
 	/**
 	 * Tests settings migration from the old Sections paradigm to Automation.
 	 */
@@ -30,9 +30,9 @@ class Automation_Test extends Apple_News_Testcase {
 		update_option(
 			'apple_news_section_taxonomy_mappings',
 			[
-				'abcdef01-2345-6789-abcd-ef0123567890' => [1],
-				'bcdef012-3456-789a-bcde-f01235678901' => [2],
-				'cdef0123-4567-89ab-cdef-012356789012' => [3, 4],
+				'abcdef01-2345-6789-abcd-ef0123567890' => [ 1 ],
+				'bcdef012-3456-789a-bcde-f01235678901' => [ 2 ],
+				'cdef0123-4567-89ab-cdef-012356789012' => [ 3, 4 ],
 			]
 		);
 		update_option(
