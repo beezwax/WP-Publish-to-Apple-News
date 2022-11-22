@@ -1060,11 +1060,10 @@ class Apple_News {
 		}
 
 		// Update Automation settings.
-		if ( add_option( Apple_News\Admin\Automation::OPTION_KEY, $automation ) ) {
-			delete_option( 'apple_news_section_priority_mappings' );
-			delete_option( 'apple_news_section_taxonomy_mappings' );
-			delete_option( 'apple_news_section_theme_mappings' );
-		}
+		update_option( Apple_News\Admin\Automation::OPTION_KEY, $automation );
+		delete_option( 'apple_news_section_priority_mappings' );
+		delete_option( 'apple_news_section_taxonomy_mappings' );
+		delete_option( 'apple_news_section_theme_mappings' );
 	}
 
 	/**
