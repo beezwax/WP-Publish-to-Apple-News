@@ -74,11 +74,10 @@ class Automation {
 			self::PAGE_NAME,
 			self::OPTION_KEY,
 			[
-				'default'           => [],
-				'description'       => __( 'Automation settings for Publish to Apple News.', 'apple-news' ),
-				'sanitize_callback' => [ __CLASS__, 'sanitize_setting' ],
-				'show_in_rest'      => [ 'schema' => self::SCHEMA ],
-				'type'              => 'array',
+				'default'      => [],
+				'description'  => __( 'Automation settings for Publish to Apple News.', 'apple-news' ),
+				'show_in_rest' => [ 'schema' => self::SCHEMA ],
+				'type'         => 'array',
 			]
 		);
 	}
@@ -119,7 +118,7 @@ class Automation {
 
 		// Loop through each matched rule and apply the value to metadata.
 		foreach ( $metadata_rules as $rule ) {
-			$metadata[ $rule['field'] ] = $rule['value'];
+			$metadata[ $rule['field'] ] = 'true' === $rule['value'];
 		}
 
 		return $metadata;
@@ -232,16 +231,5 @@ class Automation {
 
 		// Render target div for React app.
 		echo '<div id="apple-news-options__page"></div>';
-	}
-
-	/**
-	 * Sanitizes the field value.
-	 *
-	 * @param array $value An array containing the unsanitized setting value.
-	 *
-	 * @return array An array containing the sanitized setting value.
-	 */
-	public static function sanitize_setting( $value ) {
-		return $value;
 	}
 }
