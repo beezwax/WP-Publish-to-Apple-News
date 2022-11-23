@@ -28,6 +28,35 @@ class Apple_News_Automation_Test extends Apple_News_Testcase {
 	}
 
 	/**
+	 * Tests automation of the slug value.
+	 */
+	public function test_component_slug_automation() {
+		$post_id = self::factory()->post->create();
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'slug' ] ] );
+
+		// Create an automation routine for the slug component.
+		$result  = wp_insert_term( 'Test Slug Category', 'category' );
+		$term_id = $result['term_id'];
+		update_option(
+			'apple_news_automation',
+			[
+				[
+					'field'    => 'slug.#text#',
+					'taxonomy' => 'category',
+					'term_id'  => $term_id,
+					'value'    => 'Test Slug Value',
+				],
+			]
+		);
+
+		// Set the taxonomy term to trigger the automation routine and ensure the slug value is set.
+		wp_set_post_terms( $post_id, [ $term_id ], 'category' );
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'heading', $json['components'][0]['role'] );
+		$this->assertEquals( 'Test Slug Value', $json['components'][0]['text'] );
+	}
+
+	/**
 	 * Ensures that named metadata is properly set via an automation process.
 	 *
 	 * @dataProvider data_metadata_automation

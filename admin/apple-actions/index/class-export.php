@@ -674,15 +674,21 @@ class Export extends Action {
 	 * Sets the active theme for this session if explicitly set or mapped.
 	 */
 	private function set_theme() {
-		$rules = Automation::get_automation_for_post( $this->id );
-		foreach ( $rules as $rule ) {
-			if ( 'theme' === ( $rule['field'] ?? '' ) ) {
-				$theme = new Theme();
-				$theme->set_name( $rule['value'] ?? '' );
-				if ( ! $theme->load() ) {
-					$theme->set_name( \Apple_Exporter\Theme::get_active_theme_name() );
-					$theme->load();
-				}
+		$active_theme = Theme::get_active_theme_name();
+
+		/**
+		 * Allows the active theme to be filtered during export on a per-post basis.
+		 *
+		 * @since 2.4.0
+		 *
+		 * @param string $theme_name The name of the theme to use.
+		 * @param int    $post_id    The ID of the post being exported.
+		 */
+		$theme_name = apply_filters( 'apple_news_active_theme', Theme::get_active_theme_name(), $this->id );
+		if ( ! empty( $theme_name ) && $active_theme !== $theme_name ) {
+			$theme = new Theme();
+			$theme->set_name( $theme_name );
+			if ( $theme->load() ) {
 				$theme->use_this();
 			}
 		}

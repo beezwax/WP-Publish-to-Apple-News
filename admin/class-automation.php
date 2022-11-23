@@ -63,7 +63,9 @@ class Automation {
 	public static function init(): void {
 		add_action( 'init', [ __CLASS__, 'action__init' ] );
 		add_action( 'admin_menu', [ __CLASS__, 'action__admin_menu' ], 100 );
+		add_filter( 'apple_news_active_theme', [ __CLASS__, 'filter__apple_news_active_theme' ], 0, 2 );
 		add_filter( 'apple_news_article_metadata', [ __CLASS__, 'filter__apple_news_article_metadata' ], 0, 2 );
+		add_filter( 'apple_news_exporter_slug', [ __CLASS__, 'filter__apple_news_exporter_slug' ], 0, 2 );
 	}
 
 	/**
@@ -98,6 +100,25 @@ class Automation {
 	}
 
 	/**
+	 * A callback function for the apple_news_active_theme filter.
+	 *
+	 * @param string $theme_name The name of the theme to use.
+	 * @param int    $post_id    The ID of the post being exported.
+	 *
+	 * @return string The filtered theme name.
+	 */
+	public static function filter__apple_news_active_theme( $theme_name, $post_id ) {
+		$rules = self::get_automation_for_post( $post_id );
+		foreach ( $rules as $rule ) {
+			if ( 'theme' === ( $rule['field'] ?? '' ) && ! empty( $rule['value'] ) ) {
+				return $rule['value'];
+			}
+		}
+
+		return $theme_name;
+	}
+
+	/**
 	 * A callback function for the apple_news_article_metadata filter.
 	 *
 	 * @param array $metadata An array of metadata keys and values.
@@ -124,6 +145,25 @@ class Automation {
 		}
 
 		return $metadata;
+	}
+
+	/**
+	 * A callback function for the apple_news_exporter_slug filter.
+	 *
+	 * @param string $slug    The slug to use.
+	 * @param int    $post_id The post ID associated with the slug.
+	 *
+	 * @return string The filtered slug value.
+	 */
+	public static function filter__apple_news_exporter_slug( $slug, $post_id ) {
+		$rules = self::get_automation_for_post( $post_id );
+		foreach ( $rules as $rule ) {
+			if ( 'slug.#text#' === ( $rule['field'] ?? '' ) ) {
+				return $rule['value'] ?? '';
+			}
+		}
+
+		return $slug;
 	}
 
 	/**
