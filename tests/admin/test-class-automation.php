@@ -28,6 +28,64 @@ class Apple_News_Automation_Test extends Apple_News_Testcase {
 	}
 
 	/**
+	 * Tests automation priority (where multiple rules match and the first should be used).
+	 */
+	public function test_automation_priority() {
+		$post_id = self::factory()->post->create();
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'slug' ] ] );
+
+		// Create an automation routine for the slug component.
+		$result_1  = wp_insert_term( 'Test Slug Category 1', 'category' );
+		$result_2  = wp_insert_term( 'Test Slug Category 2', 'category' );
+		$term_id_1 = $result_1['term_id'];
+		$term_id_2 = $result_2['term_id'];
+		update_option(
+			'apple_news_automation',
+			[
+				[
+					'field'    => 'slug.#text#',
+					'taxonomy' => 'category',
+					'term_id'  => $term_id_1,
+					'value'    => 'Top Priority',
+				],
+				[
+					'field'    => 'slug.#text#',
+					'taxonomy' => 'category',
+					'term_id'  => $term_id_2,
+					'value'    => 'Lower Priority',
+				],
+			]
+		);
+
+		// Set the taxonomy term to trigger the automation routine and ensure the slug value is set.
+		wp_set_post_terms( $post_id, [ $term_id_1, $term_id_2 ], 'category' );
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'heading', $json['components'][0]['role'] );
+		$this->assertEquals( 'Top Priority', $json['components'][0]['text'] );
+
+		// Invert the priorities and ensure it worked properly.
+		update_option(
+			'apple_news_automation',
+			[
+				[
+					'field'    => 'slug.#text#',
+					'taxonomy' => 'category',
+					'term_id'  => $term_id_2,
+					'value'    => 'Lower Priority',
+				],
+				[
+					'field'    => 'slug.#text#',
+					'taxonomy' => 'category',
+					'term_id'  => $term_id_1,
+					'value'    => 'Top Priority',
+				],
+			]
+		);
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'Lower Priority', $json['components'][0]['text'] );
+	}
+
+	/**
 	 * Tests automation of the slug value.
 	 */
 	public function test_component_slug_automation() {
@@ -208,6 +266,35 @@ class Apple_News_Automation_Test extends Apple_News_Testcase {
 		$this->assertFalse( get_option( 'apple_news_section_priority_mappings' ) );
 		$this->assertFalse( get_option( 'apple_news_section_taxonomy_mappings' ) );
 		$this->assertFalse( get_option( 'apple_news_section_theme_mappings' ) );
+	}
+
+	/**
+	 * Tests automation rules based on a different taxonomy (post_tag instead of category).
+	 */
+	public function test_taxonomy_change() {
+		$post_id = self::factory()->post->create();
+		$this->set_theme_settings( [ 'meta_component_order' => [ 'slug' ] ] );
+
+		// Create an automation routine for the slug component.
+		$result  = wp_insert_term( 'Test Slug Tag', 'post_tag' );
+		$term_id = $result['term_id'];
+		update_option(
+			'apple_news_automation',
+			[
+				[
+					'field'    => 'slug.#text#',
+					'taxonomy' => 'post_tag',
+					'term_id'  => $term_id,
+					'value'    => 'Test Slug Tag Value',
+				],
+			]
+		);
+
+		// Set the taxonomy term to trigger the automation routine and ensure the slug value is set.
+		wp_set_post_terms( $post_id, [ $term_id ], 'post_tag' );
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'heading', $json['components'][0]['role'] );
+		$this->assertEquals( 'Test Slug Tag Value', $json['components'][0]['text'] );
 	}
 
 	/**
