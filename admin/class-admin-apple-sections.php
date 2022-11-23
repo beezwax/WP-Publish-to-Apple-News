@@ -1,14 +1,15 @@
 <?php
 /**
- * Publish to Apple News Admin Screens: Admin_Apple_Sections class
+ * Publish to Apple News Admin: Admin_Apple_Sections class
  *
- * Contains a class which is used to manage the Sections admin settings page.
+ * Contains a class which is used to manage Sections.
  *
  * @package Apple_News
  * @since 1.2.2
  */
 
-use \Apple_Actions\Index\Section;
+use Apple_Actions\Index\Section;
+use Apple_News\Admin\Automation;
 
 /**
  * This class is in charge of handling the management of Apple News sections.
@@ -16,31 +17,6 @@ use \Apple_Actions\Index\Section;
  * @since 1.2.2
  */
 class Admin_Apple_Sections extends Apple_News {
-
-	/**
-	 * The option name for section/taxonomy mappings.
-	 */
-	const TAXONOMY_MAPPING_KEY = 'apple_news_section_taxonomy_mappings';
-
-	/**
-	 * Returns a taxonomy object representing the taxonomy to be mapped to sections.
-	 *
-	 * @access public
-	 * @return WP_Taxonomy|false A WP_Taxonomy object on success; false on failure.
-	 */
-	public static function get_mapping_taxonomy() {
-
-		/**
-		 * Allows for modification of the taxonomy used for section mapping.
-		 *
-		 * @since 1.2.2
-		 *
-		 * @param string $taxonomy The taxonomy slug to be filtered.
-		 */
-		$taxonomy = apply_filters( 'apple_news_section_taxonomy', 'category' );
-
-		return get_taxonomy( $taxonomy );
-	}
 
 	/**
 	 * Returns an array of section data without requiring an instance of the object.
@@ -90,9 +66,9 @@ class Admin_Apple_Sections extends Apple_News {
 			return $meta_value;
 		}
 
-		// Determine if there are taxonomy mappings configured.
-		$mappings = get_option( self::TAXONOMY_MAPPING_KEY );
-		if ( empty( $mappings ) ) {
+		// Determine if there are automation rules defined for this post.
+		$rules = Automation::get_automation_for_post( $post_id );
+		if ( empty( $rules ) ) {
 			return [];
 		}
 
@@ -119,27 +95,14 @@ class Admin_Apple_Sections extends Apple_News {
 			}
 		}
 
-		// Try to get configured taxonomy.
-		$taxonomy = self::get_mapping_taxonomy();
-		if ( empty( $taxonomy ) || is_wp_error( $taxonomy ) ) {
-			wp_die( esc_html__( 'Unable to get a valid mapping taxonomy.', 'apple-news' ) );
-		}
-
-		// Try to get terms for the post.
-		$terms = get_the_terms( $post_id, $taxonomy->name );
-		if ( empty( $terms ) || is_wp_error( $terms ) ) {
-			return [];
-		}
-
-		// Loop through the mappings to determine sections.
+		// Loop through automation rules to determine sections.
 		$post_sections = [];
-		$term_ids      = wp_list_pluck( $terms, 'term_id' );
-		$mappings      = get_option( self::TAXONOMY_MAPPING_KEY );
-		foreach ( $mappings as $section_id => $section_term_ids ) {
-			foreach ( $section_term_ids as $section_term_id ) {
-				if ( in_array( $section_term_id, $term_ids, true ) ) {
-					$post_sections[] = $sections[ $section_id ];
-				}
+		foreach ( $rules as $rule ) {
+			if ( 'links.sections' === ( $rule['field'] ?? '' )
+				&& ! empty( $rule['value'] )
+				&& ! empty( $sections[ $rule['value'] ] )
+			) {
+				$post_sections[] = $sections[ $rule['value'] ];
 			}
 		}
 

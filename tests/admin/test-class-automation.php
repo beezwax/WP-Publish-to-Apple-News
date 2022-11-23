@@ -60,6 +60,37 @@ class Apple_News_Automation_Test extends Apple_News_Testcase {
 	}
 
 	/**
+	 * Tests ability to automate setting a section.
+	 */
+	public function test_sections_automation() {
+		$post_id = self::factory()->post->create();
+
+		// Create an automation routine for section mapping.
+		$result  = wp_insert_term( 'Test Section Category', 'category' );
+		$term_id = $result['term_id'];
+		update_option(
+			'apple_news_automation',
+			[
+				[
+					'field'    => 'links.sections',
+					'taxonomy' => 'category',
+					'term_id'  => $term_id,
+					'value'    => 'abcdef01-2345-6789-abcd-ef012356789b',
+				],
+			]
+		);
+
+		// Set the taxonomy term to trigger the automation routine and ensure the flag is set.
+		wp_set_post_terms( $post_id, [ $term_id ], 'category' );
+		$request  = $this->get_request_for_post( $post_id );
+		$metadata = $this->get_metadata_from_request( $request );
+		$this->assertEquals(
+			[ 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789b' ],
+			$metadata['data']['links']['sections']
+		);
+	}
+
+	/**
 	 * Tests settings migration from the old Sections paradigm to Automation.
 	 */
 	public function test_settings_migration() {

@@ -5,6 +5,8 @@
  * @package Apple_News
  */
 
+use Apple_News\Admin\Automation;
+
 /**
  * This class provides a meta box to publish posts to Apple News from the edit screen.
  *
@@ -429,8 +431,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		}
 
 		// Determine whether to print the subheading for manual selection.
-		$mappings = get_option( Admin_Apple_Sections::TAXONOMY_MAPPING_KEY );
-		if ( ! empty( $mappings ) ) {
+		if ( ! empty( Automation::get_automation_rules() ) ) {
 			printf(
 				'<h4>%s</h4>',
 				esc_html__( 'Manual Section Selection', 'apple-news' )
@@ -461,20 +462,17 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 	public static function build_sections_override( $post_id ) {
 
 		// Determine if there are section/taxonomy mappings set.
-		$mappings = get_option( Admin_Apple_Sections::TAXONOMY_MAPPING_KEY );
-		if ( empty( $mappings ) ) {
+		if ( empty( Automation::get_automation_rules() ) ) {
 			return;
 		}
 
 		// Add checkbox to allow override of automatic section assignment.
-		$mapping_taxonomy = Admin_Apple_Sections::get_mapping_taxonomy();
-		$sections         = get_post_meta( $post_id, 'apple_news_sections', true );
+		$sections = get_post_meta( $post_id, 'apple_news_sections', true );
 		?>
 		<div class="section-override">
 			<label for="apple-news-sections-by-taxonomy">
 			<input id="apple-news-sections-by-taxonomy" name="apple_news_sections_by_taxonomy" type="checkbox" <?php checked( ! is_array( $sections ) ); ?> />
-				<?php esc_html_e( 'Assign sections by', 'apple-news' ); ?>
-				<?php echo esc_html( strtolower( $mapping_taxonomy->labels->singular_name ) ); ?>
+				<?php esc_html_e( 'Assign sections via Apple News Automation rules', 'apple-news' ); ?>
 			</label>
 		</div>
 		<?php
