@@ -26,7 +26,7 @@ function get_settings_response( $data ) { // phpcs:ignore VariableAnalysis.CodeA
 	$settings       = $admin_settings->fetch_settings();
 	return [
 		'adminUrl'            => esc_url_raw( admin_url( 'admin.php?page=apple-news-options' ) ),
-		'automaticAssignment' => ! empty( get_option( 'apple_news_section_taxonomy_mappings' ) ),
+		'automaticAssignment' => ! empty( get_option( 'apple_news_automation' ) ),
 		'apiAsync'            => 'yes' === $settings->api_async,
 		'apiAutosync'         => 'yes' === $settings->api_autosync,
 		'apiAutosyncDelete'   => 'yes' === $settings->api_autosync_delete,
