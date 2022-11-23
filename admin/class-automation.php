@@ -118,7 +118,9 @@ class Automation {
 
 		// Loop through each matched rule and apply the value to metadata.
 		foreach ( $metadata_rules as $rule ) {
-			$metadata[ $rule['field'] ] = 'true' === $rule['value'];
+			if ( false === strpos( $rule['field'], '.' ) ) {
+				$metadata[ $rule['field'] ] = 'true' === $rule['value'];
+			}
 		}
 
 		return $metadata;
