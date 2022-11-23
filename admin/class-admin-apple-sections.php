@@ -20,17 +20,7 @@ class Admin_Apple_Sections extends Apple_News {
 	/**
 	 * The option name for section/taxonomy mappings.
 	 */
-	const PRIORITY_MAPPING_KEY = 'apple_news_section_priority_mappings';
-
-	/**
-	 * The option name for section/taxonomy mappings.
-	 */
 	const TAXONOMY_MAPPING_KEY = 'apple_news_section_taxonomy_mappings';
-
-	/**
-	 * The option name for section/theme mappings.
-	 */
-	const THEME_MAPPING_KEY = 'apple_news_section_theme_mappings';
 
 	/**
 	 * Returns a taxonomy object representing the taxonomy to be mapped to sections.
@@ -171,23 +161,5 @@ class Admin_Apple_Sections extends Apple_News {
 		 * @param string $format        The section format (e.g., 'url').
 		 */
 		return apply_filters( 'apple_news_get_sections_for_post', $post_sections, $post_id, $format );
-	}
-
-	/**
-	 * Given a section ID, check for a custom theme mapping.
-	 *
-	 * @param string $section_id The Apple News section ID.
-	 * @access public
-	 * @return string The name of the theme, or null if not found.
-	 */
-	public static function get_theme_for_section( $section_id ) {
-
-		// Try to get the theme mapping for this section ID.
-		$theme_mappings = get_option( self::THEME_MAPPING_KEY );
-		if ( ! isset( $theme_mappings[ $section_id ] ) ) {
-			return null;
-		}
-
-		return $theme_mappings[ $section_id ];
 	}
 }

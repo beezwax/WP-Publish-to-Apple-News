@@ -149,4 +149,35 @@ class Apple_News_Automation_Test extends Apple_News_Testcase {
 		$this->assertFalse( get_option( 'apple_news_section_taxonomy_mappings' ) );
 		$this->assertFalse( get_option( 'apple_news_section_theme_mappings' ) );
 	}
+
+	/**
+	 * Tests automation of theme selection by taxonomy.
+	 */
+	public function test_theme_automation() {
+		// Load some themes so we have more than one to choose from.
+		$this->load_example_theme( 'colorful' );
+		$this->load_example_theme( 'default' );
+
+		$post_id = self::factory()->post->create();
+
+		// Create an automation routine for selecting the theme based on category.
+		$result  = wp_insert_term( 'Entertainment', 'category' );
+		$term_id = $result['term_id'];
+		update_option(
+			'apple_news_automation',
+			[
+				[
+					'field'    => 'theme',
+					'taxonomy' => 'category',
+					'term_id'  => $term_id,
+					'value'    => 'Colorful',
+				],
+			]
+		);
+
+		// Set the taxonomy term to trigger the automation routine and ensure the correct theme is chosen.
+		wp_set_post_terms( $post_id, [ $term_id ], 'category' );
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( '#000000', $json['componentTextStyles']['dropcapBodyStyle']['textColor'] );
+	}
 }
