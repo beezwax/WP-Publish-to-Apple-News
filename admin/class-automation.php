@@ -10,6 +10,8 @@
 
 namespace Apple_News\Admin;
 
+use Apple_News;
+
 /**
  * This class is in charge of handling the management of Apple News automation.
  *
@@ -18,9 +20,14 @@ namespace Apple_News\Admin;
 class Automation {
 
 	/**
-	 * The field name for the automation settings screen.
+	 * The option name for automation.
 	 */
-	const FIELD_NAME = 'apple-news-automation-settings-field';
+	const OPTION_KEY = 'apple_news_automation';
+
+	/**
+	 * The page name for the automation settings screen.
+	 */
+	const PAGE_NAME = 'apple-news-automation';
 
 	/**
 	 * The schema for automation rules.
@@ -51,22 +58,14 @@ class Automation {
 	];
 
 	/**
-	 * The option name for automation.
-	 */
-	const OPTION_KEY = 'apple_news_automation';
-
-	/**
-	 * The page name for the automation settings screen.
-	 */
-	const PAGE_NAME = 'apple-news-automation';
-
-	/**
 	 * Initialize functionality of this class by registering hooks.
 	 */
 	public static function init(): void {
 		add_action( 'init', [ __CLASS__, 'action__init' ] );
-		add_action( 'admin_menu', [ __CLASS__, 'action__admin_menu' ] );
+		add_action( 'admin_menu', [ __CLASS__, 'action__admin_menu' ], 100 );
+		add_filter( 'apple_news_active_theme', [ __CLASS__, 'filter__apple_news_active_theme' ], 0, 2 );
 		add_filter( 'apple_news_article_metadata', [ __CLASS__, 'filter__apple_news_article_metadata' ], 0, 2 );
+		add_filter( 'apple_news_exporter_slug', [ __CLASS__, 'filter__apple_news_exporter_slug' ], 0, 2 );
 	}
 
 	/**
@@ -77,11 +76,10 @@ class Automation {
 			self::PAGE_NAME,
 			self::OPTION_KEY,
 			[
-				'default'           => [],
-				'description'       => __( 'Automation settings for Publish to Apple News.', 'apple-news' ),
-				'sanitize_callback' => [ __CLASS__, 'sanitize_setting' ],
-				'show_in_rest'      => [ 'schema' => self::SCHEMA ],
-				'type'              => 'array',
+				'default'      => [],
+				'description'  => __( 'Automation settings for Publish to Apple News.', 'apple-news' ),
+				'show_in_rest' => [ 'schema' => self::SCHEMA ],
+				'type'         => 'array',
 			]
 		);
 	}
@@ -99,6 +97,25 @@ class Automation {
 			self::PAGE_NAME,
 			[ __CLASS__, 'render_submenu_page' ]
 		);
+	}
+
+	/**
+	 * A callback function for the apple_news_active_theme filter.
+	 *
+	 * @param string $theme_name The name of the theme to use.
+	 * @param int    $post_id    The ID of the post being exported.
+	 *
+	 * @return string The filtered theme name.
+	 */
+	public static function filter__apple_news_active_theme( $theme_name, $post_id ) {
+		$rules = self::get_automation_for_post( $post_id );
+		foreach ( $rules as $rule ) {
+			if ( 'theme' === ( $rule['field'] ?? '' ) && ! empty( $rule['value'] ) ) {
+				return $rule['value'];
+			}
+		}
+
+		return $theme_name;
 	}
 
 	/**
@@ -122,10 +139,31 @@ class Automation {
 
 		// Loop through each matched rule and apply the value to metadata.
 		foreach ( $metadata_rules as $rule ) {
-			$metadata[ $rule['field'] ] = $rule['value'];
+			if ( false === strpos( $rule['field'], '.' ) ) {
+				$metadata[ $rule['field'] ] = 'true' === $rule['value'];
+			}
 		}
 
 		return $metadata;
+	}
+
+	/**
+	 * A callback function for the apple_news_exporter_slug filter.
+	 *
+	 * @param string $slug    The slug to use.
+	 * @param int    $post_id The post ID associated with the slug.
+	 *
+	 * @return string The filtered slug value.
+	 */
+	public static function filter__apple_news_exporter_slug( $slug, $post_id ) {
+		$rules = self::get_automation_for_post( $post_id );
+		foreach ( $rules as $rule ) {
+			if ( 'slug.#text#' === ( $rule['field'] ?? '' ) ) {
+				return $rule['value'] ?? '';
+			}
+		}
+
+		return $slug;
 	}
 
 	/**
@@ -214,38 +252,26 @@ class Automation {
 	public static function render_submenu_page(): void {
 		// Enqueue page specific scripts.
 		wp_enqueue_script(
-			'apple-news-plugin-admin-settings',
+			'apple-news-admin-settings',
 			plugins_url( 'build/adminSettings.js', __DIR__ ),
 			[ 'wp-block-editor', 'wp-api-fetch', 'wp-api', 'wp-i18n', 'wp-components', 'wp-element', 'wp-tinymce' ],
-			[],
+			Apple_News::$version,
 			true
 		);
 		wp_enqueue_style( 'wp-edit-blocks' );
 		wp_localize_script(
-			'apple-news-plugin-admin-settings',
+			'apple-news-admin-settings',
 			'AppleNewsAutomationConfig',
 			[
-				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
 				'fields'     => self::get_fields(),
 				'sections'   => \Admin_Apple_Sections::get_sections(),
+				'taxonomies' => get_taxonomies( [ 'public' => 'true' ] ),
 				'themes'     => \Apple_Exporter\Theme::get_registry(),
 			]
 		);
 		add_filter( 'should_load_block_editor_scripts_and_styles', '__return_true' );
-		wp_add_iframed_editor_assets_html();
 
 		// Render target div for React app.
 		echo '<div id="apple-news-options__page"></div>';
-	}
-
-	/**
-	 * Sanitizes the field value.
-	 *
-	 * @param array $value An array containing the unsanitized setting value.
-	 *
-	 * @return array An array containing the sanitized setting value.
-	 */
-	public static function sanitize_setting( $value ) {
-		return $value;
 	}
 }

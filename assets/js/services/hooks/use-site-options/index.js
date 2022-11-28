@@ -63,11 +63,17 @@ const useSiteOptions = () => {
     setSaving(true);
     notices.forEach((id) => removeNotice(id));
     setNotices([]);
+
+    // Enforce some defaults prior to save.
+    // Request will 500 when site_logo === null.
+    const finalSettings = { ...settings };
+    finalSettings.site_logo = finalSettings.site_logo ?? 0;
+
     try {
       const response = await apiFetch({
         path: '/wp/v2/settings',
         method: 'POST',
-        data: settings,
+        data: finalSettings,
       });
       setSettings(response || {});
       await success(__('Settings Saved', 'bassmaster-plugin'));

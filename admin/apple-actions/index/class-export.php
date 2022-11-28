@@ -12,13 +12,14 @@ require_once plugin_dir_path( __FILE__ ) . '../class-action.php';
 require_once plugin_dir_path( __FILE__ ) . '../class-action-exception.php';
 require_once plugin_dir_path( __FILE__ ) . '../../../includes/apple-exporter/autoload.php';
 
-use Apple_Actions\Action as Action;
-use Apple_Exporter\Exporter as Exporter;
-use Apple_Exporter\Exporter_Content as Exporter_Content;
-use Apple_Exporter\Exporter_Content_Settings as Exporter_Content_Settings;
-use Apple_Exporter\Third_Party\Jetpack_Tiled_Gallery as Jetpack_Tiled_Gallery;
-use Admin_Apple_Sections;
+use Apple_Actions\Action;
+use Apple_Exporter\Exporter;
+use Apple_Exporter\Exporter_Content;
+use Apple_Exporter\Exporter_Content_Settings;
+use Apple_Exporter\Theme;
+use Apple_Exporter\Third_Party\Jetpack_Tiled_Gallery;
 use Apple_News;
+use Apple_News\Admin\Automation;
 
 /**
  * A class to handle an export request from the admin.
@@ -54,8 +55,8 @@ class Export extends Action {
 	 */
 	public function __construct( $settings, $id = null, $sections = null ) {
 		parent::__construct( $settings );
-		$this->set_theme( $sections );
 		$this->id = $id;
+		$this->set_theme();
 		Jetpack_Tiled_Gallery::instance();
 	}
 
@@ -671,88 +672,25 @@ class Export extends Action {
 
 	/**
 	 * Sets the active theme for this session if explicitly set or mapped.
-	 *
-	 * @since 1.2.3
-	 *
-	 * @param array $sections Explicit sections mapped for this post.
-	 *
-	 * @access private
 	 */
-	private function set_theme( $sections ) {
+	private function set_theme() {
+		$active_theme = Theme::get_active_theme_name();
 
-		// If there are no sections, bail.
-		if ( empty( $sections ) || ! is_array( $sections ) ) {
-			return;
-		}
-
-		/*
-		 * Get a list of priorities from the options table. If no priorities have
-		 * been set, then this will return an empty array, and the priority of
-		 * each section will default to 1.
+		/**
+		 * Allows the active theme to be filtered during export on a per-post basis.
+		 *
+		 * @since 2.4.0
+		 *
+		 * @param string $theme_name The name of the theme to use.
+		 * @param int    $post_id    The ID of the post being exported.
 		 */
-		$priorities = get_option(
-			Admin_Apple_Sections::PRIORITY_MAPPING_KEY,
-			[]
-		);
-
-		/*
-		 * Priorities are stored as section_id => priority, so we can just run
-		 * arsort here to preserve keys and sort by values in reverse order, so
-		 * sections with highest priority are sorted to the top.
-		 */
-		arsort( $priorities );
-
-		// Default to the first section in the list.
-		$assigned_section = basename( $sections[0] );
-
-		// Loop over the priority map and find the priority of the default section.
-		$section_priority = 1;
-		foreach ( $priorities as $section_id => $priority ) {
-			if ( $assigned_section === $section_id ) {
-				$section_priority = $priority;
-				break;
+		$theme_name = apply_filters( 'apple_news_active_theme', Theme::get_active_theme_name(), $this->id );
+		if ( ! empty( $theme_name ) && $active_theme !== $theme_name ) {
+			$theme = new Theme();
+			$theme->set_name( $theme_name );
+			if ( $theme->load() ) {
+				$theme->use_this();
 			}
 		}
-
-		/*
-		 * Sections are stored as URLs, but we really need the section ID, which is
-		 * the last segment of the URL. Loop over the section list and extract the
-		 * last segment using basename() into a new array that we can use for easy
-		 * comparison.
-		 */
-		$section_keys = array_map( 'basename', $sections );
-
-		/*
-		 * Loop over the priority list and try to find a section that is assigned
-		 * to the post that has a higher priority than the default section. If
-		 * found, swap the active section.
-		 */
-		foreach ( $priorities as $section_id => $priority ) {
-			if ( in_array( $section_id, $section_keys, true )
-				&& $priority >= $section_priority
-			) {
-				$assigned_section = $section_id;
-				break;
-			}
-		}
-
-		// Check if there is a custom theme mapping.
-		$theme_name = Admin_Apple_Sections::get_theme_for_section( $assigned_section );
-		if ( empty( $theme_name ) ) {
-			return;
-		}
-
-		// Try to get theme settings.
-		$theme = new \Apple_Exporter\Theme();
-		$theme->set_name( $theme_name );
-		if ( ! $theme->load() ) {
-
-			// Fall back to the active theme.
-			$theme->set_name( \Apple_Exporter\Theme::get_active_theme_name() );
-			$theme->load();
-		}
-
-		// Set theme as active for this session.
-		$theme->use_this();
 	}
 }

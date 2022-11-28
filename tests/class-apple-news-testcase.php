@@ -144,7 +144,7 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		// Ensure HTML5 image captions are supported.
 		add_theme_support( 'html5', [ 'caption' ] );
 
-		// Create some dummy content and save it for future use.
+		// Create some example content and save it for future use.
 		$this->content = new Apple_Exporter\Exporter_Content(
 			1,
 			'My Title',
@@ -187,6 +187,39 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 
 		// Create a workspace for future use. Default it to use post ID 1, but this can be overridden at the test level.
 		$this->set_workspace_post_id( 1 );
+
+		// Pre-cache a transient for sections using sample data to bypass API call.
+		set_transient(
+			'apple_news_sections',
+			[
+				(object) [
+					'createdAt'  => '2017-01-01T00:00:00Z',
+					'id'         => 'abcdef01-2345-6789-abcd-ef012356789a',
+					'isDefault'  => true,
+					'links'      => (object) [
+						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
+						'self'    => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789a',
+					],
+					'modifiedAt' => '2017-01-01T00:00:00Z',
+					'name'       => 'Main',
+					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUv',
+					'type'       => 'section',
+				],
+				(object) [
+					'createdAt'  => '2017-01-01T00:00:00Z',
+					'id'         => 'abcdef01-2345-6789-abcd-ef012356789b',
+					'isDefault'  => false,
+					'links'      => (object) [
+						'channel' => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef0123567890',
+						'self'    => 'https://news-api.apple.com/channels/abcdef01-2345-6789-abcd-ef012356789b',
+					],
+					'modifiedAt' => '2017-01-01T00:00:00Z',
+					'name'       => 'Secondary Section',
+					'shareUrl'   => 'https://apple.news/AbCdEfGhIj-KlMnOpQrStUw',
+					'type'       => 'section',
+				],
+			]
+		);
 	}
 
 	/**

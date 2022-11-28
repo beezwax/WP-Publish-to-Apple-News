@@ -1,10 +1,8 @@
+import { ImagePicker } from '@alleyinteractive/block-editor-tools';
 import { BaseControl, PanelBody, TextareaControl } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import PropTypes from 'prop-types';
 import React from 'react';
-
-// Components.
-import ImagePicker from '../../components/image-picker';
 
 const CoverImage = ({
   coverImageCaption,

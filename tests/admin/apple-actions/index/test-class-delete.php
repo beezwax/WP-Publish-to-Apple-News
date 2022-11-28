@@ -25,7 +25,7 @@ class Apple_News_Admin_Action_Index_Delete_Test extends Apple_News_Testcase {
 		$api->delete_article( $remote_id )
 			->shouldBeCalled();
 
-		// Create post with dummy remote id.
+		// Create post with example remote id.
 		$post_id = $this->factory->post->create();
 		update_post_meta( $post_id, 'apple_news_api_id', $remote_id );
 
