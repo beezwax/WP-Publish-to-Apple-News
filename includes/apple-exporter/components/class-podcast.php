@@ -3,11 +3,11 @@
  * Publish to Apple News Includes: Apple_Exporter\Components\Podcast class
  *
  * Contains a class which is used to transform Podcast embeds into Apple News format.
- * Documentation about apple podcast players can be found here: https://podcasters.apple.com/support/889-apple-podcasts-embed-player.
+ * Documentation for Apple Podcast players can be found here: https://podcasters.apple.com/support/889-apple-podcasts-embed-player.
  *
  * @package Apple_News
  * @subpackage Apple_Exporter
- * @since 0.2.0
+ * @since 2.4.0
  */
 
 namespace Apple_Exporter\Components;
@@ -15,7 +15,7 @@ namespace Apple_Exporter\Components;
 /**
  * A class to transform a Podcast embed into an Apple News Podcast component.
  *
- * @since 0.2.0
+ * @since 2.4.0
  */
 class Podcast extends Component {
 
@@ -23,7 +23,7 @@ class Podcast extends Component {
 	 * Look for node matches for this component.
 	 *
 	 * @param \DOMElement $node The node to examine for matches.
-	 * @access public
+	 * 
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
@@ -37,8 +37,6 @@ class Podcast extends Component {
 
 	/**
 	 * Register all specs for the component.
-	 *
-	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
@@ -55,7 +53,6 @@ class Podcast extends Component {
 	 * Build the component.
 	 *
 	 * @param string $html The HTML to parse into text for processing.
-	 * @access protected
 	 */
 	protected function build( $html ) {
 		// Try to get podcast URL.
@@ -79,7 +76,6 @@ class Podcast extends Component {
 	 *
 	 * @param string $node The node to parse for the Podcast URL.
 	 *
-	 * @access private
 	 * @return string|false The Podcast URL on success, or false on failure.
 	 */
 	private static function get_podcast_url( $node ) {
