@@ -113,7 +113,7 @@ class Podcast extends Component {
 			'%1$s://%2$s%3$s',
 			$url_comps['scheme'],
 			$url_comps['host'],
-			$url_comps['path'],
+			$url_comps['path']
 		);
 
 		// Parse params from url query component.
@@ -134,7 +134,7 @@ class Podcast extends Component {
 			$url = sprintf(
 				'%1$s?%2$s',
 				$url,
-				http_build_query( $params ),
+				http_build_query( $params )
 			);
 		}
 
