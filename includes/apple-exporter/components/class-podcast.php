@@ -99,7 +99,7 @@ class Podcast extends Component {
 		}
 
 		// Remove iframe specific `embed.` prefix on podcast url.
-		$url = preg_replace( '/(embed.)(podcasts\.apple\.com)/', '$2', $url );
+		$url = str_replace( 'embed.podcasts.apple.com', 'podcasts.apple.com', $url );
 		
 		// Parse url into component parts.
 		$url_comps = parse_url( $url );
@@ -119,19 +119,9 @@ class Podcast extends Component {
 
 		// `?i=` query param contains podcast episode info.
 		// If it exists, we need to retain it.
-		if ( $params && array_key_exists( 'i', $params ) ) {
-			// Remove all query params that are not 'i'.
-			foreach ( $params as $name => $value ) {
-				if ( 'i' !== $name ) {
-						unset( $params[ $name ] );
-				}
-			}
+		if ( $params && ! empty( $params['i'] ) ) {
 			// Append 'i' pararm to end of url.
-			$url = sprintf(
-				'%1$s?%2$s',
-				$url,
-				http_build_query( $params )
-			);
+			$url .= '?' . http_build_query( [ 'i' => $params['i'] ] );
 		}
 
 		return $url;
