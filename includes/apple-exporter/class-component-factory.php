@@ -93,6 +93,7 @@ class Component_Factory {
 		self::register_component( 'facebook', '\\Apple_Exporter\\Components\\Facebook' );
 		self::register_component( 'instagram', '\\Apple_Exporter\\Components\\Instagram' );
 		self::register_component( 'table', '\\Apple_Exporter\\Components\\Table' );
+		self::register_component( 'podcast', '\\Apple_Exporter\\Components\\Podcast' );
 		self::register_component( 'iframe', '\\Apple_Exporter\\Components\\Embed_Web_Video' );
 		self::register_component( 'embed', '\\Apple_Exporter\\Components\\Embed_Generic' );
 		self::register_component( 'img', '\\Apple_Exporter\\Components\\Image' );
