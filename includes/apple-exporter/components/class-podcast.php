@@ -74,9 +74,9 @@ class Podcast extends Component {
 	/**
 	 * A method to get an Podcast URL from provided node.
 	 *
-	 * @param string $node The node to parse for the Podcast URL.
+	 * @param \DOMElement|string $node The node to parse for the Podcast URL.
 	 *
-	 * @return string|false The Podcast URL on success, or false on failure.
+	 * @return string|null The Podcast URL on success, or false on failure.
 	 */
 	private static function get_podcast_url( $node ) {
 		if ( 'string' === gettype( $node ) ) {
