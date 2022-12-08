@@ -265,6 +265,10 @@ class Request {
 				$message = __( 'Unable to fetch information for the specified article. Was it deleted?', 'apple-news' );
 			}
 
+			if ( 'DUPLICATE_ARTICLE_FOUND' === $error->code ) {
+				$message .= '. Original UUID: ' . $error->value;
+			}
+
 			throw new Request_Exception( $message );
 		}
 
