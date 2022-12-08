@@ -146,6 +146,8 @@ class Apple_News_Metadata_Test extends Apple_News_Testcase {
 		$result   = $this->get_json_for_post( $post_id );
 		$metadata = $result['metadata'];
 
+		// Assertions.
+		$this->assertEquals( $poster, $metadata['thumbnailURL'] );
 		$this->assertArrayNotHasKey( 'videoURL', $metadata );
 	}
 }
