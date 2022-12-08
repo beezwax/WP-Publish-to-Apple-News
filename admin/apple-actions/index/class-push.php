@@ -346,6 +346,10 @@ class Push extends API_Action {
 		// Get the isSponsored setting.
 		$is_sponsored                = (bool) get_post_meta( $this->id, 'apple_news_is_sponsored', true );
 		$meta['data']['isSponsored'] = $is_sponsored;
+		
+		// Get the videoURL suppression setting.
+		// $suppressVideoURL                 = (bool) get_post_meta( $this->id, 'apple_news_suppress_video_url', true );
+		// $meta['data']['suppressVideoURL'] = $suppressVideoURL;
 
 		// Get the maturity rating setting.
 		$maturity_rating = get_post_meta( $this->id, 'apple_news_maturity_rating', true );
