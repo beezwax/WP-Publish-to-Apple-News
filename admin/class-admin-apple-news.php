@@ -165,6 +165,10 @@ class Admin_Apple_News extends Apple_News {
 						'prepare_callback' => 'apple_news_json_encode',
 					],
 				],
+				'apple_news_suppress_video_url'       => [
+					'default' => false,
+					'type'    => 'boolean',
+				],
 			];
 
 			// Loop over postmeta fields and register each.
