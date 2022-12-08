@@ -102,7 +102,7 @@ class Metadata extends Builder {
 						);
 
 						if ( ! get_post_meta( $this->content_id(), 'apple_news_suppress_video_url', true ) ) {
-							$meta['videoURL']     = esc_url_raw( $url );
+							$meta['videoURL'] = esc_url_raw( $url );
 						}
 
 						break;

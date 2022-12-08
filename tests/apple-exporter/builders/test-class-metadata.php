@@ -136,7 +136,7 @@ class Apple_News_Metadata_Test extends Apple_News_Testcase {
 	 */
 	public function test_suppress_video_url( $poster, $video ) {
 		// Setup.
-		$post_id  = self::factory()->post->create(
+		$post_id = self::factory()->post->create(
 			[
 				'post_content' => '<figure class="wp-block-video"><video controls="" poster="' . $poster . '" src="' . $video . '"></video></figure>',
 			]
