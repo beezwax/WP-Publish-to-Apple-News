@@ -100,6 +100,10 @@
 						</select>
 					</label>
 				</div>
+				<div>
+					<span><?php echo esc_html( $layout_columns ); ?></span>
+					<span><?php echo esc_html( $layout_width ); ?></span>
+				</div>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $specs ) ) : ?>
