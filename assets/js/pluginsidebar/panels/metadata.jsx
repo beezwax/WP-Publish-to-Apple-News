@@ -27,6 +27,8 @@ const Metadata = ({
   onChangeIsPreview,
   onChangeIsSponsored,
   onChangeMetadata,
+  onChangeSuppressVideoURL,
+  suppressVideoURL,
 }) => (
   <PanelBody
     initialOpen={false}
@@ -55,6 +57,12 @@ const Metadata = ({
       help={__('Check this to indicate this article is sponsored content.', 'apple-news')}
       label={__('Sponsored Article', 'apple-news')}
       onChange={onChangeIsSponsored}
+    />
+    <CheckboxControl
+      checked={suppressVideoURL}
+      help={__('Check this to prevent video thumbnails for this article.', 'apple-news')}
+      label={__('Do not set videoURL metadata for this article', 'apple-news')}
+      onChange={onChangeSuppressVideoURL}
     />
     <h3>{__('Custom Metadata', 'apple-news')}</h3>
     {metadata.map(({ key, type, value }, index) => (
@@ -124,6 +132,8 @@ Metadata.propTypes = {
   onChangeIsPreview: PropTypes.func.isRequired,
   onChangeIsSponsored: PropTypes.func.isRequired,
   onChangeMetadata: PropTypes.func.isRequired,
+  onChangeSuppressVideoURL: PropTypes.func.isRequired,
+  suppressVideoURL: PropTypes.bool.isRequired,
 };
 
 export default Metadata;
