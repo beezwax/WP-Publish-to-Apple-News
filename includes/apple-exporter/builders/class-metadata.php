@@ -100,7 +100,10 @@ class Metadata extends Builder {
 						$meta['thumbnailURL'] = $this->maybe_bundle_source(
 							$matches[1][ $i ]
 						);
-						$meta['videoURL']     = esc_url_raw( $url );
+
+						if ( ! get_post_meta( $this->content_id(), 'apple_news_suppress_video_url', true ) ) {
+							$meta['videoURL'] = esc_url_raw( $url );
+						}
 
 						break;
 					}

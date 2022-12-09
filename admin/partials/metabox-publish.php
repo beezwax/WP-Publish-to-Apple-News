@@ -67,6 +67,11 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 			<strong><?php esc_html_e( 'Sponsored Article', 'apple-news' ); ?></strong>
 		</label>
 		<p><?php esc_html_e( 'Check this to indicate this article is sponsored content.', 'apple-news' ); ?></p>
+		<label for="apple-news-suppress-video-url">
+			<input id="apple-news-suppress-video-url" name="apple_news_suppress_video_url" type="checkbox" value="1" <?php checked( $suppress_video_url ); ?>>
+			<strong><?php esc_html_e( 'Do not set videoURL metadata for this article', 'apple-news' ); ?></strong>
+		</label>
+		<p><?php esc_html_e( 'Check this to prevent video thumbnails for this article.', 'apple-news' ); ?></p>
 		<h4><?php esc_html_e( 'Custom Metadata', 'apple-news' ); ?></h4>
 		<?php Admin_Apple_Meta_Boxes::build_metadata( $post->ID ); ?>
 		<button class="button-primary apple-news-metadata-add">
