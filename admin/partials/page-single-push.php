@@ -81,15 +81,6 @@
 				</td>
 			</tr>
 			<tr>
-				<th scope="row"><?php esc_html_e( 'Suppress Video Thumbnail?', 'apple-news' ); ?></th>
-				<td>
-					<label for="apple-news-suppress-video-url">
-						<input id="apple-news-suppress-video-url" name="apple_news_suppress_video_url" type="checkbox" value="1" <?php checked( $post_meta['apple_news_suppress_video_url'][0] ); ?>>
-						<?php esc_html_e( 'Check this to prevent video thumbnails for this article.', 'apple-news' ); ?>
-					</label>
-				</td>
-			</tr>
-			<tr>
 				<th scope="row"><?php esc_html_e( 'Maturity Rating', 'apple-news' ); ?></th>
 				<td>
 					<select id="apple-news-maturity-rating" name="apple_news_maturity_rating">
