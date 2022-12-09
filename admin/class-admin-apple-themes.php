@@ -160,6 +160,26 @@ class Admin_Apple_Themes extends Apple_News {
 	}
 
 	/**
+	 * Return a Theme object loaded with db values based on the theme name string.
+	 *
+	 * @param string                 $theme_str The name of theme.
+	 * @return \Apple_Exporter\Theme @theme_object A Theme object loaded with db config.
+	 */
+	public static function get_loaded_theme( $theme_str ) {
+		// Make sure theme exists in registry before continuing.
+		$registry = \Apple_Exporter\Theme::get_registry();
+		if ( empty( $registry ) || ! in_array( $theme_str, $registry ) ) {
+			return;
+		}
+
+		$theme_object = new \Apple_Exporter\Theme();
+		$theme_object->set_name( $theme_str );
+		$theme_object->load();
+
+		return $theme_object;
+	}
+
+	/**
 	 * Constructor. Sets page names dynamically and registers actions.
 	 *
 	 * @access public
