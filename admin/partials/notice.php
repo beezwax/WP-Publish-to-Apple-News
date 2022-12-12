@@ -10,7 +10,7 @@
  * @package Apple_News
  */
 
-$apple_allowed_html = [
+$apple_notice_html = [
 	'a'  => [ 'href' => [] ],
 	'br' => [],
 ]
@@ -21,5 +21,5 @@ $apple_allowed_html = [
 	data-nonce="<?php echo esc_attr( wp_create_nonce( 'apple_news_dismiss_notice' ) ); ?>"
 	data-type="<?php echo esc_attr( $type ); ?>"
 >
-	<p><strong><?php echo wp_kses( $message, $apple_allowed_html ); ?></strong></p>
+	<p><strong><?php echo wp_kses( $message, $apple_notice_html ); ?></strong></p>
 </div>
