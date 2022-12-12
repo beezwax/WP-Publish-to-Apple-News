@@ -153,8 +153,13 @@ class Admin_Apple_Notice {
 			$user_id = get_current_user_id();
 		}
 
+		$allowed_html = [
+			'a'  => [ 'href' => [] ],
+			'br' => [],
+		];
+
 		// Sanitize values.
-		$message = wp_kses( $message, [ 'a' => [ 'href' => [] ], 'br' => [], ] );
+		$message = wp_kses( $message, $allowed_html );
 		$type    = sanitize_text_field( $type );
 
 		// Pull usermeta and see if the message already exists.
