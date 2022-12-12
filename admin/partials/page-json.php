@@ -86,6 +86,14 @@
 				</label>
 			</div>
 			<?php if ( ! empty( $selected_theme ) ) : ?>
+				<div class="theme-value-wrapper">
+					<div class="theme-value-row top">
+						<?php esc_html_e( 'Theme Columns', 'apple-news' ); ?>: <span><?php echo esc_html( $layout_columns ); ?></span>
+					</div>
+					<div class="theme-value-row">
+						<?php esc_html_e( 'Layout Width', 'apple-news' ); ?>: <span><?php echo esc_html( $layout_width ); ?></span>
+					</div>
+				</div>
 				<div>
 					<label for="apple_news_theme">
 						<?php esc_html_e( 'Component', 'apple-news' ); ?>:
@@ -99,10 +107,6 @@
 							<?php endforeach; ?>
 						</select>
 					</label>
-				</div>
-				<div>
-					<span><?php echo esc_html( $layout_columns ); ?></span>
-					<span><?php echo esc_html( $layout_width ); ?></span>
 				</div>
 			<?php endif; ?>
 
