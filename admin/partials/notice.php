@@ -17,5 +17,5 @@
 	data-nonce="<?php echo esc_attr( wp_create_nonce( 'apple_news_dismiss_notice' ) ); ?>"
 	data-type="<?php echo esc_attr( $type ); ?>"
 >
-	<p><strong><?php echo wp_kses_post( $message ); ?></strong></p>
+	<p><strong><?php echo wp_kses( $message, [ 'a' => [ 'href' => [] ], 'br' => [], ] ); ?></strong></p>
 </div>
