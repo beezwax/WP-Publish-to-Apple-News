@@ -266,7 +266,7 @@ class Request {
 			}
 
 			if ( 'DUPLICATE_ARTICLE_FOUND' === $error->code ) {
-				$message .= '. Original UUID: ' . $error->value;
+				$message .= '.<br>Original UUID: ' . $error->value;
 			}
 
 			throw new Request_Exception( $message );
