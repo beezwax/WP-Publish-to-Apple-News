@@ -125,4 +125,29 @@ class Apple_News_Metadata_Test extends Apple_News_Testcase {
 		$this->assertEquals( $poster, $metadata['thumbnailURL'] );
 		$this->assertEquals( $video, $metadata['videoURL'] );
 	}
+
+	/**
+	 * Ensures videoURL is suppressed when corresponding meta is set.
+	 *
+	 * @param string $poster The URL to the poster image for the video.
+	 * @param string $video  The URL to the video.
+	 *
+	 * @dataProvider data_video
+	 */
+	public function test_suppress_video_url( $poster, $video ) {
+		// Setup.
+		$post_id = self::factory()->post->create(
+			[
+				'post_content' => '<figure class="wp-block-video"><video controls="" poster="' . $poster . '" src="' . $video . '"></video></figure>',
+			]
+		);
+		// Toggle suppression meta value.
+		update_post_meta( $post_id, 'apple_news_suppress_video_url', true );
+		$result   = $this->get_json_for_post( $post_id );
+		$metadata = $result['metadata'];
+
+		// Assertions.
+		$this->assertEquals( $poster, $metadata['thumbnailURL'] );
+		$this->assertArrayNotHasKey( 'videoURL', $metadata );
+	}
 }

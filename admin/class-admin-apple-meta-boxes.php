@@ -180,6 +180,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			'apple_news_pullquote'          => 'string',
 			'apple_news_pullquote_position' => 'string',
 			'apple_news_slug'               => 'string',
+			'apple_news_suppress_video_url' => 'boolean',
 		];
 		foreach ( $fields as $meta_key => $type ) {
 			switch ( $type ) {
@@ -345,6 +346,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 		$pullquote          = get_post_meta( $post->ID, 'apple_news_pullquote', true );
 		$pullquote_position = get_post_meta( $post->ID, 'apple_news_pullquote_position', true );
 		$slug               = get_post_meta( $post->ID, 'apple_news_slug', true );
+		$suppress_video_url = get_post_meta( $post->ID, 'apple_news_suppress_video_url', true );
 
 		// Set default values.
 		if ( empty( $pullquote_position ) ) {
