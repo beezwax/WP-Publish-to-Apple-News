@@ -10,10 +10,6 @@
  * @package Apple_News
  */
 
-$apple_notice_html = [
-	'a'  => [ 'href' => [] ],
-	'br' => [],
-]
 ?>
 <div
 	class="notice <?php echo sanitize_html_class( 'notice-' . $type ); ?> apple-news-notice is-dismissible"
@@ -21,5 +17,5 @@ $apple_notice_html = [
 	data-nonce="<?php echo esc_attr( wp_create_nonce( 'apple_news_dismiss_notice' ) ); ?>"
 	data-type="<?php echo esc_attr( $type ); ?>"
 >
-	<p><strong><?php echo wp_kses( $message, $apple_notice_html ); ?></strong></p>
+	<p><strong><?php echo wp_kses_post( $message ); ?></strong></p>
 </div>
