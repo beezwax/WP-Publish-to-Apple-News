@@ -166,7 +166,7 @@ class Admin_Apple_Themes extends Apple_News {
 	 * 
 	 * @return \Apple_Exporter\Theme $theme_object A Theme object loaded with db config.
 	 */
-	public static function get_loaded_theme( $theme_str ) {
+	public static function get_theme_by_name( $theme_str ) {
 		$theme_object = new \Apple_Exporter\Theme();
 		$theme_object->set_name( $theme_str );
 		$theme_object->load();
