@@ -181,8 +181,8 @@ class Admin_Apple_JSON extends Apple_News {
 		$selected_theme = $this->get_selected_theme();
 
 		// Extract theme layout configuration.
-		$layout_columns = '';
-		$layout_width   = '';
+		$layout_columns = 0;
+		$layout_width   = 0;
 		if ( ! empty( $selected_theme ) ) {
 			$loaded_theme   = Admin_Apple_Themes::get_loaded_theme( $selected_theme );
 			$layout_columns = $loaded_theme->get_layout_columns();
