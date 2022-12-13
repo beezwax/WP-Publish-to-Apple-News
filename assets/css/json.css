@@ -4,6 +4,18 @@
 	display: block;
 }
 
+.apple-news-json .theme-value-wrapper {
+	margin-top: 15px;
+}
+
+.apple-news-json .theme-value-row span {
+	font-weight: bold;
+}
+
+.apple-news-json .theme-value-row.top {
+	margin-bottom: 3px;
+}
+
 .apple-news-json input[type="submit"] {
 	margin-right: 1em;
 }
