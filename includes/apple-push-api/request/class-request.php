@@ -267,6 +267,7 @@ class Request {
 
 			if ( 'DUPLICATE_ARTICLE_FOUND' === $error->code ) {
 				$message .= '.<br>' . sprintf(
+					// translators: UUID of original article.
 					__( 'Original UUID: %s', 'apple-news' ),
 					sanitize_text_field( $error->value )
 				);
