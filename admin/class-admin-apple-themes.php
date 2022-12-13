@@ -164,16 +164,9 @@ class Admin_Apple_Themes extends Apple_News {
 	 *
 	 * @param string $theme_str The name of theme.
 	 * 
-	 * @return \Apple_Exporter\Theme|null $theme_object A Theme object loaded with db config,
-	 * or null if theme name not in registry.
+	 * @return \Apple_Exporter\Theme $theme_object A Theme object loaded with db config.
 	 */
 	public static function get_loaded_theme( $theme_str ) {
-		// Make sure theme exists in registry before continuing.
-		$registry = \Apple_Exporter\Theme::get_registry();
-		if ( empty( $registry ) || ! in_array( $theme_str, $registry, true ) ) {
-			return;
-		}
-
 		$theme_object = new \Apple_Exporter\Theme();
 		$theme_object->set_name( $theme_str );
 		$theme_object->load();
