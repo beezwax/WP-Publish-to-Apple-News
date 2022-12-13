@@ -94,7 +94,7 @@ class Podcast extends Component {
 		// Pattern match src attribute for apple podcast url.
 		$url = $iframe->getAttribute( 'src' );
 
-		if ( empty( $url ) || ! str_contains( $url, 'podcasts.apple.com' ) ) {
+		if ( empty( $url ) || false === strpos( $url, 'podcasts.apple.com' ) ) {
 			return;
 		}
 

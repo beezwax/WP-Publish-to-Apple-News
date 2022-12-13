@@ -118,7 +118,7 @@ const Sidebar = () => {
    */
   const displayNotification = useCallback((message, type = 'success') => (type === 'success'
     ? dispatchNotice.createInfoNotice(DOMPurify.sanitize(message), { type: 'snackbar' })
-    : dispatchNotice.createErrorNotice(DOMPurify.sanitize(message))
+    : dispatchNotice.createErrorNotice(message, { __unstableHTML: true })
   ), [dispatchNotice]);
 
   /**

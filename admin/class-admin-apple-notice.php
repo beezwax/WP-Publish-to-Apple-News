@@ -154,7 +154,7 @@ class Admin_Apple_Notice {
 		}
 
 		// Sanitize values.
-		$message = wp_kses( $message, [ 'a' => [ 'href' => [] ] ] );
+		$message = wp_kses_post( $message );
 		$type    = sanitize_text_field( $type );
 
 		// Pull usermeta and see if the message already exists.
