@@ -89,12 +89,12 @@
 				<div class="theme-value-wrapper">
 				<?php if ( ! empty( $layout_columns ) ) : ?>
 					<div class="theme-value-row top">
-						<?php esc_html_e( 'Theme Columns', 'apple-news' ); ?>: <span><?php echo esc_html( $layout_columns ); ?></span>
+						<?php esc_html_e( 'Theme Columns', 'apple-news' ); ?>: <span><?php echo (int) $layout_columns; ?></span>
 					</div>
 				<?php endif; ?>
 				<?php if ( ! empty( $layout_width ) ) : ?>
 					<div class="theme-value-row">
-						<?php esc_html_e( 'Layout Width', 'apple-news' ); ?>: <span><?php echo esc_html( $layout_width ); ?></span>
+						<?php esc_html_e( 'Layout Width', 'apple-news' ); ?>: <span><?php echo (int) $layout_width; ?></span>
 					</div>
 				<?php endif; ?>
 				</div>
