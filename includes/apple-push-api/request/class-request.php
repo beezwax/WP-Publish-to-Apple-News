@@ -266,7 +266,10 @@ class Request {
 			}
 
 			if ( 'DUPLICATE_ARTICLE_FOUND' === $error->code ) {
-				$message .= '.<br>Original UUID: ' . $error->value;
+				$message .= '.<br>' . sprintf(
+					__( 'Original UUID: %s', 'apple-news' ),
+					sanitize_text_field( $error->value )
+				);
 			}
 
 			throw new Request_Exception( $message );
