@@ -443,7 +443,7 @@ class Body extends Component {
 	 * Determine whether to apply a dropcap style for the component.
 	 * 
 	 * @param \Apple_Exporter\Theme $theme Object that stores theme level dropcap configuration.
-	 * @param string $html The HTML to check for dropcap conditions. Should be the first paragraph of the post content.
+	 * @param string                $html The HTML to check for dropcap conditions. Should be the first paragraph of the post content.
 	 *
 	 * @return boolean
 	 */
@@ -454,8 +454,10 @@ class Body extends Component {
 		}
 
 		// Check for first character punctuation.
-		$content = strip_tags( $html );
-		if ( ctype_punct( $content[0] ) ) {
+		$content    = wp_strip_all_tags( $html );
+		$first_char = mb_substr( $content, 0, 1 );
+		// Regex-planation: \p{P} searchs for punctuation, /u modifier makes it unicode inclusive.
+		if ( preg_match( '/\p{P}$/u', $first_char ) ) {
 			return false;
 		}
 
