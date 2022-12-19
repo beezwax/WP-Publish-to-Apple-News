@@ -448,12 +448,15 @@ class Body extends Component {
 	 * @return boolean
 	 */
 	private function dropcap_determination( $theme, $html ) {
+		// Toggle dropcap determination flag so that this logic applies only to the post's first paragraph.
 		$theme->dropcap_determined = true;
+
+		// Check that the theme is configured to apply dropcap styling.
 		if ( 'yes' !== $theme->get_value( 'initial_dropcap' ) ) {
 			return false;
 		}
 
-		// Check for first character punctuation.
+		// Check the first character for punctuation.
 		$content    = wp_strip_all_tags( $html );
 		$first_char = mb_substr( $content, 0, 1 );
 		// Regex-planation: \p{P} searchs for punctuation, /u modifier makes it unicode inclusive.
@@ -461,6 +464,7 @@ class Body extends Component {
 			return false;
 		}
 
+		// Check that the content meets the minimum character number.
 		$num_chars = mb_strlen( $content );
 		if ( 'yes' !== $theme->get_value( 'dropcap_minimum_opt_out' )
 			&& $num_chars < (int) $theme->get_value( 'dropcap_minimum' )
