@@ -440,6 +440,7 @@ HTML;
 				'dropcap_color'                  => '#defdef',
 				'dropcap_color_dark'             => '#efdef0',
 				'dropcap_font'                   => 'AmericanTypewriter-Bold',
+				'dropcap_minimum_opt_out'        => 'yes',
 				'dropcap_number_of_characters'   => 15,
 				'dropcap_number_of_lines'        => 10,
 				'dropcap_number_of_raised_lines' => 5,
