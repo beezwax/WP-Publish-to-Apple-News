@@ -295,10 +295,9 @@ class Body extends Component {
 
 		// Determine whether to apply dropcap style.
 		$theme = \Apple_Exporter\Theme::get_used();
-		if ( ! $theme->dropcap_applied
-			&& 'yes' === $theme->get_value( 'initial_dropcap' )
+		if ( ! $theme->dropcap_determined
+			&& $this->dropcap_determination( $theme, $html )
 		) {
-			$theme->dropcap_applied = true;
 			$this->set_initial_dropcap_style();
 		} else {
 			$this->set_default_style();
@@ -438,6 +437,36 @@ class Body extends Component {
 			$this->get_default_style_values(),
 			'textStyle'
 		);
+	}
+
+	/**
+	 * Determine whether to apply a dropcap style for the component.
+	 * 
+	 * @param \Apple_Exporter\Theme $theme Object that stores theme level dropcap configuration.
+	 * @param string $html The HTML to check for dropcap conditions. Should be the first paragraph of the post content.
+	 *
+	 * @return boolean
+	 */
+	private function dropcap_determination( $theme, $html ) {
+		$theme->dropcap_determined = true;
+		if ( 'yes' !== $theme->get_value( 'initial_dropcap' ) ) {
+			return false;
+		}
+
+		// Check for first character punctuation.
+		$content = strip_tags( $html );
+		if ( ctype_punct( $content[0] ) ) {
+			return false;
+		}
+
+		$num_chars = mb_strlen( $content );
+		if ( 'yes' !== $theme->get_value( 'dropcap_minimum_opt_out' )
+			&& $num_chars < (int) $theme->get_value( 'dropcap_minimum' )
+		) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
