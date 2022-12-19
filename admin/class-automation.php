@@ -103,15 +103,17 @@ class Automation {
 	 * A callback function for the apple_news_active_theme filter.
 	 *
 	 * @param string $theme_name The name of the theme to use.
-	 * @param int    $post_id    The ID of the post being exported.
+	 * @param ?int   $post_id    The ID of the post being exported.
 	 *
 	 * @return string The filtered theme name.
 	 */
 	public static function filter__apple_news_active_theme( $theme_name, $post_id ) {
-		$rules = self::get_automation_for_post( $post_id );
-		foreach ( $rules as $rule ) {
-			if ( 'theme' === ( $rule['field'] ?? '' ) && ! empty( $rule['value'] ) ) {
-				return $rule['value'];
+		if ( $post_id ) {
+			$rules = self::get_automation_for_post( $post_id );
+			foreach ( $rules as $rule ) {
+				if ( 'theme' === ( $rule['field'] ?? '' ) && ! empty( $rule['value'] ) ) {
+					return $rule['value'];
+				}
 			}
 		}
 
