@@ -472,7 +472,16 @@ class Body extends Component {
 			return false;
 		}
 
-		return true;
+		/** 
+		 * Allows for filtering of the dropcap content before return.
+		 * 
+		 * @since 2.4.0
+		 * 
+		 * @param string                $content The content to filter.
+		 * @param \Apple_Exporter\Theme $theme The theme whose dropcap options are used.
+		 * @param string                $post_id The id of the post whose content we're parsing.
+		 */
+		return apply_filters( 'apple_news_dropcap', $content, $theme, $this->workspace->content_id ); 
 	}
 
 	/**
