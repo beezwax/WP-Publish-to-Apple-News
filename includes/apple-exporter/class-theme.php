@@ -835,12 +835,12 @@ class Theme {
 			],
 			'dropcap_minimum'                    => [
 				'default' => 100,
-				'label'   => __( 'Minimum number of characters for dropcap to take affect.', 'apple-news' ),
+				'label'   => __( 'Minimum number of characters for dropcap to take effect.', 'apple-news' ),
 				'type'    => 'integer',
 			],
 			'dropcap_minimum_opt_out'            => [
 				'default' => 'no',
-				'label'   => __( 'Opt out of minimum character dropcap behavior.', 'apple-news' ),
+				'label'   => __( 'Opt out of conditional dropcap behavior.', 'apple-news' ),
 				'options' => [ 'yes', 'no' ],
 				'type'    => 'select',
 			],
