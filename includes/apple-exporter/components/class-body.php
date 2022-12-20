@@ -450,26 +450,25 @@ class Body extends Component {
 	private function dropcap_determination( $theme, $html ) {
 		// Toggle dropcap determination flag so that this logic applies only to the post's first paragraph.
 		$theme->dropcap_applied = true;
+		$use_dropcap            = true;
+		$content                = wp_strip_all_tags( $html );
+		$num_chars              = mb_strlen( $content );
 
 		// Check that the theme is configured to apply dropcap styling.
 		if ( 'yes' !== $theme->get_value( 'initial_dropcap' ) ) {
-			return false;
-		}
-
-		// Check the first character for punctuation.
-		$content    = wp_strip_all_tags( $html );
-		$first_char = mb_substr( $content, 0, 1 );
-		// Regex-planation: \p{P} searchs for punctuation, /u modifier makes it unicode inclusive.
-		if ( preg_match( '/\p{P}$/u', $first_char ) ) {
-			return false;
-		}
-
-		// Check that the content meets the minimum character number.
-		$num_chars = mb_strlen( $content );
-		if ( 'yes' !== $theme->get_value( 'dropcap_minimum_opt_out' )
-			&& $num_chars < (int) $theme->get_value( 'dropcap_minimum' )
+			$use_dropcap = false;
+		} elseif ( preg_match(
+			// Regex-planation: \p{P} searchs for punctuation, /u modifier makes it unicode inclusive.
+			'/\p{P}$/u',
+			// First character of paragraph.
+			mb_substr( $content, 0, 1 )
+		) ) {
+			$use_dropcap = false;
+			// Check that the content meets the minimum character number.
+		} elseif ( 'yes' !== $theme->get_value( 'dropcap_minimum_opt_out' )
+			&& ! ( $num_chars > (int) $theme->get_value( 'dropcap_minimum' ) )
 		) {
-			return false;
+			$use_dropcap = false;
 		}
 
 		/** 
@@ -477,11 +476,12 @@ class Body extends Component {
 		 * 
 		 * @since 2.4.0
 		 * 
-		 * @param string                $content The content to filter.
+		 * @param bool                  $use_dropcap Whether to apply a dropcap to this paragraph or not.
+		 * @param string                $html The post content to filter.
 		 * @param \Apple_Exporter\Theme $theme The theme whose dropcap options are used.
 		 * @param string                $post_id The id of the post whose content we're parsing.
 		 */
-		return apply_filters( 'apple_news_dropcap', $content, $theme, $this->workspace->content_id ); 
+		return apply_filters( 'apple_news_dropcap', $use_dropcap, $html, $theme, $this->workspace->content_id ); 
 	}
 
 	/**
