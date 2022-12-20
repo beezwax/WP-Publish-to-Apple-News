@@ -295,7 +295,7 @@ class Body extends Component {
 
 		// Determine whether to apply dropcap style.
 		$theme = \Apple_Exporter\Theme::get_used();
-		if ( ! $theme->dropcap_determined
+		if ( ! $theme->dropcap_applied
 			&& $this->dropcap_determination( $theme, $html )
 		) {
 			$this->set_initial_dropcap_style();
@@ -449,7 +449,7 @@ class Body extends Component {
 	 */
 	private function dropcap_determination( $theme, $html ) {
 		// Toggle dropcap determination flag so that this logic applies only to the post's first paragraph.
-		$theme->dropcap_determined = true;
+		$theme->dropcap_applied = true;
 
 		// Check that the theme is configured to apply dropcap styling.
 		if ( 'yes' !== $theme->get_value( 'initial_dropcap' ) ) {

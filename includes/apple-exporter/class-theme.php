@@ -318,7 +318,7 @@ class Theme {
 	 * @access public
 	 * @var bool
 	 */
-	public $dropcap_determined = false;
+	public $dropcap_applied = false;
 
 	/**
 	 * Keeps track of the last error message generated.
