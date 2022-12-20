@@ -73,11 +73,11 @@ class Link_Button extends Component {
 				// 'backgroundColor' => '#DDD',
 				'border' => [
 					'all' => [
-							'width' => 1,
-							'color' => '#000000',
+						'width' => 1,
+						'color' => '#000000',
 					],
 				],
-				'mask'            => [
+				'mask'   => [
 					'type'   => 'corners',
 					'radius' => 18,
 				],
@@ -89,11 +89,11 @@ class Link_Button extends Component {
 			'default-link-button-text-style',
 			__( 'Link Button Text Style', 'apple-news' ),
 			[
-				'fontName'     => 'HelveticaNeue-Medium',
-				'fontSize'     => 15,
-				'hyphenation'  => false,
-				'lineHeight'   => 18,
-				'textAlignment'=> 'center'
+				'fontName'      => 'HelveticaNeue-Medium',
+				'fontSize'      => 15,
+				'hyphenation'   => false,
+				'lineHeight'    => 18,
+				'textAlignment' => 'center',
 				// 'textColor'    => '#000',
 			]
 		);
