@@ -729,6 +729,32 @@ class Theme {
 				'label'       => __( 'Body tracking', 'apple-news' ),
 				'type'        => 'integer',
 			],
+			'button_background_color'            => [
+				'default' => '',
+				'label'   => __( 'Background color', 'apple-news' ),
+				'type'    => 'string',
+			],
+			'button_border_color'                => [
+				'default' => '',
+				'label'   => __( 'Border color', 'apple-news' ),
+				'type'    => 'string',
+			],
+			'button_border_radius'               => [
+				'default' => 18,
+				'label'   => __( 'Border radius', 'apple-news' ),
+				'type'    => 'integer',
+			],
+			'button_border_width'                => [
+				'default' => 1,
+				'label'   => __( 'Body tracking', 'apple-news' ),
+				'type'    => 'integer',
+			],
+			'button_horizontal_alignment'        => [
+				'default' => 'center',
+				'label'   => __( 'Button alignment', 'apple-news' ),
+				'options' => [ 'left', 'center', 'right' ],
+				'type'    => 'se',
+			],
 			'byline_color'                       => [
 				'default' => '#7c7c7c',
 				'label'   => __( 'Combined Date and Author font color', 'apple-news' ),
@@ -2144,6 +2170,16 @@ class Theme {
 					'author_format',
 					'dark_mode_colors_heading',
 					'author_color_dark',
+				],
+			],
+			'button'          => [
+				'label'    => __( 'Link Button', 'apple-news' ),
+				'settings' => [
+					'button_background_color',
+					'button_border_color',
+					'button_border_radius',
+					'button_border_width',
+					'button_horizontal_alignment',
 				],
 			],
 			'byline'          => [
