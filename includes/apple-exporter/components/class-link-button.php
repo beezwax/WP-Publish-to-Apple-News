@@ -55,12 +55,10 @@ class Link_Button extends Component {
 			'link-button-layout',
 			__( 'Button Layout', 'apple-news' ),
 			[
-				'margin'  => [
-					'bottom' => 20,
-				],
-				'padding' => [
-					'top'    => 10,
-					'bottom' => 10,
+				'horizontalContentAlignment' => 'center',
+				'padding'                    => [
+					'top'    => 15,
+					'bottom' => 15,
 					'left'   => 15,
 					'right'  => 15,
 				],
@@ -72,10 +70,16 @@ class Link_Button extends Component {
 			'default-link-button',
 			__( 'Link Button Style', 'apple-news' ),
 			[
-				'backgroundColor' => '#DDD',
+				// 'backgroundColor' => '#DDD',
+				'border' => [
+					'all' => [
+							'width' => 1,
+							'color' => '#000000',
+					],
+				],
 				'mask'            => [
 					'type'   => 'corners',
-					'radius' => 25,
+					'radius' => 18,
 				],
 			]
 		);
@@ -85,7 +89,12 @@ class Link_Button extends Component {
 			'default-link-button-text-style',
 			__( 'Link Button Text Style', 'apple-news' ),
 			[
-				'textColor' => '#000',
+				'fontName'     => 'HelveticaNeue-Medium',
+				'fontSize'     => 15,
+				'hyphenation'  => false,
+				'lineHeight'   => 18,
+				'textAlignment'=> 'center'
+				// 'textColor'    => '#000',
 			]
 		);
 	}
