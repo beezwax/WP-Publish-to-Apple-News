@@ -755,7 +755,7 @@ class Theme {
 				'options' => [ 'left', 'center', 'right' ],
 				'type'    => 'se',
 			],
-			'button_text_color'                => [
+			'button_text_color'                  => [
 				'default' => '#000000',
 				'label'   => __( 'Button text color', 'apple-news' ),
 				'type'    => 'string',
