@@ -325,6 +325,6 @@ class Apple_News_Automation_Test extends Apple_News_Testcase {
 		// Set the taxonomy term to trigger the automation routine and ensure the correct theme is chosen.
 		wp_set_post_terms( $post_id, [ $term_id ], 'category' );
 		$json = $this->get_json_for_post( $post_id );
-		$this->assertEquals( '#000000', $json['componentTextStyles']['dropcapBodyStyle']['textColor'] );
+		$this->assertEquals( '#000000', $json['componentTextStyles']['default-title']['textColor'] );
 	}
 }
