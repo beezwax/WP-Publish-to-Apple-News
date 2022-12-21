@@ -152,7 +152,7 @@ class Link_Button extends Component {
 				'#button_border_color#'     => $theme->get_value( 'button_border_color' ),
 				'#button_border_radius#'    => (int) $theme->get_value( 'button_border_radius' ),
 				'#button_border_width#'     => (int) $theme->get_value( 'button_border_width' ),
-			],
+			]
 		);
 
 		// Register text styles.
