@@ -730,12 +730,12 @@ class Theme {
 				'type'        => 'integer',
 			],
 			'button_background_color'            => [
-				'default' => '',
+				'default' => '#FFFFFF',
 				'label'   => __( 'Background color', 'apple-news' ),
 				'type'    => 'string',
 			],
 			'button_border_color'                => [
-				'default' => '',
+				'default' => '#000000',
 				'label'   => __( 'Border color', 'apple-news' ),
 				'type'    => 'string',
 			],
@@ -754,6 +754,11 @@ class Theme {
 				'label'   => __( 'Button alignment', 'apple-news' ),
 				'options' => [ 'left', 'center', 'right' ],
 				'type'    => 'se',
+			],
+			'button_text_color'                => [
+				'default' => '#000000',
+				'label'   => __( 'Button text color', 'apple-news' ),
+				'type'    => 'string',
 			],
 			'byline_color'                       => [
 				'default' => '#7c7c7c',
@@ -2176,6 +2181,7 @@ class Theme {
 				'label'    => __( 'Link Button', 'apple-news' ),
 				'settings' => [
 					'button_background_color',
+					'button_text_color',
 					'button_border_color',
 					'button_border_radius',
 					'button_border_width',
