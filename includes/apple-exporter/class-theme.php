@@ -312,7 +312,8 @@ class Theme {
 	private static $used_name;
 
 	/**
-	 * Tracks whether a dropcap was applied or not.
+	 * Tracks whether or not a dropcap determination has been made.
+	 * Used to differentiate the first paragraph while parsing body text.
 	 *
 	 * @access public
 	 * @var bool
@@ -862,6 +863,17 @@ class Theme {
 				'default' => 'AvenirNext-Bold',
 				'label'   => __( 'Dropcap font face', 'apple-news' ),
 				'type'    => 'font',
+			],
+			'dropcap_minimum'                    => [
+				'default' => 100,
+				'label'   => __( 'Minimum number of characters for dropcap to take effect.', 'apple-news' ),
+				'type'    => 'integer',
+			],
+			'dropcap_minimum_opt_out'            => [
+				'default' => 'no',
+				'label'   => __( 'Opt out of conditional dropcap behavior.', 'apple-news' ),
+				'options' => [ 'yes', 'no' ],
+				'type'    => 'select',
 			],
 			'dropcap_number_of_characters'       => [
 				'default' => 1,
@@ -2137,6 +2149,8 @@ class Theme {
 				'label'    => __( 'Drop Cap', 'apple-news' ),
 				'settings' => [
 					'initial_dropcap',
+					'dropcap_minimum',
+					'dropcap_minimum_opt_out',
 					'dropcap_background_color',
 					'dropcap_color',
 					'dropcap_font',

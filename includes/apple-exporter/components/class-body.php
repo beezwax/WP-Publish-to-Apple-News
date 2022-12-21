@@ -296,9 +296,8 @@ class Body extends Component {
 		// Determine whether to apply dropcap style.
 		$theme = \Apple_Exporter\Theme::get_used();
 		if ( ! $theme->dropcap_applied
-			&& 'yes' === $theme->get_value( 'initial_dropcap' )
+			&& $this->dropcap_determination( $theme, $html )
 		) {
-			$theme->dropcap_applied = true;
 			$this->set_initial_dropcap_style();
 		} else {
 			$this->set_default_style();
@@ -438,6 +437,51 @@ class Body extends Component {
 			$this->get_default_style_values(),
 			'textStyle'
 		);
+	}
+
+	/**
+	 * Determine whether to apply a dropcap style for the component.
+	 * 
+	 * @param \Apple_Exporter\Theme $theme Object that stores theme level dropcap configuration.
+	 * @param string                $html The HTML to check for dropcap conditions. Should be the first paragraph of the post content.
+	 *
+	 * @return boolean
+	 */
+	private function dropcap_determination( $theme, $html ) {
+		// Toggle dropcap determination flag so that this logic applies only to the post's first paragraph.
+		$theme->dropcap_applied = true;
+		$use_dropcap            = true;
+		$content                = wp_strip_all_tags( $html );
+		$num_chars              = mb_strlen( $content );
+
+		// Check that the theme is configured to apply dropcap styling.
+		if ( 'yes' !== $theme->get_value( 'initial_dropcap' ) ) {
+			$use_dropcap = false;
+		} elseif ( preg_match(
+			// Regex-planation: \p{P} searchs for punctuation, /u modifier makes it unicode inclusive.
+			'/\p{P}$/u',
+			// First character of paragraph.
+			mb_substr( $content, 0, 1 )
+		) ) {
+			$use_dropcap = false;
+			// Check that the content meets the minimum character number.
+		} elseif ( 'yes' !== $theme->get_value( 'dropcap_minimum_opt_out' )
+			&& ! ( $num_chars > (int) $theme->get_value( 'dropcap_minimum' ) )
+		) {
+			$use_dropcap = false;
+		}
+
+		/** 
+		 * Allows for filtering of the dropcap content before return.
+		 * 
+		 * @since 2.4.0
+		 * 
+		 * @param bool                  $use_dropcap Whether to apply a dropcap to this paragraph or not.
+		 * @param string                $html The post content to filter.
+		 * @param \Apple_Exporter\Theme $theme The theme whose dropcap options are used.
+		 * @param string                $post_id The id of the post whose content we're parsing.
+		 */
+		return apply_filters( 'apple_news_dropcap', $use_dropcap, $html, $theme, $this->workspace->content_id ); 
 	}
 
 	/**

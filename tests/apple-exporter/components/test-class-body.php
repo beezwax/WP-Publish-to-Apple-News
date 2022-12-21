@@ -15,6 +15,56 @@
 class Apple_News_Body_Test extends Apple_News_Testcase {
 
 	/**
+	 * A data provider that arguments for `test_dropcap_determination` tests.
+	 *
+	 * @return array An array of arrays representing function arguments.
+	 */
+	public function data_dropcap_determination() {
+		return [
+			// No dropcap -- punctuation first character.
+			[
+				'default-body',
+				100,
+				'yes',
+				<<<HTML
+<p>"Go-Gurt," but to stay.</p>
+HTML
+				,
+			],
+			// No dropcap -- dropcap minimum character requirement not met.
+			[
+				'default-body',
+				100,
+				'no',
+				<<<HTML
+<p>I hope to keep this briefing brief. But briefly, before I begin this brief briefing...</p>
+HTML
+				,
+			],
+			// Dropcap applied -- minimum character opt out.
+			[
+				'dropcapBodyStyle',
+				500,
+				'yes',
+				<<<HTML
+<p>I am not optimistic about the optics of us opting out, opined the opulent Optometrist.</p>
+HTML
+				,
+			],
+			// Dropcap applied -- minimum character requirement met, no opt out, no punctuation first character.
+			[
+				'dropcapBodyStyle',
+				50,
+				'no',
+				<<<HTML
+<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+HTML
+				,
+			],
+		];
+	}
+
+	/**
 	 * A data provider that supplies empty HTML signatures to ensure that they
 	 * are not erroneously transformed into empty body elements.
 	 *
@@ -312,6 +362,28 @@ HTML;
 	}
 
 	/**
+	 * Test's dropcap configuration and conditionals.
+	 *
+	 * @dataProvider data_dropcap_determination
+	 *
+	 * @param string $body_style              The style of the first paragraph.  `dropcapBodyStyle` if dropcap styling is applied or `default-body` if not.
+	 * @param int    $dropcap_minimum         The minimum number of characters in the first paragraph before dropcap stylings are applied.
+	 * @param string $dropcap_minimum_opt_out Choice to opt out of minimum character rule, 'yes' or 'no'.
+	 * @param html   $content                 The html content of the post.
+	 */
+	public function test_dropcap_determination( $body_style, $dropcap_minimum, $dropcap_minimum_opt_out, $content ) {
+		$this->set_theme_settings(
+			[
+				'dropcap_minimum'         => $dropcap_minimum,
+				'dropcap_minimum_opt_out' => $dropcap_minimum_opt_out,
+			]
+		);
+		$post_id = self::factory()->post->create( [ 'post_content' => $content ] );
+		$json    = $this->get_json_for_post( $post_id );
+		$this->assertEquals( $body_style, $json['components'][3]['textStyle'] );
+	}
+
+	/**
 	 * Tests handling for empty HTML content.
 	 *
 	 * @dataProvider data_empty_html
@@ -440,6 +512,7 @@ HTML;
 				'dropcap_color'                  => '#defdef',
 				'dropcap_color_dark'             => '#efdef0',
 				'dropcap_font'                   => 'AmericanTypewriter-Bold',
+				'dropcap_minimum_opt_out'        => 'yes',
 				'dropcap_number_of_characters'   => 15,
 				'dropcap_number_of_lines'        => 10,
 				'dropcap_number_of_raised_lines' => 5,
