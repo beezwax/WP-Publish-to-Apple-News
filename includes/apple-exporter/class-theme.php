@@ -747,14 +747,14 @@ class Theme {
 			],
 			'button_border_width'                => [
 				'default' => 1,
-				'label'   => __( 'Body tracking', 'apple-news' ),
+				'label'   => __( 'Border width', 'apple-news' ),
 				'type'    => 'integer',
 			],
 			'button_horizontal_alignment'        => [
 				'default' => 'center',
 				'label'   => __( 'Button alignment', 'apple-news' ),
 				'options' => [ 'left', 'center', 'right' ],
-				'type'    => 'se',
+				'type'    => 'select',
 			],
 			'button_text_color'                  => [
 				'default' => '#000000',
