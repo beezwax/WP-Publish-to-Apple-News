@@ -88,6 +88,17 @@
 			dropcapNumberOfRaisedLines = parseInt( $( '#dropcap_number_of_raised_lines' ).val() ),
 			dropcapPadding = parseInt( $( '#dropcap_padding' ).val() ),
 			dropcapParagraph = $( '.apple-news-component p' ).first();
+			dropcapNumChars = dropcapParagraph.text().length;
+			dropcapMinChars = parseInt( $( '#dropcap_minimum' ).val() );
+			dropcapMinOptOut = $( '#dropcap_minimum_opt_out' ).val()
+			useDropcap = true;
+
+		// Determine if dropcap should be applied or not.
+		if ( 'no' === $( '#initial_dropcap' ).val() ) {
+			useDropcap = false;
+		} else if ( 'no' === dropcapMinOptOut && dropcapNumChars < dropcapMinChars  ) {
+			useDropcap = false;
+		}
 
 		// Adjust number of lines to remain within tolerance.
 		if ( dropcapNumberOfLines < 2 ) {
@@ -113,7 +124,7 @@
 		);
 
 		// If enabled, add it back.
-		if ( 'yes' === $( '#initial_dropcap' ).val() ) {
+		if ( useDropcap ) {
 
 			// Create the dropcap span with the specified number of characters.
 			dropcapParagraph.html( // phpcs:ignore WordPressVIPMinimum.JS.HTMLExecutingFunctions.html
@@ -238,6 +249,14 @@
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-image-caption', 'caption_line_height', 'line-height', 'px', null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-image-caption', 'caption_line_height', 'padding-bottom', 'px', null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-image-caption', 'caption_line_height', 'padding-top', 'px', null );
+
+		// Link Button
+		appleNewsSetCSS( '.apple-news-preview button.apple-news-link-button', 'button_background_color', 'background-color', null, null );
+		appleNewsSetCSS( '.apple-news-preview button.apple-news-link-button', 'button_border_color', 'border-color', null, null );
+		appleNewsSetCSS( '.apple-news-preview button.apple-news-link-button', 'button_border_radius', 'border-radius', 'px', null );
+		appleNewsSetCSS( '.apple-news-preview button.apple-news-link-button', 'button_border_width', 'border-width', 'px', null );
+		appleNewsSetCSS( '.apple-news-preview button.apple-news-link-button', 'button_text_color', 'color', null, null );
+		appleNewsSetCSS( '.apple-news-preview div.apple-news-button-wrapper', 'button_horizontal_alignment', 'text-align', null, null );
 
 		// Pull quote
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-pull-quote', 'pullquote_font', 'font-family', null, null );
