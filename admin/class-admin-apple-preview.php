@@ -115,6 +115,10 @@ class Admin_Apple_Preview extends Apple_News {
 			);
 			?>
 			<p>Maecenas tortor dui, pellentesque ac ullamcorper quis, malesuada sit amet turpis. Nunc in tellus et justo dapibus sollicitudin.</p>
+			<div class="apple-news-button-wrapper">
+				<button class="apple-news-link-button" type="button">Link Button</button>
+			</div>
+			<p>Odio euismod lacinia at quis risus. Leo vel orci porta non pulvinar. Malesuada fames ac turpis egestas integer eget aliquet.</p>
 			<h2>Quisque efficitur</h2>
 			<p>Quisque efficitur sit amet ex et venenatis. Morbi nisi nisi, ornare id iaculis eget, pulvinar ac dolor.</p>
 			<blockquote>Blockquote lorem ipsum dolor sit amet, efficitur sit amet aliquet id, aliquam placerat turpis.</blockquote>
