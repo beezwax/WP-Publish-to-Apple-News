@@ -733,12 +733,12 @@ class Theme {
 			'button_background_color'            => [
 				'default' => '#FFFFFF',
 				'label'   => __( 'Background color', 'apple-news' ),
-				'type'    => 'string',
+				'type'    => 'color',
 			],
 			'button_border_color'                => [
 				'default' => '#000000',
 				'label'   => __( 'Border color', 'apple-news' ),
-				'type'    => 'string',
+				'type'    => 'color',
 			],
 			'button_border_radius'               => [
 				'default' => 18,
@@ -759,7 +759,7 @@ class Theme {
 			'button_text_color'                  => [
 				'default' => '#000000',
 				'label'   => __( 'Button text color', 'apple-news' ),
-				'type'    => 'string',
+				'type'    => 'color',
 			],
 			'byline_color'                       => [
 				'default' => '#7c7c7c',
