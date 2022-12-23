@@ -256,6 +256,8 @@
 		appleNewsSetCSS( '.apple-news-preview button.apple-news-link-button', 'button_border_radius', 'border-radius', 'px', null );
 		appleNewsSetCSS( '.apple-news-preview button.apple-news-link-button', 'button_border_width', 'border-width', 'px', null );
 		appleNewsSetCSS( '.apple-news-preview button.apple-news-link-button', 'button_text_color', 'color', null, null );
+		appleNewsSetCSS( '.apple-news-preview button.apple-news-link-button', 'button_font_face', 'font-family', null, null );
+		appleNewsSetCSS( '.apple-news-preview button.apple-news-link-button', 'button_font_size', 'font-size', 'px', null );
 		appleNewsSetCSS( '.apple-news-preview div.apple-news-button-wrapper', 'button_horizontal_alignment', 'text-align', null, null );
 
 		// Pull quote

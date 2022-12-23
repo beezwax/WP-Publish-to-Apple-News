@@ -732,22 +732,22 @@ class Theme {
 			],
 			'button_background_color'            => [
 				'default' => '#ffffff',
-				'label'   => __( 'Background color', 'apple-news' ),
+				'label'   => __( 'Button background color', 'apple-news' ),
 				'type'    => 'color',
 			],
 			'button_border_color'                => [
 				'default' => '#000000',
-				'label'   => __( 'Border color', 'apple-news' ),
+				'label'   => __( 'Button border color', 'apple-news' ),
 				'type'    => 'color',
 			],
 			'button_border_radius'               => [
 				'default' => 18,
-				'label'   => __( 'Border radius', 'apple-news' ),
+				'label'   => __( 'Button border radius', 'apple-news' ),
 				'type'    => 'integer',
 			],
 			'button_border_width'                => [
 				'default' => 1,
-				'label'   => __( 'Border width', 'apple-news' ),
+				'label'   => __( 'Button border width', 'apple-news' ),
 				'type'    => 'integer',
 			],
 			'button_horizontal_alignment'        => [
@@ -760,6 +760,16 @@ class Theme {
 				'default' => '#000000',
 				'label'   => __( 'Button text color', 'apple-news' ),
 				'type'    => 'color',
+			],
+			'button_font_face'                   => [
+				'default' => 'HelveticaNeue-Medium',
+				'label'   => __( 'Button font face', 'apple-news' ),
+				'type'    => 'font',
+			],
+			'button_font_size'                   => [
+				'default' => 15,
+				'label'   => __( 'Button font size', 'apple-news' ),
+				'type'    => 'integer',
 			],
 			'byline_color'                       => [
 				'default' => '#7c7c7c',
@@ -2196,6 +2206,8 @@ class Theme {
 				'settings' => [
 					'button_background_color',
 					'button_text_color',
+					'button_font_face',
+					'button_font_size',
 					'button_border_color',
 					'button_border_radius',
 					'button_border_width',

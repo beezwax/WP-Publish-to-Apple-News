@@ -89,8 +89,8 @@ class Link_Button extends Component {
 			'default-link-button-text-style',
 			__( 'Link Button Text Style', 'apple-news' ),
 			[
-				'fontName'      => 'HelveticaNeue-Medium',
-				'fontSize'      => 15,
+				'fontName'      => '#button_font_face#',
+				'fontSize'      => '#button_font_face#',
 				'hyphenation'   => false,
 				'lineHeight'    => 18,
 				'textAlignment' => 'center',
@@ -160,6 +160,8 @@ class Link_Button extends Component {
 			'default-link-button-text-style',
 			'default-link-button-text-style',
 			[
+				'#button_font_face#'  => $theme->get_value( 'button_font_face' ),
+				'#button_font_size#'  => (int) $theme->get_value( 'button_font_size' ),
 				'#button_text_color#' => $theme->get_value( 'button_text_color' ),
 			],
 			'textStyle'
