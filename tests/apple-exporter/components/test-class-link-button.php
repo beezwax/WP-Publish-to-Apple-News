@@ -47,7 +47,7 @@ HTML;
 					'left'   => 15,
 					'right'  => 15,
 					'top'    => 15,
-				]
+				],
 			],
 			$json['componentLayouts']['link-button-layout']
 		);
