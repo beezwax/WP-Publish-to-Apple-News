@@ -87,10 +87,10 @@
 			dropcapNumberOfLines = parseInt( $( '#dropcap_number_of_lines' ).val() ),
 			dropcapNumberOfRaisedLines = parseInt( $( '#dropcap_number_of_raised_lines' ).val() ),
 			dropcapPadding = parseInt( $( '#dropcap_padding' ).val() ),
-			dropcapParagraph = $( '.apple-news-component p' ).first();
-			dropcapNumChars = dropcapParagraph.text().length;
-			dropcapMinChars = parseInt( $( '#dropcap_minimum' ).val() );
-			dropcapMinOptOut = $( '#dropcap_minimum_opt_out' ).val()
+			dropcapParagraph = $( '.apple-news-component p' ).first(),
+			dropcapNumChars = dropcapParagraph.text().length,
+			dropcapMinChars = parseInt( $( '#dropcap_minimum' ).val() ),
+			dropcapMinOptOut = $( '#dropcap_minimum_opt_out' ).val(),
 			useDropcap = true;
 
 		// Determine if dropcap should be applied or not.
