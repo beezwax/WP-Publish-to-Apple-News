@@ -90,7 +90,7 @@ class Link_Button extends Component {
 			__( 'Link Button Text Style', 'apple-news' ),
 			[
 				'fontName'      => '#button_font_face#',
-				'fontSize'      => '#button_font_face#',
+				'fontSize'      => '#button_font_size#',
 				'hyphenation'   => false,
 				'lineHeight'    => 18,
 				'textAlignment' => 'center',
