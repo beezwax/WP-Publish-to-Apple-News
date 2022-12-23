@@ -128,6 +128,33 @@ class Apple_News_Link_Button_Test extends Apple_News_Component_TestCase {
 	}
 
 	/**
+	 * A data provider for the test_styles function.
+	 *
+	 * @return array An array of function arguments for the test function.
+	 */
+	public function data_provider_styles() {
+		return [
+			// Test button styles.
+			[
+				<<<HTML
+<a class="wp-block-button__link" href="https://www.example.org/">Test Button</a>
+HTML
+				,
+				[
+					'background_color'     => '#ffffff',
+					'text_color'           => '#000000',
+					'font_face'            => 'HelveticaNeue-Medium',
+					'font_size'            => 15,
+					'border_color'         => '#000000',
+					'border_radius'        => 18,
+					'border_width'         => 1,
+					'horizontal_alignment' => 'center',
+				],
+			],
+		];
+	}
+
+	/**
 	 * Tests the behavior of node_matches to ensure that the scope of
 	 * node matching is sufficiently narrow.
 	 *

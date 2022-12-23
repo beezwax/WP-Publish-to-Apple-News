@@ -730,6 +730,47 @@ class Theme {
 				'label'       => __( 'Body tracking', 'apple-news' ),
 				'type'        => 'integer',
 			],
+			'button_background_color'            => [
+				'default' => '#ffffff',
+				'label'   => __( 'Button background color', 'apple-news' ),
+				'type'    => 'color',
+			],
+			'button_border_color'                => [
+				'default' => '#000000',
+				'label'   => __( 'Button border color', 'apple-news' ),
+				'type'    => 'color',
+			],
+			'button_border_radius'               => [
+				'default' => 18,
+				'label'   => __( 'Button border radius', 'apple-news' ),
+				'type'    => 'integer',
+			],
+			'button_border_width'                => [
+				'default' => 1,
+				'label'   => __( 'Button border width', 'apple-news' ),
+				'type'    => 'integer',
+			],
+			'button_horizontal_alignment'        => [
+				'default' => 'center',
+				'label'   => __( 'Button alignment', 'apple-news' ),
+				'options' => [ 'left', 'center', 'right' ],
+				'type'    => 'select',
+			],
+			'button_text_color'                  => [
+				'default' => '#000000',
+				'label'   => __( 'Button text color', 'apple-news' ),
+				'type'    => 'color',
+			],
+			'button_font_face'                   => [
+				'default' => 'HelveticaNeue-Medium',
+				'label'   => __( 'Button font face', 'apple-news' ),
+				'type'    => 'font',
+			],
+			'button_font_size'                   => [
+				'default' => 15,
+				'label'   => __( 'Button font size', 'apple-news' ),
+				'type'    => 'integer',
+			],
 			'byline_color'                       => [
 				'default' => '#7c7c7c',
 				'label'   => __( 'Combined Date and Author font color', 'apple-news' ),
@@ -2158,6 +2199,19 @@ class Theme {
 					'author_format',
 					'dark_mode_colors_heading',
 					'author_color_dark',
+				],
+			],
+			'button'          => [
+				'label'    => __( 'Link Button', 'apple-news' ),
+				'settings' => [
+					'button_background_color',
+					'button_text_color',
+					'button_font_face',
+					'button_font_size',
+					'button_border_color',
+					'button_border_radius',
+					'button_border_width',
+					'button_horizontal_alignment',
 				],
 			],
 			'byline'          => [
