@@ -731,7 +731,7 @@ class Theme {
 				'type'        => 'integer',
 			],
 			'button_background_color'            => [
-				'default' => '#FFFFFF',
+				'default' => '#ffffff',
 				'label'   => __( 'Background color', 'apple-news' ),
 				'type'    => 'color',
 			],
