@@ -31,24 +31,31 @@ class Apple_News_Image_Test extends Apple_News_Component_TestCase {
 	}
 
 	/**
-	 * Test component type ('image' or 'photo') postmeta selection.
+	 * Test component role ('image' or 'photo') postmeta selection.
 	 */
-	public function test_component_type() {
+	public function test_component_role() {
 		// Create test post.
 		$post_id = self::factory()->post->create(
 			[
-				// First img becomes cover, second img is output as standard json component.
-				'post_content' => '<img src="https://placeimg.com/640/480/any" alt="Example Cover" /><img src="https://placeimg.com/640/480/any" alt="Example Image" />',
+				'post_content' => '<img src="https://placeimg.com/640/480/any" alt="Example" />',
 			]
 		);
+
+		// Create a new attachment and assign it as the featured image for the cover component. 
+		set_post_thumbnail( 
+			$post_id, 
+			$this->get_new_attachment( 0 ) 
+		); 
+
+		// Check that the default component role is 'photo'.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'photo', $json['components'][1]['components'][3]['role'] );
 
 		// Toggle component type meta.
 		update_post_meta( $post_id, 'apple_news_use_image_component', true );
 
+		// Check that the component role is now 'image' after meta toggle.
 		$json = $this->get_json_for_post( $post_id );
-		// Test cover image role.
-		$this->assertEquals( 'image', $json['components'][0]['components'][0]['role'] );
-		// Test second image role.
 		$this->assertEquals( 'image', $json['components'][1]['components'][3]['role'] );
 	}
 
