@@ -31,7 +31,7 @@ class Apple_News_Image_Test extends Apple_News_Component_TestCase {
 	}
 
 	/**
-	 * Test component role ('image' or 'photo') postmeta selection.
+	 * Test component role ('image' or 'photo') based on postmeta selection.
 	 */
 	public function test_component_role() {
 		// Create test post.

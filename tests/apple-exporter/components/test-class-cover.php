@@ -57,6 +57,9 @@ class Apple_News_Cover_Test extends Apple_News_Testcase {
 		remove_filter( 'apple_news_cover_json', [ $this, 'filter_apple_news_cover_json' ] );
 	}
 
+	/**
+	 * Test cover component role ('image' or 'photo') based on postmeta selection.
+	 */
 	public function test_cover_role() {
 		// Create test post.
 		$post_id = self::factory()->post->create();
