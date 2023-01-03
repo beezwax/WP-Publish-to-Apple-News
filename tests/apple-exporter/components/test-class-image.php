@@ -31,6 +31,28 @@ class Apple_News_Image_Test extends Apple_News_Component_TestCase {
 	}
 
 	/**
+	 * Test component type ('image' or 'photo') postmeta selection.
+	 */
+	public function test_component_type() {
+		// Create test post.
+		$post_id = self::factory()->post->create(
+			[
+				// First img becomes cover, second img is output as json component.
+				'post_content' => '<img src="https://placeimg.com/640/480/any" alt="Example Cover" /><img src="https://placeimg.com/640/480/any" alt="Example Image" />',
+			]
+		);
+
+		// Toggle component type meta.
+		update_post_meta( $post_id, 'apple_news_use_image_component', true );
+
+		$json = $this->get_json_for_post( $post_id );
+		// Test cover image role.
+		$this->assertEquals( 'image', $json['components'][0]['components'][0]['role'] );
+		// Test second image role.
+		$this->assertEquals( 'image', $json['components'][1]['components'][3]['role'] );
+	}
+
+	/**
 	 * Test Image component matching and JSON
 	 * output with HTML markup for an image.
 	 */
