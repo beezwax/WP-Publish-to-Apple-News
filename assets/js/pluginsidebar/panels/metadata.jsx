@@ -28,7 +28,9 @@ const Metadata = ({
   onChangeIsSponsored,
   onChangeMetadata,
   onChangeSuppressVideoURL,
+  onChangeUseImageComponent,
   suppressVideoURL,
+  useImageComponent,
 }) => (
   <PanelBody
     initialOpen={false}
@@ -63,6 +65,12 @@ const Metadata = ({
       help={__('Check this to prevent video thumbnails for this article.', 'apple-news')}
       label={__('Do not set videoURL metadata for this article', 'apple-news')}
       onChange={onChangeSuppressVideoURL}
+    />
+    <CheckboxControl
+      checked={useImageComponent}
+      help={__('Check this to use Image instead of Photo components for parsed images.', 'apple-news')}
+      label={__('Image component type toggle.', 'apple-news')}
+      onChange={onChangeUseImageComponent}
     />
     <h3>{__('Custom Metadata', 'apple-news')}</h3>
     {metadata.map(({ key, type, value }, index) => (
@@ -133,7 +141,9 @@ Metadata.propTypes = {
   onChangeIsSponsored: PropTypes.func.isRequired,
   onChangeMetadata: PropTypes.func.isRequired,
   onChangeSuppressVideoURL: PropTypes.func.isRequired,
+  onChangeUseImageComponent: PropTypes.func.isRequired,
   suppressVideoURL: PropTypes.bool.isRequired,
+  useImageComponent: PropTypes.bool.isRequired,
 };
 
 export default Metadata;

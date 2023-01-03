@@ -181,6 +181,7 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			'apple_news_pullquote_position' => 'string',
 			'apple_news_slug'               => 'string',
 			'apple_news_suppress_video_url' => 'boolean',
+			'apple_news_use_image_component' => 'boolean',
 		];
 		foreach ( $fields as $meta_key => $type ) {
 			switch ( $type ) {
@@ -335,18 +336,19 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 
 		// Only show the publish feature if the user is authorized and auto sync is not enabled.
 		// Also check if the post has been previously published and/or deleted.
-		$api_id             = get_post_meta( $post->ID, 'apple_news_api_id', true );
-		$deleted            = get_post_meta( $post->ID, 'apple_news_api_deleted', true );
-		$pending            = get_post_meta( $post->ID, 'apple_news_api_pending', true );
-		$is_paid            = get_post_meta( $post->ID, 'apple_news_is_paid', true );
-		$is_preview         = get_post_meta( $post->ID, 'apple_news_is_preview', true );
-		$is_hidden          = get_post_meta( $post->ID, 'apple_news_is_hidden', true );
-		$maturity_rating    = get_post_meta( $post->ID, 'apple_news_maturity_rating', true );
-		$is_sponsored       = get_post_meta( $post->ID, 'apple_news_is_sponsored', true );
-		$pullquote          = get_post_meta( $post->ID, 'apple_news_pullquote', true );
-		$pullquote_position = get_post_meta( $post->ID, 'apple_news_pullquote_position', true );
-		$slug               = get_post_meta( $post->ID, 'apple_news_slug', true );
-		$suppress_video_url = get_post_meta( $post->ID, 'apple_news_suppress_video_url', true );
+		$api_id              = get_post_meta( $post->ID, 'apple_news_api_id', true );
+		$deleted             = get_post_meta( $post->ID, 'apple_news_api_deleted', true );
+		$pending             = get_post_meta( $post->ID, 'apple_news_api_pending', true );
+		$is_paid             = get_post_meta( $post->ID, 'apple_news_is_paid', true );
+		$is_preview          = get_post_meta( $post->ID, 'apple_news_is_preview', true );
+		$is_hidden           = get_post_meta( $post->ID, 'apple_news_is_hidden', true );
+		$maturity_rating     = get_post_meta( $post->ID, 'apple_news_maturity_rating', true );
+		$is_sponsored        = get_post_meta( $post->ID, 'apple_news_is_sponsored', true );
+		$pullquote           = get_post_meta( $post->ID, 'apple_news_pullquote', true );
+		$pullquote_position  = get_post_meta( $post->ID, 'apple_news_pullquote_position', true );
+		$slug                = get_post_meta( $post->ID, 'apple_news_slug', true );
+		$suppress_video_url  = get_post_meta( $post->ID, 'apple_news_suppress_video_url', true );
+		$use_image_component = get_post_meta( $post->ID, 'apple_news_use_image_component', true );
 
 		// Set default values.
 		if ( empty( $pullquote_position ) ) {

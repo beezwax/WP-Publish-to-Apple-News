@@ -169,6 +169,10 @@ class Admin_Apple_News extends Apple_News {
 					'default' => false,
 					'type'    => 'boolean',
 				],
+				'apple_news_use_image_component' => [
+					'default' => false,
+					'type'    => 'boolean',
+				],
 			];
 
 			// Loop over postmeta fields and register each.

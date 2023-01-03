@@ -72,6 +72,11 @@ if ( ! \Apple_News::is_initialized() ) : ?>
 			<strong><?php esc_html_e( 'Do not set videoURL metadata for this article', 'apple-news' ); ?></strong>
 		</label>
 		<p><?php esc_html_e( 'Check this to prevent video thumbnails for this article.', 'apple-news' ); ?></p>
+		<label for="apple-news-use-image-component">
+			<input id="apple-news-use-image-component" name="apple_news_use_image_component" type="checkbox" value="1" <?php checked( $use_image_component ); ?>>
+			<strong><?php esc_html_e( 'Image component type toggle', 'apple-news' ); ?></strong>
+		</label>
+		<p><?php esc_html_e( 'Check this to use Image instead of Photo components for parsed images.', 'apple-news' ); ?></p>
 		<h4><?php esc_html_e( 'Custom Metadata', 'apple-news' ); ?></h4>
 		<?php Admin_Apple_Meta_Boxes::build_metadata( $post->ID ); ?>
 		<button class="button-primary apple-news-metadata-add">
