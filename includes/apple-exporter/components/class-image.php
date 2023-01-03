@@ -61,7 +61,7 @@ class Image extends Component {
 			'json-without-caption',
 			__( 'JSON without caption', 'apple-news' ),
 			[
-				'role'   => 'photo',
+				'role'   => '#role#',
 				'URL'    => '#url#',
 				'layout' => '#layout#',
 			]
@@ -87,7 +87,7 @@ class Image extends Component {
 				'role'       => 'container',
 				'components' => [
 					[
-						'role'    => 'photo',
+						'role'    => '#role#',
 						'URL'     => '#url#',
 						'layout'  => '#layout#',
 						'caption' => [
@@ -192,6 +192,10 @@ class Image extends Component {
 		$values   = [
 			'#url#' => $this->maybe_bundle_source( $url, $filename ),
 		];
+
+		// Use postmeta to determine if component will be registered as an Image or Photo.
+		$use_image = get_post_meta( $this->workspace->content_id, 'apple_news_use_image_component', true );
+		$values['#role#'] = $use_image ? 'image' : 'photo';
 
 		// Determine image alignment.
 		if ( false !== stripos( $html, 'align="left"' )
