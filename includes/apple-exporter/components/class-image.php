@@ -194,16 +194,8 @@ class Image extends Component {
 		];
 
 		// Use postmeta to determine if component role should be registered as 'image' or 'photo'.
-		$use_image  = get_post_meta( $this->workspace->content_id, 'apple_news_use_image_component', true );
-		$image_type = $use_image ? 'image' : 'photo';
-
-		/**
-		 * Allows for an image src value to be filtered before being applied.
-		 *
-		 * @param string $image_type The image component type as determined by postmeta ('image' or 'photo').
-		 * @param string $text       The raw text that was parsed from the article.
-		 */
-		$values['#role#'] = apply_filters( 'apple_news_build_img_role', $image_type, $html );
+		$use_image        = get_post_meta( $this->workspace->content_id, 'apple_news_use_image_component', true );
+		$values['#role#'] = $use_image ? 'image' : 'photo';
 
 		// Determine image alignment.
 		if ( false !== stripos( $html, 'align="left"' )

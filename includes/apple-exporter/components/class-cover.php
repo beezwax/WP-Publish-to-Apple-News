@@ -173,16 +173,8 @@ class Cover extends Component {
 		}
 
 		// Use postmeta to determine if component role should be registered as 'image' or 'photo'.
-		$use_image  = get_post_meta( $this->workspace->content_id, 'apple_news_use_image_component', true );
-		$image_type = $use_image ? 'image' : 'photo';
-
-		/**
-		 * Allows for an image src value to be filtered before being applied.
-		 *
-		 * @param string $image_type The image component type as determined by postmeta ('image' or 'photo').
-		 * @param string $options    The options based to the cover's build method.
-		 */
-		$role = apply_filters( 'apple_news_build_cover_img_role', $image_type, $options );
+		$use_image = get_post_meta( $this->workspace->content_id, 'apple_news_use_image_component', true );
+		$role      = $use_image ? 'image' : 'photo';
 
 		// Fork for caption vs. not.
 		if ( ! empty( $options['caption'] )
