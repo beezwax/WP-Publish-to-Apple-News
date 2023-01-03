@@ -194,7 +194,7 @@ class Image extends Component {
 		];
 
 		// Use postmeta to determine if component will be registered as an Image or Photo.
-		$use_image = get_post_meta( $this->workspace->content_id, 'apple_news_use_image_component', true );
+		$use_image        = get_post_meta( $this->workspace->content_id, 'apple_news_use_image_component', true );
 		$values['#role#'] = $use_image ? 'image' : 'photo';
 
 		// Determine image alignment.
