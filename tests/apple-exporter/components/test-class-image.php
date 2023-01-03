@@ -37,7 +37,7 @@ class Apple_News_Image_Test extends Apple_News_Component_TestCase {
 		// Create test post.
 		$post_id = self::factory()->post->create(
 			[
-				// First img becomes cover, second img is output as json component.
+				// First img becomes cover, second img is output as standard json component.
 				'post_content' => '<img src="https://placeimg.com/640/480/any" alt="Example Cover" /><img src="https://placeimg.com/640/480/any" alt="Example Image" />',
 			]
 		);
