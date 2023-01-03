@@ -68,8 +68,8 @@ const Metadata = ({
     />
     <CheckboxControl
       checked={useImageComponent}
-      help={__('Check this to use Image instead of Photo components for parsed images.', 'apple-news')}
-      label={__('Image component type toggle.', 'apple-news')}
+      help={__('Check this to use an Image instead of a Photo component for images in this article.', 'apple-news')}
+      label={__('Use Image component for images.', 'apple-news')}
       onChange={onChangeUseImageComponent}
     />
     <h3>{__('Custom Metadata', 'apple-news')}</h3>
