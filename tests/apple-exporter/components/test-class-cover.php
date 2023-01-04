@@ -58,6 +58,31 @@ class Apple_News_Cover_Test extends Apple_News_Testcase {
 	}
 
 	/**
+	 * Test cover component role ('image' or 'photo') based on postmeta selection.
+	 */
+	public function test_cover_role() {
+		// Create test post.
+		$post_id = self::factory()->post->create();
+
+		// Create a new attachment and assign it as the featured image for the cover component. 
+		set_post_thumbnail( 
+			$post_id, 
+			$this->get_new_attachment( 0 ) 
+		);
+
+		// Check that the cover component's default role is 'photo'.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'photo', $json['components'][0]['components'][0]['role'] );
+
+		// Toggle component type meta.
+		update_post_meta( $post_id, 'apple_news_use_image_component', true );
+
+		// Check that the cover component's role is now 'image' after meta toggle.
+		$json = $this->get_json_for_post( $post_id );
+		$this->assertEquals( 'image', $json['components'][0]['components'][0]['role'] );
+	}
+
+	/**
 	 * Ensures that the lightbox font is set to the same font face as the image caption.
 	 */
 	public function test_lightbox_font() {

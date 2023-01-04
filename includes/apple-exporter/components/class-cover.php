@@ -37,7 +37,7 @@ class Cover extends Component {
 				'layout'     => 'headerPhotoLayout',
 				'components' => [
 					[
-						'role'   => 'photo',
+						'role'   => '#role#',
 						'layout' => 'headerPhotoLayout',
 						'URL'    => '#url#',
 					],
@@ -70,7 +70,7 @@ class Cover extends Component {
 				'layout'     => 'headerPhotoLayout',
 				'components' => [
 					[
-						'role'    => 'photo',
+						'role'    => '#role#',
 						'layout'  => 'headerPhotoLayoutWithCaption',
 						'URL'     => '#url#',
 						'caption' => [
@@ -172,6 +172,10 @@ class Cover extends Component {
 			return;
 		}
 
+		// Use postmeta to determine if component role should be registered as 'image' or 'photo'.
+		$use_image = get_post_meta( $this->workspace->content_id, 'apple_news_use_image_component', true );
+		$role      = $use_image ? 'image' : 'photo';
+
 		// Fork for caption vs. not.
 		if ( ! empty( $options['caption'] )
 			&& true === $theme->get_value( 'cover_caption' )
@@ -180,6 +184,7 @@ class Cover extends Component {
 				'jsonWithCaption',
 				[
 					'#caption#'          => $options['caption'],
+					'#role#'             => $role,
 					'#url#'              => $url,
 					'#caption_tracking#' => intval( $theme->get_value( 'caption_tracking' ) ) / 100,
 				]
@@ -188,7 +193,8 @@ class Cover extends Component {
 			$this->register_json(
 				'json',
 				[
-					'#url#' => $url,
+					'#role#' => $role,
+					'#url#'  => $url,
 				]
 			);
 		}

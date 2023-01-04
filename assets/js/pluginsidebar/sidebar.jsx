@@ -94,6 +94,7 @@ const Sidebar = () => {
   const [selectedSectionsRaw, setSelectedSectionsRaw] = usePostMetaValue('apple_news_sections');
   const [slug, setSlug] = usePostMetaValue('apple_news_slug');
   const [suppressVideoURL, setSuppressVideoURL] = usePostMetaValue('apple_news_suppress_video_url');
+  const [useImageComponent, setUseImageComponent] = usePostMetaValue('apple_news_use_image_component');
 
   // Decode selected sections.
   const metadata = safeJsonParseArray(metadataRaw);
@@ -238,7 +239,9 @@ const Sidebar = () => {
           onChangeIsSponsored={setIsSponsored}
           onChangeMetadata={setMetadata}
           onChangeSuppressVideoURL={setSuppressVideoURL}
+          onChangeUseImageComponent={setUseImageComponent}
           suppressVideoURL={suppressVideoURL}
+          useImageComponent={useImageComponent}
         />
         <MaturityRating
           maturityRating={maturityRating}

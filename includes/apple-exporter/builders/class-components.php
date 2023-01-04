@@ -461,7 +461,7 @@ class Components extends Builder {
 
 			// Add some buffer for the caption.
 			$ratio /= 1.2;
-		} elseif ( 'photo' === $component['role'] && ! empty( $component['URL'] ) ) {
+		} elseif ( ( 'photo' === $component['role'] || 'image' === $component['role'] ) && ! empty( $component['URL'] ) ) {
 			$ratio = $this->get_image_ratio( $component['URL'] );
 		}
 
