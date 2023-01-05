@@ -30,7 +30,7 @@ class Apple_News_Author_Test extends Apple_News_Testcase {
 		);
 		$json    = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 'author', $json['components'][0]['role'] );
-		$this->assertEquals( 'by Test Author', $json['components'][0]['text'] );
+		$this->assertEquals( 'By Test Author', $json['components'][0]['text'] );
 	}
 
 	/**
@@ -94,7 +94,7 @@ class Apple_News_Author_Test extends Apple_News_Testcase {
 		// Validate author settings in generated JSON.
 		$this->assertEquals( '#ffcc00', $json['componentTextStyles']['default-author']['linkStyle']['textColor'] );
 		$this->assertEquals( '#ccff00', $json['componentTextStyles']['default-author']['conditional'][1]['linkStyle']['textColor'] );
-		$this->assertEquals( 'by <a href="' . esc_url( get_author_posts_url( $user_id ) ) . '" rel="author">Test Author</a>', $json['components'][1]['text'] );
+		$this->assertEquals( 'By <a href="' . esc_url( get_author_posts_url( $user_id ) ) . '" rel="author">Test Author</a>', $json['components'][1]['text'] );
 	}
 
 	/**
@@ -126,6 +126,6 @@ class Apple_News_Author_Test extends Apple_News_Testcase {
 		$json                 = $this->get_json_for_post( $post_id );
 
 		// Validate author settings in generated JSON.
-		$this->assertEquals( 'by <a href="' . esc_url( get_author_posts_url( $author_1 ) ) . '" rel="author">' . get_the_author_meta( 'display_name', $author_1 ) . '</a> and <a href="' . esc_url( get_author_posts_url( $author_2 ) ) . '" rel="author">' . get_the_author_meta( 'display_name', $author_2 ) . '</a>', $json['components'][1]['text'] );
+		$this->assertEquals( 'By <a href="' . esc_url( get_author_posts_url( $author_1 ) ) . '" rel="author">' . get_the_author_meta( 'display_name', $author_1 ) . '</a> and <a href="' . esc_url( get_author_posts_url( $author_2 ) ) . '" rel="author">' . get_the_author_meta( 'display_name', $author_2 ) . '</a>', $json['components'][1]['text'] );
 	}
 }
