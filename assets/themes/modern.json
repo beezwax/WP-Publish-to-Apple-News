@@ -31,7 +31,7 @@
     "author_link_color": "#000000",
     "byline_color": "#000000",
     "byline_font": "AvenirNext-Regular",
-    "byline_format": "By #author# #F j, Y, g:ia#",
+    "byline_format": "by #author# #F j, Y, g:ia#",
     "byline_line_height": 36,
     "byline_size": 12,
     "byline_tracking": 24,
