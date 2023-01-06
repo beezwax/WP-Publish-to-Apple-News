@@ -149,7 +149,7 @@ HTML;
 		// Ensure component level conditional is set.
 		$this->assertEquals(
 			'dark-table',
-			$json['components'][1]['conditional'][0]['style'],
+			$json['components'][1]['conditional'][0]['style']
 		);
 
 		// Ensure border color values match.
@@ -211,7 +211,7 @@ HTML;
 		// Ensure component level conditional is still set.
 		$this->assertEquals(
 			'dark-table',
-			$json['components'][1]['conditional'][0]['style'],
+			$json['components'][1]['conditional'][0]['style']
 		);
 
 		// Ensure unset dark mode style falls back to default-table style.
