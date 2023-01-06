@@ -75,20 +75,17 @@ class Table extends Component {
 			! empty( $table_header_background_color_dark ) ||
 			! empty( $table_header_color_dark );
 
-		$dark_table_conditional = [];
-		if ( $this->dark_table_colors_exist ) {
-			$dark_table_conditional = [
-				'conditional' => [
-					[
-						'style'      => 'dark-table',
-						'conditions' => [
-							'minSpecVersion'       => '1.14',
-							'preferredColorScheme' => 'dark',
-						],
+		$dark_table_conditional = $this->dark_table_colors_exist ? [
+			'conditional' => [
+				[
+					'style'      => 'dark-table',
+					'conditions' => [
+						'minSpecVersion'       => '1.14',
+						'preferredColorScheme' => 'dark',
 					],
 				],
-			];
-		}
+			],
+		] : [];
 
 		// Register the JSON for the table itself.
 		$this->register_spec(
