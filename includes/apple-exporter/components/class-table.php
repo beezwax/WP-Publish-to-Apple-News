@@ -240,6 +240,8 @@ class Table extends Component {
 				$dark_table_styles['tableStyle']['columns']['divider']['color'] = '#table_border_color_dark#';
 				// Row borders.
 				$dark_table_styles['tableStyle']['rows']['divider']['color'] = '#table_border_color_dark#';
+				// Header row borders.
+				$dark_table_styles['tableStyle']['headerRows']['divider']['color'] = '#table_border_color_dark#';
 			}
 
 			$this->register_spec(
