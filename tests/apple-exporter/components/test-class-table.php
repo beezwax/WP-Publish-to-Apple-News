@@ -118,7 +118,7 @@ HTML;
 
 
 	/**
-	 * Tests table settings.
+	 * Tests dark mode colors.
 	 */
 	public function test_dark_colors() {
 
@@ -146,54 +146,92 @@ HTML;
 		$this->ensure_tokens_replaced( $json );
 		$json = json_decode( $json, true );
 
-		// Ensure conditionals are set
-		// Outer Table Border.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['conditional'] ) );
-		// Background Color, Text Color.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['cells']['conditional'] ) );
-		// Column Border.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['columns']['conditional'] ) );
-		// Row Border.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['rows']['conditional'] ) );
-		// Header Border.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['headerRows']['conditional'] ) );
-		// Header Background, Header Text Color.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'] ) );
+		// Ensure component level conditional is set.
+		$this->assertEquals(
+			'dark-table',
+			$json['components'][1]['conditional'][0]['style'],
+		);
 
-		// Ensure Color Values match.
+		// Ensure border color values match.
 		$this->assertEquals(
 			'#abcdef',
-			$json['componentStyles']['default-table']['conditional']['border']['all']['color']
+			$json['componentStyles']['dark-table']['border']['all']['color']
 		);
 		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['dark-table']['tableStyle']['columns']['divider']['color']
+		);
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['dark-table']['tableStyle']['rows']['divider']['color']
+		);
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['dark-table']['tableStyle']['headerRows']['divider']['color']
+		);
+
+		// Ensure cell background and text colors match.
+		$this->assertEquals(
 			'#fedcba',
-			$json['componentStyles']['default-table']['tableStyle']['cells']['conditional'][0]['backgroundColor']
+			$json['componentStyles']['dark-table']['tableStyle']['cells']['backgroundColor']
 		);
 		$this->assertEquals(
 			'#123456',
-			$json['componentStyles']['default-table']['tableStyle']['cells']['conditional'][0]['textStyle']['textColor']
+			$json['componentStyles']['dark-table']['tableStyle']['cells']['textStyle']['textColor']
 		);
 
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentStyles']['default-table']['tableStyle']['columns']['conditional'][0]['divider']['color']
-		);
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentStyles']['default-table']['tableStyle']['rows']['conditional'][0]['divider']['color']
-		);
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentStyles']['default-table']['tableStyle']['headerRows']['conditional'][0]['divider']['color']
-		);
-
+		// Ensure header background and text colors match.
 		$this->assertEquals(
 			'#654321',
-			$json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'][0]['backgroundColor']
+			$json['componentStyles']['dark-table']['tableStyle']['headerCells']['backgroundColor']
 		);
 		$this->assertEquals(
 			'#987654',
-			$json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'][0]['textStyle']['textColor']
+			$json['componentStyles']['dark-table']['tableStyle']['headerCells']['textStyle']['textColor']
+		);
+
+		// Test partial dark mode styles.
+		// Set table settings.
+		$this->set_theme_settings(
+			[
+				// Set default-table style.
+				'table_border_color'               => '#111111',
+				'table_body_background_color'      => '#000000',
+				// Reset dark mode style.
+				'table_body_background_color_dark' => '',
+			]
+		);
+
+		// Run the export.
+		$exporter = new Exporter( $content, $this->workspace, $this->settings );
+		$json     = $exporter->export();
+		$this->ensure_tokens_replaced( $json );
+		$json = json_decode( $json, true );
+
+		// Ensure component level conditional is still set.
+		$this->assertEquals(
+			'dark-table',
+			$json['components'][1]['conditional'][0]['style'],
+		);
+
+		// Ensure unset dark mode style falls back to default-table style.
+		$this->assertEquals(
+			'#000000',
+			$json['componentStyles']['dark-table']['tableStyle']['cells']['backgroundColor']
+		);
+		$this->assertEquals(
+			'#000000',
+			$json['componentStyles']['default-table']['tableStyle']['cells']['backgroundColor']
+		);
+
+		// Ensure dark mode styles still differentiated from default-styles for fields with set values.
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['dark-table']['border']['all']['color']
+		);
+		$this->assertEquals(
+			'#111111',
+			$json['componentStyles']['default-table']['border']['all']['color']
 		);
 	}
 
