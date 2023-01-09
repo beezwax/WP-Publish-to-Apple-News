@@ -26,29 +26,7 @@ class Apple_News_Table_Test extends Apple_News_Component_TestCase {
 		parent::setup();
 
 		// Create an example table to use in tests.
-		$this->html = <<<HTML
-<table>
-	<thead>
-		<tr>
-			<th>Column Header 1</th>
-			<th>Column Header 2</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td>Column Data 1</td>
-			<td>Column Data 2</td>
-		</tr>
-	</tbody>
-	<tfoot>
-		<tr>
-			<td>Column Footer 1</td>
-			<td>Column Footer 2</td>
-		</tr>
-	</tfoot>
-</table>
-HTML;
-
+		$this->html         = '<table><thead><tr><th>Column Header 1</th><th>Column Header 2</th></tr></thead><tbody><tr><td>Column Data 1</td><td>Column Data 2</td></tr></tbody><tfoot><tr><td>Column Footer 1</td><td>Column Footer 2</td></tr></tfoot></table>';
 		$this->html_caption = '<figure class="wp-block-table"><table><thead><tr><th>Column Header 1</th><th>Column Header 2</th></tr></thead><tbody><tr><td>Column Data 1</td><td>Column Data 2</td></tr></tbody><tfoot><tr><td>Column Footer 1</td><td>Column Footer 2</td></tr></tfoot></table><figcaption>Caption</figcaption></figure>';
 	}
 
@@ -92,17 +70,13 @@ HTML;
 	 * Tests HTML formatting.
 	 */
 	public function test_html() {
+		// Create post, generate json.
+		$post_id = self::factory()->post->create( [ 'post_content' => $this->html ] );
+		$json    = $this->get_json_for_post( $post_id );
+		$result  = $json['components'][3];
 
-		// Setup.
-		$component = new Table(
-			$this->html,
-			$this->workspace,
-			$this->settings,
-			$this->styles,
-			$this->layouts,
-			null,
-			$this->component_styles
-		);
+		// Remove newlines from table html.
+		$result['html'] = str_replace( "\n", '', $json['components'][3]['html'] );
 
 		// Test.
 		$this->assertEquals(
@@ -112,23 +86,15 @@ HTML;
 				'role'   => 'htmltable',
 				'style'  => 'default-table',
 			],
-			$component->to_array()
+			$result
 		);
 	}
 
 
 	/**
-	 * Tests table settings.
+	 * Tests dark mode colors.
 	 */
 	public function test_dark_colors() {
-
-		// Setup.
-		$content = new Exporter_Content(
-			3,
-			'Title',
-			$this->html
-		);
-
 		// Set table settings.
 		$this->set_theme_settings(
 			[
@@ -140,60 +106,93 @@ HTML;
 			]
 		);
 
-		// Run the export.
-		$exporter = new Exporter( $content, $this->workspace, $this->settings );
-		$json     = $exporter->export();
-		$this->ensure_tokens_replaced( $json );
-		$json = json_decode( $json, true );
+		// Create post, generate json.
+		$post_id = self::factory()->post->create( [ 'post_content' => $this->html ] );
+		$json    = $this->get_json_for_post( $post_id );
 
-		// Ensure conditionals are set
-		// Outer Table Border.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['conditional'] ) );
-		// Background Color, Text Color.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['cells']['conditional'] ) );
-		// Column Border.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['columns']['conditional'] ) );
-		// Row Border.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['rows']['conditional'] ) );
-		// Header Border.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['headerRows']['conditional'] ) );
-		// Header Background, Header Text Color.
-		$this->assertTrue( isset( $json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'] ) );
+		// Ensure component level conditional is set.
+		$this->assertEquals(
+			'dark-table',
+			$json['components'][3]['conditional'][0]['style']
+		);
 
-		// Ensure Color Values match.
+		// Ensure border color values match.
 		$this->assertEquals(
 			'#abcdef',
-			$json['componentStyles']['default-table']['conditional']['border']['all']['color']
+			$json['componentStyles']['dark-table']['border']['all']['color']
 		);
 		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['dark-table']['tableStyle']['columns']['divider']['color']
+		);
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['dark-table']['tableStyle']['rows']['divider']['color']
+		);
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['dark-table']['tableStyle']['headerRows']['divider']['color']
+		);
+
+		// Ensure cell background and text colors match.
+		$this->assertEquals(
 			'#fedcba',
-			$json['componentStyles']['default-table']['tableStyle']['cells']['conditional'][0]['backgroundColor']
+			$json['componentStyles']['dark-table']['tableStyle']['cells']['backgroundColor']
 		);
 		$this->assertEquals(
 			'#123456',
-			$json['componentStyles']['default-table']['tableStyle']['cells']['conditional'][0]['textStyle']['textColor']
+			$json['componentStyles']['dark-table']['tableStyle']['cells']['textStyle']['textColor']
 		);
 
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentStyles']['default-table']['tableStyle']['columns']['conditional'][0]['divider']['color']
-		);
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentStyles']['default-table']['tableStyle']['rows']['conditional'][0]['divider']['color']
-		);
-		$this->assertEquals(
-			'#abcdef',
-			$json['componentStyles']['default-table']['tableStyle']['headerRows']['conditional'][0]['divider']['color']
-		);
-
+		// Ensure header background and text colors match.
 		$this->assertEquals(
 			'#654321',
-			$json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'][0]['backgroundColor']
+			$json['componentStyles']['dark-table']['tableStyle']['headerCells']['backgroundColor']
 		);
 		$this->assertEquals(
 			'#987654',
-			$json['componentStyles']['default-table']['tableStyle']['headerCells']['conditional'][0]['textStyle']['textColor']
+			$json['componentStyles']['dark-table']['tableStyle']['headerCells']['textStyle']['textColor']
+		);
+
+		// Test partial dark mode styles.
+		// Set table settings.
+		$this->set_theme_settings(
+			[
+				// Set default-table style.
+				'table_border_color'               => '#111111',
+				'table_body_background_color'      => '#000000',
+				// Reset dark mode style.
+				'table_body_background_color_dark' => '',
+			]
+		);
+
+		// Regenerate json after theme setting changes.
+		$json = $this->get_json_for_post( $post_id );
+
+		// Ensure component level conditional is still set.
+		$this->assertEquals(
+			'dark-table',
+			$json['components'][3]['conditional'][0]['style']
+		);
+
+		// Ensure unset dark mode style falls back to default-table style.
+		$this->assertEquals(
+			'#000000',
+			$json['componentStyles']['dark-table']['tableStyle']['cells']['backgroundColor']
+		);
+		$this->assertEquals(
+			'#000000',
+			$json['componentStyles']['default-table']['tableStyle']['cells']['backgroundColor']
+		);
+
+		// Ensure dark mode styles still differentiated from default-styles for fields with set values.
+		$this->assertEquals(
+			'#abcdef',
+			$json['componentStyles']['dark-table']['border']['all']['color']
+		);
+		$this->assertEquals(
+			'#111111',
+			$json['componentStyles']['default-table']['border']['all']['color']
 		);
 	}
 
@@ -201,14 +200,6 @@ HTML;
 	 * Tests table settings.
 	 */
 	public function test_settings() {
-
-		// Setup.
-		$content = new Exporter_Content(
-			3,
-			'Title',
-			$this->html
-		);
-
 		// Set table settings.
 		$this->set_theme_settings(
 			[
@@ -236,11 +227,9 @@ HTML;
 			]
 		);
 
-		// Run the export.
-		$exporter = new Exporter( $content, $this->workspace, $this->settings );
-		$json     = $exporter->export();
-		$this->ensure_tokens_replaced( $json );
-		$json = json_decode( $json, true );
+		// Create post, generate json.
+		$post_id = self::factory()->post->create( [ 'post_content' => $this->html ] );
+		$json    = $this->get_json_for_post( $post_id );
 
 		// Validate table layout in generated JSON.
 		$this->assertEquals(
