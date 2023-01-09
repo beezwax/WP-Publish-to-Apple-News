@@ -787,8 +787,8 @@ class Theme {
 				'type'    => 'font',
 			],
 			'byline_format'                      => [
-				'default'     => 'By #author# | #M j, Y | g:i A#',
-				'description' => __( 'Set the byline format. Two tokens can be present, #author# to denote the location of the author name and a <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string also encapsulated by #. The default format is "By #author# | #M j, Y | g:i A#". Note that byline format updates only preview on save.', 'apple-news' ),
+				'default'     => 'by #author# | #M j, Y | g:i A#',
+				'description' => __( 'Set the byline format. Two tokens can be present, #author# to denote the location of the author name and a <a href="http://php.net/manual/en/function.date.php" target="blank">PHP date format</a> string also encapsulated by #. The default format is "by #author# | #M j, Y | g:i A#". Note that byline format updates only preview on save.', 'apple-news' ),
 				'label'       => __( 'Combined Date and Author format', 'apple-news' ),
 				'type'        => 'text',
 			],
