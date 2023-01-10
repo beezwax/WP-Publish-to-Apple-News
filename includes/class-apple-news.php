@@ -1032,7 +1032,9 @@ class Apple_News {
 				$trigger_save = true;
 			}
 			// If theme options have changed, save to db.
-			if ( $trigger_save ) $theme_object->save();
+			if ( $trigger_save ) {
+				$theme_object->save();
+			}
 		}
 
 		$automation = [];
