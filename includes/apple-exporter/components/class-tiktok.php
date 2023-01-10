@@ -36,14 +36,17 @@ class TikTok extends Component {
 		}
 
 		// Handle TikTok oEmbed URLs.
-		// if ( false !== self::get_instagram_url( $node->nodeValue ) ) {
-		// 	return $node;
-		// }
+		if ( false !== self::get_tiktok_url( $node->nodeValue ) ) {
+			return $node;
+		}
 
-		// Look for old-style full TikTok embeds.
-		// if ( self::node_has_class( $node, 'instagram-media' ) ) {
-		// 	return $node;
-		// }
+		// Look for full html TikTok embeds.
+		if (
+			'blockquote' === $node->nodeName
+			&& self::node_has_class( $node, 'tiktok-embed' )
+		) {
+			return $node;
+		}
 
 		return null;
 	}
@@ -73,14 +76,8 @@ class TikTok extends Component {
 	protected function build( $html ) {
 
 		// Try to get URL using oEmbed.
-		// $url = self::get_instagram_url( $html );
-
-		// Fall back to old-style full embed if oEmbed failed.
-		if ( empty( $url ) ) {
-			if ( preg_match( '#https?://(www\.)?instagr(\.am|am\.com)/p/([^/]+)/#', $html, $matches ) ) {
-				$url = $matches[0];
-			}
-		}
+		// Works for Gutenberg block, classic oEmbed, and full html embed.
+		$url = self::get_tiktok_url( $html );
 
 		// Ensure we got a URL.
 		if ( empty( $url ) ) {
@@ -96,20 +93,24 @@ class TikTok extends Component {
 	}
 
 	/**
-	 * A method to get an Instagram URL from provided text.
+	 * A method to get an TikTok URL from provided text.
 	 *
-	 * @param string $text The text to parse for the Instagram URL.
+	 * @param string $text The text to parse for the TikTok URL.
 	 *
 	 * @see \WP_oEmbed::__construct()
 	 *
 	 * @access private
-	 * @return string|false The Instagram URL on success, or false on failure.
+	 * @return string|false The TikTok URL on success, or false on failure.
 	 */
-	private static function get_instagram_url( $text ) {
+	private static function get_tiktok_url( $text ) {
 
-		// Check for matches against the WordPress oEmbed signature for Instagram.
-		if ( preg_match( '#^https?://(www\.)?instagr(\.am|am\.com)/p/.*$#i', $text ) ) {
-			return $text;
+		// Check for matches against the WordPress oEmbed signature for TikTok.
+		if ( preg_match_all(
+			'(https?:\/\/(www\.)?tiktok\.com\/@.*\/video\/\d{19})',
+			$text,
+			$matches
+		) ) {
+			return $matches[0][0];
 		}
 
 		return false;
