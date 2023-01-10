@@ -188,7 +188,7 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$exporter         = $export->fetch_exporter();
 		$exporter_content = $exporter->get_content();
 
-		$this->assertEquals( 'by Testuser | Aug 26, 2016 | 12:00 PM', $exporter_content->byline() );
+		$this->assertEquals( 'By Testuser | Aug 26, 2016 | 12:00 PM', $exporter_content->byline() );
 	}
 
 	/**
@@ -220,7 +220,7 @@ class Apple_News_Admin_Action_Index_Export_Test extends Apple_News_Testcase {
 		$exporter         = $export->fetch_exporter();
 		$exporter_content = $exporter->get_content();
 
-		$this->assertEquals( 'by #Testuser | Aug 26, 2016 | 12:00 PM', $exporter_content->byline() );
+		$this->assertEquals( 'By #Testuser | Aug 26, 2016 | 12:00 PM', $exporter_content->byline() );
 	}
 
 	/**
