@@ -25,29 +25,45 @@ class Apple_News_TikTok_Test extends Apple_News_Testcase {
 	public function data_transform() {
 		return [
 			[
+				// Gutenberg block.
 				<<<HTML
-<iframe src="https://embed.podcasts.apple.com/us/podcast/hiking-treks/id1620111298?itsct=podcast_box_player&amp;itscg=30200&amp;ls=1&amp;theme=light" height="450px" frameborder="0" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation" allow="autoplay *; encrypted-media *; clipboard-write" style="width: 100%; max-width: 660px; overflow: hidden; border-radius: 10px; background-color: transparent;"></iframe>
+<!-- wp:embed {"url":"https://www.tiktok.com/@charliehunter67/video/7139291200539905326","type":"video","providerNameSlug":"tiktok","responsive":true} -->
+<figure class="wp-block-embed is-type-video is-provider-tiktok wp-block-embed-tiktok"><div class="wp-block-embed__wrapper">
+https://www.tiktok.com/@charliehunter67/video/7139291200539905326
+</div></figure>
+<!-- /wp:embed -->
 HTML
 				,
-				'https://podcasts.apple.com/us/podcast/hiking-treks/id1620111298',
+				'https://www.tiktok.com/@charliehunter67/video/7139291200539905326',
 			],
+
+			// oEmbed text.
 			[
 				<<<HTML
-<iframe src="https://embed.podcasts.apple.com/us/podcast/bouldering-around-boulder/id1620111298?i=1000558312282&amp;itsct=podcast_box_player&amp;itscg=30200&amp;ls=1&amp;theme=light" height="175px" frameborder="0" sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation" allow="autoplay *; encrypted-media *; clipboard-write" style="width: 100%; max-width: 660px; overflow: hidden; border-radius: 10px; background-color: transparent;"></iframe>
+<p>https://www.tiktok.com/@charliehunter67/video/7139291200539905326</p>
 HTML
 				,
-				'https://podcasts.apple.com/us/podcast/bouldering-around-boulder/id1620111298?i=1000558312282',
+				'https://www.tiktok.com/@charliehunter67/video/7139291200539905326',
+			],
+
+			// Full html embed.
+			[
+				<<<HTML
+<blockquote class="tiktok-embed" style="max-width: 605px; min-width: 325px;" cite="https://www.tiktok.com/@charliehunter67/video/7139291200539905326" data-video-id="7139291200539905326"><section><a title="@charliehunter67" href="https://www.tiktok.com/@charliehunter67?refer=embed" target="_blank" rel="noopener">@charliehunter67</a><a title="♬ original sound - Charlie Hunter" href="https://www.tiktok.com/music/original-sound-7139291194638519083?refer=embed" target="_blank" rel="noopener">♬ original sound - Charlie Hunter</a></section></blockquote>
+HTML
+				,
+				'https://www.tiktok.com/@charliehunter67/video/7139291200539905326',
 			],
 		];
 	}
 
 	/**
-	 * Tests transforming an embedded podcast to a Podcast component.
+	 * Tests transforming an embedded tiktok video into a TikTok component.
 	 *
 	 * @dataProvider data_transform
 	 *
-	 * @param string $post_content  HTML with embedded podcast iframe.
-	 * @param string $expected  The expected URL that is rendered in the component.
+	 * @param string $post_content HTML with embedded TikTok video.
+	 * @param string $expected     The expected URL rendered into the component.
 	 */
 	public function test_transform( $post_content, $expected ) {
 		$this->become_admin();
@@ -55,7 +71,7 @@ HTML
 		$json    = $this->get_json_for_post( $post_id );
 		$this->assertEquals(
 			[
-				'role' => 'podcast',
+				'role' => 'tiktok',
 				'URL'  => $expected,
 			],
 			$json['components'][3]
