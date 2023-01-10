@@ -61,7 +61,7 @@ class Apple_News_Byline_Test extends Apple_News_Testcase {
 		);
 		$json    = $this->get_json_for_post( $post_id );
 		$this->assertEquals( 'byline', $json['components'][0]['role'] );
-		$this->assertEquals( 'by Test Author | Jan 1, 1970 | 12:00 PM', $json['components'][0]['text'] );
+		$this->assertEquals( 'By Test Author | Jan 1, 1970 | 12:00 PM', $json['components'][0]['text'] );
 	}
 
 	/**
@@ -127,7 +127,7 @@ class Apple_News_Byline_Test extends Apple_News_Testcase {
 		// Validate byline settings in generated JSON.
 		$this->assertEquals( '#ffcc00', $json['componentTextStyles']['default-byline']['linkStyle']['textColor'] );
 		$this->assertEquals( '#ccff00', $json['componentTextStyles']['default-byline']['conditional'][1]['linkStyle']['textColor'] );
-		$this->assertEquals( 'by <a href="' . esc_url( get_author_posts_url( $user_id ) ) . '" rel="author">Test Author</a> | Jan 1, 1970 | 12:00 PM', $json['components'][1]['text'] );
+		$this->assertEquals( 'By <a href="' . esc_url( get_author_posts_url( $user_id ) ) . '" rel="author">Test Author</a> | Jan 1, 1970 | 12:00 PM', $json['components'][1]['text'] );
 	}
 
 	/**
@@ -159,6 +159,6 @@ class Apple_News_Byline_Test extends Apple_News_Testcase {
 		$json                 = $this->get_json_for_post( $post_id );
 
 		// Validate byline settings in generated JSON.
-		$this->assertEquals( 'by <a href="' . esc_url( get_author_posts_url( $author_1 ) ) . '" rel="author">' . get_the_author_meta( 'display_name', $author_1 ) . '</a> and <a href="' . esc_url( get_author_posts_url( $author_2 ) ) . '" rel="author">' . get_the_author_meta( 'display_name', $author_2 ) . '</a> | Jan 1, 1970 | 12:00 PM', $json['components'][1]['text'] );
+		$this->assertEquals( 'By <a href="' . esc_url( get_author_posts_url( $author_1 ) ) . '" rel="author">' . get_the_author_meta( 'display_name', $author_1 ) . '</a> and <a href="' . esc_url( get_author_posts_url( $author_2 ) ) . '" rel="author">' . get_the_author_meta( 'display_name', $author_2 ) . '</a> | Jan 1, 1970 | 12:00 PM', $json['components'][1]['text'] );
 	}
 }
