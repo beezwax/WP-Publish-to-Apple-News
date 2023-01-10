@@ -131,20 +131,6 @@ HTML
 				'Spotify',
 			],
 
-			// Gutenberg: TikTok embed.
-			[
-				<<<HTML
-<!-- wp:embed {"url":"https://www.tiktok.com/@dynamic_wallpaper/video/6778286193776938241","type":"video","providerNameSlug":"tiktok","responsive":true} -->
-<figure class="wp-block-embed is-type-video is-provider-tiktok wp-block-embed-tiktok"><div class="wp-block-embed__wrapper">
-https://www.tiktok.com/@dynamic_wallpaper/video/6778286193776938241
-</div></figure>
-<!-- /wp:embed -->
-HTML
-				,
-				'https://www.tiktok.com/@dynamic_wallpaper/video/6778286193776938241',
-				'TikTok',
-			],
-
 			// Classic: Amazon Kindle embed.
 			[
 				<<<HTML
