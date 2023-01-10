@@ -1020,19 +1020,20 @@ class Apple_News {
 
 		foreach ( $registry as $theme_name ) {
 			$theme_object = Admin_Apple_Themes::get_theme_by_name( $theme_name );
-			$trigger_save = false;
+			$save_theme   = false;
+
 			// Update author_format.
 			if ( 'by #author#' === $theme_object->get_value( 'author_format' ) ) {
 				$theme_object->set_value( 'author_format', 'By #author#' );
-				$trigger_save = true;
+				$save_theme = true;
 			}
 			// Update byline_format.
 			if ( 'by #author# | #M j, Y | g:i A#' === $theme_object->get_value( 'byline_format' ) ) {
 				$theme_object->set_value( 'byline_format', 'By #author# | #M j, Y | g:i A#' );
-				$trigger_save = true;
+				$save_theme = true;
 			}
-			// If theme options have changed, save to db.
-			if ( $trigger_save ) {
+			// If theme options have changed, write to db.
+			if ( $save_theme ) {
 				$theme_object->save();
 			}
 		}
