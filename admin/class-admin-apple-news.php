@@ -181,11 +181,17 @@ class Admin_Apple_News extends Apple_News {
 			}
 
 			// Prevent Yoast Duplicate Post plugin from cloning apple_news meta.
-			add_filter( 'duplicate_post_meta_keys_filter', function( $meta_keys ) {
-				array_filter( $meta_keys, function( $key ) {
-					return substr( $key, 0, 11 ) !== 'apple_news_';
-				});
-			} );
+			add_filter(
+				'duplicate_post_meta_keys_filter',
+				function( $meta_keys ) {
+					array_filter(
+						$meta_keys,
+						function( $key ) {
+							return substr( $key, 0, 11 ) !== 'apple_news_';
+						}
+					);
+				} 
+			);
 
 			add_action(
 				'rest_api_init',
