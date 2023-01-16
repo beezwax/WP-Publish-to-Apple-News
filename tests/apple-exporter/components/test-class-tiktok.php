@@ -17,7 +17,7 @@ use Apple_Exporter\Components\TikTok;
  */
 class Apple_News_TikTok_Test extends Apple_News_Testcase {
 
-/**
+	/**
 	 * A data provider for the test_transform function.
 	 *
 	 * @return array An array of arrays representing function arguments.
