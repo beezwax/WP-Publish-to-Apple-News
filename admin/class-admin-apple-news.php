@@ -184,12 +184,14 @@ class Admin_Apple_News extends Apple_News {
 			add_filter(
 				'duplicate_post_meta_keys_filter',
 				function( $meta_keys ) {
+					return is_array( $meta_keys ) ?
 					array_filter(
 						$meta_keys,
 						function( $key ) {
 							return substr( $key, 0, 11 ) !== 'apple_news_';
 						}
-					);
+					)
+					: $meta_keys;
 				} 
 			);
 
