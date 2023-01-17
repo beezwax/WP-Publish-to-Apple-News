@@ -1,20 +1,20 @@
 <?php
 /**
- * Publish to Apple News Includes: Apple_Exporter\Components\Instagram class
+ * Publish to Apple News Includes: Apple_Exporter\Components\TikTok class
  *
- * Contains a class which is used to transform Instagram embeds into Apple News format.
+ * Contains a class which is used to transform TikTok embeds into Apple News format.
  *
  * @package Apple_News
  * @subpackage Apple_Exporter
- * @since 0.2.0
+ * @since 2.4.0
  */
 
 namespace Apple_Exporter\Components;
 
 /**
- * A class to transform an Instagram embed into an Instagram Apple News component.
+ * A class to transform an TikTok embed into an TikTok Apple News component.
  *
- * @since 0.2.0
+ * @since 2.4.0
  */
 class TikTok extends Component {
 
