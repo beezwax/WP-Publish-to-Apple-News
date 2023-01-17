@@ -585,4 +585,29 @@ JSON;
 		$theme_settings = $theme->all_settings();
 		$this->assertEquals( 50, $theme_settings['layout_margin'] );
 	}
+
+	/**
+	 * Ensures that the 2.4.0 upgrade updates author_format theme values correctly.
+	 */
+	public function test_upgrade_2_4_0() {
+		$registry = \Apple_Exporter\Theme::get_registry();
+
+		// Reset author and byline formats to old convention so we can test upgrade logic.
+		foreach ( $registry as $theme_name ) {
+			$theme_object = Admin_Apple_Themes::get_theme_by_name( $theme_name );
+			$theme_object->set_value( 'author_format', 'by #author#' );
+			$theme_object->set_value( 'byline_format', 'by #author# | #M j, Y | g:i A#' );
+			$theme_object->save();
+		}
+
+		$apple_news = new Apple_News();
+		$apple_news->upgrade_to_2_4_0();
+
+		// Confirm that upgrade logic updated the author and byline formats to the new convention.
+		foreach ( $registry as $theme_name ) {
+			$theme_object = Admin_Apple_Themes::get_theme_by_name( $theme_name );
+			$this->assertEquals( 'By #author#', $theme_object->get_value( 'author_format' ) );
+			$this->assertEquals( 'By #author# | #M j, Y | g:i A#', $theme_object->get_value( 'byline_format' ) );
+		}
+	}
 }

@@ -1015,6 +1015,29 @@ class Apple_News {
 	 * Upgrades settings and data formats to be compatible with version 2.4.0.
 	 */
 	public function upgrade_to_2_4_0() {
+		// Update author and byline theme formats to new convention.
+		$registry = \Apple_Exporter\Theme::get_registry();
+
+		foreach ( $registry as $theme_name ) {
+			$theme_object = Admin_Apple_Themes::get_theme_by_name( $theme_name );
+			$save_theme   = false;
+
+			// Update author_format.
+			if ( 'by #author#' === $theme_object->get_value( 'author_format' ) ) {
+				$theme_object->set_value( 'author_format', 'By #author#' );
+				$save_theme = true;
+			}
+			// Update byline_format.
+			if ( 'by #author# | #M j, Y | g:i A#' === $theme_object->get_value( 'byline_format' ) ) {
+				$theme_object->set_value( 'byline_format', 'By #author# | #M j, Y | g:i A#' );
+				$save_theme = true;
+			}
+			// If theme options have changed, write to db.
+			if ( $save_theme ) {
+				$theme_object->save();
+			}
+		}
+
 		$automation = [];
 
 		// Get legacy settings, if they exist.
