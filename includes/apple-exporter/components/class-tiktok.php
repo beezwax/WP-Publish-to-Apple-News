@@ -22,7 +22,6 @@ class TikTok extends Component {
 	 * Look for node matches for this component.
 	 *
 	 * @param \DOMElement $node The node to examine for matches.
-	 * @access public
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
@@ -54,7 +53,6 @@ class TikTok extends Component {
 	/**
 	 * Register all specs for the component.
 	 *
-	 * @access public
 	 */
 	public function register_specs() {
 		$this->register_spec(
@@ -71,7 +69,6 @@ class TikTok extends Component {
 	 * Build the component.
 	 *
 	 * @param string $html The HTML to parse into text for processing.
-	 * @access protected
 	 */
 	protected function build( $html ) {
 
@@ -99,7 +96,6 @@ class TikTok extends Component {
 	 *
 	 * @see \WP_oEmbed::__construct()
 	 *
-	 * @access private
 	 * @return string|false The TikTok URL on success, or false on failure.
 	 */
 	private static function get_tiktok_url( $text ) {
