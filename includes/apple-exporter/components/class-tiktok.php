@@ -52,7 +52,6 @@ class TikTok extends Component {
 
 	/**
 	 * Register all specs for the component.
-	 *
 	 */
 	public function register_specs() {
 		$this->register_spec(
