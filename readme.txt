@@ -3,7 +3,7 @@ Contributors: potatomaster, kevinfodness, jomurgel, tylermachado, benpbolton, al
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 4.0
-Tested up to: 6.0
+Tested up to: 6.1
 Requires PHP: 7.1
 Stable tag: 2.4.0
 License: GPLv3 or later
@@ -48,6 +48,11 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 
 = 2.4.0 =
 * Deprecation: Removed official support for PHP 5.6 and 7.0.
+* TODO: Add remainder of updates for 2.4.0
+
+= 2.3.3 =
+* Enhancement: Tested up to WordPress 6.1.
+* Experimental: Added opt-in filters for deleting posts that have been unpublished.
 
 = 2.3.2 =
 * Bugfix: Fixes a bug where the layout body-layout-last is not added to the list of layouts if the body content ends with something other than a paragraph.

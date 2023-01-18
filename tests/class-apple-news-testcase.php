@@ -248,7 +248,7 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 	protected function add_http_response(
 		$verb,
 		$url,
-		$body,
+		$body = '',
 		$headers = [],
 		$response = [
 			'code'    => 200,
@@ -257,13 +257,15 @@ abstract class Apple_News_Testcase extends WP_UnitTestCase {
 		$cookies = [],
 		$filename = null
 	) {
-		$this->http_responses[ $verb ][ $url ][] = [
-			'body'     => $body,
-			'cookies'  => $cookies,
-			'filename' => $filename,
-			'headers'  => new Requests_Utility_CaseInsensitiveDictionary( $headers ),
-			'response' => $response,
-		];
+		// Handle null for DELETE.
+		$this->http_responses[ $verb ][ $url ][] = 'DELETE' !== $verb
+			? [
+				'body'     => $body,
+				'cookies'  => $cookies,
+				'filename' => $filename,
+				'headers'  => new Requests_Utility_CaseInsensitiveDictionary( $headers ),
+				'response' => $response,
+			] : null;
 	}
 
 	/**
