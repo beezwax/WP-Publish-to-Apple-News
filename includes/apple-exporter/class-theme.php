@@ -1115,6 +1115,11 @@ class Theme {
 				'hidden'  => true,
 				'type'    => 'array',
 			],
+			'layout_columns_override'            => [
+				'default' => null,
+				'label'   => __( 'Layout columns override', 'apple-news' ),
+				'type'    => 'integer',
+			],
 			'layout_gutter'                      => [
 				'default' => 20,
 				'label'   => __( 'Layout gutter', 'apple-news' ),
@@ -1127,7 +1132,7 @@ class Theme {
 			],
 			'layout_width'                       => [
 				'default' => 1024,
-				'hidden'  => true,
+				'label'   => __( 'Layout width', 'apple-news' ),
 				'type'    => 'integer',
 			],
 			'meta_component_order'               => [
@@ -1558,6 +1563,9 @@ class Theme {
 	 * @return int The number of layout columns to use.
 	 */
 	public function get_layout_columns() {
+		if ( $this->get_value( 'layout_columns_override' ) ) {
+			return $this->get_value( 'layout_columns_override' );
+		}
 		return ( 'center' === $this->get_value( 'body_orientation' ) ) ? 9 : 7;
 	}
 
@@ -2123,7 +2131,12 @@ class Theme {
 			'layout'          => [
 				'label'       => __( 'Layout Spacing', 'apple-news' ),
 				'description' => __( 'The spacing for the base layout of the exported articles', 'apple-news' ),
-				'settings'    => [ 'layout_margin', 'layout_gutter' ],
+				'settings'    => [
+					'layout_columns_override',
+					'layout_margin',
+					'layout_gutter',
+					'layout_width',
+				],
 			],
 			'slug'            => [
 				'label'       => __( 'Slug', 'apple-news' ),
