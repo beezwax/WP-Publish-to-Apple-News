@@ -27,14 +27,41 @@ class Apple_News_Layout_Test extends Apple_News_Testcase {
 		$settings                  = $theme->all_settings();
 		$settings['layout_margin'] = 123;
 		$settings['layout_gutter'] = 222;
+		$settings['layout_width']  = 768;
 		$theme->load( $settings );
 		$this->assertTrue( $theme->save() );
 		$layout = new Layout( $this->content, $this->settings );
 		$result = $layout->to_array();
 
 		$this->assertEquals( $theme->get_layout_columns(), $result['columns'] );
-		$this->assertEquals( $theme->get_value( 'layout_width' ), $result['width'] );
+		$this->assertEquals( 768, $result['width'] );
 		$this->assertEquals( 123, $result['margin'] );
 		$this->assertEquals( 222, $result['gutter'] );
+	}
+
+	/**
+	 * Test column override functionality.
+	 */
+	public function test_column_override() {
+		$theme                     = Theme::get_used();
+		$settings                  = $theme->all_settings();
+		$settings['layout_margin'] = 123;
+		$theme->load( $settings );
+		$this->assertTrue( $theme->save() );
+		$layout = new Layout( $this->content, $this->settings );
+		$result = $layout->to_array();
+
+		// Check default behavior.
+		$this->assertEquals( $theme->get_layout_columns(), $result['columns'] );
+
+		$settings['layout_columns_override'] = 6;
+		$theme->load( $settings );
+		$this->assertTrue( $theme->save() );
+		$layout = new Layout( $this->content, $this->settings );
+		$result = $layout->to_array();
+
+		// Confirm override works after theme value change.
+		$this->assertEquals( 6, $theme->get_layout_columns() );
+		$this->assertEquals( 6, $result['columns'] );
 	}
 }
