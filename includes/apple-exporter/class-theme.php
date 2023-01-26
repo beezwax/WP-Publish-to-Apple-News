@@ -1570,7 +1570,7 @@ class Theme {
 	 * @return int The number of layout columns to use.
 	 */
 	public function get_layout_columns() {
-		if ( 'yes' === $this->get_value( 'layout_columns_override' ) ) {
+		if ( 'yes' === $this->get_value( 'layout_columns_override' ) && ! empty( $this->get_value( 'layout_columns' ) ) ) {
 			return $this->get_value( 'layout_columns' );
 		}
 		return ( 'center' === $this->get_value( 'body_orientation' ) ) ? 9 : 7;
