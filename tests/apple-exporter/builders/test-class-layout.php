@@ -48,13 +48,26 @@ class Apple_News_Layout_Test extends Apple_News_Testcase {
 
 		// Check default, override-less behavior.
 		$this->assertEquals( $theme->get_layout_columns(), $json['layout']['columns'] );
+		$this->assertEquals( 7, $json['layout']['columns'] );
 
-		$theme->set_value( 'layout_columns_override', 6 );
+		// Confirm override applies after 'layout_columns_override' is flipped to 'yes'.
+		$theme->set_value( 'layout_columns_override', 'yes' );
+		$theme->set_value( 'layout_columns', 6 );
 		$this->assertTrue( $theme->save() );
 		$json = $this->get_json_for_post( $post_id );
 
-		// Confirm override applies after 'layout_columns_override' theme value change.
 		$this->assertEquals( 6, $theme->get_layout_columns() );
 		$this->assertEquals( 6, $json['layout']['columns'] );
+
+		// Reset override and confirm that dynamic computed value is restored.
+		$theme->set_value( 'layout_columns_override', 'no' );
+		// Also set body_orientation to 'center' to ensure the computed value for layout_columns changes accordingly.
+		$theme->set_value( 'body_orientation', 'center' );
+		$this->assertTrue( $theme->save() );
+		$json = $this->get_json_for_post( $post_id );
+
+		// Confirm override applies after 'layout_columns' theme value change.
+		$this->assertEquals( $theme->get_layout_columns(), $json['layout']['columns'] );
+		$this->assertEquals( 9, $json['layout']['columns'] );
 	}
 }

@@ -1115,10 +1115,16 @@ class Theme {
 				'hidden'  => true,
 				'type'    => 'array',
 			],
-			'layout_columns_override'            => [
-				'default' => null,
-				'label'   => __( 'Layout columns override', 'apple-news' ),
+			'layout_columns'                     => [
+				'default' => 0,
+				'label'   => __( 'Layout columns', 'apple-news' ),
 				'type'    => 'integer',
+			],
+			'layout_columns_override'            => [
+				'default' => 'no',
+				'label'   => __( 'Override computed value with user configured value set above?', 'apple-news' ),
+				'options' => [ 'yes', 'no' ],
+				'type'    => 'select',
 			],
 			'layout_gutter'                      => [
 				'default' => 20,
@@ -1557,14 +1563,15 @@ class Theme {
 	}
 
 	/**
-	 * Get the computed layout columns.
+	 * If user override enabled return layout_columns theme value.
+	 * Else return the computed layout columns value.
 	 *
 	 * @access public
 	 * @return int The number of layout columns to use.
 	 */
 	public function get_layout_columns() {
-		if ( $this->get_value( 'layout_columns_override' ) ) {
-			return $this->get_value( 'layout_columns_override' );
+		if ( 'yes' === $this->get_value( 'layout_columns_override' ) ) {
+			return $this->get_value( 'layout_columns' );
 		}
 		return ( 'center' === $this->get_value( 'body_orientation' ) ) ? 9 : 7;
 	}
@@ -2132,6 +2139,7 @@ class Theme {
 				'label'       => __( 'Layout Spacing', 'apple-news' ),
 				'description' => __( 'The spacing for the base layout of the exported articles', 'apple-news' ),
 				'settings'    => [
+					'layout_columns',
 					'layout_columns_override',
 					'layout_margin',
 					'layout_gutter',
