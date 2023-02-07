@@ -81,7 +81,11 @@ class Admin_Apple_Post_Sync {
 		 * @param bool $should_delete Whether the post should be deleted via the Apple News API or not.
 		 * @param int  $post_id       The ID of the post that was moved to the trash.
 		 */
-		$delete_on_trash = apply_filters( 'apple_news_should_post_delete_on_trash', false, $post->ID );
+		$delete_on_trash = apply_filters(
+			'apple_news_should_post_delete_on_trash',
+			'yes' === $this->settings->api_autosync_trash,
+			$post->ID
+		);
 
 		/**
 		 * Determines whether to delete an article via the Apple News API if it is
@@ -93,7 +97,11 @@ class Admin_Apple_Post_Sync {
 		 * @param bool $should_delete Whether the post should be deleted via the Apple News API or not.
 		 * @param int  $post_id       The ID of the post that was unpublished.
 		 */
-		$delete_on_unpublish = apply_filters( 'apple_news_should_post_delete_on_unpublish', false, $post->ID );
+		$delete_on_unpublish = apply_filters(
+			'apple_news_should_post_delete_on_unpublish',
+			'yes' === $this->settings->api_autosync_unpublish,
+			$post->ID
+		);
 
 		// Determine whether to delete the article via the API.
 		if ( $old_status !== $new_status

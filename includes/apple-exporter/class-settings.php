@@ -33,6 +33,8 @@ class Settings {
 		'api_async'                   => 'no',
 		'api_autosync'                => 'yes',
 		'api_autosync_delete'         => 'yes',
+		'api_autosync_unpublish'      => 'yes',
+		'api_autosync_trash'          => 'yes',
 		'api_autosync_skip'           => '[]',
 		'api_autosync_update'         => 'yes',
 		'api_channel'                 => '',

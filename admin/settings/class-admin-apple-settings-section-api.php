@@ -32,41 +32,49 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 
 		// Add the settings.
 		$this->settings = [
-			'api_config_file'       => [
+			'api_config_file'        => [
 				// translators: tokens fill in <a> tags.
 				'description' => sprintf( __( 'Having trouble? %1$sEnter the contents of your .papi file manually%2$s.', 'apple-news' ), '<a href="#api_config_file">', '</a>' ),
 				'type'        => 'file',
 			],
-			'api_config_file_input' => [
+			'api_config_file_input'  => [
 				'type' => 'textarea',
 			],
-			'api_channel'           => [
+			'api_channel'            => [
 				'type' => 'hidden',
 			],
-			'api_key'               => [
+			'api_key'                => [
 				'type' => 'hidden',
 			],
-			'api_secret'            => [
+			'api_secret'             => [
 				'type' => 'hidden',
 			],
-			'api_autosync'          => [
+			'api_autosync'           => [
 				'label' => __( 'Automatically publish to Apple News when published in WordPress', 'apple-news' ),
 				'type'  => [ 'yes', 'no' ],
 			],
-			'api_autosync_update'   => [
+			'api_autosync_update'    => [
 				'label' => __( 'Automatically update in Apple News when updated in WordPress', 'apple-news' ),
 				'type'  => [ 'yes', 'no' ],
 			],
-			'api_autosync_delete'   => [
+			'api_autosync_delete'    => [
 				'label' => __( 'Automatically delete from Apple News when deleted in WordPress', 'apple-news' ),
 				'type'  => [ 'yes', 'no' ],
 			],
-			'api_async'             => [
+			'api_autosync_unpublish' => [
+				'label' => __( 'Automatically delete from Apple News when unpublished in WordPress', 'apple-news' ),
+				'type'  => [ 'yes', 'no' ],
+			],
+			'api_autosync_trash'     => [
+				'label' => __( 'Automatically delete from Apple News when moved to the trash in WordPress', 'apple-news' ),
+				'type'  => [ 'yes', 'no' ],
+			],
+			'api_async'              => [
 				'label'       => __( 'Asynchronously publish to Apple News', 'apple-news' ),
 				'type'        => [ 'yes', 'no' ],
 				'description' => $this->get_async_description(),
 			],
-			'api_autosync_skip'     => [
+			'api_autosync_skip'      => [
 				'label'    => __( 'Skip auto-publishing for posts that have any of the following term IDs:', 'apple-news' ),
 				'required' => false,
 			],
@@ -80,7 +88,7 @@ class Admin_Apple_Settings_Section_API extends Admin_Apple_Settings_Section {
 			],
 			'apple_news_options'       => [
 				'label'    => __( 'Apple News API Options', 'apple-news' ),
-				'settings' => [ 'api_autosync', 'api_autosync_update', 'api_autosync_delete', 'api_async', 'api_autosync_skip' ],
+				'settings' => [ 'api_autosync', 'api_autosync_update', 'api_autosync_delete', 'api_autosync_unpublish', 'api_autosync_trash', 'api_async', 'api_autosync_skip' ],
 			],
 		];
 
