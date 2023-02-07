@@ -28,7 +28,7 @@ class Apple_News_Automation_Test extends Apple_News_Testcase {
 	}
 
 	/**
-	 * Tests automation priority (where multiple rules match and the first should be used).
+	 * Tests automation priority (where multiple rules match and the last should be used).
 	 */
 	public function test_automation_priority() {
 		$post_id = self::factory()->post->create();
@@ -46,13 +46,13 @@ class Apple_News_Automation_Test extends Apple_News_Testcase {
 					'field'    => 'slug.#text#',
 					'taxonomy' => 'category',
 					'term_id'  => $term_id_1,
-					'value'    => 'Top Priority',
+					'value'    => 'Lower Priority',
 				],
 				[
 					'field'    => 'slug.#text#',
 					'taxonomy' => 'category',
 					'term_id'  => $term_id_2,
-					'value'    => 'Lower Priority',
+					'value'    => 'Top Priority',
 				],
 			]
 		);
@@ -71,13 +71,13 @@ class Apple_News_Automation_Test extends Apple_News_Testcase {
 					'field'    => 'slug.#text#',
 					'taxonomy' => 'category',
 					'term_id'  => $term_id_2,
-					'value'    => 'Lower Priority',
+					'value'    => 'Top Priority',
 				],
 				[
 					'field'    => 'slug.#text#',
 					'taxonomy' => 'category',
 					'term_id'  => $term_id_1,
-					'value'    => 'Top Priority',
+					'value'    => 'Lower Priority',
 				],
 			]
 		);
