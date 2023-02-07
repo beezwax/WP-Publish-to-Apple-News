@@ -112,7 +112,7 @@ class Automation {
 			$rules = self::get_automation_for_post( $post_id );
 			foreach ( $rules as $rule ) {
 				if ( 'theme' === ( $rule['field'] ?? '' ) && ! empty( $rule['value'] ) ) {
-					return $rule['value'];
+					$theme_name = $rule['value'];
 				}
 			}
 		}
@@ -161,7 +161,7 @@ class Automation {
 		$rules = self::get_automation_for_post( $post_id );
 		foreach ( $rules as $rule ) {
 			if ( 'slug.#text#' === ( $rule['field'] ?? '' ) ) {
-				return $rule['value'] ?? '';
+				$slug = $rule['value'] ?? '';
 			}
 		}
 
