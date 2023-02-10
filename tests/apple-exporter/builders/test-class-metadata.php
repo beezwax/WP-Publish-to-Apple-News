@@ -141,13 +141,25 @@ class Apple_News_Metadata_Test extends Apple_News_Testcase {
 				'post_content' => '<figure class="wp-block-video"><video controls="" poster="' . $poster . '" src="' . $video . '"></video></figure>',
 			]
 		);
+		$image   = $this->get_new_attachment( $post_id );
+		set_post_thumbnail( $post_id, $image );
+		$result   = $this->get_json_for_post( $post_id );
+		$metadata = $result['metadata'];
+		
+		// Pre meta suppresion assertions.
+		$this->assertEquals( $poster, $metadata['thumbnailURL'] );
+		$this->assertArrayHasKey( 'videoURL', $metadata );
+
 		// Toggle suppression meta value.
 		update_post_meta( $post_id, 'apple_news_suppress_video_url', true );
 		$result   = $this->get_json_for_post( $post_id );
 		$metadata = $result['metadata'];
 
-		// Assertions.
-		$this->assertEquals( $poster, $metadata['thumbnailURL'] );
+		// Post meta suppresion assertions.
+		$this->assertEquals(
+			wp_get_attachment_url( $image ),
+			$metadata['thumbnailURL']
+		);
 		$this->assertArrayNotHasKey( 'videoURL', $metadata );
 	}
 }
