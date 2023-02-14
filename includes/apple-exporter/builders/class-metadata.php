@@ -94,16 +94,14 @@ class Metadata extends Builder {
 				// Try to match an MP4 source URL.
 				if ( preg_match( '/src="([^\?"]+\.(mp4|m3u8)[^"]*)"/', $matches[0][ $i ], $src ) ) {
 
-					// Include the thumbnail and video URL if the video URL is valid.
-					$url = Exporter_Content::format_src_url( $src[1] );
-					if ( ! empty( $url ) ) {
+					// Include the thumbnail and video URL if the video URL is valid and the suppression meta is absent.
+					$url            = Exporter_Content::format_src_url( $src[1] );
+					$suppress_video = get_post_meta( $this->content_id(), 'apple_news_suppress_video_url', true );
+					if ( ! empty( $url ) && ! $suppress_video ) {
+						$meta['videoURL']     = esc_url_raw( $url );
 						$meta['thumbnailURL'] = $this->maybe_bundle_source(
 							$matches[1][ $i ]
 						);
-
-						if ( ! get_post_meta( $this->content_id(), 'apple_news_suppress_video_url', true ) ) {
-							$meta['videoURL'] = esc_url_raw( $url );
-						}
 
 						break;
 					}
