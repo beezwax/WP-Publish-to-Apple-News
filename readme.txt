@@ -13,7 +13,7 @@ Enables journalistic outlets already approved by Apple News to send content dire
 
 == Description ==
 
-The 'Publish to Apple News' plugin enables WordPress sites with approved Apple News channels to publish content directly on Apple News. Note that Apple News is a distribution platform for professional publications of a journalistic nature, and not all applications will be accepted.
+The 'Publish to Apple News' plugin enables WordPress sites with approved Apple News channels to publish content directly on Apple News.
 
 **Features include:**
 
@@ -47,12 +47,24 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 == Changelog ==
 
 = 2.4.0 =
-* Deprecation: Removed official support for PHP 5.6 and 7.0.
-* TODO: Add remainder of updates for 2.4.0
+* Enhancement: Adds a new Automation configuration to set sections, themes, and other metadata based on taxonomic association for a selected term in the selected taxonomy. This system replaces the Sections configuration previously in use and Sections settings will auto-migrate to the new system.
+* Enhancement: Adds UI controls to set options for whether posts should be deleted from Apple News when unpublished in WordPress.
+* Enhancement: Adds support for Apple Podcast embeds.
+* Enhancement: Adds support for TikTok embeds.
+* Enhancement: Makes layout width a configurable property in the theme editor.
+* Enhancement: Includes the original article ID in the duplicate article error message.
+* Enhancement: Allows publishers to opt out of automatically adding video metadata on posts that contain videos on a per-post basis.
+* Enhancement: Disables dropcap when the first paragraph is under a certain character limit and when it starts with punctuation. Adds theme settings to configure this behavior.
+* Enhancement: Updates the link button style for all themes to match the Apple standard button style.
+* Enhancement: Allows publishers to configure whether images should use the Image or Photo component on a per-post basis. (Photos are tap-to-enlarge whereas Images are not.)
+* Bugfix: Capitalizes the word "By" in the default byline and author components.
+* Bugfix: Fixes the display of the table component in dark mode to properly apply selected dark mode colors.
+* Bugfix: Fixes an issue where posts duplicated by Yoast Duplicate Post are associated with the same article ID in Apple News and updates overwrite the original post.
+* Deprecation: Removes official support for PHP 5.6 and 7.0.
 
 = 2.3.3 =
 * Enhancement: Tested up to WordPress 6.1.
-* Experimental: Added opt-in filters for deleting posts that have been unpublished.
+* Experimental: Adds opt-in filters for deleting posts that have been unpublished.
 
 = 2.3.2 =
 * Bugfix: Fixes a bug where the layout body-layout-last is not added to the list of layouts if the body content ends with something other than a paragraph.
