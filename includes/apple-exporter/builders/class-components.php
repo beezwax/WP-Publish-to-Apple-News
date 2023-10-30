@@ -526,6 +526,10 @@ class Components extends Builder {
 	 */
 	private function get_image_full_size_url( $url ) {
 
+		if(null === $url) {
+			return '';
+		}
+
 		// Strip URL formatting for easier matching.
 		$url = urldecode( $url );
 

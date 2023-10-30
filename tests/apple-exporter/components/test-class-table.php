@@ -18,6 +18,8 @@ use Apple_Exporter\Components\Table;
  * @subpackage Tests
  */
 class Apple_News_Table_Test extends Apple_News_Component_TestCase {
+	private string $html;
+	private string $html_caption;
 
 	/**
 	 * A fixture containing operations to be run before each test.
