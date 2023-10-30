@@ -15,8 +15,12 @@
   },
   "scripts": {
     "phpcbf" : "phpcbf .",
-    "phpcs" : "phpcs .",
-    "phpunit" : "phpunit"
+    "phpcs" : "phpcs . --basepath=.",
+    "phpunit" : "phpunit",
+    "test": [
+      "@phpcs",
+      "@phpunit"
+    ]
   },
   "config": {
     "allow-plugins": {
