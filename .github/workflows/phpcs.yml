@@ -10,5 +10,4 @@ jobs:
         php: [ 8.0 ]
     uses: alleyinteractive/.github/.github/workflows/php-coding-standards.yml@main
     with:
-      command: "phpcs"
       php: ${{ matrix.php }}
