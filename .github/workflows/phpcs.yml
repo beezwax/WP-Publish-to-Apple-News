@@ -8,10 +8,7 @@ jobs:
     strategy:
       matrix:
         php: [ 8.0 ]
-        wordpress: [ "latest" ]
     uses: alleyinteractive/.github/.github/workflows/php-coding-standards.yml@main
     with:
       command: "phpcs"
       php: ${{ matrix.php }}
-      wordpress: ${{ matrix.wordpress }}
-      working-directory: ./
