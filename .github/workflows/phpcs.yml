@@ -2,12 +2,16 @@ name: PHP Coding Standards
 
 on:
   pull_request:
+    branches:
+      - develop
+      types: [ opened, synchronize, reopened, ready_for_review ]
 
 jobs:
   phpcs:
     strategy:
       matrix:
         php: [ 8.0 ]
+    if: github.event.pull_request.draft == false
     uses: alleyinteractive/.github/.github/workflows/php-coding-standards.yml@main
     with:
       php: ${{ matrix.php }}
