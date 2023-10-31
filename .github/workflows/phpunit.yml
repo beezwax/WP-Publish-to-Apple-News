@@ -2,6 +2,9 @@ name: Testing Suite
 
 on:
   pull_request:
+    branches:
+      - develop
+      types: [ opened, synchronize, reopened, ready_for_review ]
 
 jobs:
   php-tests:
@@ -9,6 +12,7 @@ jobs:
       matrix:
         php: ['8.2', '8.1', '8.0', '7.4']
         wordpress: ["latest"]
+    if: github.event.pull_request.draft == false
     uses: alleyinteractive/.github/.github/workflows/php-tests.yml@main
     with:
       command: "test"

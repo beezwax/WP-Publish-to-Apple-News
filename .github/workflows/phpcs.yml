@@ -10,7 +10,7 @@ jobs:
   phpcs:
     strategy:
       matrix:
-        php: [ 8.0 ]
+        php: [ 8.2 ]
     if: github.event.pull_request.draft == false
     uses: alleyinteractive/.github/.github/workflows/php-coding-standards.yml@main
     with:

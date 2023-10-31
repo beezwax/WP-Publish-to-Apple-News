@@ -2,9 +2,13 @@ name: Node Tests
 
 on:
   pull_request:
+    branches:
+      - develop
+      types: [ opened, synchronize, reopened, ready_for_review ]
 
 jobs:
   node-tests:
+    if: github.event.pull_request.draft == false
     uses: alleyinteractive/.github/.github/workflows/node-tests.yml@main
     with:
       ci: true
