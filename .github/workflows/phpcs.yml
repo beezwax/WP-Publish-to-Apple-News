@@ -2,9 +2,9 @@ name: PHP Coding Standards
 
 on:
   pull_request:
+    types: [ opened, synchronize, reopened, ready_for_review ]
     branches:
       - develop
-      types: [ opened, synchronize, reopened, ready_for_review ]
 
 jobs:
   phpcs:
