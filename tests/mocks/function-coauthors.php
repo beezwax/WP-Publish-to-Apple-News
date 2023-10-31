@@ -29,7 +29,9 @@ function coauthors( $between = ', ', $between_last = ' and ', $before = '', $aft
 	// Get last index.
 	$last_index = count( $apple_news_coauthors ) - 1;
 
-	if(null === $between) {
+	// Default was not set when running unit tests,
+	// causing failures.
+	if(empty( $between)) {
 		$between = ', ';
 	}
 
