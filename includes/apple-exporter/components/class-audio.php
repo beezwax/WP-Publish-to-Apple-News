@@ -31,10 +31,10 @@ class Audio extends Component {
 			// Is this a gutenberg audio block?
 			( self::node_has_class( $node, 'wp-block-audio' )
 				&& $node->hasChildNodes()
-				&& 'audio' === $node->firstChild->nodeName
+				&& 'audio' === $node->firstChild->nodeName // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			)
 			// Or is this a stand-alone audio tag?
-			|| 'audio' === $node->nodeName
+			|| 'audio' === $node->nodeName // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		) {
 			return $node;
 		}
