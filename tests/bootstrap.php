@@ -18,7 +18,7 @@ if ( ! $apple_news_tests_dir ) {
 require_once $apple_news_tests_dir . '/includes/functions.php';
 
 // Autoloading for prophecy.
-require_once dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php';
+require_once dirname( __DIR__ ) . '/vendor/autoload.php';
 
 /**
  * Manually load the plugin for tests.
@@ -58,7 +58,7 @@ function apple_news_manually_load_plugin() {
 	$bc_setup->action_init();
 
 	// Load the plugin.
-	require dirname( dirname( __FILE__ ) ) . '/apple-news.php';
+	require dirname( __DIR__ ) . '/apple-news.php';
 }
 tests_add_filter( 'muplugins_loaded', 'apple_news_manually_load_plugin' );
 

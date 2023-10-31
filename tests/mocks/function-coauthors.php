@@ -31,7 +31,7 @@ function coauthors( $between = ', ', $between_last = ' and ', $before = '', $aft
 
 	// Default was not set when running unit tests,
 	// causing failures.
-	if(empty( $between)) {
+	if ( empty( $between ) ) {
 		$between = ', ';
 	}
 

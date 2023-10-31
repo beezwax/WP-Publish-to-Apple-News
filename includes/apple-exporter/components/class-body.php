@@ -555,4 +555,3 @@ class Body extends Component {
 		return parent::to_array();
 	}
 }
-

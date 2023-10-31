@@ -8,7 +8,7 @@
 
 namespace Apple_Push_API;
 
-use Apple_Push_API\Request\Request_Exception as Request_Exception;
+use Apple_Push_API\Request\Request_Exception;
 
 /**
  * A class to build attachments.
@@ -286,5 +286,4 @@ class MIME_Builder {
 
 		return $content;
 	}
-
 }

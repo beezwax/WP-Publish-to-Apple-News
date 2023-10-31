@@ -8,7 +8,7 @@
 
 namespace Apple_Exporter\Components;
 
-use \Apple_Exporter\Exporter_Content;
+use Apple_Exporter\Exporter_Content;
 
 /**
  * An HTML audio tag.
@@ -108,5 +108,4 @@ class Audio extends Component {
 
 		$this->register_json( $audio_spec, $values );
 	}
-
 }

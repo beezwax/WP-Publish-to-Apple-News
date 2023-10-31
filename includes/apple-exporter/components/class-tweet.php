@@ -112,5 +112,4 @@ class Tweet extends Component {
 			'layout'
 		);
 	}
-
 }

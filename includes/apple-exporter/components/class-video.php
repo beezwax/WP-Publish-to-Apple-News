@@ -11,7 +11,7 @@
 
 namespace Apple_Exporter\Components;
 
-use \Apple_Exporter\Exporter_Content;
+use Apple_Exporter\Exporter_Content;
 
 /**
  * A class which is used to transform video elements into Apple News format.

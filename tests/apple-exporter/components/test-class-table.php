@@ -21,6 +21,7 @@ class Apple_News_Table_Test extends Apple_News_Component_TestCase {
 	/**
 	 * The HTML code to display
 	 * .
+	 *
 	 * @var string $html
 	 */
 	private string $html;

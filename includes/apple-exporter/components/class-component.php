@@ -10,9 +10,9 @@ namespace Apple_Exporter\Components;
 
 require_once __DIR__ . '/../class-markdown.php';
 
-use \Apple_Exporter\Component_Spec;
-use \Apple_Exporter\Exporter_Content;
-use \Apple_Exporter\Parser;
+use Apple_Exporter\Component_Spec;
+use Apple_Exporter\Exporter_Content;
+use Apple_Exporter\Parser;
 
 /**
  * Base component class. All components must inherit from this class and

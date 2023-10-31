@@ -79,6 +79,4 @@ class Divider extends Component {
 			[]
 		);
 	}
-
 }
-

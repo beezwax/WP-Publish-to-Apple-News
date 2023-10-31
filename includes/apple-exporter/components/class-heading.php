@@ -246,6 +246,4 @@ class Heading extends Component {
 			'textStyle'
 		);
 	}
-
 }
-

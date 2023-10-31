@@ -294,5 +294,4 @@ class Exporter_Content {
 		$body = $dom->getElementsByTagName( 'body' )->item( 0 );
 		return $body ? $body->childNodes : new \DOMNodeList();
 	}
-
 }

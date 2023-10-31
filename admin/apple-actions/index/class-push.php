@@ -11,9 +11,9 @@ namespace Apple_Actions\Index;
 require_once plugin_dir_path( __FILE__ ) . '../class-api-action.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-export.php';
 
-use \Admin_Apple_Notice;
-use \Admin_Apple_Sections;
-use \Apple_Actions\API_Action;
+use Admin_Apple_Notice;
+use Admin_Apple_Sections;
+use Apple_Actions\API_Action;
 
 /**
  * A class to handle a push request from the admin.

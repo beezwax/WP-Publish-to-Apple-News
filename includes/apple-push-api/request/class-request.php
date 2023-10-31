@@ -8,7 +8,7 @@
 
 namespace Apple_Push_API\Request;
 
-use \Apple_Push_API\MIME_Builder as MIME_Builder;
+use Apple_Push_API\MIME_Builder;
 
 require_once __DIR__ . '/../class-mime-builder.php';
 
@@ -182,13 +182,11 @@ class Request {
 			$body .= "\n\n" . esc_html__( 'Image Settings', 'apple-news' ) . ":\n";
 			if ( 'yes' === $settings['use_remote_images'] ) {
 				$body .= esc_html__( 'Use Remote images enabled ', 'apple-news' );
-			} else {
-				if ( ! empty( $bundles ) ) {
+			} elseif ( ! empty( $bundles ) ) {
 					$body .= "\n" . esc_html__( 'Bundled images', 'apple-news' ) . ":\n";
 					$body .= implode( "\n", $bundles );
-				} else {
-					$body .= esc_html__( 'No bundled images found.', 'apple-news' );
-				}
+			} else {
+				$body .= esc_html__( 'No bundled images found.', 'apple-news' );
 			}
 
 			// Add the JSON for the post.

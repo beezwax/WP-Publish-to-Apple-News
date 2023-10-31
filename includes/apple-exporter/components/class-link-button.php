@@ -185,4 +185,3 @@ class Link_Button extends Component {
 		);
 	}
 }
-

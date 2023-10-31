@@ -11,8 +11,8 @@
 
 namespace Apple_Exporter\Components;
 
-use \Apple_Exporter\Exporter_Content;
-use \DOMDocument;
+use Apple_Exporter\Exporter_Content;
+use DOMDocument;
 
 /**
  * A class to translate the output of [gallery] shortcodes into Apple News format.
