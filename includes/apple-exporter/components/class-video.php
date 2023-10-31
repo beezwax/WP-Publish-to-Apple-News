@@ -32,10 +32,10 @@ class Video extends Component {
 			// Is this a gutenberg video block?
 			( self::node_has_class( $node, 'wp-block-video' )
 				&& $node->hasChildNodes()
-				&& 'video' === $node->firstChild->nodeName
+				&& 'video' === $node->firstChild->nodeName // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			)
 			// Or is this a stand-alone video tag?
-			|| 'video' === $node->nodeName
+			|| 'video' === $node->nodeName // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		) {
 			return $node;
 		}
