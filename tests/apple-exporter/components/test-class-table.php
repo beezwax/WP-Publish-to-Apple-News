@@ -18,7 +18,17 @@ use Apple_Exporter\Components\Table;
  * @subpackage Tests
  */
 class Apple_News_Table_Test extends Apple_News_Component_TestCase {
+	/**
+	 * The HTML code to display
+	 * .
+	 * @var string $html
+	 */
 	private string $html;
+	/**
+	 * The caption for the HTML.
+	 *
+	 * @var string $html_caption
+	 */
 	private string $html_caption;
 
 	/**
