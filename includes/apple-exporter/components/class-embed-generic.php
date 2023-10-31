@@ -27,7 +27,7 @@ class Embed_Generic extends Component {
 	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
-
+		/* phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase */
 		// If we aren't on an element node, bail out.
 		if ( 1 !== $node->nodeType ) {
 			return null;
@@ -51,6 +51,7 @@ class Embed_Generic extends Component {
 			&& 'iframe' === $node->childNodes->item( 0 )->nodeName
 		) {
 			return $node;
+			/* phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase */
 		}
 
 		// Anything else isn't supported out of the box.

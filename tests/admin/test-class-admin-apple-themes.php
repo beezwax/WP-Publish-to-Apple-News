@@ -13,7 +13,7 @@ use Apple_Exporter\Exporter_Content;
 use Apple_Exporter\Theme;
 
 /**
- *
+ * A class to test the Admin_Apple_Themes class.
  */
 class Admin_Apple_Themes_Test extends Apple_News_Testcase {
 
