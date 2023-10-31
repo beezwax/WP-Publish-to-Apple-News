@@ -10,6 +10,7 @@ jobs:
   php-tests:
     strategy:
       matrix:
+        multisite: [0, 1]
         php: ['8.2', '8.1', '8.0', '7.4']
         wordpress: ["latest"]
     if: github.event.pull_request.draft == false
