@@ -46,10 +46,10 @@ class TikTok extends Component {
 			&& self::node_has_class( $node, 'tiktok-embed' )
 		) {
 			return $node;
-			/* phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase */
 		}
 
 		return null;
+		/* phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase */
 	}
 
 	/**

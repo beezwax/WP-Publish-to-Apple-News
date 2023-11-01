@@ -211,7 +211,7 @@ class MIME_Builder {
 				sprintf(
 					// translators: token is an attachment filename.
 					esc_html__( 'The attachment %s could not be included in the request because it was empty.', 'apple-news' ),
-					$filename // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					esc_html( $filename )
 				)
 			);
 		}
@@ -222,8 +222,8 @@ class MIME_Builder {
 				sprintf(
 					// translators: first token is the filename, second is the file size.
 					esc_html__( 'The attachment %1$s could not be included in the request because its size was %2$s.', 'apple-news' ),
-					$filename, // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-					$size // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					esc_html( $filename ),
+					esc_html( $size )
 				)
 			);
 		}

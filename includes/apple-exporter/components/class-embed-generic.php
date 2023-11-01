@@ -51,11 +51,11 @@ class Embed_Generic extends Component {
 			&& 'iframe' === $node->childNodes->item( 0 )->nodeName
 		) {
 			return $node;
-			/* phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase */
 		}
 
 		// Anything else isn't supported out of the box.
 		return null;
+		/* phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase */
 	}
 
 	/**

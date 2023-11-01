@@ -228,7 +228,7 @@ class Push extends API_Action {
 				sprintf(
 					// Translators: Placeholder is a post ID.
 					esc_html__( 'Skipped push of article %d due to the apple_news_skip_push filter.', 'apple-news' ),
-					$this->id // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+					absint( $this->id )
 				)
 			);
 		}
@@ -278,7 +278,7 @@ class Push extends API_Action {
 					sprintf(
 						// Translators: Placeholder is a post ID.
 						esc_html__( 'Skipped push of article %d due to the presence of a skip push taxonomy term.', 'apple-news' ),
-						$this->id // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+						absint( $this->id )
 					)
 				);
 			}
