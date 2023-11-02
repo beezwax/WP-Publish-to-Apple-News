@@ -1,0 +1,113 @@
+name: PHPUnit Testing Suite
+
+on:
+  workflow_call:
+    inputs:
+      action:
+        default: "install"
+        required: false
+        type: "string"
+      command:
+        default: "phpunit"
+        required: false
+        type: "string"
+      php:
+        default: "8.0"
+        required: false
+        type: string
+      os:
+        default: "ubuntu-latest"
+        required: false
+        type: string
+      dependency-versions:
+        default: "locked"
+        required: false
+        type: "string"
+      wordpress:
+        default: "latest"
+        required: false
+        type: "string"
+      multisite:
+        default: false
+        required: false
+        type: boolean
+
+jobs:
+  test:
+    runs-on: ${{ inputs.os }}
+    timeout-minutes: 10
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    name: "phpunit ${{ inputs.php }} - ${{ inputs.wordpress }} - ${{ inputs.os }} - multisite: ${{ inputs.multisite }}"
+    env:
+      CACHEDIR: /tmp/test-cache
+      WP_CORE_DIR: /tmp/wordpress
+      WP_TESTS_DIR: /tmp/wordpress/tests/phpunit  # TESTING
+      WP_VERSION: ${{ inputs.wordpress }}
+      WP_DB_HOST: 127.0.0.1
+      WP_DB_USER: root
+      WP_DB_PASSWORD: '""'
+      WP_MULTISITE: ${{ inputs.multisite == true && 1 || 0 }}
+
+    steps:
+      - name: Cancel previous runs of this workflow (pull requests only)
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: styfle/cancel-workflow-action@0.12.0
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: Setup Cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.CACHEDIR }}
+          key: ${{ runner.os }}-php-tests-${{ inputs.php }}-${{ inputs.wordpress }}
+          restore-keys: |
+            ${{ runner.os }}-php-tests-${{ inputs.php }}-${{ inputs.wordpress }}
+            ${{ runner.os }}-php-tests-${{ inputs.php }}-
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ inputs.php }}
+          extensions: apc, dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, gd
+          tools: composer:v2
+          coverage: none
+
+      - name: Install WordPress Test Library  # TESTING
+        run: |
+          cd "${WP_CORE_DIR}"
+          svn co https://develop.svn.wordpress.org/trunk/tests/phpunit/includes/ tests/phpunit/includes/
+          svn co https://develop.svn.wordpress.org/trunk/tests/phpunit/data/ tests/phpunit/data/
+
+      - name: Validate Composer
+        run: composer validate
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v2
+        if: inputs.action == 'install'
+        with:
+          composer-options: "--no-progress --no-ansi --no-interaction --prefer-dist"
+          dependency-versions: ${{ inputs.dependency-versions }}
+
+      - name: Update dependencies
+        uses: nick-invision/retry@v2.9.0
+        if: inputs.action == 'update'
+        with:
+          timeout_minutes: 5
+          max_attempts: 5
+          command: composer update --prefer-dist --no-interaction
+
+      - name: Test Package
+        shell: bash
+        run: composer run ${{ inputs.command }}
