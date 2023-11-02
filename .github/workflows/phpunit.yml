@@ -1,11 +1,11 @@
 name: Testing Suite
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [ opened, synchronize, reopened, ready_for_review ]
     branches:
       - develop
-      - issue-1021
 
 jobs:
   php-tests:
