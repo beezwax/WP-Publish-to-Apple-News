@@ -6,3 +6,9 @@
  */
 
 // Silence is golden.
+
+if ( ! function_exists('add_action' ) ) {
+	function do_nothing() {
+		// Do nothing.
+	}
+}
