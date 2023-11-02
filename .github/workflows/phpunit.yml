@@ -4,7 +4,8 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened, ready_for_review ]
     branches:
-      - develop, issue-1021
+      - develop
+      - issue-1021
 
 jobs:
   php-tests:
