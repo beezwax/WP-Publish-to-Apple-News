@@ -10,57 +10,68 @@
 
 const WP_TESTS_PHPUNIT_POLYFILLS_PATH = __DIR__ . '/../vendor/yoast/phpunit-polyfills'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 
-$apple_news_tests_dir = getenv( 'WP_TESTS_DIR' );
-if ( ! $apple_news_tests_dir ) {
-	$apple_news_tests_dir = '/tmp/wordpress-tests-lib';
+/**
+ * Includes a PHP file if it exists.
+ *
+ * @param string $file The path to the PHP file to include.
+ *
+ * @return void
+ * @throws Exception If the file does not exist.
+ */
+function apple_news_require_file( string $file ) {
+	if ( ! file_exists( $file ) ) {
+		throw new Exception( 'File not found: ' . esc_html( $file ) );
+	}
+	require_once $file;
 }
-
-require_once $apple_news_tests_dir . '/includes/functions.php';
 
 // Autoloading for prophecy.
-require_once dirname( __DIR__ ) . '/vendor/autoload.php';
+apple_news_require_file( dirname( __DIR__ ) . '/vendor/autoload.php' );
 
 /**
- * Manually load the plugin for tests.
+ * Install WordPress and load the plugin.
  */
-function apple_news_manually_load_plugin() {
-	// Disable VIP cache manager when testing against VIP Go integration.
-	if ( method_exists( 'WPCOM_VIP_Cache_Manager', 'instance' ) ) {
-		remove_action( 'init', [ WPCOM_VIP_Cache_Manager::instance(), 'init' ] );
-	}
+\Mantle\Testing\manager()
+	->maybe_rsync_plugin()
+	->loaded(
+		function () {
+			// Disable VIP cache manager when testing against VIP Go integration.
+			if ( method_exists( 'WPCOM_VIP_Cache_Manager', 'instance' ) ) {
+					remove_action( 'init', [ WPCOM_VIP_Cache_Manager::instance(), 'init' ] );
+			}
 
-	// Set the permalink structure and domain options.
-	update_option( 'home', 'https://www.example.org' );
-	update_option( 'permalink_structure', '/%postname%' );
-	update_option( 'siteurl', 'https://www.example.org' );
+			// Set the permalink structure and domain options.
+			update_option( 'home', 'https://www.example.org' );
+			update_option( 'permalink_structure', '/%postname%' );
+			update_option( 'siteurl', 'https://www.example.org' );
 
-	// Apple News reads in the channel/key/secret values on load.
-	update_option(
-		'apple_news_settings',
-		[
-			'api_channel' => 'foo',
-			'api_key'     => 'bar',
-			'api_secret'  => 'baz',
-		]
-	);
+			// Apple News reads in the channel/key/secret values on load.
+			update_option(
+				'apple_news_settings',
+				[
+					'api_channel' => 'foo',
+					'api_key'     => 'bar',
+					'api_secret'  => 'baz',
+				]
+			);
 
-	// Force WP to treat URLs as HTTPS during testing so the home and siteurl option protocols are honored.
-	$_SERVER['HTTPS'] = 1;
+			// Force WP to treat URLs as HTTPS during testing so the home and siteurl option protocols are honored.
+			$_SERVER['HTTPS'] = 1;
 
-	// Load mocks for integration tests.
-	require_once __DIR__ . '/mocks/class-bc-setup.php';
-	if ( ! function_exists( 'coauthors' ) ) {
-		require_once __DIR__ . '/mocks/function-coauthors.php';
-	}
+			// Load mocks for integration tests.
+			apple_news_require_file( __DIR__ . '/mocks/class-bc-setup.php' );
+			if ( ! function_exists( 'coauthors' ) ) {
+				apple_news_require_file( __DIR__ . '/mocks/function-coauthors.php' );
+			}
 
-	// Activate mocked Brightcove functionality.
-	$bc_setup = new BC_Setup();
-	$bc_setup->action_init();
-
+			// Activate mocked Brightcove functionality.
+			$bc_setup = new BC_Setup();
+			$bc_setup->action_init();
+		}
+	)
 	// Load the plugin.
-	require dirname( __DIR__ ) . '/apple-news.php';
-}
-tests_add_filter( 'muplugins_loaded', 'apple_news_manually_load_plugin' );
+	->install();
+
 
 // Disable CAP by default - make it opt-in in tests.
 tests_add_filter( 'apple_news_use_coauthors', '__return_false' );
@@ -80,8 +91,5 @@ tests_add_filter(
 	}
 );
 
-require $apple_news_tests_dir . '/includes/bootstrap.php';
-
-require_once __DIR__ . '/class-apple-news-testcase.php';
-
-require_once __DIR__ . '/apple-exporter/components/class-component-testcase.php';
+apple_news_require_file( __DIR__ . '/class-apple-news-testcase.php' );
+apple_news_require_file( __DIR__ . '/apple-exporter/components/class-component-testcase.php' );
