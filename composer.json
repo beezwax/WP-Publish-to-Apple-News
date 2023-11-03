@@ -25,7 +25,8 @@
   "config": {
     "allow-plugins": {
       "composer/installers": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "alleyinteractive/composer-wordpress-autoloader": true
     }
   }
 }
