@@ -26,7 +26,7 @@ function apple_news_require_file( string $file ) {
 }
 
 // Autoloading for prophecy.
-apple_news_require_file( dirname( __DIR__ ) . '/vendor/autoload.php' );
+apple_news_require_file( dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php' );
 
 /**
  * Install WordPress and load the plugin.
@@ -67,11 +67,11 @@ apple_news_require_file( dirname( __DIR__ ) . '/vendor/autoload.php' );
 			// Activate mocked Brightcove functionality.
 			$bc_setup = new BC_Setup();
 			$bc_setup->action_init();
-		}
-	)
-	// Load the plugin.
-	->install();
 
+			// Load the plugin.
+			require dirname( dirname( __FILE__ ) ) . '/apple-news.php';
+		}
+	)->install();
 
 // Disable CAP by default - make it opt-in in tests.
 tests_add_filter( 'apple_news_use_coauthors', '__return_false' );
