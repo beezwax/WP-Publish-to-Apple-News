@@ -15,7 +15,7 @@ jobs:
         php: ['8.2', '8.1', '8.0', '7.4']
         wordpress: ["latest"]
     if: github.event.pull_request.draft == false
-    uses: ./.github/workflows/php-tests-temp.yml
+    uses: alleyinteractive/.github/.github/workflows/php-tests.yml@main
     with:
       command: "test"
       php: ${{ matrix.php }}
