@@ -9,7 +9,7 @@
 /* phpcs:disable WordPressVIPMinimum.Files.IncludingFile.UsingVariable */
 
 const WP_TESTS_PHPUNIT_POLYFILLS_PATH = __DIR__ . '/../vendor/yoast/phpunit-polyfills'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-
+const WP_TESTS_MULTISITE              = 1; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 /**
  * Includes a PHP file if it exists.
  *
@@ -68,28 +68,30 @@ apple_news_require_file( dirname( __DIR__, 1 ) . '/vendor/autoload.php' );
 			$bc_setup = new BC_Setup();
 			$bc_setup->action_init();
 
+
+			// Disable CAP by default - make it opt-in in tests.
+			add_filter( 'apple_news_use_coauthors', '__return_false' );
+
+			// Filter the list of allowed protocols to allow Apple News-specific ones.
+			add_filter(
+				'kses_allowed_protocols',
+				function ( $protocols ) {
+					return array_merge(
+						(array) $protocols,
+						[
+							'music',
+							'musics',
+							'stocks',
+						]
+					);
+				}
+			);
+
 			// Load the plugin.
 			require dirname( __DIR__, 1 ) . '/apple-news.php';
 		}
 	)->install();
 
-// Disable CAP by default - make it opt-in in tests.
-tests_add_filter( 'apple_news_use_coauthors', '__return_false' );
-
-// Filter the list of allowed protocols to allow Apple News-specific ones.
-tests_add_filter(
-	'kses_allowed_protocols',
-	function ( $protocols ) {
-		return array_merge(
-			(array) $protocols,
-			[
-				'music',
-				'musics',
-				'stocks',
-			]
-		);
-	}
-);
 
 apple_news_require_file( __DIR__ . '/class-apple-news-testcase.php' );
 apple_news_require_file( __DIR__ . '/apple-exporter/components/class-component-testcase.php' );
