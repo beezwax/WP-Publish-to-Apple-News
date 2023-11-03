@@ -26,7 +26,7 @@ function apple_news_require_file( string $file ) {
 }
 
 // Autoloading for prophecy.
-apple_news_require_file( dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php' );
+apple_news_require_file( dirname( __DIR__, 1 ) . '/vendor/autoload.php' );
 
 /**
  * Install WordPress and load the plugin.
@@ -69,7 +69,7 @@ apple_news_require_file( dirname( dirname( __FILE__ ) ) . '/vendor/autoload.php'
 			$bc_setup->action_init();
 
 			// Load the plugin.
-			require dirname( dirname( __FILE__ ) ) . '/apple-news.php';
+			require dirname( __DIR__, 1 ) . '/apple-news.php';
 		}
 	)->install();
 
