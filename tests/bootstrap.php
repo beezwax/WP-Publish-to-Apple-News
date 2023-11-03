@@ -9,7 +9,8 @@
 /* phpcs:disable WordPressVIPMinimum.Files.IncludingFile.UsingVariable */
 
 const WP_TESTS_PHPUNIT_POLYFILLS_PATH = __DIR__ . '/../vendor/yoast/phpunit-polyfills'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-const WP_TESTS_MULTISITE              = 1; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
+
+const WP_TESTS_MULTISITE = 1; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 /**
  * Includes a PHP file if it exists.
  *
@@ -91,7 +92,6 @@ apple_news_require_file( dirname( __DIR__, 1 ) . '/vendor/autoload.php' );
 			require dirname( __DIR__, 1 ) . '/apple-news.php';
 		}
 	)->install();
-
 
 apple_news_require_file( __DIR__ . '/class-apple-news-testcase.php' );
 apple_news_require_file( __DIR__ . '/apple-exporter/components/class-component-testcase.php' );
