@@ -2,9 +2,9 @@
 Contributors: potatomaster, kevinfodness, jomurgel, tylermachado, benpbolton, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brianschick, attackant
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
-Requires at least: 5.2
+Requires at least: 5.6
 Tested up to: 6.3.2
-Requires PHP: 7.4
+Requires PHP: 8.0
 Stable tag: 2.4.1
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
@@ -45,6 +45,12 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.4.1 =
+* Enhancement: Migrate to use Mantle Testkit for unit tests
+* Enhancement: Add support for PHP 8.2.
+* Deprecation: Dropped support for PHP 7.1, PHP 8.0 is now the minimum supported version.
+* Deprecation: Bumped minimum supported WordPress version to 5.6 (the first release with PHP 8.0 support).
 
 = 2.4.0 =
 * Enhancement: Adds a new Automation configuration to set sections, themes, and other metadata based on taxonomic association for a selected term in the selected taxonomy. This system replaces the Sections configuration previously in use and Sections settings will auto-migrate to the new system.
