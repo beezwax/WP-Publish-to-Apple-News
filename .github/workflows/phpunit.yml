@@ -1,6 +1,7 @@
 name: Testing Suite
 
 on:
+  workflow_dispatch:
   pull_request:
     types: [ opened, synchronize, reopened, ready_for_review ]
     branches:
@@ -11,7 +12,7 @@ jobs:
     strategy:
       matrix:
         multisite: [0, 1]
-        php: ['8.2', '8.1', '8.0', '7.4']
+        php: ['8.2', '8.1', '8.0']
         wordpress: ["latest"]
     if: github.event.pull_request.draft == false
     uses: alleyinteractive/.github/.github/workflows/php-tests.yml@main
