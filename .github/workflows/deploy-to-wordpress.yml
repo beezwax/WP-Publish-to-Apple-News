@@ -10,6 +10,9 @@ jobs:
   release:
     name: New release
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - name: Get the version
         id: packagejson
@@ -26,32 +29,29 @@ jobs:
         run: |
           CURRENT=${{ steps.packagejson.outputs.version }}
           PREVIOUS=${{ steps.previoustag.outputs.tag }}
-
-          if [[ $CURRENT > $PREVIOUS ]]; then
-            echo "::set-output name=incremented::true"
-          else
+          if [[ $(printf '%s\n' "$PREVIOUS" "$CURRENT" | sort -V | head -n1) != "$CURRENT" ]]; then
             echo "::set-output name=incremented::false"
             exit 1
+          else
+            echo "::set-output name=incremented::true"
           fi
 
-      - name: Build
-        if: ${{ steps.check.outputs.incremented == 'true' }}
-
-      - name: Publish
-        if: ${{ steps.check.outputs.incremented == 'true' }}
-
       - name: Set up Node
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         uses: actions/setup-node@v2
         with:
           node-version: '16.x'
 
       - name: Install dependencies
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         run: npm ci
 
       - name: Build
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         run: npm run build
 
       - name: Setup PHP
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
@@ -60,53 +60,53 @@ jobs:
           coverage: none
 
       - name: Install PHP dependencies
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         uses: ramsey/composer-install@v2
         with:
           composer-options: "--no-dev --optimize-autoloader"
 
       - name: Create version tag
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         run: git tag v${{ steps.packagejson.outputs.version }}
 
       - name: Push version tag
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         run: git push origin v${{ steps.packagejson.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push all tags
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         run: git push --tags
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create GitHub release
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v${{ steps.packagejson.outputs.version }}
           release_name: Release v${{ steps.packagejson.outputs.version }}
 
       - name: Create artifact
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         run: |
           mkdir plugin-build
           composer archive -vvv --format=zip --file="plugin-build/publish-to-apple-news"
 
       - name: Upload artifact
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         uses: actions/upload-artifact@v2
         with:
           name: publish-to-apple-news
           path: plugin-build/publish-to-apple-news.zip
 
       - name: Upload release asset
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         uses: softprops/action-gh-release@v1
         with:
           files: plugin-build/publish-to-apple-news.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: WordPress Plugin Deploy
+        if: ${{ steps.check.outputs.incremented == 'true' }}
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SLUG: publish-to-apple-news
