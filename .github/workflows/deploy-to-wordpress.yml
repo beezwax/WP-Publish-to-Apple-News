@@ -1,0 +1,91 @@
+name: Deploy to WordPress.org
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - develop
+
+jobs:
+  release:
+    name: New release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.x'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.0
+          extensions: mbstring, intl
+          tools: composer:v2
+          coverage: none
+
+      - name: Install PHP dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          composer-options: "--no-dev --optimize-autoloader"
+
+      - name: Get the version
+        id: packagejson
+        run: |
+          echo "::set-output name=version::$(jq -r '.version' package.json)"
+
+      - name: Create version tag
+        run: git tag v${{ steps.packagejson.outputs.version }}
+
+      - name: Push version tag
+        run: git push origin v${{ steps.packagejson.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push all tags
+        run: git push --tags
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create GitHub release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.packagejson.outputs.version }}
+          release_name: Release v${{ steps.packagejson.outputs.version }}
+
+      - name: Create artifact
+        run: |
+          mkdir plugin-build
+          composer archive -vvv --format=zip --file="plugin-build/publish-to-apple-news"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: publish-to-apple-news
+          path: plugin-build/publish-to-apple-news.zip
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v1
+        with:
+          files: plugin-build/publish-to-apple-news.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: WordPress Plugin Deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SLUG: publish-to-apple-news
