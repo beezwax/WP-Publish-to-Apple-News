@@ -28,10 +28,17 @@ jobs:
           PREVIOUS=${{ steps.previoustag.outputs.tag }}
 
           if [[ $CURRENT > $PREVIOUS ]]; then
-             echo "::set-output name=incremented::true"
+            echo "::set-output name=incremented::true"
           else
-             echo "::set-output name=incremented::false"
+            echo "::set-output name=incremented::false"
+            exit 1
           fi
+
+      - name: Build
+        if: ${{ steps.check.outputs.incremented == 'true' }}
+
+      - name: Publish
+        if: ${{ steps.check.outputs.incremented == 'true' }}
 
       - name: Set up Node
         uses: actions/setup-node@v2
