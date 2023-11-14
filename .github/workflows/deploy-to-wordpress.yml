@@ -7,104 +7,39 @@ on:
       - develop
 
 jobs:
+  built-release:
+    uses: alleyinteractive/.github/.github/workflows/built-release.yml@main
+    with:
+      node: '16.x'
+      php: '8.2'
+      composer_install: true
+      draft: true
+
   release:
-    name: New release
+    name: WordPress release
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: Get the version
-        id: packagejson
-        run: |
-          echo "::set-output name=version::$(grep "Version:" apple-news.php | awk -F: '{print $2}' | tr -d '[:space:]')"
-
-      - name: Get latest tag
-        id: previoustag
-        run: |
-          echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
-
-      - name: Check version increment
-        id: check
-        run: |
-          CURRENT=${{ steps.packagejson.outputs.version }}
-          PREVIOUS=${{ steps.previoustag.outputs.tag }}
-          if [[ $(printf '%s\n' "$PREVIOUS" "$CURRENT" | sort -V | head -n1) != "$CURRENT" ]]; then
-            echo "::set-output name=incremented::false"
-            exit 1
-          else
-            echo "::set-output name=incremented::true"
-          fi
-
-      - name: Set up Node
-        if: ${{ steps.check.outputs.incremented == 'true' }}
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16.x'
-
-      - name: Install dependencies
-        if: ${{ steps.check.outputs.incremented == 'true' }}
-        run: npm ci
-
-      - name: Build
-        if: ${{ steps.check.outputs.incremented == 'true' }}
-        run: npm run build
-
-      - name: Setup PHP
-        if: ${{ steps.check.outputs.incremented == 'true' }}
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-          extensions: mbstring, intl
-          tools: composer:v2
-          coverage: none
-
-      - name: Install PHP dependencies
-        if: ${{ steps.check.outputs.incremented == 'true' }}
-        uses: ramsey/composer-install@v2
-        with:
-          composer-options: "--no-dev --optimize-autoloader"
-
-      - name: Create version tag
-        if: ${{ steps.check.outputs.incremented == 'true' }}
-        run: git tag v${{ steps.packagejson.outputs.version }}
-
-      - name: Push version tag
-        if: ${{ steps.check.outputs.incremented == 'true' }}
-        run: git push origin v${{ steps.packagejson.outputs.version }}
-
-      - name: Push all tags
-        if: ${{ steps.check.outputs.incremented == 'true' }}
-        run: git push --tags
-
-      - name: Create GitHub release
-        if: ${{ steps.check.outputs.incremented == 'true' }}
-        uses: actions/create-release@v1
-        with:
-          tag_name: v${{ steps.packagejson.outputs.version }}
-          release_name: Release v${{ steps.packagejson.outputs.version }}
 
       - name: Create artifact
-        if: ${{ steps.check.outputs.incremented == 'true' }}
         run: |
           mkdir plugin-build
           composer archive -vvv --format=zip --file="plugin-build/publish-to-apple-news"
 
       - name: Upload artifact
-        if: ${{ steps.check.outputs.incremented == 'true' }}
         uses: actions/upload-artifact@v2
         with:
           name: publish-to-apple-news
           path: plugin-build/publish-to-apple-news.zip
 
       - name: Upload release asset
-        if: ${{ steps.check.outputs.incremented == 'true' }}
         uses: softprops/action-gh-release@v1
         with:
           files: plugin-build/publish-to-apple-news.zip
 
       - name: WordPress Plugin Deploy
-        if: ${{ steps.check.outputs.incremented == 'true' }}
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
