@@ -1,42 +1,14 @@
 name: Deploy to WordPress.org
-
 on:
-  workflow_dispatch:
   push:
-    branches:
-      - develop
-
+    tags:
+      - "*"
 jobs:
-  built-release:
-    uses: alleyinteractive/.github/.github/workflows/built-release.yml@main
-    with:
-      node: '16.x'
-      php: '8.2'
-      composer_install: true
-      draft: true
-
-  release:
-    name: WordPress release
+  push-built-release:
+    name: Deploy plugin version to WP.org
     runs-on: ubuntu-latest
-
     steps:
-
-      - name: Create artifact
-        run: |
-          mkdir plugin-build
-          composer archive -vvv --format=zip --file="plugin-build/publish-to-apple-news"
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: publish-to-apple-news
-          path: plugin-build/publish-to-apple-news.zip
-
-      - name: Upload release asset
-        uses: softprops/action-gh-release@v1
-        with:
-          files: plugin-build/publish-to-apple-news.zip
-
+      - uses: actions/checkout@master
       - name: WordPress Plugin Deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
         env:
