@@ -29,5 +29,25 @@
       "composer/installers": true,
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
+  },
+  "archive": {
+    "exclude": [
+      "*.xml",
+      "*.dist",
+      "*.cache",
+      ".phpcs.xml",
+      ".editorconfig",
+      ".gitignore",
+      ".distignore",
+      ".deployignore",
+      ".github/",
+      ".phpcs/",
+      ".phpstan/",
+      "plugin-build/",
+      "tests/",
+      "publish-to-apple-news.zip",
+      "!vendor/",
+      "!.wordpress-org/"
+    ]
   }
 }
