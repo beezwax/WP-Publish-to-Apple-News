@@ -16,6 +16,9 @@ use Apple_Push_API\MIME_Builder;
  */
 class Apple_News_MIME_Builder_Test extends Apple_News_Testcase {
 
+	/**
+	 * Sets up the test case.
+	 */
 	public function setUp(): void {
 		parent::setUp();
 
