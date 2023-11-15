@@ -8,9 +8,6 @@
 
 /* phpcs:disable WordPressVIPMinimum.Files.IncludingFile.UsingVariable */
 
-const WP_TESTS_PHPUNIT_POLYFILLS_PATH = __DIR__ . '/../vendor/yoast/phpunit-polyfills'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-
-const WP_TESTS_MULTISITE = 1; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 /**
  * Includes a PHP file if it exists.
  *
@@ -38,7 +35,7 @@ apple_news_require_file( dirname( __DIR__, 1 ) . '/vendor/autoload.php' );
 		function () {
 			// Disable VIP cache manager when testing against VIP Go integration.
 			if ( method_exists( 'WPCOM_VIP_Cache_Manager', 'instance' ) ) {
-					remove_action( 'init', [ WPCOM_VIP_Cache_Manager::instance(), 'init' ] );
+				remove_action( 'init', [ WPCOM_VIP_Cache_Manager::instance(), 'init' ] );
 			}
 
 			// Set the permalink structure and domain options.
