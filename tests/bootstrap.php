@@ -8,8 +8,6 @@
 
 /* phpcs:disable WordPressVIPMinimum.Files.IncludingFile.UsingVariable */
 
-const WP_TESTS_PHPUNIT_POLYFILLS_PATH = __DIR__ . '/../vendor/yoast/phpunit-polyfills'; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
-
 const WP_TESTS_MULTISITE = 1; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound
 /**
  * Includes a PHP file if it exists.
