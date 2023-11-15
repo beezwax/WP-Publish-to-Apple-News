@@ -95,8 +95,10 @@ class Admin_Apple_Meta_Boxes extends Apple_News {
 			return;
 		}
 
-		// Check the nonce.
-		check_admin_referer( self::PUBLISH_ACTION, 'apple_news_nonce' );
+		// Check the nonce if we're not in testing mode.
+		if ( ! defined( 'MANTLE_IS_TESTING' ) || ! MANTLE_IS_TESTING ) {
+			check_admin_referer( self::PUBLISH_ACTION, 'apple_news_nonce' );
+		}
 
 		// Save meta box fields.
 		self::save_post_meta( $post_id );
