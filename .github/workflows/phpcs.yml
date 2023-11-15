@@ -1,6 +1,10 @@
 name: PHP Coding Standards
 
 on:
+  push:
+    branches:
+      - develop
+      - release/*
   pull_request:
     types: [ opened, synchronize, reopened, ready_for_review ]
     branches:
