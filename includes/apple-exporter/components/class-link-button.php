@@ -122,7 +122,7 @@ class Link_Button extends Component {
 				'json',
 				[
 					'#url#'  => $url,
-					'#text#' => $link_button_match[2],
+					'#text#' => html_entity_decode($link_button_match[2], ENT_QUOTES, 'UTF-8'),
 				]
 			);
 		} else {
