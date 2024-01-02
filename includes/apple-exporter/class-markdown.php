@@ -205,7 +205,7 @@ class Markdown {
 		if ( 'ol' === $this->list_mode ) {
 			return sprintf(
 				'%d. %s',
-				$this->list_index ++,
+				$this->list_index++,
 				$text
 			);
 		}
