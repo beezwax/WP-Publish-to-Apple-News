@@ -2,7 +2,7 @@
 Contributors: potatomaster, kevinfodness, jomurgel, tylermachado, benpbolton, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brianschick, attackant
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
-Requires at least: 5.6
+Requires at least: 6.3
 Tested up to: 6.3.2
 Requires PHP: 8.0
 Stable tag: 2.4.1

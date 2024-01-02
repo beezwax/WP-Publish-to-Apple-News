@@ -6,7 +6,7 @@
   <rule ref="Alley-Interactive" />
 
   <!-- Check for cross-version support for PHP 7.4 and higher. -->
-  <config name="testVersion" value="7.1-"/>
+  <config name="testVersion" value="8.0-"/>
 
   <!-- Set the text domain for i18n. -->
   <rule ref="WordPress.WP.I18n">
@@ -69,5 +69,5 @@
   <exclude-pattern>vendor/</exclude-pattern>
 
   <!-- The version set here matches the minimum version in readme.txt. -->
-  <config name="minimum_supported_wp_version" value="4.0" />
+  <config name="minimum_supported_wp_version" value="6.3" />
 </ruleset>
