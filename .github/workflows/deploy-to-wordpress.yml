@@ -16,4 +16,4 @@ jobs:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLUG: publish-to-apple-news
-          DRY_RUN: true
+          DRY_RUN: false

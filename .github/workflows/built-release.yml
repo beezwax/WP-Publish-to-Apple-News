@@ -15,4 +15,4 @@ jobs:
       node: 16
       php: '8.2'
       composer_install: true
-      draft: true
+      draft: false
