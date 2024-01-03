@@ -3,7 +3,7 @@ Contributors: potatomaster, kevinfodness, jomurgel, tylermachado, benpbolton, al
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 6.3
-Tested up to: 6.3.2
+Tested up to: 6.4.2
 Requires PHP: 8.0
 Stable tag: 2.4.1
 License: GPLv3 or later
