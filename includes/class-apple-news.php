@@ -553,7 +553,7 @@ class Apple_News {
 	 * @return null|bool True, if the conditions are ripe for the fix, otherwise the existing value of $check.
 	 * @see \update_metadata
 	 */
-	public function filter_update_post_metadata( ?bool $check, int $object_id, string $meta_key, mixed $meta_value, mixed $prev_value ): ?bool {
+	public function filter_update_post_metadata($check, $object_id, $meta_key, $meta_value, $prev_value ) {
 		if ( empty( $prev_value ) ) {
 			$old_value = get_metadata( 'post', $object_id, $meta_key );
 			if ( false !== $old_value && is_array( $old_value ) && 1 === count( $old_value ) ) {
