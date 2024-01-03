@@ -69,5 +69,5 @@
   <exclude-pattern>vendor/</exclude-pattern>
 
   <!-- The version set here matches the minimum version in readme.txt. -->
-  <config name="minimum_supported_wp_version" value="6.3" />
+  <config name="minimum_wp_version" value="6.3" />
 </ruleset>
