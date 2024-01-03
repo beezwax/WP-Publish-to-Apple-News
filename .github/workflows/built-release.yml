@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - develop
-      - main
-      - production
 
 jobs:
   built-release:
@@ -14,5 +12,6 @@ jobs:
     with:
       node: 16
       php: '8.2'
+      github_token: ${{ secrets.GH_TOKEN }}
       composer_install: true
       draft: false
