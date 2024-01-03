@@ -9,6 +9,8 @@
  * @since 0.2.0
  */
 
+/* phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase */
+
 namespace Apple_Exporter;
 
 use DOMElement;
@@ -203,7 +205,7 @@ class Markdown {
 		if ( 'ol' === $this->list_mode ) {
 			return sprintf(
 				'%d. %s',
-				$this->list_index ++,
+				$this->list_index++,
 				$text
 			);
 		}
@@ -306,3 +308,4 @@ class Markdown {
 		return $text . "\n\n";
 	}
 }
+/* phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase */

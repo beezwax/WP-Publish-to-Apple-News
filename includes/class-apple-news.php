@@ -46,7 +46,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $version = '2.4.0';
+	public static $version = '2.4.1';
 
 	/**
 	 * Link to support for the plugin on WordPress.org.
@@ -544,19 +544,19 @@ class Apple_News {
 	 * otherwise the same as the existing value in the database will cause a failure
 	 * during post save.
 	 *
-	 * @see \update_metadata
-	 *
-	 * @param null|bool $check      Whether to allow updating metadata for the given type.
-	 * @param int       $object_id  Object ID.
-	 * @param string    $meta_key   Meta key.
+	 * @param bool|null $check Whether to allow updating metadata for the given type.
+	 * @param int       $object_id Object ID.
+	 * @param string    $meta_key Meta key.
 	 * @param mixed     $meta_value Meta value. Must be serializable if non-scalar.
 	 * @param mixed     $prev_value Optional. If specified, only update existing.
-	 * @return null|bool True if the conditions are ripe for the fix, otherwise the existing value of $check.
+	 *
+	 * @return null|bool True, if the conditions are ripe for the fix, otherwise the existing value of $check.
+	 * @see \update_metadata
 	 */
 	public function filter_update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
 		if ( empty( $prev_value ) ) {
 			$old_value = get_metadata( 'post', $object_id, $meta_key );
-			if ( 1 === count( $old_value ) ) {
+			if ( false !== $old_value && is_array( $old_value ) && 1 === count( $old_value ) ) {
 				if ( $old_value[0] === $meta_value ) {
 					return true;
 				}
