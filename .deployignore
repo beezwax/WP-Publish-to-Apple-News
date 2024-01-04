@@ -34,14 +34,10 @@ assets/js/util
 behat.yml
 bin
 bitbucket-pipelines.yml
-composer.json
-composer.lock
 multisite.xml
 multisite.xml.dist
 node_modules
 npm-debug.log
-package-lock.json
-package.json
 phpcs.xml
 phpcs.xml.dist
 phpstan.neon.dist
@@ -53,3 +49,5 @@ vendor
 webpack.config.js
 wp-cli.local.yml
 yarn.lock
+DOCKER_ENV
+babel.config.json
