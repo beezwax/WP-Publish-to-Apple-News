@@ -12,7 +12,6 @@
 .eslintignore
 .eslintrc.json
 .git
-.github
 .gitignore
 .gitlab-ci.yml
 .idea
