@@ -5,7 +5,7 @@ Tags: publish, apple, news, iOS
 Requires at least: 6.3
 Tested up to: 6.4.2
 Requires PHP: 8.0
-Stable tag: 2.4.2
+Stable tag: 2.4.3
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,10 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.4.3 =
+
+* No changes, re-releasing to trigger a new release.
 
 = 2.4.2 =
 
