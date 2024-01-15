@@ -147,66 +147,131 @@ class Parser {
 	 * @return string The clean HTML
 	 */
 	private function clean_html( string $html ): string {
+		$html = $this->remove_empty_tags( $html );
+		$html = $this->handle_anchor_links( $html );
+		$html = $this->handle_root_relative_urls( $html );
+		$html = $this->validate_protocols( $html );
+		$html = $this->convert_spaces( $html );
+
+		// Return the clean HTML.
+		return $html;
+	}
+
+	/**
+	 * Remove empty <a> tags from the given HTML content.
+	 *
+	 * @param string $html The HTML content to remove empty <a> tags from.
+	 *
+	 * @return string The modified HTML content without empty <a> tags.
+	 */
+	private function remove_empty_tags( string $html ): string {
 		// Match all <a> tags via regex.
 		// We can't use DOMDocument here because some tags will be removed entirely.
 		preg_match_all( '/<a.*?>(.*?)<\/a>/m', $html, $a_tags );
 
 		// Check if we got matches.
-		if ( empty( $a_tags ) ) {
-			return $html;
-		}
-
-		// Iterate over the matches and see what we need to do.
-		foreach ( $a_tags[0] as $i => $a_tag ) {
-			// If the <a> tag doesn't have content, dump it.
-			$content = trim( $a_tags[1][ $i ] );
-			if ( empty( $content ) ) {
-				$html = str_replace( $a_tag, '', $html );
-				continue;
-			}
-
-			// If there isn't an href that has content, strip the anchor tag.
-			if ( ! preg_match( '/<a[^>]+href="([^"]+)"[^>]*>.*?<\/a>/m', $a_tag, $matches ) ) {
-				$html = str_replace( $a_tag, $content, $html );
-				continue;
-			}
-
-			// If the href value trims to nil, strip the anchor tag.
-			$href = trim( $matches[1] );
-			if ( empty( $href ) ) {
-				$html = str_replace( $a_tag, $a_tags[1][ $i ], $html );
-			}
-
-			// Handle anchor links.
-			if ( str_starts_with( $href, '#' ) ) {
-				global $post;
-
-				$permalink = get_permalink( $post );
-
-				if ( false === $permalink ) {
+		if ( ! empty( $a_tags ) ) {
+			// Iterate over the matches and see what we need to do.
+			foreach ( $a_tags[0] as $i => $a_tag ) {
+				// If the <a> tag doesn't have content, dump it.
+				$content = trim( $a_tags[1][ $i ] );
+				if ( empty( $content ) ) {
+					$html = str_replace( $a_tag, '', $html );
 					continue;
 				}
 
-				$html = str_replace( 'href="' . $href, 'href="' . $permalink . $href, $html );
-				continue;
-			}
+				// If there isn't an href that has content, strip the anchor tag.
+				if ( ! preg_match( '/<a[^>]+href="([^"]+)"[^>]*>.*?<\/a>/m', $a_tag, $matches ) ) {
+					$html = str_replace( $a_tag, $content, $html );
+					continue;
+				}
 
-			// Handle root relative URLs.
-			if ( str_starts_with( $href, '/' ) && ! str_contains( $href, '//' ) ) {
-				$html = str_replace( 'href="' . $href, 'href="' . get_site_url() . $href, $html );
-				continue;
-			}
-
-			// Ensure that the resulting URL uses a supported protocol. Leave it up to the content creator to ensure the URL is otherwise valid.
-			if ( ! preg_match( '/^(https?:\/\/|mailto:|musics?:\/\/|stocks:\/\/|webcal:\/\/)/', $href ) ) {
-				$html = str_replace( $a_tag, $content, $html );
+				// If the href value trims to nil, strip the anchor tag.
+				$href = trim( $matches[1] );
+				if ( empty( $href ) ) {
+					$html = str_replace( $a_tag, $a_tags[1][ $i ], $html );
+				}
 			}
 		}
 
-		// Make non-breaking spaces actual spaces.
-		$html = str_ireplace( [ '&nbsp;', '&#160;' ], ' ', $html );
-
-		// Return the clean HTML.
 		return $html;
+	}
+
+	/**
+	 * Handle anchor links (aka hash links) in the given HTML content.
+	 * Replace the anchor links with the permalink of the global post
+	 * if the permalink is available.
+	 *
+	 * @param string $html The HTML content to handle anchor links.
+	 *
+	 * @return string The modified HTML content with replaced anchor links.
+	 */
+	private function handle_anchor_links( string $html ): string {
+		global $post;
+
+		$permalink = get_permalink( $post );
+
+		if ( false !== $permalink ) {
+			$html = preg_replace_callback(
+				'/(<a[^>]+href="#[^"]+")[^>]*>/m',
+				fn( $matches ) => str_replace( 'href="#', 'href="' . $permalink . '#', $matches[0] ),
+				$html
+			);
+		}
+
+		return $html;
+	}
+
+	/**
+	 * Handle root-relative URLs in the HTML content.
+	 * Replace the root-relative URLs with the absolute
+	 * URLs using the site URL.
+	 *
+	 * @param string $html The HTML content to handle root-relative URLs.
+	 *
+	 * @return string The modified HTML content with absolute URLs for root-relative ones.
+	 */
+	private function handle_root_relative_urls( string $html ): string {
+		return preg_replace_callback(
+			'/(<a[^>]+href="\/[^\/"][^"]*")[^>]*>/m',
+			fn( $matches ) => str_replace( 'href="/', 'href="' . get_site_url() . '/', $matches[0] ),
+			$html
+		);
+	}
+
+	/**
+	 * Ensure that the resulting URL uses a supported protocol.
+	 * Leave it up to the content creator to ensure the URL is
+	 * otherwise valid.
+	 *
+	 * @param string $html The HTML content to validate.
+	 *
+	 * @return string The modified HTML content with validated protocols.
+	 */
+	private function validate_protocols( string $html ): string {
+		return preg_replace_callback(
+			'/<a[^>]+href="([^"]*)"[^>]*>(.*?)<\/a>/m',
+			function ( $matches ) {
+				$href    = $matches[1];
+				$content = $matches[2];
+				if ( ! preg_match( '/^(https?:\/\/|mailto:|musics?:\/\/|stocks:\/\/|webcal:\/\/)/', $href ) ) {
+					return $content;
+				}
+
+				return $matches[0]; // Return whole anchor tag if protocol is fine.
+			},
+			$html
+		);
+	}
+
+	/**
+	 * Convert non-breaking spaces to regular spaces.
+	 *
+	 * @param string $html The HTML content to convert.
+	 *
+	 * @return string The modified HTML content with converted spaces.
+	 */
+	private function convert_spaces( string $html ): string {
+		return str_ireplace( [ '&nbsp;', '&#160;' ], ' ', $html );
 	}
 }
