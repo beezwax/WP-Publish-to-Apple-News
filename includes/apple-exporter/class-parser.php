@@ -30,7 +30,7 @@ class Parser {
 	 * @access public
 	 * @var string
 	 */
-	public $format;
+	public string $format;
 
 	/**
 	 * Initializes the object with the format setting.
@@ -39,7 +39,7 @@ class Parser {
 	 *
 	 * @access public
 	 */
-	public function __construct( $format = 'markdown' ) {
+	public function __construct( string $format = 'markdown' ) {
 		$this->format = ( 'html' === $format ) ? 'html' : 'markdown';
 	}
 
@@ -51,7 +51,7 @@ class Parser {
 	 * @access public
 	 * @return string The filtered content in the format specified.
 	 */
-	public function parse( $html ) {
+	public function parse( string $html ): string {
 
 		// Don't parse empty input.
 		if ( empty( $html ) ) {
@@ -81,7 +81,7 @@ class Parser {
 	 * @access private
 	 * @return string The content, converted to an Apple News HTML string.
 	 */
-	private function parse_html( $html ) {
+	private function parse_html( string $html ): string {
 
 		// Apply formatting.
 		$parser  = new HTML();
@@ -106,7 +106,7 @@ class Parser {
 	 * @access private
 	 * @return string The content, converted to an Apple News Markdown string.
 	 */
-	private function parse_markdown( $html ) {
+	private function parse_markdown( string $html ): string {
 
 		// PHP's DOMDocument doesn't like HTML5, so we must ignore errors.
 		libxml_use_internal_errors( true );
@@ -142,10 +142,11 @@ class Parser {
 	 * both HTML and Markdown format.
 	 *
 	 * @param string $html The HTML to be cleaned.
+	 *
 	 * @access private
 	 * @return string The clean HTML
 	 */
-	private function clean_html( $html ) {
+	private function clean_html( string $html ): string {
 		// Match all <a> tags via regex.
 		// We can't use DOMDocument here because some tags will be removed entirely.
 		preg_match_all( '/<a.*?>(.*?)<\/a>/m', $html, $a_tags );
@@ -177,7 +178,7 @@ class Parser {
 			}
 
 			// Handle anchor links.
-			if ( 0 === strpos( $href, '#' ) ) {
+			if ( str_starts_with( $href, '#' ) ) {
 				global $post;
 
 				$permalink = get_permalink( $post );
@@ -191,7 +192,7 @@ class Parser {
 			}
 
 			// Handle root relative URLs.
-			if ( 0 === strpos( $href, '/' ) && false === strpos( $href, '//' ) ) {
+			if ( str_starts_with( $href, '/' ) && ! str_contains( $href, '//' ) ) {
 				$html = str_replace( 'href="' . $href, 'href="' . get_site_url() . $href, $html );
 				continue;
 			}
@@ -199,13 +200,11 @@ class Parser {
 			// Ensure that the resulting URL uses a supported protocol. Leave it up to the content creator to ensure the URL is otherwise valid.
 			if ( ! preg_match( '/^(https?:\/\/|mailto:|musics?:\/\/|stocks:\/\/|webcal:\/\/)/', $href ) ) {
 				$html = str_replace( $a_tag, $content, $html );
-				continue;
 			}
 		}
 
-		// Make nonbreaking spaces actual spaces.
-		$html = str_ireplace( '&nbsp;', ' ', $html );
-		$html = str_replace( '&#160;', ' ', $html );
+		// Make non-breaking spaces actual spaces.
+		$html = str_ireplace( [ '&nbsp;', '&#160;' ], ' ', $html );
 
 		// Return the clean HTML.
 		return $html;
