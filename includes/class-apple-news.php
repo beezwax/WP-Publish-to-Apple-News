@@ -102,7 +102,7 @@ class Apple_News {
 	 * @var array
 	 * @access public
 	 */
-	public static array $maturity_ratings = [ 'KIDS', 'MATURE', 'GENERAL' ];
+	public static $maturity_ratings = [ 'KIDS', 'MATURE', 'GENERAL' ];
 
 	/**
 	 * A helper function for getting authors for a post, which supports native
@@ -116,7 +116,7 @@ class Apple_News {
 	 *
 	 * @return string The author list, formatted according to the given options.
 	 */
-	public static function get_authors( $between = null, $between_last = null, $before = null, $after = null ): string {
+	public static function get_authors( $between = null, $between_last = null, $before = null, $after = null ) {
 		global $post;
 
 		// Bail out if we don't have a post.
@@ -184,7 +184,7 @@ class Apple_News {
 	 * @param string $post_type  The post type to map against.
 	 * @return string The mapped capability.
 	 */
-	public static function get_capability_for_post_type( $capability, $post_type ): string {
+	public static function get_capability_for_post_type( $capability, $post_type ) {
 		$post_type_object = get_post_type_object( $post_type );
 
 		return ! empty( $post_type_object->cap->{$capability} )
@@ -203,7 +203,7 @@ class Apple_News {
 	 * @access public
 	 * @return string The filename for an asset to be bundled.
 	 */
-	public static function get_filename( string $path ): string {
+	public static function get_filename( $path ) {
 
 		// If we already have a hash for this path, return it.
 		if ( isset( self::$bundle_hashes[ $path ] ) ) {
@@ -261,7 +261,7 @@ class Apple_News {
 	 * @access public
 	 * @return string The HTML for the support info block.
 	 */
-	public static function get_support_info( string $format = 'html', bool $with_padding = true ): string {
+	public static function get_support_info( $format = 'html', $with_padding = true ) {
 
 		// Construct base support info block.
 		$support_info = sprintf(
@@ -304,7 +304,7 @@ class Apple_News {
 	 *
 	 * @return bool True if the default theme is the current active theme, false otherwise.
 	 */
-	public static function is_default_theme(): bool {
+	public static function is_default_theme() {
 		// If the theme is not named "Default", then it is customized, and is not the default theme.
 		$active_theme = Theme::get_active_theme_name();
 		if ( __( 'Default', 'apple-news' ) !== $active_theme ) {
@@ -407,7 +407,7 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function action_admin_enqueue_scripts( string $hook ): void {
+	public function action_admin_enqueue_scripts( $hook ) {
 		// Ensure we are in an appropriate context.
 		if ( ! in_array( $hook, $this->contexts, true ) ) {
 			return;
@@ -584,7 +584,7 @@ class Apple_News {
 	 * @param string $author_nicename The author's nice name.
 	 * @return string updated $author attribute.
 	 */
-	public function filter_author_link( $link, $author_id, $author_nicename ): string {
+	public function filter_author_link( $link, $author_id, $author_nicename ) {
 		/**
 		 * Allows for modification of the byline link used by WordPress authors and CoAuthors Plus.
 		 *
@@ -604,7 +604,7 @@ class Apple_News {
 	 *
 	 * @return string updated $author attribute.
 	 */
-	public function filter_the_author( string $author ): string {
+	public function filter_the_author( $author ) {
 		return ucfirst( $author );
 	}
 
@@ -613,7 +613,7 @@ class Apple_News {
 	 *
 	 * @param string $to_handle The script handle to attach the inline script to.
 	 */
-	public function inline_locale_data( string $to_handle ): void {
+	public function inline_locale_data( $to_handle ) {
 		// Define locale data for Jed.
 		$locale_data = [
 			'' => [
@@ -937,7 +937,7 @@ class Apple_News {
 	 *
 	 * @param string $theme_name The theme name for which settings should be migrated.
 	 */
-	public function migrate_table_settings( string $theme_name ): void {
+	public function migrate_table_settings( $theme_name ): void {
 
 		// Load the theme settings from the database.
 		$theme = new Theme();
