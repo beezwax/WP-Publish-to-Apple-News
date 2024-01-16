@@ -61,7 +61,7 @@ class Apple_News_Parser_Test extends Apple_News_Testcase {
 
 <a href="/2018/05/03/an-92-test">Root-relative link</a>
 
-<a name="testanchor">Test Anchor</a>
+<a id="testanchor">Test Anchor</a>
 
 <a href="#testanchor">Anchor Link</a>
 
@@ -89,7 +89,7 @@ HTML;
 			'[Absolute link](https://www.google.com)'
 			. '[Root-relative link](https://www.example.org/2018/05/03/an-92-test)'
 			. 'Test Anchor'
-			. '[Anchor Link](' . $permalink . '#testanchor)'
+			. '[Anchor Link](#testanchor)'
 			. 'Legit empty link'
 			. 'Link that trims to empty'
 			. 'Not a real URL',
@@ -110,7 +110,7 @@ HTML;
 
 <a href="/2018/05/03/an-92-test">Root-relative link</a>
 
-<a name="testanchor">Test Anchor</a>
+<a id="testanchor">Test Anchor</a>
 
 <a href="#testanchor">Anchor Link</a>
 
@@ -138,7 +138,7 @@ HTML;
 			'<p><a href="https://www.google.com">Absolute link</a></p>'
 				. '<p><a href="https://www.example.org/2018/05/03/an-92-test">Root-relative link</a></p>'
 				. '<p>Test Anchor</p>'
-				. '<p><a href="' . $permalink . '#testanchor">Anchor Link</a></p>'
+				. '<p><a href="#testanchor">Anchor Link</a></p>'
 				. '<p>Legit empty link</p>'
 				. '<p>Link that trims to empty</p>'
 				. '<p>Not a real URL</p>',
