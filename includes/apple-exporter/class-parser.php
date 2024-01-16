@@ -148,7 +148,6 @@ class Parser {
 	 */
 	private function clean_html( string $html ): string {
 		$html = $this->remove_empty_tags( $html );
-		$html = $this->handle_anchor_links( $html );
 		$html = $this->handle_root_relative_urls( $html );
 		$html = $this->validate_protocols( $html );
 		$html = $this->convert_spaces( $html );
@@ -198,31 +197,6 @@ class Parser {
 	}
 
 	/**
-	 * Handle anchor links (aka hash links) in the given HTML content.
-	 * Replace the anchor links with the permalink of the global post
-	 * if the permalink is available.
-	 *
-	 * @param string $html The HTML content to handle anchor links.
-	 *
-	 * @return string The modified HTML content with replaced anchor links.
-	 */
-	private function handle_anchor_links( string $html ): string {
-		global $post;
-
-		$permalink = get_permalink( $post );
-
-		if ( false !== $permalink ) {
-			$html = preg_replace_callback(
-				'/(<a[^>]+href="#[^"]+")[^>]*>/m',
-				fn( $matches ) => str_replace( 'href="#', 'href="' . $permalink . '#', $matches[0] ),
-				$html
-			);
-		}
-
-		return $html;
-	}
-
-	/**
 	 * Handle root-relative URLs in the HTML content.
 	 * Replace the root-relative URLs with the absolute
 	 * URLs using the site URL.
@@ -254,7 +228,7 @@ class Parser {
 			function ( $matches ) {
 				$href    = $matches[1];
 				$content = $matches[2];
-				if ( ! preg_match( '/^(https?:\/\/|mailto:|musics?:\/\/|stocks:\/\/|webcal:\/\/)/', $href ) ) {
+				if ( ! preg_match( '/^(https?:\/\/|mailto:|musics?:\/\/|stocks:\/\/|webcal:\/\/|#)/', $href ) ) {
 					return $content;
 				}
 
