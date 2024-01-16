@@ -66,7 +66,7 @@ class Apple_News {
 	 * @var bool
 	 * @access private
 	 */
-	private static bool $is_initialized;
+	private static bool $is_initialized = false;
 
 	/**
 	 * Plugin domain.
@@ -326,17 +326,18 @@ class Apple_News {
 	 * @return bool True if initialized, false if not.
 	 */
 	public static function is_initialized(): bool {
-
-		// Look up required information in plugin settings, if necessary.
-		if ( null === self::$is_initialized ) {
+		// Check if the necessary plugin settings are initialized
+		if ( false === self::$is_initialized ) {
 			$settings = get_option( self::$option_name );
 
-			self::$is_initialized = ( ! empty( $settings['api_channel'] )
-				&& ! empty( $settings['api_key'] )
-				&& ! empty( $settings['api_secret'] )
-				|| ! empty( $settings['api_config_file'] )
-				|| ! empty( $settings['api_config_file_input'] )
-			);
+			$has_api_settings = ! empty( $settings['api_channel'] )
+								&& ! empty( $settings['api_key'] )
+								&& ! empty( $settings['api_secret'] );
+
+			$has_api_config = ! empty( $settings['api_config_file'] )
+								|| ! empty( $settings['api_config_file_input'] );
+
+			self::$is_initialized = $has_api_settings || $has_api_config;
 		}
 
 		return self::$is_initialized;
