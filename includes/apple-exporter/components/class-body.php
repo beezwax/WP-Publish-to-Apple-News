@@ -110,7 +110,7 @@ class Body extends Component {
 			'format' => '#format#',
 		];
 
-		// TODO add indentifier to $spec
+		// TODO add identifier to $spec
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),

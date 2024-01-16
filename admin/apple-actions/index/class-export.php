@@ -19,7 +19,6 @@ use Apple_Exporter\Exporter_Content_Settings;
 use Apple_Exporter\Theme;
 use Apple_Exporter\Third_Party\Jetpack_Tiled_Gallery;
 use Apple_News;
-use Apple_News\Admin\Automation;
 
 /**
  * A class to handle an export request from the admin.
@@ -140,7 +139,7 @@ class Export extends Action {
 			}
 			if ( ! empty( $post_thumb_url ) ) {
 				// If the post thumb URL is root-relative, convert it to fully-qualified.
-				if ( 0 === strpos( $post_thumb_url, '/' ) ) {
+				if ( str_starts_with( $post_thumb_url, '/' ) ) {
 					$post_thumb_url = site_url( $post_thumb_url );
 				}
 
@@ -185,7 +184,7 @@ class Export extends Action {
 		if ( ! empty( $excerpt ) ) {
 			$content_normalized = strtolower( str_replace( ' ', '', wp_strip_all_tags( $content ) ) );
 			$excerpt_normalized = strtolower( str_replace( ' ', '', wp_strip_all_tags( $excerpt ) ) );
-			if ( false !== strpos( $content_normalized, $excerpt_normalized ) ) {
+			if ( str_contains( $content_normalized, $excerpt_normalized ) ) {
 				$excerpt = '';
 			}
 		}
@@ -247,7 +246,7 @@ class Export extends Action {
 		 *
 		 * @since 2.3.0
 		 *
-		 * @param string $ date   The date for the post.
+		 * @param string $date The date for the post.
 		 * @param int    $post_id The ID of the post.
 		 */
 		$date = apply_filters( 'apple_news_exporter_date', $date, $post->ID );
@@ -545,7 +544,7 @@ class Export extends Action {
 		 * hook.
 		 */
 		if ( ! class_exists( '\BC_CMS_API' ) && class_exists( '\BC_Setup' ) ) {
-			\BC_Setup::action_init();
+			( new \BC_Setup )->action_init();
 		}
 
 		// Ensure the account ID and video IDs are strings.
@@ -630,6 +629,7 @@ class Export extends Action {
 	 * Filter the content for markdown format.
 	 *
 	 * @param string $content The content to be filtered.
+	 *
 	 * @access private
 	 * @return string
 	 */
@@ -645,14 +645,14 @@ class Export extends Action {
 	/**
 	 * Loads settings for the Exporter_Content from the WordPress post metadata.
 	 *
-	 * @since 0.4.0
-	 * @return Settings
+	 * @return Exporter_Content_Settings
 	 * @access private
+	 * @since 0.4.0
 	 */
 	private function fetch_content_settings() {
 		$settings = new Exporter_Content_Settings();
 		foreach ( get_post_meta( $this->id ) as $name => $value ) {
-			if ( 0 === strpos( $name, 'apple_news_' ) ) {
+			if ( str_starts_with( $name, 'apple_news_' ) ) {
 				$name  = str_replace( 'apple_news_', '', $name );
 				$value = $value[0];
 				$settings->set( $name, $value );
@@ -665,7 +665,7 @@ class Export extends Action {
 		 * Before this filter is called, the Exporter_Content_Settings object is
 		 * initialized and merged with settings stored in postmeta for this post.
 		 *
-		 * @param Apple_Exporter\Exporter_Content_Settings $settings The content settings for this article.
+		 * @param Exporter_Content_Settings $settings The content settings for this article.
 		 */
 		return apply_filters( 'apple_news_content_settings', $settings );
 	}
@@ -673,7 +673,7 @@ class Export extends Action {
 	/**
 	 * Sets the active theme for this session if explicitly set or mapped.
 	 */
-	private function set_theme() {
+	private function set_theme(): void {
 		$active_theme = Theme::get_active_theme_name();
 
 		/**
