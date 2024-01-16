@@ -39,10 +39,11 @@ class Body extends Component {
 	 * Look for node matches for this component.
 	 *
 	 * @param DOMElement $node The node to examine for matches.
+	 *
 	 * @access public
 	 * @return array|null The node on success, or null on no match.
 	 */
-	public static function node_matches( $node ): ?array {
+	public static function node_matches( $node ) {
 		/* phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase */
 		// We are only interested in p, pre, ul and ol.
 		if ( ! in_array( $node->nodeName, [ 'p', 'pre', 'ul', 'ol' ], true ) ) {
@@ -100,17 +101,20 @@ class Body extends Component {
 	 *
 	 * @access public
 	 */
-	public function register_specs(): void {
+	public function register_specs() {
 		$theme        = \Apple_Exporter\Theme::get_used();
 		$default_spec = $this->get_default_style_spec();
+		$spec         = [
+			'role'   => 'body',
+			'text'   => '#text#',
+			'format' => '#format#',
+		];
+
+		// TODO add indentifier to $spec
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			[
-				'role'   => 'body',
-				'text'   => '#text#',
-				'format' => '#format#',
-			]
+			$spec
 		);
 
 		$this->register_spec(
@@ -208,7 +212,7 @@ class Body extends Component {
 	 * @access private
 	 * @return array An array of HTML components.
 	 */
-	private static function split_unsupported_elements( string $html, string $tag, string $open, string $close ): array {
+	private static function split_unsupported_elements( $html, $tag, $open, $close ) {
 
 		// Don't bother processing if there is nothing to operate on.
 		if ( empty( $html ) ) {
@@ -279,9 +283,10 @@ class Body extends Component {
 	 * Build the component.
 	 *
 	 * @param string $html The HTML to parse into text for processing.
+	 *
 	 * @access protected
 	 */
-	protected function build( $html ): void {
+	protected function build( $html ) {
 
 		// If there is no text for this element, bail.
 		$html  = $this->parser->parse( $html );
@@ -320,7 +325,7 @@ class Body extends Component {
 	 * @access protected
 	 * @return bool Whether HTML format is enabled for this component type.
 	 */
-	protected function html_enabled( $enabled = true ): bool { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
+	protected function html_enabled( $enabled = true ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 		return parent::html_enabled( $enabled );
 	}
 
@@ -329,7 +334,7 @@ class Body extends Component {
 	 *
 	 * @access private
 	 */
-	private function set_default_layout(): void {
+	private function set_default_layout() {
 
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
@@ -362,7 +367,7 @@ class Body extends Component {
 	 * @return array
 	 * @access private
 	 */
-	private function get_default_style_spec(): array {
+	private function get_default_style_spec() {
 		$theme                = \Apple_Exporter\Theme::get_used();
 		$body_color_dark      = $theme->get_value( 'body_color_dark' );
 		$body_link_color_dark = $theme->get_value( 'body_link_color_dark' );
@@ -414,7 +419,7 @@ class Body extends Component {
 	 * @return array
 	 * @access private
 	 */
-	private function get_default_style_values(): array {
+	private function get_default_style_values() {
 
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
@@ -436,7 +441,7 @@ class Body extends Component {
 	 *
 	 * @access public
 	 */
-	public function set_default_style(): void {
+	public function set_default_style() {
 		$this->register_style(
 			'default-body',
 			'default-body',
@@ -453,7 +458,7 @@ class Body extends Component {
 	 *
 	 * @return boolean
 	 */
-	private function dropcap_determination( Theme $theme, string $html ): bool {
+	private function dropcap_determination( $theme, $html ) {
 		// Toggle dropcap determination flag so that this logic applies only to the post's first paragraph.
 		$theme->dropcap_applied = true;
 		$use_dropcap            = true;
@@ -495,7 +500,7 @@ class Body extends Component {
 	 *
 	 * @access private
 	 */
-	private function set_initial_dropcap_style(): void {
+	private function set_initial_dropcap_style() {
 
 		// Get information about the currently loaded theme.
 		$theme = \Apple_Exporter\Theme::get_used();
@@ -550,7 +555,7 @@ class Body extends Component {
 	 * @access public
 	 * @return array
 	 */
-	public function to_array(): array {
+	public function to_array() {
 
 		// If the text content evaluates to empty, return an empty array.
 		$sanitized_text = sanitize_text_field( $this->json['text'] );
