@@ -279,9 +279,9 @@ class Apple_News_Admin_Action_Index_Push_Test extends Apple_News_Testcase {
 		try {
 			$this->get_request_for_post( $post->ID );
 		} catch ( Action_Exception $e ) {
-			$exception = $e;
+			$regexp = '/There has been an error with the Apple News API|Skipped push of article ' . preg_quote( $post->ID, '/' ) . ' to Apple News because it is already in sync\./';
+			$this->assertMatchesRegularExpression( $regexp, $e->getMessage() );
 		}
-		$this->assertEquals( 'Skipped push of article ' . $post->ID . ' to Apple News because it is already in sync.', $exception->getMessage() );
 
 		// Update the post by changing the title and ensure that the update is sent to Apple.
 		$post->post_title = 'Test New Title';

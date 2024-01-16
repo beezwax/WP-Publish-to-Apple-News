@@ -450,7 +450,7 @@ class Push extends API_Action {
 
 			$this->clean_workspace();
 
-			if ( preg_match( '#WRONG_REVISION#', $e->getMessage() ) ) {
+			if ( str_contains( $e->getMessage(), 'WRONG_REVISION' ) ) {
 				throw new \Apple_Actions\Action_Exception( esc_html__( 'Apple News Error: It seems like the article was updated by another call. If the problem persists, try removing and pushing again.', 'apple-news' ) );
 			} else {
 				throw new \Apple_Actions\Action_Exception( esc_html__( 'There has been an error with the Apple News API: ', 'apple-news' ) . esc_html( $e->getMessage() ) );
