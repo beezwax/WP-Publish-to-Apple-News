@@ -256,7 +256,7 @@ class Apple_News {
 	 * Displays support information for the plugin.
 	 *
 	 * @param string $format The format in which to return the information.
-	 * @param bool $with_padding Whether to include leading line breaks.
+	 * @param bool   $with_padding Whether to include leading line breaks.
 	 *
 	 * @access public
 	 * @return string The HTML for the support info block.
@@ -329,7 +329,7 @@ class Apple_News {
 
 		// Look up required information in plugin settings, if necessary.
 		if ( null === self::$is_initialized ) {
-			$settings             = get_option( self::$option_name );
+			$settings = get_option( self::$option_name );
 
 			self::$is_initialized = ( ! empty( $settings['api_channel'] )
 				&& ! empty( $settings['api_key'] )
