@@ -10,9 +10,18 @@ namespace Apple_Exporter\Components;
 
 require_once __DIR__ . '/../class-markdown.php';
 
+use Apple_Exporter\Builders\Component_Layouts;
+use Apple_Exporter\Builders\Component_Styles;
+use Apple_Exporter\Builders\Component_Text_Styles;
 use Apple_Exporter\Component_Spec;
 use Apple_Exporter\Exporter_Content;
 use Apple_Exporter\Parser;
+use Apple_Exporter\Settings;
+use Apple_Exporter\Theme;
+use Apple_Exporter\Workspace;
+use Apple_News;
+use DOMDocument;
+use DOMElement;
 
 /**
  * Base component class. All components must inherit from this class and
@@ -46,7 +55,7 @@ abstract class Component {
 
 	/**
 	 * If this component is set as a target for an anchor, does it need to fix
-	 * it's layout? Defaults to true, components can set this to false if they do
+	 * its layout? Defaults to true, components can set this to false if they do
 	 * not need an automatic layout assigned to them or want more control.
 	 *
 	 * Right now, the only component that sets this to false is the body, as it
@@ -80,11 +89,15 @@ abstract class Component {
 	/**
 	 * Text for this component.
 	 *
+	 * TODO Figure out the correct type for this, in places it
+	 * is an array, in others a string, possibly null. Generally,
+	 * this project could use more type validation.
+	 *
 	 * @since 0.2.0
 	 * @var string
 	 * @access protected
 	 */
-	protected $text;
+	protected $text = '';
 
 	/**
 	 * JSON for this component.
@@ -148,7 +161,7 @@ abstract class Component {
 	 * @var string
 	 * @access private
 	 */
-	private $uid;
+	private $uid = '';
 
 	/**
 	 * Specs for this component.
@@ -173,7 +186,7 @@ abstract class Component {
 	 * @var array
 	 * @access public
 	 */
-	public $allowed_html = [
+	public array $allowed_html = [
 		'p'          => [],
 		'strong'     => [],
 		'b'          => [],
@@ -279,12 +292,13 @@ abstract class Component {
 	 * input.
 	 *
 	 * @param string $html The HTML to be cleaned.
+	 *
 	 * @access protected
 	 * @return string The cleaned HTML.
 	 */
 	protected static function clean_html( $html ) {
 		// Because PHP's DomDocument doesn't like HTML5 tags, ignore errors.
-		$dom = new \DOMDocument();
+		$dom = new DOMDocument();
 		libxml_use_internal_errors( true );
 		$dom->loadHTML( '<?xml encoding="utf-8" ?>' . $html );
 		libxml_clear_errors();
@@ -321,6 +335,7 @@ abstract class Component {
 	 *
 	 * @param string $name  The name of the key to set in the JSON.
 	 * @param mixed  $value The value to set in the JSON.
+	 *
 	 * @access public
 	 */
 	public function set_json( $name, $value ) {
@@ -333,6 +348,7 @@ abstract class Component {
 	 * Get a JSON value
 	 *
 	 * @param string $name The name of the key to look up in the JSON.
+	 *
 	 * @access public
 	 * @return mixed The value corresponding to the key.
 	 */
@@ -345,6 +361,7 @@ abstract class Component {
 	 * Set the anchor position.
 	 *
 	 * @param int $position The position of the anchor to set.
+	 *
 	 * @access public
 	 */
 	public function set_anchor_position( $position ) {
@@ -384,7 +401,7 @@ abstract class Component {
 	 * @access public
 	 */
 	public function is_anchor_target() {
-		return ! is_null( $this->uid );
+		return '' !== $this->uid;
 	}
 
 	/**
@@ -394,7 +411,7 @@ abstract class Component {
 	 * @access public
 	 */
 	public function can_be_anchor_target() {
-		return $this->can_be_anchor_target && is_null( $this->uid );
+		return $this->can_be_anchor_target && '' === $this->uid;
 	}
 
 	/**
@@ -404,7 +421,7 @@ abstract class Component {
 	 * @access public
 	 */
 	public function uid() {
-		if ( is_null( $this->uid ) ) {
+		if ( '' === $this->uid ) {
 			$this->uid = 'component-' . md5( uniqid( $this->text, true ) );
 			$this->set_json( 'identifier', $this->uid );
 		}
@@ -416,16 +433,17 @@ abstract class Component {
 	 * Maybe bundles the source based on current settings.
 	 * Returns the URL to use based on current setings.
 	 *
-	 * @param string $source   The path or URL of the resource which is going to be bundled.
+	 * @param string $source The path or URL of the resource which is going to be bundled.
 	 * @param string $filename The name of the file to be created.
+	 *
 	 * @return string The URL to use for this asset in the JSON.
 	 */
 	protected function maybe_bundle_source( $source, $filename = null ) {
 		if ( 'yes' === $this->get_setting( 'use_remote_images' ) ) {
 			return $source;
 		} else {
-			if ( null === $filename ) {
-				$filename = \Apple_News::get_filename( $source );
+			if ( '' === $filename ) {
+				$filename = Apple_News::get_filename( $source );
 			}
 			$this->bundle_source( $filename, $source );
 			return 'bundle://' . $filename;
@@ -446,10 +464,11 @@ abstract class Component {
 	/**
 	 * Gets an exporter setting.
 	 *
-	 * @since 0.4.0
 	 * @param string $name The name of the setting to look up.
+	 *
 	 * @access protected
 	 * @return mixed The value of the setting.
+	 * @since 0.4.0
 	 */
 	protected function get_setting( $name ) {
 		return $this->settings->get( $name );
@@ -488,11 +507,12 @@ abstract class Component {
 	/**
 	 * Sets an exporter setting.
 	 *
-	 * @since 0.4.0
 	 * @param string $name  The name of the setting to set.
 	 * @param mixed  $value The value of the setting to set.
+	 *
 	 * @access protected
 	 * @return boolean True on success, false on failure.
+	 * @since 0.4.0
 	 */
 	protected function set_setting( $name, $value ) {
 		// TODO - how is this used?
@@ -502,11 +522,12 @@ abstract class Component {
 	/**
 	 * Store specs that can be used for managing component JSON using an admin screen.
 	 *
-	 * @since 1.2.4
 	 * @param string $name  The name of the spec to be registered.
 	 * @param string $label The label for the spec.
 	 * @param array  $spec  The spec definition to register.
+	 *
 	 * @access protected
+	 * @since 1.2.4
 	 */
 	protected function register_spec( $name, $label, $spec ) {
 		// Store as a multidimensional array with the label and spec, indexed by name.
@@ -516,10 +537,11 @@ abstract class Component {
 	/**
 	 * Get a spec to use for creating component JSON.
 	 *
-	 * @since 1.2.4
 	 * @param string $spec_name The name of the spec to fetch.
+	 *
+	 * @return array|null The spec definition.
 	 * @access protected
-	 * @return array The spec definition.
+	 * @since 1.2.4
 	 */
 	protected function get_spec( $spec_name ) {
 		if ( ! isset( $this->specs[ $spec_name ] ) ) {
@@ -620,16 +642,17 @@ abstract class Component {
 	 * because when the body is centered, the full-width layout spans the same
 	 * columns as the body.
 	 *
-	 * @param string $name      The name of the layout.
-	 * @param string $spec_name The spec to use for defining the JSON.
-	 * @param array  $values    Values to substitute for placeholders in the spec.
-	 * @param array  $property  The JSON property to set with the layout.
+	 * @param string     $name      The name of the layout.
+	 * @param string     $spec_name The spec to use for defining the JSON.
+	 * @param array      $values    Values to substitute for placeholders in the spec.
+	 * @param array|null $property  The JSON property to set with the layout.
+	 *
 	 * @access protected
 	 */
 	protected function register_full_width_layout( $name, $spec_name, $values = [], $property = null ) {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		// Initial colStart and colSpan.
 		$col_start = 0;
@@ -677,8 +700,9 @@ abstract class Component {
 	/**
 	 * Check if a node has a class.
 	 *
-	 * @param \DOMElement $node      The node to examine for matches.
-	 * @param string      $classname The name of the class to look up.
+	 * @param DOMElement $node      The node to examine for matches.
+	 * @param string     $classname The name of the class to look up.
+	 *
 	 * @access protected
 	 * @return boolean True if the node has the class, false if it does not.
 	 */
@@ -701,6 +725,7 @@ abstract class Component {
 	 * valid array.
 	 *
 	 * @param string $html The HTML to parse into text for processing.
+	 *
 	 * @access protected
 	 */
 	abstract protected function build( $html );
@@ -782,9 +807,9 @@ abstract class Component {
 	 * Given a DOMElement, recursively traverses its children looking for iframe
 	 * nodes and returns the first one it finds.
 	 *
-	 * @param \DOMElement $node The node to examine.
+	 * @param DOMElement $node The node to examine.
 	 *
-	 * @return \DOMElement|null The iframe DOMElement if found, null if not.
+	 * @return DOMElement|null The iframe DOMElement if found, null if not.
 	 */
 	public static function get_iframe_from_node( $node ) {
 		// If this node is an iframe, return it.
@@ -808,17 +833,17 @@ abstract class Component {
 	/**
 	 * Get iframe/embed node.
 	 *
-	 * @param \DOMElement $node The node to examine.
+	 * @param DOMElement $node The node to examine.
+	 *
 	 * @return bool True if the figure is an iframe.
 	 */
 	public static function is_embed_figure( $node ) {
 
 		// Set default.
-		$has_figure_iframe = false;
 
 		// Return false if we don't have any child nodes.
 		if ( ! $node->hasChildNodes() ) {
-			return $has_figure_iframe;
+			return false;
 		}
 
 		// Loop those child nodes.
@@ -826,10 +851,9 @@ abstract class Component {
 
 			// Return false if we don't have children, or if is an image.
 			if ( ! $child->hasChildNodes() || 'img' === $child->nodeName ) {
-				return $has_figure_iframe;
+				return false;
 			}
 
-			// Loop subchildren.
 			foreach ( $child->childNodes as $c ) {
 
 				// Return true if we're seeing an iframe.
@@ -839,7 +863,7 @@ abstract class Component {
 			}
 		}
 
-		return $has_figure_iframe;
+		return false;
 	}
 	/* phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase */
 }
