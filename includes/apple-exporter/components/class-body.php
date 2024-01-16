@@ -102,7 +102,7 @@ class Body extends Component {
 	 * @access public
 	 */
 	public function register_specs() {
-		$theme        = \Apple_Exporter\Theme::get_used();
+		$theme        = Theme::get_used();
 		$default_spec = $this->get_default_style_spec();
 		$spec         = [
 			'role'   => 'body',
@@ -305,7 +305,7 @@ class Body extends Component {
 		);
 
 		// Determine whether to apply dropcap style.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 		if ( ! $theme->dropcap_applied
 			&& $this->dropcap_determination( $theme, $html )
 		) {
@@ -337,7 +337,7 @@ class Body extends Component {
 	private function set_default_layout() {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		// Register the standard layout.
 		$this->register_layout(
@@ -368,7 +368,7 @@ class Body extends Component {
 	 * @access private
 	 */
 	private function get_default_style_spec() {
-		$theme                = \Apple_Exporter\Theme::get_used();
+		$theme                = Theme::get_used();
 		$body_color_dark      = $theme->get_value( 'body_color_dark' );
 		$body_link_color_dark = $theme->get_value( 'body_link_color_dark' );
 		$dark_colors_exist    = ! empty( $body_color_dark ) || ! empty( $body_link_color_dark );
@@ -422,7 +422,7 @@ class Body extends Component {
 	private function get_default_style_values() {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		return [
 			'#body_font#'            => $theme->get_value( 'body_font' ),
@@ -453,8 +453,8 @@ class Body extends Component {
 	/**
 	 * Determine whether to apply a dropcap style for the component.
 	 *
-	 * @param \Apple_Exporter\Theme $theme Object that stores theme level dropcap configuration.
-	 * @param string                $html The HTML to check for dropcap conditions. Should be the first paragraph of the post content.
+	 * @param Theme  $theme Object that stores theme level dropcap configuration.
+	 * @param string $html The HTML to check for dropcap conditions. Should be the first paragraph of the post content.
 	 *
 	 * @return boolean
 	 */
@@ -485,12 +485,12 @@ class Body extends Component {
 		/**
 		 * Allows for filtering of the dropcap content before return.
 		 *
-		 * @since 2.4.0
-		 *
 		 * @param bool                  $use_dropcap Whether to apply a dropcap to this paragraph or not.
 		 * @param string                $html The post content to filter.
-		 * @param \Apple_Exporter\Theme $theme The theme whose dropcap options are used.
+		 * @param Theme $theme The theme whose dropcap options are used.
 		 * @param string                $post_id The id of the post whose content we're parsing.
+		 *
+		 *@since 2.4.0
 		 */
 		return apply_filters( 'apple_news_dropcap', $use_dropcap, $html, $theme, $this->workspace->content_id );
 	}
@@ -503,7 +503,7 @@ class Body extends Component {
 	private function set_initial_dropcap_style() {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		// Negotiate the number of lines.
 		$number_of_lines = absint( $theme->get_value( 'dropcap_number_of_lines' ) );
