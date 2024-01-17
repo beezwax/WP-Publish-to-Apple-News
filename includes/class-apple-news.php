@@ -563,7 +563,7 @@ class Apple_News {
 	 * @return null|bool True, if the conditions are ripe for the fix, otherwise the existing value of $check.
 	 * @see \update_metadata
 	 */
-	public function filter_update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ): ?bool {
+	public function filter_update_post_metadata( $check, $object_id, $meta_key, $meta_value, $prev_value ) {
 		if ( empty( $prev_value ) ) {
 			$old_value = get_metadata( 'post', $object_id, $meta_key );
 			if ( false !== $old_value && is_array( $old_value ) && 1 === count( $old_value ) ) {
@@ -1150,7 +1150,10 @@ class Apple_News {
 	 * @access private
 	 * @return bool True if all keys exist in the array, false if not.
 	 */
-	private function all_keys_exist( array $compare, array $keys ): bool {
+	private function all_keys_exist( $compare, $keys ) {
+		if ( ! is_array( $compare ) || ! is_array( $keys ) ) {
+			return false;
+		}
 
 		return ( count( $keys ) === count(
 			array_intersect_key( $compare, array_combine( $keys, $keys ) )
@@ -1170,7 +1173,7 @@ class Apple_News {
 	 * @access private
 	 * @return array The modified settings array.
 	 */
-	private function clone_settings( array $wp_settings, array $settings_map ): array {
+	private function clone_settings( $wp_settings, $settings_map ) {
 
 		// Loop over each setting in the map and clone if conditions are favorable.
 		foreach ( $settings_map as $to => $from ) {
