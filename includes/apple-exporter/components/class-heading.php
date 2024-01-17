@@ -176,6 +176,8 @@ class Heading extends Component {
 		if ( 0 === preg_match( '#<h(\d).*?>(.*?)</h\1>#si', $html, $matches ) ) {
 			return;
 		}
+		// TODO add id to identifier for anchor links to headings.
+		// See https://github.com/alleyinteractive/apple-news/pull/1044.
 
 		$level = intval( $matches[1] );
 		$text  = $matches[2];

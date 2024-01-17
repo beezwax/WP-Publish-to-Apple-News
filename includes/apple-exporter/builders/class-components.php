@@ -465,10 +465,9 @@ class Components extends Builder {
 				// Saving the 'id' as the 'identifier'.
 				$identifier = $matches[1];
 
-				// If this identifier already exists (is a duplicate),
-				// concatenate it with a dash and the count.
+				// If this identifier already exists skip it (is a duplicate).
 				if ( isset( $identifiers[ $identifier ] ) ) {
-					$identifier .= sprintf( '-%s', ++$identifiers[ $identifier ] );
+					return '';
 				} else {
 					// If this is the first time we've encountered this identifier,
 					// add it to our dictionary and set its count to 1.
