@@ -8,6 +8,9 @@
 
 namespace Apple_Exporter\Components;
 
+use Apple_Exporter\Theme;
+use DOMElement;
+
 /**
  * Represents an HTML header.
  *
@@ -21,14 +24,16 @@ class Heading extends Component {
 	 * @var array
 	 * @access public
 	 */
-	public static $levels = [ 1, 2, 3, 4, 5, 6 ];
+	public static array $levels = [ 1, 2, 3, 4, 5, 6 ];
 
 	/**
 	 * Look for node matches for this component.
 	 *
-	 * @param \DOMElement $node The node to examine for matches.
+	 * @param DOMElement $node The node to examine for matches.
+	 *
+	 * @return array|DOMElement|null The node on success, array in the case of an image,
+	 * or null on no match.
 	 * @access public
-	 * @return \DOMElement|null The node on success, or null on no match.
 	 */
 	public static function node_matches( $node ) {
 		$regex = sprintf(
@@ -54,8 +59,8 @@ class Heading extends Component {
 	 *
 	 * @access public
 	 */
-	public function register_specs() {
-		$theme = \Apple_Exporter\Theme::get_used();
+	public function register_specs(): void {
+		$theme = Theme::get_used();
 
 		$this->register_spec(
 			'json',
@@ -124,6 +129,10 @@ class Heading extends Component {
 	 * @return bool Whether HTML format is enabled for this component type.
 	 */
 	protected function html_enabled( $enabled = true ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
+		// TODO: The html_enabled methods in all the child classes
+		//  can be removed with a little refactoring in the future
+		//  since the parent method is the same and these are only being
+		//  used to set state.
 		return parent::html_enabled( $enabled );
 	}
 
@@ -131,10 +140,11 @@ class Heading extends Component {
 	 * Split the image parts.
 	 *
 	 * @param string $html The node, rendered to HTML.
+	 *
 	 * @access private
 	 * @return array An array of split components.
 	 */
-	private static function split_image( $html ) {
+	private static function split_image( string $html ): array {
 		if ( empty( $html ) ) {
 			return [];
 		}
@@ -172,7 +182,7 @@ class Heading extends Component {
 	 * @param string $html The HTML to parse into text for processing.
 	 * @access protected
 	 */
-	protected function build( $html ) {
+	protected function build( $html ): void {
 		if ( 0 === preg_match( '#<h(\d).*?>(.*?)</h\1>#si', $html, $matches ) ) {
 			return;
 		}
@@ -205,10 +215,10 @@ class Heading extends Component {
 	 *
 	 * @access private
 	 */
-	private function set_layout() {
+	private function set_layout(): void {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		$this->register_layout(
 			'heading-layout',
@@ -225,12 +235,13 @@ class Heading extends Component {
 	 * Set the style for the component.
 	 *
 	 * @param int $level The heading level (1-6).
+	 *
 	 * @access private
 	 */
-	private function set_style( $level ) {
+	private function set_style( int $level ): void {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		$this->register_style(
 			'default-heading-' . $level,
