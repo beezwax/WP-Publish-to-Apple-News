@@ -39,7 +39,7 @@ class Parser {
 	 *
 	 * @access public
 	 */
-	public function __construct( string $format = 'markdown' ) {
+	public function __construct( $format = 'markdown' ) {
 		$this->format = ( 'html' === $format ) ? 'html' : 'markdown';
 	}
 
@@ -51,7 +51,7 @@ class Parser {
 	 * @access public
 	 * @return string The filtered content in the format specified.
 	 */
-	public function parse( string $html ): string {
+	public function parse( $html ): string {
 
 		// Don't parse empty input.
 		if ( empty( $html ) ) {
@@ -83,10 +83,6 @@ class Parser {
 	 */
 	private function parse_html( string $html ): string {
 
-		// Apply formatting.
-		$parser  = new HTML();
-		$content = $parser->format( $html );
-
 		/**
 		 * Allows for filtering of the formatted content before return.
 		 *
@@ -95,7 +91,7 @@ class Parser {
 		 * @param string $content The content to filter.
 		 * @param string $html The original HTML, before filtering was applied.
 		 */
-		return apply_filters( 'apple_news_parse_html', $content, $html );
+		return apply_filters( 'apple_news_parse_html', ( new HTML() )->format( $html ), $html );
 	}
 
 	/**
@@ -153,7 +149,7 @@ class Parser {
 		$html = $this->convert_spaces( $html );
 
 		// Return the clean HTML.
-		return $html;
+		return trim( $html );
 	}
 
 	/**
