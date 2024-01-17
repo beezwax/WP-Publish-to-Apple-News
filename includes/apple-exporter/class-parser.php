@@ -143,7 +143,7 @@ class Parser {
 	 * @return string The clean HTML
 	 */
 	private function clean_html( string $html ): string {
-		$html = $this->remove_empty_tags( $html );
+		$html = $this->remove_empty_a_tags( $html );
 		$html = $this->handle_root_relative_urls( $html );
 		$html = $this->validate_protocols( $html );
 		$html = $this->convert_spaces( $html );
@@ -159,7 +159,7 @@ class Parser {
 	 *
 	 * @return string The modified HTML content without empty <a> tags.
 	 */
-	private function remove_empty_tags( string $html ): string {
+	private function remove_empty_a_tags( string $html ): string {
 		// Match all <a> tags via regex.
 		// We can't use DOMDocument here because some tags will be removed entirely.
 		preg_match_all( '/<a.*?>(.*?)<\/a>/m', $html, $a_tags );
@@ -203,7 +203,7 @@ class Parser {
 	 */
 	private function handle_root_relative_urls( string $html ): string {
 		return preg_replace_callback(
-			'/(<a[^>]+href="\/[^\/"][^"]*")[^>]*>/m',
+			'/(<a[^>]+href=(["\'])\/[^\/].*?\2[^>]*>)/m',
 			fn( $matches ) => str_replace( 'href="/', 'href="' . get_site_url() . '/', $matches[0] ),
 			$html
 		);
