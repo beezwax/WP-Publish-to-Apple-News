@@ -174,7 +174,7 @@ class Request {
 			// Get the admin email.
 			$admin_email = filter_var( $settings['apple_news_admin_email'], FILTER_VALIDATE_EMAIL );
 			if ( empty( $admin_email ) ) {
-				return; // TODO Fix missing return value.
+				return; // TODO Fix inconsistent return value.
 			}
 
 			// Add the API response.
