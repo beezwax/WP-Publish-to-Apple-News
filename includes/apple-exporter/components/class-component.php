@@ -402,7 +402,7 @@ abstract class Component {
 	 * @access public
 	 */
 	public function is_anchor_target() {
-		return '' !== $this->uid;
+		return ! empty( $this->uid );
 	}
 
 	/**
@@ -412,7 +412,7 @@ abstract class Component {
 	 * @access public
 	 */
 	public function can_be_anchor_target() {
-		return $this->can_be_anchor_target && '' === $this->uid;
+		return $this->can_be_anchor_target && empty( $this->uid );
 	}
 
 	/**
@@ -422,7 +422,7 @@ abstract class Component {
 	 * @access public
 	 */
 	public function uid() {
-		if ( '' === $this->uid ) {
+		if ( empty( $this->uid ) ) {
 			$this->uid = 'component-' . md5( uniqid( $this->text, true ) );
 			$this->set_json( 'identifier', $this->uid );
 		}
