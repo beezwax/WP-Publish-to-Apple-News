@@ -500,8 +500,8 @@ class Components extends Builder {
 					return '';
 				} else {
 					// If this is the first time we've encountered this identifier,
-					// add it to our dictionary and set its count to 1.
-					$identifiers[ $identifier ] = 1;
+					// add it to our dictionary.
+					$identifiers[ $identifier ] = true;
 				}
 
 				// Add 'identifier' to the component.
