@@ -19,6 +19,7 @@ use Apple_Exporter\Exporter_Content_Settings;
 use Apple_Exporter\Theme;
 use Apple_Exporter\Third_Party\Jetpack_Tiled_Gallery;
 use Apple_News;
+use BC_Setup;
 
 /**
  * A class to handle an export request from the admin.
@@ -544,7 +545,7 @@ class Export extends Action {
 		 * hook.
 		 */
 		if ( ! class_exists( '\BC_CMS_API' ) && class_exists( '\BC_Setup' ) ) {
-			( new \BC_Setup )->action_init();
+			( new BC_Setup() )->action_init();
 		}
 
 		// Ensure the account ID and video IDs are strings.

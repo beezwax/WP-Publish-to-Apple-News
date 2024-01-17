@@ -158,7 +158,7 @@ class Request {
 		// Ensure we have an expected response type.
 		if ( ( ! is_array( $response ) || ! isset( $response['body'] ) ) && ! is_wp_error( $response ) ) {
 			if ( is_array( $response ) || is_object( $response ) ) {
-				$response = json_encode( $response );
+				$response = wp_json_encode( $response );
 			}
 			throw new Request_Exception( esc_html( __( 'Invalid response:', 'apple-news' ) . $response ) );
 		}
@@ -174,7 +174,7 @@ class Request {
 			// Get the admin email.
 			$admin_email = filter_var( $settings['apple_news_admin_email'], FILTER_VALIDATE_EMAIL );
 			if ( empty( $admin_email ) ) {
-				return;
+				return; // TODO Fix missing return value.
 			}
 
 			// Add the API response.

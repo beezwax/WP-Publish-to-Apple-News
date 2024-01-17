@@ -326,7 +326,7 @@ class Apple_News {
 	 * @return bool True if initialized, false if not.
 	 */
 	public static function is_initialized(): bool {
-		// Check if the necessary plugin settings are initialized
+		// Check if the necessary plugin settings are initialized.
 		if ( false === self::$is_initialized ) {
 			$settings = get_option( self::$option_name );
 
