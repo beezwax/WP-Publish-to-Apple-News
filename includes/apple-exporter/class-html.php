@@ -27,35 +27,36 @@ class HTML {
 	private $allowed_html = [
 		'a'          => [
 			'href' => true,
+			'id'   => true,
 		],
-		'aside'      => [],
-		'b'          => [],
-		'blockquote' => [],
-		'br'         => [],
-		'caption'    => [],
-		'cite'       => [],
-		'code'       => [],
-		'del'        => [],
-		'em'         => [],
-		'footer'     => [],
-		'i'          => [],
-		'li'         => [],
-		'ol'         => [],
-		'p'          => [],
-		'pre'        => [],
-		's'          => [],
-		'samp'       => [],
-		'strong'     => [],
-		'sub'        => [],
-		'sup'        => [],
-		'table'      => [],
-		'td'         => [],
-		'th'         => [],
-		'tr'         => [],
-		'tbody'      => [],
-		'thead'      => [],
-		'tfoot'      => [],
-		'ul'         => [],
+		'aside'      => [ 'id' => true ],
+		'b'          => [ 'id' => true ],
+		'blockquote' => [ 'id' => true ],
+		'br'         => [ 'id' => true ],
+		'caption'    => [ 'id' => true ],
+		'cite'       => [ 'id' => true ],
+		'code'       => [ 'id' => true ],
+		'del'        => [ 'id' => true ],
+		'em'         => [ 'id' => true ],
+		'footer'     => [ 'id' => true ],
+		'i'          => [ 'id' => true ],
+		'li'         => [ 'id' => true ],
+		'ol'         => [ 'id' => true ],
+		'p'          => [ 'id' => true ],
+		'pre'        => [ 'id' => true ],
+		's'          => [ 'id' => true ],
+		'samp'       => [ 'id' => true ],
+		'strong'     => [ 'id' => true ],
+		'sub'        => [ 'id' => true ],
+		'sup'        => [ 'id' => true ],
+		'table'      => [ 'id' => true ],
+		'td'         => [ 'id' => true ],
+		'th'         => [ 'id' => true ],
+		'tr'         => [ 'id' => true ],
+		'tbody'      => [ 'id' => true ],
+		'thead'      => [ 'id' => true ],
+		'tfoot'      => [ 'id' => true ],
+		'ul'         => [ 'id' => true ],
 	];
 
 	/**
@@ -74,7 +75,7 @@ class HTML {
 		// Strip out all tags and attributes other than what is allowed.
 		$html = wp_kses( $html, $this->allowed_html );
 
-		// Remove any tempty tags.
+		// Remove any empty tags.
 		$html = preg_replace( '/<([a-z0-9]+)[^>]*>\s*<\/\1>/', '', $html );
 
 		return $html;
