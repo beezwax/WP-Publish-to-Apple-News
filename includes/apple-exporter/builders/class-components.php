@@ -68,6 +68,36 @@ class Components extends Builder {
 		// Group body components to improve text flow at all orientations.
 		$components = $this->group_body_components( $components );
 
+		// Remove any identifiers that are duplicated.
+		$components = $this->remove_duplicate_identifiers( $components );
+
+		return $components;
+	}
+
+	/**
+	 * Strip duplicated identifiers from components, leaving the component.
+	 *
+	 * @param array $components The array of components to remove duplicate identifiers from.
+	 *
+	 * @return array The updated array of components with duplicate identifiers removed.
+	 */
+	protected function remove_duplicate_identifiers( array $components ): array {
+		$identifiers = [];
+		foreach ( $components as $i => $component ) {
+			if ( ! empty( $component['identifier'] ) ) {
+				if ( in_array( $component['identifier'], $identifiers, true ) ) {
+					unset( $components[ $i ]['identifier'] );
+				} else {
+					$identifiers[] = $component['identifier'];
+				}
+			}
+
+			// If the component contains nested components, process them as well.
+			if ( isset( $component['components'] ) && is_array( $component['components'] ) ) {
+				$components[ $i ]['components'] = $this->remove_duplicate_identifiers( $component['components'] );
+			}
+		}
+
 		return $components;
 	}
 
@@ -857,7 +887,7 @@ class Components extends Builder {
 
 		/**
 		 * Loop though the first-level nodes of the body element. Components might
-		 * include child-components, like an Cover and Image.
+		 * include child-components, like a Cover and Image.
 		 */
 		$components = [];
 		foreach ( $this->content_nodes() as $node ) {

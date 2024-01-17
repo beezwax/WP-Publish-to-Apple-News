@@ -840,8 +840,6 @@ abstract class Component {
 	 */
 	public static function is_embed_figure( $node ) {
 
-		// Set default.
-
 		// Return false if we don't have any child nodes.
 		if ( ! $node->hasChildNodes() ) {
 			return false;
