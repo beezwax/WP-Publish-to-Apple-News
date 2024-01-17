@@ -24,7 +24,7 @@ class HTML {
 	 * @access private
 	 * @var array
 	 */
-	private $allowed_html = [
+	private array $allowed_html = [
 		'a'          => [
 			'href' => true,
 			'id'   => true,

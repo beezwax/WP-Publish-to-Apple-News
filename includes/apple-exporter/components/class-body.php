@@ -101,20 +101,17 @@ class Body extends Component {
 	 *
 	 * @access public
 	 */
-	public function register_specs() {
+	public function register_specs(): void {
 		$theme        = Theme::get_used();
 		$default_spec = $this->get_default_style_spec();
-		$spec         = [
-			'role'   => 'body',
-			'text'   => '#text#',
-			'format' => '#format#',
-		];
-
-		// TODO add identifier to $spec.
 		$this->register_spec(
 			'json',
 			__( 'JSON', 'apple-news' ),
-			$spec
+			[
+				'role'   => 'body',
+				'text'   => '#text#',
+				'format' => '#format#',
+			]
 		);
 
 		$this->register_spec(
