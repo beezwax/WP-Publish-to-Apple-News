@@ -1142,7 +1142,7 @@ class Apple_News {
 	}
 
 	/**
-	 * Verifies that the list of keys provided all exists in the settings array.
+	 * Verifies that the list of keys provided all exist in the settings array.
 	 *
 	 * @param array $compare The array to compare against the list of keys.
 	 * @param array $keys The keys to check.
