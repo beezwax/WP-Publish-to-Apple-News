@@ -130,9 +130,9 @@ class Heading extends Component {
 	 */
 	protected function html_enabled( $enabled = true ) { // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
 		// TODO: The html_enabled methods in all the child classes
-		//  can be removed with a little refactoring in the future
-		//  since the parent method is the same and these are only being
-		//  used to set state.
+		// can be removed with a little refactoring in the future
+		// since the parent method is the same and these are only being
+		// used to set state.
 		return parent::html_enabled( $enabled );
 	}
 

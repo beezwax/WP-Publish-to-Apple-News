@@ -484,7 +484,7 @@ class Body extends Component {
 		 *
 		 * @param bool                  $use_dropcap Whether to apply a dropcap to this paragraph or not.
 		 * @param string                $html The post content to filter.
-		 * @param Theme $theme The theme whose dropcap options are used.
+		 * @param Theme                 $theme The theme whose dropcap options are used.
 		 * @param string                $post_id The id of the post whose content we're parsing.
 		 *
 		 *@since 2.4.0
