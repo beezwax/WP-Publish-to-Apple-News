@@ -69,6 +69,7 @@ class Heading extends Component {
 				'role'   => '#heading_level#',
 				'text'   => '#text#',
 				'format' => '#format#',
+				'identifier' =>'#identifier#'
 			]
 		);
 
@@ -183,13 +184,14 @@ class Heading extends Component {
 	 * @access protected
 	 */
 	protected function build( $html ): void {
-		if ( 0 === preg_match( '#<h(\d).*?>(.*?)</h\1>#si', $html, $matches ) ) {
+		// Match HTML headings, capture level, id value if set, and heading text.
+		if ( 0 === preg_match( '#<h(\d).*?id=(["\'])(.*?)\2.*?>(.*?)</h\1>#si', $html, $matches ) ) {
 			return;
 		}
-		// TODO add id to identifier for anchor links to headings.
 
 		$level = intval( $matches[1] );
-		$text  = $matches[2];
+		$text  = $matches[4];
+		$id = $matches[3] ?? null;
 
 		// Parse and trim the resultant text, and if there is nothing left, bail.
 		$text = trim( $this->parser->parse( $text ) );
@@ -203,6 +205,7 @@ class Heading extends Component {
 				'#heading_level#' => 'heading' . $level,
 				'#text#'          => $text,
 				'#format#'        => $this->parser->format,
+				'#identifier#'          => $id,
 			]
 		);
 
