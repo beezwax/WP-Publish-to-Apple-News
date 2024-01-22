@@ -52,7 +52,7 @@ class Apple_News_Parser_Test extends Apple_News_Testcase {
 	 *
 	 * @see \Apple_Exporter\Parser::parse
 	 */
-	public function test_clean_html_markdown():void {
+	public function test_clean_html_markdown(): void {
 		// Create a post.
 		global $post;
 		$post_content = <<<HTML
@@ -101,7 +101,7 @@ HTML;
 	 *
 	 * @see \Apple_Exporter\Parser::parse
 	 */
-	public function test_clean_html():void {
+	public function test_clean_html(): void {
 		// Create a post.
 		global $post;
 		$post_content = <<<HTML
