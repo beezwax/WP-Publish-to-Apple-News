@@ -66,10 +66,10 @@ class Heading extends Component {
 			'json',
 			__( 'JSON', 'apple-news' ),
 			[
-				'role'   => '#heading_level#',
-				'text'   => '#text#',
-				'format' => '#format#',
-				'identifier' =>'#identifier#'
+				'role'       => '#heading_level#',
+				'text'       => '#text#',
+				'format'     => '#format#',
+				'identifier' => '#identifier#',
 			]
 		);
 
@@ -185,13 +185,13 @@ class Heading extends Component {
 	 */
 	protected function build( $html ): void {
 		// Match HTML headings, capture level, id value if set, and heading text.
-		if ( 0 === preg_match( '#<h(\d).*?id=(["\'])(.*?)\2.*?>(.*?)</h\1>#si', $html, $matches ) ) {
+		if ( 0 === preg_match( '#<h(\d).*?(id=(["\'])(.*?)\2)?.*?>(.*?)</h\1>#si', $html, $matches ) ) {
 			return;
 		}
 
 		$level = intval( $matches[1] );
-		$text  = $matches[4];
-		$id = $matches[3] ?? null;
+		$text  = $matches[5];
+		$id    = $matches[4] ?? null;
 
 		// Parse and trim the resultant text, and if there is nothing left, bail.
 		$text = trim( $this->parser->parse( $text ) );
@@ -205,7 +205,7 @@ class Heading extends Component {
 				'#heading_level#' => 'heading' . $level,
 				'#text#'          => $text,
 				'#format#'        => $this->parser->format,
-				'#identifier#'          => $id,
+				'#identifier#'    => $id,
 			]
 		);
 
