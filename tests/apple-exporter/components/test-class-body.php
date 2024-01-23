@@ -266,7 +266,7 @@ HTML
 			// Root-relative URL. Should be permitted, but auto-converted to a fully qualified URL.
 			[ '/test', true ],
 
-			// Hash-based URL. Should be permitted, but auto-converted to a hash link against the test post's permalink.
+			// Anchor link (hash-based URL) should be permitted.
 			[ '#test', true ],
 
 			// Apple News article URL.
@@ -463,7 +463,7 @@ HTML;
 	/**
 	 * Given an expected result and an actual link, verifies that the link URL is
 	 * correctly processed. Used to ensure that valid link types (not just http/s,
-	 * but also mailto, webcal, stocks, etc) are supported, and that unsupported
+	 * but also mailto, webcal, stocks, etc.) are supported, and that unsupported
 	 * types are stripped out.
 	 *
 	 * @dataProvider data_link_types
@@ -475,17 +475,15 @@ HTML;
 		$this->set_theme_settings( [ 'meta_component_order' => [ 'title', 'author' ] ] );
 		$content = <<<HTML
 <!-- wp:paragraph -->
-<p>Lorem ipsum <a href="{$link}">dolor sit amet</a>.</p>
+<p>Lorem ipsum <a href="$link">dolor sit amet</a>.</p>
 <!-- /wp:paragraph -->
 HTML;
 		$post_id = self::factory()->post->create( [ 'post_content' => $content ] );
 		$json    = $this->get_json_for_post( $post_id );
 
 		// Negotiate expected value and test.
-		if ( 0 === strpos( $link, '/' ) ) {
+		if ( str_starts_with( $link, '/' ) ) {
 			$link = 'https://www.example.org' . $link;
-		} elseif ( 0 === strpos( $link, '#' ) ) {
-			$link = get_permalink( $post_id ) . $link;
 		}
 		$expected = $should_work
 			? sprintf( '<p>Lorem ipsum <a href="%s">dolor sit amet</a>.</p>', $link )

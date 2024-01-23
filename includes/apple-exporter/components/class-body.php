@@ -8,6 +8,9 @@
 
 namespace Apple_Exporter\Components;
 
+use Apple_Exporter\Theme;
+use DOMElement;
+
 /**
  * A paragraph component.
  *
@@ -35,7 +38,8 @@ class Body extends Component {
 	/**
 	 * Look for node matches for this component.
 	 *
-	 * @param \DOMElement $node The node to examine for matches.
+	 * @param DOMElement $node The node to examine for matches.
+	 *
 	 * @access public
 	 * @return array|null The node on success, or null on no match.
 	 */
@@ -68,7 +72,7 @@ class Body extends Component {
 			'IDEOGRAPHIC SPACE'         => "\xe3\x80\x80",
 		];
 
-		// If the node is p, ul or ol AND it's empty, just ignore.
+		// If the node is p, ul or ol AND it's empty, ignore.
 		if ( empty( $node->nodeValue )
 			|| empty( str_replace( $whitespace, '', $node->nodeValue ) )
 		) {
@@ -97,8 +101,8 @@ class Body extends Component {
 	 *
 	 * @access public
 	 */
-	public function register_specs() {
-		$theme        = \Apple_Exporter\Theme::get_used();
+	public function register_specs(): void {
+		$theme        = Theme::get_used();
 		$default_spec = $this->get_default_style_spec();
 		$this->register_spec(
 			'json',
@@ -195,12 +199,13 @@ class Body extends Component {
 	}
 
 	/**
-	 * Split the non markdownable content for processing.
+	 * Split the non-markdownable content for processing.
 	 *
 	 * @param string $html The HTML to split.
 	 * @param string $tag The tag in which to enclose primary content.
 	 * @param string $open The opening HTML tag(s) for use in balancing a split.
 	 * @param string $close The closing HTML tag(s) for use in balancing a split.
+	 *
 	 * @access private
 	 * @return array An array of HTML components.
 	 */
@@ -229,8 +234,8 @@ class Body extends Component {
 		}
 
 		// Split the HTML by the found element into the left and right parts.
-		list( $whole, $tag_name ) = $matches;
-		list( $left, $right )     = explode( $whole, $html, 3 );
+		[ $whole, $tag_name ] = $matches;
+		[ $left, $right ]     = explode( $whole, $html, 3 );
 
 		// Additional processing for list items.
 		if ( 'ol' === $tag || 'ul' === $tag ) {
@@ -275,6 +280,7 @@ class Body extends Component {
 	 * Build the component.
 	 *
 	 * @param string $html The HTML to parse into text for processing.
+	 *
 	 * @access protected
 	 */
 	protected function build( $html ) {
@@ -296,7 +302,7 @@ class Body extends Component {
 		);
 
 		// Determine whether to apply dropcap style.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 		if ( ! $theme->dropcap_applied
 			&& $this->dropcap_determination( $theme, $html )
 		) {
@@ -328,7 +334,7 @@ class Body extends Component {
 	private function set_default_layout() {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		// Register the standard layout.
 		$this->register_layout(
@@ -359,7 +365,7 @@ class Body extends Component {
 	 * @access private
 	 */
 	private function get_default_style_spec() {
-		$theme                = \Apple_Exporter\Theme::get_used();
+		$theme                = Theme::get_used();
 		$body_color_dark      = $theme->get_value( 'body_color_dark' );
 		$body_link_color_dark = $theme->get_value( 'body_link_color_dark' );
 		$dark_colors_exist    = ! empty( $body_color_dark ) || ! empty( $body_link_color_dark );
@@ -413,7 +419,7 @@ class Body extends Component {
 	private function get_default_style_values() {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		return [
 			'#body_font#'            => $theme->get_value( 'body_font' ),
@@ -444,8 +450,8 @@ class Body extends Component {
 	/**
 	 * Determine whether to apply a dropcap style for the component.
 	 *
-	 * @param \Apple_Exporter\Theme $theme Object that stores theme level dropcap configuration.
-	 * @param string                $html The HTML to check for dropcap conditions. Should be the first paragraph of the post content.
+	 * @param Theme  $theme Object that stores theme level dropcap configuration.
+	 * @param string $html The HTML to check for dropcap conditions. Should be the first paragraph of the post content.
 	 *
 	 * @return boolean
 	 */
@@ -460,7 +466,7 @@ class Body extends Component {
 		if ( 'yes' !== $theme->get_value( 'initial_dropcap' ) ) {
 			$use_dropcap = false;
 		} elseif ( preg_match(
-			// Regex-planation: \p{P} searchs for punctuation, /u modifier makes it unicode inclusive.
+			// Regex-planation: \p{P} searches for punctuation, /u modifier makes it unicode inclusive.
 			'/\p{P}$/u',
 			// First character of paragraph.
 			mb_substr( $content, 0, 1 )
@@ -476,12 +482,12 @@ class Body extends Component {
 		/**
 		 * Allows for filtering of the dropcap content before return.
 		 *
-		 * @since 2.4.0
-		 *
 		 * @param bool                  $use_dropcap Whether to apply a dropcap to this paragraph or not.
 		 * @param string                $html The post content to filter.
-		 * @param \Apple_Exporter\Theme $theme The theme whose dropcap options are used.
+		 * @param Theme                 $theme The theme whose dropcap options are used.
 		 * @param string                $post_id The id of the post whose content we're parsing.
+		 *
+		 *@since 2.4.0
 		 */
 		return apply_filters( 'apple_news_dropcap', $use_dropcap, $html, $theme, $this->workspace->content_id );
 	}
@@ -494,7 +500,7 @@ class Body extends Component {
 	private function set_initial_dropcap_style() {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		// Negotiate the number of lines.
 		$number_of_lines = absint( $theme->get_value( 'dropcap_number_of_lines' ) );
@@ -534,7 +540,7 @@ class Body extends Component {
 	/**
 	 * This component needs to ensure it didn't end up with empty content.
 	 * This will go through sanitize_text_field later as part of the assembled JSON.
-	 * Therefore, tags aren't valid but we need to catch them now
+	 * Therefore, tags aren't valid, but we need to catch them now
 	 * or we could encounter a parsing error when it's already too late.
 	 *
 	 * We also can't do this sooner, such as in build, because at that point
@@ -548,7 +554,7 @@ class Body extends Component {
 	 */
 	public function to_array() {
 
-		// If the text content evaluates to empty, just return an empty array.
+		// If the text content evaluates to empty, return an empty array.
 		$sanitized_text = sanitize_text_field( $this->json['text'] );
 		if ( empty( $sanitized_text ) ) {
 			return [];

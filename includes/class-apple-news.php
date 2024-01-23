@@ -8,6 +8,10 @@
  * @since 0.2.0
  */
 
+use Apple_Exporter\Component_Factory;
+use Apple_Exporter\Settings;
+use Apple_Exporter\Theme;
+
 /**
  * Base plugin class with core plugin information and shared functionality
  * between frontend and backend plugin classes.
@@ -22,15 +26,15 @@ class Apple_News {
 	 *
 	 * @var array
 	 */
-	private static $bundle_hashes = [];
+	private static array $bundle_hashes = [];
 
 	/**
-	 * Link to support for the plugin on github.
+	 * Link to support for the plugin on GitHub.
 	 *
 	 * @var string
 	 * @access public
 	 */
-	public static $github_support_url = 'https://github.com/alleyinteractive/apple-news/issues';
+	public static string $github_support_url = 'https://github.com/alleyinteractive/apple-news/issues';
 
 	/**
 	 * Option name for settings.
@@ -38,7 +42,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $option_name = 'apple_news_settings';
+	public static string $option_name = 'apple_news_settings';
 
 	/**
 	 * Plugin version.
@@ -46,7 +50,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $version = '2.4.4';
+	public static string $version = '2.4.4';
 
 	/**
 	 * Link to support for the plugin on WordPress.org.
@@ -54,7 +58,7 @@ class Apple_News {
 	 * @var string
 	 * @access public
 	 */
-	public static $wordpress_org_support_url = 'https://wordpress.org/support/plugin/publish-to-apple-news';
+	public static string $wordpress_org_support_url = 'https://wordpress.org/support/plugin/publish-to-apple-news';
 
 	/**
 	 * Keeps track of whether the plugin is initialized.
@@ -62,7 +66,7 @@ class Apple_News {
 	 * @var bool
 	 * @access private
 	 */
-	private static $is_initialized;
+	private static bool $is_initialized = false;
 
 	/**
 	 * Plugin domain.
@@ -70,7 +74,7 @@ class Apple_News {
 	 * @var string
 	 * @access protected
 	 */
-	protected $plugin_domain = 'apple-news';
+	protected string $plugin_domain = 'apple-news';
 
 	/**
 	 * Plugin slug.
@@ -78,7 +82,7 @@ class Apple_News {
 	 * @var string
 	 * @access protected
 	 */
-	protected $plugin_slug = 'apple_news';
+	protected string $plugin_slug = 'apple_news';
 
 	/**
 	 * An array of contexts where assets should be enqueued.
@@ -86,7 +90,7 @@ class Apple_News {
 	 * @var array
 	 * @access private
 	 */
-	private $contexts = [
+	private array $contexts = [
 		'post.php',
 		'post-new.php',
 		'toplevel_page_apple_news_index',
@@ -103,7 +107,7 @@ class Apple_News {
 	/**
 	 * A helper function for getting authors for a post, which supports native
 	 * WordPress authors as well as Co-Authors Plus. Like the coauthors function,
-	 * must be used in the loop.
+	 * it must be used in the loop.
 	 *
 	 * @param ?string $between      Delimiter that should appear between the co-authors.
 	 * @param ?string $between_last Delimiter that should appear between the last two co-authors.
@@ -121,7 +125,7 @@ class Apple_News {
 		}
 
 		// Get information about the currently used theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		/**
 		 * Allows for changing the option to use Co-Authors Plus for authorship.
@@ -135,7 +139,7 @@ class Apple_News {
 		$use_cap = apply_filters( 'apple_news_use_coauthors', function_exists( 'coauthors' ), get_the_ID() );
 
 		// Get theme option for byline links. True if set to yes.
-		// Ignore html option if setting meta data.
+		// Ignore html option if setting metadata.
 		$use_author_links = $theme->get_value( 'author_links' ) && 'yes' === $theme->get_value( 'author_links' ) && 'APPLE_NEWS_DELIMITER' !== $between;
 
 		// Handle CAP authorship.
@@ -195,6 +199,7 @@ class Apple_News {
 	 * ancestor.
 	 *
 	 * @param string $path The path to analyze for a filename.
+	 *
 	 * @access public
 	 * @return string The filename for an asset to be bundled.
 	 */
@@ -301,13 +306,13 @@ class Apple_News {
 	 */
 	public static function is_default_theme() {
 		// If the theme is not named "Default", then it is customized, and is not the default theme.
-		$active_theme = \Apple_Exporter\Theme::get_active_theme_name();
+		$active_theme = Theme::get_active_theme_name();
 		if ( __( 'Default', 'apple-news' ) !== $active_theme ) {
 			return false;
 		}
 
 		// If the theme _is_ named "Default", check its configuration against the default.
-		$theme = new \Apple_Exporter\Theme();
+		$theme = new Theme();
 		$theme->set_name( $active_theme );
 		$theme->load();
 
@@ -320,15 +325,19 @@ class Apple_News {
 	 * @access public
 	 * @return bool True if initialized, false if not.
 	 */
-	public static function is_initialized() {
+	public static function is_initialized(): bool {
+		// Check if the necessary plugin settings are initialized.
+		if ( false === self::$is_initialized ) {
+			$settings = get_option( self::$option_name );
 
-		// Look up required information in plugin settings, if necessary.
-		if ( null === self::$is_initialized ) {
-			$settings             = get_option( self::$option_name );
-			self::$is_initialized = ( ! empty( $settings['api_channel'] )
-				&& ! empty( $settings['api_key'] )
-				&& ! empty( $settings['api_secret'] )
-			);
+			$has_api_settings = ! empty( $settings['api_channel'] )
+								&& ! empty( $settings['api_key'] )
+								&& ! empty( $settings['api_secret'] );
+
+			$has_api_config = ! empty( $settings['api_config_file'] )
+								|| ! empty( $settings['api_config_file_input'] );
+
+			self::$is_initialized = $has_api_settings || $has_api_config;
 		}
 
 		return self::$is_initialized;
@@ -338,9 +347,9 @@ class Apple_News {
 	 * Returns new WP_Error if uninitialized.
 	 *
 	 * @access public
-	 * @return WP_Error error if uninitialized.
+	 * @return WP_Error|null error if uninitialized.
 	 */
-	public static function has_uninitialized_error() {
+	public static function has_uninitialized_error(): WP_Error|null {
 		if ( ! self::is_initialized() ) {
 			return new WP_Error(
 				'apple_news_bad_operation',
@@ -350,6 +359,7 @@ class Apple_News {
 				]
 			);
 		}
+		return null;
 	}
 
 	/**
@@ -421,7 +431,7 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function action_enqueue_block_editor_assets() {
+	public function action_enqueue_block_editor_assets(): void {
 		// Bail if the post type is not one of the Publish to Apple News post types configured in settings.
 		if ( ! in_array( get_post_type(), (array) Admin_Apple_Settings_Section::$loaded_settings['post_types'], true ) ) {
 			return;
@@ -464,7 +474,7 @@ class Apple_News {
 	 *
 	 * @since 1.3.0
 	 */
-	public function action_plugins_loaded() {
+	public function action_plugins_loaded(): void {
 
 		// Determine if the database version and code version are the same.
 		$current_version = get_option( 'apple_news_version' );
@@ -504,17 +514,17 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function create_default_theme() {
+	public function create_default_theme(): void {
 
 		// Determine if an active theme exists.
-		$active_theme = \Apple_Exporter\Theme::get_active_theme_name();
+		$active_theme = Theme::get_active_theme_name();
 		if ( ! empty( $active_theme ) ) {
 			return;
 		}
 
 		// Build the theme formatting settings from the base settings array.
-		$theme          = new \Apple_Exporter\Theme();
-		$options        = \Apple_Exporter\Theme::get_options();
+		$theme          = new Theme();
+		$options        = Theme::get_options();
 		$wp_settings    = get_option( self::$option_name, [] );
 		$theme_settings = [];
 		foreach ( array_keys( $options ) as $option_key ) {
@@ -591,6 +601,7 @@ class Apple_News {
 	 * A filter callback for the_author to wrap authors in byline tag if supported.
 	 *
 	 * @param string $author author name.
+	 *
 	 * @return string updated $author attribute.
 	 */
 	public function filter_the_author( $author ) {
@@ -623,7 +634,7 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function migrate_api_settings() {
+	public function migrate_api_settings(): void {
 
 		/**
 		 * Use the value of api_autosync_update for api_autosync_delete if not set
@@ -643,7 +654,7 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function migrate_blockquote_settings() {
+	public function migrate_blockquote_settings(): void {
 
 		// Check for the presence of blockquote-specific settings.
 		$wp_settings = get_option( self::$option_name );
@@ -720,7 +731,7 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function migrate_caption_settings() {
+	public function migrate_caption_settings(): void {
 
 		// Check for the presence of caption-specific settings.
 		$wp_settings = get_option( self::$option_name );
@@ -765,13 +776,13 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function migrate_custom_json_to_themes() {
+	public function migrate_custom_json_to_themes(): void {
 
 		// Get a list of all themes that need to be updated.
-		$all_themes = \Apple_Exporter\Theme::get_registry();
+		$all_themes = Theme::get_registry();
 
 		// Get a list of components that may have customized JSON.
-		$component_factory = new \Apple_Exporter\Component_Factory();
+		$component_factory = new Component_Factory();
 		$component_factory->initialize();
 		$components = $component_factory::get_components();
 
@@ -803,7 +814,7 @@ class Apple_News {
 
 		// Loop over themes and apply to each.
 		foreach ( $all_themes as $theme_name ) {
-			$theme = new \Apple_Exporter\Theme();
+			$theme = new Theme();
 			$theme->set_name( $theme_name );
 			$theme->load();
 			$settings                   = $theme->all_settings();
@@ -824,9 +835,9 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function migrate_header_settings() {
+	public function migrate_header_settings(): void {
 
-		// Check for presence of any legacy header setting.
+		// Check for the presence of any legacy header setting.
 		$wp_settings = get_option( self::$option_name );
 		if ( empty( $wp_settings['header_font'] )
 			&& empty( $wp_settings['header_color'] )
@@ -874,7 +885,7 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function migrate_settings() {
+	public function migrate_settings(): void {
 
 		// Attempt to load settings from the option.
 		$wp_settings = get_option( self::$option_name );
@@ -885,7 +896,7 @@ class Apple_News {
 		// For each potential value, see if the WordPress option exists.
 		// If so, migrate its value into the new array format.
 		// If it doesn't exist, just use the default value.
-		$settings          = new \Apple_Exporter\Settings();
+		$settings          = new Settings();
 		$all_settings      = $settings->all();
 		$migrated_settings = [];
 		foreach ( $all_settings as $key => $default ) {
@@ -905,10 +916,10 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function remove_global_formatting_settings() {
+	public function remove_global_formatting_settings(): void {
 
 		// Loop through formatting settings and remove them from saved settings.
-		$formatting_settings = array_keys( \Apple_Exporter\Theme::get_options() );
+		$formatting_settings = array_keys( Theme::get_options() );
 		$wp_settings         = get_option( self::$option_name, [] );
 		foreach ( $formatting_settings as $setting_key ) {
 			if ( isset( $wp_settings[ $setting_key ] ) ) {
@@ -926,10 +937,10 @@ class Apple_News {
 	 *
 	 * @param string $theme_name The theme name for which settings should be migrated.
 	 */
-	public function migrate_table_settings( $theme_name ) {
+	public function migrate_table_settings( $theme_name ): void {
 
 		// Load the theme settings from the database.
-		$theme = new \Apple_Exporter\Theme();
+		$theme = new Theme();
 		$theme->set_name( $theme_name );
 		$theme->load();
 
@@ -971,10 +982,10 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function upgrade_to_1_3_0() {
+	public function upgrade_to_1_3_0(): void {
 
 		// Determine if themes have been created yet.
-		$theme_list = \Apple_Exporter\Theme::get_registry();
+		$theme_list = Theme::get_registry();
 		if ( empty( $theme_list ) ) {
 			$this->migrate_settings();
 			$this->migrate_header_settings();
@@ -1000,10 +1011,10 @@ class Apple_News {
 	 *
 	 * @access public
 	 */
-	public function upgrade_to_1_4_0() {
+	public function upgrade_to_1_4_0(): void {
 
 		// Set intelligent defaults for table styles in all themes.
-		$theme_list = \Apple_Exporter\Theme::get_registry();
+		$theme_list = Theme::get_registry();
 		if ( ! empty( $theme_list ) && is_array( $theme_list ) ) {
 			foreach ( $theme_list as $theme ) {
 				$this->migrate_table_settings( $theme );
@@ -1014,9 +1025,9 @@ class Apple_News {
 	/**
 	 * Upgrades settings and data formats to be compatible with version 2.4.0.
 	 */
-	public function upgrade_to_2_4_0() {
+	public function upgrade_to_2_4_0(): void {
 		// Update author and byline theme formats to new convention.
-		$registry = \Apple_Exporter\Theme::get_registry();
+		$registry = Theme::get_registry();
 
 		foreach ( $registry as $theme_name ) {
 			$theme_object = Admin_Apple_Themes::get_theme_by_name( $theme_name );
@@ -1047,7 +1058,6 @@ class Apple_News {
 		$mapping_taxonomy  = apply_filters( 'apple_news_section_taxonomy', 'category' );
 
 		// Get an ordered list of sections.
-		$sections = [];
 		if ( ! empty( $priority_mappings ) ) {
 			arsort( $priority_mappings );
 			$sections = array_keys( $priority_mappings );
@@ -1094,7 +1104,7 @@ class Apple_News {
 	 *
 	 * @access protected
 	 */
-	protected function load_example_themes() {
+	protected function load_example_themes(): void {
 
 		// Set configuration for example themes.
 		$example_themes = [
@@ -1110,7 +1120,7 @@ class Apple_News {
 		foreach ( $example_themes as $slug => $name ) {
 
 			// Determine if the theme already exists.
-			$theme = new \Apple_Exporter\Theme();
+			$theme = new Theme();
 			$theme->set_name( $name );
 			if ( $theme->load() ) {
 				continue;
@@ -1159,6 +1169,7 @@ class Apple_News {
 	 *
 	 * @param array $wp_settings  An array of settings to modify.
 	 * @param array $settings_map A settings map in the format $to => $from.
+	 *
 	 * @access private
 	 * @return array The modified settings array.
 	 */

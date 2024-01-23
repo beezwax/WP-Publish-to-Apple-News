@@ -99,7 +99,7 @@ HTML;
 		$this->set_theme_settings( [ 'meta_component_order' => $meta_order ] );
 		$content = <<<HTML
 <!-- wp:heading -->
-<h2>Heading <strong>Level</strong> 2</h2>
+<h2 id="heading-target">Heading <strong>Level</strong> 2</h2>
 <!-- /wp:heading -->
 
 <!-- wp:paragraph -->
