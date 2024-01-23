@@ -8,7 +8,9 @@
 
 namespace Apple_Push_API\Request;
 
+use Apple_Push_API\Credentials;
 use Apple_Push_API\MIME_Builder;
+use WP_Error;
 
 require_once __DIR__ . '/../class-mime-builder.php';
 
@@ -85,15 +87,16 @@ class Request {
 	/**
 	 * Sends a POST request with the given article and bundles.
 	 *
-	 * @since 0.2.0
-	 * @param string $url     The URL to post the request to.
-	 * @param string $article The content of the article.
-	 * @param array  $bundles Optional. Any bundles that will be sent with the article. Defaults to an empty array.
-	 * @param array  $meta    Optional. Any additional metadata that will be sent with the article. Defaults to null.
-	 * @param int    $post_id Optional. The post ID for the article being sent. Defaults to null.
+	 * @param string     $url     The URL to post the request to.
+	 * @param string     $article The content of the article.
+	 * @param array      $bundles Optional. Any bundles that will be sent with the article. Defaults to an empty array.
+	 * @param array|null $meta    Optional. Any additional metadata that will be sent with the article. Defaults to null.
+	 * @param int|null   $post_id Optional. The post ID for the article being sent. Defaults to null.
+	 *
 	 * @access public
 	 * @return mixed The response body from the API.
 	 * @throws Request_Exception If the request fails.
+	 * @since 0.2.0
 	 */
 	public function post( $url, $article, $bundles = [], $meta = null, $post_id = null ) {
 		return $this->request(
@@ -111,11 +114,12 @@ class Request {
 	/**
 	 * Sends a DELETE request for the given article and bundles.
 	 *
-	 * @since 0.2.0
 	 * @param string $url The URL to send the request to.
+	 *
 	 * @access public
 	 * @return mixed The response body from the API.
 	 * @throws Request_Exception If the request fails.
+	 * @since 0.2.0
 	 */
 	public function delete( $url ) {
 		return $this->request( 'DELETE', $url );
@@ -137,21 +141,25 @@ class Request {
 	/**
 	 * Parses the API response and checks for errors.
 	 *
-	 * @since 0.2.0
-	 * @param array   $response           The response from the API.
-	 * @param boolean $json               Optional. Whether to return the response as decoded JSON or not. Defaults to true.
-	 * @param string  $type               Optional. The post type of the content. Defaults to 'post'.
-	 * @param array   $meta               Optional. Additional meta information sent with the request. Defaults to null.
-	 * @param array   $bundles            Optional. Bundles sent with the request. Defaults to null.
-	 * @param string  $article            Optional. The content of the article. Defaults to a blank string.
-	 * @param string  $debug_mime_request Optional. Debug information about the MIME encoding. Defaults to a blank string.
+	 * @param array|WP_Error $response The response from the API.
+	 * @param boolean        $json               Optional. Whether to return the response as decoded JSON or not. Defaults to true.
+	 * @param string         $type               Optional. The post type of the content. Defaults to 'post'.
+	 * @param array          $meta               Optional. Additional meta information sent with the request. Defaults to null.
+	 * @param array          $bundles            Optional. Bundles sent with the request. Defaults to null.
+	 * @param string         $article            Optional. The content of the article. Defaults to a blank string.
+	 * @param string         $debug_mime_request Optional. Debug information about the MIME encoding. Defaults to a blank string.
+	 *
 	 * @access private
 	 * @return mixed The response body from the API.
 	 * @throws Request_Exception If the response is invalid.
+	 * @since 0.2.0
 	 */
 	private function parse_response( $response, $json = true, $type = 'post', $meta = null, $bundles = null, $article = '', $debug_mime_request = '' ) {
 		// Ensure we have an expected response type.
 		if ( ( ! is_array( $response ) || ! isset( $response['body'] ) ) && ! is_wp_error( $response ) ) {
+			if ( is_array( $response ) || is_object( $response ) ) {
+				$response = wp_json_encode( $response );
+			}
 			throw new Request_Exception( esc_html( __( 'Invalid response:', 'apple-news' ) . $response ) );
 		}
 
@@ -166,7 +174,7 @@ class Request {
 			// Get the admin email.
 			$admin_email = filter_var( $settings['apple_news_admin_email'], FILTER_VALIDATE_EMAIL );
 			if ( empty( $admin_email ) ) {
-				return;
+				return; // TODO Fix inconsistent return value.
 			}
 
 			// Add the API response.
@@ -229,6 +237,9 @@ class Request {
 
 		// Check for errors from the API.
 		$response_decoded = json_decode( $response['body'] );
+		if ( json_last_error() !== JSON_ERROR_NONE ) {
+			throw new Request_Exception( esc_html( __( 'Unable to decode JSON from the response:', 'apple-news' ) ) );
+		}
 		if ( ! empty( $response_decoded->errors ) && is_array( $response_decoded->errors ) ) {
 			$message  = '';
 			$messages = [];
@@ -281,17 +292,18 @@ class Request {
 	/**
 	 * Parses the API response and checks for errors.
 	 *
+	 * @param string $article The article content.
+	 * @param array  $bundles Optional. The bundles to be sent with the article. Defaults to an empty array.
+	 * @param array  $meta Optional. Additional meta to be sent with the request. Defaults to an empty array.
+	 * @param int    $post_id Optional. The post ID for the post being sent. Defaults to null.
+	 *
+	 * @access private
+	 * @return string The content to be sent to the API.
+	 * @throws Request_Exception If the content cannot be built.
 	 * @todo The exporter has an abstracted article class. Should we have
 	 *       something similar here? That way this method could live there.
 	 *
 	 * @since 0.2.0
-	 * @param string $article The article content.
-	 * @param array  $bundles Optional. The bundles to be sent with the article. Defaults to an empty array.
-	 * @param array  $meta    Optional. Additional meta to be sent with the request. Defaults to an empty array.
-	 * @param int    $post_id Optional. The post ID for the post being sent. Defaults to null.
-	 * @access private
-	 * @return string The content to be sent to the API.
-	 * @throws Request_Exception If the content cannot be built.
 	 */
 	private function build_content( $article, $bundles = [], $meta = [], $post_id = null ) {
 		$bundles = array_unique( $bundles );

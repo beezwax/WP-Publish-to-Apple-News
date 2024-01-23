@@ -14,9 +14,10 @@ namespace Apple_Exporter\Builders;
 use Apple_Exporter\Component_Factory;
 use Apple_Exporter\Components\Component;
 use Apple_Exporter\Components\Image;
-use Apple_Exporter\Workspace;
 use Apple_Exporter\Theme;
+use Apple_Exporter\Workspace;
 use Apple_News;
+use DOMElement;
 use DOMNode;
 
 /**
@@ -66,6 +67,36 @@ class Components extends Builder {
 
 		// Group body components to improve text flow at all orientations.
 		$components = $this->group_body_components( $components );
+
+		// Remove any identifiers that are duplicated.
+		$components = $this->remove_duplicate_identifiers( $components );
+
+		return $components;
+	}
+
+	/**
+	 * Strip duplicated identifiers from components, leaving the component.
+	 *
+	 * @param array $components The array of components to remove duplicate identifiers from.
+	 *
+	 * @return array The updated array of components with duplicate identifiers removed.
+	 */
+	protected function remove_duplicate_identifiers( array $components ): array {
+		$identifiers = [];
+		foreach ( $components as $i => $component ) {
+			if ( ! empty( $component['identifier'] ) ) {
+				if ( in_array( $component['identifier'], $identifiers, true ) ) {
+					unset( $components[ $i ]['identifier'] );
+				} else {
+					$identifiers[] = $component['identifier'];
+				}
+			}
+
+			// If the component contains nested components, process them as well.
+			if ( isset( $component['components'] ) && is_array( $component['components'] ) ) {
+				$components[ $i ]['components'] = $this->remove_duplicate_identifiers( $component['components'] );
+			}
+		}
 
 		return $components;
 	}
@@ -130,7 +161,7 @@ class Components extends Builder {
 	private function add_thumbnail_if_needed( &$components ) {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		// Otherwise, iterate over the components and look for the first image.
 		foreach ( $components as $i => $component ) {
@@ -288,7 +319,7 @@ class Components extends Builder {
 	private function anchor_lines_coefficient() {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		return ceil( 18 / $theme->get_value( 'body_size' ) * 18 );
 	}
@@ -309,7 +340,7 @@ class Components extends Builder {
 		}
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		// Get the component's anchor settings, if set.
 		$anchor_json = $component->get_json( 'anchor' );
@@ -364,7 +395,7 @@ class Components extends Builder {
 	private function characters_per_line_anchored() {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		// Get the body text size in points.
 		$body_size = $theme->get_value( 'body_size' );
@@ -426,8 +457,67 @@ class Components extends Builder {
 			return;
 		}
 
+		// Convert HTML IDs to identifiers.
+		$component = $this->convert_ids_to_identifiers( $component );
+
 		// Trim the fat.
 		$component['text'] = trim( $component['text'] );
+	}
+
+	/**
+	 * Convert the 'id' attributes in the HTML text of a
+	 * component to unique identifiers to support internal
+	 * anchor links.
+	 *
+	 * @param Component $component The component whose 'id' attributes will be converted.
+	 *
+	 * @return Component The component with converted 'id' attributes.
+	 * @since 2.4.4
+	 *
+	 * @access private
+	 */
+	private function convert_ids_to_identifiers( &$component ) {
+		// Dictionary to hold identifiers as keys with value the number of times each is found.
+		$identifiers = [];
+
+		// Searching for 'id' in the HTML and removing the attribute
+		// and store (valid) ones as 'identifier' on the component.
+		$component['text'] = preg_replace_callback(
+			'/\bid=["\'](.*?)["\']/',
+			function ( $matches ) use ( &$component, &$identifiers ) {
+				// If 'id' starts with a digit, it's skipped,
+				// as it's not a valid identifier and Apple News
+				// will reject it.
+				if ( preg_match( '/^\d/', $matches[1] ) ) {
+					return '';
+				}
+
+				// Saving the 'id' as the 'identifier'.
+				$identifier = $matches[1];
+
+				// If this identifier already exists skip it (is a duplicate).
+				if ( isset( $identifiers[ $identifier ] ) ) {
+					return '';
+				} else {
+					// If this is the first time we've encountered this identifier,
+					// add it to our dictionary.
+					$identifiers[ $identifier ] = true;
+				}
+
+				// Add 'identifier' to the component.
+				$component['identifier'] = $identifier;
+
+				// Returning an empty string to remove the
+				// 'id' attribute from the HTML.
+				return '';
+			},
+			$component['text']
+		);
+
+		// Remove unnecessary whitespaces in the HTML tags.
+		$component['text'] = preg_replace( '/\s*>/', '>', $component['text'] );
+
+		return $component;
 	}
 
 	/**
@@ -506,7 +596,7 @@ class Components extends Builder {
 	/**
 	 * Get a component from a node.
 	 *
-	 * @param \DOMElement $node The node to be examined.
+	 * @param DOMElement $node The node to be examined.
 	 *
 	 * @access private
 	 * @return array An array of components matching the node.
@@ -573,7 +663,7 @@ class Components extends Builder {
 	 * @since 1.2.1
 	 *
 	 * @access private
-	 * @return float An image ratio (width/height) for the given image.
+	 * @return float|int An image ratio (width/height) for the given image.
 	 */
 	private function get_image_ratio( $url ) {
 
@@ -615,11 +705,10 @@ class Components extends Builder {
 		$new_components = [];
 		$cover_index    = null;
 		$anchor_buffer  = 0;
-		$prev           = null;
 		$current        = null;
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		// Loop through components, grouping as necessary.
 		foreach ( $components as $component ) {
@@ -746,7 +835,7 @@ class Components extends Builder {
 	private function meta_components() {
 
 		// Get information about the currently loaded theme.
-		$theme = \Apple_Exporter\Theme::get_used();
+		$theme = Theme::get_used();
 
 		// Attempt to get the component order.
 		$meta_component_order = $theme->get_value( 'meta_component_order' );
@@ -798,7 +887,7 @@ class Components extends Builder {
 
 		/**
 		 * Loop though the first-level nodes of the body element. Components might
-		 * include child-components, like an Cover and Image.
+		 * include child-components, like a Cover and Image.
 		 */
 		$components = [];
 		foreach ( $this->content_nodes() as $node ) {
