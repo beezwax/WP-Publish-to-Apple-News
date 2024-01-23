@@ -21,7 +21,7 @@ class Apple_News_Parser_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the parser's ability to parse markdown.
 	 */
-	public function test_parse_markdown() {
+	public function test_parse_markdown(): void {
 		// Create a basic HTML post.
 		$post = '<html><body><h2>A heading</h2><p><strong>This is strong.</strong><br><a href="https://www.apple.com">This is a link</a></p></body></html>';
 
@@ -36,16 +36,15 @@ class Apple_News_Parser_Test extends Apple_News_Testcase {
 	/**
 	 * Tests the parser's ability to parse HTML.
 	 */
-	public function test_parse_html() {
+	public function test_parse_html(): void {
 		// Create a basic HTML post.
-		$post = '<h2 class="someClass">A heading</h2><p><strong>This is strong.</strong><br><a href="https://www.apple.com" target="_blank">This is a link</a></p><div>The div tags will disappear.</div>';
+		$post = '<h2 id="heading-target" class="someClass">A heading</h2><p><strong>This is strong.</strong><br><a href="https://www.apple.com" target="_blank">This is a link</a></p><div>The div tags will disappear.</div>';
 
 		// Parse only HTML that's valid for Apple News.
-		$parser   = new Parser( 'html' );
-		$markdown = $parser->parse( $post );
+		$html = ( new Parser( 'html' ) )->parse( $post );
 
 		// Verify.
-		$this->assertEquals( $markdown, 'A heading<p><strong>This is strong.</strong><br><a href="https://www.apple.com">This is a link</a></p>The div tags will disappear.' );
+		$this->assertEquals( $html, 'A heading<p><strong>This is strong.</strong><br><a href="https://www.apple.com">This is a link</a></p>The div tags will disappear.' );
 	}
 
 	/**
@@ -53,7 +52,7 @@ class Apple_News_Parser_Test extends Apple_News_Testcase {
 	 *
 	 * @see \Apple_Exporter\Parser::parse
 	 */
-	public function test_clean_html_markdown() {
+	public function test_clean_html_markdown(): void {
 		// Create a post.
 		global $post;
 		$post_content = <<<HTML
@@ -102,7 +101,7 @@ HTML;
 	 *
 	 * @see \Apple_Exporter\Parser::parse
 	 */
-	public function test_clean_html() {
+	public function test_clean_html(): void {
 		// Create a post.
 		global $post;
 		$post_content = <<<HTML

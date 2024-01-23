@@ -292,17 +292,18 @@ class Request {
 	/**
 	 * Parses the API response and checks for errors.
 	 *
+	 * @param string $article The article content.
+	 * @param array  $bundles Optional. The bundles to be sent with the article. Defaults to an empty array.
+	 * @param array  $meta Optional. Additional meta to be sent with the request. Defaults to an empty array.
+	 * @param int    $post_id Optional. The post ID for the post being sent. Defaults to null.
+	 *
+	 * @access private
+	 * @return string The content to be sent to the API.
+	 * @throws Request_Exception If the content cannot be built.
 	 * @todo The exporter has an abstracted article class. Should we have
 	 *       something similar here? That way this method could live there.
 	 *
 	 * @since 0.2.0
-	 * @param string $article The article content.
-	 * @param array  $bundles Optional. The bundles to be sent with the article. Defaults to an empty array.
-	 * @param array  $meta    Optional. Additional meta to be sent with the request. Defaults to an empty array.
-	 * @param int    $post_id Optional. The post ID for the post being sent. Defaults to null.
-	 * @access private
-	 * @return string The content to be sent to the API.
-	 * @throws Request_Exception If the content cannot be built.
 	 */
 	private function build_content( $article, $bundles = [], $meta = [], $post_id = null ) {
 		$bundles = array_unique( $bundles );
