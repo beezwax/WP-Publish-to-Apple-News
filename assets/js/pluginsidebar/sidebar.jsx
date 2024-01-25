@@ -22,7 +22,7 @@ import Slug from './panels/slug';
 // Utils.
 import safeJsonParseArray from '../util/safe-json-parse-array';
 
-const Sidebar = () => {
+function Sidebar() {
   const [state, setState] = useState({
     autoAssignCategories: false,
     loading: false,
@@ -289,6 +289,6 @@ const Sidebar = () => {
       </PluginSidebar>
     </>
   );
-};
+}
 
 export default Sidebar;
