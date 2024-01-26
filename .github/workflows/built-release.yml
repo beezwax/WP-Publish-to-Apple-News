@@ -12,7 +12,7 @@ jobs:
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
     with:
-      node: 20
+      node: 21
       php: '8.2'
       composer_install: true
       draft: false
