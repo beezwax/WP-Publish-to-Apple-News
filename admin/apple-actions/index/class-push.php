@@ -11,10 +11,14 @@ namespace Apple_Actions\Index;
 require_once plugin_dir_path( __FILE__ ) . '../class-api-action.php';
 require_once plugin_dir_path( __FILE__ ) . 'class-export.php';
 
+use Admin_Apple_Async;
 use Admin_Apple_Notice;
 use Admin_Apple_Sections;
 use Apple_Actions\Action_Exception;
 use Apple_Actions\API_Action;
+use Apple_Exporter\Exporter;
+use Apple_Exporter\Settings;
+use Apple_Push_API\Request\Request_Exception;
 
 /**
  * A class to handle a push request from the admin.
@@ -51,21 +55,20 @@ class Push extends API_Action {
 	/**
 	 * Current instance of the Exporter.
 	 *
-	 * @var Exporter
+	 * @var Exporter;
 	 * @access private
 	 */
-	private $exporter;
+	private Exporter $exporter;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param \Apple_Exporter\Settings $settings A settings object containing settings at load time.
+	 * @param Settings $settings A settings object containing settings at load time.
 	 * @param int                      $id       The ID for the content object to be pushed.
 	 */
 	public function __construct( $settings, $id ) {
 		parent::__construct( $settings );
 		$this->id       = $id;
-		$this->exporter = null;
 	}
 
 	/**
@@ -88,7 +91,7 @@ class Push extends API_Action {
 			// Track this publish event as pending with the timestamp it was sent.
 			update_post_meta( $this->id, 'apple_news_api_pending', time() );
 
-			wp_schedule_single_event( time(), \Admin_Apple_Async::ASYNC_PUSH_HOOK, [ $this->id, get_current_user_id() ] );
+			wp_schedule_single_event( time(), Admin_Apple_Async::ASYNC_PUSH_HOOK, [ $this->id, get_current_user_id() ] );
 		} else {
 			return $this->push( $user_id );
 		}
@@ -312,7 +315,6 @@ class Push extends API_Action {
 
 		// If there's an API ID, update, otherwise create.
 		$remote_id = get_post_meta( $this->id, 'apple_news_api_id', true );
-		$result    = null;
 
 		/**
 		 * Actions to be taken before the article is pushed to Apple News.
@@ -441,7 +443,7 @@ class Push extends API_Action {
 			 * @param object $result  The JSON returned by the Apple News API.
 			 */
 			do_action( 'apple_news_after_push', $this->id, $result );
-		} catch ( \Apple_Push_API\Request\Request_Exception $e ) {
+		} catch ( Request_Exception $e ) {
 
 			// Remove the pending designation if it exists.
 			delete_post_meta( $this->id, 'apple_news_api_pending' );
@@ -502,7 +504,7 @@ class Push extends API_Action {
 
 		// Build the component alert error message, if required.
 		if ( ! empty( $errors[0]['component_errors'] ) ) {
-			// Build an list of the components that caused errors.
+			// Build a list of the components that caused errors.
 			$component_names = implode( ', ', $errors[0]['component_errors'] );
 
 			if ( 'warn' === $component_alerts ) {
@@ -539,7 +541,7 @@ class Push extends API_Action {
 			// Throw an exception.
 			throw new Action_Exception( esc_html( $alert_message ) );
 		} elseif ( 'warn' === $component_alerts && ! empty( $errors[0]['component_errors'] ) ) {
-				\Admin_Apple_Notice::error( $alert_message, $user_id );
+				Admin_Apple_Notice::error( $alert_message, $user_id );
 		}
 	}
 
