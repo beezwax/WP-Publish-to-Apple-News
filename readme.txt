@@ -1,11 +1,11 @@
 === Publish To Apple News ===
-Contributors: potatomaster, kevinfodness, jomurgel, tylermachado, benpbolton, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brianschick, attackant
+Contributors: potatomaster, kevinfodness, jomurgel, tylermachado, benpbolton, alleyinteractive, beezwaxbuzz, gosukiwi, pilaf, jaygonzales, brianschick, wildist
 Donate link: https://wordpress.org
 Tags: publish, apple, news, iOS
 Requires at least: 6.3
 Tested up to: 6.4.2
 Requires PHP: 8.0
-Stable tag: 2.4.5
+Stable tag: 2.4.6
 License: GPLv3 or later
 License URI: https://www.gnu.org/licenses/gpl.html
 
@@ -45,6 +45,9 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 4. Manage posts in Apple News right from the post edit screen
 
 == Changelog ==
+
+= 2.4.6 =
+* TODO DAMIAN: Add changelog for 2.4.6
 
 = 2.4.5 =
 * Fixes regular expression for adding identifiers.
