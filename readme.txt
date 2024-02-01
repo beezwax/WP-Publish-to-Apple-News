@@ -47,7 +47,19 @@ Please visit our [wiki](https://github.com/alleyinteractive/apple-news/wiki) for
 == Changelog ==
 
 = 2.4.6 =
-* TODO DAMIAN: Add changelog for 2.4.6
+
+* Bugfix: #1057 - Resolved type error on Automation admin screen
+* Bugfix: #1056 - Resolved error fetching list of sections
+* Bugfix: #1055 - Moved async functions outside useEffect to avoid synchronous errors
+* Bugfix: #1051 - Updated npm dependencies to match WordPress
+* Bugfix: #1050 - Resolved uncaught promise error when saving automation rules
+* Bugfix: #1048 - Fix posting bug caused by invalid document name.
+* Bugfix: #1030 - Fixed render error with "publish-to-apple-news" plugin.
+* Bugfix: #1028 - Fixed inability to select checklist options in Post Apple News Options plugin.
+* Bugfix: #1018 - Fixed bug deleting automation rules which removed all page contents.
+* Bugfix: #1014 - Resolved invalid document exception while processing articles.
+* Enhancement: Upgraded to Node.js 20 and npm 10.
+* Enhancement: Added info for using plugin with News Preview app.
 
 = 2.4.5 =
 * Fixes regular expression for adding identifiers.
