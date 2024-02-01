@@ -4,8 +4,8 @@
   "license": "GPLv3",
   "main": "index.php",
   "engines": {
-    "node": ">=18.0.0 <22.0.0",
-    "npm": ">=9.0.0 <11.0.0"
+    "node": ">=20.0.0 <21.0.0",
+    "npm": ">=10.0.0 <11.0.0"
   },
   "browserslist": [
     "defaults",
@@ -32,13 +32,13 @@
   },
   "dependencies": {
     "@alleyinteractive/block-editor-tools": "^0.6.1",
-    "@wordpress/api-fetch": "^6.47.0",
-    "@wordpress/components": "^25.16.0",
-    "@wordpress/data": "^9.20.0",
-    "@wordpress/dependency-extraction-webpack-plugin": "^5.1.0",
-    "@wordpress/edit-post": "^7.27.1",
-    "@wordpress/i18n": "^4.50.0",
-    "@wordpress/plugins": "^6.18.0",
+    "@wordpress/api-fetch": "^6.39.13",
+    "@wordpress/components": "^25.8.14",
+    "@wordpress/data": "^9.12.13",
+    "@wordpress/dependency-extraction-webpack-plugin": "^4.25.13",
+    "@wordpress/edit-post": "^7.19.16",
+    "@wordpress/i18n": "^4.42.13",
+    "@wordpress/plugins": "^6.10.14",
     "@wordpress/scripts": "^26.13.13",
     "dompurify": "^3.0.8",
     "prop-types": "^15.8.1",
