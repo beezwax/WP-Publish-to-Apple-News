@@ -226,7 +226,7 @@ class Push extends API_Action {
 		if ( apply_filters( 'apple_news_skip_push', false, $this->id ) ) {
 			throw new \Apple_Actions\Action_Exception(
 				sprintf(
-					// Translators: Placeholder is a post ID.
+				// Translators: Placeholder is a post ID.
 					esc_html__( 'Skipped push of article %d due to the apple_news_skip_push filter.', 'apple-news' ),
 					absint( $this->id )
 				)
@@ -276,7 +276,7 @@ class Push extends API_Action {
 			if ( array_intersect( $term_ids, $skip_term_ids ) ) {
 				throw new \Apple_Actions\Action_Exception(
 					sprintf(
-						// Translators: Placeholder is a post ID.
+					// Translators: Placeholder is a post ID.
 						esc_html__( 'Skipped push of article %d due to the presence of a skip push taxonomy term.', 'apple-news' ),
 						absint( $this->id )
 					)
@@ -392,7 +392,7 @@ class Push extends API_Action {
 		if ( $this->is_post_in_sync( $json, $meta, $bundles ) ) {
 			throw new \Apple_Actions\Action_Exception(
 				sprintf(
-					// Translators: Placeholder is a post ID.
+				// Translators: Placeholder is a post ID.
 					esc_html__( 'Skipped push of article %d to Apple News because it is already in sync.', 'apple-news' ),
 					$this->id // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
 				)
@@ -462,7 +462,7 @@ class Push extends API_Action {
 		if ( $remote_id ) {
 			Admin_Apple_Notice::success(
 				sprintf(
-					// translators: token is the post title.
+				// translators: token is the post title.
 					__( 'Article %s has been successfully updated on Apple News!', 'apple-news' ),
 					$post->post_title
 				),
@@ -471,7 +471,7 @@ class Push extends API_Action {
 		} else {
 			Admin_Apple_Notice::success(
 				sprintf(
-					// translators: token is the post title.
+				// translators: token is the post title.
 					__( 'Article %s has been pushed successfully to Apple News!', 'apple-news' ),
 					$post->post_title
 				),
@@ -506,13 +506,13 @@ class Push extends API_Action {
 
 			if ( 'warn' === $component_alerts ) {
 				$alert_message .= sprintf(
-					// translators: token is a list of component names.
+				// translators: token is a list of component names.
 					__( 'The following components are unsupported by Apple News and were removed: %s', 'apple-news' ),
 					$component_names
 				);
 			} elseif ( 'fail' === $component_alerts ) {
 				$alert_message .= sprintf(
-					// translators: token is a list of component names.
+				// translators: token is a list of component names.
 					__( 'The following components are unsupported by Apple News and prevented publishing: %s', 'apple-news' ),
 					$component_names
 				);
@@ -538,7 +538,7 @@ class Push extends API_Action {
 			// Throw an exception.
 			throw new \Apple_Actions\Action_Exception( esc_html( $alert_message ) );
 		} elseif ( 'warn' === $component_alerts && ! empty( $errors[0]['component_errors'] ) ) {
-				\Admin_Apple_Notice::error( $alert_message, $user_id );
+			\Admin_Apple_Notice::error( $alert_message, $user_id );
 		}
 	}
 
