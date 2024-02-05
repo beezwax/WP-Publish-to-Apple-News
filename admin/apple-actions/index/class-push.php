@@ -398,7 +398,8 @@ class Push extends API_Action {
 		 */
 		$meta['data'] = apply_filters( 'apple_news_article_metadata', $meta['data'], $this->id );
 
-		// Allow the API data to be debugged in browser.
+		// Allow the API data to be debugged in browser for QA
+		// since not all of it is included in the JSON.
 		$this->debug_api( $json, $meta, $bundles );
 
 		// Ignore if the post is already in sync.
@@ -607,5 +608,43 @@ class Push extends API_Action {
 		} else {
 			return wp_json_encode( $decoded );
 		}
+	}
+
+	/**
+	 * Allows debugging of API requests by dumping the data if
+	 * a url parameter `apple_news_debug` is set and the user
+	 * is an admin.
+	 *
+	 * @param string $json The JSON data to debug.
+	 * @param array  $bundles The bundles data to debug.
+	 * @param array  $meta The meta data to debug.
+	 *
+	 * @return void
+	 */
+	private function debug_api( string $json, array $bundles, array $meta ): void {
+		// Allow debugging of API requests by dumping the data if a url parameter is set.
+		$apple_news_debug = filter_input( INPUT_GET, 'apple_news_debug', FILTER_SANITIZE_STRING );
+		if ( empty( $apple_news_debug ) || ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
+		header( 'Content-Type: text/html' );
+		echo '<h1>Apple News API Push</h1><pre>';
+		echo 'Post ID: ', htmlspecialchars( $this->id ?? '' ), "\n";
+		echo '<hr>', 'Article:', print_r(
+			isset( $json ) ? json_decode( $json, true ) : [],
+			true
+		);
+
+		if ( ! empty( $bundles ) ) {
+			echo '<hr>', 'Bundles:', print_r( $bundles, true );
+		}
+
+		if ( ! empty( $meta ) ) {
+			echo '<hr>', 'Meta:', print_r( $meta, true );
+		}
+
+		echo '</pre>';
+		exit( 'Stopping execution before sending the API request.' );
 	}
 }
