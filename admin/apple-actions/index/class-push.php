@@ -159,14 +159,6 @@ class Push extends API_Action {
 			$in_sync = false;
 		}
 
-		echo "TESt: \n";
-		echo 'Article: ' . print_r( $json, true ) . "\n";
-		echo 'Bundles: ' . print_r( $bundles, true ) . "\n";
-		echo 'Meta: ' . print_r( $meta, true ) . "\n";
-		echo 'Post ID: ' . $post->ID . "\n";
-
-		die( "Stopping execution before sending the request.\n" );
-
 		/**
 		 * Allows for custom logic to determine if a post is in sync or not.
 		 *
@@ -605,5 +597,4 @@ class Push extends API_Action {
 			return wp_json_encode( $decoded );
 		}
 	}
-
 }
