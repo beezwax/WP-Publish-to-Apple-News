@@ -141,13 +141,14 @@ class Admin_Apple_News extends Apple_News {
 					'default' => '',
 				],
 				'apple_news_metadata'            => [
-					'default'           => '',
+					'default'           => [],
 					'sanitize_callback' => function ( $value ) {
 						return ! empty( $value ) && is_string( $value ) ? json_decode( $value, true ) : $value;
 					},
 					'show_in_rest'      => [
 						'prepare_callback' => 'apple_news_json_encode',
 					],
+					'type'              => 'array',
 				],
 				'apple_news_pullquote'           => [
 					'default' => '',
@@ -159,11 +160,16 @@ class Admin_Apple_News extends Apple_News {
 					'default' => '',
 				],
 				'apple_news_sections'            => [
-					'default'           => '',
-					'sanitize_callback' => 'apple_news_sanitize_selected_sections',
-					'show_in_rest'      => [
-						'prepare_callback' => 'apple_news_json_encode',
+					'default'      => [],
+					'show_in_rest' => [
+						'schema' => [
+							'items' => [
+								'type' => 'string',
+							],
+							'type'  => 'array',
+						],
 					],
+					'type'         => 'array',
 				],
 				'apple_news_suppress_video_url'  => [
 					'default' => false,
@@ -192,7 +198,7 @@ class Admin_Apple_News extends Apple_News {
 						}
 					)
 					: $meta_keys;
-				} 
+				}
 			);
 
 			add_action(
